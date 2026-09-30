@@ -1,0 +1,47 @@
+1
+00:00:00,000 --> 00:00:05,000
+Trong một xưởng cơ khí nhỏ, An bắt đầu từ một vấn đề rất quen thuộc.
+
+2
+00:00:05,000 --> 00:00:10,000
+Bánh xe chỉ quay khi người thợ liên tục đẩy nó bằng tay.
+
+3
+00:00:10,000 --> 00:00:15,000
+An muốn truyền lực từ một tay quay qua cơ cấu bánh răng.
+
+4
+00:00:15,000 --> 00:00:20,000
+Trên bản vẽ, bánh răng nhỏ nằm bên cạnh bánh răng lớn.
+
+5
+00:00:20,000 --> 00:00:25,000
+Những đường nét mô tả cách lực đi qua từng chi tiết.
+
+6
+00:00:25,000 --> 00:00:30,000
+An chuẩn bị các bộ phận trong xưởng rồi bắt đầu lắp ráp.
+
+7
+00:00:30,000 --> 00:00:35,000
+Nguyên mẫu đầu tiên được đặt lên bàn để thử tay quay.
+
+8
+00:00:35,000 --> 00:00:40,000
+Nhưng hai bánh răng quá sát nhau khiến cả cơ cấu bị kẹt.
+
+9
+00:00:40,000 --> 00:00:45,000
+An đánh dấu chỗ tiếp xúc trên bản vẽ và điều chỉnh khoảng cách.
+
+10
+00:00:45,000 --> 00:00:50,000
+Ở lần thử tiếp theo, tay quay đã truyền được lực.
+
+11
+00:00:50,000 --> 00:00:55,000
+Bánh xe chuyển động, cho thấy sự điều chỉnh đã có tác dụng.
+
+12
+00:00:55,000 --> 00:01:00,000
+Quan sát, phác thảo, chế tạo, thử nghiệm và cải tiến: ý tưởng trở thành cỗ máy.

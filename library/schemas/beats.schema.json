@@ -1,0 +1,67 @@
+{
+  "$ref": "#/definitions/beats",
+  "definitions": {
+    "beats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 96,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+          },
+          "chapterId": {
+            "type": "string",
+            "maxLength": 96,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+          },
+          "startMs": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "endMs": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "narrationText": {
+            "type": "string"
+          },
+          "meaning": {
+            "type": "string"
+          },
+          "visualGoal": {
+            "type": "string"
+          },
+          "importance": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "segmentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 96,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "id",
+          "chapterId",
+          "startMs",
+          "endMs",
+          "narrationText",
+          "meaning",
+          "visualGoal",
+          "importance",
+          "segmentIds"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

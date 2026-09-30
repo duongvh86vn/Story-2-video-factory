@@ -1,0 +1,15 @@
+rendering:
+  engine: hyperframes
+  draft: { width: 960, height: 540, fps: 15, quality: draft }
+  final: { width: 1920, height: 1080, fps: 30, quality: delivery }
+  workers: 2
+  docker: false
+  timeout_ms: 1800000
+  max_duration_seconds: 300
+  max_shots: 100
+style: { preset: historical-cinematic }
+visual_rules:
+  max_static_seconds: 4
+  max_same_camera_seconds: 7
+  preferred_shot_seconds: { min: 2, max: 6 }
+  minimum_changes_per_10_seconds: 2

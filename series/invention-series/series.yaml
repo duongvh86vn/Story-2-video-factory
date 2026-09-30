@@ -1,0 +1,3 @@
+project: { language: vi }
+style: { preset: historical-cinematic }
+workflow: { require_character_approval: true }

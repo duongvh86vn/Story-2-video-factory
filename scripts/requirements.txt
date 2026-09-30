@@ -1,0 +1,2 @@
+# Fast ASR; provision explicitly outside ingest. Python 3.10-3.13 recommended.
+faster-whisper>=1.1.1,<2

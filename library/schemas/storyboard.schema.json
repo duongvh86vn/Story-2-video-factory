@@ -1,0 +1,281 @@
+{
+  "$ref": "#/definitions/storyboard",
+  "definitions": {
+    "storyboard": {
+      "type": "object",
+      "properties": {
+        "shots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "beatIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 96,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                },
+                "minItems": 1
+              },
+              "sceneType": {
+                "type": "string",
+                "enum": [
+                  "historical-reconstruction",
+                  "character-scene",
+                  "archival-photo",
+                  "photo-parallax",
+                  "map",
+                  "timeline",
+                  "technical-cutaway",
+                  "technical-diagram",
+                  "exploded-view",
+                  "process-diagram",
+                  "factory-process",
+                  "macro-detail",
+                  "data-chart",
+                  "document-highlight",
+                  "newspaper",
+                  "quote",
+                  "kinetic-typography",
+                  "kinetic-text",
+                  "ui-demo",
+                  "schematic",
+                  "comparison",
+                  "before-after",
+                  "object-hero",
+                  "abstract-transition"
+                ]
+              },
+              "subject": {
+                "type": "string"
+              },
+              "characters": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 96,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                },
+                "default": []
+              },
+              "visualDescription": {
+                "type": "string"
+              },
+              "camera": {
+                "type": "object",
+                "properties": {
+                  "shotSize": {
+                    "type": "string"
+                  },
+                  "movement": {
+                    "type": "string"
+                  },
+                  "angle": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "shotSize",
+                  "movement",
+                  "angle"
+                ],
+                "additionalProperties": false
+              },
+              "motion": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "transitionIn": {
+                "type": "string",
+                "enum": [
+                  "hard-cut",
+                  "match-cut",
+                  "fade",
+                  "dissolve",
+                  "crossfade",
+                  "slide-left",
+                  "slide-right",
+                  "wipe"
+                ],
+                "default": "hard-cut"
+              },
+              "transitionOut": {
+                "type": "string",
+                "enum": [
+                  "hard-cut",
+                  "match-cut",
+                  "fade",
+                  "dissolve",
+                  "crossfade",
+                  "slide-left",
+                  "slide-right",
+                  "wipe"
+                ],
+                "default": "hard-cut"
+              },
+              "assetNeeds": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "character",
+                        "image",
+                        "video",
+                        "diagram",
+                        "music",
+                        "sfx",
+                        "document"
+                      ]
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "characterId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "versionId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "pose": {
+                      "type": "string"
+                    },
+                    "localPath": {
+                      "type": "string"
+                    },
+                    "required": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "sourceUrl": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "license": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "description"
+                  ],
+                  "additionalProperties": false
+                },
+                "default": []
+              },
+              "textOnScreen": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "default": null
+              },
+              "recipeId": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "default": null
+              },
+              "renderer": {
+                "type": "string",
+                "const": "hyperframes",
+                "default": "hyperframes"
+              },
+              "locked": {
+                "type": "boolean",
+                "default": false
+              },
+              "intentionalStatic": {
+                "type": "boolean",
+                "default": false
+              },
+              "intentionalBlack": {
+                "type": "boolean",
+                "default": false
+              },
+              "sfx": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "timeMs": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "intensity": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1,
+                      "default": 0.3
+                    },
+                    "assetId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    }
+                  },
+                  "required": [
+                    "timeMs",
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                "default": []
+              }
+            },
+            "required": [
+              "id",
+              "startMs",
+              "endMs",
+              "beatIds",
+              "sceneType",
+              "subject",
+              "visualDescription",
+              "camera"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "shots"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

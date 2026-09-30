@@ -1,0 +1,91 @@
+{
+  "$ref": "#/definitions/narration",
+  "definitions": {
+    "narration": {
+      "type": "object",
+      "properties": {
+        "durationMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "id",
+              "startMs",
+              "endMs",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "text",
+              "startMs",
+              "endMs"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "audioPath": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "srt",
+            "wav",
+            "aligned"
+          ]
+        }
+      },
+      "required": [
+        "durationMs",
+        "segments",
+        "mode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,3 @@
+# Optional precision/alignment backend, matched to the documented API.
+-r requirements.txt
+whisperx==3.7.4

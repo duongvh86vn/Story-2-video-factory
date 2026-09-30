@@ -1,0 +1,91 @@
+{
+  "$ref": "#/definitions/project-state",
+  "definitions": {
+    "project-state": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "NEW",
+            "INGESTED",
+            "TIMED",
+            "ANALYZED",
+            "STORYBOARDED",
+            "ASSETS_READY",
+            "SCENES_READY",
+            "DRAFT_RENDERED",
+            "REVIEWED",
+            "REPAIRED",
+            "FINAL_RENDERED",
+            "QC_PASSED",
+            "DONE"
+          ]
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "inputHash": {
+          "type": "string"
+        },
+        "assetInputHash": {
+          "type": "string",
+          "default": ""
+        },
+        "artifactHashes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {}
+        },
+        "reviewIteration": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "approvals": {
+          "type": "object",
+          "properties": {
+            "storyboard": {
+              "type": "boolean",
+              "default": false
+            },
+            "characters": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "locked": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "default": {}
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "name",
+        "state",
+        "updatedAt",
+        "inputHash"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

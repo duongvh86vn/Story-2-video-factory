@@ -1,0 +1,16 @@
+workflow:
+  automatic: true
+  require_storyboard_approval: false
+  require_character_approval: false
+  max_review_iterations: 2
+  max_model_calls: 250
+  max_generated_assets_per_shot: 3
+  max_scene_bytes: 500000
+  allow_rule_based_review: true
+retry: { structured_output: 2, scene_generation: 2, scene_repair: 3, render: 1 }
+research: { enabled: false, sources: [] }
+qc:
+  duration_tolerance_ms: 250
+  black_min_seconds: 0.5
+  freeze_min_seconds: 4
+  allowed_black: []

@@ -1,0 +1,9 @@
+audio:
+  target_lufs: -16
+  true_peak: -1.5
+  music_volume: 0.15
+  sfx_volume: 0.5
+  sample_rate: 48000
+  duration_tolerance_ms: 500
+captions: { mode: both, font: Arial, font_size: 24 }
+asr: { engine: faster-whisper, model: small, device: cpu, compute_type: int8, align: false }

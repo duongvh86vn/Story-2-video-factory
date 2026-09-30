@@ -1,0 +1,7 @@
+models:
+  planner: { provider: gateway, model: "${PLANNER_MODEL}", base_url: "${MODEL_GATEWAY_URL}", api_key_env: MODEL_GATEWAY_KEY, temperature: 0.3 }
+  storyboard: { provider: gateway, model: "${STORYBOARD_MODEL}", base_url: "${MODEL_GATEWAY_URL}", api_key_env: MODEL_GATEWAY_KEY, temperature: 0.5 }
+  coder: { provider: gateway, model: "${CODER_MODEL}", base_url: "${MODEL_GATEWAY_URL}", api_key_env: MODEL_GATEWAY_KEY, temperature: 0.2 }
+  repair: { provider: gateway, model: "${REPAIR_MODEL}", base_url: "${MODEL_GATEWAY_URL}", api_key_env: MODEL_GATEWAY_KEY, temperature: 0.1 }
+  visual_review: { provider: gateway, model: "${REVIEW_MODEL}", base_url: "${MODEL_GATEWAY_URL}", api_key_env: MODEL_GATEWAY_KEY, vision: true, temperature: 0.1 }
+  fallback: { provider: gateway, model: "${FALLBACK_MODEL}", base_url: "${MODEL_GATEWAY_URL}", api_key_env: MODEL_GATEWAY_KEY, temperature: 0.2 }

@@ -1,0 +1,158 @@
+{
+  "$ref": "#/definitions/character-bible",
+  "definitions": {
+    "character-bible": {
+      "type": "object",
+      "properties": {
+        "characters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "name": {
+                "type": "string"
+              },
+              "identity": {
+                "type": "object",
+                "properties": {
+                  "genderPresentation": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "apparentAge": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "body": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "face": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "hair": {
+                    "type": "string",
+                    "default": ""
+                  },
+                  "facialHair": {
+                    "type": "string",
+                    "default": ""
+                  }
+                },
+                "additionalProperties": false
+              },
+              "wardrobe": {
+                "type": "object",
+                "properties": {
+                  "default": {
+                    "type": "string"
+                  },
+                  "eraRules": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": []
+                  }
+                },
+                "required": [
+                  "default"
+                ],
+                "additionalProperties": false
+              },
+              "immutable": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "mutable": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "negativeRules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "referenceAssets": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "locked": {
+                "type": "boolean",
+                "default": true
+              },
+              "versions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "assets": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "default": []
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "description"
+                  ],
+                  "additionalProperties": false
+                },
+                "default": []
+              },
+              "poses": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "default": {}
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "identity",
+              "wardrobe",
+              "immutable",
+              "mutable"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "seriesId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "characters"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
