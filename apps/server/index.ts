@@ -328,6 +328,13 @@ export async function buildServer(options: ServerOptions = {}) {
 
   app.get('/preview-bridge.js', async (_request, reply) => reply.type('text/javascript').send(PREVIEW_BRIDGE));
   app.get<{ Params: Named & { '*': string } }>('/project-static/:name/*', async (request, reply) => {
+    const rawPath = (request.raw.url ?? '').split('?')[0]!;
+    let decodedPath: string;
+    try { decodedPath = decodeURIComponent(rawPath); }
+    catch { throw new ApiError(400, 'Invalid project-relative path.', 'INVALID_PATH'); }
+    if (decodedPath.split('/').some(segment => segment === '.' || segment === '..' || segment.includes('\\') || segment.includes('\0'))) {
+      throw new ApiError(400, 'Invalid project-relative path.', 'INVALID_PATH');
+    }
     const root = await rootFor(request.params.name), relative = request.params['*'], extension = path.extname(relative).toLowerCase();
     const scene = relative.startsWith('scenes/');
     const narration = await optionalArtifact<NonNullable<ProjectDetail['artifacts']['narration']>>(root, 'narration.json');
@@ -335,7 +342,7 @@ export async function buildServer(options: ServerOptions = {}) {
     if (!allowed || !MIME[extension] || (!scene && ['.html', '.js', '.css'].includes(extension))) throw new ApiError(404, 'Preview file is not allowed.', 'NOT_FOUND');
     const file = await boundPath(root, relative);
     if (extension === '.html') {
-      reply.header('Content-Security-Policy', "sandbox allow-scripts; default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self'; frame-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self' http://localhost:5173 http://127.0.0.1:5173");
+      reply.header('Content-Security-Policy', "sandbox allow-scripts; default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; frame-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self' http://localhost:5173 http://127.0.0.1:5173");
       return reply.type(MIME['.html']!).send(withPreviewBridge(await fs.readFile(file, 'utf8')));
     }
     if (extension === '.svg') reply.header('Content-Security-Policy', "sandbox; default-src 'none'; style-src 'unsafe-inline'");

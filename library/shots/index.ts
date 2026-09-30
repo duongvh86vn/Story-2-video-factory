@@ -21,7 +21,7 @@ export function selectRecipe(shot: Shot): ShotRecipe | undefined {
 }
 export interface RecipeAsset { id:string; type:string; path:string; characterId?:string; }
 export function renderRecipe(recipe: ShotRecipe, shot: Shot, style: VisualStyle, width: number, height: number, assets: RecipeAsset[]): SceneFiles {
-  const title=escapeHtml(shot.textOnScreen ?? ''), description=escapeHtml(shot.visualDescription);
+  const title=escapeHtml(shot.textOnScreen ?? ''), description=escapeHtml(shot.visualDescription.slice(0,220).trim() + (shot.visualDescription.length>220 ? '…' : ''));
   const duration=(shot.endMs-shot.startMs)/1000, scope=`[data-composition-id="${shot.id}"]`;
   const targets=(selector:string)=>JSON.stringify(`${scope} ${selector}`);
   const labels=sourceLabels(shot.visualDescription,shot.subject);
@@ -79,6 +79,6 @@ export function renderRecipe(recipe: ShotRecipe, shot: Shot, style: VisualStyle,
   const camera=`tl.set(${targets('.camera-rig')},${JSON.stringify({scale:framing,rotation:tilt})},0);${shot.intentionalStatic || /static|locked|tĩnh/.test(movement)?'':`tl.to(${targets('.camera-rig')},${JSON.stringify(cameraVars)},0);`}`;
   const js=`const tl=gsap.timeline({paused:true});\nwindow.__timelines=window.__timelines||{};\nwindow.__timelines[${JSON.stringify(shot.id)}]=tl;\n${camera}\n${shot.intentionalStatic ? '' : motion}\n${transitionTween(shot.transitionIn,`${scope} .visual`,transitionDuration,0,true)}\n${transitionTween(shot.transitionOut,`${scope} .visual`,transitionDuration,Math.max(0,duration-transitionDuration),false)}\ntl.to({}, {duration:${duration}},0);\n`;
   const cameraCss=`${scope} .camera-rig{position:absolute;inset:0;transform-origin:50% 50%}`;
-  const html=`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(shot.subject)}</title><link rel="stylesheet" href="style.css"></head><body><div data-composition-id="${shot.id}" data-width="${width}" data-height="${height}" data-duration="${duration}" data-start="0">${title?`<h1 class="scene-title">${title}</h1>`:''}<div class="camera-rig"><div class="visual">${content}</div></div></div><script src="vendor/gsap.min.js"></script><script src="scene.js"></script></body></html>`;
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(shot.subject)}</title><link rel="stylesheet" href="style.css"></head><body><div data-composition-id="${shot.id}" data-width="${width}" data-height="${height}" data-duration="${duration}" data-start="0">${title?`<h1 class="scene-title">${title}</h1>`:''}<div class="camera-rig"><div class="visual">${content}</div></div></div><script>window.__timelines=window.__timelines||{};</script><script src="vendor/gsap.min.js"></script><script src="scene.js"></script></body></html>`;
   return {files:[{path:'index.html',content:html},{path:'style.css',content:css+cameraCss},{path:'scene.js',content:js}],dependencies:[],notes:[`${recipe.id} v${recipe.version}`, 'Schematic graphics are visualizations, not archival evidence.']};
 }

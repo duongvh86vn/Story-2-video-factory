@@ -2,7 +2,7 @@ import ts from 'typescript';
 import type { SceneFiles, Shot } from '../core/schemas.js';
 import { SceneFilesSchema } from '../core/schemas.js';
 
-export const SCENE_CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self'; media-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'";
+export const SCENE_CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'";
 export const SCENE_FILENAMES = ['index.html','style.css','scene.js'] as const;
 const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
 const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','script']);
@@ -103,7 +103,7 @@ export function validateSceneFiles(input: SceneFiles, shot: Shot, maxBytes=50000
       if (key==='style') errors.push(...validateCss(value));
     }
     if (tag==='script' && !raw.startsWith('/')) {
-      const src=attributes.get('src'); if (!src || !['vendor/gsap.min.js','scene.js'].includes(src)) errors.push('Only local GSAP and scene.js script tags are permitted');else scripts.push(src);
+      const src=attributes.get('src'); if (src && !['vendor/gsap.min.js','scene.js'].includes(src)) errors.push('Only local GSAP and scene.js script tags are permitted');else if (src) scripts.push(src);
       if (attributes.has('type') && attributes.get('type')!=='text/javascript') errors.push('Module/importmap scripts are forbidden');
     }
     if (attributes.has('data-composition-src')) errors.push('A generated shot cannot load additional compositions');
@@ -116,7 +116,10 @@ export function validateSceneFiles(input: SceneFiles, shot: Shot, maxBytes=50000
     if (tag==='meta' && attributes.has('http-equiv') && attributes.get('http-equiv')!.toLowerCase()!=='content-security-policy') errors.push('Meta refresh/headers are forbidden');
     if (tag==='link' && attributes.get('rel')!=='stylesheet') errors.push('Only local stylesheet links are permitted');
   }
-  for (const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)) if (match[1]!.trim()) errors.push('Inline authored JS is forbidden; use scene.js');
+  for (const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gi)) {
+    const inline = match[1]!.trim();
+    if (inline && !/^window\.__timelines\s*=\s*window\.__timelines\s*\|\|\s*\{\};?$/.test(inline)) errors.push('Inline authored JS is forbidden; use scene.js');
+  }
   if (roots!==1) errors.push('Exactly one shot composition root is required');
   if (scripts.join('|')!=='vendor/gsap.min.js|scene.js') errors.push('Scripts must load GSAP then scene.js exactly once');
   const css=files.get('style.css')??'',scope=`[data-composition-id="${shot.id}"]`;
