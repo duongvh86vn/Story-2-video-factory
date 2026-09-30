@@ -2,7 +2,8 @@
 
 Ngày kiểm thử: 2026-09-30  
 Repository: `https://github.com/duongvh86vn/Story-2-video-factory`  
-Commit mã được kiểm thử trong vòng tiếp tục: `81bf7b8df9c94cbf1562519ba8ccdfd769c22b51` (`Fix artifact recovery and preview review integrity with regression coverage`)  
+Commit mã được kiểm thử trong vòng tiếp tục: `81bf7b8df9c94cbf1562519ba8ccdfd769c22b51` (`Fix artifact recovery and preview review integrity with regression coverage`)
+
 Đợt kiểm thử đầu: `1ba032e` (`Keep map recipe labels inside canvas`), sau `42d704d` (`Fix HyperFrames registry CSP and static path guards`).
 
 Các mục từ “Môi trường” đến “Phạm vi chưa đạt hoặc chưa chạy” ghi lại đợt đầu. Phần “Vòng tiếp tục” cuối file cập nhật bằng chứng và giới hạn hiện tại.
