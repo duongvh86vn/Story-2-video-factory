@@ -176,6 +176,23 @@ npm run benchmark -- --count 20 --generated --config config/models.gateway.examp
 
 Các phép đo chưa chạy được ghi `null`, không tính như đạt. Việc đánh giá chất lượng, lỗi có chủ ý và chạy toàn bộ acceptance suite nằm trong bàn giao test.
 
+## Kiểm thử và hồi quy
+
+```powershell
+npm test
+npm run test:typecheck
+npm run test:asr
+npm run test:render
+```
+
+`npm test` chạy HTTP adapter bằng server fixture cục bộ, kiểm tra retry/fallback/budget, API upload/edit/revision, khóa/resume/SQLite, scene/review integrity và media/QC bằng FFmpeg thật. Lệnh này cần FFmpeg/ffprobe; không gọi dịch vụ model bên ngoài.
+
+`test:asr` chạy faster-whisper thật, CPU/int8, model `tiny` đã cache và tắt download. Trên Windows, fixture dùng giọng Microsoft David tiếng Anh; có thể truyền WAV tiếng Anh riêng qua `npm run test:asr -- C:\audio\narration.wav`. Đặt `VIDEO_FACTORY_TEST_ASR_MODEL` để chọn model đã provision. Bài kiểm tra này xác nhận ingest WAV và word timing hợp lệ, chưa đánh giá độ chính xác tiếng Việt hoặc WhisperX.
+
+`test:render` chạy tracer SRT-only 4 giây tới `DONE` bằng HyperFrames/FFmpeg, giữ video, preview và QC trong `temp/acceptance-render/`. Lệnh build không chạy các bài kiểm tra này. Preview manifest cũ thiếu hash contact sheet sẽ được tạo lại khi resume để bảo đảm review dùng đúng ảnh đã sinh.
+
+Đọc `TEST-RESULTS.md` để xem kết quả đã đo và phần chưa xác nhận với provider/vision thật, WhisperX và Docker.
+
 ## Generated scene isolation
 
 Scene được validate theo file allowlist, CSP, local asset và deterministic GSAP. Renderer subprocess không kế thừa key model. Production có thể bật `rendering.docker: true` để dùng sandbox renderer của upstream. Một validator source không thay thế sandbox hệ điều hành khi chạy mã không tin cậy.

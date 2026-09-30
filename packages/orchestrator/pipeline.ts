@@ -21,7 +21,7 @@ import { collectResearch } from './research.js';
 import { reservation } from './reservation.js';
 
 export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; onProgress?:(state:ProjectState)=>void; }
-const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
+const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
 export function redact(message:string,config:FactoryConfig):string { for (const role of Object.values(config.models)) { const key=process.env[role.api_key_env]; if (key) message=message.split(key).join('[REDACTED]'); } return message.replace(/Bearer\s+[^\s"']+/gi,'Bearer [REDACTED]'); }
 async function inputFingerprint(root:string,config:FactoryConfig):Promise<string> { const files:string[]=[]; for(const relative of Object.values(config.input)) if(await exists(safePath(root,relative))) files.push(await safeRealPath(root,relative)); const repo=await findRepoRoot(); if (config.project.series) files.push(...await walk(safePath(path.join(repo,'series'),config.project.series))); const contents=await Promise.all([...new Set(files)].sort().map(async file=>[path.relative(root,file),hash(await fs.readFile(file))])); return hash({config,contents}); }
 async function assetFingerprint(root:string):Promise<string> {
@@ -32,6 +32,7 @@ async function assetFingerprint(root:string):Promise<string> {
 async function artifactHashes(root:string,state:ProjectState):Promise<void> {
   for (const [stage,files] of Object.entries(outputs)) if (stateIndex(stage as ProjectStatus)<=stateIndex(state.state)) for (const file of files) if (await exists(path.join(root,file))) state.artifactHashes[file]=hash(await fs.readFile(path.join(root,file)));
   if(stateIndex(state.state)>=stateIndex('SCENES_READY')) for(const file of await walk(path.join(root,'scenes'))) if(/\.(html|js|css|json)$/.test(file)) state.artifactHashes[path.relative(root,file).replace(/\\/g,'/')]=hash(await fs.readFile(file));
+  if(stateIndex(state.state)>=stateIndex('DRAFT_RENDERED')) for(const file of await walk(path.join(root,'previews'))) if(/\.(png|jpg|json)$/.test(file)) state.artifactHashes[path.relative(root,file).replace(/\\/g,'/')]=hash(await fs.readFile(file));
 }
 async function reconcile(root:string,state:ProjectState):Promise<void> {
   const initial=stateIndex(state.state); let target=initial;
@@ -39,7 +40,11 @@ async function reconcile(root:string,state:ProjectState):Promise<void> {
   for (const stage of States) {
     if (stateIndex(stage)>initial) break;
     for (const file of outputs[stage] ?? []) {
-      if (!await exists(path.join(root,file))) { target=Math.min(target,Math.max(0,stateIndex(stage)-1)); continue; }
+      if (!await exists(path.join(root,file))) {
+        // Narration and its rich timeline are produced by ingest, before TIMED validates them.
+        const producer = ['work/narration.json','work/timeline.json'].includes(file) ? 'INGESTED' : stage;
+        target=Math.min(target,Math.max(0,stateIndex(producer as ProjectStatus)-1)); continue;
+      }
       const current=hash(await fs.readFile(path.join(root,file)));
       if (state.artifactHashes[file] && state.artifactHashes[file]!==current) {
         target=Math.min(target,Math.max(0,stateIndex(stage)-(editable.has(file)?0:1)));
@@ -50,6 +55,16 @@ async function reconcile(root:string,state:ProjectState):Promise<void> {
   if(initial>=stateIndex('SCENES_READY')) for(const [file,previous] of Object.entries(state.artifactHashes)) if(file.startsWith('scenes/') && file!=='scenes/index.html') {
     if(!await exists(path.join(root,file))) target=Math.min(target,stateIndex('ASSETS_READY'));
     else if(hash(await fs.readFile(path.join(root,file)))!==previous) target=Math.min(target,stateIndex('SCENES_READY'));
+  }
+  if(initial>=stateIndex('DRAFT_RENDERED')) {
+    for(const [file,previous] of Object.entries(state.artifactHashes)) if(file.startsWith('previews/')) {
+      if(!await exists(path.join(root,file))||hash(await fs.readFile(path.join(root,file)))!==previous) target=Math.min(target,stateIndex('SCENES_READY'));
+    }
+    // Upgrade older preview manifests by regenerating them at their producing stage.
+    try {
+      const manifest=await readJson(path.join(root,'previews/manifest.json'),z.object({sheetHashes:z.record(z.string())}));
+      if(!manifest.sheetHashes['previews/contact-sheet-global.jpg']) target=Math.min(target,stateIndex('SCENES_READY'));
+    } catch {target=Math.min(target,stateIndex('SCENES_READY'));}
   }
   if(target<initial) {
     state.state=States[target]!;state.reviewIteration=0;
@@ -77,7 +92,9 @@ async function report(root:string,config:FactoryConfig,state:ProjectState,router
   await writeAtomic(path.join(root,'output/production-report.md'),text);
 }
 export async function runPipeline(projectRoot:string,options:PipelineOptions={}):Promise<ProjectState> {
-  const root=path.resolve(projectRoot); if (!await exists(path.join(root,'project.yaml'))) throw new Error('Missing project.yaml; use video-factory new first');
+  const resolved=path.resolve(projectRoot); if (!await exists(path.join(resolved,'project.yaml'))) throw new Error('Missing project.yaml; use video-factory new first');
+  // Canonicalize Windows short paths and directory aliases before deriving asset-relative paths.
+  const root=await fs.realpath(resolved);
   const release=await acquire(root); let store:ProductionStore|undefined; let config:FactoryConfig|undefined;
   try {
     config=await loadConfig(root); const state=await loadState(root); store=new ProductionStore(root); store.failInterruptedJobs();

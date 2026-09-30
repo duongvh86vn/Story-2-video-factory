@@ -11,7 +11,7 @@ import { validateSceneFiles } from '../scenes/security.js';
 import { visualAssetPath } from '../scenes/assets.js';
 
 interface PreviewFrame { shotId:string; fraction:number; timeMs:number; path:string; hash:string; }
-interface PreviewManifest { frames:PreviewFrame[]; sceneHashes:Record<string,string>; masterHash:string; global:string; }
+interface PreviewManifest { frames:PreviewFrame[]; sceneHashes:Record<string,string>; masterHash:string; global:string; sheetHashes:Record<string,string>; }
 const fractions=[0,.25,.5,.75,1] as const;
 async function contactSheet(root:string,frames:PreviewFrame[],destination:string):Promise<string> {
   const width=384,height=216,labelHeight=30,columns=5,rows=Math.ceil(frames.length/columns);
@@ -41,7 +41,7 @@ async function masterHash(root:string):Promise<string> {
   return hash(Buffer.concat(sources));
 }
 export async function createPreviews(projectRoot:string,config:FactoryConfig,storyboard:Storyboard):Promise<void> {
-  const engine=new HyperFramesEngine(config,projectRoot),frames:PreviewFrame[]=[];
+  const engine=new HyperFramesEngine(config,projectRoot),frames:PreviewFrame[]=[],sheetHashes:Record<string,string>={};
   const hashes=await sceneHashes(projectRoot,storyboard);
   const master=await masterHash(projectRoot);
   for(const shot of storyboard.shots) {
@@ -55,11 +55,14 @@ export async function createPreviews(projectRoot:string,config:FactoryConfig,sto
       const frame={shotId:shot.id,fraction,timeMs:shot.startMs+timeMs,path:file,hash:hash(await fs.readFile(output))};
       frames.push(frame);shotFrames.push(frame);
     }
-    await contactSheet(projectRoot,shotFrames,`previews/${shot.id}/contact-sheet.jpg`);
+    const sheetPath=`previews/${shot.id}/contact-sheet.jpg`;
+    const sheet=await contactSheet(projectRoot,shotFrames,sheetPath);
+    sheetHashes[sheetPath]=hash(await fs.readFile(sheet));
     await contactSheet(projectRoot,shotFrames,`previews/contact-sheet-${shot.id}.jpg`);
   }
-  await contactSheet(projectRoot,frames,'previews/contact-sheet-global.jpg');
-  await writeJson(await outputPath(projectRoot,'previews/manifest.json'),{frames,sceneHashes:hashes,masterHash:master,global:'previews/contact-sheet-global.jpg'} satisfies PreviewManifest);
+  const global='previews/contact-sheet-global.jpg';
+  sheetHashes[global]=hash(await fs.readFile(await contactSheet(projectRoot,frames,global)));
+  await writeJson(await outputPath(projectRoot,'previews/manifest.json'),{frames,sceneHashes:hashes,masterHash:master,global,sheetHashes} satisfies PreviewManifest);
 }
 function tokens(text:string):Set<string> {return new Set(text.toLocaleLowerCase().match(/[\p{L}]{3,}/gu)??[]);}
 function issue(shot:Shot,type:string,severity:ReviewIssue['severity'],description:string,repair:string):ReviewIssue {return {shotId:shot.id,type,severity,description,repair};}
@@ -117,7 +120,20 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
     const current=await sceneHashes(projectRoot,storyboard);
     if(JSON.stringify(current)!==JSON.stringify(manifest.sceneHashes)||manifest.masterHash!==await masterHash(projectRoot)) throw new Error('Preview scenes/master are stale; recreate previews before visual review');
     if(manifest.frames.length!==storyboard.shots.length*5) throw new Error('Visual review requires five snapshots per shot');
-    for(const frame of manifest.frames) if(hash(await fs.readFile(await safeRealPath(projectRoot,frame.path)))!==frame.hash) throw new Error(`Preview frame changed: ${frame.path}`);
+    const shots=new Map(storyboard.shots.map(shot=>[shot.id,shot])),seen=new Set<string>();
+    for(const frame of manifest.frames) {
+      const shot=shots.get(frame.shotId),key=`${frame.shotId}:${frame.fraction}`;
+      if(!shot||!fractions.some(fraction=>fraction===frame.fraction)||seen.has(key)) throw new Error('Invalid or duplicate snapshot coverage');
+      const duration=shot.endMs-shot.startMs;
+      if(frame.timeMs!==shot.startMs+Math.min(Math.round(duration*frame.fraction),duration-1)) throw new Error('Invalid snapshot timing');
+      seen.add(key);
+      if(hash(await fs.readFile(await safeRealPath(projectRoot,frame.path)))!==frame.hash) throw new Error(`Preview frame changed: ${frame.path}`);
+    }
+    // Vision reads sheets, so checking only their constituent PNGs cannot detect stale edits.
+    for(const relative of ['previews/contact-sheet-global.jpg',...storyboard.shots.map(shot=>`previews/${shot.id}/contact-sheet.jpg`)]) {
+      if(!manifest.sheetHashes?.[relative]) throw new Error('Preview contact sheet hashes are missing; recreate previews before visual review');
+      if(hash(await fs.readFile(await safeRealPath(projectRoot,relative)))!==manifest.sheetHashes[relative]) throw new Error(`Preview contact sheet changed: ${relative}`);
+    }
   }
   if(hasVision) {
     for(let start=0;start<storyboard.shots.length;start+=6) {

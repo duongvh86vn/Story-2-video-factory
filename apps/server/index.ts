@@ -77,7 +77,7 @@ export async function buildServer(options: ServerOptions = {}) {
     return action(root, await coordinator());
   });
 
-  await app.register(multipart, { limits: { fileSize: 128 * 1024 * 1024, files: 12, fields: 2, fieldSize: 200, parts: 14 }, throwFileSizeLimit: true });
+  await app.register(multipart, { preservePath: true, limits: { fileSize: 128 * 1024 * 1024, files: 12, fields: 2, fieldSize: 200, parts: 14 }, throwFileSizeLimit: true });
   app.addHook('onRequest', async (request, reply) => {
     const host = request.headers.host;
     let hostname = '';

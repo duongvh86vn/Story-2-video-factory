@@ -1,6 +1,6 @@
 # Bàn giao test cho model khác
 
-Chủ dự án yêu cầu model triển khai không thực hiện test. Không có test suite, render thử, browser smoke test, model/API smoke test hay xác nhận chất lượng video nào được chạy trong phiên triển khai. Build/typecheck chỉ kiểm tra khả năng biên dịch, không chứng minh pipeline chạy đúng trên media thực tế.
+Trong giai đoạn triển khai ban đầu, chủ dự án giao phần test cho model khác. Kết quả kiểm thử và vòng sửa lỗi tiếp theo đã được ghi tại `TEST-RESULTS.md`; đọc báo cáo đó trước khi tiếp tục checklist bên dưới. Repository hiện có suite hồi quy cục bộ qua `npm test`, cùng hai lệnh opt-in `npm run test:asr` và `npm run test:render`. Các mục checklist chưa có bằng chứng vẫn cần được kiểm thử riêng.
 
 ## Chuẩn bị
 
