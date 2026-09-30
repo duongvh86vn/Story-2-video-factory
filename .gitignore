@@ -19,6 +19,7 @@ projects/*/.factory.lock
 projects/*/project-state.json
 projects/*/scenes/assets/
 projects/*/scenes/vendor/
+projects/acceptance-60s/
 *.mp4
 *.wav
 *.mp3

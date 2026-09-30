@@ -31,7 +31,7 @@ export function renderRecipe(recipe: ShotRecipe, shot: Shot, style: VisualStyle,
   let content='', motion='';
   switch(recipe.id) {
     case 'historical-map': {
-      content=svg(`<path class="land" d="M80 120L270 70 360 140 520 90 740 125 910 65 1100 210 1040 410 850 560 610 510 440 590 230 460 100 310Z"/><path class="route" d="M220 360Q550 80 940 330" fill="none"/><circle class="traveler" cx="220" cy="360" r="18"/>${labels.slice(0,3).map((value,i)=>`<circle cx="${220+i*360}" cy="${i===1?190:350}" r="10"/><text x="${160+i*360}" y="${i===1?150:415}">${text(value)}</text>`).join('')}`);
+      content=svg(`<path class="land" d="M80 120L270 70 360 140 520 90 740 125 910 65 1100 210 1040 410 850 560 610 510 440 590 230 460 100 310Z"/><path class="route" d="M220 360Q550 80 940 330" fill="none"/><circle class="traveler" cx="220" cy="360" r="18"/>${labels.slice(0,3).map((value,i)=>`<circle cx="${220+i*360}" cy="${i===1?190:350}" r="10"/><text x="${160+i*360}" y="${i===1?150:415}">${text(value.slice(0,24))}</text>`).join('')}`);
       motion=`tl.from(${targets('.route')},{strokeDashoffset:1400,duration:${duration*.75}},0.1);tl.to(${targets('.traveler')},{x:720,y:-30,duration:${duration*.8},ease:"sine.inOut"},0.1);`;break;
     }
     case 'patent-reveal': {
