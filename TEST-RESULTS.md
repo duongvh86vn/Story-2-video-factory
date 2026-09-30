@@ -2,8 +2,10 @@
 
 Ngày kiểm thử: 2026-09-30  
 Repository: `https://github.com/duongvh86vn/Story-2-video-factory`  
-Commit mã được kiểm thử: `1ba032e` (`Keep map recipe labels inside canvas`)  
-Commit ngay trước đó: `42d704d` (`Fix HyperFrames registry CSP and static path guards`)
+Commit mã được kiểm thử trong vòng tiếp tục: `81bf7b8df9c94cbf1562519ba8ccdfd769c22b51` (`Fix artifact recovery and preview review integrity with regression coverage`)  
+Đợt kiểm thử đầu: `1ba032e` (`Keep map recipe labels inside canvas`), sau `42d704d` (`Fix HyperFrames registry CSP and static path guards`).
+
+Các mục từ “Môi trường” đến “Phạm vi chưa đạt hoặc chưa chạy” ghi lại đợt đầu. Phần “Vòng tiếp tục” cuối file cập nhật bằng chứng và giới hạn hiện tại.
 
 ## Môi trường
 
@@ -29,7 +31,7 @@ Commit ngay trước đó: `42d704d` (`Fix HyperFrames registry CSP and static p
 | `ffmpeg -v error -i .../final.mp4 -f null -` | 0 | Decode toàn file không báo lỗi |
 | `npm run cli -- doctor` | 0 | Node, FFmpeg, FFprobe, Python được nhận diện |
 | `npm run benchmark -- --count 20` | 0 | 20/20 mẫu offline hoàn tất |
-| faster-whisper với model giả và `--allow-downloads` tắt | 1 | Ghi diagnostics, không tạo output giả |
+| faster-whisper với model giả và `--allow-downloads` tắt | 4 | Ghi diagnostics, không tạo output giả; exit code đã được xác nhận lại ở vòng tiếp tục |
 | WhisperX forced alignment | 3 | Ghi diagnostics: thiếu module `whisperx` |
 
 ## Tracer 60 giây
@@ -129,3 +131,77 @@ Các mục sau chưa được tính là pass:
 - Ngắt tiến trình ở từng state, stale lock recovery, SQLite job recovery, artifact invalidation matrix, approval gates đầy đủ và API mutation/upload optimistic revision.
 
 Model tiếp theo nên bắt đầu từ nhóm WAV/WhisperX và provider/vision thật nếu có credentials, sau đó chạy failure-injection/QC và Docker isolation. Các kết quả `null` ở trên là chưa chạy, không phải pass.
+
+## Vòng tiếp tục — 2026-09-30
+
+Đã hoàn thành phần hồi quy cục bộ và sửa các lỗi tái hiện được. Không gộp HTTP fixture vào kết quả chất lượng của provider thật.
+
+### Lệnh và kết quả
+
+| Lệnh | Exit code | Kết quả |
+|---|---:|---|
+| `npm test` | 0 | 35/35 test pass; không skip/cancel |
+| `npm run test:typecheck` | 0 | Typecheck cả test và hai script acceptance |
+| `npm run build` | 0 | Backend, Studio và Vite build pass |
+| `npm run test:asr` | 0 | faster-whisper tiny thật, CPU/int8, cache cục bộ, download tắt |
+| `npm run test:render` | 0 | HyperFrames tracer 4 giây tới `DONE`, QC pass |
+| `git diff --check` | 0 | Không có lỗi whitespace |
+| `python scripts/asr.py ... --model acceptance-no-such-model` | 4 | Diagnostics ghi lỗi, không tạo narration output giả |
+| `docker info --format '{{.ServerVersion}}'` | 1 | Docker CLI có sẵn; Docker Engine chưa chạy, thiếu pipe `dockerDesktopLinuxEngine` |
+
+### Phạm vi suite 35 test
+
+| Nhóm | Số test | Bằng chứng |
+|---|---:|---|
+| Model HTTP/journal | 12 | 6 adapter gateway/OpenAI-compatible/DeepSeek/LiteLLM/Gemini/Ollama dùng HTTP server cục bộ; structured JSON, token usage và vision payload; 429, schema feedback, timeout, refusal, truncation, fallback, budget sau restart, cost, secret redaction, torn append, lock PID chết và concurrent reservation |
+| Pipeline/resume | 5 | Mất narration, approval characters/storyboard, khóa bible, stale/live/partial project lock, SQLite interrupted job, no-op stage resume, migration preview manifest cũ |
+| Scene/review | 5 | Runtime/remote/unscoped CSS/oversize source bị từ chối; identity không tồn tại và numeric claim ngoài source; contact sheet bị sửa, snapshot trùng; vision response sai batch hoặc failed không có issue |
+| Studio API | 6 | Optimistic revision, khóa shot, bất biến narration timing, upload nhiều file không commit khi validation lỗi, SVG script, source >2 MB, filename traversal/type mismatch, host/origin, busy mutation, junction escape và HTTP range |
+| FFmpeg/media/QC | 7 | Caption `none/burned/soft/both`; duration/stream/loudness; black/freeze/silence/full-scale clipping/true peak; whitelist đầy đủ, BGM ducking, SFX timestamp và normalization |
+
+Các ca traversal URL dùng HTTP request giữ nguyên raw path; `app.inject` có thể tự normalize encoded dot segment. Junction được tạo thật bằng `fs.symlink(..., 'junction')` trên Windows. Bộ test dùng thư mục tạm riêng và không sửa project của người dùng.
+
+Media suite dùng test pattern và tone để đo filter/mux/QC, không dùng tone làm bằng chứng nhận dạng giọng nói. Đã đo thành phần BGM 880 Hz trước mastering: RMS trong đoạn có voice thấp hơn đoạn không voice ít nhất 3 dB. SFX tại 2500 ms dùng delay 120000 sample ở 48 kHz; timestamp ngoài shot bị từ chối. Output normalization và QC pass ở cả bốn chế độ caption. Black/freeze/silence/clipping được chèn vào MP4 thật và bị QC phát hiện; intentional black/static cùng SRT-only silence được chấp nhận khi whitelist phủ đủ khoảng.
+
+### WAV-only thật
+
+Fixture: giọng tổng hợp **Microsoft David Desktop**, tiếng Anh; không tải model. Model **faster-whisper tiny**, CPU/int8.
+
+- Audio probe: `12288 ms`.
+- Ingest trả `mode=wav`, `audioPath=input/narration.wav`, 4 segment, 27 word timing hợp lệ và SRT sinh từ transcription.
+- Transcript: “the inventor built a new machine. The machine helped workers in the factory. Each part moved in a clear sequence. The story ends with a useful invention.”
+- Timing dùng `faster-whisper-attention`; đây không phải forced alignment CTC của WhisperX.
+- Chưa đo WER/precision trên bộ dữ liệu tiếng Việt hoặc giọng người thật.
+
+### Tracer sau sửa
+
+Fixture cuối: `temp/acceptance-render/tracer-1790779942030/` (gitignore, giữ evidence cục bộ).
+
+- `project-state.json`: `DONE`, không có `error`.
+- MP4: H.264, `1920×1080`, `30 fps`, `4.000 s`.
+- Audio: AAC, 48 kHz, stereo, `4.000 s`; SRT-only nên giữ silent bed và cảnh báo không có voice.
+- Một stream subtitle; caption mode `both`.
+- 5 snapshot riêng biệt tại `0/25/50/75/100%`, 2 contact sheet có hash trong manifest.
+- QC pass; draft/review/final và production artifacts được tạo bằng HyperFrames/FFmpeg thật.
+
+Video: `temp/acceptance-render/tracer-1790779942030/output/final.mp4`; báo cáo: `output/qc-report.json`, `output/production-report.md`; preview: `previews/manifest.json`, `previews/contact-sheet-global.jpg` trong cùng fixture.
+
+### Lỗi và sửa đổi
+
+1. Mất `work/narration.json` khi resume từ `TIMED` trước đây quay về `INGESTED` rồi đọc file đã mất. Reconcile hiện quay về trước bước ingest để tạo lại narration và timeline.
+2. Windows short path như `DUONGV~1` làm `path.relative` tạo tham chiếu asset ngoài namespace. Pipeline hiện canonicalize project root bằng `realpath` trước khi tạo đường dẫn tương đối.
+3. Review trước đây kiểm tra PNG nhưng không kiểm tra contact sheet thực sự gửi cho vision. Manifest hiện lưu và xác minh hash từng sheet.
+4. Review trước đây chỉ đếm tổng 5 ảnh/shot, có thể nhận snapshot trùng hoặc sai timestamp. Hiện kiểm tra ID, fraction riêng biệt và mốc thời gian theo narration.
+5. Preview manifest/PNG/JPG nay được theo dõi để invalidate draft khi mất hoặc bị sửa. Manifest cũ thiếu sheet hash được tạo lại khi resume; test xác nhận rewind về `SCENES_READY`.
+6. Multipart bật `preservePath` để filename validator có thể từ chối đường dẫn upload nguyên gốc, thay vì parser âm thầm cắt basename.
+
+### Phần còn cần kiểm thử riêng
+
+- WhisperX chưa cài; `torch`/`torchaudio` chưa có. SRT+WAV forced alignment, CTC precision và tiếng Việt chưa được xác nhận.
+- Không có `.env` chứa cấu hình provider thật. HTTP contract cục bộ đã pass nhưng latency, compatibility với dịch vụ triển khai, semantic quality, billing và real vision chưa được đo.
+- Vision fixtures chỉ kiểm tra schema/batch/failure guard; chưa có detection ratio cho sai người/trang phục/crop/mâu thuẫn hình ảnh.
+- Docker isolation chưa chạy vì Engine chưa hoạt động.
+- Chưa chạy benchmark 20 generated scene với provider thật, `--full`/`--render`, hoặc SIGKILL tại từng stage. SQLite/project lock recovery đã kiểm tra bằng persisted interrupted/stale state.
+- API đã kiểm tra limit source 2 MB, junction và format attack; chưa stream thử file 128 MB/combined 256 MB và chưa kiểm tra toàn bộ upload limit matrix.
+
+Các giới hạn trên không được tính là pass. `TEST-HANDOFF.md` giữ checklist để model test tiếp tục khi có môi trường và cấu hình tương ứng.
