@@ -9,11 +9,11 @@ render_strategy: reusable-svg-rig
 
 # Robot mini dẫn chuyện
 
-Hồ sơ nhân vật mục tiêu của đặc tả V2. Hệ thống phải đọc MD này, dựng và lưu một rig vector có thể điều khiển, rồi tái sử dụng rig đó cho mọi shot. File này mô tả thiết kế; chưa phải asset hay tính năng runtime đã triển khai.
+Hồ sơ chuẩn V2.1: compiler đọc MD thành profile/rig SVG có khớp và pose, dùng cùng rig xuyên video. Code compiler/controller đã bổ sung; chất lượng hoạt hình chờ nghiệm thu runtime.
 
 ## Vai trò
 
-Một robot nhỏ đứng cạnh hình minh họa để kể và giải thích nội dung trong WAV/SRT. Robot là người dẫn chương trình của video, không phải nhà phát minh hoặc nhân vật lịch sử trong câu chuyện. Robot có thể quan sát, đặt câu hỏi bằng biểu cảm, chỉ vào chi tiết, vận hành mô hình minh họa và tổng kết.
+Một robot nhỏ đứng cạnh hình minh họa để kể và giải thích nội dung trong script/WAV/SRT. Robot là người dẫn chương trình của video, không phải nhà phát minh hoặc nhân vật lịch sử trong câu chuyện. Robot có thể quan sát, đặt câu hỏi bằng biểu cảm, chỉ vào chi tiết, vận hành mô hình minh họa và tổng kết.
 
 Ngôn ngữ cơ thể thân thiện, rõ ý, giống một trợ giảng. Sự hài hước chỉ nằm ở biểu cảm và chuyển động; không tự thêm lời thoại hoặc sự kiện ngoài narration.
 
@@ -85,7 +85,7 @@ Không dùng một vòng vẫy tay/talking-mouth lặp suốt video để thay c
 
 ## Đồng bộ giọng và cử chỉ
 
-WAV người dùng cung cấp là giọng kể của robot; không tự sửa hoặc thay giọng đó. Với SRT-only, giọng do TTS được cấu hình tạo ra phải dùng đúng cue text và clock theo đặc tả gốc.
+Script thuần dùng TTS nguyên văn, clock theo audio đo thực tế. WAV người dùng cung cấp là giọng kể của robot; không tự sửa hoặc thay giọng đó. Với SRT-only, giọng do TTS được cấu hình tạo ra phải dùng đúng cue text và clock theo đặc tả gốc.
 
 Miệng mở theo speech activity đã đo từ audio, đóng trong khoảng nghỉ; mức độ chính xác được ghi rõ. Chỉ có segment timing thì dùng animation nói ở mức đoạn, không tuyên bố phoneme lip-sync. Chỉ vào một part khi narration đang nói về part đó; thả tay/đổi mục tiêu khi chuyển ý.
 
@@ -106,3 +106,8 @@ Trong video phát triển ô tô, robot đi dọc timeline của các mốc có 
 ## Điều kiện duyệt nhân vật
 
 Preview sheet phải có chính diện, hướng trái/phải, idle, explain, point, operate-model, compare và summarize. Người dùng có thể sửa hồ sơ rồi duyệt một lần. Hash hồ sơ/rig phải được lưu; shot dùng cùng một profile version và rig hash. Nếu rig sai tỷ lệ, thiếu khớp hoặc không thể chỉ đúng target, không được coi là nhân vật đã dựng xong.
+
+
+## Mẫu chuẩn và tùy chỉnh V2.1
+
+Chọn mẫu chuẩn này cho phép pipeline tự chạy tiếp. MD riêng tại input/host.md phải duyệt preview một lần theo rig hash; sửa appearance/hash cần duyệt lại. Khung rig được hỗ trợ là vector 2D, màu/tỷ lệ/nét theo schema; hướng trái/phải là hướng trình bày sơ đồ, không phải asset 3D. Không coi build qua là đã nghiệm thu thiết kế/diễn xuất.

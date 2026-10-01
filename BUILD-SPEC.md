@@ -1,331 +1,165 @@
-# STORY-TO-VIDEO FACTORY — NHÂN VẬT DẪN CHUYỆN GIẢI THÍCH
+# STORY-TO-VIDEO FACTORY — BA LUỒNG, MỘT VIDEO GIẢI THÍCH
 
-**Đặc tả sản phẩm V2 — 2026-10-01**
+Đặc tả V2.1 · 2026-10-01. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống.
 
-**Mục tiêu:** nhận câu chuyện giải thích/mô tả/kể lại sự vật, sự việc dưới dạng WAV hoặc SRT; dựng một robot mini hoặc người que từ hồ sơ Markdown; để nhân vật đó kể và minh họa câu chuyện bằng hoạt hình.
+## 1. Trải nghiệm và phạm vi
 
-Ví dụ đầu vào: “Hệ thống hơi nước ra đời như thế nào?”, “Quá trình phát triển ô tô như thế nào?”, “Một cơ cấu hoạt động ra sao?”, “Một quy trình diễn ra như thế nào?”.
+**Nhập nội dung → chọn người que hoặc robot mini → Tạo video.** Kịch bản là lời kể hoàn chỉnh. Hệ thống đọc nguyên văn, không tự viết lại, thêm lời thoại, câu chào hoặc lời kết.
 
-Tài liệu này thay định hướng V1. Nội dung là yêu cầu cho lần sửa hệ thống tiếp theo, không phải tuyên bố code hiện tại đã hỗ trợ V2. Xem `IMPLEMENTATION-STATUS.md` để biết khoảng cách triển khai. Bản V1 được giữ ở `docs/archive/STORY-TO-VIDEO-FACTORY.v1.md` trong repository để tra cứu kỹ thuật cũ.
+Sản phẩm là video giải thích/mô tả/kể lại sự vật và sự việc, ví dụ hệ thống hơi nước và quá trình phát triển ô tô. Một host cố định đứng cạnh hình minh họa, nhìn/chỉ/thao tác đúng đối tượng đang được giải thích. Host là người trình bày, tách khỏi nhà phát minh, nhân vật lịch sử và các đối tượng trong narration.
 
-## 1. Trải nghiệm cần tạo ra
+Code V2.1 đã bổ sung các module và contract dưới đây. Build/typecheck được kiểm tra; **nghiệm thu runtime, TTS, ASR, render và chất lượng giải thích chưa được chạy trong lượt triển khai này**, theo yêu cầu giao test cho model khác. Xem IMPLEMENTATION-STATUS.md và TEST-HANDOFF.md. TEST-RESULTS.md trước đây chỉ chứng minh V1. Bản V1 được lưu tại docs/archive/STORY-TO-VIDEO-FACTORY.v1.md.
 
-Người dùng đưa narration WAV/SRT và chọn host. Hệ thống dựng hoạt hình giải thích có nhân vật dẫn chuyện cố định, sơ đồ/mô hình/timeline phù hợp nội dung và giọng kể bám đúng đầu vào.
+## 2. Ba luồng đầu vào
 
-```text
-WAV / SRT của người dùng
-          +
-MD mô tả robot mini / người que
-          ↓
-Hiểu điều đang được giải thích và giữ narration clock
-          ↓
-Dựng một host có rig cố định
-          ↓
-Chia lời kể thành chapter → beat → cảnh giải thích
-          ↓
-Host chỉ dẫn / thao tác + minh họa cơ chế / quy trình / tiến trình
-          ↓
-Draft → review nội dung, host, tương tác, đồng bộ → sửa
-          ↓
-MP4 có host kể chuyện, audio, subtitle và QC
-```
-
-Một cảnh đúng: robot đứng cạnh mô hình, hướng mắt và tay vào chi tiết đang được nhắc tới; chi tiết đó chuyển động hoặc được làm rõ đúng lúc lời kể giải thích nó.
-
-Một cảnh chưa đạt: hình chân dung đứng yên kèm một đoạn chữ; ảnh lịch sử trôi trên màn hình; một host nhỏ như logo không tham gia giải thích; chuyển cảnh và hiệu ứng đẹp nhưng không diễn tả nội dung narration.
-
-## 2. Đầu vào và quyền quyết định nội dung
-
-### 2.1 Đầu vào tối thiểu
-
-| Đầu vào | Bắt buộc | Ý nghĩa |
+| Chế độ | Nguồn chính | Giọng và clock |
 |---|---|---|
-| `input/narration.wav` hoặc `input/narration.srt` | Có, ít nhất một | Lời kể và clock chính |
-| Host profile MD | Có, hệ thống cung cấp sẵn mặc định | Thiết kế và hành vi của nhân vật dẫn chuyện |
-| `input/source.md` | Không | Chủ đề, mục tiêu, kiến thức bổ trợ, yêu cầu riêng |
-| Assets người dùng | Không | Ảnh tư liệu, logo, hình sản phẩm, diagram, BGM/SFX có nguồn |
+| script | input/script.txt hoặc input/script.md UTF-8 | TTS nguyên văn; clock từ audio thực tế đã đo |
+| wav | input/narration.wav | Giữ audio; ASR tạo transcript/timestamp |
+| srt | input/narration.srt | Giữ cue text/clock; TTS từng cue và fit |
 
-Không bắt người dùng viết thêm một câu chuyện hư cấu hoặc một character bible phức tạp. Nếu chưa có `source.md`, hệ thống tạo canonical story từ transcript/cue text và lưu bản phân tích để review. Không có MD nội dung bổ trợ vẫn phải chuẩn bị được video từ narration.
+WAV + SRT thuộc luồng WAV: giữ WAV, giữ cue ID/text/clock SRT, kiểm tra/forced-align trước sản xuất. Không đổi tốc độ WAV để che mismatch. Thiếu backend alignment hoặc mismatch phải báo rõ và chặn final.
 
-Hai hồ sơ host cung cấp sẵn:
+input.mode quyết định nguồn chính khi nhiều file cùng tồn tại. Chế độ srt bỏ qua WAV; script bỏ qua WAV/SRT; wav dùng SRT đi kèm nếu có. auto nhận diện project cũ theo WAV/SRT, hoặc script khi chỉ có script. auto gặp script cùng WAV/SRT phải yêu cầu chọn mode; không âm thầm đổi nguồn.
 
-- [Robot mini](library/characters/MINI-ROBOT.md): lựa chọn mặc định.
-- [Người que](library/characters/STICK-MAN.md): lựa chọn thay thế.
+source.md là tài liệu bổ trợ tùy chọn, không phải kịch bản. Host MD mô tả nhân vật. Hai loại MD không cung cấp quyền thực thi shell, tool, hướng dẫn hệ thống hoặc thay nội dung lời kể. Không có source.md vẫn phải chuẩn bị được video.
 
-Người dùng có thể dùng profile MD riêng hoặc sửa profile sẵn. Một video dùng một host chính. Đổi host là lựa chọn ở project/series, không do model tự quyết ở từng shot.
+## 3. Luồng script không có clock
 
-### 2.2 Ưu tiên nguồn
+1. Nhập trực tiếp hoặc tải .txt/.md UTF-8, tối đa 128 KiB, không NUL. Giữ bản gốc và hash/source path.
+2. Markdown chỉ bỏ định dạng thông thường: heading/list/quote prefix, dấu nhấn/code, link markup; YAML frontmatter không đọc. Nội dung văn bản còn lại được đọc như lời kể, kể cả câu mang hình thức mệnh lệnh. Không hiểu script thành outline hoặc tự viết bài.
+3. Lưu work/script.json: original, text, paragraphs, chunks và sourceStartLine/sourceEndLine. Studio có nút xem lời kể chuẩn trước khi tạo video.
+4. Chia ở dấu câu/khoảng trắng, tối đa mặc định 120 Unicode characters/chunk; không cắt giữa từ, giữ toàn bộ từ và thứ tự. Một từ vượt giới hạn báo lỗi.
+5. TTS từng chunk ở tốc độ mặc định; đo WAV thực tế sau chuẩn hóa sample rate. Mỗi chunk đồng thời là một cue phụ đề.
+6. Ghép audio tuần tự, thêm 250 ms giữa các đoạn văn. Timeline/cue được tính từ thời lượng đã đo, không ước lượng clock rồi ép TTS vào đó.
+7. Lưu narration.json (mode=script), timeline.json, voiced-narration.json, voice-report.json, speech-activity.json và script-timing.json.
 
-1. WAV người dùng cung cấp quyết định giọng/audio thật; SRT đi cùng quyết định nguyên văn cue và cue timing sau khi được kiểm tra khớp audio.
-2. SRT-only quyết định cue text và cue clock. WAV-only được ASR thành transcript và timeline, không tự viết lại lời kể.
-3. `source.md`/tư liệu bổ trợ chỉ giúp diễn giải và thiết kế hình, không tự thay lời kể hoặc kéo dài video.
-4. Host MD quyết định nhận dạng/rig/hành vi; không cung cấp dữ kiện về lịch sử hay cơ chế ngoài narration.
+Thiếu TTS hoặc tạo giọng thất bại: báo needs-voice/provider-failed; dừng trước checkpoint TIMED, không tạo timeline chính thức cho nội dung mới, không final/DONE. Artifact của lần chạy cũ không chứng minh lần chạy mới thành công.
 
-Nếu WAV/SRT/source mâu thuẫn đáng kể, ghi issue và yêu cầu sửa/chọn nguồn trước khi final; không âm thầm chọn một câu chuyện khác. Chỉ bôi sáng/chuyển động những quan hệ có trong nguồn, hoặc sơ đồ hóa chúng với provenance `visualization`.
+## 4. WAV, SRT và giọng kể
 
-Giữ riêng `fact`, `interpretation`, `visualization`. Không tự thêm người phát minh, ngày tháng, hãng xe, thông số máy hoặc quan hệ nhân quả chưa có nguồn. Host là hư cấu phục vụ trình bày và không được gắn vai trò lịch sử của người được nhắc tới.
+WAV giữ bản input và hash, ASR theo backend được cấu hình. Master theo thời lượng probe, kể cả silence đầu/cuối. Transcript không được planner tự viết lại. WAV+SRT giữ nguyên clock và nguyên văn; word timing chỉ bổ sung, không thay cue clock.
 
-## 3. Giọng kể và clock
+SRT-only đọc đúng từng cue. TTS audio được đặt đúng vị trí, khoảng trống thành silence. Fit dùng atempo giữ cao độ, mặc định 0.85–1.20; câu ngắn được padding, không bắt buộc kéo giọng chậm. Voice report lưu fittedDurationMs để QC phân biệt phần silence padding theo clock với mất lời kể. Câu dài không vừa giới hạn, hoặc audio sau fit vẫn vượt cue, phải báo fit-failed. Không trim phần lời, viết lại hay đổi timestamp để vừa.
 
-### WAV-only
+SRT chưa có giọng được dựng **nháp im lặng có nhãn**, gồm voice-report và activity method=segment-draft. Cả thiếu giọng, provider lỗi và fit lỗi đều chặn final/DONE. Chuyển sang WAV là lựa chọn input.mode rõ ràng, không tự fallback.
 
-- Probe audio, ASR bằng backend được cấu hình; giữ nguyên file giọng của người dùng.
-- Lưu segment, word timing có evidence và mức confidence thực tế.
-- Thời lượng master theo audio probe, gồm leading silence, khoảng nghỉ và tail.
-- Không đổi giọng, dựng thêm lời thoại hoặc tự rút ngắn nội dung để khớp recipe.
+Giọng cấu hình một lần trong config/voice.yaml, project có thể override. Adapter Windows Speech kiểm tra voice cài đặt và culture; HTTP/command nhận language, voice và nguyên văn qua contract. Adapter bên ngoài phải hỗ trợ language được yêu cầu; cần nghe/nghiệm thu tiếng Việt với nhà cung cấp thật. Không đổi sang giọng Anh để thay giọng Việt thiếu.
 
-### WAV + SRT
+HTTP adapter: POST base_url, JSON {text, language, voice, format:"wav"}, trả WAV bytes, Content-Type audio/wav hoặc application/octet-stream. Token lấy từ api_key_env. Đây là adapter protocol chung, không phải client trực tiếp cho mọi API TTS trên thị trường.
 
-- Giữ cue ID, text, start/end của SRT; đối chiếu/align với WAV.
-- Word timing chỉ là lớp bổ sung, không thay clock gốc.
-- Mismatch vượt tolerance phải được báo rõ; không dịch timestamp hoặc đổi tốc độ WAV người dùng để che lỗi.
+Command adapter: executable + command_args có {request}, tùy chọn {output}; request JSON UTF-8 chứa text/language/voiceId/output. Chạy shell=false, có timeout. Không đưa nội dung script thành shell command.
 
-### SRT-only
+Speech activity đo RMS audio 20 ms; mouth mở theo activity/level và đóng lúc nghỉ. Đây là đồng bộ audio activity, **không phải phoneme lip-sync**. Silent draft chỉ có đồng bộ mức segment, report phải ghi đúng.
 
-- Final có nhân vật **kể bằng giọng nói**: cần một TTS provider/voice được cấu hình, hoặc WAV tương ứng do người dùng bổ sung.
-- TTS dùng đúng nguyên văn từng cue, không đổi ý, bỏ từ hay thêm câu chào/kết ngoài SRT.
-- Dựng audio theo cue clock; khoảng trống giữ thành khoảng nghỉ. Fit tốc độ trong giới hạn cấu hình và giữ pitch; nếu cue quá ngắn, báo không fit được thay vì sửa timestamp.
-- Khi thiếu TTS/WAV, vẫn cho lập storyboard/render nháp im lặng để review hình. Gắn rõ `silent-draft`/`needs-voice`; không coi đó là sản phẩm cuối đạt yêu cầu kể chuyện.
-- TTS là module tùy cấu hình, không giả định người dùng đã có một dịch vụ hoặc voice ID cụ thể.
+## 5. Host MD → rig tái sử dụng
 
-Nhân vật dùng giọng của narration. Cử động miệng theo speech activity đo từ audio và cử chỉ theo ý nghĩa đoạn kể. V2 đầu có thể đồng bộ ở mức segment/word; phải ghi đúng mức đồng bộ, không tuyên bố phoneme lip-sync nếu chưa có dữ liệu đó. Miệng đóng trong khoảng nghỉ, kể cả khi nhân vật vẫn giữ pose chỉ dẫn.
+Hai mẫu sẵn: library/characters/MINI-ROBOT.md và STICK-MAN.md. Chọn mẫu chuẩn cho phép chạy tự động; custom input/host.md phải xem và duyệt preview một lần theo rig hash trước sản xuất. Đổi profile/appearance/compiler làm hash đổi và cần duyệt lại custom host.
 
-## 4. Dựng host từ file MD
+Compiler xuất HostProfile JSON, SVG rig, part IDs/joint pivots, pose library, host-preview-sheet.png. Màu, headScale/bodyScale (0.75–1.25), strokeWidth (2–10) có schema. MD tùy chỉnh vẫn nằm trong hai rig vector được hỗ trợ; không hứa tạo mọi hình dạng 3D hoặc render mọi mô tả tùy ý.
 
-Host cần được dựng thành nhân vật hoạt hình có thể điều khiển. Một MD ghi “robot dễ thương” hoặc một ảnh chân dung cố định chưa đủ để coi là đã dựng host.
+Pose/action: idle, greet, explain, point, operate-model, compare, think, react, summarize, walk-to-marker. Preview gồm chính diện, hướng trái/phải dạng sơ đồ 2D và các pose. Rig/profile version/hash cố định xuyên video; không sinh nhân vật mới mỗi shot. Profile không được biến host thành nhà phát minh.
 
-```text
-profile.md
-    ↓
-HostProfile JSON có schema
-    ↓
-SVG rig / part IDs / joint pivots / pose library
-    ↓
-Host preview sheet → duyệt một lần
-    ↓
-Host asset/rig đã khóa và có hash
-    ↓
-Mọi scene tái sử dụng cùng rig
-```
+Controller dùng khớp tay có chiều dài cố định, IK tính ở compile time, gaze hướng target, pointer từ tay đến đúng part anchor. operate-model phải tiếp cận, contact thực tế, rồi model event mới phản ứng. Không stretch tay để che target ngoài tầm. Đích thiếu, action chồng nhau, contact sai hoặc event không được component hỗ trợ phải bị từ chối.
 
-V2 ưu tiên vector 2D/SVG để robot/người que giữ nhận dạng và diễn xuất rõ. Model hỗ trợ đọc MD thành dữ liệu, nhưng renderer/controller dựng và seek animation theo clock. Không sinh lại hình nhân vật ở mỗi shot.
+Host cao khoảng 25–40% khung hình (compiler mặc định 36%), hiện ít nhất 70% thời gian narration, vắng liên tục tối đa 6 giây. absent không được chỉ/thao tác như một host vô hình. Presentation hiện hỗ trợ beside-model/absent; inset chưa được renderer hỗ trợ và bị validator từ chối.
 
-Host profile phải mô tả:
+## 6. Phân tích và explanation plan
 
-- ID, version, loại host, vai trò dẫn chuyện.
-- Hình đầu/thân/mặt, tỷ lệ, màu, đường nét và điểm nhận dạng bất biến.
-- Bộ phận rig, vị trí khớp, action/pose ID và biến đổi được phép.
-- Biểu cảm, miệng, hướng nhìn, pointer/prop và quy tắc tương tác.
-- Cách dùng giọng, đồng bộ, bố cục và điều kiện duyệt.
-
-Host compiler phải xuất ít nhất:
+Pipeline chung:
 
 ```text
-work/host-profile.json
-work/host-rig.json
-assets/host/<profile-id>/<version>/host.svg
-assets/host/<profile-id>/<version>/poses.json
-previews/host-preview-sheet.png
+input document → narration có clock → analysis → explanation plan
+  → storyboard → assets → scenes → draft → review/repair → final → QC → DONE
 ```
 
-Hồ sơ/rig đã duyệt được khóa. Cache theo profile hash, compiler version và style phù hợp; đổi host/profile thì invalidate các cảnh liên quan. Không đánh đồng host với nhân vật/sự vật được narration nói đến. Canonical model tách `host` khỏi `subjectActors`/`illustratedEntities`.
+Mỗi beat: explanationGoal, narrationSegmentIds, sourceRefs, entities, evidenced relations, visualMethod, hostIntent. Clock của chapter/beat/shot do code tính từ narration. Model chỉ cung cấp cấu trúc/ý đồ, không sở hữu phép tính timestamp hoặc identity.
 
-## 5. Ngôn ngữ hình ảnh của video giải thích
+Nguồn quyết định là narration của mode đã chọn. source.md chỉ bổ trợ. Entity label phải có trong source excerpt; relation phải có endpoint/evidence. Không tự thêm ngày, hãng xe, thông số hoặc quan hệ nhân quả. Nguồn mâu thuẫn high phải chặn final; planner thật có contract báo contentIssues và vision review kiểm tra lại. Planner mock chỉ xử lý quy tắc nguồn/keyword, không phải kiểm chứng kiến thức hoặc phát hiện mọi mâu thuẫn ngữ nghĩa.
 
-Mỗi beat phải trả lời: **người xem cần hiểu điều gì, và hình/chuyển động nào làm điều đó rõ hơn?**
+Minh họa có provenance=visualization, fidelity=conceptual. Bộ từ vựng hiện gồm boiler, condenser, cylinder, piston, wheel, gear, lever, car, engine, battery, pipe, flow, object, stage, marker. Cơ cấu được sơ đồ hóa, không giả làm bản vẽ/tư liệu lịch sử. Narrative có chi tiết ngoài vocabulary phải được diễn giải trong phạm vi này hoặc báo cần sửa, không tự tạo asset sai.
 
-| Loại nội dung | Hình chính | Vai trò host |
+## 7. Tám recipe giải thích
+
+| Ý đồ | Recipe | Minh họa |
 |---|---|---|
-| Cơ chế hoạt động | Part diagram, cutaway, lực/dòng/chuyển động theo nguồn | Chỉ đúng part, thao tác với mô hình, hướng mắt theo diễn biến |
-| Một quy trình | Các bước, vật liệu/trạng thái đi qua từng bước | Chỉ bước hiện tại, chuyển sang bước kế khi narration chuyển |
-| Quá trình ra đời/phát triển | Timeline có mốc và hình/đối tượng được nguồn nhắc tới | Đi/chỉ tới mốc, giải thích thay đổi giữa các giai đoạn |
-| So sánh/cải tiến | Hai trạng thái hoặc hai phương án cùng tiêu chí | Chỉ từng phía, làm rõ điểm khác biệt |
-| Mô tả cấu tạo | Sơ đồ phân lớp, tách các part có tên | Chỉ/tách part, giữ nhãn gọn |
-| Kể lại sự kiện | Không gian, đối tượng và chuỗi diễn biến từ narration | Dẫn người xem qua các bước; host vẫn là người kể ngoài sự kiện |
+| Mở câu hỏi | host-introduce-question | Host và vấn đề từ narration |
+| Cơ chế | host-mechanism-explainer | Part, luồng, contact/motion có nguồn |
+| Quy trình | host-process-steps | Các bước và nhấn theo lời kể |
+| Tiến trình | host-evolution-timeline | Mốc/đối tượng thay đổi có nguồn |
+| So sánh | host-before-after | Hai target được chỉ lần lượt |
+| Tách bộ phận | host-part-breakdown | Part diagram và reveal |
+| Chuỗi sự kiện | host-event-sequence | Rail, bước/sự kiện theo narration |
+| Tổng kết | host-summary | Host nhấn các ý đã có |
 
-Ưu tiên nền đơn giản, đối tượng vector, nhãn ngắn và motion có mục đích. Tư liệu thật được dùng khi giúp xác định đúng đối tượng/mốc; không trở thành chuỗi ảnh thay cho cảnh giải thích.
+Recipe dùng cùng rig/model/interaction contract. Quan hệ và nhãn không được đổi thành claim mới khi chỉnh storyboard. Host action chọn theo cue/word anchors; diagram reaction sau contact. Các mũi tên nhân quả cần evidence; chỉ cùng xuất hiện không đủ chứng minh nguyên nhân.
 
-Không lấy nguyên `visualDescription`, prompt hoặc đoạn narration dài làm chữ trên màn hình. Text on screen chỉ là tên bộ phận, mốc, nhãn, con số có nguồn hoặc ý ngắn; phụ đề đảm nhiệm lời kể đầy đủ.
+Không thay host bằng portrait, slideshow hoặc một tấm chữ dài. Fallback giảm motion/model complexity nhưng giữ host, source parts, relations và interaction. Lỗi semantic không được biến thành pass bằng fallback trang trí.
 
-Không giả lập hình ảnh “chính xác kỹ thuật” nếu chỉ là mô hình khái niệm. Giữ sơ đồ đơn giản nhưng quan hệ nối/lực/hướng/trình tự phải đúng với narration và evidence có sẵn.
+## 8. Studio, API và CLI
 
-## 6. Host phải tham gia vào câu chuyện
+Studio: ba tab Kịch bản/WAV/SRT → host → giọng → Tạo video. Có preview lời kể, host preview, trạng thái giọng/chờ duyệt, storyboard ba cột lời kể/mục tiêu giải thích/hành động. Storyboard approval/chỉnh/khóa/rebuild shot vẫn có sẵn nhưng không bắt buộc khi automatic=true.
 
-- Mặc định host hiện trong mỗi cảnh, ở cạnh vùng minh họa hoặc ô host khi zoom detail.
-- Có thể tạm vắng mặt ở close-up cơ chế, tối đa 6 giây liên tiếp theo storyboard mặc định. Host hiện ở mở đầu, các phần giới thiệu chapter và tổng kết.
-- Mục tiêu mặc định: nhìn thấy host ít nhất 70% thời gian có speech. Tỷ lệ này đo trên host timeline, không tính một logo/ảnh host bất động làm hành động dẫn chuyện.
-- Mỗi beat giải thích có ít nhất một hành động có ý nghĩa: point, explain, operate-model, compare, walk-to-marker hoặc summarize. Idle, chớp mắt và mouth loop không tính là hành động đó.
-- Narration nhắc part/mốc/bước nào thì host nhìn/chỉ đúng target đó trong cửa sổ thời gian tương ứng.
-- Thao tác phải có tiếp xúc trước khi mô hình phản ứng; không diễn hoạt ngẫu nhiên để làm cảnh có vẻ sống động.
-- Giữ một host ID/profile version/rig hash trong cả tập và trong series được chọn.
+API có PATCH project settings (input.mode/script, host, language, voice, automatic), PUT script editor, multipart script/host upload, POST script preview, voice-default settings, approve host và run tới DONE. Settings/artifact edits có revision check. Generated story/narration chỉ đọc; chỉnh script hoặc input SRT/WAV để đổi lời kể. Host scene source được sinh từ kế hoạch đã validate; chỉnh storyboard rồi rebuild thay vì sửa SVG/JS làm mất identity/target guarantees.
 
-Người dùng có thể thay mục tiêu hiện diện khi duyệt storyboard. Planner không tự hạ mức này để xử lý thiếu asset hoặc recipe.
+CLI new/configure/script/make/resume/approve/status/lock/edit dùng cùng contract với Studio. `new --example` lấy bài hơi nước thuần script, không đưa người dùng về truyện hư cấu V1. Các project V1 có thể opt-in content.mode=legacy để dùng pipeline cũ; không được coi nghiệm thu legacy là nghiệm thu host explainer.
 
-## 7. Bố cục và diễn xuất
+## 9. Cache, resume, lock và chặn lỗi
 
-Vùng bố cục điển hình: host 25–40% chiều cao khung hình ở một bên; mô hình/sơ đồ ở vùng còn lại; phụ đề ở phía dưới. Layout đổi theo nội dung và camera, không giữ một chân dung lớn che cả mô hình.
+Cache raw TTS theo text/provider/voice/language/endpoint/command/settings và audio hash. Script sửa hoặc đổi giọng làm lại narration/phần phụ thuộc; cue raw còn hợp lệ được tái sử dụng. Đổi host chỉ làm lại phần hình, giữ audio/timeline hợp lệ. Thay source bổ trợ cũng giữ narration, làm lại analysis/explanation.
 
-Yêu cầu:
+Fingerprint chỉ xét input đang chọn (WAV có companion SRT). Resume kiểm tra artifact hashes và producer checkpoints. Mất/đổi script JSON, audio, rig, scene hay preview phải rewind đúng checkpoint. Lock đã duyệt được giữ; lock mâu thuẫn clock/host mới phải báo sửa/unlock, không tự bỏ lock.
 
-- Chừa vùng caption phía dưới và margin an toàn; chữ/nhãn/host không che nhau.
-- Host nhìn rõ mặt và hướng tay ở kích thước xem thông thường.
-- Khi pointer target di chuyển hoặc camera zoom, đầu pointer vẫn bám anchor của target, không dùng tọa độ cứng khiến chỉ sai sau layout đổi.
-- Cảnh cơ chế phải nhìn thấy part đang chuyển động; nhãn khớp với part.
-- Chuyển cảnh giữ host identity, hướng không gian và nội dung; không tự thay pose/style/nhân vật.
-- Motion diễn tả sự kiện trong narration. Nhịp và độ dài cảnh theo ý nghĩa, không ép đổi recipe ở mỗi đoạn vì mục tiêu đa dạng mỹ thuật.
+CSP/scene allowlist, local asset hashes, project path/symlink guards, shell=false, secret redaction, timeout, model-call/cost budgets, bounded retries/repair, attempt journals/SQLite vẫn được giữ. JSON Schema mô tả shape; runtime validators còn kiểm tra source, full coverage, target, contact, locks và hashes.
 
-## 8. Phân tích narration và intermediate representation
+Final yêu cầu ready voice, canonical narration/hash không đổi, draft review pass, host approval hợp lệ và scene/artifact hợp lệ. QC fail không DONE. Studio không hiển thị final của phiên bản cũ như final của input vừa sửa.
 
-Phân tích phải tạo:
+## 10. Bố cục, render, review và QC
 
-1. Canonical transcript/story và nguồn của từng nội dung.
-2. Các chapter theo phần giải thích; beat theo câu hỏi, cơ chế, bước, mốc, so sánh hoặc kết luận.
-3. Các đối tượng/part và quan hệ cần minh họa; không tạo nhân vật lịch sử chỉ vì cần “main character”.
-4. Host action plan theo từng beat và cue/word anchor.
-5. Storyboard có visualization plan, host plan và nguồn nội dung riêng.
+HyperFrames 0.8.96, SVG/GSAP deterministic paused timelines, FFmpeg cho audio/mux/captions/QC. Default final 1920×1080/30fps, draft 960×540/15fps, tối đa 300 giây/100 shot, budgets cấu hình.
 
-Beat phải có `explanationGoal`, `narrationSegmentIds`, `sourceRefs`, `entities`, `relations`, `visualMethod` và `hostIntent`. Timeline math do ứng dụng tính/validate; model không tự bịa timestamp.
+Chừa vùng caption cuối khung: bottom 4%, tối đa 14% chiều cao. Nhãn model phải nằm trong safe layout; cue đầy đủ không vừa phải báo lỗi, không clip mất chữ. Camera hỗ trợ wide/medium/close, eye-level, locked/static/push-in/pull-out/pan-left/pan-right với movement nhỏ giữ clearance; giá trị ngoài khả năng renderer bị từ chối.
 
-Shot schema mục tiêu bổ sung các nhóm sau vào schema V1:
+Review: 5 snapshot/shot tại 0/25/50/75/100%, thêm trước/trong/sau action reach/contact, action sheets, scene/master/frame/sheet hashes. Rule review kiểm tra IDs/source/timing/geometry/contact/artifact integrity. Vision được cấu hình sẽ so identity, biểu cảm, crop/readability, subtitle clearance và tính đúng của hình giải thích. Không dùng 5 ảnh tĩnh để tuyên bố toàn bộ diễn xuất/phoneme đúng.
 
-```json
-{
-  "id": "ch001.s002",
-  "startMs": 6000,
-  "endMs": 10000,
-  "narrationSegmentIds": ["seg002"],
-  "explanationGoal": "Cho thấy bộ phận được lời kể nhắc tới chuyển động",
-  "sourceRefs": [{"kind": "narration", "segmentId": "seg002"}],
-  "visualization": {
-    "type": "mechanism",
-    "modelId": "mechanism-01",
-    "partIds": ["piston"],
-    "events": [{"type": "part-motion", "targetId": "piston", "narrationAnchor": "seg002"}],
-    "provenance": "visualization"
-  },
-  "host": {
-    "id": "mini-robot-01",
-    "profileVersion": 1,
-    "presence": "beside-model",
-    "actions": [
-      {"type": "point", "startMs": 6000, "endMs": 7400, "target": {"modelId": "mechanism-01", "partId": "piston", "anchor": "center"}},
-      {"type": "explain", "startMs": 7400, "endMs": 10000}
-    ]
-  },
-  "textOnScreen": "Pít-tông",
-  "captionRegion": "bottom-safe",
-  "recipeId": "host-mechanism-explainer"
-}
-```
+Report phải phân biệt rule-based/combined, voice source/provider/hash, synchronization và phần chưa xác nhận. Không có vision mà allow_rule_based_review=true có thể tạo final qua kiểm tra kỹ thuật; **đó chưa là nghiệm thu chất lượng hình hoặc kiến thức**, phải xem/nghe bởi model/người test. Có thể đặt allow_rule_based_review=false cho sản xuất yêu cầu vision thật.
 
-Đây là ví dụ cấu trúc cho một shot, không phải dữ kiện/cue thật của một bài cụ thể. Các field trên là yêu cầu V2 chưa có đầy đủ trong code hiện tại. Validator phải kiểm tra narration/source/target thật; không nhận một chuỗi `visualDescription` chung chung để thay cho interaction plan.
+QC: codec/resolution/fps/duration, audio presence/hash/duration, sample rate/loudness/true peak/clipping, unexpected black/freeze/silence, subtitle stream và sidecar đúng text/clock, thumbnail/artifacts. Lỗi high chặn DONE. DONE của một project là checkpoint sản xuất đã qua các gate cấu hình, không tự chứng minh toàn bộ sản phẩm V2.1 đã nghiệm thu.
 
-Host action/event dùng global clock. Word/segment anchor được ứng dụng resolve thành timestamp hợp lệ; action nằm trong shot và gắn đúng đối tượng. Storyboard phải cover toàn bộ narration, kể cả khoảng nghỉ, không có gap/overlap.
-
-## 9. Scene factory và recipe mới
-
-Thư viện chính của V2:
-
-| Recipe ID mục tiêu | Nội dung |
-|---|---|
-| `host-introduce-question` | Host và câu hỏi/đối tượng mở bài từ narration |
-| `host-mechanism-explainer` | Host, part diagram, chuyển động cơ cấu và pointer anchors |
-| `host-process-steps` | Host và quy trình nhiều bước |
-| `host-evolution-timeline` | Host, timeline, các thay đổi có nguồn |
-| `host-before-after` | Host giải thích hai trạng thái/cải tiến |
-| `host-part-breakdown` | Host và mô hình tách part |
-| `host-event-sequence` | Host dẫn qua chuỗi sự kiện/không gian |
-| `host-summary` | Host và các ý đã được kể để kết bài |
-
-Recipe nhận host rig + visualization model + interaction timeline, không tự tạo identity. Diagram/model phải có part IDs và anchors; host controller biết cách nhìn/chỉ/thao tác trên chúng.
-
-Recipe V1 như map, newspaper, portrait, patent có thể làm vật liệu phụ khi đúng nguồn; không dùng chúng để thay cho host hoặc diễn giải cơ chế.
-
-Fallback đúng: giữ host đã duyệt, giảm minh họa xuống vài part/mũi tên/bước nhưng vẫn diễn tả quan hệ chính. Fallback sai: đổi thành chân dung, slideshow, đoạn text dài hoặc bỏ host. Nếu không thể dựng một minh họa trung thực, giữ draft/report và báo cần sửa; không đánh dấu final pass bằng một cảnh trang trí không giải thích được ý.
-
-## 10. Renderer và module
-
-Giữ renderer HyperFrames trong lượt triển khai này, deterministic timeline/GSAP, SVG cục bộ và FFmpeg cho audio/caption/mux/QC. Không cần xây thêm engine để đổi đúng ngôn ngữ sản phẩm.
-
-Các trách nhiệm bổ sung:
-
-| Module mục tiêu | Trách nhiệm |
-|---|---|
-| Narration ingest | WAV/SRT là đầu vào chính, source MD tùy chọn |
-| Host profile compiler | Đọc MD → schema → rig/pose library |
-| Host controller | Pose, gaze, gesture, speech activity và seek theo clock |
-| Explainer planner | Goals, đối tượng/part, quan hệ, chapter/beat |
-| Visualization builder | Mechanism/process/timeline/compare với anchor ổn định |
-| Interaction planner/compiler | Resolve pointer/contact/event từ narration anchors |
-| Voice resolver | WAV người dùng hoặc TTS được cấu hình cho SRT-only |
-| Semantic/visual reviewer | Nội dung hình, host identity, đúng target, speech/gesture/caption |
-
-Model chỉ trả structured data/source trong contract. Orchestrator validate, ghi artifact, chạy renderer, đọc lỗi và retry có giới hạn. Dùng provider/model ID từ config, không hard-code tên model giả. Không giao việc giữ character identity hoặc timestamp arithmetic cho lời hứa trong prompt.
-
-Giữ các nền tảng V1: persisted checkpoints/SQLite, artifact hashes, locked manual edits, local assets/provenance, schema validation, CSP/scene allowlist, sandbox renderer khi có, secret redaction, model budgets, attempt journals và bounded repair. Khi profile/voice/diagram/interaction plan đổi, phải invalidate đúng artifacts phụ thuộc.
-
-## 11. Project và artifacts mục tiêu
+## 11. Artifacts
 
 ```text
-projects/steam-explainer/
-  project.yaml
-  input/
-    narration.wav        # ít nhất WAV hoặc SRT
-    narration.srt
-    source.md            # tùy chọn
-    host.md              # tùy chọn, thay cho profile mặc định
-    assets/
-  work/
-    narration.json
-    timeline.json
-    story.json
-    host-profile.json
-    host-rig.json
-    explanation-plan.json
-    host-timeline.json
-    voice-report.json
-    chapters.json
-    beats.json
-    storyboard.json
-    asset-manifest.json
-    review.json
-  assets/host/<id>/<version>/
-  scenes/
-  previews/
-    host-preview-sheet.png
-    contact-sheet-global.jpg
-    manifest.json
-  output/
-    final.mp4
-    final.srt
-    thumbnail.png
-    storyboard.json
-    storyboard.md
-    host-profile.json
-    host-timeline.json
-    timeline.json
-    asset-manifest.json
-    qc-report.json
-    production-report.md
+input/script.txt|script.md, narration.wav, narration.srt  # theo mode
+input/source.md, host.md, assets/                       # tùy chọn
+work/input-document.json, script.json, script-timing.json
+work/narration.json, voiced-narration.json, timeline.json
+work/voice-report.json, speech-activity.json, voice/cues/
+work/story.json, chapters.json, beats.json, character-bible.json
+work/host-profile.json, host-rig.json, explanation-plan.json, host-timeline.json
+work/storyboard.json, storyboard.md, asset-manifest.json, review.json
+assets/host/<id>/<version>/host.svg, poses.json
+scenes/<shot>/index.html, style.css, scene.js, host-geometry.json
+previews/host-preview-sheet.png, contact-sheet-global.jpg, manifest.json
+output/final.mp4, final.srt, thumbnail.png
+output/narration.json, timeline.json, speech-activity.json, voice-report.json
+output/storyboard.json, storyboard.md, host-profile.json, host-timeline.json
+output/explanation-plan.json, character-bible.json, asset-manifest.json
+output/production-report.md, qc-report.json, cost-report.json
 ```
 
-## 12. Cấu hình mục tiêu
-
-Ví dụ dưới là contract V2 cần triển khai và validate, **chưa phải cấu hình chạy được với runtime V1**:
+## 12. Cấu hình mẫu
 
 ```yaml
-project:
-  name: steam-explainer
-  language: vi
-content:
-  mode: narrated-explainer
+project: { name: steam-explainer, language: vi }
+content: { mode: narrated-explainer }
 input:
+  mode: script
+  script: input/script.txt
+  source: input/source.md
   narration: input/narration.wav
   subtitles: input/narration.srt
-  source: input/source.md             # cho phép không tồn tại
 host:
   profile: library/characters/MINI-ROBOT.md
-  profile_id: mini-robot-01
   reuse_rig: true
   identity_locked: true
 presentation:
@@ -333,110 +167,23 @@ presentation:
   maximum_host_absence_seconds: 6
   require_meaningful_host_action_per_beat: true
 voice:
-  source: auto                        # dùng WAV nếu có, nếu không dùng TTS đã cấu hình
-  tts_provider: null                  # cần chọn để final SRT-only có giọng
+  source: auto
+  tts_provider: windows-speech
   voice_id: null
   preserve_input_audio: true
   preserve_srt_text: true
   preserve_srt_timing: true
   fit_rate_min: 0.85
   fit_rate_max: 1.20
-rendering:
-  engine: hyperframes
-captions:
-  mode: both
+workflow: { automatic: true, require_host_approval: true, require_storyboard_approval: false }
+style: { preset: technical-clean }
+captions: { mode: both }
 ```
 
-Path `library/...` resolve từ repo/installed library; `input/...` resolve từ project. Muốn người que thì đổi profile/profile ID sang `library/characters/STICK-MAN.md` / `stick-man-01`; không thay câu chuyện.
+Windows provider cần giọng tiếng Việt thực sự được cài. Đổi người que bằng profile STICK-MAN.md; custom chọn input/host.md. Library path resolve từ repo; input path từ project. Cấu hình giọng mặc định dùng config/voice.yaml, xem config/voice.example.yaml. Không đưa token vào YAML.
 
-Schema phải từ chối hoặc báo rõ option chưa được hỗ trợ, không âm thầm bỏ field V2 rồi render theo kiểu V1.
+## 13. Nghiệm thu và bàn giao
 
-## 13. Studio theo luồng người dùng
+Model khác thực hiện runtime tests, lưu commit/config/provider/evidence theo TEST-HANDOFF.md. Bộ nghiệm thu phải kiểm tra thuần script không WAV/SRT, WAV giữ lời, SRT giữ cue text/clock, WAV+SRT mismatch, thiếu/lỗi TTS/fit không final; hai host trên bài hơi nước và ô tô; identity/target/contact/speech/layout; resume/edit voice/host/script/rebuild/locks; final audio/subtitle/duration/QC.
 
-1. Upload WAV/SRT; xem transcript/cue và trạng thái giọng kể.
-2. Chọn **Robot mini** hoặc **Người que**, hoặc tải host MD riêng.
-3. Xem host preview sheet, sửa mô tả nếu cần và duyệt nhận dạng/rig.
-4. Nếu chỉ có SRT, chọn TTS/voice hoặc thêm WAV; nếu thiếu voice chỉ làm nháp im lặng có nhãn.
-5. Xem storyboard với ba cột rõ: lời kể, hình giải thích, hành động host.
-6. Preview timeline có thể seek; kiểm tra host chỉ gì, cơ cấu chạy gì và tương ứng câu nào.
-7. Sửa/khóa shot hoặc host plan; rebuild phần liên quan, review, xuất final.
-
-Không hỏi người dùng chọn renderer, sửa code hoặc nghĩ một nhân vật lịch sử cho mỗi bài. Các option kỹ thuật ở phần cấu hình nâng cao.
-
-## 14. Review, QC và định nghĩa hoàn thành
-
-Capture 5 snapshot/shot tại 0/25/50/75/100%, có shot/time label và hash. Thêm snapshot gần action anchors quan trọng và đánh giá temporal events từ timeline/frame sequence; 5 ảnh tĩnh không chứng minh toàn bộ tương tác/lip-sync đúng.
-
-| Kiểm tra | Điều kiện đạt |
-|---|---|
-| Nội dung | Giữ lời kể/nguồn; không biến thành câu chuyện hư cấu khác, không thêm claim chưa có evidence |
-| Host | Đúng profile/rig hash, tỷ lệ/màu/part ổn định, đọc được, đủ hiện diện theo config |
-| Hành động | Mỗi beat có action đúng ý; pointer/gaze/contact đúng part/mốc; không lặp idle như diễn xuất |
-| Minh họa | Cơ chế, quy trình, tiến trình hoặc so sánh thật sự được thể hiện; quan hệ chính đúng nguồn |
-| Đồng bộ | Host/action/model events bám cue/word clock; miệng hoạt động trong speech và đóng ở khoảng nghỉ |
-| Caption/layout | Không overflow, không che host/target; nhãn ngắn, subtitle đủ nội dung |
-| Audio | WAV giữ nguyên nội dung; SRT-only final có voice fit clock; BGM/SFX không che narration |
-| Video/QC | Decode được, resolution/fps/duration đúng; không unexpected black/freeze/silence/clipping |
-| Resume | Khóa/duyệt/profile hashes còn hiệu lực; rebuild đúng phạm vi sau edit/mất artifact |
-
-Các lỗi high như sai nội dung cơ chế, mất host, đổi identity, chỉ sai target chính, thiếu voice final, audio/caption lệch clock phải chặn sản xuất final. Repair chỉ sửa scene/plan có lỗi trong budget, không viết lại narration để làm review xanh.
-
-Rule-based review kiểm tra ID/timing/geometry/targets/hash. Vision review có thể kiểm tra hình thức/semantic/crop; không gọi rule-based pass là đánh giá mỹ thuật hoặc xác nhận kiến thức. Report ghi rõ cái gì đã đo, cái gì chưa xác nhận.
-
-`DONE` nghĩa là host đã được dựng và duyệt, kể/giải thích input bằng giọng phù hợp, minh họa và interaction đạt review, final media đạt QC. Một video chỉ có silent bed, diagram mẫu hoặc portrait không đạt mục tiêu này dù encode thành công.
-
-Phần test/acceptance được giao cho model/người test theo chỉ đạo của chủ dự án. Không dùng việc sửa tài liệu này để tự chạy lại test hoặc coi các test V1 là bằng chứng V2 đã xong.
-
-## 15. Hai bài acceptance bám đúng ý tưởng
-
-### A. Hệ thống hơi nước ra đời/hoạt động như thế nào
-
-Input: narration do người dùng cung cấp và `MINI-ROBOT.md`; `source.md` bổ trợ nếu có.
-
-Storyboard phải dựa vào đúng cấu trúc narration: bối cảnh/vấn đề → nguyên lý hoặc cải tiến được kể → bộ phận và diễn biến → kết quả/ý nghĩa. Không tự thêm tên người/năm hoặc cấu tạo cụ thể nếu nguồn không có.
-
-Robot phải hướng người xem qua sơ đồ/mô hình; chỉ bộ phận được nhắc tới, mô hình phản ứng đúng trình tự; có thể so sánh trạng thái trước/sau nếu narration mô tả chúng. Mô hình khái niệm ghi provenance visualization.
-
-Không chấp nhận đổi thành truyện một kỹ sư hư cấu đi trong xưởng với các cảnh bản vẽ không làm rõ nội dung đầu vào.
-
-### B. Quá trình phát triển ô tô
-
-Input: narration do người dùng cung cấp và `STICK-MAN.md`; chọn robot thay người que vẫn phải kể cùng câu chuyện.
-
-Storyboard dùng các mốc/giai đoạn có trong narration, hình xe/bộ phận ở từng mốc và thay đổi được nguồn nói rõ. Người que đi/chỉ tới mốc, so sánh hai thế hệ/giải pháp khi cần, kết nối ý nghĩa của sự thay đổi.
-
-Không tự thêm hãng xe, đời xe, năm phát minh, động cơ hoặc tốc độ; không thay bằng montage xe chạy và text timeline không có host giải thích.
-
-Acceptance cần đủ bốn nhánh: WAV-only, WAV+SRT, SRT-only có voice, SRT-only thiếu voice chỉ ra nháp và báo cần voice. Kiểm tra cả hai profile và nhiều tập để chứng minh tái sử dụng host.
-
-## 16. Kế hoạch sửa hệ thống hiện có
-
-| Thứ tự | Việc cần làm | Điều kiện bàn giao cho tester |
-|---|---|---|
-| P0 | Chốt input/host/story roles; schema V2; source MD optional | WAV/SRT được coi là nguồn chính; host không bị parser biến thành nhân vật lịch sử |
-| P1 | Host compiler, hai rig chuẩn, preview/duyệt/hash/lock | Dựng được robot và người que từ MD, thực hiện pose/action và tái sử dụng |
-| P2 | Explainer planner, visualization model, interaction timeline và recipe host | Storyboard mỗi beat có hình giải thích và hành động target cụ thể |
-| P3 | Voice resolver/TTS optional, speech activity, gesture synchronization | WAV giữ đúng; SRT-only có voice fit clock hoặc trạng thái needs-voice rõ |
-| P4 | Scene/master/review/QC/resume cho host và explanation plan | Không bỏ host khi fallback; validation chặn lỗi nội dung/interaction/voice |
-| P5 | Studio chọn/duyệt host, storyboard ba cột, hai bài acceptance | Người dùng làm video theo luồng §13, tester kiểm tra các nhánh §15 |
-
-Tái sử dụng ingest/ASR, adapter, renderer, FFmpeg, artifact store, lock/hash và API nền đã có. Sửa planner/schema/recipe/host pipeline để đạt trải nghiệm mới; không chỉ đổi prompt hoặc thêm một profile MD rồi tuyên bố hoàn thành.
-
-Example hư cấu về nhân vật An và các test/render V1 là fixture kỹ thuật cũ; chúng không đại diện cho sản phẩm mới. Các số liệu V1 giữ nguyên trong `TEST-RESULTS.md` với phiên bản tương ứng.
-
-## 17. Chỉ dẫn triển khai theo đặc tả này
-
-Khi được giao triển khai V2, đọc tài liệu này cùng hai host profile và implementation status. Ưu tiên nghiệm thu một video giải thích có host thật sự dẫn chuyện trước khi mở rộng recipe/style.
-
-Các nguyên tắc sản phẩm cần giữ:
-
-- WAV/SRT là nội dung kể và clock chính.
-- Host do hồ sơ MD quyết định; dựng một lần, reuse có kiểm chứng.
-- Host là người giải thích, khác với người/sự vật được giải thích.
-- Mọi beat có ý nghĩa, minh họa và hành động host phù hợp.
-- Hình chuyển động phải làm rõ câu chuyện, không chỉ trang trí.
-- Voice/caption/gesture/model bám cùng narration timeline.
-- Đổi model không đổi renderer hoặc host identity.
-- Fallback đơn giản hóa hình, giữ host và quan hệ chính.
-- Chưa có voice hoặc còn lỗi giải thích nghiêm trọng thì chưa có final đạt yêu cầu.
-- Phân biệt đặc tả, tính năng đã triển khai và kết quả test; không đánh đồng chúng.
+V1 test evidence không được dùng để tuyên bố ba luồng mới đạt. Build/typecheck là kiểm tra biên dịch, không thay việc nghe giọng Việt, xem video, kiểm tra cơ chế hoặc chạy ASR/render thật. Trạng thái nghiệm thu mới phải ghi riêng trong TEST-RESULTS.md.

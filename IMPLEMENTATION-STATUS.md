@@ -1,37 +1,27 @@
-# Trạng thái triển khai và định hướng sản phẩm
+# Trạng thái V2.1 — 2026-10-01
 
-Cập nhật tài liệu: **2026-10-01**. Đặc tả hiện hành: [BUILD-SPEC.md](BUILD-SPEC.md), V2 — robot mini/người que dẫn chuyện giải thích từ WAV/SRT.
+Đã triển khai code và tài liệu cho kế hoạch ba luồng. Backend/CLI/Studio build và typecheck qua; schema JSON đã bổ sung. Runtime tests, giọng thật, ASR/alignment, render và nghiệm thu video **chưa chạy trong lượt này**, theo chỉ đạo giao cho model khác.
 
-## Đã hoàn thành trong lần chỉnh yêu cầu này
+| Hạng mục | Code | Nghiệm thu runtime |
+|---|---|---|
+| Script paste/upload/normalize/120-char cues/source lines | Đã bổ sung | Chờ |
+| TTS actual durations/250-ms paragraph pauses/cache | Đã bổ sung | Chờ TTS thật |
+| WAV/SRT/WAV+SRT, explicit selected authority | Đã tích hợp nền V1 và mode mới | Chờ hồi quy ba luồng |
+| Windows/HTTP/command voice; SRT fit/gate | Đã bổ sung | Chờ tiếng Việt/provider/failure cases |
+| Robot/stick SVG rigs/MD/hash/poses/preview/approval | Đã bổ sung | Chờ xem identity và khớp |
+| Tám recipe, explanation source refs/parts/relations | Đã bổ sung | Chờ hai bài và semantic review |
+| Target/gaze/IK/contact/audio-activity mouth | Đã bổ sung | Chờ animation/seek/contact thực tế |
+| Pipeline automatic, reports/exports/QC gates | Đã nối | Chờ final thật |
+| Studio/API/CLI/settings/upload/editor | Đã bổ sung | Chờ thao tác UI và API |
+| Resume/caches/locks/selected-shot rebuild | Đã nối | Chờ mất artifact và edit matrix |
 
-- Viết lại đặc tả theo video giải thích sự vật, sự việc, cơ chế, quy trình và tiến trình phát triển.
-- Tạo hồ sơ Markdown cho [robot mini](library/characters/MINI-ROBOT.md) và [người que](library/characters/STICK-MAN.md), gồm nhận dạng, part IDs, khớp, pose/actions, gaze/pointer, speech sync và điều kiện duyệt.
-- Chốt WAV/SRT là nguồn chính, source MD bổ trợ tùy chọn, host tách khỏi đối tượng được kể.
-- Chốt final SRT-only cần voice; silent draft không đại diện cho sản phẩm cuối đạt yêu cầu.
-- Định nghĩa recipe host, interaction/visualization plan, review/QC và acceptance cho hơi nước/ô tô.
-- Lưu [đặc tả V1](docs/archive/STORY-TO-VIDEO-FACTORY.v1.md) và cập nhật bản đồ/bàn giao để tránh nhầm trạng thái.
+Giới hạn cần được nghiệm thu minh bạch:
 
-Đây là thay đổi tài liệu. Chưa thay code/prompt runtime, chưa dựng SVG rig từ hai hồ sơ mới và chưa chạy test cho V2 trong lần này.
+- HTTP/command là adapter protocol chung; phải cấu hình provider thật. Windows kiểm tra culture; adapter ngoài nhận language nhưng cần nghe/xác nhận chất lượng/ngôn ngữ thực tế.
+- Chỉ có hai rig vector và vocabulary diagram hữu hạn; custom MD không tạo tùy ý mọi nhân vật/3D. Hướng trái/phải trong preview là sơ đồ 2D.
+- Mouth đo RMS/audio activity; không có phoneme/viseme alignment. Short silence RMS threshold cần được kiểm tra trên audio thật.
+- Rule review kiểm tra contract/geometry/hash; không chứng minh tính đúng vật lý, mức dễ hiểu, crop hoặc thẩm mỹ. Planner/vision thật và xem/nghe final là evidence nghiệm thu.
+- Camera có tập giá trị hỗ trợ rõ; inset chưa hỗ trợ, bị từ chối. Scene source V2.1 do renderer sinh; edit storyboard và rebuild để bảo toàn guarantees.
+- Môi trường đã biết chưa có WhisperX/giọng TTS Việt/API model được xác nhận. Không tự coi cài thư viện/encode/build là chất lượng video đạt.
 
-## Nền tảng V1 đã có
-
-CLI/Studio/API; ingest MD/SRT/WAV và ASR bridge; planner/storyboard/character bible; asset resolver; tám recipe tổng quát; HyperFrames/GSAP; preview/contact sheets/review; FFmpeg audio/caption/QC; checkpoint/SQLite/resume/locks/hash; model adapter/retry/budget và log redaction.
-
-Các lỗi recovery, Windows path, preview integrity và upload filename đã được sửa trong vòng trước. `TEST-RESULTS.md` ghi 35 test hồi quy, WAV tiny tiếng Anh và tracer HyperFrames 4 giây trên mã V1. Các kết quả này không chứng minh host-driven explainer V2 đã được triển khai.
-
-## Những khoảng cách cần xử lý cho V2
-
-| Hạng mục | Hiện trạng |
-|---|---|
-| Nhận WAV/SRT không cần source MD | Ingest hiện còn yêu cầu `source.md`; cần sửa |
-| Đọc host MD thành rig điều khiển được | Hai hồ sơ đã có; compiler/controller và SVG rig chưa có |
-| Host riêng, không trộn với nhân vật/sự vật trong narration | Character pipeline V1 còn tổng quát; cần schema và role separation |
-| Explanation goals, model part IDs, anchors, host interactions | Chưa có contract đầy đủ trong storyboard/scene schema |
-| Recipe có host giải thích, chỉ/thao tác/so sánh | Tám recipe V1 chưa đáp ứng yêu cầu này |
-| SRT-only final có giọng | Runtime hiện tạo silent bed, chưa có TTS/needs-voice gate V2 |
-| Speech activity/gaze/gesture/contact sync | Chưa triển khai cho host rig |
-| Studio chọn/duyệt host và trạng thái voice | Chưa có luồng V2 |
-| Review nội dung giải thích và target interactions | Guard/hash/timing V1 có thể reuse; semantic/temporal checks V2 cần bổ sung |
-| Nghiệm thu hơi nước/ô tô, hai host, nhiều tập | Chưa chạy, giao cho tester sau khi triển khai |
-
-Kế hoạch sửa theo P0–P5 trong §16 của `BUILD-SPEC.md`. Bản đồ module và phạm vi tái sử dụng xem `IMPLEMENTATION-MAP.md`.
+TEST-RESULTS.md giữ nguyên lịch sử V1 và ghi riêng kiểm tra biên dịch V2.1. Chỉ cập nhật cột nghiệm thu khi model test giao evidence mới. Định nghĩa DONE của project được nêu trong BUILD-SPEC.md; không dùng checkpoint này để tự tuyên bố sản phẩm mới đã được nghiệm thu.

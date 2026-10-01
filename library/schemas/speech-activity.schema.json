@@ -1,0 +1,58 @@
+{
+  "$ref": "#/definitions/speech-activity",
+  "definitions": {
+    "speech-activity": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "audio-rms",
+            "segment-draft"
+          ]
+        },
+        "audioHash": {
+          "type": "string"
+        },
+        "windowMs": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "intervals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "level": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "startMs",
+              "endMs",
+              "level"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "method",
+        "windowMs",
+        "intervals"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

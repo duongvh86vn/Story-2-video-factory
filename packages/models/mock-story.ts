@@ -62,10 +62,10 @@ export function mockStoryAnalysis(context: MockContext): Story {
   const narrationSpans = spoken.flatMap(sentences);
   const claims = new Map<string, Story['facts'][number]>();
   for (const fact of story.facts) {
-    if (story.story.includes(fact.claim)) claims.set(fact.claim, { ...fact, source: 'source.md' });
+    if (story.story.includes(fact.claim)) claims.set(fact.claim, { ...fact, source: story.origin==='narration'?'narration':'source.md' });
     else if (spoken.some(text => text.includes(fact.claim))) claims.set(fact.claim, { ...fact, source: 'narration' });
   }
-  for (const span of sourceSpans.slice(0, 16)) if (!claims.has(span)) claims.set(span, { claim: span, type: 'fact', source: 'source.md' });
+  for (const span of sourceSpans.slice(0, 16)) if (!claims.has(span)) claims.set(span, { claim: span, type: 'fact', source: story.origin==='narration'?'narration':'source.md' });
   for (const span of narrationSpans.slice(0, 12)) if (!claims.has(span)) claims.set(span, { claim: span, type: 'fact', source: 'narration' });
   const events = (narrationSpans.length ? narrationSpans : sourceSpans).slice(0, 16);
   const explicitCauses = [...sourceSpans, ...narrationSpans].filter(span => /vì|do đó|nên|khiến|dẫn đến|nhờ|because|therefore|result|caus|led to|so that/i.test(span));

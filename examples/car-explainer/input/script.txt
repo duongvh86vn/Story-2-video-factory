@@ -1,0 +1,9 @@
+Quá trình phát triển ô tô có thể được nhìn qua những thay đổi nào? Ta bắt đầu với xe dùng động cơ xăng của Karl Benz.
+
+Năm 1886 là một mốc của Benz Patent Motor Car. Xe có ba bánh, với động cơ xăng một xi-lanh đặt phía sau. Hãy phân biệt động cơ, bánh xe và thân xe trên hình minh họa.
+
+Để giải thích một hệ truyền động bằng mô hình, ta dùng câu sau: động cơ truyền chuyển động đến bánh xe. Mũi tên chỉ quan hệ này, không phải bản vẽ chi tiết của chiếc xe lịch sử.
+
+Tiếp theo, ta so sánh xe dùng động cơ đốt trong với xe điện: nguồn năng lượng và bộ phận tạo chuyển động khác nhau. Pin cấp năng lượng cho động cơ điện. Hình so sánh không khẳng định xe điện chỉ xuất hiện sau xe xăng.
+
+Tóm lại, câu chuyện phát triển ô tô gồm nhiều hướng cải tiến. Ta cần đọc đúng các mốc được nêu, tách tiến trình lịch sử khỏi mô hình giải thích, và không tự thêm thông số kỹ thuật.

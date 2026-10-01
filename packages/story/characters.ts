@@ -167,7 +167,8 @@ export function enforceCharacterLocks(candidate: CharacterBible, story: Story, i
 
 export async function buildCharacterBible(root: string, config: FactoryConfig, router: ModelRouter, story: Story, narration: Narration, series: SeriesContext): Promise<CharacterBible> {
   const file = path.join(root, 'work', 'character-bible.json');
-  const existing: CharacterBible = await exists(file) ? CharacterBibleSchema.parse(await readJson(file)) : { characters: [] };
+  let existing: CharacterBible = await exists(file) ? CharacterBibleSchema.parse(await readJson(file)) : { characters: [] };
+  if(config.content.mode==='narrated-explainer'){const subjects=new Set(story.characters.map(c=>c.id));existing={...existing,characters:existing.characters.filter(c=>subjects.has(c.id))};series={...series,bible:{...series.bible,characters:series.bible.characters.filter(c=>subjects.has(c.id))}};}
   const locks = await readProjectLocks(root);
   if (locks.characterBible) {
     if (!await exists(file)) throw new Error('Character bible is locked but work/character-bible.json is missing');

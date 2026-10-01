@@ -1,0 +1,982 @@
+{
+  "$ref": "#/definitions/config",
+  "definitions": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "default": "untitled"
+            },
+            "language": {
+              "type": "string",
+              "default": "vi"
+            },
+            "series": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "narrated-explainer",
+                "legacy"
+              ],
+              "default": "narrated-explainer"
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "host": {
+          "type": "object",
+          "properties": {
+            "profile": {
+              "type": "string",
+              "default": "library/characters/MINI-ROBOT.md"
+            },
+            "profile_id": {
+              "type": "string"
+            },
+            "reuse_rig": {
+              "type": "boolean",
+              "const": true,
+              "default": true
+            },
+            "identity_locked": {
+              "type": "boolean",
+              "const": true,
+              "default": true
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "presentation": {
+          "type": "object",
+          "properties": {
+            "minimum_host_speech_visibility": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.7
+            },
+            "maximum_host_absence_seconds": {
+              "type": "number",
+              "minimum": 0,
+              "default": 6
+            },
+            "require_meaningful_host_action_per_beat": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "voice": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "input",
+                "tts"
+              ],
+              "default": "auto"
+            },
+            "tts_provider": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "windows-speech",
+                    "http",
+                    "command"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "voice_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "base_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "api_key_env": {
+              "type": "string",
+              "default": "TTS_API_KEY"
+            },
+            "command": {
+              "type": "string"
+            },
+            "command_args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "timeout_ms": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 120000
+            },
+            "preserve_input_audio": {
+              "type": "boolean",
+              "const": true,
+              "default": true
+            },
+            "preserve_srt_text": {
+              "type": "boolean",
+              "const": true,
+              "default": true
+            },
+            "preserve_srt_timing": {
+              "type": "boolean",
+              "const": true,
+              "default": true
+            },
+            "fit_rate_min": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1,
+              "default": 0.85
+            },
+            "fit_rate_max": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 2,
+              "default": 1.2
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "input": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "script",
+                "wav",
+                "srt"
+              ],
+              "default": "auto"
+            },
+            "script": {
+              "type": "string",
+              "default": "input/script.txt"
+            },
+            "source": {
+              "type": "string",
+              "default": "input/source.md"
+            },
+            "narration": {
+              "type": "string",
+              "default": "input/narration.wav"
+            },
+            "subtitles": {
+              "type": "string",
+              "default": "input/narration.srt"
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "models": {
+          "type": "object",
+          "properties": {
+            "planner": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "gateway",
+                    "openai-compatible",
+                    "gemini",
+                    "deepseek",
+                    "ollama",
+                    "litellm",
+                    "mock"
+                  ],
+                  "default": "mock"
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "default": "mock"
+                },
+                "base_url": {
+                  "type": "string"
+                },
+                "api_key_env": {
+                  "type": "string",
+                  "default": "MODEL_GATEWAY_KEY"
+                },
+                "temperature": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "default": 0.2
+                },
+                "vision": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "timeout_ms": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 120000
+                },
+                "input_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "output_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            },
+            "storyboard": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "gateway",
+                    "openai-compatible",
+                    "gemini",
+                    "deepseek",
+                    "ollama",
+                    "litellm",
+                    "mock"
+                  ],
+                  "default": "mock"
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "default": "mock"
+                },
+                "base_url": {
+                  "type": "string"
+                },
+                "api_key_env": {
+                  "type": "string",
+                  "default": "MODEL_GATEWAY_KEY"
+                },
+                "temperature": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "default": 0.2
+                },
+                "vision": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "timeout_ms": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 120000
+                },
+                "input_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "output_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            },
+            "coder": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "gateway",
+                    "openai-compatible",
+                    "gemini",
+                    "deepseek",
+                    "ollama",
+                    "litellm",
+                    "mock"
+                  ],
+                  "default": "mock"
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "default": "mock"
+                },
+                "base_url": {
+                  "type": "string"
+                },
+                "api_key_env": {
+                  "type": "string",
+                  "default": "MODEL_GATEWAY_KEY"
+                },
+                "temperature": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "default": 0.2
+                },
+                "vision": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "timeout_ms": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 120000
+                },
+                "input_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "output_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            },
+            "repair": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "gateway",
+                    "openai-compatible",
+                    "gemini",
+                    "deepseek",
+                    "ollama",
+                    "litellm",
+                    "mock"
+                  ],
+                  "default": "mock"
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "default": "mock"
+                },
+                "base_url": {
+                  "type": "string"
+                },
+                "api_key_env": {
+                  "type": "string",
+                  "default": "MODEL_GATEWAY_KEY"
+                },
+                "temperature": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "default": 0.2
+                },
+                "vision": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "timeout_ms": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 120000
+                },
+                "input_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "output_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            },
+            "visual_review": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "gateway",
+                    "openai-compatible",
+                    "gemini",
+                    "deepseek",
+                    "ollama",
+                    "litellm",
+                    "mock"
+                  ],
+                  "default": "mock"
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "default": "mock"
+                },
+                "base_url": {
+                  "type": "string"
+                },
+                "api_key_env": {
+                  "type": "string",
+                  "default": "MODEL_GATEWAY_KEY"
+                },
+                "temperature": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "default": 0.2
+                },
+                "vision": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "timeout_ms": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 120000
+                },
+                "input_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "output_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            },
+            "fallback": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "gateway",
+                    "openai-compatible",
+                    "gemini",
+                    "deepseek",
+                    "ollama",
+                    "litellm",
+                    "mock"
+                  ],
+                  "default": "mock"
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1,
+                  "default": "mock"
+                },
+                "base_url": {
+                  "type": "string"
+                },
+                "api_key_env": {
+                  "type": "string",
+                  "default": "MODEL_GATEWAY_KEY"
+                },
+                "temperature": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "default": 0.2
+                },
+                "vision": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "timeout_ms": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 120000
+                },
+                "input_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                },
+                "output_cost_per_million": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "rendering": {
+          "type": "object",
+          "properties": {
+            "engine": {
+              "type": "string",
+              "const": "hyperframes",
+              "default": "hyperframes"
+            },
+            "draft": {
+              "type": "object",
+              "properties": {
+                "width": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "height": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "fps": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "quality": {
+                  "type": "string",
+                  "enum": [
+                    "draft",
+                    "looks",
+                    "delivery"
+                  ],
+                  "default": "delivery"
+                }
+              },
+              "required": [
+                "width",
+                "height",
+                "fps"
+              ],
+              "additionalProperties": false,
+              "default": {
+                "width": 960,
+                "height": 540,
+                "fps": 15,
+                "quality": "draft"
+              }
+            },
+            "final": {
+              "type": "object",
+              "properties": {
+                "width": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "height": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                },
+                "fps": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "quality": {
+                  "type": "string",
+                  "enum": [
+                    "draft",
+                    "looks",
+                    "delivery"
+                  ],
+                  "default": "delivery"
+                }
+              },
+              "required": [
+                "width",
+                "height",
+                "fps"
+              ],
+              "additionalProperties": false,
+              "default": {
+                "width": 1920,
+                "height": 1080,
+                "fps": 30,
+                "quality": "delivery"
+              }
+            },
+            "timeout_ms": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 1800000
+            },
+            "docker": {
+              "type": "boolean",
+              "default": false
+            },
+            "max_duration_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 300
+            },
+            "max_shots": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 100
+            },
+            "workers": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 2
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "workflow": {
+          "type": "object",
+          "properties": {
+            "automatic": {
+              "type": "boolean",
+              "default": true
+            },
+            "require_host_approval": {
+              "type": "boolean",
+              "const": true,
+              "default": true
+            },
+            "require_storyboard_approval": {
+              "type": "boolean",
+              "default": false
+            },
+            "require_character_approval": {
+              "type": "boolean",
+              "default": false
+            },
+            "max_review_iterations": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 2
+            },
+            "max_model_calls": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 250
+            },
+            "max_model_cost_usd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max_generated_assets_per_shot": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 3
+            },
+            "max_scene_bytes": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 500000
+            },
+            "allow_rule_based_review": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "retry": {
+          "type": "object",
+          "properties": {
+            "structured_output": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 2
+            },
+            "scene_generation": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 2
+            },
+            "scene_repair": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 3
+            },
+            "render": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 1
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "audio": {
+          "type": "object",
+          "properties": {
+            "target_lufs": {
+              "type": "number",
+              "minimum": -70,
+              "maximum": -5,
+              "default": -16
+            },
+            "true_peak": {
+              "type": "number",
+              "minimum": -9,
+              "maximum": 0,
+              "default": -1.5
+            },
+            "music_volume": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.15
+            },
+            "sfx_volume": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.5
+            },
+            "sample_rate": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 48000
+            },
+            "duration_tolerance_ms": {
+              "type": "number",
+              "minimum": 0,
+              "default": 500
+            },
+            "silence_min_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 2
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "captions": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "none",
+                "burned",
+                "soft",
+                "both"
+              ],
+              "default": "both"
+            },
+            "font": {
+              "type": "string",
+              "default": "Arial"
+            },
+            "font_size": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 24
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "asr": {
+          "type": "object",
+          "properties": {
+            "engine": {
+              "type": "string",
+              "enum": [
+                "faster-whisper",
+                "whisperx"
+              ],
+              "default": "faster-whisper"
+            },
+            "model": {
+              "type": "string",
+              "default": "small"
+            },
+            "device": {
+              "type": "string",
+              "default": "cpu"
+            },
+            "compute_type": {
+              "type": "string",
+              "default": "int8"
+            },
+            "language": {
+              "type": "string"
+            },
+            "align": {
+              "type": "boolean",
+              "default": false
+            },
+            "allow_downloads": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "style": {
+          "type": "object",
+          "properties": {
+            "preset": {
+              "type": "string",
+              "default": "technical-clean"
+            },
+            "overrides": {
+              "type": "object",
+              "additionalProperties": {},
+              "default": {}
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "visual_rules": {
+          "type": "object",
+          "properties": {
+            "max_static_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 4
+            },
+            "max_same_camera_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 7
+            },
+            "preferred_shot_seconds": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 2
+                },
+                "max": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "default": 6
+                }
+              },
+              "additionalProperties": false,
+              "default": {}
+            },
+            "minimum_changes_per_10_seconds": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "default": 2
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "research": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              },
+              "default": []
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "qc": {
+          "type": "object",
+          "properties": {
+            "duration_tolerance_ms": {
+              "type": "number",
+              "minimum": 0,
+              "default": 250
+            },
+            "black_min_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 0.5
+            },
+            "freeze_min_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "default": 4
+            },
+            "allowed_black": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startMs": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "endMs": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "startMs",
+                  "endMs"
+                ],
+                "additionalProperties": false
+              },
+              "default": []
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

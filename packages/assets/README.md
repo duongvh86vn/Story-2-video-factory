@@ -95,3 +95,7 @@ generation, licensing inference, or automatic archival image substitution are
 enabled. Provider implementation, source attribution, and owner-asserted rights
 remain the project owner's responsibility. Calls are serialized per project
 within a process; separate processes must coordinate asset-stage execution.
+
+## Narrated explainer V2.1
+
+The approved SVG host rig is a required local asset for every visible host shot. Its profile/rig/asset hashes are validated independently of subject characters. Conceptual SVG diagrams use sourced entity labels/relations; legacy portraits cannot substitute for the explainer host. Runtime acceptance of host identity/target/contact remains in TEST-HANDOFF.md.

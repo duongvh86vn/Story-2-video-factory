@@ -1,0 +1,220 @@
+{
+  "$ref": "#/definitions/host-timeline",
+  "definitions": {
+    "host-timeline": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 2
+        },
+        "hostId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "profileVersion": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "rigHash": {
+          "type": "string"
+        },
+        "durationMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "speechVisibility": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "synchronization": {
+          "type": "string",
+          "enum": [
+            "audio-activity",
+            "word",
+            "segment"
+          ]
+        },
+        "shots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "shotId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "startMs": {
+                "type": "integer"
+              },
+              "endMs": {
+                "type": "integer"
+              },
+              "host": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "profileVersion": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "rigHash": {
+                    "type": "string"
+                  },
+                  "presence": {
+                    "type": "string",
+                    "enum": [
+                      "beside-model",
+                      "inset",
+                      "absent"
+                    ]
+                  },
+                  "actions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "idle",
+                            "greet",
+                            "explain",
+                            "point",
+                            "operate-model",
+                            "compare",
+                            "think",
+                            "react",
+                            "summarize",
+                            "walk-to-marker"
+                          ]
+                        },
+                        "startMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "endMs": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0
+                        },
+                        "narrationAnchor": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "target": {
+                          "type": "object",
+                          "properties": {
+                            "modelId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "partId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "anchor": {
+                              "type": "string",
+                              "enum": [
+                                "center",
+                                "handle",
+                                "label"
+                              ],
+                              "default": "center"
+                            }
+                          },
+                          "required": [
+                            "modelId",
+                            "partId"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "secondTarget": {
+                          "type": "object",
+                          "properties": {
+                            "modelId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "partId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "anchor": {
+                              "type": "string",
+                              "enum": [
+                                "center",
+                                "handle",
+                                "label"
+                              ],
+                              "default": "center"
+                            }
+                          },
+                          "required": [
+                            "modelId",
+                            "partId"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "contactMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "startMs",
+                        "endMs"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "id",
+                  "profileVersion",
+                  "rigHash",
+                  "presence",
+                  "actions"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "shotId",
+              "startMs",
+              "endMs",
+              "host"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "version",
+        "hostId",
+        "profileVersion",
+        "rigHash",
+        "durationMs",
+        "speechVisibility",
+        "synchronization",
+        "shots"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

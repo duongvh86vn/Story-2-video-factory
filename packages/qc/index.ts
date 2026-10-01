@@ -5,6 +5,8 @@ import type { Narration, Storyboard } from '../core/schemas.js';
 import { exists, readJson, safeRealPath, writeAtomic, writeJson } from '../core/utils.js';
 import { outputPath, redact } from '../render/process.js';
 import { ffmpeg, probe, type ProbeResult } from '../audio/ffmpeg.js';
+import { serializeSrt } from '../ingest/srt.js';
+import { requireVoice, VoiceReportSchema } from '../voice/index.js';
 
 export interface QCInterval {startMs:number;endMs:number;}
 export interface QCIssue {type:string;severity:'high'|'medium'|'low';description:string;startMs?:number;endMs?:number;}
@@ -41,6 +43,7 @@ export async function runQC(projectRoot:string,config:FactoryConfig,narration:Na
   let video:unknown=null,metadata:ProbeResult|undefined;
   const add=(type:string,description:string,interval?:QCInterval,severity:QCIssue['severity']='high')=>issues.push({type,severity,description,...interval});
   const srtOnly=narration.mode==='srt'&&!narration.audioPath;
+  if(config.content.mode==='narrated-explainer'){try{await requireVoice(projectRoot,narration);}catch(error){add('voice',error instanceof Error?error.message:String(error));}}
   if(srtOnly) warnings.push('SRT-only source has no voice recording. Missing narration and planned silence are not QC failures.');
   try {
     const file=await safeRealPath(projectRoot,'output/final.mp4');metadata=await probe(projectRoot,config,file);
@@ -75,6 +78,7 @@ export async function runQC(projectRoot:string,config:FactoryConfig,narration:Na
       const stats=await ffmpeg(projectRoot,config,['-i',file,'-map','0:a:0','-vn','-af',`silencedetect=n=-50dB:d=${config.audio.silence_min_seconds},astats=metadata=1:reset=0,loudnorm=I=${config.audio.target_lufs}:TP=${config.audio.true_peak}:print_format=json`,'-f','null','-']);
       detections.silence=detectedIntervals(stats.stderr,'silence',detectDuration);
       const allowed=srtOnly?[{startMs:0,endMs:detectDuration}]:narrationGaps(narration);
+      if(config.content.mode==='narrated-explainer'&&narration.mode==='srt'){const voice=await readJson(path.join(projectRoot,'work/voice-report.json'),VoiceReportSchema);if(voice.source==='tts'&&voice.status==='ready')for(const cue of voice.cues){if(cue.fittedDurationMs!==undefined&&cue.startMs+cue.fittedDurationMs<cue.endMs)allowed.push({startMs:Math.ceil(cue.startMs+cue.fittedDurationMs),endMs:cue.endMs});}}
       for(const interval of detections.silence) if(!fullyWhitelisted(interval,allowed,120)) add('unexpected-silence','Silence overlaps a spoken narration interval',interval);
       const peaks=[...stats.stderr.matchAll(/Peak level dB:\s*(-?(?:\d+(?:\.\d+)?|inf))/gi)].map(match=>Number(match[1]));
       if(!peaks.length) add('audio-analysis','FFmpeg did not report peak statistics');
@@ -92,6 +96,7 @@ export async function runQC(projectRoot:string,config:FactoryConfig,narration:Na
     const soft=['soft','both'].includes(config.captions.mode),subtitleCount=metadata.streams.filter(stream=>stream.codec_type==='subtitle').length;
     if(soft&&!subtitleCount) add('captions','Requested soft subtitles are missing');
     if(!soft&&subtitleCount) add('captions','Unexpected soft subtitle stream');
+    if(await exists(path.join(projectRoot,'output/final.srt'))&&(await fs.readFile(await safeRealPath(projectRoot,'output/final.srt'),'utf8'))!==serializeSrt(narration.segments))add('subtitle-integrity','Exported subtitle text/clock differ from canonical narration');
     for(const artifact of ['output/final.srt','output/thumbnail.png']) if(!await exists(path.join(projectRoot,artifact))) add('artifact',`Missing required production artifact: ${artifact}`);
   } catch(error) {add('qc-execution',redact(error instanceof Error?error.message:String(error)));}
   if(await exists(path.join(projectRoot,'work/media-report.json'))) {

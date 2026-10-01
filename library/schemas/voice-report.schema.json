@@ -1,0 +1,135 @@
+{
+  "$ref": "#/definitions/voice-report",
+  "definitions": {
+    "voice-report": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 2
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "needs-voice",
+            "fit-failed",
+            "provider-failed"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "input",
+            "tts",
+            "silent-draft"
+          ]
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "voiceId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "narrationHash": {
+          "type": "string"
+        },
+        "audioPath": {
+          "type": "string"
+        },
+        "audioHash": {
+          "type": "string"
+        },
+        "textPreserved": {
+          "type": "boolean",
+          "const": true
+        },
+        "timingPreserved": {
+          "type": "boolean",
+          "const": true
+        },
+        "inputAudioPreserved": {
+          "type": "boolean"
+        },
+        "synchronization": {
+          "type": "string",
+          "enum": [
+            "audio-activity",
+            "segment"
+          ]
+        },
+        "cues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "textHash": {
+                "type": "string"
+              },
+              "startMs": {
+                "type": "number"
+              },
+              "endMs": {
+                "type": "number"
+              },
+              "rawDurationMs": {
+                "type": "number"
+              },
+              "fittedDurationMs": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "rate": {
+                "type": "number"
+              },
+              "audioHash": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "textHash",
+              "startMs",
+              "endMs"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "source",
+        "provider",
+        "voiceId",
+        "narrationHash",
+        "textPreserved",
+        "timingPreserved",
+        "inputAudioPreserved",
+        "synchronization",
+        "cues",
+        "warnings"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

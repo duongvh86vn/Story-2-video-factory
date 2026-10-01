@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import type { FactoryConfig } from '../core/config.js';
-import type { Story, Narration } from '../core/schemas.js';
+import { StorySchema, type Story, type Narration } from '../core/schemas.js';
 import type { ModelRouter } from '../models/registry.js';
 import { appendLog, safePath, safeRealPath, writeAtomic, writeJson } from '../core/utils.js';
 import { parseMarkdownDocument } from './markdown.js';
@@ -17,6 +17,7 @@ export { probeAudio, reconcileAudioDuration, validateNarration } from './audio.j
 export type { SrtDocument, SrtCue, SrtDiagnostic } from './srt.js';
 export type { MarkdownDocument } from './markdown.js';
 export type { AudioProbe } from './audio.js';
+export { prepareInput, parseScript, ScriptDocumentSchema } from './script.js';
 
 async function inputFile(root: string, relative: string, required: boolean): Promise<string | undefined> {
   const lexical = safePath(root, relative);
@@ -51,11 +52,11 @@ export async function ingestProject(projectRoot: string, config: FactoryConfig, 
   const attempts = path.join(ingest, 'attempts.jsonl');
   await appendLog(attempts, { kind: 'ingest', event: 'started', runId, startedAt });
   try {
-    const source = await inputFile(root, config.input.source, true);
-    const document = parseMarkdownDocument(await fs.readFile(source!, 'utf8'), config);
-    await writeJson(path.join(ingest, 'source.json'), { ...document, sourcePath: config.input.source });
-    const subtitles = await inputFile(root, config.input.subtitles, false);
-    const audio = await inputFile(root, config.input.narration, false);
+    const source = await inputFile(root, config.input.source, config.content.mode === 'legacy');
+    const document = source ? parseMarkdownDocument(await fs.readFile(source, 'utf8'), config) : undefined;
+    if (document) await writeJson(path.join(ingest, 'source.json'), { ...document, sourcePath: config.input.source, authority: 'supplemental' });
+    const subtitles = await inputFile(root, config.input.subtitles, config.input.mode === 'srt');
+    const audio = config.input.mode === 'srt' ? undefined : await inputFile(root, config.input.narration, config.input.mode === 'wav');
     if (!subtitles && !audio) throw new Error('Supply ' + config.input.subtitles + ' and/or ' + config.input.narration);
     const srt = subtitles ? parseSrtDocument(await fs.readFile(subtitles, 'utf8')) : undefined;
     if (srt) await writeJson(path.join(ingest, 'subtitles.json'), srt);
@@ -97,13 +98,23 @@ export async function ingestProject(projectRoot: string, config: FactoryConfig, 
     for (const segment of narration.segments) { if (segment.startMs > cursor) gaps.push({ startMs: cursor, endMs: segment.startMs }); cursor = segment.endMs; }
     if (cursor < narration.durationMs) gaps.push({ startMs: cursor, endMs: narration.durationMs });
     const timeline = { version: 1, durationMs: narration.durationMs, mode: narration.mode, segments: narration.segments, cues: narration.segments, words: narration.words, gaps, leadingSilenceMs: firstStart, trailingSilenceMs: narration.durationMs - finalEnd, ...(probe ? { audioDurationMs: probe.durationMs } : {}), ...(narration.audioPath ? { audioPath: narration.audioPath } : {}) };
-    await writeJson(path.join(work, 'story.json'), document.story);
+    const narrationText = narration.segments.map(segment => segment.text).join('\n');
+    const story = config.content.mode === 'legacy' ? document!.story : StorySchema.parse({
+      title: document?.story.title ?? config.project.name, genre: 'explainer', language: config.project.language,
+      story: narrationText, origin: 'narration', purpose: document?.story.purpose || 'Giải thích nội dung narration bằng một host cố định và hình minh họa.',
+      style: document?.story.style ?? { visual: 'Clear 2D vector explainer with a reusable animated host', era: '' },
+      rules: [...document?.story.rules ?? [], 'Narration is authoritative; host is a presenter, not a historical person.'],
+      characters: (document?.story.characters ?? []).filter(character => narrationText.toLocaleLowerCase().includes(character.name.toLocaleLowerCase())),
+      facts: narration.segments.map(segment => ({ claim: segment.text, type: 'fact', source: segment.id })),
+      ...(document ? { supplement: { story: document.story.story, facts: document.story.facts, sourcePath: config.input.source } } : {}),
+    });
+    await writeJson(path.join(work, 'story.json'), story);
     await writeJson(path.join(work, 'narration.json'), narration);
     await writeJson(path.join(work, 'timeline.json'), timeline);
     if (audio && (srt || config.asr.engine === 'whisperx' || config.asr.align)) await writeJson(path.join(work, 'narration.aligned.json'), narration);
     if (audio && !srt) await writeAtomic(path.join(work, 'narration.srt'), serializeSrt(narration.segments));
     await appendLog(attempts, { kind: 'ingest', event: 'completed', runId, mode: narration.mode, durationMs: narration.durationMs, segmentCount: narration.segments.length, wordCount: narration.words.length, diagnostics: srt?.diagnostics ?? [], finishedAt: new Date().toISOString() });
-    return { story: document.story, narration };
+    return { story, narration };
   } catch (error) {
     await appendLog(attempts, { kind: 'ingest', event: 'failed', runId, finishedAt: new Date().toISOString(), error: error instanceof Error ? { name: error.name, message: error.message } : String(error) });
     throw error;

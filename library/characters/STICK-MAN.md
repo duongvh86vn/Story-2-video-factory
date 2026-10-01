@@ -9,7 +9,7 @@ render_strategy: reusable-svg-rig
 
 # Người que dẫn chuyện
 
-Hồ sơ nhân vật mục tiêu của đặc tả V2. “Người que” ở đây là stick figure có rig và biểu cảm, có thể kể chuyện bằng giọng trong WAV/SRT và tương tác với hình minh họa. File này mô tả thiết kế; chưa phải asset hay tính năng runtime đã triển khai.
+Hồ sơ chuẩn V2.1: người que có rig vector, khớp và biểu cảm, kể lời từ script/WAV/SRT và giải thích hình minh họa. Code compiler/controller đã bổ sung; chất lượng hoạt hình chờ nghiệm thu runtime.
 
 ## Vai trò
 
@@ -83,7 +83,7 @@ Pose phải hỗ trợ nội dung đang kể; không chạy/vẫy tay ngẫu nhi
 
 ## Đồng bộ giọng và cử chỉ
 
-WAV người dùng cung cấp là giọng của người que; không tự thay giọng. SRT-only dùng TTS đã cấu hình, đúng nguyên văn và clock. Miệng mở trong speech activity, đóng ở khoảng nghỉ. Nếu chỉ có segment timing, ghi rõ đồng bộ mức đoạn; không khẳng định phoneme lip-sync.
+Script thuần dùng TTS nguyên văn, clock theo audio đo thực tế. WAV người dùng cung cấp là giọng của người que; không tự thay giọng. SRT-only dùng TTS đã cấu hình, đúng nguyên văn và clock. Miệng mở trong speech activity, đóng ở khoảng nghỉ. Nếu chỉ có segment timing, ghi rõ đồng bộ mức đoạn; không khẳng định phoneme lip-sync.
 
 Chỉ và nhìn cùng một mục tiêu. Thao tác phải có tiếp xúc trước khi mô hình phản ứng; không làm đồ vật tự bật/tắt vì một gesture trang trí không có liên hệ nội dung.
 
@@ -104,3 +104,8 @@ Với câu chuyện cơ chế hơi nước, người que đứng cạnh sơ đ�
 ## Điều kiện duyệt nhân vật
 
 Preview sheet phải có chính diện, trái/phải, explain, point, operate-model, walk-to-marker, compare và summarize. Giữ một profile version/rig hash xuyên tập. Duyệt một lần rồi tái sử dụng; không sinh một người que mới ở từng scene. Nếu tay/chân không gập được hoặc không thể chỉ đúng target, rig chưa đạt.
+
+
+## Mẫu chuẩn và tùy chỉnh V2.1
+
+Chọn mẫu chuẩn này cho phép pipeline tự chạy tiếp. MD riêng tại input/host.md phải duyệt preview một lần theo rig hash; sửa appearance/hash cần duyệt lại. Khung rig được hỗ trợ là vector 2D, màu/tỷ lệ/nét theo schema; hướng trái/phải là hướng trình bày sơ đồ, không phải asset 3D. Không coi build qua là đã nghiệm thu thiết kế/diễn xuất.

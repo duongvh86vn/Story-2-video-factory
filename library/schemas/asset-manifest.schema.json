@@ -69,7 +69,8 @@
                 "type": "string"
               },
               "sourceUrl": {
-                "type": "string"
+                "type": "string",
+                "format": "uri"
               },
               "author": {
                 "type": "string"

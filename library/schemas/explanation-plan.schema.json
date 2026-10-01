@@ -1,0 +1,315 @@
+{
+  "$ref": "#/definitions/explanation-plan",
+  "definitions": {
+    "explanation-plan": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 2
+        },
+        "hostId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "beats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "beatId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "explanationGoal": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "narrationSegmentIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "maxLength": 96,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                },
+                "minItems": 1
+              },
+              "sourceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "narration",
+                        "source"
+                      ]
+                    },
+                    "segmentId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "quote"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1
+              },
+              "entities": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "boiler",
+                        "condenser",
+                        "piston",
+                        "cylinder",
+                        "wheel",
+                        "gear",
+                        "lever",
+                        "car",
+                        "engine",
+                        "battery",
+                        "pipe",
+                        "flow",
+                        "object",
+                        "stage",
+                        "marker"
+                      ]
+                    },
+                    "sourceRefs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "narration",
+                              "source"
+                            ]
+                          },
+                          "segmentId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "quote": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2000
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "quote"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "label",
+                    "kind",
+                    "sourceRefs"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 8
+              },
+              "relations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "to": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "sequence",
+                        "cause",
+                        "transfer",
+                        "part-of",
+                        "compare"
+                      ]
+                    },
+                    "sourceRefs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "narration",
+                              "source"
+                            ]
+                          },
+                          "segmentId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "quote": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2000
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "quote"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1
+                    }
+                  },
+                  "required": [
+                    "from",
+                    "to",
+                    "kind",
+                    "sourceRefs"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 16
+              },
+              "visualMethod": {
+                "type": "string",
+                "enum": [
+                  "question",
+                  "mechanism",
+                  "process",
+                  "evolution",
+                  "comparison",
+                  "breakdown",
+                  "event-sequence",
+                  "summary"
+                ]
+              },
+              "hostIntent": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            },
+            "required": [
+              "beatId",
+              "explanationGoal",
+              "narrationSegmentIds",
+              "sourceRefs",
+              "entities",
+              "relations",
+              "visualMethod",
+              "hostIntent"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "contentIssues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "severity": {
+                "type": "string",
+                "enum": [
+                  "high",
+                  "medium",
+                  "low"
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "sourceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "narration",
+                        "source"
+                      ]
+                    },
+                    "segmentId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "quote"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "severity",
+              "description",
+              "sourceRefs"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        }
+      },
+      "required": [
+        "version",
+        "hostId",
+        "beats"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

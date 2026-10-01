@@ -16,8 +16,8 @@ export async function analyzeProject(projectRoot: string, config: FactoryConfig,
   source = StorySchema.parse(source);
   validateNarration(narration);
   const series = await loadSeriesContext(projectRoot, config);
-  const sourceCharacters = new Map(series.source?.characters.map(character => [character.id, character]) ?? []);
-  for (const inherited of series.bible.characters) {
+  const sourceCharacters = new Map(config.content.mode === 'legacy' ? series.source?.characters.map(character => [character.id, character]) ?? [] : []);
+  for (const inherited of config.content.mode === 'legacy' ? series.bible.characters : []) {
     sourceCharacters.set(inherited.id, { id: inherited.id, name: inherited.name,
       description: Object.values(inherited.identity).filter(Boolean).join('; '),
       immutableTraits: inherited.immutable, mutableTraits: inherited.mutable });
@@ -53,7 +53,7 @@ export async function analyzeProject(projectRoot: string, config: FactoryConfig,
     }
     for (const fact of result.facts) {
       const segment = narration.segments.find(item => item.id === fact.source || `segment:${item.id}` === fact.source);
-      const text = fact.source === 'source.md' ? base.story : fact.source === 'narration' ? narration.segments.map(item => item.text).join('\n') : segment?.text;
+      const text = fact.source === 'source.md' ? config.content.mode==='legacy'?base.story:base.supplement?.story : fact.source === 'narration' ? narration.segments.map(item => item.text).join('\n') : segment?.text;
       if (!text || !fact.claim.trim() || !normalized(text).includes(normalized(fact.claim))) throw new Error(`Fact must be a grounded source excerpt: ${fact.claim} (${fact.source})`);
     }
     return StorySchema.parse({ ...base, purpose: base.purpose || result.purpose,

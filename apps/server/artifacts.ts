@@ -3,7 +3,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import {
   StorySchema, NarrationSchema, CharacterBibleSchema, StoryboardSchema, AssetManifestSchema,
-  ChapterSchema, BeatSchema, ProjectStateSchema, ReviewSchema,
+  ChapterSchema, BeatSchema, ProjectStateSchema, ReviewSchema, States,
   type Narration, type Storyboard, type CharacterBible, type Beat, type ProjectStatus,
 } from '../../packages/core/schemas.js';
 import { hash, writeAtomic } from '../../packages/core/utils.js';
@@ -14,9 +14,27 @@ import { validateStoryboard } from '../../packages/storyboard/validate.js';
 import { storyboardMarkdown } from '../../packages/storyboard/markdown.js';
 import { ApiError, boundPath, redact } from './security.js';
 import type { Coordinator } from './jobs.js';
+import { parseScript, ScriptDocumentSchema } from '../../packages/ingest/script.js';
+import { loadConfig } from '../../packages/core/config.js';
+import { HostProfileSchema, HostRigSchema, HostTimelineSchema, loadHost } from '../../packages/host/index.js';
+import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/index.js';
+import { ExplanationPlanSchema } from '../../packages/explainer/schemas.js';
+import { validateExplainerStoryboard, writeHostTimeline } from '../../packages/explainer/storyboard.js';
 
 interface ArtifactSpec { paths: string[]; schema?: z.ZodTypeAny; editable?: boolean; from?: ProjectStatus; text?: boolean; }
 export const ARTIFACTS: Record<string, ArtifactSpec> = {
+  'script.txt': {paths:['input/script.txt'],editable:true,from:'NEW',text:true},
+  'script.md': {paths:['input/script.md'],editable:true,from:'NEW',text:true},
+  'host.md': {paths:['input/host.md'],editable:true,from:'TIMED',text:true},
+  'script.json': {paths:['work/script.json'],schema:ScriptDocumentSchema},
+  'input-document.json': {paths:['work/input-document.json']},
+  'voiced-narration.json': {paths:['work/voiced-narration.json'],schema:NarrationSchema},
+  'voice-report.json': {paths:['work/voice-report.json','output/voice-report.json'],schema:VoiceReportSchema},
+  'speech-activity.json': {paths:['work/speech-activity.json'],schema:ActivitySchema},
+  'host-profile.json': {paths:['work/host-profile.json','output/host-profile.json'],schema:HostProfileSchema},
+  'host-rig.json': {paths:['work/host-rig.json'],schema:HostRigSchema},
+  'host-timeline.json': {paths:['work/host-timeline.json','output/host-timeline.json'],schema:HostTimelineSchema},
+  'explanation-plan.json': {paths:['work/explanation-plan.json','output/explanation-plan.json'],schema:ExplanationPlanSchema},
   'source.md': { paths: ['input/source.md'], editable: true, from: 'NEW', text: true },
   'narration.srt': { paths: ['input/narration.srt'], editable: true, from: 'NEW', text: true },
   'story.json': { paths: ['work/story.json'], schema: StorySchema, editable: true, from: 'INGESTED' },
@@ -40,6 +58,7 @@ export const DOWNLOADS: Record<string, string[]> = {
   'thumbnail.png': ['output/thumbnail.png'],
   'contact-sheet.jpg': ['previews/contact-sheet-global.jpg', 'previews/contact-sheet.jpg', 'previews/contact-sheet.jpeg'],
   'contact-sheet.png': ['previews/contact-sheet.png'],
+  'host-preview.png': ['previews/host-preview-sheet.png'],
   ...Object.fromEntries(Object.entries(ARTIFACTS).map(([name, spec]) => [name, spec.paths])),
 };
 
@@ -60,7 +79,8 @@ export async function readArtifact(root: string, name: string): Promise<{ name: 
   const content = await fs.readFile(file, 'utf8');
   let data: unknown = spec.text ? content : JSON.parse(content);
   if (spec.schema) data = spec.schema.parse(data);
-  return { name, data, revision: hash(content), editable: !!spec.editable };
+  const derived=(await loadConfig(root)).content.mode==='narrated-explainer'&&['story.json','narration.json'].includes(name);
+  return { name, data, revision: hash(content), editable: !!spec.editable&&!derived };
 }
 
 export async function optionalArtifact<T>(root: string, name: string): Promise<T | null> {
@@ -100,6 +120,7 @@ export async function validateStoryboardEdit(root: string, board: Storyboard): P
   if (!narration || !beats || !bible) throw new ApiError(409, 'Analyze narration, beats and characters before editing the storyboard.', 'CONTEXT_MISSING');
   try { validateStoryboard(board, narration, beats, bible); }
   catch (error) { throw new ApiError(422, (error as Error).message, 'STORYBOARD_INVALID'); }
+  const config=await loadConfig(root);if(config.content.mode==='narrated-explainer'){const{profile,rig}=await loadHost(root);validateExplainerStoryboard(board,narration,beats,profile,rig,config);}
   unique(board.shots.map(s => s.id), 'shot');
   const beatIds = new Set(beats.map(b => b.id));
   const characterIds = new Set(bible.characters.map(c => c.id));
@@ -148,10 +169,13 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   await checkRevision(existing, revision);
   const state = await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root, 'project-state.json');
   let data: unknown = spec.text ? z.string().min(1).max(2 * 1024 * 1024).parse(value) : spec.schema!.parse(value);
+  if(name==='script.txt'||name==='script.md')parseScript(data as string,`input/${name}`);
+  if(name==='host.md'&&Buffer.byteLength(data as string,'utf8')>128*1024)throw new ApiError(413,'Host MD exceeds 128 KB','TOO_LARGE');
+  if(['story.json','narration.json'].includes(name)&&(await loadConfig(root)).content.mode==='narrated-explainer')throw new ApiError(403,'Edit the script or input SRT; generated narration is immutable.','READ_ONLY');
   if (name === 'narration.json') validateNarrationTiming(data as Narration, await optionalArtifact<Narration>(root, name));
   if (name === 'narration.srt') {
     const cues = srtSegments(data as string), previous = await optionalArtifact<Narration>(root, 'narration.json');
-    if (previous && hash(cues.map(({ startMs, endMs }) => ({ startMs, endMs }))) !== hash(previous.segments.map(({ startMs, endMs }) => ({ startMs, endMs })))) {
+    if (previous && ['srt','aligned'].includes(previous.mode) && hash(cues.map(({ startMs, endMs }) => ({ startMs, endMs }))) !== hash(previous.segments.map(({ startMs, endMs }) => ({ startMs, endMs })))) {
       throw new ApiError(422, 'Existing narration timestamps are immutable. Create another project for new timing.', 'TIMESTAMP_IMMUTABLE');
     }
   }
@@ -183,7 +207,7 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   }
   const relative = existing ? path.relative(root, existing).split(path.sep).join('/') : spec.paths[0]!;
   // Invalidate generated dependents before replacing their canonical input.
-  await coordinator.invalidateProject(root, spec.from);
+  await coordinator.invalidateProject(root, name==='source.md'&&(await loadConfig(root)).content.mode==='narrated-explainer'?'TIMED':spec.from);
   const file = await boundPath(root, relative, true);
   await writeAtomic(file, spec.text ? data as string : JSON.stringify(data, null, 2) + '\n');
   const alias = name === 'character-bible.json' ? 'work/characters.json' : name === 'asset-manifest.json' ? 'work/assets.json' : null;
@@ -199,13 +223,16 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   if (name === 'storyboard.json') {
     const beats = await optionalArtifact<Beat[]>(root, 'beats.json');
     await writeAtomic(await boundPath(root, 'work/storyboard.md', true), storyboardMarkdown(data as Storyboard, beats ?? []));
+    if((await loadConfig(root)).content.mode==='narrated-explainer'){const {profile,rig}=await loadHost(root),n=await optionalArtifact<Narration>(root,'narration.json'),voice=await optionalArtifact<z.infer<typeof VoiceReportSchema>>(root,'voice-report.json');if(n)await writeHostTimeline(root,data as Storyboard,n,profile,rig,voice?.synchronization);}
   }
   return readArtifact(root, name);
 }
 
+export async function currentDownload(root:string,name:string):Promise<boolean>{const stage:Record<string,ProjectStatus>={'final.mp4':'FINAL_RENDERED','final.srt':'FINAL_RENDERED','thumbnail.png':'FINAL_RENDERED','qc-report.json':'QC_PASSED','production-report.md':'DONE','draft.mp4':'DRAFT_RENDERED'};if(!stage[name])return true;const state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');return !!state&&States.indexOf(state.state)>=States.indexOf(stage[name]!);}
 export async function listDownloads(root: string): Promise<unknown[]> {
   const result: unknown[] = [];
   for (const [name, paths] of Object.entries(DOWNLOADS)) {
+    if(!await currentDownload(root,name))continue;
     const file = await locate(root, paths);
     if (file) { const stat = await fs.stat(file); result.push({ name, size: stat.size, modifiedAt: stat.mtime.toISOString(), editable: !!ARTIFACTS[name]?.editable }); }
   }

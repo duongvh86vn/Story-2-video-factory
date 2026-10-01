@@ -23,7 +23,7 @@ export const api = {
   create: (name: string, example: boolean) => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example }) }),
   project: (name: string) => request<ProjectDetail>(projectUrl(name)),
   run: (name: string, until: ProjectStatus, shotIds?: string[]) => request<{ job: Job }>(`${projectUrl(name)}/run`, { method: 'POST', body: JSON.stringify({ until, ...(shotIds ? { shotIds } : {}) }) }),
-  approve: (name: string, kind: 'storyboard' | 'characters') => request<ProjectSummary>(`${projectUrl(name)}/approve`, { method: 'POST', body: JSON.stringify({ kind }) }),
+  approve: (name: string, kind: 'storyboard' | 'characters' | 'host') => request<ProjectSummary>(`${projectUrl(name)}/approve`, { method: 'POST', body: JSON.stringify({ kind }) }),
   locks: (name: string, locked: Record<string, boolean>) => request<ProjectSummary>(`${projectUrl(name)}/locks`, { method: 'PATCH', body: JSON.stringify({ locked }) }),
   artifact: <T = unknown>(name: string, artifact: string) => request<ArtifactDocument<T>>(`${projectUrl(name)}/artifacts/${encodeURIComponent(artifact)}`),
   save: <T = unknown>(name: string, artifact: string, data: T, revision: string) => request<ArtifactDocument<T>>(`${projectUrl(name)}/artifacts/${encodeURIComponent(artifact)}`, { method: 'PUT', body: JSON.stringify({ data, revision }) }),
@@ -32,4 +32,7 @@ export const api = {
   assets: (name: string) => request<{ files: UploadedAsset[] }>(`${projectUrl(name)}/assets`),
   log: (name: string, key: string) => request<{ text: string; truncated: boolean }>(`${projectUrl(name)}/logs/${encodeURIComponent(key)}`),
   upload: (name: string, data: FormData) => request<{ files: UploadedAsset[] }>(`${projectUrl(name)}/upload`, { method: 'POST', body: data }),
+  settings: (name:string,data:unknown)=>request<ProjectDetail>(`${projectUrl(name)}/settings`,{method:'PATCH',body:JSON.stringify(data)}),
+  script: (name:string,text:string,format:'txt'|'md',revision?:string)=>request<ArtifactDocument>(`${projectUrl(name)}/script`,{method:'PUT',body:JSON.stringify({text,format,revision})}),
+  voiceDefaults: (voice:unknown)=>request<{saved:boolean}>('/api/settings/voice',{method:'PUT',body:JSON.stringify(voice)}),
 };

@@ -1,0 +1,9 @@
+Hệ thống hơi nước được cải tiến như thế nào? Ta cùng xem vấn đề nhiệt trong động cơ hơi nước.
+
+Trong thiết kế cũ, xi-lanh phải nóng để tiết kiệm nhiên liệu, nhưng lại cần được làm nguội trong mỗi chu kỳ. Việc làm nóng rồi làm lạnh liên tục gây lãng phí.
+
+James Watt tách nhiệm vụ làm lạnh sang một bình ngưng riêng. Hơi nước được dẫn đến bình ngưng, còn xi-lanh được giữ nóng. Hai bộ phận có hai nhiệm vụ khác nhau.
+
+Năm 1769, Watt nhận bằng sáng chế cho cải tiến này. So với cách làm lạnh ngay trong xi-lanh, bình ngưng riêng giúp sử dụng nhiệt hiệu quả hơn.
+
+Sau đó, động cơ cải tiến được ứng dụng tại nhà máy và xưởng. Tóm lại, điểm cần hiểu là tách nơi giữ nóng khỏi nơi ngưng tụ, thay vì coi Watt là người tạo ra toàn bộ động cơ hơi nước từ đầu.

@@ -1,6 +1,6 @@
 # Kết quả kiểm thử Story-to-Video Factory
 
-Lưu ý phiên bản (2026-10-01): báo cáo này đo runtime **V1**. `BUILD-SPEC.md` hiện đã chuyển sang V2 với robot mini/người que dẫn chuyện giải thích. Việc đổi MD không xác nhận V2 đã được triển khai hoặc kiểm thử; xem `IMPLEMENTATION-STATUS.md` và phần V2 trong `TEST-HANDOFF.md`.
+Lưu ý phiên bản (2026-10-01): các kết quả runtime bên dưới đo **V1**. Code ba luồng/host V2.1 đã bổ sung và build/typecheck qua, nhưng nghiệm thu runtime V2.1 vẫn giao model khác. Xem IMPLEMENTATION-STATUS.md và TEST-HANDOFF.md. Không dùng kết quả V1 để khẳng định ba luồng mới đạt.
 
 Ngày kiểm thử: 2026-09-30  
 Repository: `https://github.com/duongvh86vn/Story-2-video-factory`  
@@ -208,3 +208,18 @@ Video: `temp/acceptance-render/tracer-1790779942030/output/final.mp4`; báo cáo
 - API đã kiểm tra limit source 2 MB, junction và format attack; chưa stream thử file 128 MB/combined 256 MB và chưa kiểm tra toàn bộ upload limit matrix.
 
 Các giới hạn trên không được tính là pass. `TEST-HANDOFF.md` giữ checklist để model test tiếp tục khi có môi trường và cấu hình tương ứng.
+
+
+## Triển khai V2.1 — kiểm tra biên dịch, chưa nghiệm thu runtime
+
+Ngày 2026-10-01. Source ba luồng script/WAV/SRT, voice/host/explainer pipeline và Studio/API/CLI đã được bổ sung. Commit bàn giao là commit GitHub có tiêu đề `Implement three narration flows with reusable explainer hosts`; model test phải ghi SHA thực đã chạy ở phần nghiệm thu tiếp theo.
+
+| Kiểm tra | Kết quả | Phạm vi |
+|---|---|---|
+| npm run typecheck | PASS | TypeScript backend/CLI và Studio |
+| npm run build | PASS | Backend/CLI compile + Studio Vite production bundle |
+| npm run schemas | Đã sinh | JSON Schema từ shared contracts, không là runtime test |
+| npm test / test:asr / test:render | NOT RUN trong lượt V2.1 | Theo yêu cầu giao test model khác |
+| TTS/ASR/alignment/render/video host V2.1 | NOT RUN | Chưa có evidence nghiệm thu mới |
+
+Mẫu script/SRT và matrix acceptance nằm trong TEST-HANDOFF.md. Cần provider tiếng Việt thật, alignment backend và planner/vision phù hợp để ghi evidence audio/video/source/contact/layout. Rule-only pass, schema generation, compilation hoặc kết quả V1 không thay thế các ca này.

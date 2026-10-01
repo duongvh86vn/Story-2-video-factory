@@ -3,9 +3,11 @@ import type { VisualStyle } from '../styles/index.js';
 import { escapeHtml } from '../../packages/core/utils.js';
 import { svg, sourceLabels } from '../components/index.js';
 import { transitionTween } from '../transitions/index.js';
+import { explainerRecipes } from './explainer.js';
 
 export interface ShotRecipe { id: string; version: number; sceneTypes: string[]; description: string; duration: { min: number; max: number }; }
 export const recipes: readonly ShotRecipe[] = [
+  ...explainerRecipes,
   {id:'historical-map',version:1,sceneTypes:['map'],description:'Schematic route with named locations, moving marker and progressive route reveal.',duration:{min:2,max:8}},
   {id:'patent-reveal',version:1,sceneTypes:['document-highlight','technical-diagram','schematic','document'],description:'Document or schematic on paper, line reveal and region highlight.',duration:{min:2,max:7}},
   {id:'newspaper-headline',version:1,sceneTypes:['newspaper','quote','kinetic-text','kinetic-typography'],description:'Editorial headline, pull quote and independently timed rule/column reveal.',duration:{min:2,max:6}},
@@ -16,8 +18,9 @@ export const recipes: readonly ShotRecipe[] = [
   {id:'before-after',version:1,sceneTypes:['before-after','comparison','data-chart','ui-demo','abstract-transition'],description:'Two sourced views with comparison divider and sequential emphasis.',duration:{min:2,max:7}}
 ];
 export function selectRecipe(shot: Shot): ShotRecipe | undefined {
-  if (shot.recipeId) return recipes.find(recipe=>recipe.id === shot.recipeId);
-  return recipes.find(recipe=>recipe.sceneTypes.includes(shot.sceneType));
+  const available=shot.host?recipes:recipes.filter(r=>!explainerRecipes.some(e=>e.id===r.id));
+  if (shot.recipeId) return available.find(recipe=>recipe.id === shot.recipeId);
+  return available.find(recipe=>recipe.sceneTypes.includes(shot.sceneType));
 }
 export interface RecipeAsset { id:string; type:string; path:string; characterId?:string; }
 export function renderRecipe(recipe: ShotRecipe, shot: Shot, style: VisualStyle, width: number, height: number, assets: RecipeAsset[]): SceneFiles {

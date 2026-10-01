@@ -7,16 +7,23 @@ import { randomUUID } from 'node:crypto';
 import { Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { z } from 'zod';
-import { findRepoRoot, loadConfig } from '../../packages/core/config.js';
+import { findRepoRoot, loadConfig, ConfigSchema } from '../../packages/core/config.js';
+import YAML from 'yaml';
+import { updateSettings, SettingsPatchSchema } from '../../packages/orchestrator/settings.js';
+import { parseScript } from '../../packages/ingest/script.js';
+import { parseHostProfile } from '../../packages/host/profile.js';
+import { hostPreviewSvg } from '../../packages/host/rig.js';
+import { ModelRouter } from '../../packages/models/registry.js';
 import { ProjectStateSchema, States, ShotSchema, StoryboardSchema, SceneFilesSchema, type ProjectState, type Storyboard } from '../../packages/core/schemas.js';
 import { exists, hash, writeAtomic } from '../../packages/core/utils.js';
 import { inspectMedia } from '../../packages/assets/files.js';
 import { validateSceneFiles, secureSceneFiles, SCENE_FILENAMES } from '../../packages/scenes/security.js';
 import { ApiError, ProjectName, SafeId, boundPath, ensureIdle, projectPath, uploadFilename, MIME, redact } from './security.js';
-import { ARTIFACTS, DOWNLOADS, LOGS, checkRevision, listDownloads, locate, optionalArtifact, readArtifact, saveArtifact, srtSegments, tailLog } from './artifacts.js';
+import { ARTIFACTS, DOWNLOADS, LOGS, checkRevision, currentDownload, listDownloads, locate, optionalArtifact, readArtifact, saveArtifact, srtSegments, tailLog } from './artifacts.js';
 import { loadCoordinator, ProjectJobs, type Coordinator } from './jobs.js';
 import { PREVIEW_BRIDGE, withPreviewBridge } from './preview.js';
 import { visualAssetPath } from '../../packages/scenes/assets.js';
+import { validateExplainerSources } from '../../packages/scenes/index.js';
 import type { ProjectDetail, ProjectSummary, SceneDocument, UploadedAsset } from './contracts.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
@@ -105,7 +112,7 @@ export async function buildServer(options: ServerOptions = {}) {
     const root = await rootFor(name);
     const state = await optionalArtifact<ProjectState>(root, 'project-state.json') ?? ProjectStateSchema.parse({ version: 1, name, state: 'NEW', updatedAt: (await fs.stat(root)).mtime.toISOString(), inputHash: '' });
     const job = jobs.current(name);
-    return { name, state: state.state, updatedAt: state.updatedAt, approvals: state.approvals, busy: job?.status === 'running' || await isBusy(root), job, ...(state.error ? { error: redact(state.error) } : {}) };
+    return { name, state: state.state, updatedAt: state.updatedAt, approvals: state.approvals, waitingFor:state.waitingFor,busy: job?.status === 'running' || await isBusy(root), job, ...(state.error ? { error: redact(state.error) } : {}) };
   };
   const detail = async (name: string): Promise<ProjectDetail> => {
     const root = await rootFor(name);
@@ -121,8 +128,10 @@ export async function buildServer(options: ServerOptions = {}) {
       ...await summary(name), locked: state.locked,
       progress: { completed, total: States.length - 1, percent: Math.round(completed / (States.length - 1) * 100), stage: state.state },
       artifacts: clean(raw.artifacts ?? {}) as ProjectDetail['artifacts'], production: clean(raw.production ?? {}), downloads,
-      preview: { composition: await available(['scenes/index.html']), draft: await available(DOWNLOADS['draft.mp4']!), final: await available(DOWNLOADS['final.mp4']!), contactSheet: await available([...DOWNLOADS['contact-sheet.jpg']!, ...DOWNLOADS['contact-sheet.png']!]) },
-      settings: { language: config.project.language, format: config.rendering.final, approvalRequired: { storyboard: config.workflow.require_storyboard_approval || !config.workflow.automatic, characters: config.workflow.require_character_approval } },
+      preview: { composition: await available(['scenes/index.html']), draft: await available(DOWNLOADS['draft.mp4']!), final: completed>=States.indexOf('FINAL_RENDERED')?await available(DOWNLOADS['final.mp4']!):null, contactSheet: await available([...DOWNLOADS['contact-sheet.jpg']!, ...DOWNLOADS['contact-sheet.png']!]) },
+      settings: {revision:hash(await fs.readFile(await boundPath(root,'project.yaml'))),language:config.project.language,contentMode:config.content.mode,input:config.input,host:config.host,
+        voice:((({command,command_args,...rest})=>rest)(config.voice)),automatic:config.workflow.automatic,format:config.rendering.final,
+        approvalRequired:{storyboard:config.workflow.require_storyboard_approval||!config.workflow.automatic,characters:config.workflow.require_character_approval,host:config.workflow.require_host_approval}},
     };
   };
 
@@ -144,6 +153,33 @@ export async function buildServer(options: ServerOptions = {}) {
     return reply.code(201).send(result);
   });
   app.get<{ Params: Named }>('/api/projects/:name', request => detail(ProjectName.parse(request.params.name)));
+  app.patch<{Params:Named}>('/api/projects/:name/settings',async request=>{
+    const body=SettingsPatchSchema.parse(request.body);
+    return mutate(request.params.name,async root=>{await checkRevision(await boundPath(root,'project.yaml'),body.revision);await updateSettings(root,body);return detail(request.params.name);});
+  });
+  app.put<{Params:Named}>('/api/projects/:name/script',async request=>{
+    const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']).default('txt'),revision:z.string().optional()}).strict().parse(request.body);
+    return mutate(request.params.name,async(root,core)=>{
+      const relative=`input/script.${body.format}`,file=await boundPath(root,relative,true);await checkRevision(await locate(root,[relative]),body.revision);
+      parseScript(body.text,relative);if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
+      await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md'}});return readArtifact(root,`script.${body.format}`);
+    });
+  });
+  app.get<{Params:Named &{kind:string}}>('/api/projects/:name/hosts/:kind/preview',async(request,reply)=>{
+    const kind=z.enum(['mini-robot','stick-man']).parse(request.params.kind),root=await rootFor(request.params.name),config=await loadConfig(root);
+    config.host={...config.host,profile:`library/characters/${kind==='mini-robot'?'MINI-ROBOT':'STICK-MAN'}.md`,profile_id:undefined};
+    const profile=await parseHostProfile(root,config,new ModelRouter(config,root));
+    return reply.type('image/svg+xml').header('Content-Security-Policy',"default-src 'none'; style-src 'unsafe-inline'").send(hostPreviewSvg(profile));
+  });
+  app.post('/api/script-preview',async request=>{const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md'])}).strict().parse(request.body);const parsed=parseScript(body.text,`input/script.${body.format}`);return {text:parsed.text,chunks:parsed.chunks.length};});
+  app.put('/api/settings/voice',async request=>{
+    const patch=ConfigSchema.shape.voice.removeDefault().partial().strict().parse(request.body),repo=await findRepoRoot(),file=await boundPath(repo,'config/voice.yaml',true);
+    const current=await exists(file)?YAML.parse(await fs.readFile(file,'utf8'))?.voice??{}:{};
+    const voice=ConfigSchema.shape.voice.removeDefault().parse({...current,...patch});
+    if(voice.tts_provider==='command'&&!voice.command)throw new ApiError(422,'Configure the command adapter in config/voice.yaml before selecting it as default.','INVALID_SETTINGS');
+    if(voice.base_url){const u=new URL(voice.base_url);if(u.username||u.password)throw new ApiError(422,'Use the API key environment variable for credentials.','INVALID_SETTINGS');}
+    await writeAtomic(file,YAML.stringify({voice}));return {saved:true};
+  });
   app.post<{ Params: Named }>('/api/projects/:name/run', async (request, reply) => {
     const name = ProjectName.parse(request.params.name), body = RunBody.parse(request.body ?? {}), root = await rootFor(name);
     await safeLayout(root); await ensureIdle(root);
@@ -163,9 +199,9 @@ export async function buildServer(options: ServerOptions = {}) {
     return { job: jobs.get(name, request.params.id) };
   });
   app.post<{ Params: Named }>('/api/projects/:name/approve', async request => {
-    const { kind } = z.object({ kind: z.enum(['storyboard', 'characters']) }).strict().parse(request.body);
+    const { kind } = z.object({ kind: z.enum(['storyboard', 'characters','host']) }).strict().parse(request.body);
     return mutate(request.params.name, async (root, core) => {
-      if (!await optionalArtifact(root, kind === 'storyboard' ? 'storyboard.json' : 'character-bible.json')) throw new ApiError(409, 'Generate this artifact before approving it.', 'ARTIFACT_REQUIRED');
+      if (!await optionalArtifact(root, kind === 'storyboard' ? 'storyboard.json' : kind==='host'?'host-rig.json':'character-bible.json')) throw new ApiError(409, 'Generate this artifact before approving it.', 'ARTIFACT_REQUIRED');
       await core.approveProject(root, kind); return summary(request.params.name);
     });
   });
@@ -234,6 +270,7 @@ export async function buildServer(options: ServerOptions = {}) {
       const assets = approved.map(visualAssetPath).filter((value):value is string=>Boolean(value));
       const config = await loadConfig(root);
       const errors = validateSceneFiles(body, shot, config.workflow.max_scene_bytes, assets, config.rendering.final);
+      errors.push(...await validateExplainerSources(root,config,shot,body));
       if (errors.length) throw new ApiError(422, errors.join('\n'), 'INVALID_SCENE');
       const secured = secureSceneFiles(body);
       await core.invalidateProject(root, 'SCENES_READY');
@@ -255,7 +292,9 @@ export async function buildServer(options: ServerOptions = {}) {
           const original = uploadFilename(part.filename), extension = path.extname(original).toLowerCase();
           const category = part.fieldname;
           let relative: string;
-          if (category === 'source' && extension === '.md') relative = 'input/source.md';
+          if(category==='script'&&['.txt','.md'].includes(extension))relative=`input/script${extension}`;
+          else if(category==='host'&&extension==='.md')relative='input/host.md';
+          else if (category === 'source' && extension === '.md') relative = 'input/source.md';
           else if ((category === 'subtitles' || category === 'srt') && extension === '.srt') relative = 'input/narration.srt';
           else if ((category === 'narration' || category === 'audio') && extension === '.wav') relative = 'input/narration.wav';
           else if (category === 'assets' && ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.avif', '.svg', '.mp4', '.webm', '.mov', '.wav', '.mp3', '.flac', '.ogg', '.m4a', '.pdf', '.txt', '.md'].includes(extension)) relative = `input/assets/${original}`;
@@ -269,7 +308,11 @@ export async function buildServer(options: ServerOptions = {}) {
           } });
           await pipeline(part.file, counter, createWriteStream(staged, { flags: 'wx' }));
           if (part.file.truncated || !size) throw new ApiError(413, 'File is empty or exceeds the upload limit.', 'TOO_LARGE');
-          if (relative.endsWith('.srt')) {
+          if(category==='script'||category==='host'){
+            if(size>128*1024)throw new ApiError(413,'Script/host exceeds 128 KB.','TOO_LARGE');
+            let text:string;try{text=new TextDecoder('utf-8',{fatal:true}).decode(await fs.readFile(staged));}catch{throw new ApiError(422,'Script/host must be UTF-8.','INVALID_INPUT');}
+            if(category==='script')parseScript(text,relative);
+          } else if (relative.endsWith('.srt')) {
             if (size > 2 * 1024 * 1024) throw new ApiError(413, 'Subtitles exceed 2 MB.', 'TOO_LARGE');
             srtSegments(await fs.readFile(staged, 'utf8'));
           } else if (category === 'source') {
@@ -291,12 +334,15 @@ export async function buildServer(options: ServerOptions = {}) {
         if (!pending.length) throw new ApiError(422, 'Choose at least one file.', 'EMPTY_UPLOAD');
         // Validate all destinations before touching canonical inputs.
         for (const item of pending) await boundPath(root, item.relative, true);
-        await core.invalidateProject(root, pending.some(item => !item.relative.startsWith('input/assets/')) ? 'NEW' : 'STORYBOARDED');
+        const config=await loadConfig(root);await core.invalidateProject(root,pending.some(item=>!item.relative.startsWith('input/assets/')&&item.relative!=='input/host.md'&&(item.relative!=='input/source.md'||config.content.mode==='legacy'))?'NEW':pending.some(item=>['input/host.md','input/source.md'].includes(item.relative))?'TIMED':'STORYBOARDED');
         const result: UploadedAsset[] = [];
         for (const item of pending) {
           await fs.rename(item.staged, await boundPath(root, item.relative, true));
           result.push({ name: item.original, path: item.relative, size: item.size });
         }
+        const script=pending.find(item=>/^input\/script\.(?:txt|md)$/.test(item.relative));
+        if(script)await updateSettings(root,{input:{mode:'script',script:script.relative as 'input/script.txt'|'input/script.md'}});
+        if(pending.some(item=>item.relative==='input/host.md'))await updateSettings(root,{host:'custom'});
         return result;
       } finally {
         for (const item of await fs.readdir(stage)) await fs.unlink(path.join(stage, item));
@@ -322,7 +368,8 @@ export async function buildServer(options: ServerOptions = {}) {
   app.get<{ Params: Named & { key: string } }>('/api/projects/:name/logs/:key', async request => tailLog(await rootFor(request.params.name), request.params.key));
   app.get<{ Params: Named & { artifact: string } }>('/api/projects/:name/downloads/:artifact', async (request, reply) => {
     const paths = DOWNLOADS[request.params.artifact]; if (!paths) throw new ApiError(404, 'Download is not allowed.', 'NOT_FOUND');
-    const file = await locate(await rootFor(request.params.name), paths); if (!file) throw new ApiError(404, 'Artifact is not available yet.', 'NOT_FOUND');
+    const root=await rootFor(request.params.name);if(!await currentDownload(root,request.params.artifact))throw new ApiError(409,'Artifact is from an earlier revision; resume production to regenerate it.','STALE_ARTIFACT');
+    const file = await locate(root, paths); if (!file) throw new ApiError(404, 'Artifact is not available yet.', 'NOT_FOUND');
     return streamFile(request, reply, file, request.params.artifact);
   });
 
@@ -337,7 +384,8 @@ export async function buildServer(options: ServerOptions = {}) {
     }
     const root = await rootFor(request.params.name), relative = request.params['*'], extension = path.extname(relative).toLowerCase();
     const scene = relative.startsWith('scenes/');
-    const narration = await optionalArtifact<NonNullable<ProjectDetail['artifacts']['narration']>>(root, 'narration.json');
+    const narration = await optionalArtifact<NonNullable<ProjectDetail['artifacts']['narration']>>(root, 'voiced-narration.json')??await optionalArtifact<NonNullable<ProjectDetail['artifacts']['narration']>>(root, 'narration.json');
+    if(relative==='output/final.mp4'&&!await currentDownload(root,'final.mp4'))throw new ApiError(409,'Final belongs to an earlier input revision.','STALE_ARTIFACT');
     const allowed = scene || relative === narration?.audioPath || relative.startsWith('input/assets/') || relative.startsWith('assets/') || relative.startsWith('work/series-assets/') || relative.startsWith('previews/') || Object.values(DOWNLOADS).flat().includes(relative);
     if (!allowed || !MIME[extension] || (!scene && ['.html', '.js', '.css'].includes(extension))) throw new ApiError(404, 'Preview file is not allowed.', 'NOT_FOUND');
     const file = await boundPath(root, relative);

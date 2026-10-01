@@ -1,0 +1,51 @@
+1
+00:00:00,000 --> 00:00:10,000
+Hệ thống hơi nước được cải tiến như thế nào?
+
+2
+00:00:10,000 --> 00:00:20,000
+Ta cùng xem vấn đề nhiệt trong động cơ hơi nước.
+
+3
+00:00:20,000 --> 00:00:30,000
+Trong thiết kế cũ, xi-lanh phải nóng để tiết kiệm nhiên liệu, nhưng lại cần được làm nguội trong mỗi
+
+4
+00:00:30,000 --> 00:00:40,000
+chu kỳ.
+
+5
+00:00:40,000 --> 00:00:50,000
+Việc làm nóng rồi làm lạnh liên tục gây lãng phí.
+
+6
+00:00:50,000 --> 00:01:00,000
+James Watt tách nhiệm vụ làm lạnh sang một bình ngưng riêng.
+
+7
+00:01:00,000 --> 00:01:10,000
+Hơi nước được dẫn đến bình ngưng, còn xi-lanh được giữ nóng.
+
+8
+00:01:10,000 --> 00:01:20,000
+Hai bộ phận có hai nhiệm vụ khác nhau.
+
+9
+00:01:20,000 --> 00:01:30,000
+Năm 1769, Watt nhận bằng sáng chế cho cải tiến này.
+
+10
+00:01:30,000 --> 00:01:40,000
+So với cách làm lạnh ngay trong xi-lanh, bình ngưng riêng giúp sử dụng nhiệt hiệu quả hơn.
+
+11
+00:01:40,000 --> 00:01:50,000
+Sau đó, động cơ cải tiến được ứng dụng tại nhà máy và xưởng.
+
+12
+00:01:50,000 --> 00:02:00,000
+Tóm lại, điểm cần hiểu là tách nơi giữ nóng khỏi nơi ngưng tụ, thay vì coi Watt là người tạo ra toàn
+
+13
+00:02:00,000 --> 00:02:10,000
+bộ động cơ hơi nước từ đầu.

@@ -14,6 +14,11 @@ export function storyboardMarkdown(storyboard: Storyboard, beats: Beat[]): strin
     sections.push(`## ${inline(shot.id)} — ${timestamp(shot.startMs)} → ${timestamp(shot.endMs)}`,
       `\nNarration (referenced beats):\n\n${narration.split(/\r?\n/).map(line => `> ${inline(line)}`).join('\n')}`,
       `\nVisual:\n\n${shot.visualDescription}`,
+      ...(shot.host && shot.visualization ? [
+        `\n| Narration | Giải thích | Hành động host |\n|---|---|---|\n| ${inline(narration).replaceAll('|', '\\|')} | ${inline(shot.explanationGoal ?? '').replaceAll('|', '\\|')} | ${shot.host.actions.map(a => `${a.type} → ${a.target?.partId ?? 'viewer'}`).join('; ')} |`,
+        `\nHost: ${inline(shot.host.id)} v${shot.host.profileVersion}; rig ${inline(shot.host.rigHash)}; ${shot.host.presence}`,
+        `\nVisualization: ${shot.visualization.type}; conceptual. Parts: ${shot.visualization.parts.map(p => inline(p.label)).join(', ')}`,
+      ] : []),
       `\nScene type: ${shot.sceneType}\n\nSubject: ${inline(shot.subject)}`,
       `\nCharacters: ${shot.characters.length ? shot.characters.map(inline).join(', ') : 'None'}`,
       `\nCamera: ${inline(shot.camera.shotSize)}; ${inline(shot.camera.angle)}; ${inline(shot.camera.movement)}`,

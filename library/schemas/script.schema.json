@@ -1,0 +1,105 @@
+{
+  "$ref": "#/definitions/script",
+  "definitions": {
+    "script": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 1
+        },
+        "parserVersion": {
+          "type": "string",
+          "const": "script-1"
+        },
+        "sourcePath": {
+          "type": "string"
+        },
+        "sourceHash": {
+          "type": "string"
+        },
+        "original": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "paragraphs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index": {
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              },
+              "sourceStartLine": {
+                "type": "integer"
+              },
+              "sourceEndLine": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "index",
+              "text",
+              "sourceStartLine",
+              "sourceEndLine"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "chunks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "paragraphIndex": {
+                "type": "integer"
+              },
+              "sourceStartLine": {
+                "type": "integer"
+              },
+              "sourceEndLine": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id",
+              "text",
+              "paragraphIndex",
+              "sourceStartLine",
+              "sourceEndLine"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "version",
+        "parserVersion",
+        "sourcePath",
+        "sourceHash",
+        "original",
+        "text",
+        "paragraphs",
+        "chunks"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

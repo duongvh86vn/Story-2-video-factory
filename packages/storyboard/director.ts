@@ -12,10 +12,12 @@ import { planWithValidation } from '../story/request.js';
 import { narrationBoundaries, validateShotReferences, validateStoryboard } from './validate.js';
 import { storyboardMarkdown } from './markdown.js';
 import { recipes as builtInRecipes } from '../../library/shots/index.js';
+import { loadHost } from '../host/index.js';
+import { explainerShot, validateExplainerStoryboard, writeHostTimeline } from '../explainer/storyboard.js';
 
 async function recipeCatalog(): Promise<Array<Record<string, unknown>>> {
   const files = await walk(path.join(await libraryRoot(), 'shots'));
-  const recipes: Array<Record<string, unknown>> = builtInRecipes.map(recipe => ({ ...recipe }));
+  const recipes: Array<Record<string, unknown>> = builtInRecipes.filter(recipe=>!recipe.id.startsWith('host-')).map(recipe => ({ ...recipe }));
   for (const file of files.filter(file => /(?:recipe|manifest)\.(?:ya?ml|json)$/i.test(file))) {
     const text = await fs.readFile(file, 'utf8');
     const data: unknown = file.endsWith('.json') ? JSON.parse(text) : YAML.parse(text);
@@ -33,6 +35,41 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
   const file = path.join(projectRoot, 'work', 'storyboard.json');
   const stateLocks = await readProjectLocks(projectRoot);
   const existing = await exists(file) ? StoryboardSchema.parse(await readJson(file)) : undefined;
+  if (config.content.mode === 'narrated-explainer') {
+    const { profile, rig } = await loadHost(projectRoot);
+    let storyboard: Storyboard;
+    if (stateLocks.storyboard) {
+      if (!existing) throw new Error('Locked storyboard is missing');
+      storyboard = existing;
+    } else {
+      const locks = existing?.shots.filter(s => stateLocks[s.id] ?? stateLocks[`shot:${s.id}`] ?? s.locked) ?? [];
+      const anchors = [...narrationBoundaries(narration, beats)].sort((a, b) => a - b);
+      const endpoints = [...new Set([0, narration.durationMs, ...beats.flatMap(b => [b.startMs, b.endMs]), ...locks.flatMap(s => [s.startMs, s.endMs])])].sort((a, b) => a - b);
+      const planned: Shot[] = []; let serial = 0;
+      for (let i = 0; i < endpoints.length - 1; i++) {
+        const start = endpoints[i]!, end = endpoints[i + 1]!, lock = locks.find(s => s.startMs <= start && s.endMs >= end);
+        if (lock) { if (!planned.some(s => s.id === lock.id)) planned.push(lock); continue; }
+        const beat = beats.find(b => b.startMs <= start && b.endMs >= end);
+        if (!beat) throw new Error('An unlocked explainer interval crosses a beat');
+        let cursor = start;
+        while (cursor < end) {
+          const limit = cursor + config.visual_rules.preferred_shot_seconds.max * 1000;
+          const cut = end <= limit ? end : anchors.filter(a => a > cursor && a <= limit).at(-1) ?? end;
+          let id: string; do { id = `${beat.chapterId}.s${String(++serial).padStart(3, '0')}`; } while (locks.some(s => s.id === id));
+          planned.push(explainerShot(id, cursor, cut, beat, narration, profile, rig)); cursor = cut;
+        }
+      }
+      storyboard = StoryboardSchema.parse({ shots: planned.sort((a, b) => a.startMs - b.startMs) });
+    }
+    validateStoryboard(storyboard, narration, beats, characters);
+    validateExplainerStoryboard(storyboard, narration, beats, profile, rig, config);
+    if (storyboard.shots.length > config.rendering.max_shots) throw new Error('Explainer exceeds configured shot limit');
+    const markdown = storyboardMarkdown(storyboard, beats);
+    await writeJson(file, storyboard); await writeAtomic(path.join(projectRoot, 'work/storyboard.md'), markdown);
+    await writeJson(path.join(projectRoot, 'output/storyboard.json'), storyboard); await writeAtomic(path.join(projectRoot, 'output/storyboard.md'), markdown);
+    await writeHostTimeline(projectRoot, storyboard, narration, profile, rig);
+    return storyboard;
+  }
   if (stateLocks.storyboard) {
     if (!existing) throw new Error('Storyboard is locked but work/storyboard.json is missing');
     validateStoryboard(existing, narration, beats, characters);

@@ -7,7 +7,7 @@ rendering:
   timeout_ms: 1800000
   max_duration_seconds: 300
   max_shots: 100
-style: { preset: historical-cinematic }
+style: { preset: technical-clean }
 visual_rules:
   max_static_seconds: 4
   max_same_camera_seconds: 7

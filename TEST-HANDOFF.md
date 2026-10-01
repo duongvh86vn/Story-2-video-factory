@@ -1,95 +1,67 @@
-# Bàn giao test cho model khác
+# Bàn giao nghiệm thu ba luồng V2.1
 
-Trong giai đoạn triển khai ban đầu, chủ dự án giao phần test cho model khác. Kết quả kiểm thử và vòng sửa lỗi tiếp theo đã được ghi tại `TEST-RESULTS.md`; đọc báo cáo đó trước khi tiếp tục checklist bên dưới. Repository hiện có suite hồi quy cục bộ qua `npm test`, cùng hai lệnh opt-in `npm run test:asr` và `npm run test:render`. Các mục checklist chưa có bằng chứng vẫn cần được kiểm thử riêng.
+2026-10-01. Theo yêu cầu chủ dự án, agent triển khai chỉ chạy build/typecheck/schema export và kiểm tra diff; **không chạy suite runtime, ASR/TTS hoặc render nghiệm thu**. TEST-RESULTS.md giữ evidence V1, chưa chứng minh V2.1. Checklist V1 cũ nằm trong docs/archive/TEST-HANDOFF.v1.md.
 
-## Nghiệm thu định hướng V2 — 2026-10-01
+## Chuẩn bị và ghi evidence
 
-`BUILD-SPEC.md` đã được viết lại theo robot mini/người que dẫn chuyện giải thích WAV/SRT. Lần cập nhật này chỉ sửa MD; chưa triển khai hoặc test V2. Suite và số liệu hiện tại là nền tảng V1.
+Đọc BUILD-SPEC.md, IMPLEMENTATION-STATUS.md, IMPLEMENTATION-MAP.md. Ghi `git rev-parse HEAD`, Windows/Node/Python/FFmpeg/HyperFrames versions, effective project.yaml (redact secrets), model/provider/voice/language, command/exit code, project state và các artifact hashes. Không ghi API key, user private WAV hoặc log credentials vào GitHub.
 
-Sau khi triển khai, tester cần ưu tiên:
+Cần Node >=22.13, FFmpeg/FFprobe. Script/SRT cần TTS tiếng Việt thật. Windows Speech chỉ dùng voice đã cài đúng culture; HTTP/command cần adapter theo config/voice.example.yaml và §4 BUILD-SPEC. WAV-only cần ASR; WAV+SRT cần WhisperX/forced alignment. Thiếu dependencies phải ghi NOT RUN/BLOCKED, không biến thành PASS.
 
-- Hai bài đầu vào thật: hệ thống hơi nước và quá trình phát triển ô tô; giữ nội dung người dùng, không thay bằng truyện hư cấu của nhân vật An.
-- Chạy cả `MINI-ROBOT.md` và `STICK-MAN.md`: compiler thật sự dựng rig với part IDs/khớp/actions, không chỉ lưu text hoặc dùng ảnh chân dung.
-- WAV-only/SRT-only/WAV+SRT; thiếu `source.md` vẫn ingest; SRT-only final có TTS/WAV, thiếu voice chỉ ra nháp và needs-voice.
-- Host identity/rig hash giữ qua shot/tập, có đủ hiện diện và hành động giải thích. Host không bị gán vai nhà phát minh/lịch sử.
-- Đối chiếu pointer, gaze, contact, part motion và cue/word anchor; kiểm tra frame sequence quanh action, không chỉ tổng số snapshot.
-- Cơ chế/quy trình/timeline/compare đúng lời kể; nhãn/caption không che host và target. Không dùng portrait/slideshow/idle loop làm substitute.
-- Fallback vẫn giữ host và quan hệ chính; lỗi voice/identity/nội dung/target nghiêm trọng phải chặn final.
-- Studio chọn/duyệt host, voice status và storyboard lời kể/hình/hành động; edit/lock/resume invalidate đúng phụ thuộc.
+Cấu hình planner/visual_review thật nếu đánh giá semantic/appearance. Mock/rule-only không được tính là đã xem hình/kiểm chứng kiến thức. Đối với acceptance nghiêm túc, đặt workflow.allow_rule_based_review=false và role visual_review.vision=true; lưu review.mode=combined cùng evidence video/frame sequence. Có thể chạy offline để tách lỗi deterministic contracts, ghi giới hạn rõ.
 
-Các tiêu chí đo và thứ tự P0–P5 nằm trong §14–16 của đặc tả V2. Checklist kỹ thuật V1 dưới đây dùng làm hồi quy, không thay cho nghiệm thu V2.
+Model test có thể chạy npm test/test:asr/test:render và bổ sung các ca dưới đây. Suite/lệnh cũ là V1; những fixture cần behavior V1 phải đặt content.mode=legacy. Không dùng script acceptance-60s cũ hay 35 tests cũ làm bằng chứng ba luồng mới.
 
-## Chuẩn bị
-
-- Đọc `BUILD-SPEC.md`, `README.md`, `IMPLEMENTATION-MAP.md` và code hiện tại.
-- `npm ci`, `npm run build`. Node 22.13+, FFmpeg/ffprobe.
-- Cài Python ASR requirements nếu test WAV. Dùng môi trường riêng cho WhisperX.
-- Cấu hình model ID thật và key ở `.env`; không commit key hoặc log request header.
-- Default mock được dùng cho dữ liệu offline; vision thật cần role `visual_review` có `vision: true`. Không tính review mock/rule-based như vision pass.
-
-## Tracer đầu tiên
+## Ca đầu tiên: thuần script
 
 ```powershell
-npm run cli -- new acceptance-60s --example
-npm run cli -- make projects/acceptance-60s
-ffprobe -v error -show_streams -show_format -of json projects/acceptance-60s/output/final.mp4
+npm ci
+npm run build
+npm run typecheck
+npm run cli -- new acceptance-v21-steam --example
+npm run cli -- configure projects/acceptance-v21-steam --input script --host mini-robot --tts windows-speech
+npm run cli -- make projects/acceptance-v21-steam
+npm run cli -- status projects/acceptance-v21-steam
+ffprobe -v error -show_streams -show_format -of json projects/acceptance-v21-steam/output/final.mp4
 ```
 
-Xác nhận tất cả artifact cuối, 60 giây trong tolerance, 1920×1080/30 fps, subtitle, các cảnh và pose nhân vật. SRT-only không có giọng đọc; cần thêm WAV để đánh giá narration/mix. Không chấp nhận MP4 tồn tại như đủ bằng chứng: mở xem thực tế, đối chiếu các snapshot và nghe audio.
+Ví dụ Windows chỉ hợp lệ khi có giọng Việt đã cài. Nếu không, configure HTTP/command adapter thật trước; không thay language thành en để gọi nghiệm thu tiếng Việt là PASS. Thời lượng script thay đổi theo audio, **không mặc định 60 giây**.
 
-## Ingest và đồng hồ
+## Matrix bắt buộc
 
-- SRT BOM, CRLF/LF, multiline, dấu phẩy/chấm millisecond, giờ dài, index không liên tiếp.
-- Timestamp âm, end≤start, cue overlap, cue rỗng, input thiếu, audio duration lệch: báo lỗi đúng vị trí.
-- Leading/trailing silence và gap giữa cues: visual coverage vẫn toàn duration, không đổi cue timestamps.
-- WAV-only faster-whisper, WhisperX precision, SRT+WAV forced alignment: SRT text/interval không đổi, word timing hợp lệ.
-- Python/FFmpeg thiếu, ASR model tải thất bại, timeout: lưu attempt/error, resume không nhân đôi side effect.
+| Nhóm | Ca và điều kiện đạt |
+|---|---|
+| Script | Không có WAV/SRT input vẫn có audio, mode=script, timeline/cues, voiced MP4 |
+| Nguyên văn | TXT/MD tiếng Việt, BOM, newline, heading/list/emphasis/link/code: preview canonical và từ/thứ tự TTS đúng; không thực thi câu mệnh lệnh trong MD |
+| Segmentation | <=120 Unicode chars/cue, không cắt từ; boundary punctuation/space; từ quá dài/NUL/invalid UTF-8/empty có lỗi rõ |
+| Actual clock | Probe cue WAV và assembled WAV; cue duration bằng audio đo, không fitted trước; 250 ms ở paragraph boundaries, không thêm pause giữa chunk cùng paragraph |
+| Selected authority | Để script/WAV/SRT khác nội dung cùng tồn tại, chọn mỗi mode: không dùng nhầm file. auto ambiguous báo lỗi. input.source không trở thành lời kể |
+| WAV | Giữ input hash/content/giọng, transcript từ ASR thật; gaps/tail/duration đúng |
+| SRT | Text/start/end không đổi; TTS đúng từng cue; silence gaps và padding sau fitted speech (fittedDurationMs); atempo range/pitch; voiced final |
+| WAV+SRT | Giữ WAV và SRT; chuẩn bị cặp khớp và cố tình lệch lời/clock; mismatch hoặc thiếu alignment chặn final |
+| Voice blockers | Script no TTS/provider timeout/invalid WAV/no speech → INGESTED + waitingFor=voice/voice-report lỗi, không timeline mới/final/DONE. SRT no voice/fit-failed chỉ silent draft, không final/DONE |
+| Host | Robot và người que giữ profile/version/rig/asset hashes, fixed limb proportions; không portrait/slideshow/host chỉ như logo |
+| Interaction | Pointer/gaze đúng part; fixed-length joints; contact rồi model reaction; compare hai đích; walk chỉ khi có marker/rail; mouth activity đúng audio/đóng lúc nghỉ |
+| Recipe | Chạy đủ 8 method với narration có ý tương ứng; label/entity/relations có evidence, không thêm năm/thông số/nhân quả |
+| Bài thực tế | Cả hai host trên hơi nước và phát triển ô tô, mở xem/nghe trọn final và giải thích được nội dung |
+| Layout | Host 25–40%, >=70% spoken duration, absence <=6s; safe captions/labels, không crop/che targets; cue dài báo lỗi thay vì mất chữ |
+| Source/edit guard | Sửa entity label, relation, target, action overlap/contact, unsupported camera/inset/motion: reject hoặc high issue, không final sai. Supplemental contradictions với planner/vision thật phải high và chặn |
+| Approval | Mẫu chuẩn auto; custom MD dừng host-approval sau preview; approve/resume; đổi custom hash cần duyệt lại |
+| Resume/cache | Run lại không sửa giữ audio hash/checkpoints; sửa 1 chunk tái sử dụng cache còn đúng; đổi voice tái tạo narration; đổi host/source giữ narration/audio hợp lệ |
+| Artifact recovery | Xóa/đổi script JSON, audio, rig/poses, scene, preview PNG/sheets/master: rewind/rebuild đúng producer, không review stale evidence |
+| Locks/rebuild | Khóa shot/board/identity được giữ; clock/host mới xung đột lock phải báo rõ. Rebuild một shot giữ audio và shot còn hợp lệ |
+| Studio/API/CLI | Ba tabs, TXT→MD revision, paste/upload/preview/save/create, default voice, host approval, editor/explicit mode, statuses waiting, voiced preview, API revision conflicts |
+| Stale final | Tạo xong rồi sửa script/voice/host: final cũ không xuất hiện như final hiện tại khi state invalidated; blocker không báo DONE |
+| Final/QC | Decode H.264/AAC, fps/res/duration, audible narration, full SRT text/clock/soft stream, thumbnail, reports, loudness/black/freeze/silence/clipping |
 
-## Planning và model
+## Fixtures và cách so sánh
 
-- Mỗi segment nằm trong beat; mỗi beat được shot bao phủ; chapter/beat/shot không chồng lấn hoặc hở timeline.
-- JSON sai schema, prose thay JSON, ID nhân vật lạ, factual addition: reject/repair với feedback và budget.
-- Gateway/OpenAI-compatible, Gemini native, DeepSeek, Ollama, LiteLLM: kiểm tra URL/envelope, usage/cost, vision input.
-- 429/retry-after, timeout, HTTP 4xx/5xx, fallback khác provider: không vô hạn, không chuyển production lỗi sang mock âm thầm.
-- Resume vẫn tính call/cost budget từ journal. Giá chưa cấu hình phải phân biệt chi phí đo thực.
-- Dùng 20 mẫu cùng số thứ tự/style qua `benchmarks/run.ts`; đo schema pass, scene compile, repair, continuity, cost, latency. Đánh giá semantic/factual quality độc lập với schema.
+examples/steam-explainer/input/script.txt và car-explainer/input/script.txt là lời kể; project.yaml mặc định script+robot. Đổi host.profile sang STICK-MAN.md để chạy người que. Có thể bỏ source.md để kiểm tra minimum input.
 
-## Scene, render và bảo vệ
+fixtures/narration.srt có clock do tác giả fixture đặt rộng (10 giây/cue), không phải thời gian WAV/script đã đo. Copy vào input/narration.srt, chọn srt. Model test phải chuẩn bị WAV thật và SRT khớp WAV cho nhánh aligned; không ghép TTS script duration với SRT fixture rồi gọi mismatch là lỗi implement.
 
-- Từng recipe: map, document, newspaper/text/quote, portrait parallax, conveyor/process, exploded machine, timeline, before/after.
-- Lint/check upstream phải chạy thật, không dựa vào file existence. Seek theo thứ tự ngẫu nhiên để xác nhận deterministic frames.
-- 20 scene có model code: đo mục tiêu ≥90% compile tự động; không báo tỷ lệ trước khi đo.
-- Sinh scene lỗi, repair tối đa ba lần, fallback recipe; lưu toàn bộ attempts. Shot khóa không bị tự sửa.
-- Master subcomposition: selector/style namespace, timeline registration, media relative path, transitions và profile scaling draft/final.
-- Bắt access env, filesystem/shell, URL remote, path traversal, symlink, nondeterminism và source quá lớn. Chạy untrusted scenes trong Docker ở bài test isolation.
-- Browser request/runtime error, missing asset, network disabled, shader/media edge cases: xác nhận validator không bỏ qua.
+Bổ sung narration để buộc đủ 8 recipes; ghi method/recipe IDs thực và source quotes. Không chỉ đếm catalog có tám tên. Không chỉ đếm snapshot hoặc MP4 tồn tại. Xem trước/trong/sau contact, seek lùi/tiến/restart, nghe full câu cuối cue và xem caption đầy đủ.
 
-## Review
+## Bàn giao kết quả
 
-- Năm snapshot 0/25/50/75/100% cho mỗi shot; per-shot/global contact sheets, nhãn timestamp.
-- Inject wrong character/version/costume, blank crop, text overflow, subtitle overlap, contradiction, repetition; dùng vision thật và đo khả năng bắt lỗi.
-- Chỉ high severity được auto repair. Regenerate draft/snapshot/review sau repair; không final render khi review fail.
-- Không có vision: report ghi rõ rule-based; `allow_rule_based_review:false` phải dừng.
-- Loop budget bị hết và shot khóa bị lỗi: báo nguyên nhân, không ghi DONE.
-
-## Audio/caption/QC
-
-- Narration + BGM + SFX local; offset SFX đúng shot; ducking nghe được; normalize LUFS/true peak theo config.
-- `none`, `burned`, `soft`, `both`; tiếng Việt Unicode/font/escaping đường dẫn Windows.
-- Đo đúng codec, fps, resolution, sample rate, duration. SRT-only không bị coi là missing user voice.
-- Inject black/freeze/silence/clipping: QC báo đúng. Opening fade whitelist, shot intentionalStatic và silence có chủ ý không bị false positive.
-- Lỗi QC giữ report và production report nhưng không chuyển QC_PASSED/DONE.
-
-## Resume, khóa, Studio
-
-- Ngắt tiến trình ở mỗi state, xác nhận PID lock, stale lock recovery, SQLite jobs và state JSON nhất quán.
-- Sửa shot 1: chỉ regenerate shot 1 và master. Sửa scene source trực tiếp: giữ nội dung, validate/render/review lại.
-- Input/config/asset hash đổi, file artifact mất hoặc bị sửa: invalidation đúng stage, không tiếp tục với artifact cũ.
-- Khóa storyboard/characterBible/shot, approve gates, identity/version/pose series và override episode.
-- CLI mọi lệnh; API upload, source/SRT/JSON/scene editing, optimistic revision, duplicate jobs, status/log/cost/QC/download.
-- Web Studio: project list, timeline scrub, preview scene/video, manual camera/asset/caption, locks/approval, responsive keyboard/focus.
-- API path traversal, symlink, upload extension/size, local host/origin handling, CSP preview. Không hiển thị key.
-
-## Báo cáo cần trả
-
-Ghi commit được test, lệnh thực chạy và exit code, fixture/model/renderer version, lỗi tái hiện, screenshot/video/audio evidence, tỷ lệ đo được và giới hạn chưa test. Phân biệt lỗi code, môi trường và chất lượng model. Không đổi hoặc thu hẹp đặc tả để làm test xanh. Sửa lỗi có bằng chứng rồi chạy lại đúng checks liên quan.
+Ghi phần V2.1 riêng trong TEST-RESULTS.md: tested commit, PASS/FAIL/NOT RUN từng nhóm, output/hash/duration/voice/review mode, shot/cue/time và evidence path. Không sửa lịch sử V1 thành V2.1. Nếu có lỗi, mô tả input tối thiểu, expected/actual, stage và command để agent triển khai sửa đúng phạm vi. Chỉ gọi V2.1 nghiệm thu khi đủ ba luồng và hai host/hai bài có evidence thật.

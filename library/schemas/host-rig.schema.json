@@ -1,0 +1,162 @@
+{
+  "$ref": "#/definitions/host-rig",
+  "definitions": {
+    "host-rig": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "profileVersion": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "profileHash": {
+          "type": "string"
+        },
+        "rigHash": {
+          "type": "string"
+        },
+        "compilerVersion": {
+          "type": "string"
+        },
+        "viewBox": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          ]
+        },
+        "assetPath": {
+          "type": "string"
+        },
+        "posePath": {
+          "type": "string"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "parent": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "pivot": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "additionalProperties": false
+              },
+              "bounds": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  },
+                  "width": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "pivot",
+              "bounds"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 10
+        },
+        "poses": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "rotations": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "rootX": {
+                "type": "number",
+                "default": 0
+              },
+              "gaze": {
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": [
+              "rotations"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "id",
+        "profileVersion",
+        "profileHash",
+        "rigHash",
+        "compilerVersion",
+        "viewBox",
+        "assetPath",
+        "posePath",
+        "parts",
+        "poses"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

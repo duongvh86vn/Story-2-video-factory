@@ -129,6 +129,58 @@
             "type": "string"
           },
           "default": []
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "narration",
+            "source"
+          ]
+        },
+        "supplement": {
+          "type": "object",
+          "properties": {
+            "story": {
+              "type": "string"
+            },
+            "facts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "claim": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "fact",
+                      "interpretation",
+                      "visualization"
+                    ]
+                  },
+                  "source": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "claim",
+                  "type",
+                  "source"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "sourcePath": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "story",
+            "facts",
+            "sourcePath"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

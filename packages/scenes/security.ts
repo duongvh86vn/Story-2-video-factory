@@ -4,7 +4,7 @@ import { SceneFilesSchema } from '../core/schemas.js';
 
 export const SCENE_CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'";
 export const SCENE_FILENAMES = ['index.html','style.css','scene.js'] as const;
-const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
+const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','svgOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
 const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','script']);
 
 function plainValue(node: ts.Expression, keys?: Set<string>): boolean {

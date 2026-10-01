@@ -1,3 +1,4 @@
+content: { mode: legacy }
 project: { name: invention-demo, language: vi }
 input: { source: input/source.md, narration: input/narration.wav, subtitles: input/narration.srt }
 style: { preset: historical-cinematic }

@@ -1,0 +1,14 @@
+project:
+  name: steam-explainer
+  language: vi
+content:
+  mode: narrated-explainer
+input:
+  mode: script
+  script: input/script.txt
+host:
+  profile: library/characters/MINI-ROBOT.md
+workflow:
+  automatic: true
+style:
+  preset: technical-clean

@@ -1,0 +1,59 @@
+1
+00:00:00,000 --> 00:00:10,000
+Quá trình phát triển ô tô có thể được nhìn qua những thay đổi nào?
+
+2
+00:00:10,000 --> 00:00:20,000
+Ta bắt đầu với xe dùng động cơ xăng của Karl Benz.
+
+3
+00:00:20,000 --> 00:00:30,000
+Năm 1886 là một mốc của Benz Patent Motor Car.
+
+4
+00:00:30,000 --> 00:00:40,000
+Xe có ba bánh, với động cơ xăng một xi-lanh đặt phía sau.
+
+5
+00:00:40,000 --> 00:00:50,000
+Hãy phân biệt động cơ, bánh xe và thân xe trên hình minh họa.
+
+6
+00:00:50,000 --> 00:01:00,000
+Để giải thích một hệ truyền động bằng mô hình, ta dùng câu sau: động cơ truyền chuyển động đến bánh
+
+7
+00:01:00,000 --> 00:01:10,000
+xe.
+
+8
+00:01:10,000 --> 00:01:20,000
+Mũi tên chỉ quan hệ này, không phải bản vẽ chi tiết của chiếc xe lịch sử.
+
+9
+00:01:20,000 --> 00:01:30,000
+Tiếp theo, ta so sánh xe dùng động cơ đốt trong với xe điện: nguồn năng lượng và bộ phận tạo chuyển
+
+10
+00:01:30,000 --> 00:01:40,000
+động khác nhau.
+
+11
+00:01:40,000 --> 00:01:50,000
+Pin cấp năng lượng cho động cơ điện.
+
+12
+00:01:50,000 --> 00:02:00,000
+Hình so sánh không khẳng định xe điện chỉ xuất hiện sau xe xăng.
+
+13
+00:02:00,000 --> 00:02:10,000
+Tóm lại, câu chuyện phát triển ô tô gồm nhiều hướng cải tiến.
+
+14
+00:02:10,000 --> 00:02:20,000
+Ta cần đọc đúng các mốc được nêu, tách tiến trình lịch sử khỏi mô hình giải thích, và không tự thêm
+
+15
+00:02:20,000 --> 00:02:30,000
+thông số kỹ thuật.

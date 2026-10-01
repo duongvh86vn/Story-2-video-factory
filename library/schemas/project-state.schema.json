@@ -8,6 +8,9 @@
           "type": "number",
           "const": 1
         },
+        "specVersion": {
+          "type": "integer"
+        },
         "name": {
           "type": "string"
         },
@@ -35,6 +38,14 @@
         "inputHash": {
           "type": "string"
         },
+        "narrationInputHash": {
+          "type": "string",
+          "default": ""
+        },
+        "hostInputHash": {
+          "type": "string",
+          "default": ""
+        },
         "assetInputHash": {
           "type": "string",
           "default": ""
@@ -61,6 +72,14 @@
             "characters": {
               "type": "boolean",
               "default": false
+            },
+            "host": {
+              "type": "boolean",
+              "default": false
+            },
+            "hostHash": {
+              "type": "string",
+              "default": ""
             }
           },
           "additionalProperties": false,
@@ -72,6 +91,16 @@
             "type": "boolean"
           },
           "default": {}
+        },
+        "waitingFor": {
+          "type": "string",
+          "enum": [
+            "host-approval",
+            "characters-approval",
+            "storyboard-approval",
+            "voice",
+            "source-review"
+          ]
         },
         "error": {
           "type": "string"

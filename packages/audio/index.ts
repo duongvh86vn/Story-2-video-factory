@@ -6,6 +6,7 @@ import { exists, hash, readJson, safeRealPath, writeJson } from '../core/utils.j
 import { outputPath } from '../render/process.js';
 import { writeCaptions } from '../captions/index.js';
 import { ffmpeg, probe, seconds } from './ffmpeg.js';
+import { requireVoice } from '../voice/index.js';
 export { ffmpeg, probe } from './ffmpeg.js';
 
 async function approvedFile(root:string,asset:Asset):Promise<string> {
@@ -22,6 +23,7 @@ function loudnessJson(stderr:string):LoudnessMeasurement|undefined {
 /** FFmpeg alone mixes, normalizes, muxes captions and extracts the production thumbnail. */
 export async function produceMedia(projectRoot:string,config:FactoryConfig,narration:Narration,storyboard:Storyboard,assets:AssetManifest):Promise<void> {
   NarrationSchema.parse(narration);StoryboardSchema.parse(storyboard);AssetManifestSchema.parse(assets);
+  if(config.content.mode==='narrated-explainer')await requireVoice(projectRoot,narration);
   const rendered=await safeRealPath(projectRoot,'work/rendered.mp4'),duration=narration.durationMs/1000,rate=config.audio.sample_rate;
   const output=await outputPath(projectRoot,'output/final.mp4'),raw=await outputPath(projectRoot,'work/audio-mix.wav'),master=await outputPath(projectRoot,'work/audio-master.wav');
   await fs.mkdir(path.dirname(output),{recursive:true});await fs.mkdir(path.dirname(raw),{recursive:true});

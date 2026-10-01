@@ -1,0 +1,17 @@
+# Copy to config/voice.yaml or configure once in Studio. Keys stay in environment variables.
+voice:
+  source: auto
+  tts_provider: windows-speech
+  voice_id: null
+  preserve_input_audio: true
+  preserve_srt_text: true
+  preserve_srt_timing: true
+  fit_rate_min: 0.85
+  fit_rate_max: 1.20
+  # For an HTTP adapter: tts_provider: http, base_url: https://your-adapter/tts
+  # Request JSON: {text, language, voice, format: wav}. Response: WAV bytes.
+  # api_key_env: TTS_API_KEY
+  # For a command adapter, supply an executable and arguments in this file:
+  # tts_provider: command
+  # command: python
+  # command_args: [C:/adapters/tts.py, --request, '{request}', --output, '{output}']

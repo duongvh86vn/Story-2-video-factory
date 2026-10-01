@@ -1,4 +1,9 @@
-# Ingest implementation
+# Ingest implementation (V2.1)
+
+`prepareInput` selects script/wav/srt and writes an untimed input document. `parseScript` normalizes UTF-8 TXT/MD as data, preserves original/source lines and words, and creates <=120-character chunks without splitting words. This step creates no speculative timestamps. `packages/voice` synthesizes script chunks, measures actual durations and creates canonical narration/timeline; SRT fitting is a separate branch.
+
+Selected narration is authoritative. `source.md` is optional supplemental data in narrated-explainer mode; legacy mode keeps the former source-driven contract. `narratedStory` refreshes supplements without regenerating voice. See BUILD-SPEC.md for selected-file precedence, voice blockers and runtime acceptance status.
+
 
 Public imports from `packages/ingest/index.ts`:
 

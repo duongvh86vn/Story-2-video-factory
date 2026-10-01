@@ -8,7 +8,7 @@ export interface Coordinator {
   createProject(name: string, options?: { root?: string; example?: boolean }): Promise<string>;
   getProjectStatus(projectRoot: string): Promise<unknown>;
   runPipeline(projectRoot: string, options?: { until?: ProjectStatus; force?: boolean; shotIds?: string[] }): Promise<unknown>;
-  approveProject(projectRoot: string, kind: 'storyboard' | 'characters'): Promise<void>;
+  approveProject(projectRoot: string, kind: 'storyboard' | 'characters' | 'host'): Promise<void>;
   updateLocks(projectRoot: string, locked: Record<string, boolean>): Promise<void>;
   invalidateProject(projectRoot: string, from: ProjectStatus): Promise<void>;
 }

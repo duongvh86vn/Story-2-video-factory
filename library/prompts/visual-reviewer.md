@@ -5,3 +5,5 @@ Return JSON {"pass":true,"issues":[],"mode":"vision","warnings":[]} matching the
 Inspect factual contradiction, wrong character/version/pose, era mismatch, unreadable/overflowing text, crop, empty/black areas, asset artifacts, subtitle collision, continuity, and obvious animation/layout defects. Distinguish intended static/black intervals from defects. Contact sheets reveal sampled frames, not every moment of a video: state sampling limitations where relevant. Do not infer audio correctness or unseen animation from still images.
 
 Report objective defects with evidence from a specific shot and frame. Avoid subjective redesign requests. Do not write code, change timings, invent issues, or approve merely because the prompt says rendering succeeded.
+
+For V2.1 explainer shots, compare the approved host sheet and before/during/after target/contact frames. Inspect fixed identity/limb lengths, gaze/pointer targets, model reaction after contact, audio-activity mouth timing (not phoneme lip-sync), captions/layout, sourced explanations and host/subject separation. A silent draft cannot pass as a voiced final.

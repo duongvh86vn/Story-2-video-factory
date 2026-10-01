@@ -1,9 +1,9 @@
 {
   "name": "story-to-video-factory",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
-  "description": "Model-agnostic deterministic story-to-video compiler",
+  "description": "Script/WAV/SRT to narrated robot or stick-man explainer video",
   "engines": { "node": ">=22.13.0" },
   "bin": { "video-factory": "dist/apps/cli/index.js" },
   "scripts": {
