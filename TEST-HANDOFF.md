@@ -2,6 +2,23 @@
 
 Trong giai đoạn triển khai ban đầu, chủ dự án giao phần test cho model khác. Kết quả kiểm thử và vòng sửa lỗi tiếp theo đã được ghi tại `TEST-RESULTS.md`; đọc báo cáo đó trước khi tiếp tục checklist bên dưới. Repository hiện có suite hồi quy cục bộ qua `npm test`, cùng hai lệnh opt-in `npm run test:asr` và `npm run test:render`. Các mục checklist chưa có bằng chứng vẫn cần được kiểm thử riêng.
 
+## Nghiệm thu định hướng V2 — 2026-10-01
+
+`BUILD-SPEC.md` đã được viết lại theo robot mini/người que dẫn chuyện giải thích WAV/SRT. Lần cập nhật này chỉ sửa MD; chưa triển khai hoặc test V2. Suite và số liệu hiện tại là nền tảng V1.
+
+Sau khi triển khai, tester cần ưu tiên:
+
+- Hai bài đầu vào thật: hệ thống hơi nước và quá trình phát triển ô tô; giữ nội dung người dùng, không thay bằng truyện hư cấu của nhân vật An.
+- Chạy cả `MINI-ROBOT.md` và `STICK-MAN.md`: compiler thật sự dựng rig với part IDs/khớp/actions, không chỉ lưu text hoặc dùng ảnh chân dung.
+- WAV-only/SRT-only/WAV+SRT; thiếu `source.md` vẫn ingest; SRT-only final có TTS/WAV, thiếu voice chỉ ra nháp và needs-voice.
+- Host identity/rig hash giữ qua shot/tập, có đủ hiện diện và hành động giải thích. Host không bị gán vai nhà phát minh/lịch sử.
+- Đối chiếu pointer, gaze, contact, part motion và cue/word anchor; kiểm tra frame sequence quanh action, không chỉ tổng số snapshot.
+- Cơ chế/quy trình/timeline/compare đúng lời kể; nhãn/caption không che host và target. Không dùng portrait/slideshow/idle loop làm substitute.
+- Fallback vẫn giữ host và quan hệ chính; lỗi voice/identity/nội dung/target nghiêm trọng phải chặn final.
+- Studio chọn/duyệt host, voice status và storyboard lời kể/hình/hành động; edit/lock/resume invalidate đúng phụ thuộc.
+
+Các tiêu chí đo và thứ tự P0–P5 nằm trong §14–16 của đặc tả V2. Checklist kỹ thuật V1 dưới đây dùng làm hồi quy, không thay cho nghiệm thu V2.
+
 ## Chuẩn bị
 
 - Đọc `BUILD-SPEC.md`, `README.md`, `IMPLEMENTATION-MAP.md` và code hiện tại.

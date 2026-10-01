@@ -1,8 +1,10 @@
 # Story-to-Video Factory
 
-Biên dịch `source.md` + `narration.srt` / `narration.wav` thành storyboard, scene HyperFrames, bản nháp, contact sheet, review, audio/caption và MP4 cuối. Model chỉ tạo dữ liệu hoặc mã scene; HyperFrames và FFmpeg thực hiện render và xử lý media.
+Định hướng sản phẩm V2: dùng **robot mini hoặc người que làm host cố định**, kể và giải thích nội dung người dùng đưa qua WAV/SRT. Host được mô tả bằng MD, dựng thành rig tái sử dụng và chỉ dẫn/thao tác với sơ đồ, mô hình, quy trình hoặc timeline theo lời kể.
 
-Đặc tả gốc: [BUILD-SPEC.md](BUILD-SPEC.md). Phạm vi triển khai: renderer HyperFrames cho V1; các engine bổ sung được giữ dưới dạng interface. Phần test và xác nhận video thực tế được bàn giao riêng theo yêu cầu của chủ dự án: [TEST-HANDOFF.md](TEST-HANDOFF.md).
+Đặc tả mới: [BUILD-SPEC.md](BUILD-SPEC.md). Hồ sơ host: [Robot mini](library/characters/MINI-ROBOT.md), [Người que](library/characters/STICK-MAN.md). Khoảng cách triển khai: [IMPLEMENTATION-STATUS.md](IMPLEMENTATION-STATUS.md).
+
+**Runtime hiện tại vẫn là V1.** Các lệnh dưới chạy pipeline `source.md` + SRT/WAV, recipe tổng quát, HyperFrames và FFmpeg; chưa đọc hai host MD thành rig, chưa có interaction plan và TTS của V2. Example nhân vật An là fixture kỹ thuật cũ. Kết quả V1 xem [TEST-RESULTS.md](TEST-RESULTS.md); bàn giao nghiệm thu V2 xem [TEST-HANDOFF.md](TEST-HANDOFF.md).
 
 ## Cài đặt trên Windows
 
@@ -16,7 +18,7 @@ Copy-Item .env.example .env
 npm run build
 ```
 
-Nếu chỉ có SRT, hệ thống tạo video với subtitle; không tự tạo giọng đọc. Có thể thêm WAV của cùng narration trước khi sản xuất. Audio WAV phải khớp thời lượng SRT trong tolerance cấu hình.
+Trong runtime V1 hiện tại, SRT-only tạo video với subtitle và silent bed, không tự tạo giọng đọc. V2 yêu cầu TTS được cấu hình hoặc WAV tương ứng cho bản final có host kể bằng giọng; bản im lặng chỉ dùng review nháp. Audio WAV phải khớp thời lượng SRT trong tolerance cấu hình.
 
 Để xử lý WAV:
 

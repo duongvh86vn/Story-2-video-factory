@@ -1,0 +1,108 @@
+---
+profile_id: mini-robot-01
+profile_version: 1
+character_kind: mini-robot
+role: explainer-host
+display_name: Ro-bi
+render_strategy: reusable-svg-rig
+---
+
+# Robot mini dẫn chuyện
+
+Hồ sơ nhân vật mục tiêu của đặc tả V2. Hệ thống phải đọc MD này, dựng và lưu một rig vector có thể điều khiển, rồi tái sử dụng rig đó cho mọi shot. File này mô tả thiết kế; chưa phải asset hay tính năng runtime đã triển khai.
+
+## Vai trò
+
+Một robot nhỏ đứng cạnh hình minh họa để kể và giải thích nội dung trong WAV/SRT. Robot là người dẫn chương trình của video, không phải nhà phát minh hoặc nhân vật lịch sử trong câu chuyện. Robot có thể quan sát, đặt câu hỏi bằng biểu cảm, chỉ vào chi tiết, vận hành mô hình minh họa và tổng kết.
+
+Ngôn ngữ cơ thể thân thiện, rõ ý, giống một trợ giảng. Sự hài hước chỉ nằm ở biểu cảm và chuyển động; không tự thêm lời thoại hoặc sự kiện ngoài narration.
+
+## Nhận dạng cố định
+
+| Bộ phận | Thiết kế bắt buộc |
+|---|---|
+| Đầu | Hộp bo tròn, rộng hơn thân một chút; một antenna ngắn ở chính giữa |
+| Mặt | Màn hình xanh đen `#142A36`, hai mắt LED màu xanh ngọc `#27D8C5`, một miệng LED đơn giản |
+| Thân | Vỏ trắng kem `#F5F3EC`, các mép viền xanh đen, một huy hiệu tròn màu vàng `#F6BD4F` ở giữa ngực |
+| Tay | Hai tay có khớp vai/khuỷu, bàn tay kiểu găng đơn giản, mỗi tay một bàn tay |
+| Chân | Hai chân ngắn và hai bàn chân rộng để tạo cảm giác chắc chắn |
+| Tỷ lệ | Tổng chiều cao quy ước 100 đơn vị: đầu khoảng 32, thân 30, vùng chân 25, phần nối/antenna còn lại |
+| Đường nét | Vector 2D rõ, viền dày đồng nhất, không texture ảnh thật |
+
+Giữ nguyên hình đầu, tỷ lệ, màu vỏ, mặt LED, antenna và huy hiệu qua tất cả shot/tập. Không thêm tay/chân, không đổi thành robot người lớn, không đổi sang khuôn mặt người. Props cầm tay là vật riêng; không trở thành bộ phận cơ thể.
+
+## Biến đổi được phép
+
+- Vị trí, tỷ lệ hiển thị đồng nhất, hướng nhìn, xoay thân nhẹ, gập khớp và pose.
+- Mắt bình thường, suy nghĩ, ngạc nhiên, vui; miệng đóng/mở ở vài mức đơn giản.
+- Cầm con trỏ hoặc một chi tiết của mô hình được narration nhắc tới.
+- Hướng nhìn và tay chỉ luôn khớp với vật được giải thích.
+- Trang phục/màu nhận dạng chỉ đổi khi người dùng sửa và duyệt hồ sơ; không do planner tự đổi.
+
+## Các bộ phận rig
+
+Rig phải có part ID ổn định:
+
+```text
+host-root
+head
+antenna
+face-screen
+eye-left
+eye-right
+mouth
+body
+badge
+arm-left-upper
+arm-left-lower
+hand-left
+arm-right-upper
+arm-right-lower
+hand-right
+leg-left
+foot-left
+leg-right
+foot-right
+```
+
+Các bộ phận cánh tay/chân dùng điểm xoay ở khớp, không kéo giãn hình học để giả chuyển động. Root transform di chuyển cả nhân vật; transform khớp điều khiển pose. Giữ hướng trái/phải theo rig, tránh đổi part ID khi mirror.
+
+## Pose và hành động chuẩn
+
+| Action ID | Chuyển động | Dùng khi |
+|---|---|---|
+| `idle` | Thở/rung nhẹ và chớp mắt tiết chế | Chờ trong khoảng nghỉ |
+| `greet` | Vẫy tay một lần, hướng mắt về người xem | Mở video hoặc mở chapter cần chào |
+| `explain` | Một tay mở, thân nghiêng nhẹ về vùng minh họa | Giải thích khái niệm |
+| `point` | Tay/con trỏ hướng đúng anchor của part | Nhắc tên bộ phận, mốc thời gian hoặc bước quy trình |
+| `operate-model` | Tay tiếp xúc đúng handle/nút/chi tiết trước khi mô hình chạy | Narration mô tả thao tác hoặc quan hệ cơ học |
+| `compare` | Chỉ lần lượt hai phía, không che nhãn | So sánh trước/sau hoặc hai phương án |
+| `think` | Tay gần cằm, mắt suy nghĩ | Narration nêu vấn đề/câu hỏi |
+| `react` | Thay đổi mắt và tư thế nhỏ | Narration nêu kết quả hoặc chuyển ý |
+| `summarize` | Quay về người xem, chỉ các ý đã có trong nguồn | Tổng kết |
+
+Không dùng một vòng vẫy tay/talking-mouth lặp suốt video để thay cho diễn xuất có ý nghĩa. `idle` và chớp mắt không được tính là hành động giải thích.
+
+## Đồng bộ giọng và cử chỉ
+
+WAV người dùng cung cấp là giọng kể của robot; không tự sửa hoặc thay giọng đó. Với SRT-only, giọng do TTS được cấu hình tạo ra phải dùng đúng cue text và clock theo đặc tả gốc.
+
+Miệng mở theo speech activity đã đo từ audio, đóng trong khoảng nghỉ; mức độ chính xác được ghi rõ. Chỉ có segment timing thì dùng animation nói ở mức đoạn, không tuyên bố phoneme lip-sync. Chỉ vào một part khi narration đang nói về part đó; thả tay/đổi mục tiêu khi chuyển ý.
+
+## Bố cục
+
+- Dạng chuẩn: robot cao khoảng 25–40% khung hình ở một bên; vùng còn lại cho mô hình/sơ đồ/timeline.
+- Khi zoom chi tiết: robot chuyển vào ô host nhỏ hoặc đứng ngoài vùng chi tiết trong khoảng ngắn theo storyboard.
+- Chừa vùng phụ đề ở dưới; tay, đầu và caption không đè lên nhau.
+- Không đặt robot như logo nhỏ bất động; silhouette, mặt và hướng tay cần đọc được ở 1080p.
+- Hướng chỉ lưu bằng tham chiếu target/anchor của hình minh họa để vẫn đúng sau khi layout đổi.
+
+## Ví dụ sử dụng
+
+Trong video giải thích cơ cấu hơi nước, robot đứng cạnh sơ đồ, chỉ phần đang được narration nhắc tới, rồi mô hình minh họa chuyển động tương ứng. Robot không giả làm người phát minh ra máy hơi nước.
+
+Trong video phát triển ô tô, robot đi dọc timeline của các mốc có trong narration, chỉ từng mẫu xe hoặc phần cải tiến và thực hiện động tác so sánh. Không tự thêm hãng xe, năm phát minh hay thông số.
+
+## Điều kiện duyệt nhân vật
+
+Preview sheet phải có chính diện, hướng trái/phải, idle, explain, point, operate-model, compare và summarize. Người dùng có thể sửa hồ sơ rồi duyệt một lần. Hash hồ sơ/rig phải được lưu; shot dùng cùng một profile version và rig hash. Nếu rig sai tỷ lệ, thiếu khớp hoặc không thể chỉ đúng target, không được coi là nhân vật đã dựng xong.

@@ -1,5 +1,7 @@
 # Kết quả kiểm thử Story-to-Video Factory
 
+Lưu ý phiên bản (2026-10-01): báo cáo này đo runtime **V1**. `BUILD-SPEC.md` hiện đã chuyển sang V2 với robot mini/người que dẫn chuyện giải thích. Việc đổi MD không xác nhận V2 đã được triển khai hoặc kiểm thử; xem `IMPLEMENTATION-STATUS.md` và phần V2 trong `TEST-HANDOFF.md`.
+
 Ngày kiểm thử: 2026-09-30  
 Repository: `https://github.com/duongvh86vn/Story-2-video-factory`  
 Commit mã được kiểm thử trong vòng tiếp tục: `81bf7b8df9c94cbf1562519ba8ccdfd769c22b51` (`Fix artifact recovery and preview review integrity with regression coverage`)

@@ -1,6 +1,23 @@
 # Specification → implementation
 
-`BUILD-SPEC.md` là nguồn yêu cầu. Bảng này ánh xạ phần triển khai để người review/test tìm đúng code. Đây là bản đồ source, không phải kết quả runtime acceptance.
+`BUILD-SPEC.md` hiện là đặc tả V2 ngày 2026-10-01: robot mini/người que dẫn chuyện giải thích từ WAV/SRT. Các yêu cầu mới chưa được coi là đã triển khai. Bản đồ này phân biệt phần cần sửa cho V2 với nền tảng V1 đã có; không phải kết quả runtime acceptance.
+
+## Đặc tả V2 và khoảng cách hiện tại
+
+| Yêu cầu V2 | Nền tảng hiện có | Phần cần bổ sung/sửa |
+|---|---|---|
+| §1–3: narration là đầu vào chính; source MD tùy chọn; final có voice | `packages/ingest`, `scripts/asr.py`, `packages/audio` | Bỏ yêu cầu source MD bắt buộc; canonical story từ narration; voice resolver/TTS và needs-voice |
+| §4: host từ MD, rig/pose/hash/duyệt | `library/characters/MINI-ROBOT.md`, `library/characters/STICK-MAN.md`; character/assets/locks V1 | Host profile schema/compiler; rig SVG có khớp; preview sheet; tách host khỏi subject actors |
+| §5–8: giải thích, host actions và target anchors | `packages/story`, `packages/storyboard`, `packages/core/schemas.ts` | Explanation goals/entities/relations; host timeline; visualization model; gesture/contact/gaze target validators |
+| §9–10: recipe host và fallback giữ ý nghĩa | `library/shots`, `packages/scenes`, `packages/render` | Recipe explainer, host controller, builder/controller cho part diagrams; fallback không bỏ host |
+| §11–12: artifacts/config V2 | `packages/core/config.ts`, state store/hash | Schema mới; host/voice/interaction artifacts và invalidation; không âm thầm bỏ option chưa hỗ trợ |
+| §13: Studio chọn/duyệt host và voice | `apps/server`, `apps/studio` | Chọn profile MD, preview rig, voice status, storyboard lời kể/hình/hành động |
+| §14–15: nghiệm thu explanation/host/sync và hai bài thực tế | `packages/review`, `packages/qc`, test hồi quy V1 | Review semantic/temporal cho interaction; voice gate; acceptance hơi nước/ô tô với cả hai host |
+| §16–17: rollout P0–P5 | Nền tảng bên dưới có thể tái sử dụng | Triển khai và nghiệm thu riêng theo V2; test V1 không xác nhận trải nghiệm mới |
+
+## Bản đồ triển khai V1 để tái sử dụng
+
+Các số mục trong bảng dưới trỏ tới [đặc tả V1 lưu trữ](docs/archive/STORY-TO-VIDEO-FACTORY.v1.md), không trỏ tới số mục của `BUILD-SPEC.md` V2.
 
 | Yêu cầu trong đặc tả | File/module hiện thực |
 |---|---|
@@ -23,6 +40,6 @@
 | §170–174, 196–205: repeatable projects, acceptance/quality/performance goals | Pipeline and sample source; numeric acceptance targets delegated to tester |
 | §206–207: upstream integration and deterministic/resumable invariants | Pinned renderer dependency, schemas, validators, pipeline and docs |
 
-V1 implement HyperFrames theo §10; không viết đồng thời Remotion/Motion Canvas/Manim/Blender. Những engine và AI-video vendor được ghi là optional/later trong §17–18, 150–151, 184 là extension contracts; không tuyên bố đã có vendor integration hoặc metrics khi chưa chạy. Remote asset providers chỉ nhận nguồn/license do người dùng cấu hình; không tự scrape kho ảnh.
+V1 implement HyperFrames theo §10 của bản lưu trữ; không viết đồng thời Remotion/Motion Canvas/Manim/Blender. Những engine và AI-video vendor được ghi là optional/later trong §17–18, 150–151, 184 của V1 là extension contracts; không tuyên bố đã có vendor integration hoặc metrics khi chưa chạy. Remote asset providers chỉ nhận nguồn/license do người dùng cấu hình; không tự scrape kho ảnh.
 
-Phase/milestone acceptance yêu cầu test/render thực tế. Chủ dự án giao việc đó cho model khác; các command và gate tương ứng được giữ trong sản phẩm và bàn giao ở `TEST-HANDOFF.md`.
+Kết quả đã chạy cho V1 xem `TEST-RESULTS.md`; checklist và phần nghiệm thu V2 được bàn giao trong `TEST-HANDOFF.md`.
