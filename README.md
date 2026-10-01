@@ -1,8 +1,8 @@
-# Story-to-Video Factory 2.1
+# Story-to-Video Factory — nền V2.1, định hướng diễn xuất V2.2
 
-Nhập **kịch bản hoàn chỉnh, WAV hoặc SRT**, chọn **người que hoặc robot mini**, rồi tạo video giải thích có người dẫn chuyện cố định. Nội dung được đọc nguyên văn; host là người giải thích, tách khỏi nhân vật lịch sử hoặc đối tượng trong lời kể.
+Nhập **kịch bản hoàn chỉnh, WAV hoặc SRT**, chọn **người que hoặc robot mini**, rồi tạo video có nhân vật chính dẫn dắt câu chuyện. Mục tiêu V2.2: nhân vật bước vào bối cảnh, quan sát, suy nghĩ, thao tác, phản ứng và dẫn sang ý sau. Nội dung được đọc nguyên văn; nhân vật tham gia minh họa, không tự nhận là nhân vật lịch sử.
 
-Code ba luồng/host/Studio đã được bổ sung. Build và typecheck đã qua. **Runtime và video V2.1 đang chờ model khác nghiệm thu**, không dùng kết quả V1 trong TEST-RESULTS.md để khẳng định phiên bản mới đã đạt.
+**Hệ diễn xuất V2.2 hiện là đặc tả/kế hoạch, chưa được triển khai.** Đọc [kịch bản hình ảnh và diễn xuất](STICKMAN-STORY-DIRECTION.md) và [thứ tự triển khai](V2-IMPLEMENTATION-PLAN.md). Code V2.1 đã có ba luồng/host/Studio với rig/recipe sơ đồ cơ bản; một số thử nghiệm local đã chạy, nghiệm thu toàn bộ còn thiếu. Các lệnh dưới đây dùng contract V2.1 hiện có; không dùng kết quả cũ để khẳng định style mới đã đạt. Xem [trạng thái](IMPLEMENTATION-STATUS.md).
 
 ## Bắt đầu
 
@@ -43,7 +43,7 @@ MP4 có audio, SRT, thumbnail, storyboard, host profile/timeline, narration/time
 
 ## Tài liệu và mẫu
 
-- [Đặc tả ba luồng](BUILD-SPEC.md), [trạng thái](IMPLEMENTATION-STATUS.md), [bản đồ code](IMPLEMENTATION-MAP.md).
+- [Đặc tả sản phẩm V2.2 và ba luồng](BUILD-SPEC.md), [diễn xuất và hai storyboard mẫu](STICKMAN-STORY-DIRECTION.md), [trạng thái](IMPLEMENTATION-STATUS.md), [bản đồ code](IMPLEMENTATION-MAP.md).
 - [Kế hoạch triển khai/đối chiếu](V2-IMPLEMENTATION-PLAN.md), [bàn giao test](TEST-HANDOFF.md), [evidence V1 và biên dịch V2.1](TEST-RESULTS.md).
 - [Bài hơi nước](examples/steam-explainer/README.md), [bài ô tô](examples/car-explainer/README.md), [Robot](library/characters/MINI-ROBOT.md), [người que](library/characters/STICK-MAN.md).
 

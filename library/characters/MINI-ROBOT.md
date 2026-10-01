@@ -9,11 +9,11 @@ render_strategy: reusable-svg-rig
 
 # Robot mini dẫn chuyện
 
-Hồ sơ chuẩn V2.1: compiler đọc MD thành profile/rig SVG có khớp và pose, dùng cùng rig xuyên video. Code compiler/controller đã bổ sung; chất lượng hoạt hình chờ nghiệm thu runtime.
+Frontmatter/rig hiện là mẫu V2.1. Vai trò mục tiêu V2.2 áp dụng cùng [đặc tả diễn xuất](../../STICKMAN-STORY-DIRECTION.md) với người que; gait/face/props/tracks mới chưa được compiler triển khai.
 
 ## Vai trò
 
-Một robot nhỏ đứng cạnh hình minh họa để kể và giải thích nội dung trong script/WAV/SRT. Robot là người dẫn chương trình của video, không phải nhà phát minh hoặc nhân vật lịch sử trong câu chuyện. Robot có thể quan sát, đặt câu hỏi bằng biểu cảm, chỉ vào chi tiết, vận hành mô hình minh họa và tổng kết.
+Robot mini là nhân vật chính dẫn người xem qua bối cảnh và nội dung script/WAV/SRT: bước vào, quan sát, suy nghĩ, thử thao tác, phản ứng và dẫn sang ý sau. Robot có thể tham gia tình huống minh họa; không tự nhận là nhà phát minh hoặc nhân vật lịch sử. Không cố định robot cạnh một grid icon suốt bài.
 
 Ngôn ngữ cơ thể thân thiện, rõ ý, giống một trợ giảng. Sự hài hước chỉ nằm ở biểu cảm và chuyển động; không tự thêm lời thoại hoặc sự kiện ngoài narration.
 
@@ -91,21 +91,23 @@ Miệng mở theo speech activity đã đo từ audio, đóng trong khoảng ngh
 
 ## Bố cục
 
-- Dạng chuẩn: robot cao khoảng 25–40% khung hình ở một bên; vùng còn lại cho mô hình/sơ đồ/timeline.
-- Khi zoom chi tiết: robot chuyển vào ô host nhỏ hoặc đứng ngoài vùng chi tiết trong khoảng ngắn theo storyboard.
+- V2.2: wide cao 25–40%, medium 40–65%, close mặt/tay có chủ đích; >=70% thời gian lời kể và absence <=6 giây.
+- Camera theo nhân vật/target; cận đối tượng có thể vắng robot ngắn rồi quay lại. Inset chưa có trong renderer V2.1.
 - Chừa vùng phụ đề ở dưới; tay, đầu và caption không đè lên nhau.
 - Không đặt robot như logo nhỏ bất động; silhouette, mặt và hướng tay cần đọc được ở 1080p.
 - Hướng chỉ lưu bằng tham chiếu target/anchor của hình minh họa để vẫn đúng sau khi layout đổi.
 
 ## Ví dụ sử dụng
 
-Trong video giải thích cơ cấu hơi nước, robot đứng cạnh sơ đồ, chỉ phần đang được narration nhắc tới, rồi mô hình minh họa chuyển động tương ứng. Robot không giả làm người phát minh ra máy hơi nước.
+Trong video hơi nước, robot bước vào xưởng minh họa, tìm hiểu vấn đề, thao tác mô hình và phản ứng với kết quả đúng narration. Các cảnh sơ đồ hỗ trợ hiểu cơ chế. Robot không giả làm người phát minh ra máy hơi nước.
 
 Trong video phát triển ô tô, robot đi dọc timeline của các mốc có trong narration, chỉ từng mẫu xe hoặc phần cải tiến và thực hiện động tác so sánh. Không tự thêm hãng xe, năm phát minh hay thông số.
 
 ## Điều kiện duyệt nhân vật
 
 Preview sheet phải có chính diện, hướng trái/phải, idle, explain, point, operate-model, compare và summarize. Người dùng có thể sửa hồ sơ rồi duyệt một lần. Hash hồ sơ/rig phải được lưu; shot dùng cùng một profile version và rig hash. Nếu rig sai tỷ lệ, thiếu khớp hoặc không thể chỉ đúng target, không được coi là nhân vật đã dựng xong.
+
+V2.2 cần thêm video preview 30fps đi/dừng/quay, face/mood trong lúc nói, contact/cầm/đặt và continuity giữa scene. Robot dùng nhịp chuyển trọng tâm phù hợp chân ngắn; không sao chép quãng bước của người que rồi gây trượt chân. Các yêu cầu này cần code và nghiệm thu, chưa được đáp ứng chỉ bằng sửa hồ sơ.
 
 
 ## Mẫu chuẩn và tùy chỉnh V2.1

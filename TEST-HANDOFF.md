@@ -1,6 +1,27 @@
-# Bàn giao nghiệm thu ba luồng V2.1
+# Bàn giao nghiệm thu ba luồng và diễn xuất V2.2
 
-2026-10-01. Theo yêu cầu chủ dự án, agent triển khai chỉ chạy build/typecheck/schema export và kiểm tra diff; **không chạy suite runtime, ASR/TTS hoặc render nghiệm thu**. TEST-RESULTS.md giữ evidence V1, chưa chứng minh V2.1. Checklist V1 cũ nằm trong docs/archive/TEST-HANDOFF.v1.md.
+2026-10-01. Đợt hiện tại viết lại đặc tả/kịch bản, không chạy test runtime hoặc tạo video V2.2. Đợt trước đã có một số tests/giọng Việt/render local; xem IMPLEMENTATION-STATUS.md. Chúng chưa đủ nghiệm thu V2.1 và không chứng minh V2.2. TEST-RESULTS.md giữ lịch sử V1; checklist V1 cũ ở docs/archive/TEST-HANDOFF.v1.md.
+
+## Ưu tiên mới: nghiệm thu chuyển động và kể chuyện
+
+Chỉ chạy các ca mới sau khi module/schema V2.2 đã được triển khai; không nhập fields tương lai vào config hiện tại. Đọc STICKMAN-STORY-DIRECTION.md và storyboard hai bài ở §10–11. Bỏ các đoạn ảnh tĩnh/tư liệu của video tham khảo khỏi chuẩn chuyển động.
+
+| Nhóm mới | Evidence và điều kiện đạt |
+|---|---|
+| Protagonist | Một identity dẫn xuyên bài; vào cảnh, quan sát/thử/phản ứng/đưa sang ý sau theo nội dung; không chỉ đứng góc/vẫy tay |
+| Walk/stop/turn | Video 30fps ở 1× và slow motion; stance anchors giữ chân trụ, quãng bước theo root, dừng có trọng lượng, không trượt |
+| Face/mood | Mày/mắt/mí/miệng/head đổi có nguyên nhân, nhìn đúng target; speech track giữ mood và đóng lúc nghỉ |
+| Prop/contact | Reach/contact/attach/hold/release với target/grip thật; reaction sau nguyên nhân, không xuyên vật/nhảy world position |
+| Blending | Ownership rõ; không snap/restart idle ở biên cue/clip; body/gesture/gaze/face không tranh quyền |
+| Continuity | Hướng đi/entry-exit pose/tay cầm đồ vật/scene lighting nhất quán quanh cut |
+| Determinism | Frame 0, seek ngẫu nhiên/tiến/lùi, sequential và batch render tương đương; attachment không phụ thuộc callback |
+| Staging/camera | Wide/medium/close có mục đích; mặt/tay đọc được, ground/depth/occlusion đúng và subtitles đủ chữ |
+| Nguồn/clock | Không thêm thoại hoặc claim; không đổi SRT clock hay kéo audio để đủ action; asset lịch sử đúng claim |
+| Missing capabilities | Thiếu clip/asset có trạng thái lỗi rõ và chặn final; không âm thầm fallback cinematic thành diagram/slideshow |
+| Product | Preview clips/plans/reports trong Studio/API/CLI cùng pipeline; cache/locks/resume/rebuild hoạt động với artifacts mới |
+| Hai bài/hai host | Xem/nghe full hơi nước và ô tô với người que/robot; narrative rõ, không thêm cơ chế/mốc không có nguồn |
+
+Freeze nghi vấn cần lưu cả global detection và vùng diễn xuất để xác minh; không tắt gate hoặc thêm wiggle giả. Pose sheet/năm snapshot không đủ nghiệm thu độ mượt. Clip bench qua trước, rồi chạy đầy đủ ba luồng/failure/resume và final QC dưới đây.
 
 ## Chuẩn bị và ghi evidence
 
@@ -27,7 +48,7 @@ ffprobe -v error -show_streams -show_format -of json projects/acceptance-v21-ste
 
 Ví dụ Windows chỉ hợp lệ khi có giọng Việt đã cài. Nếu không, configure HTTP/command adapter thật trước; không thay language thành en để gọi nghiệm thu tiếng Việt là PASS. Thời lượng script thay đổi theo audio, **không mặc định 60 giây**.
 
-## Matrix bắt buộc
+## Matrix nền ba luồng cần tiếp tục hồi quy
 
 | Nhóm | Ca và điều kiện đạt |
 |---|---|
@@ -41,10 +62,10 @@ Ví dụ Windows chỉ hợp lệ khi có giọng Việt đã cài. Nếu không
 | WAV+SRT | Giữ WAV và SRT; chuẩn bị cặp khớp và cố tình lệch lời/clock; mismatch hoặc thiếu alignment chặn final |
 | Voice blockers | Script no TTS/provider timeout/invalid WAV/no speech → INGESTED + waitingFor=voice/voice-report lỗi, không timeline mới/final/DONE. SRT no voice/fit-failed chỉ silent draft, không final/DONE |
 | Host | Robot và người que giữ profile/version/rig/asset hashes, fixed limb proportions; không portrait/slideshow/host chỉ như logo |
-| Interaction | Pointer/gaze đúng part; fixed-length joints; contact rồi model reaction; compare hai đích; walk chỉ khi có marker/rail; mouth activity đúng audio/đóng lúc nghỉ |
+| Interaction | Pointer/gaze đúng part; fixed-length joints; contact rồi model reaction; compare hai đích; V2.1 walk-to-marker cần rail, V2.2 walk dùng stage/ground anchors; mouth activity đúng audio/đóng lúc nghỉ |
 | Recipe | Chạy đủ 8 method với narration có ý tương ứng; label/entity/relations có evidence, không thêm năm/thông số/nhân quả |
 | Bài thực tế | Cả hai host trên hơi nước và phát triển ô tô, mở xem/nghe trọn final và giải thích được nội dung |
-| Layout | Host 25–40%, >=70% spoken duration, absence <=6s; safe captions/labels, không crop/che targets; cue dài báo lỗi thay vì mất chữ |
+| Layout | Wide host 25–40%, medium 40–65%, close có chủ đích khi V2.2 hỗ trợ; >=70% spoken duration, absence <=6s; captions/labels đủ chữ, không crop nhầm/che target |
 | Source/edit guard | Sửa entity label, relation, target, action overlap/contact, unsupported camera/inset/motion: reject hoặc high issue, không final sai. Supplemental contradictions với planner/vision thật phải high và chặn |
 | Approval | Mẫu chuẩn auto; custom MD dừng host-approval sau preview; approve/resume; đổi custom hash cần duyệt lại |
 | Resume/cache | Run lại không sửa giữ audio hash/checkpoints; sửa 1 chunk tái sử dụng cache còn đúng; đổi voice tái tạo narration; đổi host/source giữ narration/audio hợp lệ |
@@ -64,4 +85,4 @@ Bổ sung narration để buộc đủ 8 recipes; ghi method/recipe IDs thực v
 
 ## Bàn giao kết quả
 
-Ghi phần V2.1 riêng trong TEST-RESULTS.md: tested commit, PASS/FAIL/NOT RUN từng nhóm, output/hash/duration/voice/review mode, shot/cue/time và evidence path. Không sửa lịch sử V1 thành V2.1. Nếu có lỗi, mô tả input tối thiểu, expected/actual, stage và command để agent triển khai sửa đúng phạm vi. Chỉ gọi V2.1 nghiệm thu khi đủ ba luồng và hai host/hai bài có evidence thật.
+Ghi kết quả V2.1/V2.2 riêng trong TEST-RESULTS.md: tested commit và dirty-tree diff nếu có, PASS/FAIL/NOT RUN từng nhóm, output/hash/duration/voice/review mode, shot/cue/time và evidence path. Không sửa lịch sử V1. Nếu lỗi, ghi input tối thiểu, expected/actual, stage và command. Chỉ gọi V2.2 nghiệm thu khi đủ ba luồng/hai host/hai bài cùng evidence diễn xuất thật; MP4 tồn tại hoặc gate kỹ thuật pass chưa đủ.

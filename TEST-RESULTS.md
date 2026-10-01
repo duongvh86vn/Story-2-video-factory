@@ -1,6 +1,6 @@
 # Kết quả kiểm thử Story-to-Video Factory
 
-Lưu ý phiên bản (2026-10-01): các kết quả runtime bên dưới đo **V1**. Code ba luồng/host V2.1 đã bổ sung và build/typecheck qua, nhưng nghiệm thu runtime V2.1 vẫn giao model khác. Xem IMPLEMENTATION-STATUS.md và TEST-HANDOFF.md. Không dùng kết quả V1 để khẳng định ba luồng mới đạt.
+Lưu ý phiên bản (2026-10-01): các kết quả lịch sử bên dưới đo **V1**. Code ba luồng/host V2.1 đã bổ sung và build/typecheck qua; thử nghiệm local sau đó chỉ là evidence từng phần, được ghi trong IMPLEMENTATION-STATUS.md. Hệ diễn xuất V2.2 hiện mới có đặc tả/kế hoạch, chưa có code/video nghiệm thu. Xem TEST-HANDOFF.md; không dùng kết quả cũ để khẳng định ba luồng hoặc style mới đạt. Nội dung lịch sử bên dưới được giữ nguyên.
 
 Ngày kiểm thử: 2026-09-30  
 Repository: `https://github.com/duongvh86vn/Story-2-video-factory`  

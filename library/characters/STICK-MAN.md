@@ -9,18 +9,18 @@ render_strategy: reusable-svg-rig
 
 # Người que dẫn chuyện
 
-Hồ sơ chuẩn V2.1: người que có rig vector, khớp và biểu cảm, kể lời từ script/WAV/SRT và giải thích hình minh họa. Code compiler/controller đã bổ sung; chất lượng hoạt hình chờ nghiệm thu runtime.
+Hồ sơ tạo hình người que và mục tiêu diễn xuất V2.2. Frontmatter vẫn là contract rig V2.1 hiện có; sửa mô tả này không tự bổ sung animation vào compiler. Đặc tả chung nằm trong [STICKMAN-STORY-DIRECTION.md](../../STICKMAN-STORY-DIRECTION.md).
 
 ## Vai trò
 
-Người dẫn chuyện cố định cho video giải thích phát minh, quá trình phát triển, cơ chế hoạt động và sự kiện. Nhân vật đứng cạnh mô hình, chỉ chi tiết, thao tác với mô hình, so sánh và tổng kết. Không tự đóng vai nhà phát minh hoặc nhân vật lịch sử được narration nhắc tới.
+Nhân vật chính cố định cho video giải thích phát minh, quá trình phát triển, cơ chế và sự kiện. Người que bước vào bối cảnh, quan sát vấn đề, suy nghĩ, thử thao tác, phản ứng rồi dẫn người xem sang cảnh tiếp theo. Có thể cùng người xem đi qua xưởng, đường hoặc các không gian minh họa; không bị giữ ở một góc cạnh sơ đồ. Không tự đóng vai nhà phát minh hoặc tuyên bố hành động minh họa là sự kiện lịch sử.
 
 ## Nhận dạng cố định
 
 | Bộ phận | Thiết kế bắt buộc |
 |---|---|
 | Đầu | Hình tròn nền trắng kem `#F5F3EC`, viền xanh đen `#172B36` |
-| Mặt | Hai mắt chấm/oval nhỏ và một miệng nét đơn giản, đủ nhìn được khi nhân vật ở cạnh sơ đồ |
+| Mặt | Mắt/đồng tử, mí, mày và miệng đơn giản nhưng đọc được cảm xúc; giữ cấu trúc mặt qua cảnh |
 | Thân | Một nét thân chính, hai tay và hai chân có khớp rõ |
 | Bàn tay/chân | Hình đơn giản hoặc đầu nét bo tròn; không thêm ngón tay chi tiết |
 | Nhận diện | Một khăn cổ nhỏ màu xanh ngọc `#27D8C5` cố định |
@@ -30,6 +30,8 @@ Người dẫn chuyện cố định cho video giải thích phát minh, quá tr
 
 Giữ đầu tròn, độ dày nét, chiều dài tay/chân, màu, khăn cổ và cấu trúc mặt qua mọi shot. Không biến thành người thật, emoji hoặc một stick figure khác. Nếu có nhân vật minh họa phụ, phải có ID và vai trò khác, không được thay thế host.
 
+Trang phục theo bối cảnh là layer riêng được duyệt; giữ dấu nhận diện chính. Không bắt mọi video mặc áo da thú/cầm lao vì mẫu tham khảo nói về tiền sử. Màu scarf là nhận diện của mẫu hiện có, có thể đổi qua profile/approval, không do planner tự đổi theo shot.
+
 ## Biến đổi được phép
 
 - Đi lại, đổi pose, xoay đầu, hướng nhìn và biểu cảm đơn giản.
@@ -38,7 +40,9 @@ Giữ đầu tròn, độ dày nét, chiều dài tay/chân, màu, khăn cổ v�
 - Mirror pose nếu giữ chính xác target, silhouette và nhận diện.
 - Hình đầu/tỷ lệ/khăn chỉ thay khi người dùng sửa và duyệt hồ sơ.
 
-## Các bộ phận rig
+## Rig hiện có và phần cần mở rộng
+
+V2.1 hiện dùng các IDs sau; pelvis/chest/neck, brows/lids/pupils và mouth shapes cần bổ sung trong compiler/schema V2.2, chưa có chỉ nhờ thêm tên vào MD.
 
 ```text
 host-root
@@ -64,7 +68,7 @@ foot-right
 
 Các nét tay/chân phải xoay quanh khớp, không chỉ trượt cả sticker trên màn hình. Root và part transforms phải seek được theo master clock.
 
-## Pose và hành động chuẩn
+## Action IDs V2.1 hiện có
 
 | Action ID | Chuyển động | Dùng khi |
 |---|---|---|
@@ -79,7 +83,17 @@ Các nét tay/chân phải xoay quanh khớp, không chỉ trượt cả sticker
 | `react` | Mắt/miệng/pose thay đổi nhỏ | Kết quả hoặc chuyển ý |
 | `summarize` | Hướng về người xem và các ý tổng kết | Kết video/chapter |
 
-Pose phải hỗ trợ nội dung đang kể; không chạy/vẫy tay ngẫu nhiên. `walk-to-marker` chỉ dùng khi khung hình thật sự có timeline/mốc và có đủ thời gian.
+Pose phải hỗ trợ nội dung đang kể; không chạy/vẫy tay ngẫu nhiên. `walk-to-marker` của V2.1 chỉ dùng khi khung hình có timeline/mốc và đủ thời gian. V2.2 cần locomotion chung trong stage, không giới hạn mọi bước đi vào rail/timeline.
+
+## Diễn xuất V2.2 cần triển khai
+
+- Enter/walk/stop/turn/exit: bước chân tương ứng quãng đường, chân trụ giữ mặt đất, root/chest/head/tay phối hợp, dừng có chuyển trọng tâm.
+- Observe/inspect/think/discover: mắt nhìn trước, đầu/thân theo target; tò mò → tập trung → hiểu ra có nguyên nhân trong lời kể.
+- Reach/pick-up/hold/place/push/pull/turn-handle: tay tiếp cận grip, contact/attach/release đúng, thân tham gia lực và đồ vật phản ứng sau nguyên nhân.
+- Address-viewer/invite-follow/lead-to-next-scene: hướng người xem vào chi tiết, quay và đưa sang cảnh mới; entry/exit pose và đạo cụ liên tục.
+- Moods neutral, curious, thinking, concerned, effort, surprised, understanding và confident: mày/mắt/miệng/head có track riêng; speech activity không xóa mood.
+
+Mỗi action có chuẩn bị → hành động chính → settle/recovery, easing và transition. Không reset idle sau mọi cue, không chỉ trượt toàn sticker hoặc lặp một gesture suốt video. Giữ bone lengths, foot plant và prop world position khi seek. Tham số thời gian/clip ở đặc tả chung cần được kiểm tra bằng video, không coi pose sheet là nghiệm thu.
 
 ## Đồng bộ giọng và cử chỉ
 
@@ -89,21 +103,21 @@ Chỉ và nhìn cùng một mục tiêu. Thao tác phải có tiếp xúc trư�
 
 ## Bố cục
 
-- Host thường cao 25–40% khung hình, đứng trên đường nền hoặc cạnh bàn/mô hình.
+- Wide thường cao 25–40%, medium 40–65%; close mặt/tay có chủ đích. Giữ >=70% thời gian có lời kể, absence <=6 giây.
 - Nét nhân vật phải đủ tương phản trên nền, đặc biệt khi dùng schematic trắng.
 - Chừa vùng phụ đề; không để thân/tay che nhãn bộ phận.
-- Zoom cơ chế thì thu host vào ô nhỏ hoặc cho vắng mặt ngắn theo storyboard.
+- Camera theo nhân vật hoặc target; cận cơ chế có thể vắng nhân vật ngắn rồi quay lại. Inset hiện chưa được renderer V2.1 hỗ trợ.
 - Host phải còn nhìn rõ mặt và hướng chỉ, không dùng hình tí hon như watermark.
 
 ## Ví dụ sử dụng
 
-Với câu chuyện phát triển ô tô, người que đi giữa các mốc có trong narration, so sánh hai hình xe hoặc chỉ phần cải tiến. Nếu narration chỉ kể tiến trình, không tự chuyển thành câu chuyện hư cấu về một người chế tạo xe.
+Với phát triển ô tô, người que đi vào cảnh đường, quan sát xe, kiểm tra bộ phận và dẫn sang các phương án cải tiến đã kể. Xe lịch sử có nguồn, mô hình truyền động tách riêng; không tự tạo chuyện người que chế tạo xe.
 
-Với câu chuyện cơ chế hơi nước, người que đứng cạnh sơ đồ và chỉ trình tự/cơ cấu. Người que là người giải thích ngoài câu chuyện, không phải bằng chứng về một nhân vật lịch sử.
+Với hơi nước, người que vào xưởng minh họa, nhận ra vấn đề nóng/lạnh, suy nghĩ và thao tác mô hình để thấy vai trò bình ngưng. Nhân vật vừa dẫn chuyện vừa tham gia minh họa, không phải bằng chứng về một nhân vật lịch sử. Hai storyboard đầy đủ ở §10–11 đặc tả chung.
 
 ## Điều kiện duyệt nhân vật
 
-Preview sheet phải có chính diện, trái/phải, explain, point, operate-model, walk-to-marker, compare và summarize. Giữ một profile version/rig hash xuyên tập. Duyệt một lần rồi tái sử dụng; không sinh một người que mới ở từng scene. Nếu tay/chân không gập được hoặc không thể chỉ đúng target, rig chưa đạt.
+Preview sheet giữ các view/pose chuẩn; V2.2 cần thêm clips 30fps đi/dừng/quay, biểu cảm trong khi nói, contact, cầm/đặt và chuyển cảnh. Xem tốc độ 1× và seek/reverse. Giữ một profile version/rig hash xuyên video; không sinh nhân vật mới ở từng scene. Rig thiếu khớp, foot plant hoặc không chỉ/cầm đúng target chưa đạt diễn xuất.
 
 
 ## Mẫu chuẩn và tùy chỉnh V2.1

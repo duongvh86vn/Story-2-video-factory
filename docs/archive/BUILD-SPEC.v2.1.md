@@ -1,16 +1,14 @@
-# STORY-TO-VIDEO FACTORY — NHÂN VẬT CHÍNH DẪN DẮT CÂU CHUYỆN
+# STORY-TO-VIDEO FACTORY — BA LUỒNG, MỘT VIDEO GIẢI THÍCH
 
-Đặc tả mục tiêu V2.2 · 2026-10-01. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Ba luồng narration của V2.1 được giữ; phần diễn xuất V2.2 dưới đây cần triển khai.
+Đặc tả V2.1 · 2026-10-01. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống.
 
 ## 1. Trải nghiệm và phạm vi
 
 **Nhập nội dung → chọn người que hoặc robot mini → Tạo video.** Kịch bản là lời kể hoàn chỉnh. Hệ thống đọc nguyên văn, không tự viết lại, thêm lời thoại, câu chào hoặc lời kết.
 
-Sản phẩm là video giải thích/mô tả/kể lại sự vật và sự việc, ví dụ hệ thống hơi nước và quá trình phát triển ô tô. Người que hoặc robot mini là **nhân vật chính dẫn chuyện**: bước vào bối cảnh, quan sát vấn đề, suy nghĩ, thử thao tác, phản ứng và đưa người xem sang ý tiếp theo. Một identity xuyên video. Nhân vật tham gia các tình huống minh họa, không tự nhận là nhà phát minh hoặc nhân vật lịch sử trong narration.
+Sản phẩm là video giải thích/mô tả/kể lại sự vật và sự việc, ví dụ hệ thống hơi nước và quá trình phát triển ô tô. Một host cố định đứng cạnh hình minh họa, nhìn/chỉ/thao tác đúng đối tượng đang được giải thích. Host là người trình bày, tách khỏi nhà phát minh, nhân vật lịch sử và các đối tượng trong narration.
 
-Đặc tả diễn xuất, hai storyboard mẫu và hướng HTML5/CSS/SVG/JavaScript nằm trong [STICKMAN-STORY-DIRECTION.md](STICKMAN-STORY-DIRECTION.md). Các đoạn ảnh tĩnh trong video tham khảo không được dùng làm chuẩn chuyển động. Lời kể vẫn nguyên văn; hệ thống chỉ tạo thêm **kịch bản hình ảnh và diễn xuất**.
-
-Code nền hiện là V2.1 với rig/recipe sơ đồ cơ bản. Đã có một số thử nghiệm local giọng Việt/render và tests trên working tree; ba luồng chưa nghiệm thu đầy đủ, style mới chưa được triển khai. Xem [trạng thái](IMPLEMENTATION-STATUS.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [bàn giao nghiệm thu](TEST-HANDOFF.md). V1 và V2.1 được lưu riêng trong docs/archive; không dùng evidence cũ để công bố V2.2 hoàn thành.
+Code V2.1 đã bổ sung các module và contract dưới đây. Build/typecheck được kiểm tra; **nghiệm thu runtime, TTS, ASR, render và chất lượng giải thích chưa được chạy trong lượt triển khai này**, theo yêu cầu giao test cho model khác. Xem IMPLEMENTATION-STATUS.md và TEST-HANDOFF.md. TEST-RESULTS.md trước đây chỉ chứng minh V1. Bản V1 được lưu tại docs/archive/STORY-TO-VIDEO-FACTORY.v1.md.
 
 ## 2. Ba luồng đầu vào
 
@@ -54,21 +52,17 @@ Command adapter: executable + command_args có {request}, tùy chọn {output}; 
 
 Speech activity đo RMS audio 20 ms; mouth mở theo activity/level và đóng lúc nghỉ. Đây là đồng bộ audio activity, **không phải phoneme lip-sync**. Silent draft chỉ có đồng bộ mức segment, report phải ghi đúng.
 
-## 5. Host MD → nhân vật chính và rig tái sử dụng
+## 5. Host MD → rig tái sử dụng
 
 Hai mẫu sẵn: library/characters/MINI-ROBOT.md và STICK-MAN.md. Chọn mẫu chuẩn cho phép chạy tự động; custom input/host.md phải xem và duyệt preview một lần theo rig hash trước sản xuất. Đổi profile/appearance/compiler làm hash đổi và cần duyệt lại custom host.
 
 Compiler xuất HostProfile JSON, SVG rig, part IDs/joint pivots, pose library, host-preview-sheet.png. Màu, headScale/bodyScale (0.75–1.25), strokeWidth (2–10) có schema. MD tùy chỉnh vẫn nằm trong hai rig vector được hỗ trợ; không hứa tạo mọi hình dạng 3D hoặc render mọi mô tả tùy ý.
 
-V2.1 hiện có 10 action IDs: idle, greet, explain, point, operate-model, compare, think, react, summarize, walk-to-marker. Preview gồm chính diện, hướng trái/phải dạng sơ đồ 2D và các pose. Rig/profile version/hash cố định xuyên video; không sinh nhân vật mới mỗi shot. Profile không được biến host thành nhà phát minh. Đây là khả năng hiện có, chưa phải bộ diễn xuất mới.
-
-V2.2 cần rig có pelvis/chest/head, tay/chân phân khớp, bàn tay/chân; mặt có mắt/mí/mày/miệng và head tilt riêng. Action library cần enter/walk/turn/stop, observe/inspect/think, address-viewer, reach/pick-up/hold/place, push/pull/turn-handle, react và lead-to-next-scene. Các tên mới chỉ là contract dự kiến cho đến khi schema/compiler/API được cập nhật.
-
-Mỗi clip có chuẩn bị, hành động chính, recovery/settle; đi có foot plant/quãng đường đúng, dừng có chuyển trọng tâm; cầm/đặt có attach/release đúng world position. Gesture, face, gaze, speech và locomotion có track/ownership riêng. Không tween cả hình trên đôi chân bất động hoặc reset idle ở mỗi cue. Preview nhân vật cần video 30fps ngoài pose sheet.
+Pose/action: idle, greet, explain, point, operate-model, compare, think, react, summarize, walk-to-marker. Preview gồm chính diện, hướng trái/phải dạng sơ đồ 2D và các pose. Rig/profile version/hash cố định xuyên video; không sinh nhân vật mới mỗi shot. Profile không được biến host thành nhà phát minh.
 
 Controller dùng khớp tay có chiều dài cố định, IK tính ở compile time, gaze hướng target, pointer từ tay đến đúng part anchor. operate-model phải tiếp cận, contact thực tế, rồi model event mới phản ứng. Không stretch tay để che target ngoài tầm. Đích thiếu, action chồng nhau, contact sai hoặc event không được component hỗ trợ phải bị từ chối.
 
-V2.2: nhân vật thường cao 25–40% khung ở wide, 40–65% ở medium; close mặt/tay được crop có chủ đích. Giữ ít nhất 70% thời gian có lời kể, vắng liên tục tối đa 6 giây; chừa vùng subtitle. Không dùng giới hạn wide để cấm close-up. V2.1 hiện vẫn mặc định cao 36%, hỗ trợ beside-model/absent; inset chưa hỗ trợ. Quy tắc framing mới phải được triển khai cùng validator, không chỉ sửa tài liệu.
+Host cao khoảng 25–40% khung hình (compiler mặc định 36%), hiện ít nhất 70% thời gian narration, vắng liên tục tối đa 6 giây. absent không được chỉ/thao tác như một host vô hình. Presentation hiện hỗ trợ beside-model/absent; inset chưa được renderer hỗ trợ và bị validator từ chối.
 
 ## 6. Phân tích và explanation plan
 
@@ -76,18 +70,14 @@ Pipeline chung:
 
 ```text
 input document → narration có clock → analysis → explanation plan
-  → story direction → stage/performance/camera plans → storyboard
-  → assets + rig/clips → compile scenes → voiced preview
-  → review/repair → final → QC → DONE
+  → storyboard → assets → scenes → draft → review/repair → final → QC → DONE
 ```
 
-Mỗi beat giữ explanationGoal, narrationSegmentIds, sourceRefs, entities, evidenced relations, visualMethod, hostIntent. V2.2 bổ sung mục đích hành động, emotional arc, stage/prop targets, entry/exit pose và continuity. Người que phải làm một việc có ý nghĩa, thấy kết quả và nối sang ý sau. Không áp một bộ động tác giống nhau vào mọi câu.
-
-Clock của chapter/beat/shot do code tính từ narration. Model chỉ cung cấp cấu trúc/ý đồ, không sở hữu phép tính timestamp hoặc identity. Beat hình ảnh có thể đi qua nhiều cue hoặc một cue có nhiều shot; không buộc cut theo từng chunk TTS.
+Mỗi beat: explanationGoal, narrationSegmentIds, sourceRefs, entities, evidenced relations, visualMethod, hostIntent. Clock của chapter/beat/shot do code tính từ narration. Model chỉ cung cấp cấu trúc/ý đồ, không sở hữu phép tính timestamp hoặc identity.
 
 Nguồn quyết định là narration của mode đã chọn. source.md chỉ bổ trợ. Entity label phải có trong source excerpt; relation phải có endpoint/evidence. Không tự thêm ngày, hãng xe, thông số hoặc quan hệ nhân quả. Nguồn mâu thuẫn high phải chặn final; planner thật có contract báo contentIssues và vision review kiểm tra lại. Planner mock chỉ xử lý quy tắc nguồn/keyword, không phải kiểm chứng kiến thức hoặc phát hiện mọi mâu thuẫn ngữ nghĩa.
 
-Minh họa có provenance=visualization, fidelity=conceptual. Bộ từ vựng V2.1 hiện gồm boiler, condenser, cylinder, piston, wheel, gear, lever, car, engine, battery, pipe, flow, object, stage, marker. Cơ cấu được sơ đồ hóa, không giả làm bản vẽ/tư liệu lịch sử. V2.2 cần bổ sung bối cảnh, đạo cụ/grip/ground anchors và assets có nguồn. Ví dụ xe Benz ba bánh không được thay bằng generic car bốn bánh để minh họa claim lịch sử. Thiếu asset đúng phải báo rõ, không tự tạo asset sai.
+Minh họa có provenance=visualization, fidelity=conceptual. Bộ từ vựng hiện gồm boiler, condenser, cylinder, piston, wheel, gear, lever, car, engine, battery, pipe, flow, object, stage, marker. Cơ cấu được sơ đồ hóa, không giả làm bản vẽ/tư liệu lịch sử. Narrative có chi tiết ngoài vocabulary phải được diễn giải trong phạm vi này hoặc báo cần sửa, không tự tạo asset sai.
 
 ## 7. Tám recipe giải thích
 
@@ -102,13 +92,13 @@ Minh họa có provenance=visualization, fidelity=conceptual. Bộ từ vựng V
 | Chuỗi sự kiện | host-event-sequence | Rail, bước/sự kiện theo narration |
 | Tổng kết | host-summary | Host nhấn các ý đã có |
 
-Recipe giữ ý đồ giải thích nhưng cần cách dàn dựng mới trong §9 STICKMAN-STORY-DIRECTION.md: nhân vật sống trong cảnh, đi/quan sát/thử/phản ứng và dẫn tiếp. Không biến toàn bài thành tám biến thể của grid icon. Quan hệ và nhãn không được đổi thành claim mới khi chỉnh storyboard. Action chọn theo narration anchors; model reaction sau contact khi có thao tác. Các mũi tên nhân quả cần evidence; chỉ cùng xuất hiện không đủ chứng minh nguyên nhân.
+Recipe dùng cùng rig/model/interaction contract. Quan hệ và nhãn không được đổi thành claim mới khi chỉnh storyboard. Host action chọn theo cue/word anchors; diagram reaction sau contact. Các mũi tên nhân quả cần evidence; chỉ cùng xuất hiện không đủ chứng minh nguyên nhân.
 
-Không thay nhân vật bằng portrait, slideshow hoặc một tấm chữ dài. Fallback chỉ giảm chi tiết phụ khi vẫn giữ diễn xuất/hành động chính, source parts, relations và interaction. Thiếu clip/asset cần thiết phải dừng để sửa; không âm thầm đổi cinematic thành diagram hoặc thành cảnh đứng yên. Lỗi semantic không được biến thành pass bằng fallback trang trí.
+Không thay host bằng portrait, slideshow hoặc một tấm chữ dài. Fallback giảm motion/model complexity nhưng giữ host, source parts, relations và interaction. Lỗi semantic không được biến thành pass bằng fallback trang trí.
 
 ## 8. Studio, API và CLI
 
-Studio hiện có ba tab Kịch bản/WAV/SRT → host → giọng → Tạo video, preview lời kể/host, trạng thái chờ và storyboard. V2.2 cần chọn style cinematic/diagram rõ ràng; storyboard ba cột **Lời kể | Dàn cảnh và diễn xuất | Preview clip**, xem action/mood/target/continuity. Storyboard approval/chỉnh/khóa/rebuild shot vẫn có sẵn nhưng không bắt buộc khi automatic=true. Chế độ mặc định mục tiêu là story-cinematic; hiện chưa có trường này trong config.
+Studio: ba tab Kịch bản/WAV/SRT → host → giọng → Tạo video. Có preview lời kể, host preview, trạng thái giọng/chờ duyệt, storyboard ba cột lời kể/mục tiêu giải thích/hành động. Storyboard approval/chỉnh/khóa/rebuild shot vẫn có sẵn nhưng không bắt buộc khi automatic=true.
 
 API có PATCH project settings (input.mode/script, host, language, voice, automatic), PUT script editor, multipart script/host upload, POST script preview, voice-default settings, approve host và run tới DONE. Settings/artifact edits có revision check. Generated story/narration chỉ đọc; chỉnh script hoặc input SRT/WAV để đổi lời kể. Host scene source được sinh từ kế hoạch đã validate; chỉnh storyboard rồi rebuild thay vì sửa SVG/JS làm mất identity/target guarantees.
 
@@ -124,25 +114,19 @@ CSP/scene allowlist, local asset hashes, project path/symlink guards, shell=fals
 
 Final yêu cầu ready voice, canonical narration/hash không đổi, draft review pass, host approval hợp lệ và scene/artifact hợp lệ. QC fail không DONE. Studio không hiển thị final của phiên bản cũ như final của input vừa sửa.
 
-V2.2 tách cache rig/clip, stage/asset, performance, camera và rendered shot khỏi narration. Thêm trạng thái cần asset/animation và report lỗi ở schema/API/CLI trước khi sử dụng. Đổi action/mood/style không làm lại audio nếu narration/voice/clock hợp lệ. Profile hoặc clock mới xung đột lock vẫn phải báo rõ.
-
 ## 10. Bố cục, render, review và QC
 
-Giữ nền hiện có HyperFrames 0.8.96, SVG/GSAP paused timelines, FFmpeg cho audio/mux/captions/QC. HTML5 dựng stage/layers; CSS dựng appearance/depth; SVG là rig/props có anchors; JavaScript compiler điều khiển tracks theo master clock. “Java” ở yêu cầu được hiểu là JavaScript trình duyệt.
+HyperFrames 0.8.96, SVG/GSAP deterministic paused timelines, FFmpeg cho audio/mux/captions/QC. Default final 1920×1080/30fps, draft 960×540/15fps, tối đa 300 giây/100 shot, budgets cấu hình.
 
-Default final hiện là 1920×1080/30fps, draft 960×540/15fps, tối đa 300 giây/100 shot, budgets cấu hình. V2.2 cần preview diễn xuất tối thiểu 30fps; draft 15fps chỉ phù hợp kiểm tra bố cục. 60fps là lựa chọn cần đo runtime, không phải lời hứa chữa lỗi rig.
+Chừa vùng caption cuối khung: bottom 4%, tối đa 14% chiều cao. Nhãn model phải nằm trong safe layout; cue đầy đủ không vừa phải báo lỗi, không clip mất chữ. Camera hỗ trợ wide/medium/close, eye-level, locked/static/push-in/pull-out/pan-left/pan-right với movement nhỏ giữ clearance; giá trị ngoài khả năng renderer bị từ chối.
 
-Frame state phải suy ra được từ masterTimeMs ở frame 0, seek tiến/lùi hoặc render theo batch. Compiler bake IK/foot plant/blend/attachment states vào scene allowlist; không dựa vào CSS clock độc lập, callback đã chạy, random hay frame trước. Không bỏ CSP/security để tạo animation. Chi tiết compiler và nguồn kỹ thuật ở §13 STICKMAN-STORY-DIRECTION.md.
-
-Chừa vùng caption cuối khung: bottom 4%, tối đa 14% chiều cao. Nhãn phải nằm trong safe layout; cue đầy đủ không vừa phải báo lỗi, không clip mất chữ. V2.1 hỗ trợ wide/medium/close, eye-level, locked/static/push-in/pull-out/pan-left/pan-right với movement nhỏ. V2.2 cần camera framing theo người/target và scene depth; khả năng mới phải cập nhật compiler/validator và chứng minh safe regions.
-
-Review hiện có 5 snapshot/shot tại 0/25/50/75/100%, thêm trước/trong/sau reach/contact và hashes. V2.2 bắt buộc có preview clip và chuỗi frame quanh bước chân, đổi cảm xúc, attach/release và cut; xem tốc độ 1×, slow motion, seek/reverse. Rule review kiểm tra source/timing/geometry/contact/artifact; review diễn xuất kiểm tra mục đích, trọng lượng, face/gaze, continuity và dễ hiểu. Không dùng năm ảnh tĩnh để chứng minh chuyển động mượt.
+Review: 5 snapshot/shot tại 0/25/50/75/100%, thêm trước/trong/sau action reach/contact, action sheets, scene/master/frame/sheet hashes. Rule review kiểm tra IDs/source/timing/geometry/contact/artifact integrity. Vision được cấu hình sẽ so identity, biểu cảm, crop/readability, subtitle clearance và tính đúng của hình giải thích. Không dùng 5 ảnh tĩnh để tuyên bố toàn bộ diễn xuất/phoneme đúng.
 
 Report phải phân biệt rule-based/combined, voice source/provider/hash, synchronization và phần chưa xác nhận. Không có vision mà allow_rule_based_review=true có thể tạo final qua kiểm tra kỹ thuật; **đó chưa là nghiệm thu chất lượng hình hoặc kiến thức**, phải xem/nghe bởi model/người test. Có thể đặt allow_rule_based_review=false cho sản xuất yêu cầu vision thật.
 
-QC: codec/resolution/fps/duration, audio presence/hash/duration, sample rate/loudness/true peak/clipping, unexpected black/freeze/silence, subtitle stream và sidecar đúng text/clock, thumbnail/artifacts. Freeze cần xác minh vùng diễn xuất nếu nền tĩnh chiếm nhiều khung; không tắt gate hoặc thêm rung giả để pass. Lỗi high chặn DONE. DONE của một project là checkpoint qua gate cấu hình, không tự chứng minh toàn bộ sản phẩm hoặc style V2.2 đã nghiệm thu.
+QC: codec/resolution/fps/duration, audio presence/hash/duration, sample rate/loudness/true peak/clipping, unexpected black/freeze/silence, subtitle stream và sidecar đúng text/clock, thumbnail/artifacts. Lỗi high chặn DONE. DONE của một project là checkpoint sản xuất đã qua các gate cấu hình, không tự chứng minh toàn bộ sản phẩm V2.1 đã nghiệm thu.
 
-## 11. Artifacts hiện có V2.1 và bổ sung dự kiến
+## 11. Artifacts
 
 ```text
 input/script.txt|script.md, narration.wav, narration.srt  # theo mode
@@ -163,11 +147,7 @@ output/explanation-plan.json, character-bible.json, asset-manifest.json
 output/production-report.md, qc-report.json, cost-report.json
 ```
 
-V2.2 cần thêm story-direction.json, stage-plan.json, performance-plan.json, camera-plan.json, animation-library.json, performance-report.json và previews/performance/ có video. Nội dung/schema mới ở §14 STICKMAN-STORY-DIRECTION.md; hiện chưa được code tạo ra.
-
-## 12. Cấu hình mẫu chạy với contract V2.1 hiện có
-
-Ví dụ sau vẫn dùng technical-clean/rig sơ đồ. Nó không bật style diễn xuất V2.2; không thêm các field tương lai vào project hiện tại rồi coi renderer đã hỗ trợ.
+## 12. Cấu hình mẫu
 
 ```yaml
 project: { name: steam-explainer, language: vi }
@@ -204,6 +184,6 @@ Windows provider cần giọng tiếng Việt thực sự được cài. Đổi 
 
 ## 13. Nghiệm thu và bàn giao
 
-Bộ nghiệm thu giữ thuần script không WAV/SRT, WAV giữ lời, SRT giữ cue text/clock, WAV+SRT mismatch, thiếu/lỗi TTS/fit không final; hai host/hai bài; resume/cache/locks/rebuild và final media QC. V2.2 bổ sung role nhân vật chính, diễn xuất có mục đích, foot plant, face/mood, đạo cụ, liên tục giữa cảnh và deterministic seek. Xem TEST-HANDOFF.md và §15–16 STICKMAN-STORY-DIRECTION.md.
+Model khác thực hiện runtime tests, lưu commit/config/provider/evidence theo TEST-HANDOFF.md. Bộ nghiệm thu phải kiểm tra thuần script không WAV/SRT, WAV giữ lời, SRT giữ cue text/clock, WAV+SRT mismatch, thiếu/lỗi TTS/fit không final; hai host trên bài hơi nước và ô tô; identity/target/contact/speech/layout; resume/edit voice/host/script/rebuild/locks; final audio/subtitle/duration/QC.
 
-V1 hoặc các ca local V2.1 không được dùng để tuyên bố V2.2 đạt. Build/typecheck là kiểm tra biên dịch, không thay nghe giọng Việt và xem diễn xuất. Đợt này là lập lại kịch bản/đặc tả theo yêu cầu mới, chưa triển khai renderer mới; trạng thái phải ghi riêng trong IMPLEMENTATION-STATUS.md và TEST-RESULTS.md.
+V1 test evidence không được dùng để tuyên bố ba luồng mới đạt. Build/typecheck là kiểm tra biên dịch, không thay việc nghe giọng Việt, xem video, kiểm tra cơ chế hoặc chạy ASR/render thật. Trạng thái nghiệm thu mới phải ghi riêng trong TEST-RESULTS.md.
