@@ -5,7 +5,8 @@ workflow:
   max_review_iterations: 2
   max_model_calls: 250
   max_generated_assets_per_shot: 3
-  max_scene_bytes: 500000
+  # Fixed bone transforms are baked on the narration clock, including contact samples.
+  max_scene_bytes: 2000000
   allow_rule_based_review: true
 retry: { structured_output: 2, scene_generation: 2, scene_repair: 3, render: 1 }
 research: { enabled: false, sources: [] }

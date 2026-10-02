@@ -1,8 +1,9 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import YAML from 'yaml';
+import { z } from 'zod';
 import type { FactoryConfig } from '../core/config.js';
-import { StoryboardSchema, type Beat, type Chapter, type CharacterBible, type Narration, type Shot, type Story, type Storyboard, SceneTypes, TransitionTypes } from '../core/schemas.js';
+import { ShotSchema, StoryboardSchema, type Beat, type Chapter, type CharacterBible, type Narration, type Shot, type Story, type Storyboard, SceneTypes, TransitionTypes } from '../core/schemas.js';
 import { exists, hash, readJson, walk, writeAtomic, writeJson } from '../core/utils.js';
 import type { ModelRouter } from '../models/registry.js';
 import { validatePlanning, uniqueIds } from '../story/timeline.js';
@@ -14,6 +15,31 @@ import { storyboardMarkdown } from './markdown.js';
 import { recipes as builtInRecipes } from '../../library/shots/index.js';
 import { loadHost } from '../host/index.js';
 import { explainerShot, validateExplainerStoryboard, writeHostTimeline } from '../explainer/storyboard.js';
+import { cinematicSetting, directCinematicShot, validateCinematicShot, validateModelContinuity, writeCinematicPlans } from '../director/index.js';
+import { prepareCinematicEnvironments } from '../stage/index.js';
+import { DIRECTION_VERSION } from '../director/schemas.js';
+import { ANIMATION_VERSION } from '../animation/schemas.js';
+import { modelExitParts } from '../director/props.js';
+import { createCreativeStoryboard } from '../director/creative.js';
+import {seedActorStoryboard} from '../actors/model.js';
+import {actorDefinitions,actorLockKey,assertActorLocks} from '../actors/locks.js';
+
+/** Discard obsolete derived data only on unlocked shots; never relabel an old plan as current. */
+export async function readStoryboardForDirection(file:string,stateLocks:Record<string,boolean>):Promise<Storyboard>{
+  const envelope=z.object({shots:z.array(ShotSchema.innerType().omit({cinematic:true}).extend({cinematic:z.unknown().optional()}))}).parse(await readJson(file));
+  const shots=envelope.shots.map(shot=>{
+    if(shot.cinematic){
+      const version=z.object({producer:z.string(),performance:z.object({compilerVersion:z.string()}).passthrough()}).passthrough().parse(shot.cinematic);
+      if(version.producer!==DIRECTION_VERSION||version.performance.compilerVersion!==ANIMATION_VERSION){
+        if(!/^story-direction-2\.2\.\d+$/.test(version.producer)||!/^performance-2\.2\.\d+$/.test(version.performance.compilerVersion))throw new Error(`${shot.id}: unrecognized cinematic plan version`);
+        if(stateLocks.storyboard||(stateLocks[shot.id]??stateLocks[`shot:${shot.id}`]??shot.locked))throw new Error(`${shot.id}: locked cinematic plan version requires migration; unlock the shot or restore its compiler`);
+        return {...shot,cinematic:undefined};
+      }
+    }
+    return shot;
+  });
+  return StoryboardSchema.parse({shots});
+}
 
 async function recipeCatalog(): Promise<Array<Record<string, unknown>>> {
   const files = await walk(path.join(await libraryRoot(), 'shots'));
@@ -34,7 +60,9 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
   validatePlanning(narration, chapters, beats);
   const file = path.join(projectRoot, 'work', 'storyboard.json');
   const stateLocks = await readProjectLocks(projectRoot);
-  const existing = await exists(file) ? StoryboardSchema.parse(await readJson(file)) : undefined;
+  const retained=await exists(file)?await readJson(file):{shots:[]};
+  const lockedActors=actorDefinitions(retained).filter(a=>stateLocks[actorLockKey(a.id)]);
+  const existing = await exists(file) ? await readStoryboardForDirection(file,stateLocks) : undefined;
   if (config.content.mode === 'narrated-explainer') {
     const { profile, rig } = await loadHost(projectRoot);
     let storyboard: Storyboard;
@@ -59,8 +87,32 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
           planned.push(explainerShot(id, cursor, cut, beat, narration, profile, rig)); cursor = cut;
         }
       }
-      storyboard = StoryboardSchema.parse({ shots: planned.sort((a, b) => a.startMs - b.startMs) });
+      const ordered=planned.sort((a,b)=>a.startMs-b.startMs);
+      if(config.presentation.mode==='story-cinematic'){
+        let entry: {x:number;y:number}|undefined;
+        let setting=cinematicSetting(narration.segments.map(s=>s.text).join(' ')),facing:'front'|'left'|'right'='front';
+        for(const [i,shot] of ordered.entries()){
+          if(locks.some(s=>s.id===shot.id)){
+            if(!shot.cinematic)throw new Error(`${shot.id}: locked diagram shot cannot become cinematic; unlock the shot or keep diagram mode`);
+            validateCinematicShot(shot,profile,config);
+          }else ordered[i]=directCinematicShot(shot,beats.find(b=>shot.beatIds.includes(b.id))!,profile,config,entry,{setting,facing,parts:ordered[i-1]?modelExitParts(ordered[i-1]!):undefined,nextControlId:ordered[i+1]?.host?.actions.find(a=>a.type==='operate-model')?.target?.partId});
+          validateModelContinuity(ordered[i-1],ordered[i]!);
+          const next=ordered[i]!.cinematic!;
+          if(entry&&hash(next.continuity.entry)!==hash(entry))throw new Error(`${shot.id}: locked entry breaks character continuity`);
+          entry=next.continuity.exit;
+          setting=next.setting;facing=next.continuity.facing;
+        }
+      }
+      storyboard = StoryboardSchema.parse({ shots: ordered });
+      if(config.presentation.character_mode==='actors'&&config.presentation.mode==='story-cinematic'){
+        const converted=seedActorStoryboard({shots:storyboard.shots.filter(s=>!locks.some(lock=>lock.id===s.id))},profile,rig,narration);
+        storyboard={shots:[...converted.shots,...locks].sort((a,b)=>a.startMs-b.startMs)};
+      }
+      if(config.presentation.mode==='story-cinematic')storyboard=await createCreativeStoryboard(projectRoot,config,router,{story,narration,characters,beats,profile,rig,lockedActors},storyboard,locks);
     }
+    assertActorLocks(retained,storyboard,stateLocks);
+    if(config.presentation.mode==='story-cinematic')await prepareCinematicEnvironments(projectRoot,storyboard,new Set(stateLocks.storyboard?storyboard.shots.map(s=>s.id):storyboard.shots.filter(s=>stateLocks[s.id]??stateLocks[`shot:${s.id}`]??s.locked).map(s=>s.id)));
+    storyboard=StoryboardSchema.parse(storyboard);
     validateStoryboard(storyboard, narration, beats, characters);
     validateExplainerStoryboard(storyboard, narration, beats, profile, rig, config);
     if (storyboard.shots.length > config.rendering.max_shots) throw new Error('Explainer exceeds configured shot limit');
@@ -68,6 +120,7 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
     await writeJson(file, storyboard); await writeAtomic(path.join(projectRoot, 'work/storyboard.md'), markdown);
     await writeJson(path.join(projectRoot, 'output/storyboard.json'), storyboard); await writeAtomic(path.join(projectRoot, 'output/storyboard.md'), markdown);
     await writeHostTimeline(projectRoot, storyboard, narration, profile, rig);
+    if(config.presentation.mode==='story-cinematic')await writeCinematicPlans(projectRoot,storyboard);
     return storyboard;
   }
   if (stateLocks.storyboard) {

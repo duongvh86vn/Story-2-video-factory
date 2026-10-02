@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -10,7 +10,25 @@ export function readJson<S extends ZodTypeAny>(file: string, schema: S): Promise
 export function readJson<T>(file: string): Promise<T>;
 export async function readJson(file: string, schema?: ZodTypeAny): Promise<unknown> { const data: unknown = JSON.parse(await fs.readFile(file, 'utf8')); return schema ? schema.parse(data) : data; }
 export async function writeJson(file: string, data: unknown): Promise<void> { await writeAtomic(file, JSON.stringify(data, null, 2) + '\n'); }
-export async function writeAtomic(file: string, content: string | Buffer): Promise<void> { await fs.mkdir(path.dirname(file), { recursive: true }); const tmp = `${file}.${process.pid}.tmp`; await fs.writeFile(tmp, content); await fs.rename(tmp, file); }
+export async function writeAtomic(file: string, content: string | Buffer): Promise<void> {
+  await fs.mkdir(path.dirname(file), { recursive: true });
+  const tmp = `${file}.${process.pid}.${randomUUID()}.tmp`;
+  const handle=await fs.open(tmp,'wx');let committed=false;
+  try {
+    try { await handle.writeFile(content); } finally { await handle.close(); }
+    const delays=[20,40,80,160,320,640];
+    for(let attempt=0;;attempt++){
+      try { await fs.rename(tmp,file);committed=true;return; }
+      catch(error){
+        if(!['EPERM','EBUSY','EACCES'].includes((error as NodeJS.ErrnoException).code??'')||attempt>=delays.length)throw error;
+        await new Promise(resolve=>setTimeout(resolve,delays[attempt]));
+      }
+    }
+  } finally {
+    // The destination is never unlinked, including when every rename attempt fails.
+    if(!committed)await fs.unlink(tmp).catch(()=>{});
+  }
+}
 export async function appendLog(file: string, data: unknown): Promise<void> { await fs.mkdir(path.dirname(file), { recursive: true }); await fs.appendFile(file, JSON.stringify(data) + '\n'); }
 export function safePath(root: string, relative: string): string { if (path.isAbsolute(relative) || /^[a-z]:/i.test(relative) || relative.includes('\0')) throw new Error(`Absolute or invalid path forbidden: ${relative}`); const target = path.resolve(root, relative); const rel = path.relative(path.resolve(root), target); if (rel === '..' || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel)) throw new Error(`Path escapes project: ${relative}`); return target; }
 export async function safeRealPath(root: string, relative: string): Promise<string> { const target = safePath(root, relative); const base = await fs.realpath(root); const real = await fs.realpath(target); const rel = path.relative(base, real); if (rel.startsWith('..') || path.isAbsolute(rel)) throw new Error(`Symlink escapes project: ${relative}`); return real; }

@@ -9,6 +9,12 @@ import { ActivitySchema, VoiceReportSchema, type SpeechActivity, type VoiceRepor
 import { ScriptDocumentSchema, type ScriptDocument } from '../ingest/script.js';
 export * from './schemas.js';
 
+/** A second output bound protects PCM writers even if a filter mishandles EOF. */
+function pcmBounds(durationMs:number,sampleRate:number):string[] {
+  if(!Number.isFinite(durationMs)||durationMs<=0)throw new Error('PCM duration must be finite and positive');
+  return ['-t',seconds(durationMs/1000),'-fs',String(Math.ceil(durationMs*sampleRate/1000)*2+65536),'-ar',String(sampleRate),'-ac','1'];
+}
+
 async function synthesize(root: string, config: FactoryConfig, text: string, output: string, requestPath: string): Promise<void> {
   const v = config.voice;
   await writeJson(requestPath, { text, language: config.project.language.split('-')[0], voiceId: v.voice_id, output });
@@ -68,7 +74,7 @@ export async function narrateScript(root: string, config: FactoryConfig, script:
       report.cues.push({ id: chunk.id, textHash: hash(chunk.text), startMs, endMs, rawDurationMs: duration, rate: 1, audioHash: hash(await fs.readFile(raw)) });
       const next = script.chunks[i + 1], pause = next && next.paragraphIndex !== chunk.paragraphIndex ? 250 : 0;
       const piece = path.join(path.dirname(raw), 'script-piece.wav');
-      await ffmpeg(root, config, ['-y', '-i', normalized, '-af', `apad,atrim=duration=${seconds((duration + pause) / 1000)}`, '-c:a', 'pcm_s16le', piece]);
+      await ffmpeg(root, config, ['-y', '-i', normalized, '-af', `apad=whole_dur=${seconds((duration + pause) / 1000)},atrim=duration=${seconds((duration + pause) / 1000)}`, ...pcmBounds(duration+pause,config.audio.sample_rate), '-c:a', 'pcm_s16le', piece]);
       pieces.push(piece); clock += duration + pause;
       if (clock > config.rendering.max_duration_seconds * 1000) throw new Error('Generated script narration exceeds configured video duration limit');
     }
@@ -161,7 +167,7 @@ export async function resolveVoice(root: string, config: FactoryConfig, narratio
         report.cues[i]!.fittedDurationMs=fittedDuration;
         if (fittedDuration > window + 1) { report.status = 'fit-failed'; throw new Error(`${segment.id}: fitted speech would be truncated by cue boundary`); }
         const placed = path.join(dir, 'placed.wav');
-        await ffmpeg(root, config, ['-y', '-i', fitted, '-af', `apad,atrim=duration=${seconds(window / 1000)},adelay=${segment.startMs}:all=1`, '-ar', String(config.audio.sample_rate), '-c:a', 'pcm_s16le', placed]);
+        await ffmpeg(root, config, ['-y', '-i', fitted, '-af', `apad=whole_dur=${seconds(window / 1000)},atrim=duration=${seconds(window / 1000)},adelay=${segment.startMs}:all=1`, ...pcmBounds(segment.endMs,config.audio.sample_rate), '-c:a', 'pcm_s16le', placed]);
         report.cues[i]!.audioHash = hash(await fs.readFile(raw)); cueFiles.push(placed);
       }
       const output = await outputPath(root, 'work/voice/narration.wav');
@@ -171,12 +177,14 @@ export async function resolveVoice(root: string, config: FactoryConfig, narratio
         const next: string[] = [];
         for (let i = 0; i < mixed.length; i += 24) {
           const group = mixed.slice(i, i + 24), target = await outputPath(root, `work/voice/mix-${pass}-${i}.wav`);
-          await ffmpeg(root, config, ['-y', ...group.flatMap(f => ['-i', f]), '-filter_complex', `${group.map((_, j) => `[${j}:a]`).join('')}amix=inputs=${group.length}:normalize=0:duration=longest,apad,atrim=duration=${seconds(narration.durationMs / 1000)}[mix]`, '-map', '[mix]', '-c:a', 'pcm_s16le', target]);
+          await ffmpeg(root, config, ['-y', ...group.flatMap(f => ['-i', f]), '-filter_complex', `${group.map((_, j) => `[${j}:a]`).join('')}amix=inputs=${group.length}:normalize=0:duration=longest,apad=whole_dur=${seconds(narration.durationMs / 1000)},atrim=duration=${seconds(narration.durationMs / 1000)}[mix]`, '-map', '[mix]', ...pcmBounds(narration.durationMs,config.audio.sample_rate), '-c:a', 'pcm_s16le', target]);
           next.push(target);
         }
         mixed = next;
       }
-      await ffmpeg(root, config, ['-y', '-i', mixed[0]!, '-af', `apad,atrim=duration=${seconds(narration.durationMs / 1000)}`, '-c:a', 'pcm_s16le', output]);
+      await ffmpeg(root, config, ['-y', '-i', mixed[0]!, '-af', `apad=whole_dur=${seconds(narration.durationMs / 1000)},atrim=duration=${seconds(narration.durationMs / 1000)}`, ...pcmBounds(narration.durationMs,config.audio.sample_rate), '-c:a', 'pcm_s16le', output]);
+      const assembled=await probe(root,config,output),assembledMs=Number(assembled.format.duration)*1000;
+      if(!Number.isFinite(assembledMs)||Math.abs(assembledMs-narration.durationMs)>1)throw new Error('SRT voice assembly changed the original cue clock');
       resolved = NarrationSchema.parse({ ...narration, audioPath: 'work/voice/narration.wav' });
       report.status = 'ready'; report.audioPath = resolved.audioPath; report.audioHash = hash(await fs.readFile(output));
     } catch (error) { if (report.status !== 'fit-failed') report.status = 'provider-failed'; report.error = redact(error instanceof Error ? error.message : String(error)); resolved = narration; }

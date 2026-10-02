@@ -2,13 +2,13 @@ import type { Shot } from '../core/schemas.js';
 import type { HostProfile, HostRig } from './schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 
-export const HOST_CONTROLLER_VERSION = 'host-controller-2.1';
+export const HOST_CONTROLLER_VERSION = 'host-controller-2.1.1';
 const radians = (n: number) => n * Math.PI / 180;
 const degrees = (n: number) => n * 180 / Math.PI;
 const clamp = (n: number, low: number, high: number) => Math.max(low, Math.min(high, n));
 export interface Anchor { x: number; y: number; }
 export interface HostGeometry { controllerVersion: string; profileHash: string; rigHash: string; shotId: string; hostHeightRatio: number;
-  interactions: Array<{ type: string; startMs: number; reachMs: number; endMs: number; partId: string; target: Anchor; hand: Anchor; errorPx: number; root: Anchor; gaze: Anchor; contactMs?: number }> }
+  interactions: Array<{ actorId?:string; type: string; startMs: number; reachMs: number; endMs: number; partId: string; target: Anchor; hand: Anchor; errorPx: number; root: Anchor; gaze: Anchor; contactMs?: number }> }
 
 /** Two fixed-length bones. All calculations run at compile time, never in scene JS. */
 export function solveArm(dx: number, dy: number): { upper: number; lower: number; hand: Anchor; reachable: boolean } {

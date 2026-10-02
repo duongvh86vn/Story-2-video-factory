@@ -18,14 +18,16 @@ export function validateShotReferences(shot: Shot, beats: Beat[], characters: Ch
   const overlapping = beats.filter(beat => beat.startMs < shot.endMs && beat.endMs > shot.startMs);
   if (overlapping.length !== shot.beatIds.length || overlapping.some(beat => !shot.beatIds.includes(beat.id))) throw new Error(`Shot ${shot.id}: beatIds must list exactly all beats overlapped by its interval`);
   if (new Set(shot.characters).size !== shot.characters.length) throw new Error(`Shot ${shot.id}: duplicate character IDs`);
+  const scene=shot.cinematic?.actorScene,actorIds=new Set([...(scene?.primary?[scene.primary.id]:[]),...(scene?.supporting.map(a=>a.character.id)??[])]);
   for (const id of shot.characters) {
-    if (!characters.characters.some(character => character.id === id)) throw new Error(`Shot ${shot.id}: unknown character ${id}`);
+    if (!actorIds.has(id)&&!characters.characters.some(character => character.id === id)) throw new Error(`Shot ${shot.id}: unknown character ${id}`);
   }
   uniqueIds(shot.assetNeeds, `asset request in ${shot.id}`);
   for (const asset of shot.assetNeeds) {
     if (!asset.description.trim()) throw new Error(`Shot ${shot.id}: empty asset description`);
     if (asset.type === 'character' && !asset.characterId) throw new Error(`Shot ${shot.id}: character asset ${asset.id} requires characterId`);
     if (asset.characterId) {
+      if(actorIds.has(asset.characterId))throw new Error(`Shot ${shot.id}: actor ${asset.characterId} is generated from actorScene; do not request a legacy character image asset`);
       const character = characters.characters.find(item => item.id === asset.characterId);
       if (!character || !shot.characters.includes(asset.characterId)) throw new Error(`Shot ${shot.id}: asset ${asset.id} references a character absent from this shot`);
       if (asset.versionId && !character.versions.some(version => version.id === asset.versionId)) throw new Error(`Shot ${shot.id}: unknown character version ${asset.versionId}`);

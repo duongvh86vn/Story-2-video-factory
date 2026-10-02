@@ -25,3 +25,9 @@ projects/acceptance-60s/
 *.mp3
 .hyperframes/
 !examples/**
+
+# Local provisioned voice/ASR dependencies and machine-specific default voice
+runtime/
+config/voice.yaml
+config/voice.yaml.backup
+logs/

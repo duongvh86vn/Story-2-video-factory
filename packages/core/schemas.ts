@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { Id } from './identifiers.js';
 import { ShotHostSchema } from '../host/schemas.js';
 import { SourceRefSchema, VisualizationSchema, ExplanationBeatSchema } from '../explainer/schemas.js';
+import { CinematicPlanSchema } from '../director/schemas.js';
 export { Id } from './identifiers.js';
 
 const Time = z.number().int().nonnegative();
@@ -37,6 +38,7 @@ export const ShotSchema = z.object({
   sfx: z.array(z.object({ timeMs: Time, type: z.string(), intensity: z.number().min(0).max(1).default(0.3), assetId: Id.optional() })).default([]),
   narrationSegmentIds: z.array(Id).optional(), explanationGoal: z.string().optional(), sourceRefs: z.array(SourceRefSchema).optional(),
   host: ShotHostSchema.optional(), visualization: VisualizationSchema.optional(), captionRegion: z.literal('bottom-safe').optional(),
+  cinematic: CinematicPlanSchema.optional(),
 }).refine(s => s.endMs > s.startMs, 'Invalid shot interval');
 export const StoryboardSchema = z.object({ shots: z.array(ShotSchema).min(1) });
 export const AssetSchema = z.object({ id: Id, type: z.string(), path: z.string(), source: z.enum(['local','user','code','stock','archive','generated','template']), status: z.enum(['approved','missing','pending']), hash: z.string(), requestHash: z.string().optional(), shotIds: z.array(Id).default([]), characterId: Id.optional(), versionId: Id.optional(), pose: z.string().optional(), sourceUrl: z.string().url().optional(), author: z.string().optional(), license: z.string().optional(), retrievedAt: z.string().optional() });

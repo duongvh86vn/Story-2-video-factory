@@ -1,0 +1,23 @@
+{
+  "environments": [
+    {
+      "historicalEvidence": false,
+      "id": "environment.road.v1",
+      "file": "road-v1.png",
+      "hash": "3b1f2766f6f2545b5797ab4132e708f073b74ad1cfe093c5a5e8b79ea600859c",
+      "provenance": "generated-illustration",
+      "status": "curated-illustration",
+      "setting": "road"
+    },
+    {
+      "historicalEvidence": false,
+      "id": "environment.workshop.v1",
+      "file": "workshop-v1.png",
+      "hash": "02402924117da2cab7bfdab05a04a61a6846c699da807bfac6a9d5e489c87f49",
+      "provenance": "generated-illustration",
+      "status": "curated-illustration",
+      "setting": "workshop"
+    }
+  ],
+  "version": 1
+}

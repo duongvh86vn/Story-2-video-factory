@@ -5,11 +5,12 @@ export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker'] as const;
 const Color = z.string().regex(/^#[\da-f]{6}$/i);
 export const HostProfileSchema = z.object({
-  id: Id, version: z.number().int().positive(), kind: z.enum(HostKinds), role: z.literal('explainer-host'),
+  id: Id, version: z.number().int().positive(), kind: z.enum(HostKinds), role: z.enum(['explainer-host','story-actor']),
   name: z.string().min(1).max(80), description: z.string().min(1).max(24000),
   appearance: z.object({ outline: Color, shell: Color, screen: Color, accent: Color, badge: Color,
     headScale: z.number().min(0.75).max(1.25), bodyScale: z.number().min(0.75).max(1.25),
     strokeWidth: z.number().min(2).max(10) }).strict(),
+  costume: z.array(z.object({joint:z.enum(['head','chest','pelvis','hand-left','hand-right']),svg:z.string().min(1).max(24000)}).strict()).max(12).optional(),
   actions: z.array(z.enum(HostActions)).min(1), immutable: z.array(z.string()).min(1),
   profileHash: z.string(), compilerVersion: z.string(), sourcePath: z.string(),
 }).strict();

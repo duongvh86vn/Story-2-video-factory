@@ -1,16 +1,21 @@
-# STORY-TO-VIDEO FACTORY — NHÂN VẬT CHÍNH DẪN DẮT CÂU CHUYỆN
+# STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
-Đặc tả mục tiêu V2.2 · 2026-10-01. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Ba luồng narration của V2.1 được giữ; phần diễn xuất V2.2 dưới đây cần triển khai.
+> Contract hiện hành ngày 02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Ba luồng nguyên văn giữ nguyên. Source2.2.21 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
+
+Contract source2.2.21 bổ sung actorScene: primary nullable, supporting actors, costume SVG gắn vào khớp, speakingSegmentIds và continuity cut/continuous. Identity thuộc từng vai; preview dùng cùng skeleton với phim. Artwork/layers/palette/camera tự chọn; source/clock/contact/security vẫn chặn final khi sai.
+
+
+Đặc tả mục tiêu V2.2 · 2026-10-01. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Ba luồng narration được giữ; diễn xuất V2.2 đang triển khai/nghiệm thu. Phần đã chạy và phần còn chờ được ghi ở IMPLEMENTATION-STATUS.md.
 
 ## 1. Trải nghiệm và phạm vi
 
 **Nhập nội dung → chọn người que hoặc robot mini → Tạo video.** Kịch bản là lời kể hoàn chỉnh. Hệ thống đọc nguyên văn, không tự viết lại, thêm lời thoại, câu chào hoặc lời kết.
 
-Sản phẩm là video giải thích/mô tả/kể lại sự vật và sự việc, ví dụ hệ thống hơi nước và quá trình phát triển ô tô. Người que hoặc robot mini là **nhân vật chính dẫn chuyện**: bước vào bối cảnh, quan sát vấn đề, suy nghĩ, thử thao tác, phản ứng và đưa người xem sang ý tiếp theo. Một identity xuyên video. Nhân vật tham gia các tình huống minh họa, không tự nhận là nhà phát minh hoặc nhân vật lịch sử trong narration.
+Sản phẩm là phim hoạt hình giải thích/mô tả/kể lại sự vật, sự việc. Người que đóng vai trong câu chuyện. Người có tên trong nguồn được dựng thành vai cách điệu; người chưa có tên chỉ là vai minh họa, không bịa lịch sử. Có nhiều vai, voiceover và cảnh chỉ có cơ cấu. Không bắt buộc diễn viên nhìn khán giả hoặc thuyết trình cạnh bảng.
 
-Đặc tả diễn xuất, hai storyboard mẫu và hướng HTML5/CSS/SVG/JavaScript nằm trong [STICKMAN-STORY-DIRECTION.md](STICKMAN-STORY-DIRECTION.md). Các đoạn ảnh tĩnh trong video tham khảo không được dùng làm chuẩn chuyển động. Lời kể vẫn nguyên văn; hệ thống chỉ tạo thêm **kịch bản hình ảnh và diễn xuất**.
+Đặc tả vai diễn và hướng HTML5/CSS/SVG/JavaScript nằm trong [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Lời kể giữ nguyên văn; chỉ bổ sung kịch bản hình ảnh và diễn xuất. Video tham khảo là tư liệu về cách biểu đạt, không phải bằng chứng công nghệ hoặc lịch sử.
 
-Code nền hiện là V2.1 với rig/recipe sơ đồ cơ bản. Đã có một số thử nghiệm local giọng Việt/render và tests trên working tree; ba luồng chưa nghiệm thu đầy đủ, style mới chưa được triển khai. Xem [trạng thái](IMPLEMENTATION-STATUS.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [bàn giao nghiệm thu](TEST-HANDOFF.md). V1 và V2.1 được lưu riêng trong docs/archive; không dùng evidence cũ để công bố V2.2 hoàn thành.
+Dự án mới dùng story-cinematic/actors. Project cũ thiếu trường character_mode vẫn dùng presenter để tương thích; không âm thầm thay phim đã duyệt. Chuyển sang actors dựng lại phần hình, giữ narration/audio còn hợp lệ. Kết quả cũ lưu riêng và không đóng nghiệm thu mới.
 
 ## 2. Ba luồng đầu vào
 
@@ -52,23 +57,23 @@ HTTP adapter: POST base_url, JSON {text, language, voice, format:"wav"}, trả W
 
 Command adapter: executable + command_args có {request}, tùy chọn {output}; request JSON UTF-8 chứa text/language/voiceId/output. Chạy shell=false, có timeout. Không đưa nội dung script thành shell command.
 
-Speech activity đo RMS audio 20 ms; mouth mở theo activity/level và đóng lúc nghỉ. Đây là đồng bộ audio activity, **không phải phoneme lip-sync**. Silent draft chỉ có đồng bộ mức segment, report phải ghi đúng.
+Speech activity đo RMS20ms. Trong actorScene chỉ áp dụng cho diễn viên được gán speakingSegmentIds; [] là voiceover, không mấp máy miệng theo narration. Đây không phải phoneme lip-sync. Silent draft phải ghi đúng mức đồng bộ.
 
-## 5. Host MD → nhân vật chính và rig tái sử dụng
+## 5. Rig nền và cast diễn viên
 
-Hai mẫu sẵn: library/characters/MINI-ROBOT.md và STICK-MAN.md. Chọn mẫu chuẩn cho phép chạy tự động; custom input/host.md phải xem và duyệt preview một lần theo rig hash trước sản xuất. Đổi profile/appearance/compiler làm hash đổi và cần duyệt lại custom host.
+Hai rig nền: library/characters/MINI-ROBOT.md và STICK-MAN.md. Mẫu chuẩn chạy tiếp tự động; custom input/host.md duyệt preview một lần theo hash. Director phân vai từ nội dung và xuất actor-cast/actor-timeline cùng tạo hình riêng. Từng vai giữ identity; không giữ một identity cho cả phim.
 
 Compiler xuất HostProfile JSON, SVG rig, part IDs/joint pivots, pose library, host-preview-sheet.png. Màu, headScale/bodyScale (0.75–1.25), strokeWidth (2–10) có schema. MD tùy chỉnh vẫn nằm trong hai rig vector được hỗ trợ; không hứa tạo mọi hình dạng 3D hoặc render mọi mô tả tùy ý.
 
-V2.1 hiện có 10 action IDs: idle, greet, explain, point, operate-model, compare, think, react, summarize, walk-to-marker. Preview gồm chính diện, hướng trái/phải dạng sơ đồ 2D và các pose. Rig/profile version/hash cố định xuyên video; không sinh nhân vật mới mỗi shot. Profile không được biến host thành nhà phát minh. Đây là khả năng hiện có, chưa phải bộ diễn xuất mới.
+Các action IDs cũ là tên tương thích cho dữ liệu choreography: idle, greet, explain, point, operate-model, compare, think, react, summarize, walk-to-marker. Cinematic compiler có walk/turn/inspect/think/operate/pick-place/carry/react/lead-next, mood/gaze và speech activity. Tên action không buộc vai thành người dẫn. Costume thụ động gắn head/chest/pelvis/hands; khớp giữ độ dài.
 
-V2.2 cần rig có pelvis/chest/head, tay/chân phân khớp, bàn tay/chân; mặt có mắt/mí/mày/miệng và head tilt riêng. Action library cần enter/walk/turn/stop, observe/inspect/think, address-viewer, reach/pick-up/hold/place, push/pull/turn-handle, react và lead-to-next-scene. Các tên mới chỉ là contract dự kiến cho đến khi schema/compiler/API được cập nhật.
+Rig cinematic đã có pelvis/chest/neck/head, tay/chân phân khớp, bàn tay/chân và mặt độc lập. Library quảng cáo những clip compiler hỗ trợ, kèm constraints về ownership/contact/entry/exit. Một ý đồ như enter/stop/pick-up/hold/place có thể gồm nhiều phase trong clip, không nhất thiết có action ID riêng. Clip benchmark chạy được phải tiếp tục được nối/validate trong director/editor trước khi coi contract sản phẩm đã hỗ trợ.
 
 Mỗi clip có chuẩn bị, hành động chính, recovery/settle; đi có foot plant/quãng đường đúng, dừng có chuyển trọng tâm; cầm/đặt có attach/release đúng world position. Gesture, face, gaze, speech và locomotion có track/ownership riêng. Không tween cả hình trên đôi chân bất động hoặc reset idle ở mỗi cue. Preview nhân vật cần video 30fps ngoài pose sheet.
 
 Controller dùng khớp tay có chiều dài cố định, IK tính ở compile time, gaze hướng target, pointer từ tay đến đúng part anchor. operate-model phải tiếp cận, contact thực tế, rồi model event mới phản ứng. Không stretch tay để che target ngoài tầm. Đích thiếu, action chồng nhau, contact sai hoặc event không được component hỗ trợ phải bị từ chối.
 
-V2.2: nhân vật thường cao 25–40% khung ở wide, 40–65% ở medium; close mặt/tay được crop có chủ đích. Giữ ít nhất 70% thời gian có lời kể, vắng liên tục tối đa 6 giây; chừa vùng subtitle. Không dùng giới hạn wide để cấm close-up. V2.1 hiện vẫn mặc định cao 36%, hỗ trợ beside-model/absent; inset chưa hỗ trợ. Quy tắc framing mới phải được triển khai cùng validator, không chỉ sửa tài liệu.
+Chế độ actors bỏ quota 70%, absence6s và kích thước wide/medium bắt buộc. Camera chọn theo hành động và nguyên lý; mặt/tay/target cần đọc được, chừa phụ đề. Cut cho phép đổi vai/bối cảnh/vị trí/scale; continuous phải giữ cast, exit/entry, hướng và đồ vật. Không giả hỗ trợ chuyển vật qua cut khi compiler chưa có contract.
 
 ## 6. Phân tích và explanation plan
 
@@ -108,7 +113,7 @@ Không thay nhân vật bằng portrait, slideshow hoặc một tấm chữ dài
 
 ## 8. Studio, API và CLI
 
-Studio hiện có ba tab Kịch bản/WAV/SRT → host → giọng → Tạo video, preview lời kể/host, trạng thái chờ và storyboard. V2.2 cần chọn style cinematic/diagram rõ ràng; storyboard ba cột **Lời kể | Dàn cảnh và diễn xuất | Preview clip**, xem action/mood/target/continuity. Storyboard approval/chỉnh/khóa/rebuild shot vẫn có sẵn nhưng không bắt buộc khi automatic=true. Chế độ mặc định mục tiêu là story-cinematic; hiện chưa có trường này trong config.
+Studio có ba tab Kịch bản/WAV/SRT → kiểu tạo hình/diễn viên → giọng → Tạo video. Story-cinematic/actors mặc định cho dự án mới. Ba cột Lời kể | Dàn cảnh và diễn xuất | Preview clip; preview cast riêng. Chỉnh/khóa/rebuild có sẵn; automatic không bắt buộc duyệt storyboard.
 
 API có PATCH project settings (input.mode/script, host, language, voice, automatic), PUT script editor, multipart script/host upload, POST script preview, voice-default settings, approve host và run tới DONE. Settings/artifact edits có revision check. Generated story/narration chỉ đọc; chỉnh script hoặc input SRT/WAV để đổi lời kể. Host scene source được sinh từ kế hoạch đã validate; chỉnh storyboard rồi rebuild thay vì sửa SVG/JS làm mất identity/target guarantees.
 
@@ -152,6 +157,7 @@ work/narration.json, voiced-narration.json, timeline.json
 work/voice-report.json, speech-activity.json, voice/cues/
 work/story.json, chapters.json, beats.json, character-bible.json
 work/host-profile.json, host-rig.json, explanation-plan.json, host-timeline.json
+work/actor-cast.json, actor-timeline.json; assets/actors/<id>/<hash>/
 work/storyboard.json, storyboard.md, asset-manifest.json, review.json
 assets/host/<id>/<version>/host.svg, poses.json
 scenes/<shot>/index.html, style.css, scene.js, host-geometry.json
@@ -163,11 +169,11 @@ output/explanation-plan.json, character-bible.json, asset-manifest.json
 output/production-report.md, qc-report.json, cost-report.json
 ```
 
-V2.2 cần thêm story-direction.json, stage-plan.json, performance-plan.json, camera-plan.json, animation-library.json, performance-report.json và previews/performance/ có video. Nội dung/schema mới ở §14 STICKMAN-STORY-DIRECTION.md; hiện chưa được code tạo ra.
+Pipeline cinematic đã tạo và export story-direction.json, stage-plan.json, performance-plan.json, camera-plan.json, animation-library.json, performance-report.json và environment-provenance.json. Preview dùng scene/draft/final production và snapshots; benchmark riêng ở temp/animation-v22. Các báo cáo/clip evidence phải đúng producer/hash source đang nghiệm thu.
 
 ## 12. Cấu hình mẫu chạy với contract V2.1 hiện có
 
-Ví dụ sau vẫn dùng technical-clean/rig sơ đồ. Nó không bật style diễn xuất V2.2; không thêm các field tương lai vào project hiện tại rồi coi renderer đã hỗ trợ.
+Ví dụ sau dùng technical-clean/rig sơ đồ. Để bật renderer mới, thêm `presentation: {mode: story-cinematic}`. Không thêm action/field ngoài schema hiện hành; xem IMPLEMENTATION-STATUS.md về phần còn chờ nghiệm thu.
 
 ```yaml
 project: { name: steam-explainer, language: vi }
@@ -183,9 +189,7 @@ host:
   reuse_rig: true
   identity_locked: true
 presentation:
-  minimum_host_speech_visibility: 0.70
-  maximum_host_absence_seconds: 6
-  require_meaningful_host_action_per_beat: true
+  character_mode: actors
 voice:
   source: auto
   tts_provider: windows-speech
@@ -204,6 +208,6 @@ Windows provider cần giọng tiếng Việt thực sự được cài. Đổi 
 
 ## 13. Nghiệm thu và bàn giao
 
-Bộ nghiệm thu giữ thuần script không WAV/SRT, WAV giữ lời, SRT giữ cue text/clock, WAV+SRT mismatch, thiếu/lỗi TTS/fit không final; hai host/hai bài; resume/cache/locks/rebuild và final media QC. V2.2 bổ sung role nhân vật chính, diễn xuất có mục đích, foot plant, face/mood, đạo cụ, liên tục giữa cảnh và deterministic seek. Xem TEST-HANDOFF.md và §15–16 STICKMAN-STORY-DIRECTION.md.
+Bộ nghiệm thu giữ thuần script không WAV/SRT, WAV giữ lời, SRT giữ cue text/clock, WAV+SRT mismatch, thiếu/lỗi TTS/fit không final; hai kiểu tạo hình/hai bài; resume/cache/locks/rebuild và final media QC. V2.2 bổ sung role nhân vật chính, diễn xuất có mục đích, foot plant, face/mood, đạo cụ, liên tục giữa cảnh và deterministic seek. Xem TEST-HANDOFF.md và STORY-ACTOR-DIRECTION.md.
 
-V1 hoặc các ca local V2.1 không được dùng để tuyên bố V2.2 đạt. Build/typecheck là kiểm tra biên dịch, không thay nghe giọng Việt và xem diễn xuất. Đợt này là lập lại kịch bản/đặc tả theo yêu cầu mới, chưa triển khai renderer mới; trạng thái phải ghi riêng trong IMPLEMENTATION-STATUS.md và TEST-RESULTS.md.
+V1 hoặc các ca local V2.1 không được dùng để tuyên bố V2.2 đạt. Build/typecheck không thay nghe giọng Việt và xem diễn xuất. Runtime mới đang được triển khai/nghiệm thu; chỉ đóng release khi matrix và evidence source cuối đạt, ghi riêng trong IMPLEMENTATION-STATUS.md và TEST-RESULTS.md.

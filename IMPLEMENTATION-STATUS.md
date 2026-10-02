@@ -1,55 +1,102 @@
-# Trạng thái triển khai và khoảng cách tới V2.2
+# Trạng thái triển khai V2.2
 
-2026-10-01. **Đợt hiện tại hoàn thành việc viết lại đặc tả/kịch bản hình ảnh; chưa triển khai hệ diễn xuất V2.2.** Code đã bàn giao ở nền V2.1, commit `df3a0fe`; working tree còn sửa runtime/thử nghiệm local từ đợt trước. Commit tài liệu mới không có nghĩa các sửa đó đã được bàn giao.
+> Contract hiện hành ngày 02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ người dẫn cố định và quota. Source2.2.21 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
-## Code hiện có V2.1
 
-| Hạng mục | Mức hiện có | Giới hạn |
+2026-10-01. Nhánh đang làm: `codex/stickman-acting-v22`, bắt đầu từ `22953fa`. **Đã có runtime cinematic trong pipeline; chưa nghiệm thu toàn bộ và chưa công bố release hoàn thành.** Tài liệu A0 và kết quả V1 không chứng minh runtime mới.
+
+## Source2.2.21 — trạng thái hiện hành
+
+Đã có cast nhiều vai, costume gắn khớp, primary=null, voiceover/speech phân vai, cut/continuous, supporting actor và report theo rig thực. Studio có thẻ vai, nguồn, preview, editor JSON áp dụng mọi lần xuất hiện và lock từng identity. API `/actors/:id` giữ revision/lock/clock; replan giữ identity đã khóa cả khi renderer cũ được migrate. Cast assets/profile/poses/preview có hash, đường dẫn rig khớp file thực, được chép vào output; cache giọng tách khỏi cast. Named actor không cần ảnh chân dung trong character bible cũ. Primary actor có thể đặt mô hình có nguồn như thao tác minh họa; legacy presenter vẫn giữ contract riêng.
+
+Evidence: build/typecheck source21 qua, gồm bản CSS Studio sửa tương phản thẻ vai và tên project dài. Source19 độc lập22/26 FAIL; source20 41/43 FAIL; source21 cùng43/43 PASS và probe SVG vô hình bị chặn. Audit07:03UTC **89/89 PASS** (46 Actor Studio +43 story actors), test:typecheck exit0, thuộc snapshot trước sửa khuỷu tay. Phạm vi ghi tại [báo cáo source21](docs/validation/2026-10-02-story-actors.md). Suite07:19UTC **378/386, FAIL8** giữ như lịch sử. Sau sửa production/fixtures, model độc lập Descartes chạy lại npm test09:01–09:06UTC **403/403 PASS**, test:typecheck0; không skip/retry, source không đổi. [Báo cáo full suite](docs/validation/2026-10-02-release-regressions.md) giữ phạm vi và phần chưa chạy.
+
+Animation hiện tại **performance-2.2.7**, artwork **passive-svg-2.2.4**, director **story-direction-2.2.21**. Khuỷu mở ra ngoài ở tư thế nghỉ theo hình người dùng; đổi hướng gập qua duỗi liên tục; tay suy nghĩ đi theo cung quanh vai. Audit performance6 **143/145 FAIL2** do robot thu tay quá nhanh gần vai; bản7 chạy lại cùng assertions **145/145 PASS**, test:typecheck0, không sửa ngưỡng. Build bản7 exit0. [Evidence sửa tay](docs/validation/2026-10-02-outward-elbows.md) phân biệt geometry/GSAP đã kiểm tra với ánh xạ giải phẫu và thẩm mỹ chưa được chứng nhận.
+
+Authored adaptation37.154s đã DONE/QC; bản xưởng nhiều lớp có bàn và đạo cụ nhỏ hơn, Watt thay đổi biểu cảm khi đặt bình. Bản background minh họa được dựng lại bằng animation7/artwork4, không còn bị lớp màu phủ kín; diễn viên và cơ cấu là SVG chuyển động riêng. Đây là thiết kế được chỉnh tay từ response native bị từ chối, ghi rõ authored; không phải kết quả model tự hoàn thành hoặc chứng nhận thẩm mỹ. Ba request native source20 đều bị từ chối camera contract; native source21 dừng lỗi provider. Không đổi raw response thành model thành công.
+
+Chưa nghiệm thu: suite bàn giao đầy đủ trên snapshot cuối, autonomous model và chất lượng toàn bài, hai bài/hai kiểu tạo hình, ba luồng actors, chất lượng ASR Việt, tổ hợp edit/cache/locks ngoài phạm vi regression và GitHub. Mock/offline là seed; video presenter source18 không chứng minh sản phẩm actors đạt. Handoff đạo cụ giữa diễn viên hoặc xuyên cut chưa được hỗ trợ; báo lỗi, không giả lập bằng jump.
+
+## Lịch sử evidence trước khi đổi vai trò
+
+Các bảng và kết quả bên dưới thuộc các source cũ được nêu rõ. Yêu cầu một host, quota và mặc định diagram trong lịch sử đã bị thay thế; không áp dụng cho chế độ actors.
+
+Source2.2.18 tại thời điểm ghi evidence: `story-direction-2.2.18`; animation `performance-2.2.5` giữ nguyên. Đã triển khai model đạo diễn cho cinematic, artwork SVG/layers/gradient/mask, palette và camera riêng, biểu cảm theo cue, nhãn do artwork hoặc renderer quản lý, tâm quay trong tọa độ glyph, cùng đối tượng xuyên các cue có nguồn khớp. Studio có ý tưởng hình ảnh và cấu hình model; API/CLI dùng cùng contract. Tám recipe mô tả ý đồ giải thích, không ép bố cục.
+
+| Evidence mới | Kết quả | Giới hạn |
 |---|---|---|
-| Input | Script paste/upload/normalize, WAV/SRT/selected authority | Chưa đủ matrix runtime ba luồng |
-| Voice/clock | TTS measured clock/250-ms paragraph pause/cache; Windows/HTTP/command, SRT fit/gate | Cần provider thật và đầy đủ failure/mismatch cases |
-| Host | Hai rig SVG/hash/pose/preview/approval | Rig cơ bản, đổi pose/point; chưa có diễn xuất V2.2 |
-| Giải thích | Source refs/relations và tám recipe | Chủ yếu schematic và vocabulary hữu hạn |
-| Interaction | IK tay/target/contact, gaze, mouth RMS | Chưa có gait/foot plant, face layers, props/track blend đầy đủ |
-| Product | Studio/API/CLI, pipeline, caches/resume/locks/rebuild/exports | Cần nghiệm thu UI/edit matrix và bài hoàn chỉnh |
-| Render/review | HyperFrames/GSAP/FFmpeg, snapshots/rule/vision contracts và QC | Năm ảnh/shot và rule geometry không chứng minh diễn xuất mượt |
+| Provider native Codex CLI | Probe JSON thật thành công; sáu response model thật đã được journal; một storyboard qua scene runtime/MP4 | Model `default`; không đo dollar, không coi usage là miễn phí |
+| Provider Claude CLI | Adapter/fixtures có; probe máy này báo credit không đủ | Không có video do Claude tạo được nghiệm thu; không thay đăng nhập/mua credit |
+| Model pilot source17 | H.264 1280×720/30fps, 21.333s; AAC giọng Việt 21.304s; SRT/QC qua | Quan sát video tìm thấy nhãn lặp, tâm bánh xe sai và bố cục còn tĩnh; không đạt chất lượng mục tiêu |
+| Kiểm thử độc lập provider/art source17 | 27/27 scoped, test:typecheck qua | Trước các thay đổi world/renderer sau đó; không thay build/suite/media cuối |
+| Kiểm tra độc lập creative world source17 | 48/51; ba regression đỏ thuộc hai lỗi nguồn | Phủ định trước chủ thể và mượn cue khẳng định cũ cho flow ở cue phủ định; giữ lịch sử lỗi |
+| Source18 | Build/typecheck qua; đã sửa hai lỗi nguồn, tâm quay và quyền chọn nhãn | Đang kiểm tra độc lập bản sửa, render lại và dựng bài đầy đủ; chưa nghiệm thu release |
 
-Build/typecheck đã qua ở lần bàn giao V2.1. Không suy từ biên dịch rằng narration tiếng Việt, ASR, semantic review hoặc animation đã đạt.
+Candidate bị model validator từ chối chỉ được dùng lại khi binding cấu hình provider/model, prompt và nguồn khớp. Sửa metadata dẫn xuất không sửa factual visualization, host identity hay narration clock. Report ghi `model`/`authored`/`offline`; technical QC không xác nhận sức hấp dẫn của video.
 
-## Thử nghiệm local V2.1 từ đợt trước
+### Theo dõi sửa lỗi và resume ngày 2026-10-02
 
-Các evidence sau ở **working tree**, không phải bộ nghiệm thu hoàn chỉnh trên một release đã chốt:
+- Audit suite source18 trước bản sửa settings: **227/228**, một lỗi nhận presentation patch rỗng. Source đã sửa; log độc lập sau đó **12/12** ca settings/revision qua. Reviewer bị ngắt bởi usage limit trước khi hoàn thành báo cáo; không coi báo cáo còn `IN PROGRESS` là nghiệm thu cuối.
+- Studio giữ revision từ lúc mở form; upload/script trả revision do chính mutation tạo. Một editor khác đổi host/model/ý tưởng sẽ gây conflict, không lấy revision mới để ghi đè bằng form cũ.
+- Điểm target từ JSON có sai số số thực cỡ `1e-13` pixel so với phép nhân tọa độ stage. Validator hiện chấp nhận sai số tối đa `1e-6` pixel, vẫn chặn target sai hoặc thiếu.
+- Creative contract yêu cầu goal/refs/cue IDs/host/visualization/cinematic ngay ở schema dành cho model. Các lỗi độc lập giữa các cảnh được gom vào cùng feedback. Resume dùng bản rejected mới nhất còn khớp binding cùng lỗi hiện tại để model sửa; không sửa raw response, không âm thầm nhận một bản chưa hợp lệ.
+- Hai lượt native đầy đủ cũ đã kết thúc: hơi nước semantic validation chưa đạt; ô tô provider thất bại sau timeout. Hai project đang resume bằng cơ chế feedback mới. Chưa có final mới cho hai lượt này, chưa chứng nhận chất lượng hoặc release.
+- Build sau schema/feedback qua; còn kiểm tra build sau bổ sung initial repair, suite và các thành phẩm cuối. Reviewer mới kiểm tra độc lập các sửa đổi này; kết quả sẽ ghi theo fingerprint thực tế.
 
-| Evidence | Kết quả | Giới hạn |
+Audit độc lập mới đã hoàn thành: **240/240 suite**, **21/21 focused**, test typecheck exit 0; fingerprint input/source `848bf2e7f0ef297cc5c98cff964bb256cf1f337ab130c25b17bdf2a4ce6de685`. Bao gồm schema bắt buộc, sai số target, nhiều lỗi trong cùng feedback và resume bằng raw design mới nhất; không đổi nguồn thành công để cho qua. Report assembly vượt giới hạn thời gian của lượt audit 22 giây, được ghi riêng; không ảnh hưởng các exit test nhưng không được gọi là hoàn thành đúng thời hạn. Sau audit đã bỏ style vector tự gán khi không có style; build sau thay đổi này exit 0. Matrix giọng/ASR/render hiện tại đang chạy độc lập, chưa có kết quả toàn bộ.
+
+| Phần | Đã triển khai trên nhánh | Việc còn cần xác nhận |
 |---|---|---|
-| temp/acceptance-v21/unit-legacy-adapted.log | 35/35 tests qua sau chỉnh fixture legacy | Hồi quy nền V1; không chứng minh ba luồng/style mới |
-| temp/acceptance-v21/explainer-tests.log | 10/10 ca bổ sung qua | Audio fixture gồm tone; không thay nghe giọng/ASR/video thật |
-| Piper tiếng Việt local | Đã tạo giọng từ vi_VN-vais1000-medium qua command adapter | Runtime/model local; không mặc định có trên mọi máy |
-| temp/acceptance-v21/smoke/output/final.mp4 | Clip script ngắn có giọng, H.264/AAC, 30fps, technical QC qua sau sửa | Khoảng 2.8 giây; chưa đạt hướng diễn xuất người que mới |
-| temp/acceptance-v21/steam/work/qc-report.json | Bài hơi nước ~37.13 giây có audio; QC fail | frozen-frames 4600–9400 ms; chưa nghiệm thu bài đầy đủ |
+| Ba nguồn | Script nguyên văn/TTS clock đo thật; WAV/ASR; SRT/TTS fit; aligned WAV+SRT; matrix source2.2.6 thật 8/8: bốn final qua QC/decode và bốn lỗi bị chặn | Xác nhận lại artifacts trên source bàn giao; sửa/đổi/resume đầy đủ |
+| Rig hai host | Pelvis/chest/neck/head, tay/chân phân khớp, face layers, mood/gaze/mouth | Xem chuyển động và identity xuyên bài ở source cuối |
+| Animation | Compiler performance-2.2.5: fixed bones/IK, foot plant, walk/stop/turn, think, contact, pick/place, carry và carried entry/exit; audit độc lập phạm vi animation PASS | Tích hợp clip đạo cụ vào contract sản phẩm có nguồn; cut khi đang đi chưa được chứng nhận |
+| Director | Story/stage/performance/camera plans; model sáng tạo thay seed; custom SVG/layers, camera và mood; cùng clock/refs/targets/identity/locks | Camera/diễn xuất/ngữ nghĩa và chất lượng video đầy đủ cần kiểm chứng ở source cuối |
+| Stage/render | Bối cảnh tự thiết kế hoặc catalog/hash/provenance; SVG thụ động nhiều lớp, props, model và GSAP dưới CSP; flow lặp theo cue; label/pivot riêng | Full story visual/content review; scene limit mặc định 2 MB cho transforms đã bake |
+| Studio/API/CLI | Chọn cinematic/diagram; ba cột; bounded edits; derived reports chỉ đọc; freshness; đọc kế hoạch cũ để resume, không sửa/relabel renderer cũ hay tự bỏ lock | GUI đã mở/phát và sửa mood; hoàn tất edit/rebuild/cache và start trên thư mục dùng thật |
+| Bàn giao | Scripts preview, setup Piper/ASR và tests mới | Build/suite cuối, docs theo commit, GitHub/release và cài dùng |
 
-WhisperX/Piper và một số kiểm tra alignment đã được chuẩn bị local; chưa đủ evidence WAV/WAV+SRT mismatch, SRT thật, Studio/resume và hai nhân vật/hai bài. Không đổi failure thành PASS chỉ vì nghi detector báo dư. Log/media local được ignore; không đưa runtime/models hoặc dữ liệu project riêng lên GitHub.
+Giữ rõ các giới hạn:
 
-## Mục tiêu V2.2 theo hai video tham khảo
+- Mouth theo speech activity/RMS; không phải phoneme lip-sync.
+- `presentation.mode: story-cinematic` dùng renderer mới; mặc định config vẫn là `diagram` tới khi nghiệm thu.
+- Nền do imagegen tạo, không phải tư liệu lịch sử. Catalog/hash duyệt kỹ thuật không có nghĩa người dùng đã duyệt chất lượng từng video.
+- Sơ đồ Benz chỉ vẽ đặc điểm có trong narration/source refs; không quảng cáo là bản phục dựng chính xác xe lịch sử.
+- Clip carry/entry-exit ở compiler không tự làm mọi action tương ứng hợp lệ trong editor/planner.
+- Rule review xác minh contracts/hình học; không thay nghe giọng hoặc kiểm chứng kiến thức/thẩm mỹ. DONE là checkpoint một project dưới các gate cấu hình.
 
-| Hạng mục mới | Trạng thái |
-|---|---|
-| Nhân vật chính sống trong bối cảnh và dẫn xuyên câu chuyện | Đã viết đặc tả; chưa triển khai director |
-| Rig pelvis/chest/head, face/mày/mí/miệng, locomotion/foot plant | Chưa triển khai |
-| Multi-track blending/ownership/IK/prop attachment, deterministic seek | Chưa triển khai |
-| Story/stage/performance/camera plans và schema | Đã mô tả contract dự kiến; chưa có module/artifacts chạy |
-| Layered stage/props/occlusion và cinematic renderer | Chưa triển khai; có nền xưởng concept draft |
-| Preview diễn xuất 30fps và hai storyboard mẫu | Storyboard đã soạn; chưa có preview mới |
-| Studio clip review/cache/resume/report mới | Chưa triển khai |
-| Robot và người que trên ba luồng/hai bài | Chưa nghiệm thu V2.2 |
+## Evidence đã chạy, còn giới hạn
 
-Kế hoạch từng bước ở [V2-IMPLEMENTATION-PLAN.md](V2-IMPLEMENTATION-PLAN.md); đặc tả diễn xuất ở [STICKMAN-STORY-DIRECTION.md](STICKMAN-STORY-DIRECTION.md). Không có runtime hoặc video V2.2 mới được tạo trong lượt lập kịch bản này.
+| Ca | Kết quả thực tế | Phạm vi |
+|---|---|---|
+| Audit độc lập 2.2.4 | FAIL: góc nội suy gây hở khuỷu, hướng lift, cổ bị che, stage vô hạn | Giữ lịch sử; kết quả render/test 2.2.4 không chứng minh bản sửa |
+| Animation/camera/cinematic 2.2.5 | 55/55 tests qua; production/test typecheck qua; build qua | Khớp ở GSAP thật, neck pixel và kích thước custom, targets, source-derived models, camera/seek |
+| Suite 2.2.6 | 136/136 tests qua | Có thay đổi predicate/migration sau đó; không thay nghiệm thu video |
+| Scoped 2.2.7 | 35/35 cinematic/explainer/Studio tests qua; build và test:typecheck qua | Thêm regression Xe/cue riêng, clause/negation/energy supply và kế hoạch cũ trong Studio |
+| Suite 2.2.7 | 141/141 qua; atomic write Windows có ba regression đỏ/xanh | Studio resume/rebuild thật đã chạy sau sửa EPERM/collision |
+| Suite 2.2.10 | 155/155 qua; build/test:typecheck qua | Dàn cảnh có trạng thái, paired comparison, control/flow và model transforms; gate scene thật phát hiện fill tween chưa được allowlist chấp nhận |
+| Suite 2.2.11 | 155/155 qua; build/test:typecheck qua; cả bốn bài DONE/QC/decode | Audio và narration giữ nguyên; kiểm tra độc lập vẫn tìm thấy hai P2 dàn cảnh |
+| Audit sản phẩm 2.2.11 | Predicate, nhiệt, flow/contact và world transforms được xác minh ở các cảnh thực tế | So sánh hai thiết kế hơi nước chưa đủ; cảnh ô tô che nhãn/xe. Không nghiệm thu toàn bài |
+| Suite 2.2.12 | 160/160 qua; build/test:typecheck qua | Hai cấu hình hơi nước có nguồn; stage hai xe có đường đi/nút pin; validator nhãn trên toàn clock. Cảnh thật đang kiểm chứng; có lỗi mép nền cần sửa |
+| Bốn benchmark 2.2.5 | Acting và carry × hai host: H.264 1280×720, 30fps, 10s, decode qua | Audit độc lập PASS phạm vi animation; clip im lặng riêng |
+| Audit animation 2.2.5 | 40/40 tests; 108427 probes; hở khớp lớn nhất <0.2px; 1200 frames và 44 snapshots của bốn MP4 khớp artifact | Fingerprint 869daef3ee8239d673f2298e8369191ec5f48a273951b27aed439f2bfd07b7ec; không phải nghiệm thu sản phẩm |
+| Browser carry 2.2.5 | Tua 5.6s → 9.4s → 5.6s: SVG/face giống nhau, prop/hand trùng ở cả hai host | Điểm seek đã lấy evidence, không phải mọi thời điểm |
+| Input timing thật | 8/8 đúng kết quả mong đợi: script, WAV, SRT, aligned có giọng/clock; mismatch/no-TTS/fit-failed chặn final | Piper Việt, faster-whisper small và alignment Việt local; render/review/QC của matrix này NOT RUN |
+| Matrix render 2.2.6 | 8/8: script/SRT/WAV/aligned DONE và QC/decode/subtitle/30fps qua; mismatch/script thiếu TTS/SRT thiếu TTS/fit-failed chặn final | Rule/technical review, câu ngắn; không thay nghiệm thu nội dung/diễn xuất hai bài đầy đủ |
+| Bốn bài 2.2.5 | Hơi nước: người que 37.2s, robot 37.333s; ô tô: người que 42.6s, robot 42.467s; H.264/AAC/subtitle, QC kỹ thuật qua | Bản cũ; audit sản phẩm chưa đạt, chưa chứng minh source hiện tại |
+| Stage/caption/history | Resume/hash/locked migration; caption Việt đo glyph; ba bánh được nhận diện | Tests scoped, không thay matrix sản phẩm |
 
-## Giới hạn cần ghi đúng khi bàn giao
+Media/logs và cấu hình giọng local không commit. Evidence source cũ được giữ trong lịch sử và đánh dấu stale; không đổi thành PASS của source mới.
 
-- Mouth theo RMS/speech activity, không phải phoneme/viseme lip-sync.
-- Custom MD hiện giới hạn hai rig vector; sửa văn xuôi trong profile không tự tạo gait/face mới trong compiler.
-- Rule/mock kiểm tra contracts/geometry, không kiểm chứng kiến thức hoặc thẩm mỹ; cần xem/nghe video/chuỗi frame để nghiệm thu diễn xuất.
-- HTTP/command là adapter protocol, cần provider/voice đúng ngôn ngữ; không tự thay giọng Việt bằng tiếng Anh.
-- story-cinematic, action mới và needs-asset/needs-animation là contract dự kiến, chưa phải field/state hiện có.
-- TEST-RESULTS.md giữ lịch sử V1 riêng. Các ca local V2.1 và tài liệu V2.2 không phải chứng nhận sản phẩm đã hoàn thành.
+Lỗi ghép SRT đa cue được tái hiện và sửa: padding hữu hạn, giới hạn output `-t`/`-fs`, kiểm tra duration sau ghép. Ba ca hồi quy audio qua. Lần chạy lỗi đã dừng và file tạm lớn được dọn; lần matrix sau hoàn thành. Đây là lỗi runtime thực, không phải TTS thiếu giọng.
+
+Audit sản phẩm 2.2.6 tìm thấy 1 P1 và 5 P2. Kiểm tra độc lập 2.2.11 xác minh các sửa predicate, nóng/lạnh, hai phương án xe/động cơ, contact trước flow và model transforms ở các cảnh được lấy mẫu. Cả bốn video 2.2.11 qua QC/decode kỹ thuật, audio/narration giữ nguyên. Còn hai P2: hơi nước mới so hai bộ phận thay vì hai thiết kế; ô tô có xe/nhãn bị che.
+
+Source 2.2.12 đã sửa hai điểm trên. Bốn regression so sánh ban đầu đỏ trên 2.2.11; năm ca hiện tại xanh, gồm chặn việc dùng chu kỳ nóng/lạnh cũ để suy ra xi-lanh cải tiến giữ nóng. Hai cấu hình dùng source refs của câu so sánh và các trạng thái được kể trước đó. Template hai xe chừa hành lang nhân vật và station pin có thể chạm; validator nhãn kiểm tra toàn clock. Gate contrast thật phát hiện chữ nội bộ chìm nền, đã thêm nền sáng cho nhãn. Preview Studio còn lộ dải trống ở mép khi camera chuyển; việc này và depth/đạo cụ sản phẩm vẫn mở. Bộ clip riêng hoặc suite xanh không đóng các yêu cầu này.
+
+Một lần dựng scene xe 2.2.6 dừng đúng gate do chữ trong sơ đồ đè nhãn; đã bỏ chữ nội bộ trùng vùng và chỉ tạo motion selector thực sự có trong SVG. Không tính lần thất bại này là final đạt.
+
+Scene hơi nước 2.2.10 dừng đúng gate vì tween fill nằm ngoài declarative allowlist. 2.2.11 dùng hai lớp màu SVG cố định và opacity crossfade; regression scene security đỏ/xanh qua, không mở rộng quyền chạy JS. Lần dừng này không tính là final đạt. Audio/narration của các bài giữ nguyên khi replan hình.
+
+## Điều kiện bàn giao còn mở
+
+Theo [kế hoạch A0–A7](V2-IMPLEMENTATION-PLAN.md) và [TEST-HANDOFF.md](TEST-HANDOFF.md): đủ hai bài × hai host, script/WAV/SRT/aligned thật; gates lỗi, sửa nội dung/giọng/host, locks/resume/rebuild; final QC cùng kiểm tra diễn xuất/ngữ nghĩa; Studio dùng được và GitHub đúng commit.

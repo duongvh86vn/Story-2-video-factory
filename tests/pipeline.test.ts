@@ -3,11 +3,11 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
 import YAML from 'yaml';
-import { createProject, runPipeline, approveProject, invalidateProject, updateLocks } from '../packages/orchestrator/index.js';
+import { runPipeline, approveProject, invalidateProject, updateLocks } from '../packages/orchestrator/index.js';
 import { loadState, saveState } from '../packages/orchestrator/state-machine.js';
 import { ProductionStore } from '../packages/orchestrator/store.js';
 import { reservation } from '../packages/orchestrator/reservation.js';
-import { temporary } from './support.js';
+import { temporary, createLegacyProject as createProject } from './support.js';
 
 test('missing narration artifact resumes by repeating ingest', async t => {
   const projects = await temporary(t), root = await createProject('recovery', { root: projects, example: true });

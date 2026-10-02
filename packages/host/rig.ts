@@ -1,5 +1,11 @@
+import { faceLayers } from '../animation/face.js';
+import { performanceSvg } from '../animation/rig.js';
+import { samplePerformance } from '../animation/compiler.js';
+import type {PerformancePlan,Mood} from '../animation/schemas.js';
+import { ANIMATION_VERSION } from '../animation/schemas.js';
 import { escapeHtml, hash } from '../core/utils.js';
 import { HostRigSchema, type HostProfile, type HostRig } from './schemas.js';
+const eyeCenters = [137,180] as const;
 
 const rotations = (upperRight = 0, lowerRight = 0, upperLeft = 0, lowerLeft = 0) => ({
   'arm-right-upper': upperRight, 'arm-right-lower': lowerRight, 'arm-left-upper': upperLeft, 'arm-left-lower': lowerLeft,
@@ -22,7 +28,10 @@ export function rigParts(kind: HostProfile['kind']): HostRig['parts'] {
     id, ...(parent ? { parent } : {}), pivot: { x, y }, bounds: { x, y, width, height },
   });
   return [part('host-root', 160, 350, 280, 380), part('head', 160, robot?90:73, robot?140:80, robot?110:80, 'host-root'),
-    part('eye-left', 137, eye, 12, 15, 'head'), part('eye-right', 180, eye, 12, 15, 'head'), part('mouth', 160, mouth, 32, 10, 'head'),
+    part('eye-left', eyeCenters[0], eye, 12, 15, 'head'), part('eye-right', eyeCenters[1], eye, 12, 15, 'head'), part('mouth', 160, mouth, 32, 10, 'head'),
+    part('brow-left',eyeCenters[0],eye-16,16,4,'head'),part('brow-right',eyeCenters[1],eye-16,16,4,'head'),
+    part('lid-left',eyeCenters[0],eye-4,14,7,'head'),part('lid-right',eyeCenters[1],eye-4,14,7,'head'),
+    part('mouth-talk',160,mouth,18,6,'mouth'),part('mouth-smile',160,mouth,20,11,'head'),part('mouth-round',160,mouth,12,18,'head'),
     part('body', 160, 165, 100, 120, 'host-root'),
     part('arm-left-upper', 112, shoulder, 10, 55, 'body'), part('arm-left-lower', 112, shoulder+55, 10, 50, 'arm-left-upper'),
     part('hand-left', 112, shoulder+105, 22, 18, 'arm-left-lower'),
@@ -47,17 +56,22 @@ export function hostSvg(profile: HostProfile, poseName = 'idle', embedded = fals
     : `<g id="leg-left-upper"><path d="M160 235L140 300"/><g id="leg-left-lower"><path d="M140 300L126 370"/><g id="foot-left"><path d="M126 370H112"/></g></g></g><g id="leg-right-upper"><path d="M160 235L180 300"/><g id="leg-right-lower"><path d="M180 300L194 370"/><g id="foot-right"><path d="M194 370H207"/></g></g></g>`;
   const headShape = robot ? `<g id="antenna"><path d="M160 40V23"/><circle cx="160" cy="19" r="7" fill="${a.accent}"/></g><rect x="90" y="40" width="140" height="106" rx="25" fill="${a.shell}"/><g id="face-screen"><rect x="105" y="62" width="110" height="70" rx="15" fill="${a.screen}" stroke="none"/></g>`
     : `<circle cx="160" cy="73" r="40" fill="${a.shell}"/>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${view.join(' ')}"${embedded ? ` data-host-id="${escapeHtml(profile.id)}"` : ''}><g id="host-root" fill="none" stroke="${a.outline}" stroke-width="${a.strokeWidth}" stroke-linecap="round" stroke-linejoin="round"><g id="body-frame" transform="translate(${160 * (1 - a.bodyScale)} ${shoulder * (1 - a.bodyScale)}) scale(${a.bodyScale})">${legs}${body}${arms('left', 112)}${arms('right', 208)}</g><g id="head" transform="translate(${160 * (1 - a.headScale)} ${headY * (1 - a.headScale)}) scale(${a.headScale})">${headShape}<g id="eye-left" transform="translate(${p.gaze} 0)"><ellipse cx="137" cy="${eye}" rx="6" ry="8" fill="${robot ? a.accent : a.outline}" stroke="none"/></g><g id="eye-right" transform="translate(${p.gaze} 0)"><ellipse cx="180" cy="${eye}" rx="6" ry="8" fill="${robot ? a.accent : a.outline}" stroke="none"/></g><g id="mouth"><ellipse cx="160" cy="${mouth}" rx="15" ry="4" fill="${robot ? a.accent : a.outline}" stroke="none"/></g></g></g></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${view.join(' ')}"${embedded ? ` data-host-id="${escapeHtml(profile.id)}"` : ''}><g id="host-root" fill="none" stroke="${a.outline}" stroke-width="${a.strokeWidth}" stroke-linecap="round" stroke-linejoin="round"><g id="body-frame" transform="translate(${160 * (1 - a.bodyScale)} ${shoulder * (1 - a.bodyScale)}) scale(${a.bodyScale})">${legs}${body}${arms('left', 112)}${arms('right', 208)}</g><g id="head" transform="translate(${160 * (1 - a.headScale)} ${headY * (1 - a.headScale)}) scale(${a.headScale})">${headShape}${faceLayers(160, eye, mouth, robot ? a.accent : a.outline, robot ? a.screen : a.shell, eyeCenters, p.gaze)}</g></g></svg>`;
 }
 export function hostViewBox(profile:HostProfile):HostRig['viewBox']{const shoulder=profile.kind==='mini-robot'?177:143,bottom=profile.kind==='mini-robot'?357:370;return [-20,-20,360,Math.max(420,shoulder+(bottom-shoulder)*profile.appearance.bodyScale+40)];}
 export function buildRig(profile: HostProfile): HostRig {
   const folder = `assets/host/${profile.id}/${profile.version}`;
   const parts = rigParts(profile.kind);
   return HostRigSchema.parse({ id: profile.id, profileVersion: profile.version, profileHash: profile.profileHash,
-    rigHash: hash({ profile, svg: hostSvg(profile), parts, poses }), compilerVersion: profile.compilerVersion,
+    rigHash: hash({ profile, svg: hostSvg(profile), performanceSvg:performanceSvg(profile), animationVersion:ANIMATION_VERSION, parts, poses }), compilerVersion: profile.compilerVersion,
     viewBox: hostViewBox(profile), assetPath: `${folder}/host.svg`, posePath: `${folder}/poses.json`, parts, poses });
 }
 export function hostPreviewSvg(profile: HostProfile): string {
+  if(profile.role==='story-actor'){
+    const moods: Mood[]=['neutral','curious','thinking','concerned','effort','surprised','understanding','confident'];
+    const cells=moods.map((mood,i)=>`<g transform="translate(${(i%4)*320} ${Math.floor(i/4)*450})">${actorPoseSvg(profile,mood).replace(/<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</g><text x="${(i%4)*320+160}" y="${Math.floor(i/4)*450+430}" text-anchor="middle" font-family="Arial" font-size="18" fill="#172B36">${mood}</text>`).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900"><rect width="1280" height="900" fill="#E8EEF1"/>${cells}</svg>`;
+  }
   const entries=[{name:'front',pose:'idle',gaze:0},{name:'left (3/4 schematic)',pose:'point',gaze:-5},{name:'right (3/4 schematic)',pose:'point',gaze:5},...Object.keys(poses).map(name=>({name,pose:name,gaze:undefined}))];
   const cells = entries.map(({name,pose,gaze}, i) => {
     const x=(i%4)*320,y=Math.floor(i/4)*290;
@@ -67,4 +81,14 @@ export function hostPreviewSvg(profile: HostProfile): string {
     return `<g transform="translate(${x+60} ${y+18}) scale(.60)"><g transform="${mirror}">${svg}</g></g><text x="${x+160}" y="${y+276}" text-anchor="middle" fill="#172B36" font-family="Arial" font-size="16">${escapeHtml(name)}</text>`;
   }).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1160" viewBox="0 0 1280 1160"><rect width="1280" height="1160" fill="#E8EEF1"/>${cells}</svg>`;
+}
+/** Cast previews use the same skeleton and pose evaluator as the rendered movie. */
+export function actorPoseSvg(profile:HostProfile,mood:Mood='neutral'):string{
+  const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'cast-preview',leadCharacterId:profile.id,profileHash:profile.profileHash,kind:profile.kind,
+    durationMs:1200,fps:30,stage:{width:320,height:420,groundY:380},root:{x:160,y:380},scale:.9,walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:1200,mood}]};
+  const frame=samplePerformance(plan,profile,600,{method:'segment-draft',windowMs:20,intervals:[]});
+  let svg=performanceSvg(profile);
+  for(const [id,transform] of Object.entries(frame.transforms))svg=svg.replace(`id="${id}"`,`id="${id}" transform="${transform}"`);
+  for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp(`<g id="${id}"[^>]*>`),`<g id="${id}"${face.opacity===undefined?'':` opacity="${face.opacity}"`} transform="translate(${face.x??0} ${face.y??0}) rotate(${face.rotation??0}) scale(1 ${face.scaleY??1})">`);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 420">${svg}</svg>`;
 }

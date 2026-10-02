@@ -43,19 +43,33 @@ export class HyperFramesEngine implements VideoEngine {
     return validation;
   }
   async snapshot(request: { project: string; timeMs: number; output: string }): Promise<string> {
-    if (!Number.isFinite(request.timeMs) || request.timeMs < 0) throw new Error('snapshot timeMs must be finite and nonnegative');
-    const dir = await this.project(request.project);
-    const relative = path.isAbsolute(request.output) ? path.relative(this.projectRoot, request.output) : request.output;
-    const destination = await outputPath(this.projectRoot, relative);
-    const stage = await outputPath(this.projectRoot, `work/snapshots/${hash({ dir, timeMs: request.timeMs, relative })}`);
-    await fs.mkdir(stage, { recursive: true });
-    // --no-end prevents the default extra final frame; --describe false prevents implicit Gemini calls.
-    await this.command(['snapshot', dir, '--at', String(request.timeMs / 1000), '--no-end', '--output', stage, '--describe', 'false', '--no-browser-gpu', '--no-proxy']);
-    const files = (await fs.readdir(stage)).filter(file => /^frame-\d+-at-.*\.png$/.test(file)).sort();
-    if (files.length !== 1) throw new Error(`HyperFrames snapshot produced ${files.length} frames; expected one`);
-    await fs.mkdir(path.dirname(destination), { recursive: true });
-    await fs.copyFile(path.join(stage, files[0]!), destination);
-    return destination;
+    return (await this.snapshots({project:request.project,frames:[request]}))[0]!;
+  }
+  async snapshots(request:{project:string;frames:{timeMs:number;output:string}[]}):Promise<string[]> {
+    const dir=await this.project(request.project), destinations:string[]=[];
+    for(const frame of request.frames){
+      if(!Number.isFinite(frame.timeMs)||frame.timeMs<0)throw new Error('snapshot timeMs must be finite and nonnegative');
+      destinations.push(await outputPath(this.projectRoot,path.isAbsolute(frame.output)?path.relative(this.projectRoot,frame.output):frame.output));
+    }
+    const times=[...new Set(request.frames.map(frame=>frame.timeMs))].sort((a,b)=>a-b),sources=new Map<number,string>();
+    // One browser per batch, with the same exact seek positions as single captures.
+    for(let offset=0;offset<times.length;offset+=64){
+      const batch=times.slice(offset,offset+64),stage=await outputPath(this.projectRoot,`work/snapshots/${hash({dir,batch})}`);
+      await fs.mkdir(stage,{recursive:true});
+      await this.command(['snapshot',dir,'--at',batch.map(time=>String(time/1000)).join(','),'--no-end','--output',stage,'--describe','false','--no-browser-gpu','--no-proxy']);
+      const files=(await fs.readdir(stage)).filter(file=>/^frame-\d+-at-.*\.png$/.test(file));
+      if(files.length!==batch.length)throw new Error(`HyperFrames snapshot produced ${files.length} frames; expected ${batch.length}`);
+      for(const [index,time] of batch.entries()){
+        const matches=files.filter(file=>Number(/^frame-(\d+)-/.exec(file)?.[1])===index);
+        if(matches.length!==1)throw new Error(`Missing or duplicate snapshot at ${time}ms`);
+        sources.set(time,path.join(stage,matches[0]!));
+      }
+    }
+    for(const [index,frame] of request.frames.entries()){
+      await fs.mkdir(path.dirname(destinations[index]!),{recursive:true});
+      await fs.copyFile(sources.get(frame.timeMs)!,destinations[index]!);
+    }
+    return destinations;
   }
   private async render(profile: 'draft' | 'final', project?: string): Promise<RenderResult> {
     const source = await this.project(project), settings = this.config.rendering[profile];

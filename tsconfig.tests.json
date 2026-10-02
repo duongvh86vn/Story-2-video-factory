@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": { "noEmit": true },
-  "include": ["tests/**/*.ts", "scripts/acceptance-asr.ts", "scripts/acceptance-render.ts"]
+  "include": ["tests/**/*.ts", "scripts/acceptance-asr.ts", "scripts/acceptance-render.ts", "scripts/animation-preview.ts", "scripts/animation-player.ts", "scripts/cinematic-preview.ts"]
 }

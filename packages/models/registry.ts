@@ -11,6 +11,8 @@ import { GeminiAdapter } from './gemini.js';
 import { OllamaAdapter } from './ollama.js';
 import { LiteLLMAdapter } from './litellm.js';
 import { MockAdapter } from './mock.js';
+import { ClaudeCliAdapter } from './claude-cli.js';
+import { CodexCliAdapter } from './codex-cli.js';
 import { ModelJournal, type AttemptRecord, type UsageSummary } from './journal.js';
 
 export function createAdapter(settings: ModelSettings, options: AdapterOptions = {}): ModelAdapter {
@@ -22,6 +24,8 @@ export function createAdapter(settings: ModelSettings, options: AdapterOptions =
     case 'ollama': return new OllamaAdapter(settings, options);
     case 'litellm': return new LiteLLMAdapter(settings, options);
     case 'mock': return new MockAdapter(settings, options);
+    case 'claude-cli': return new ClaudeCliAdapter(settings,options);
+    case 'codex-cli': return new CodexCliAdapter(settings,options);
     default: throw new ModelError('configuration', 'Unknown model provider');
   }
 }
@@ -130,6 +134,7 @@ export class ModelRouter {
     } catch { throw new ModelError('attempt_artifact', 'Could not persist the redacted model attempt artifact'); }
   }
   private cost(settings: ModelSettings, response: ModelResponse): number {
+    if(response.costUsd!==undefined)return response.costUsd;
     if (settings.provider === 'mock' || !response.usage) return 0;
     return (response.usage.inputTokens * settings.input_cost_per_million + response.usage.outputTokens * settings.output_cost_per_million) / 1_000_000;
   }

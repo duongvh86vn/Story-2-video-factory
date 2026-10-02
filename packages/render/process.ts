@@ -4,9 +4,14 @@ import path from 'node:path';
 import { appendLog, safePath } from '../core/utils.js';
 
 export interface ProcessResult { code: number; stdout: string; stderr: string; timedOut: boolean; truncated?: boolean; }
+export class ProcessTimeoutError extends Error {
+  constructor(command:string){super(`${path.basename(command)} exceeded its execution timeout.`);this.name='ProcessTimeoutError';}
+}
 /** Strip credentials from diagnostics without passing a model's context to a process. */
 export function redact(value: string): string {
-  let result = value.replace(/(Bearer\s+)[\w.\-]+/gi, '$1[REDACTED]').replace(/((?:api[_-]?key|token|secret|password)\s*[=:]\s*)[^\s,"}]+/gi, '$1[REDACTED]');
+  let result = value.replace(/(Bearer\s+)[\w.\-]+/gi, '$1[REDACTED]')
+    .replace(/("(?:api[_-]?key|access[_-]?token|auth[_-]?token|token|secret|password)"\s*:\s*)"(?:\\.|[^"\\])*"/gi,'$1"[REDACTED]"')
+    .replace(/((?:api[_-]?key|access[_-]?token|auth[_-]?token|token|secret|password)\s*[=:]\s*)[^\s,"}]+/gi, '$1[REDACTED]');
   for (const [key, secret] of Object.entries(process.env)) {
     if (/(?:KEY|TOKEN|SECRET|PASSWORD|CREDENTIAL)/i.test(key) && secret && secret.length >= 4) result = result.split(secret).join('[REDACTED]');
   }
@@ -35,19 +40,22 @@ async function terminateProcessTree(pid:number):Promise<void> {
     killer.on('close',code=>{clearTimeout(timer);if(code===0) resolve();else reject(new Error(`taskkill could not confirm termination of process tree ${pid} (exit ${code})`));});
   });
 }
-export async function execute(command: string, args: string[], options: { cwd: string; logFile: string; timeoutMs?: number; allowFailure?: boolean }): Promise<ProcessResult> {
+export async function execute(command: string, args: string[], options: { cwd: string; logFile: string; timeoutMs?: number; allowFailure?: boolean; input?:string; env?:NodeJS.ProcessEnv; maxOutputBytes?:number; logOutput?:boolean }): Promise<ProcessResult> {
   const startedAt = new Date().toISOString();
   let result: ProcessResult;
   try {
     result = await new Promise<ProcessResult>((resolve, reject) => {
-      const child = spawn(command, args, { cwd: options.cwd, env: mediaEnvironment(), shell: false, windowsHide: true, detached:process.platform!=='win32', stdio: ['ignore','pipe','pipe'] });
+      const child = spawn(command, args, { cwd: options.cwd, env: options.env??mediaEnvironment(), shell: false, windowsHide: true, detached:process.platform!=='win32', stdio: ['pipe','pipe','pipe'] });
       let stdout:Buffer=Buffer.alloc(0),stderr:Buffer=Buffer.alloc(0),timedOut=false,truncated=false;
       let termination:Promise<void>|undefined;
-      const cap=1024*1024;
+      const cap=options.maxOutputBytes??1024*1024;
       const capture=(current:Buffer,chunk:Buffer):Buffer=>{const combined=Buffer.concat([current,chunk]);if(combined.length>cap){truncated=true;return Buffer.from(combined.subarray(combined.length-cap));}return combined;};
       const timer = setTimeout(() => { timedOut = true;if(child.pid){termination=terminateProcessTree(child.pid);void termination.catch(()=>{});}else child.kill(); }, options.timeoutMs ?? 600000);
       child.stdout.on('data', (chunk: Buffer) => { stdout=capture(stdout,chunk); });
       child.stderr.on('data', (chunk: Buffer) => { stderr=capture(stderr,chunk); });
+      // Prompt bytes never become shell text or command-line arguments.
+      child.stdin.on('error',error=>{if((error as NodeJS.ErrnoException).code!=='EPIPE'){clearTimeout(timer);child.kill();reject(error);}});
+      child.stdin.end(options.input??'','utf8');
       child.on('error', error => { clearTimeout(timer); reject(error); });
       child.on('close', code => { clearTimeout(timer);void (async()=>{if(termination) await termination;resolve({code:code??-1,stdout:stdout.toString('utf8'),stderr:stderr.toString('utf8'),timedOut,truncated});})().catch(reject); });
     });
@@ -57,8 +65,9 @@ export async function execute(command: string, args: string[], options: { cwd: s
     throw new Error(`Cannot start ${path.basename(command)}: ${message}`);
   }
   // Return unmodified diagnostics for exact repair; persist only redacted diagnostics.
-  await appendLog(options.logFile, { startedAt, command, args: args.map(redact), code: result.code, timedOut: result.timedOut,truncated:result.truncated, stdout: redact(result.stdout), stderr: redact(result.stderr) });
-  if (result.timedOut || (result.code !== 0 && !options.allowFailure)) throw new Error(redact(`${path.basename(command)} ${result.timedOut ? 'timed out' : `exited ${result.code}`}\n${result.stderr}\n${result.stdout}`));
+  await appendLog(options.logFile, { startedAt, command, args: args.map(redact), code: result.code, timedOut: result.timedOut,truncated:result.truncated, stdout: options.logOutput===false?'[provider response journaled separately]':redact(result.stdout), stderr: options.logOutput===false?'[provider diagnostics withheld]':redact(result.stderr) });
+  if(result.timedOut)throw new ProcessTimeoutError(command);
+  if(result.code!==0&&!options.allowFailure)throw new Error(redact(`${path.basename(command)} exited ${result.code}\n${result.stderr}\n${result.stdout}`));
   return result;
 }
 export function parseEnvelope(output: string): Record<string, unknown> | undefined {

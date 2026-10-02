@@ -7,6 +7,8 @@ import { AssetResolutionError, extensionFits, managedFile, mediaExtensions, read
 import { explicitUrlProvider, registeredAssetProviders, type AssetRequest, type LicensedAssetSource } from './providers.js';
 import { downloadAsset, licensedSource, publicSourceUrl } from './remote.js';
 import { characterFingerprint, characterSvg, diagramSvg, type Character } from './svg.js';
+import {ActorCastManifestSchema} from '../actors/assets.js';
+import {actorDefinitions} from '../actors/locks.js';
 
 interface Need { request: AssetRequest; shotIds: string[]; }
 interface AudioCandidate { type: 'music' | 'sfx'; path: string; hash: string; }
@@ -78,9 +80,11 @@ function collectNeeds(storyboard: Storyboard, characters: CharacterBible, candid
     localPath: existingMusic ? undefined : candidateMusic!.path,
   } : undefined;
   for (const shot of storyboard.shots) {
+    const scene=shot.cinematic?.actorScene,actorIds=new Set([...(scene?.primary?[scene.primary.id]:[]),...(scene?.supporting.map(a=>a.character.id)??[])]);
     const requests = shot.assetNeeds.map(request => ({ ...request }));
     if (inferredMusic) requests.push({ ...inferredMusic });
     for (const characterId of shot.characters) {
+      if(actorIds.has(characterId))continue;
       if (!characterIds.has(characterId)) throw new AssetResolutionError('unknown-shot-character');
       if (!requests.some(request => request.type === 'character' && request.characterId === characterId)) {
         requests.push({ id: `character_${characterId}`, type: 'character', characterId, pose: 'standing',
@@ -506,6 +510,18 @@ async function resolveProject(root: string, config: FactoryConfig, storyboard: S
       }
       assets.set(request.id, asset);
       await log(asset.status === 'approved' ? 'asset-resolved' : 'asset-missing', request.id);
+    }
+    if(actorDefinitions(storyboard).length){
+      const cast=await readJson(path.join(root,'work/actor-cast.json'),ActorCastManifestSchema);
+      if(cast.storyboardHash!==hash(storyboard))throw new AssetResolutionError('stale-actor-cast');
+      for(const actor of cast.actors){
+        const content=await fs.readFile(await safeRealPath(root,actor.assetPath));
+        if(hash(content)!==actor.assetHash)throw new AssetResolutionError('actor-asset-hash-mismatch');
+        const id=`actor-${hash(actor.character.id).slice(0,32)}`;
+        if(needs.some(n=>n.request.id===id))throw new AssetResolutionError('actor-asset-id-conflict',id);
+        assets.set(id,{id,type:'character',source:'code',status:'approved',path:actor.assetPath,hash:actor.assetHash,requestHash:hash(actor.character),
+          characterId:actor.character.id,shotIds:storyboard.shots.filter(s=>s.cinematic?.actorScene?.primary?.id===actor.character.id||s.cinematic?.actorScene?.supporting.some(a=>a.character.id===actor.character.id)).map(s=>s.id)});
+      }
     }
     const activeMusic = new Set(needs.filter(need => need.request.type === 'music').map(need => need.request.id));
     const manifest: AssetManifest = { assets: [...assets.values()].sort((a, b) =>

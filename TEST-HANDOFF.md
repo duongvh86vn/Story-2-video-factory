@@ -1,88 +1,53 @@
-# Bàn giao nghiệm thu ba luồng và diễn xuất V2.2
+# Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
-2026-10-01. Đợt hiện tại viết lại đặc tả/kịch bản, không chạy test runtime hoặc tạo video V2.2. Đợt trước đã có một số tests/giọng Việt/render local; xem IMPLEMENTATION-STATUS.md. Chúng chưa đủ nghiệm thu V2.1 và không chứng minh V2.2. TEST-RESULTS.md giữ lịch sử V1; checklist V1 cũ ở docs/archive/TEST-HANDOFF.v1.md.
+Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.7; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
 
-## Ưu tiên mới: nghiệm thu chuyển động và kể chuyện
+## Cast và diễn xuất
 
-Chỉ chạy các ca mới sau khi module/schema V2.2 đã được triển khai; không nhập fields tương lai vào config hiện tại. Đọc STICKMAN-STORY-DIRECTION.md và storyboard hai bài ở §10–11. Bỏ các đoạn ảnh tĩnh/tư liệu của video tham khảo khỏi chuẩn chuyển động.
-
-| Nhóm mới | Evidence và điều kiện đạt |
+| Ca | Điều kiện đạt |
 |---|---|
-| Protagonist | Một identity dẫn xuyên bài; vào cảnh, quan sát/thử/phản ứng/đưa sang ý sau theo nội dung; không chỉ đứng góc/vẫy tay |
-| Walk/stop/turn | Video 30fps ở 1× và slow motion; stance anchors giữ chân trụ, quãng bước theo root, dừng có trọng lượng, không trượt |
-| Face/mood | Mày/mắt/mí/miệng/head đổi có nguyên nhân, nhìn đúng target; speech track giữ mood và đóng lúc nghỉ |
-| Prop/contact | Reach/contact/attach/hold/release với target/grip thật; reaction sau nguyên nhân, không xuyên vật/nhảy world position |
-| Blending | Ownership rõ; không snap/restart idle ở biên cue/clip; body/gesture/gaze/face không tranh quyền |
-| Continuity | Hướng đi/entry-exit pose/tay cầm đồ vật/scene lighting nhất quán quanh cut |
-| Determinism | Frame 0, seek ngẫu nhiên/tiến/lùi, sequential và batch render tương đương; attachment không phụ thuộc callback |
-| Staging/camera | Wide/medium/close có mục đích; mặt/tay đọc được, ground/depth/occlusion đúng và subtitles đủ chữ |
-| Nguồn/clock | Không thêm thoại hoặc claim; không đổi SRT clock hay kéo audio để đủ action; asset lịch sử đúng claim |
-| Missing capabilities | Thiếu clip/asset có trạng thái lỗi rõ và chặn final; không âm thầm fallback cinematic thành diagram/slideshow |
-| Product | Preview clips/plans/reports trong Studio/API/CLI cùng pipeline; cache/locks/resume/rebuild hoạt động với artifacts mới |
-| Hai bài/hai host | Xem/nghe full hơi nước và ô tô với người que/robot; narrative rõ, không thêm cơ chế/mốc không có nguồn |
+| Default | Studio/API/CLI tạo project mới actors/story-cinematic/stick-man; project cũ giữ mode tương thích |
+| Role/source | Historical name có quote thật, role lịch sử là trích đoạn nguyên văn từ nguồn đã kiểm tra; vai không tên là minh họa, không bịa sự kiện/claim; MD chỉ là dữ liệu |
+| Identity | ID/appearance/costume/profile/rig riêng giữ ổn định; vai khác có thiết kế khác; không chung khăn cổ bắt buộc |
+| Ensemble | Hai vai trong cùng shot có khớp/actions/gaze/expressions riêng; SVG IDs không trùng; supporting actor thao tác được cơ cấu |
+| Costume/preview | Trang phục gắn khớp trong preview và MP4; không che mặt/contact; passive SVG không thực thi code/tải ngoài |
+| Voiceover | speakingSegmentIds=[] không mở miệng theo narration; chỉ cue được gán speech mới áp dụng audio activity; không thêm thoại |
+| Mechanism shot | primary=null không lộ skeleton/ground shadow; cận cơ cấu có nguồn, không đòi presenter hay quota body/presence |
+| Contact | Reach trước contact; object reaction sau contact của đúng actor, target đúng; event tự nhiên cần nguồn |
+| Cut/continuous | Cut đổi bối cảnh/vai/scale được; continuous giữ cast và vị trí/hướng/scale/model; đạo cụ chưa hỗ trợ không được giả pass |
+| Motion | Xem30fps1×/slow và seek/reverse: không snap, khớp rời, chân trượt hoặc đồ vật nhảy; biểu cảm có nguyên nhân |
+| Tay/khuỷu | Khuỷu nghỉ mở ra ngoài theo hình người dùng; vai–khuỷu–cổ tay liền, chiều dài cố định, đổi hướng không bật; think không xoay nhanh sát tâm vai; không nhầm rigside với giải phẫu |
+| Story quality | Hơi nước/ô tô có tình huống và nguyên lý dễ hiểu; người que diễn trong truyện; không phải slideshow/giáo viên đứng bên bảng |
 
-Freeze nghi vấn cần lưu cả global detection và vùng diễn xuất để xác minh; không tắt gate hoặc thêm wiggle giả. Pose sheet/năm snapshot không đủ nghiệm thu độ mượt. Clip bench qua trước, rồi chạy đầy đủ ba luồng/failure/resume và final QC dưới đây.
+Hai bài chạy cả stick-man và robot; ví dụ Tesla bổ sung chỉ khi input có nguồn tên và sự kiện. Không tự coi Tesla phát minh điện năng. Bối cảnh/tạo hình minh họa không phải tư liệu lịch sử. Cần xem/nghe full video, cuối cue, hành động và chuyển cảnh; QC kỹ thuật không đóng tiêu chí hấp dẫn.
 
-## Chuẩn bị và ghi evidence
+## Ba luồng và failure gates
 
-Đọc BUILD-SPEC.md, IMPLEMENTATION-STATUS.md, IMPLEMENTATION-MAP.md. Ghi `git rev-parse HEAD`, Windows/Node/Python/FFmpeg/HyperFrames versions, effective project.yaml (redact secrets), model/provider/voice/language, command/exit code, project state và các artifact hashes. Không ghi API key, user private WAV hoặc log credentials vào GitHub.
-
-Cần Node >=22.13, FFmpeg/FFprobe. Script/SRT cần TTS tiếng Việt thật. Windows Speech chỉ dùng voice đã cài đúng culture; HTTP/command cần adapter theo config/voice.example.yaml và §4 BUILD-SPEC. WAV-only cần ASR; WAV+SRT cần WhisperX/forced alignment. Thiếu dependencies phải ghi NOT RUN/BLOCKED, không biến thành PASS.
-
-Cấu hình planner/visual_review thật nếu đánh giá semantic/appearance. Mock/rule-only không được tính là đã xem hình/kiểm chứng kiến thức. Đối với acceptance nghiêm túc, đặt workflow.allow_rule_based_review=false và role visual_review.vision=true; lưu review.mode=combined cùng evidence video/frame sequence. Có thể chạy offline để tách lỗi deterministic contracts, ghi giới hạn rõ.
-
-Model test có thể chạy npm test/test:asr/test:render và bổ sung các ca dưới đây. Suite/lệnh cũ là V1; những fixture cần behavior V1 phải đặt content.mode=legacy. Không dùng script acceptance-60s cũ hay 35 tests cũ làm bằng chứng ba luồng mới.
-
-## Ca đầu tiên: thuần script
-
-```powershell
-npm ci
-npm run build
-npm run typecheck
-npm run cli -- new acceptance-v21-steam --example
-npm run cli -- configure projects/acceptance-v21-steam --input script --host mini-robot --tts windows-speech
-npm run cli -- make projects/acceptance-v21-steam
-npm run cli -- status projects/acceptance-v21-steam
-ffprobe -v error -show_streams -show_format -of json projects/acceptance-v21-steam/output/final.mp4
-```
-
-Ví dụ Windows chỉ hợp lệ khi có giọng Việt đã cài. Nếu không, configure HTTP/command adapter thật trước; không thay language thành en để gọi nghiệm thu tiếng Việt là PASS. Thời lượng script thay đổi theo audio, **không mặc định 60 giây**.
-
-## Matrix nền ba luồng cần tiếp tục hồi quy
-
-| Nhóm | Ca và điều kiện đạt |
+| Nhóm | Điều cần kiểm tra |
 |---|---|
-| Script | Không có WAV/SRT input vẫn có audio, mode=script, timeline/cues, voiced MP4 |
-| Nguyên văn | TXT/MD tiếng Việt, BOM, newline, heading/list/emphasis/link/code: preview canonical và từ/thứ tự TTS đúng; không thực thi câu mệnh lệnh trong MD |
-| Segmentation | <=120 Unicode chars/cue, không cắt từ; boundary punctuation/space; từ quá dài/NUL/invalid UTF-8/empty có lỗi rõ |
-| Actual clock | Probe cue WAV và assembled WAV; cue duration bằng audio đo, không fitted trước; 250 ms ở paragraph boundaries, không thêm pause giữa chunk cùng paragraph |
-| Selected authority | Để script/WAV/SRT khác nội dung cùng tồn tại, chọn mỗi mode: không dùng nhầm file. auto ambiguous báo lỗi. input.source không trở thành lời kể |
-| WAV | Giữ input hash/content/giọng, transcript từ ASR thật; gaps/tail/duration đúng |
-| SRT | Text/start/end không đổi; TTS đúng từng cue; silence gaps và padding sau fitted speech (fittedDurationMs); atempo range/pitch; voiced final |
-| WAV+SRT | Giữ WAV và SRT; chuẩn bị cặp khớp và cố tình lệch lời/clock; mismatch hoặc thiếu alignment chặn final |
-| Voice blockers | Script no TTS/provider timeout/invalid WAV/no speech → INGESTED + waitingFor=voice/voice-report lỗi, không timeline mới/final/DONE. SRT no voice/fit-failed chỉ silent draft, không final/DONE |
-| Host | Robot và người que giữ profile/version/rig/asset hashes, fixed limb proportions; không portrait/slideshow/host chỉ như logo |
-| Interaction | Pointer/gaze đúng part; fixed-length joints; contact rồi model reaction; compare hai đích; V2.1 walk-to-marker cần rail, V2.2 walk dùng stage/ground anchors; mouth activity đúng audio/đóng lúc nghỉ |
-| Recipe | Chạy đủ 8 method với narration có ý tương ứng; label/entity/relations có evidence, không thêm năm/thông số/nhân quả |
-| Bài thực tế | Cả hai host trên hơi nước và phát triển ô tô, mở xem/nghe trọn final và giải thích được nội dung |
-| Layout | Wide host 25–40%, medium 40–65%, close có chủ đích khi V2.2 hỗ trợ; >=70% spoken duration, absence <=6s; captions/labels đủ chữ, không crop nhầm/che target |
-| Source/edit guard | Sửa entity label, relation, target, action overlap/contact, unsupported camera/inset/motion: reject hoặc high issue, không final sai. Supplemental contradictions với planner/vision thật phải high và chặn |
-| Approval | Mẫu chuẩn auto; custom MD dừng host-approval sau preview; approve/resume; đổi custom hash cần duyệt lại |
-| Resume/cache | Run lại không sửa giữ audio hash/checkpoints; sửa 1 chunk tái sử dụng cache còn đúng; đổi voice tái tạo narration; đổi host/source giữ narration/audio hợp lệ |
-| Artifact recovery | Xóa/đổi script JSON, audio, rig/poses, scene, preview PNG/sheets/master: rewind/rebuild đúng producer, không review stale evidence |
-| Locks/rebuild | Khóa shot/board/identity được giữ; clock/host mới xung đột lock phải báo rõ. Rebuild một shot giữ audio và shot còn hợp lệ |
-| Studio/API/CLI | Ba tabs, TXT→MD revision, paste/upload/preview/save/create, default voice, host approval, editor/explicit mode, statuses waiting, voiced preview, API revision conflicts |
-| Stale final | Tạo xong rồi sửa script/voice/host: final cũ không xuất hiện như final hiện tại khi state invalidated; blocker không báo DONE |
-| Final/QC | Decode H.264/AAC, fps/res/duration, audible narration, full SRT text/clock/soft stream, thumbnail, reports, loudness/black/freeze/silence/clipping |
+| Script | TXT/MD UTF-8 nguyên văn; không WAV/SRT input vẫn có TTS/audio/cue/timeline/video; <=120Unicode chars/chunk không cắt từ;250ms giữa paragraph; clock theo audio đo |
+| WAV | Giữ hash/audio người dùng; ASR clock thật; kiểm tra transcript Việt thực tế, không planner viết lại |
+| SRT | Giữ cue text/clock; fit0.85–1.20 giữ pitch; không cắt lời/đổi timestamp; nghe đủ cuối cue |
+| WAV+SRT | Giữ WAV và cue; forced alignment; mismatch/thiếu backend lỗi rõ chặn final |
+| Selected input | script bỏ qua WAV/SRT, srt bỏ qua WAV; auto nhiều nguồn cần chọn rõ, không âm thầm đổi |
+| Missing/failing voice | Script needs-voice trước TIMED; SRT chỉ draft im lặng có nhãn; provider/fit lỗi không final/DONE |
+| Cache/edits | Sửa nội dung/giọng dựng lại narration; đổi cast/rig/thiết kế giữ audio còn hợp lệ; host đổi không âm thầm thay input |
+| Resume/locks | Fingerprints/hash/producer đủ; stale artifact không xuất như mới; locks giữ và conflict rõ; rebuild shot giữ phần hợp lệ |
+| API/Studio/CLI | Editor/upload/preview/save/create; character_mode; cast/timeline download; settings revision conflict; trạng thái chờ đúng |
+| Final | H264/AAC/30fps/duration/decode, narration nghe được, full SRT text/clock, thumbnail, cast/assets/provenance/reports; QC fail không DONE |
 
-## Fixtures và cách so sánh
+## Artwork, dữ liệu và sửa lỗi
 
-examples/steam-explainer/input/script.txt và car-explainer/input/script.txt là lời kể; project.yaml mặc định script+robot. Đổi host.profile sang STICK-MAN.md để chạy người que. Có thể bỏ source.md để kiểm tra minimum input.
+Model thật có request/response/usage/origin; authored và offline ghi đúng provenance. Cache/candidate có binding nội dung/provider. Artwork tự chọn layers/gradient/mask/text/palette; không bị title/xưởng seed ép lại. labelMode không nhãn trùng; motionOrigin không trôi tâm. Flow trích cue khẳng định hiện tại, không mượn câu phủ định hay cue tương lai. Revision publication atomic gồm storyboard/plans/scenes/geometry/reports; lỗi rollback không để metadata/video lệch. Giữ lịch sử các lần đỏ.
 
-fixtures/narration.srt có clock do tác giả fixture đặt rộng (10 giây/cue), không phải thời gian WAV/script đã đo. Copy vào input/narration.srt, chọn srt. Model test phải chuẩn bị WAV thật và SRT khớp WAV cho nhánh aligned; không ghép TTS script duration với SRT fixture rồi gọi mismatch là lỗi implement.
+## Lệnh và evidence
 
-Bổ sung narration để buộc đủ 8 recipes; ghi method/recipe IDs thực và source quotes. Không chỉ đếm catalog có tám tên. Không chỉ đếm snapshot hoặc MP4 tồn tại. Xem trước/trong/sau contact, seek lùi/tiến/restart, nghe full câu cuối cue và xem caption đầy đủ.
+Người triển khai: npm run build; npm run typecheck. Model độc lập: node --import tsx --test --test-concurrency=1 tests/actor-studio.test.ts tests/story-actors.test.ts; npm run test:typecheck; npm run test:cinematic-inputs. npm test chỉ tính PASS đúng fingerprint và contract; old fixture presenter có thể cần khai báo chế độ tương thích. Không đổi expected chỉ để xanh.
 
-## Bàn giao kết quả
+Source21 có audit độc lập89/89 trước sửa tay. Suite07:19UTC378/386 FAIL8 vẫn được giữ. Performance7 chạy lại animation/story-actors/actor-studio **145/145 PASS** với cùng assertions, test:typecheck0; [evidence tay](docs/validation/2026-10-02-outward-elbows.md). Full npm suite09:01UTC **403/403 PASS**, test:typecheck0 và zero source drift; [phạm vi](docs/validation/2026-10-02-release-regressions.md). HyperFrames mock ở regression resume; GSAP/AttrPlugin thật ở animation. Browser/live model/TTS/phim cuối/matrix toàn sản phẩm cần nghiệm thu riêng; số test qua không thay đánh giá chất lượng phim.
 
-Ghi kết quả V2.1/V2.2 riêng trong TEST-RESULTS.md: tested commit và dirty-tree diff nếu có, PASS/FAIL/NOT RUN từng nhóm, output/hash/duration/voice/review mode, shot/cue/time và evidence path. Không sửa lịch sử V1. Nếu lỗi, ghi input tối thiểu, expected/actual, stage và command. Chỉ gọi V2.2 nghiệm thu khi đủ ba luồng/hai host/hai bài cùng evidence diễn xuất thật; MP4 tồn tại hoặc gate kỹ thuật pass chưa đủ.
+Ví dụ: npm run cli -- new acceptance-actors --example; configure projects/acceptance-actors --input script --host stick-man --style story-cinematic --characters actors; make projects/acceptance-actors. Phải có TTS Việt thật trong config/voice.yaml hoặc project. Không đổi language sang en để báo PASS tiếng Việt.
+
+Các script có fixture clocks phải dùng audio khớp; SRT tác giả đặt10s/cue không mặc nhiên khớp TTS measured clock. Bổ sung đủ tám ý đồ giải thích khi kiểm tra recipe. Không chỉ đếm tên trong catalog, số snapshot hay file MP4 tồn tại.
+
+Kết quả mới ghi riêng, giữ TEST-RESULTS.md V1. Chỉ nghiệm thu khi đủ matrix, hai bài/hai kiểu tạo hình và evidence video thực tế; ghi mọi phần NOT RUN còn lại.

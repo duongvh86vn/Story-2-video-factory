@@ -1,0 +1,44 @@
+/** A1/A2 evidence through the production security contract and actual HyperFrames engine. */
+import assert from 'node:assert/strict';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { ConfigSchema, findRepoRoot } from '../packages/core/config.js';
+import { ModelRouter } from '../packages/models/registry.js';
+import { compileHost } from '../packages/host/index.js';
+import { benchmarkPlan, carryBenchmarkPlan } from '../packages/animation/benchmark.js';
+import { performanceScene } from '../packages/animation/scene.js';
+import { secureSceneFiles, validateSceneFiles } from '../packages/scenes/security.js';
+import { HyperFramesEngine } from '../packages/render/hyperframes.js';
+import { ffmpeg, probe } from '../packages/audio/ffmpeg.js';
+import { writeJson, writeAtomic, hash } from '../packages/core/utils.js';
+import sharp from 'sharp';
+const args=process.argv.slice(2),kind=args[args.indexOf('--host')+1]==='mini-robot'?'mini-robot':'stick-man';
+const variant=args.includes('--carry')?'carry':'acting';
+const root=path.resolve('temp/animation-v22',kind,...(variant==='carry'?['carry']:[])),dir=path.join(root,'scene');
+const config=ConfigSchema.parse({host:{profile:`library/characters/${kind==='stick-man'?'STICK-MAN':'MINI-ROBOT'}.md`},
+  rendering:{draft:{width:1280,height:720,fps:30,quality:'looks'},final:{width:1280,height:720,fps:30,quality:'delivery'}},
+  workflow:{max_scene_bytes:2000000}});
+await fs.mkdir(dir,{recursive:true});await fs.mkdir(path.join(dir,'vendor'),{recursive:true});
+const {profile,rig}=await compileHost(root,config,new ModelRouter(config,root)),plan=variant==='carry'?carryBenchmarkPlan(profile):benchmarkPlan(profile);
+const background='environment.png',backgroundBytes=await fs.readFile(path.join(await findRepoRoot(),'design/stickman/proposals/workshop-background-v1.png'));
+await writeAtomic(path.join(dir,background),backgroundBytes);
+const activity={method:'segment-draft' as const,windowMs:20,intervals:[]};
+const scene=performanceScene(plan,profile,activity,background),files=secureSceneFiles(scene.files);
+const shot={id:plan.id,startMs:0,endMs:plan.durationMs} as Parameters<typeof validateSceneFiles>[1];
+assert.deepEqual(validateSceneFiles(files,shot,config.workflow.max_scene_bytes,[background],plan.stage),[]);
+for(const file of files.files)await writeAtomic(path.join(dir,file.path),file.content);
+const require=createRequire(import.meta.url);await fs.copyFile(require.resolve('gsap/dist/gsap.min.js'),path.join(dir,'vendor/gsap.min.js'));
+await writeJson(path.join(root,'work/performance-plan.json'),plan);
+await writeJson(path.join(root,'work/performance-report.json'),{...scene.compiled.report,rigHash:rig.rigHash,background:{hash:hash(backgroundBytes),approval:'concept-draft'}});
+const engine=new HyperFramesEngine(config,root),validation=await engine.validate(dir);assert.equal(validation.pass,true,validation.errors.join('\n'));
+await engine.renderFinal(dir);
+const frames=variant==='carry'?[0,700,2000,2500,3800,4500,5600,7000,8550,8800,9400]:[0,700,1400,2100,3300,4200,5100,6200,7350,8500,9400];
+const paths=await engine.snapshots({project:dir,frames:frames.map(timeMs=>({timeMs,output:`previews/frame-${timeMs}.png`}))});
+const thumbs=await Promise.all(paths.map(file=>sharp(file).resize(384,216).png().toBuffer()));
+await sharp({create:{width:384*3,height:244*4,channels:4,background:'#EEE5D2'}}).composite(thumbs.map((input,i)=>({input,left:(i%3)*384,top:Math.floor(i/3)*244}))).png().toFile(path.join(root,'previews/acting-sheet.png'));
+await fs.mkdir(path.join(root,'output'),{recursive:true});
+await fs.copyFile(path.join(root,'work/rendered.mp4'),path.join(root,'output/acting-preview.mp4'));
+await ffmpeg(root,config,['-v','error','-i',path.join(root,'output/acting-preview.mp4'),'-f','null','-']);
+const metadata=await probe(root,config,path.join(root,'output/acting-preview.mp4'));
+console.log(JSON.stringify({root,kind,variant,validation:true,report:scene.compiled.report,sceneBytes:files.files.reduce((n,f)=>n+Buffer.byteLength(f.content),0),video:metadata.streams.map(s=>({codec:s.codec_name,width:s.width,height:s.height,fps:s.r_frame_rate,duration:s.duration})),preview:path.join(root,'output/acting-preview.mp4')},null,2));

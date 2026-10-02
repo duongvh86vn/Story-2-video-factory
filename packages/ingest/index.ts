@@ -102,7 +102,7 @@ export async function ingestProject(projectRoot: string, config: FactoryConfig, 
     const story = config.content.mode === 'legacy' ? document!.story : StorySchema.parse({
       title: document?.story.title ?? config.project.name, genre: 'explainer', language: config.project.language,
       story: narrationText, origin: 'narration', purpose: document?.story.purpose || 'Giải thích nội dung narration bằng một host cố định và hình minh họa.',
-      style: document?.story.style ?? { visual: 'Clear 2D vector explainer with a reusable animated host', era: '' },
+      style: document?.story.style ?? { visual: '', era: '' },
       rules: [...document?.story.rules ?? [], 'Narration is authoritative; host is a presenter, not a historical person.'],
       characters: (document?.story.characters ?? []).filter(character => narrationText.toLocaleLowerCase().includes(character.name.toLocaleLowerCase())),
       facts: narration.segments.map(segment => ({ claim: segment.text, type: 'fact', source: segment.id })),

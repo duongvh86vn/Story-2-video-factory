@@ -9,7 +9,7 @@ import { pipeline } from 'node:stream/promises';
 import { z } from 'zod';
 import { findRepoRoot, loadConfig, ConfigSchema } from '../../packages/core/config.js';
 import YAML from 'yaml';
-import { updateSettings, SettingsPatchSchema } from '../../packages/orchestrator/settings.js';
+import { updateSettings, SettingsPatchSchema, PresentationPatchSchema } from '../../packages/orchestrator/settings.js';
 import { parseScript } from '../../packages/ingest/script.js';
 import { parseHostProfile } from '../../packages/host/profile.js';
 import { hostPreviewSvg } from '../../packages/host/rig.js';
@@ -19,12 +19,16 @@ import { exists, hash, writeAtomic } from '../../packages/core/utils.js';
 import { inspectMedia } from '../../packages/assets/files.js';
 import { validateSceneFiles, secureSceneFiles, SCENE_FILENAMES } from '../../packages/scenes/security.js';
 import { ApiError, ProjectName, SafeId, boundPath, ensureIdle, projectPath, uploadFilename, MIME, redact } from './security.js';
-import { ARTIFACTS, DOWNLOADS, LOGS, checkRevision, currentDownload, listDownloads, locate, optionalArtifact, readArtifact, saveArtifact, srtSegments, tailLog } from './artifacts.js';
+import { ARTIFACTS, DOWNLOADS, LOGS, checkRevision, currentDownload, cinematicMigration, cinematicArtifactStatuses, listDownloads, locate, optionalArtifact, readArtifact, saveArtifact, srtSegments, tailLog } from './artifacts.js';
 import { loadCoordinator, ProjectJobs, type Coordinator } from './jobs.js';
 import { PREVIEW_BRIDGE, withPreviewBridge } from './preview.js';
 import { visualAssetPath } from '../../packages/scenes/assets.js';
 import { validateExplainerSources } from '../../packages/scenes/index.js';
 import type { ProjectDetail, ProjectSummary, SceneDocument, UploadedAsset } from './contracts.js';
+import {ActorDefinitionSchema} from '../../packages/actors/schemas.js';
+import {actorDefinitions,actorLockKey} from '../../packages/actors/locks.js';
+import {bindActorShot} from '../../packages/actors/model.js';
+import {loadHost} from '../../packages/host/index.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
 type Named = { name: string };
@@ -124,13 +128,23 @@ export async function buildServer(options: ServerOptions = {}) {
     const url = (relative: string) => `/project-static/${encodeURIComponent(name)}/${relative.split('/').map(encodeURIComponent).join('/')}`;
     const available = async (paths: string[]) => { const file = await locate(root, paths); return file ? url(path.relative(root, file).split(path.sep).join('/')) : null; };
     const completed = States.indexOf(state.state);
+    const migration=await cinematicMigration(root);
+    const scenesCurrent = !migration.required&&completed >= States.indexOf('SCENES_READY'), framesCurrent = !migration.required&&completed >= States.indexOf('DRAFT_RENDERED');
+    const storyboard = (raw.artifacts as ProjectDetail['artifacts'] | undefined)?.storyboard;
+    const shotPreviews = Object.fromEntries(await Promise.all((storyboard?.shots ?? []).map(async shot => [shot.id, {
+      composition: scenesCurrent ? await available([`scenes/${SafeId.parse(shot.id)}/index.html`]) : null,
+      frames: framesCurrent ? await available([`previews/${SafeId.parse(shot.id)}/action-sheet.jpg`, `previews/${shot.id}/contact-sheet.jpg`]) : null,
+    }])));
     return {
       ...await summary(name), locked: state.locked,
       progress: { completed, total: States.length - 1, percent: Math.round(completed / (States.length - 1) * 100), stage: state.state },
       artifacts: clean(raw.artifacts ?? {}) as ProjectDetail['artifacts'], production: clean(raw.production ?? {}), downloads,
-      preview: { composition: await available(['scenes/index.html']), draft: await available(DOWNLOADS['draft.mp4']!), final: completed>=States.indexOf('FINAL_RENDERED')?await available(DOWNLOADS['final.mp4']!):null, contactSheet: await available([...DOWNLOADS['contact-sheet.jpg']!, ...DOWNLOADS['contact-sheet.png']!]) },
+      cinematicArtifacts: await cinematicArtifactStatuses(root),
+      cinematicMigration:migration,
+      preview: { composition: scenesCurrent ? await available(['scenes/index.html']) : null, draft: framesCurrent ? await available(DOWNLOADS['draft.mp4']!) : null, final: !migration.required&&completed>=States.indexOf('FINAL_RENDERED')?await available(DOWNLOADS['final.mp4']!):null, contactSheet: framesCurrent ? await available([...DOWNLOADS['contact-sheet.jpg']!, ...DOWNLOADS['contact-sheet.png']!]) : null, shots: shotPreviews },
       settings: {revision:hash(await fs.readFile(await boundPath(root,'project.yaml'))),language:config.project.language,contentMode:config.content.mode,input:config.input,host:config.host,
-        voice:((({command,command_args,...rest})=>rest)(config.voice)),automatic:config.workflow.automatic,format:config.rendering.final,
+        voice:((({command,command_args,...rest})=>rest)(config.voice)),automatic:config.workflow.automatic,presentation:config.presentation,format:config.rendering.final,
+        creativeModel:((({command,...rest})=>rest)(config.models.storyboard)),
         approvalRequired:{storyboard:config.workflow.require_storyboard_approval||!config.workflow.automatic,characters:config.workflow.require_character_approval,host:config.workflow.require_host_approval}},
     };
   };
@@ -143,11 +157,12 @@ export async function buildServer(options: ServerOptions = {}) {
     return { projects: projects.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)) };
   });
   app.post('/api/projects', async (request, reply) => {
-    const body = z.object({ name: ProjectName, example: z.boolean().default(false) }).strict().parse(request.body);
+    const body = z.object({ name: ProjectName, example: z.boolean().default(false), presentation: PresentationPatchSchema.optional() }).strict().parse(request.body);
     const result = await jobs.mutate(body.name, async () => {
       await fs.mkdir(projectsRoot, { recursive: true });
       if ((await fs.lstat(projectsRoot)).isSymbolicLink()) throw new ApiError(403, 'Linked project folders are not supported.', 'LINK_FORBIDDEN');
-      await (await coordinator()).createProject(body.name, { root: projectsRoot, example: body.example });
+      const root = await (await coordinator()).createProject(body.name, { root: projectsRoot, example: body.example });
+      if (body.presentation) await updateSettings(root, { presentation: body.presentation });
       return summary(body.name);
     });
     return reply.code(201).send(result);
@@ -158,11 +173,12 @@ export async function buildServer(options: ServerOptions = {}) {
     return mutate(request.params.name,async root=>{await checkRevision(await boundPath(root,'project.yaml'),body.revision);await updateSettings(root,body);return detail(request.params.name);});
   });
   app.put<{Params:Named}>('/api/projects/:name/script',async request=>{
-    const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']).default('txt'),revision:z.string().optional()}).strict().parse(request.body);
+    const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']).default('txt'),revision:z.string().optional(),settingsRevision:z.string().optional()}).strict().parse(request.body);
     return mutate(request.params.name,async(root,core)=>{
+      await checkRevision(await boundPath(root,'project.yaml'),body.settingsRevision);
       const relative=`input/script.${body.format}`,file=await boundPath(root,relative,true);await checkRevision(await locate(root,[relative]),body.revision);
       parseScript(body.text,relative);if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
-      await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md'}});return readArtifact(root,`script.${body.format}`);
+      await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md'}});return {...await readArtifact(root,`script.${body.format}`),settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
     });
   });
   app.get<{Params:Named &{kind:string}}>('/api/projects/:name/hosts/:kind/preview',async(request,reply)=>{
@@ -212,6 +228,7 @@ export async function buildServer(options: ServerOptions = {}) {
       const board = await optionalArtifact<Storyboard>(root, 'storyboard.json');
       const bible = await optionalArtifact<ProjectDetail['artifacts']['character-bible']>(root, 'character-bible.json');
       const allowed = new Set(['storyboard', 'characterBible', ...board?.shots.map(s => s.id) ?? [], ...bible?.characters.map(c => c.id) ?? []]);
+      for(const actor of actorDefinitions(board??{shots:[]}))allowed.add(actorLockKey(actor.id));
       if (Object.keys(locked).some(id => !allowed.has(id))) throw new ApiError(422, 'Unknown item to lock.', 'UNKNOWN_LOCK');
       await core.updateLocks(root, locked); return summary(request.params.name);
     });
@@ -226,6 +243,7 @@ export async function buildServer(options: ServerOptions = {}) {
   });
   app.patch<{ Params: Named & { id: string } }>('/api/projects/:name/shots/:id', async request => {
     const id = SafeId.parse(request.params.id);
+    if((await cinematicMigration(await rootFor(request.params.name))).required)throw new ApiError(409,'Resume production with the current renderer before editing a shot. Locked shots remain protected.','CINEMATIC_MIGRATION_REQUIRED');
     const body = z.object({ shot: ShotSchema, revision: z.string().optional() }).strict().parse(request.body);
     if (body.shot.id !== id) throw new ApiError(422, 'Shot ID cannot be changed.', 'VALIDATION_FAILED');
     return mutate(request.params.name, async (root, core) => {
@@ -234,6 +252,23 @@ export async function buildServer(options: ServerOptions = {}) {
       if (index < 0) throw new ApiError(404, 'Shot not found.', 'NOT_FOUND');
       board.shots[index] = body.shot;
       return saveArtifact(root, 'storyboard.json', board, body.revision, core);
+    });
+  });
+  app.put<{Params:Named&{id:string}}>('/api/projects/:name/actors/:id',async request=>{
+    const id=SafeId.parse(request.params.id),body=z.object({character:ActorDefinitionSchema,revision:z.string()}).strict().parse(request.body);
+    if(body.character.id!==id)throw new ApiError(422,'Actor ID is immutable.','VALIDATION_FAILED');
+    return mutate(request.params.name,async(root,core)=>{
+      const doc=await readArtifact(root,'storyboard.json');
+      if(doc.revision!==body.revision)throw new ApiError(409,'Cast changed since this editor was opened. Reload before saving.','REVISION_CONFLICT');
+      const board=StoryboardSchema.parse(doc.data),cast=actorDefinitions(board);
+      if(!cast.some(a=>a.id===id))throw new ApiError(404,'Actor not found.','NOT_FOUND');
+      const {profile,rig}=await loadHost(root);
+      for(const shot of board.shots){const scene=shot.cinematic?.actorScene;if(!scene)continue;
+        if(scene.primary?.id===id)scene.primary=body.character;
+        for(const actor of scene.supporting)if(actor.character.id===id)actor.character=body.character;
+        bindActorShot(shot,profile,rig);
+      }
+      return saveArtifact(root,'storyboard.json',board,body.revision,core);
     });
   });
 
@@ -259,7 +294,8 @@ export async function buildServer(options: ServerOptions = {}) {
       const state = await optionalArtifact<ProjectState>(root, 'project-state.json'), board = await optionalArtifact<Storyboard>(root, 'storyboard.json');
       const shot = board?.shots.find(s => s.id === id);
       if (!shot) throw new ApiError(404, 'Shot not found.', 'NOT_FOUND');
-      if (state?.locked.storyboard || (state?.locked[id] ?? shot.locked)) throw new ApiError(423, 'Unlock this shot before changing its scene.', 'LOCKED');
+      if (state?.locked.storyboard || (state?.locked[id] ?? state?.locked[`shot:${id}`] ?? shot.locked)) throw new ApiError(423, 'Unlock this shot before changing its scene.', 'LOCKED');
+      if (shot.host || shot.cinematic) throw new ApiError(403, 'Production character scenes are read-only. Edit the validated canonical storyboard and rebuild this shot.', 'READ_ONLY');
       const allowed = new Set(previous.files.map(f => f.path));
       if (body.files.some(f => !allowed.has(f.path)) || new Set(body.files.map(f => f.path)).size !== body.files.length || body.files.length !== previous.files.length) throw new ApiError(422, 'Edit existing scene files without adding, removing or renaming them.', 'INVALID_SCENE');
       if (body.files.reduce((sum, f) => sum + Buffer.byteLength(f.content), 0) > 500000) throw new ApiError(413, 'Scene exceeds the size limit.', 'TOO_LARGE');
@@ -279,9 +315,11 @@ export async function buildServer(options: ServerOptions = {}) {
     });
   });
 
-  app.post<{ Params: Named }>('/api/projects/:name/upload', async (request, reply) => {
+  app.post<{ Params: Named;Querystring:{settingsRevision?:string} }>('/api/projects/:name/upload', async (request, reply) => {
     if (!request.isMultipart()) throw new ApiError(415, 'Choose files to upload.', 'MULTIPART_REQUIRED');
+    const query=z.object({settingsRevision:z.string().optional()}).strict().parse(request.query);
     const uploaded = await mutate(request.params.name, async (root, core) => {
+      await checkRevision(await boundPath(root,'project.yaml'),query.settingsRevision);
       const stageName = `.studio-upload-${randomUUID()}`;
       const stage = await boundPath(root, stageName, true); await fs.mkdir(stage);
       const pending: Array<{ staged: string; relative: string; original: string; size: number }> = [];
@@ -332,6 +370,7 @@ export async function buildServer(options: ServerOptions = {}) {
           pending.push({ staged, relative, original, size });
         }
         if (!pending.length) throw new ApiError(422, 'Choose at least one file.', 'EMPTY_UPLOAD');
+        await checkRevision(await boundPath(root,'project.yaml'),query.settingsRevision);
         // Validate all destinations before touching canonical inputs.
         for (const item of pending) await boundPath(root, item.relative, true);
         const config=await loadConfig(root);await core.invalidateProject(root,pending.some(item=>!item.relative.startsWith('input/assets/')&&item.relative!=='input/host.md'&&(item.relative!=='input/source.md'||config.content.mode==='legacy'))?'NEW':pending.some(item=>['input/host.md','input/source.md'].includes(item.relative))?'TIMED':'STORYBOARDED');
@@ -343,13 +382,13 @@ export async function buildServer(options: ServerOptions = {}) {
         const script=pending.find(item=>/^input\/script\.(?:txt|md)$/.test(item.relative));
         if(script)await updateSettings(root,{input:{mode:'script',script:script.relative as 'input/script.txt'|'input/script.md'}});
         if(pending.some(item=>item.relative==='input/host.md'))await updateSettings(root,{host:'custom'});
-        return result;
+        return {files:result,settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
       } finally {
         for (const item of await fs.readdir(stage)) await fs.unlink(path.join(stage, item));
         await fs.rmdir(stage);
       }
     });
-    return reply.code(201).send({ files: uploaded });
+    return reply.code(201).send(uploaded);
   });
   app.get<{ Params: Named }>('/api/projects/:name/assets', async request => {
     const root = await rootFor(request.params.name), files: UploadedAsset[] = [];
@@ -384,8 +423,12 @@ export async function buildServer(options: ServerOptions = {}) {
     }
     const root = await rootFor(request.params.name), relative = request.params['*'], extension = path.extname(relative).toLowerCase();
     const scene = relative.startsWith('scenes/');
+    if((scene||relative.startsWith('previews/'))&&(await cinematicMigration(root)).required)throw new ApiError(409,'The cinematic renderer version changed; resume production.','STALE_ARTIFACT');
+    const state = await optionalArtifact<ProjectState>(root,'project-state.json');
+    if (scene && (!state || States.indexOf(state.state)<States.indexOf('SCENES_READY'))) throw new ApiError(409,'Scene belongs to an earlier revision; resume production.','STALE_ARTIFACT');
+    if (relative.startsWith('previews/') && relative!=='previews/host-preview-sheet.png' && (!state || States.indexOf(state.state)<States.indexOf('DRAFT_RENDERED'))) throw new ApiError(409,'Preview frames require the current production draft.','STALE_ARTIFACT');
     const narration = await optionalArtifact<NonNullable<ProjectDetail['artifacts']['narration']>>(root, 'voiced-narration.json')??await optionalArtifact<NonNullable<ProjectDetail['artifacts']['narration']>>(root, 'narration.json');
-    if(relative==='output/final.mp4'&&!await currentDownload(root,'final.mp4'))throw new ApiError(409,'Final belongs to an earlier input revision.','STALE_ARTIFACT');
+    for (const name of ['final.mp4', 'draft.mp4']) if (DOWNLOADS[name]!.includes(relative) && !await currentDownload(root, name)) throw new ApiError(409,'Clip belongs to an earlier revision; resume production.','STALE_ARTIFACT');
     const allowed = scene || relative === narration?.audioPath || relative.startsWith('input/assets/') || relative.startsWith('assets/') || relative.startsWith('work/series-assets/') || relative.startsWith('previews/') || Object.values(DOWNLOADS).flat().includes(relative);
     if (!allowed || !MIME[extension] || (!scene && ['.html', '.js', '.css'].includes(extension))) throw new ApiError(404, 'Preview file is not allowed.', 'NOT_FOUND');
     const file = await boundPath(root, relative);
@@ -411,7 +454,7 @@ export async function buildServer(options: ServerOptions = {}) {
 
 export async function main(): Promise<void> {
   const port = z.coerce.number().int().min(1).max(65535).parse(process.env.STUDIO_PORT ?? 8787);
-  const app = await buildServer();
+  const app = await buildServer({ projectsRoot: process.env.STUDIO_PROJECTS_ROOT });
   await app.listen({ host: '127.0.0.1', port });
   console.log(`Story Factory Studio: http://localhost:${port}`);
   for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { void app.close().then(() => { process.exitCode = 0; }); });

@@ -5,12 +5,12 @@ import test, { type TestContext } from 'node:test';
 import { get } from 'node:http';
 import { buildServer } from '../apps/server/index.js';
 import * as core from '../packages/orchestrator/index.js';
-import { loadState } from '../packages/orchestrator/state-machine.js';
-import { temporary } from './support.js';
+import { loadState, saveState } from '../packages/orchestrator/state-machine.js';
+import { temporary, createLegacyProject } from './support.js';
 
 async function studio(t: TestContext, prepared = false) {
   const projectsRoot = await temporary(t);
-  const root = await core.createProject('fixture', { root: projectsRoot, example: true });
+  const root = await createLegacyProject('fixture', { root: projectsRoot, example: true });
   if (prepared) await core.runPipeline(root, { until: 'ASSETS_READY' });
   const app = await buildServer({ projectsRoot, coordinator: core });
   t.after(() => app.close());
@@ -98,6 +98,7 @@ test('preview blocks junction escape and malformed/traversal paths; ranges are b
     assert.equal(status, 400, url);
   }
   await fs.writeFile(path.join(root, 'output/final.mp4'), '0123456789');
+  const state=await loadState(root);state.state='FINAL_RENDERED';await saveState(root,state);
   const url = '/api/projects/fixture/downloads/final.mp4';
   const ranged = await app.inject({ url, headers: { range: 'bytes=2-5' } });
   assert.equal(ranged.statusCode, 206); assert.equal(ranged.body, '2345');

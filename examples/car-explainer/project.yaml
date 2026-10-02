@@ -7,8 +7,10 @@ input:
   mode: script
   script: input/script.txt
 host:
-  profile: library/characters/MINI-ROBOT.md
+  profile: library/characters/STICK-MAN.md
+presentation:
+  mode: story-cinematic
+  character_mode: actors
+  design_brief: "Phim hoạt hình có những người chế tạo và sử dụng xe trong câu chuyện. Benz là vai riêng khi nguồn nêu tên. Cho diễn viên quan sát và tương tác với mô hình, nối tình huống với cận cảnh nguyên lý và tiến trình phát triển. Giọng kể ngoài hình, không thêm thoại hay sự kiện lịch sử. Tự chọn tạo hình, môi trường và nhịp kể."
 workflow:
   automatic: true
-style:
-  preset: technical-clean

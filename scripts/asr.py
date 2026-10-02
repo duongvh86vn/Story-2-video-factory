@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline-first ASR/forced-alignment bridge. Output is canonical narration JSON.
 
-Supplying --cues-json selects alignment only: no Whisper transcription is loaded.
+Supplying --cues-json verifies the audio independently before forced alignment.
 Original cue IDs, text, startMs and endMs are immutable. WhisperX words are accepted
 only when their endpoints are supported by scored CTC character alignments.
 """
@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import difflib
 import importlib
 import json
 import math
@@ -21,6 +22,7 @@ import time
 import traceback
 from typing import Any
 import uuid
+import unicodedata
 
 
 class AsrError(Exception):
@@ -275,6 +277,33 @@ def align_cues(whisperx: Any, model: Any, metadata: dict[str, Any], audio: Any, 
     return words
 
 
+def speech_text(text: str) -> str:
+    folded = unicodedata.normalize("NFKD", text.lower().replace("đ", "d"))
+    return "".join(c for c in folded if c.isalnum() and not unicodedata.combining(c))
+
+
+def verify_cues(audio: Any, segments: list[dict[str, Any]], args: argparse.Namespace, diagnostics: dict[str, Any]) -> None:
+    """CTC can force unrelated words into audio; use unprompted ASR as a separate gate.
+
+    Accent/punctuation differences are ignored. Uncertain recognition fails closed,
+    with expected/observed text recorded, rather than changing supplied subtitles.
+    """
+    faster = module("faster_whisper")
+    verifier = faster.WhisperModel(args.model, device=args.device, compute_type=args.compute_type, local_files_only=not args.allow_downloads)
+    checks: list[dict[str, Any]] = []
+    diagnostics["contentVerification"] = {"method": "independent-whisper-character-similarity", "model": args.model, "minimumSimilarity": .65, "cues": checks}
+    for cue in segments:
+        window = audio[cue["startMs"] * 16:min(cue["endMs"] * 16, len(audio))]
+        iterator, _ = verifier.transcribe(window, language=args.language, beam_size=5, vad_filter=False, condition_on_previous_text=False)
+        observed = " ".join(item.text.strip() for item in iterator)
+        expected_normalized, observed_normalized = speech_text(cue["text"]), speech_text(observed)
+        similarity = difflib.SequenceMatcher(None, expected_normalized, observed_normalized, autojunk=False).ratio()
+        passed = bool(expected_normalized and observed_normalized and similarity >= .65)
+        checks.append({"cueId": cue["id"], "expected": cue["text"], "observed": observed, "similarity": similarity, "pass": passed})
+        if not passed:
+            raise AsrError(f"WAV/SRT mismatch or uncertain recognition in {cue['id']}: similarity {similarity:.3f} below 0.650; original text/clock preserved. Inspect contentVerification diagnostics.")
+
+
 def decode_audio(args: argparse.Namespace, diagnostics: dict[str, Any]) -> Any:
     numpy = module("numpy")
     command = [os.environ.get("VIDEO_FACTORY_FFMPEG") or os.environ.get("FFMPEG_PATH") or "ffmpeg", "-nostdin", "-v", "error", "-i", str(args.audio), "-map", "0:a:0", "-f", "s16le", "-ac", "1", "-acodec", "pcm_s16le", "-ar", "16000", "-"]
@@ -300,9 +329,10 @@ def transcribe_whisperx(args: argparse.Namespace, duration: int, diagnostics: di
     language = args.language
     if original is not None:
         if not language:
-            raise AsrError("--language is required for alignment of supplied cues; alignment never transcribes to guess the language", 2)
+            raise AsrError("--language is required for verification/alignment of supplied cues", 2)
         segments = original
-        diagnostics["operation"] = "forced-alignment"
+        diagnostics["operation"] = "verified-forced-alignment"
+        verify_cues(audio, segments, args, diagnostics)
     else:
         vad = local_vad(args)
         pipeline = whisperx.load_model(args.model, args.device, compute_type=args.compute_type, language=language, local_files_only=not args.allow_downloads, vad_model=vad)
@@ -332,7 +362,7 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--audio", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--diagnostics", type=Path)
-    parser.add_argument("--cues-json", type=Path, help="JSON {segments:[{id,startMs,endMs,text}]} from the TypeScript SRT parser; forces WhisperX alignment only")
+    parser.add_argument("--cues-json", type=Path, help="Immutable SRT cues; independently verify content then align with WhisperX")
     parser.add_argument("--engine", choices=["faster-whisper", "whisperx"], default="faster-whisper")
     parser.add_argument("--model", default="small")
     parser.add_argument("--device", default="cpu")

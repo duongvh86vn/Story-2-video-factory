@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import type { FactoryConfig } from '../core/config.js';
 import { AssetManifestSchema, CharacterBibleSchema, StoryboardSchema, SceneFilesSchema, NarrationSchema, type AssetManifest, type CharacterBible, type Narration, type ReviewIssue, type SceneFiles, type Shot, type Storyboard } from '../core/schemas.js';
@@ -14,17 +15,33 @@ import { SCENE_CSP, SCENE_FILENAMES, secureSceneFiles, validateSceneFiles } from
 import { visualAssetPath } from './assets.js';
 import { ffmpeg } from '../audio/ffmpeg.js';
 import { renderExplainer } from '../../library/shots/explainer.js';
+import { renderCinematic } from '../../library/shots/cinematic.js';
+import { ANIMATION_VERSION } from '../animation/schemas.js';
+import { DIRECTION_VERSION } from '../director/schemas.js';
 import { loadHost } from '../host/index.js';
 import { HOST_CONTROLLER_VERSION } from '../host/controller.js';
 import { ActivitySchema } from '../voice/index.js';
 import { validateExplainerStoryboard } from '../explainer/storyboard.js';
 import { z } from 'zod';
 import { BeatSchema } from '../core/schemas.js';
+import { captionFits } from './captions.js';
+import { repairCinematicArtwork, persistCinematicArtworkRepair, rejectCinematicArtworkRepair, recoverCinematicArtworkTransactions, publishSceneRevision } from '../director/artwork-repair.js';
+import { ARTWORK_RENDER_VERSION } from '../director/art-direction.js';
 export { validateSceneFiles, validateSceneScript, SCENE_CSP } from './security.js';
+async function cinematicBackground(root:string,shot:Shot):Promise<string|undefined>{
+  const id=shot.cinematic?.environmentAssetId;if(!id)return undefined;
+  const manifest=await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema),asset=manifest.assets.find(a=>a.id===id);
+  if(!asset||asset.status!=='approved')throw new Error(`${shot.id}: needs-asset: environment ${id} is unavailable`);
+  return visualAssetPath(asset);
+}
 export async function validateExplainerSources(root:string,config:FactoryConfig,shot:Shot,files:SceneFiles):Promise<string[]> {
   if(config.content.mode!=='narrated-explainer')return [];
   const{profile,rig}=await loadHost(root),activity=await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema),style=getStyle(config),d=config.rendering.final;
   const actual=sourceHash(secureSceneFiles(files));
+  if(shot.cinematic){
+    if(config.presentation.mode!=='story-cinematic')return ['Cinematic scene requires story-cinematic presentation'];
+    return actual===sourceHash(secureSceneFiles(renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema)).files))?[]:['Cinematic scene differs from its validated stage/performance/camera plan. Rebuild the shot.'];
+  }
   for(const simple of [false,true])if(actual===sourceHash(secureSceneFiles(renderExplainer(shot,profile,rig,activity,style,d.width,d.height,simple).files)))return [];
   return ['Explainer scene differs from its validated host/model/action plan. Edit the storyboard plan and rebuild this shot.'];
 }
@@ -64,7 +81,7 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
 async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characters:CharacterBible,assetHashes:Record<string,string>,gsap:Buffer):Promise<string> {
   const source=await exists(path.join(root,config.input.source)) ? await fs.readFile(await safeRealPath(root,config.input.source)) : Buffer.alloc(0);
   const activity=config.content.mode==='narrated-explainer'?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
-  return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:2,controller:HOST_CONTROLLER_VERSION,activity});
+  return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,controller:shot.cinematic?ANIMATION_VERSION:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,activity});
 }
 async function writeScene(root:string,dir:string,files:SceneFiles):Promise<SceneFiles> {
   const secured=secureSceneFiles(files);
@@ -88,11 +105,35 @@ async function validateCandidate(root:string,config:FactoryConfig,shot:Shot,dir:
   const errors=validateSceneFiles(files,shot,config.workflow.max_scene_bytes,refs.map(asset=>asset.path),config.rendering.final);
   errors.push(...await validateExplainerSources(root,config,shot,files));
   if(errors.length) return {files,errors};
-  const written=await writeScene(root,dir,files);
-  const runtime=await new HyperFramesEngine(config,root).validate(dir);
+  // Browser failures keep the last accepted scene intact. The candidate owns a
+  // separate complete folder, including only the already approved local assets.
+  const stage=await outputPath(root,`work/scene-candidates/${shot.id}/${randomUUID()}`);
+  await fs.mkdir(stage,{recursive:true});
+  for(const folder of ['assets','vendor'])if(await exists(path.join(dir,folder)))await fs.cp(path.join(dir,folder),path.join(stage,folder),{recursive:true});
+  const written=await writeScene(root,stage,files);
+  const runtime=await new HyperFramesEngine(config,root).validate(stage);
+  if(!runtime.pass&&!runtime.errors.length)runtime.errors.push('Runtime validation failed without diagnostics');
   return {files:written,errors:runtime.errors};
 }
-async function refreshHostGeometry(root:string,config:FactoryConfig,shot:Shot):Promise<void>{if(!shot.host)return;const {profile,rig}=await loadHost(root),activity=await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema),rendered=renderExplainer(shot,profile,rig,activity,getStyle(config),config.rendering.final.width,config.rendering.final.height);await writeJson(await outputPath(root,`scenes/${shot.id}/host-geometry.json`),rendered.geometry);}
+async function hostGeometryPublication(root:string,config:FactoryConfig,shot:Shot):Promise<Map<string,string>>{
+  const pending=new Map<string,string>();
+  if(!shot.host)return pending;
+  const {profile,rig}=await loadHost(root),activity=await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema);
+  const add=(name:string,value:unknown)=>pending.set(`scenes/${shot.id}/${name}`,JSON.stringify(value,null,2)+'\n');
+  if(shot.cinematic){
+    const rendered=renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema));
+    add('host-geometry.json',rendered.geometry);
+    add('performance-report.json',{...rendered.report,rigHash:rendered.geometry.rigHash});
+  }else{
+    const rendered=renderExplainer(shot,profile,rig,activity,getStyle(config),config.rendering.final.width,config.rendering.final.height);
+    add('host-geometry.json',rendered.geometry);
+  }
+  return pending;
+}
+async function refreshHostGeometry(root:string,config:FactoryConfig,shot:Shot):Promise<void>{
+  const pending=await hostGeometryPublication(root,config,shot);
+  if(pending.size)await publishSceneRevision(root,pending);
+}
 async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,shot:Shot,characters:CharacterBible,manifest:AssetManifest,options:{force?:boolean;issues?:ReviewIssue[];state:Locks}):Promise<void> {
   const dir=await outputPath(root,`scenes/${shot.id}`), isLocked=lockedShot(options.state,shot);
   const complete=await Promise.all(SCENE_FILENAMES.map(name=>exists(path.join(dir,name))));
@@ -101,7 +142,8 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   await fs.mkdir(dir,{recursive:true});
   const staged=await stageAssets(root,dir,shot,manifest,config), gsap=await libraryRuntime();
   await writeAtomic(await outputPath(root,`scenes/${shot.id}/vendor/gsap.min.js`),gsap);
-  const inputHash=await inputIdentity(root,config,shot,characters,staged.hashes,gsap), recordFile=path.join(dir,'scene.json');
+  let inputHash=await inputIdentity(root,config,shot,characters,staged.hashes,gsap);
+  const recordFile=path.join(dir,'scene.json');
   const record=await exists(recordFile) ? await readJson<SceneRecord>(recordFile) : undefined;
   if(complete.every(Boolean)) {
     const files=await readScene(dir), changed=record?.sourceHash!==sourceHash(files);
@@ -125,11 +167,13 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   const recipe=selectRecipe(shot), style=getStyle(config), dimensions=config.rendering.final;
   const explainer=config.content.mode==='narrated-explainer';
   const host=explainer?await loadHost(root):undefined, activity=explainer?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
-  const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified);};
+  const background=shot.cinematic?await cinematicBackground(root,shot):undefined;
+  const narrated=shot.cinematic?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
+  const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return shot.cinematic?renderCinematic(shot,host.profile,host.rig,activity,config,background,narrated):renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified);};
   let candidate:SceneFiles|undefined, errors:string[]=options.issues?.map(issue=>`${issue.type}: ${issue.description}\nRequested repair: ${issue.repair}`)??[];
   if(options.issues?.length && complete.every(Boolean) && !explainer) candidate=await readScene(dir);
   if(!candidate) {
-    if(explainer){const rendered=trustedExplainer();candidate=rendered.files;await writeJson(path.join(dir,'host-geometry.json'),rendered.geometry);}
+    if(explainer){const rendered=trustedExplainer();candidate=rendered.files;}
     else if(recipe) {
       try {candidate=renderRecipe(recipe,shot,style,dimensions.width,dimensions.height,staged.refs);}
       catch(error){errors=[redact(error instanceof Error?error.message:String(error))];await persistAttempt(root,shot,0,'recipe-error',undefined,errors);}
@@ -145,7 +189,29 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
     await persistAttempt(root,shot,0,'initial',candidate,errors); valid=!errors.length;
   }
   const maxRepairs=Math.min(3,config.retry.scene_repair);
+  let pendingArtworkShot=shot;
+  let acceptedArtworkRepair:{shot:Shot;attemptFile:string}|undefined;
   for(let attempt=1;!valid && attempt<=maxRepairs;attempt++) {
+    if(shot.cinematic?.artDirection){
+      if(isLocked||router.isMock('storyboard'))break;
+      let repairAttempt:string|undefined;
+      try{
+        const repaired=await repairCinematicArtwork(root,config,router,pendingArtworkShot,errors);
+        repairAttempt=repaired.attemptFile;
+        const files=renderCinematic(repaired.shot,host!.profile,host!.rig,activity!,config,background,narrated).files;
+        const checked=await validateCandidate(root,config,repaired.shot,dir,files,staged.refs);
+        candidate=checked.files;errors=checked.errors;valid=!errors.length;
+        if(valid){
+          const attempt=await readJson<Record<string,unknown>>(repaired.attemptFile);
+          await writeJson(repaired.attemptFile,{...attempt,runtimeValidation:'passed'});
+          acceptedArtworkRepair=repaired;
+        }else {pendingArtworkShot=repaired.shot;await rejectCinematicArtworkRepair(repaired.attemptFile,errors);}
+      }catch(error){valid=false;errors=[redact(error instanceof Error?error.message:String(error))];
+        if(repairAttempt){const saved=await readJson<Record<string,unknown>>(repairAttempt);if(saved.runtimeValidation!=='passed')await rejectCinematicArtworkRepair(repairAttempt,errors);}
+      }
+      await persistAttempt(root,shot,attempt,'artwork-repair',candidate,errors);
+      continue;
+    }
     if(explainer)break;
     if(router.isMock('repair')) break;
     try {
@@ -156,6 +222,7 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   }
   let fallback=false;
   if(!valid) {
+    if(shot.cinematic)throw new Error(`${shot.id}: cinematic scene validation failed: ${errors.join('\n')}`);
     fallback=true;
     // Simplify motion while keeping story-relevant layout and all approved identity assets.
     const fallbackRecipe=recipes.find(recipe=>recipe.id==='portrait-parallax')!;
@@ -165,17 +232,29 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
     await persistAttempt(root,shot,maxRepairs+1,'recipe-fallback',candidate,errors);
   }
   if(!valid || !candidate) throw new Error(`${shot.id}: recipe fallback failed validation: ${errors.join('\n')}`);
-  await refreshHostGeometry(root,config,shot);
+  const acceptedShot=acceptedArtworkRepair?.shot??shot;
+  inputHash=await inputIdentity(root,config,acceptedShot,characters,staged.hashes,gsap);
+  const publication=await hostGeometryPublication(root,config,acceptedShot);
+  for(const file of candidate.files)publication.set(`scenes/${shot.id}/${file.path}`,file.content);
   const output:SceneRecord={shotId:shot.id,inputHash,sourceHash:sourceHash(candidate),assetHashes:staged.hashes,renderer:'hyperframes',version:HYPERFRAMES_VERSION,recipeId:recipe?.id??'custom',fallback,validated:true,notes:candidate.notes};
-  await writeJson(recordFile,output);
+  publication.set(`scenes/${shot.id}/scene.json`,JSON.stringify(output,null,2)+'\n');
+  if(acceptedArtworkRepair){
+    await persistCinematicArtworkRepair(root,config,shot,acceptedArtworkRepair.shot,acceptedArtworkRepair.attemptFile,publication);
+    Object.assign(shot,acceptedArtworkRepair.shot);
+  }else await publishSceneRevision(root,publication);
 }
 export async function buildScenes(projectRoot:string,config:FactoryConfig,router:ModelRouter,storyboard:Storyboard,characters:CharacterBible,assets:AssetManifest,options?:{shotIds?:string[];force?:boolean}):Promise<void> {
+  await recoverCinematicArtworkTransactions(projectRoot);
   StoryboardSchema.parse(storyboard);CharacterBibleSchema.parse(characters);AssetManifestSchema.parse(assets);
   if(storyboard.shots.length>config.rendering.max_shots) throw new Error('Storyboard exceeds configured shot limit');
   if(options?.shotIds?.some(id=>!storyboard.shots.some(shot=>shot.id===id))) throw new Error('Unknown requested shotId');
   if(config.content.mode==='narrated-explainer'){const{profile,rig}=await loadHost(projectRoot),n=await readJson(path.join(projectRoot,'work/narration.json'),NarrationSchema),beats=await readJson(path.join(projectRoot,'work/beats.json'),z.array(BeatSchema));validateExplainerStoryboard(storyboard,n,beats,profile,rig,config);}
   const state=await locks(projectRoot);
   for(const shot of storyboard.shots.filter(shot=>!options?.shotIds || options.shotIds.includes(shot.id))) await compileShot(projectRoot,config,router,shot,characters,assets,{force:options?.force,state});
+  if(config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'){
+    const shots=await Promise.all(storyboard.shots.map(async shot=>({shotId:shot.id,...await readJson<Record<string,unknown>>(path.join(projectRoot,`scenes/${shot.id}/performance-report.json`))})));
+    await writeJson(path.join(projectRoot,'work/performance-report.json'),{version:22,producer:ANIMATION_VERSION,storyboardHash:hash(storyboard),shots});
+  }
 }
 export async function repairScenes(projectRoot:string,config:FactoryConfig,router:ModelRouter,storyboard:Storyboard,characters:CharacterBible,assets:AssetManifest,issues:ReviewIssue[]):Promise<void> {
   const high=issues.filter(issue=>issue.severity==='high'); if(!high.length) return;
@@ -212,9 +291,9 @@ export async function buildMaster(projectRoot:string,config:FactoryConfig,storyb
   } else if(narration.mode!=='srt') throw new Error('WAV/aligned narration requires an audio path');
   const captionsBurned=['burned','both'].includes(config.captions.mode);
   if(!/^[\p{L}\p{N} _-]{1,80}$/u.test(config.captions.font)) throw new Error('Caption font must be a plain local font family');
-  if(captionsBurned)for(const segment of narration.segments){const contentWidth=width*.85-36,lineWidth=Math.max(1,Math.floor(contentWidth/(config.captions.font_size*1.1)));let lines=0;for(const row of segment.text.split(/\r?\n/)){let count=0;lines++;for(const word of row.split(/\s+/)){const length=[...word].length;if(count&&count+1+length>lineWidth){lines++;count=0;}if(length>lineWidth){lines+=Math.floor(length/lineWidth);count=length%lineWidth;}else count+=(count?1:0)+length;}}if(lines*config.captions.font_size*1.35+24>height*.14)throw new Error(`${segment.id}: full subtitle does not fit the safe caption region; reduce caption font size or adjust the input cue`);}
-  const captionClips=captionsBurned?narration.segments.map((segment,index)=>`<div id="factory-cue-${index}" class="factory-caption clip" data-start="${segment.startMs/1000}" data-duration="${(segment.endMs-segment.startMs)/1000}" data-track-index="10">${escapeHtml(segment.text).replace(/\r?\n/g,'<br>')}</div>`).join('\n'):'';
-  const captionTimeline=captionsBurned?narration.segments.map((segment,index)=>`tl.fromTo('[data-composition-id="factory-master"] #factory-cue-${index}',{opacity:0},{opacity:1,duration:0.001,immediateRender:false},${segment.startMs/1000});tl.set('[data-composition-id="factory-master"] #factory-cue-${index}',{opacity:0},${segment.endMs/1000});`).join('\n'):'';
+  if(captionsBurned)for(const segment of narration.segments)if(!await captionFits(segment.text,config.captions.font,config.captions.font_size,width,height))throw new Error(`${segment.id}: full subtitle does not fit the safe caption region; reduce caption font size or adjust the input cue`);
+  const captionClips=captionsBurned?narration.segments.map((segment,index)=>`<div id="factory-cue-${index}" class="factory-caption clip" style="opacity:${segment.startMs===0?1:0}" data-start="${segment.startMs/1000}" data-duration="${(segment.endMs-segment.startMs)/1000}" data-track-index="10">${escapeHtml(segment.text).replace(/\r?\n/g,'<br>')}</div>`).join('\n'):'';
+  const captionTimeline=captionsBurned?narration.segments.map((segment,index)=>`tl.fromTo('[data-composition-id="factory-master"] #factory-cue-${index}',{opacity:${segment.startMs===0?1:0}},{opacity:1,duration:0.001,immediateRender:false},${segment.startMs/1000});tl.set('[data-composition-id="factory-master"] #factory-cue-${index}',{opacity:0},${segment.endMs/1000});`).join('\n'):'';
   const js=`(function(){const tl=gsap.timeline({paused:true});window.__timelines=window.__timelines||{};window.__timelines["factory-master"]=tl;${captionTimeline}tl.to({}, {duration:${narration.durationMs/1000}},0);})();`;
   await writeAtomic(await outputPath(projectRoot,'scenes/master.js'),js);
   const html=`<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${SCENE_CSP}"><title>${escapeHtml(config.project.name)}</title><style>html,body{margin:0;overflow:hidden;background:#000}.factory-stage{position:relative;width:${width}px;height:${height}px}.shot-mount{overflow:hidden}.factory-caption{opacity:0;position:absolute;z-index:100;left:7.5%;right:7.5%;bottom:4%;max-height:14%;box-sizing:border-box;text-align:center;white-space:pre-wrap;overflow-wrap:anywhere;font-family:${JSON.stringify(config.captions.font)},sans-serif;font-size:${config.captions.font_size}px;line-height:1.35;color:white;text-shadow:0 1px 3px black;background:rgba(0,0,0,.7);padding:12px 18px;border-radius:6px}</style></head><body><div data-composition-id="factory-master" data-width="${width}" data-height="${height}" data-duration="${narration.durationMs/1000}" data-fps="${fps}"><div class="factory-stage">${mounts}${captionClips}</div>${voiceClip}</div><script>window.__timelines=window.__timelines||{};</script><script src="vendor/gsap.min.js"></script><script src="master.js"></script></body></html>`;

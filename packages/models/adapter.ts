@@ -6,7 +6,7 @@ import type { ModelSettings } from '../core/config.js';
 
 export interface ModelRequest { system: string; prompt: string; context?: unknown; }
 export interface VisionRequest extends ModelRequest { images: Array<{ path: string; mimeType?: string }>; }
-export interface ModelResponse { text: string; usage?: { inputTokens: number; outputTokens: number }; }
+export interface ModelResponse { text: string; usage?: { inputTokens: number; outputTokens: number }; costUsd?:number; model?:string; }
 export interface ModelAdapter {
   generateText(input: ModelRequest): Promise<ModelResponse>;
   generateStructured<T>(input: ModelRequest, schema: ZodType<T, ZodTypeDef, any>): Promise<T>;
@@ -53,7 +53,8 @@ export function validateStructured<T>(response: ModelResponse, schema: ZodType<T
   const result = schema.safeParse(value);
   if (!result.success) {
     // Values and provider text can contain credentials; feedback includes only issue paths/codes.
-    const feedback = result.error.issues.slice(0, 20).map(issue => `${issue.path.join('.') || '$'}: ${issue.code}`).join('; ');
+    const safeHints=new Set(['Close framing requires intentional face, contact or object focus.','Wide/medium framing must use ensemble focus.','Actor name must contain text','Actor role must contain text']);
+    const feedback = result.error.issues.slice(0, 20).map(issue => `${issue.path.join('.') || '$'}: ${issue.code}${safeHints.has(issue.message)?` (${issue.message})`:''}`).join('; ');
     throw new StructuredOutputError(feedback, response);
   }
   return result.data;

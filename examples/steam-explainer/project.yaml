@@ -7,8 +7,10 @@ input:
   mode: script
   script: input/script.txt
 host:
-  profile: library/characters/MINI-ROBOT.md
+  profile: library/characters/STICK-MAN.md
+presentation:
+  mode: story-cinematic
+  character_mode: actors
+  design_brief: "Phim hoạt hình kể chuyện trong xưởng. Watt là vai riêng khi lời kể nêu tên ông. Dùng quan sát, thao tác, biểu cảm và cận cảnh cơ cấu để giải thích vấn đề nóng/lạnh; lời kể ngoài hình, không thêm thoại hoặc thí nghiệm lịch sử. Tự chọn tạo hình, bối cảnh và nhịp cắt phù hợp."
 workflow:
   automatic: true
-style:
-  preset: technical-clean

@@ -7,6 +7,23 @@ export const SCENE_FILENAMES = ['index.html','style.css','scene.js'] as const;
 const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','svgOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
 const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','script']);
 
+function validTransform(value:string):boolean {
+  const numeric='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
+  const argumentsPattern=new RegExp(`^${numeric}(?:(?:\\s*,\\s*|\\s+)${numeric})*$`);
+  let rest=value.trim(),count=0;
+  while(rest){
+    const operation=/^(translate|rotate|scale)\(([^()]*)\)/.exec(rest);
+    if(!operation)return false;
+    const body=operation[2]!.trim();
+    if(!argumentsPattern.test(body))return false;
+    const numbers=body.split(/[\s,]+/).map(Number);
+    const arities=operation[1]==='rotate'?[1,3]:[1,2];
+    if(!arities.includes(numbers.length)||!numbers.every(Number.isFinite))return false;
+    rest=rest.slice(operation[0].length).trim();count++;
+  }
+  return count>0;
+}
+
 function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
   if (ts.isStringLiteral(node) || ts.isNumericLiteral(node) || [ts.SyntaxKind.TrueKeyword,ts.SyntaxKind.FalseKeyword,ts.SyntaxKind.NullKeyword].includes(node.kind)) return true;
   if (ts.isPrefixUnaryExpression(node) && [ts.SyntaxKind.MinusToken,ts.SyntaxKind.PlusToken].includes(node.operator)) return plainValue(node.operand);
@@ -14,6 +31,8 @@ function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
   if (ts.isObjectLiteralExpression(node)) return node.properties.every(property=>{
     if (!ts.isPropertyAssignment(property) || !(ts.isIdentifier(property.name)||ts.isStringLiteral(property.name))) return false;
     const key=property.name.text;
+    // Only baked SVG transforms are accepted. No href, style, events or arbitrary AttrPlugin fields.
+    if(key==='attr') return ts.isObjectLiteralExpression(property.initializer) && property.initializer.properties.length===1 && property.initializer.properties.every(p=>ts.isPropertyAssignment(p)&&(ts.isIdentifier(p.name)||ts.isStringLiteral(p.name))&&p.name.text==='transform'&&ts.isStringLiteral(p.initializer)&&validTransform(p.initializer.text));
     if(key==='repeat'&&!(ts.isNumericLiteral(property.initializer)&&Number(property.initializer.text)===0)) return false;
     if(['duration','delay','each','amount'].includes(key)&&!(ts.isNumericLiteral(property.initializer)&&Number(property.initializer.text)>=0&&Number(property.initializer.text)<=3600)) return false;
     return !['__proto__','prototype','constructor'].includes(key) && (!keys || keys.has(key)) && plainValue(property.initializer,keys);

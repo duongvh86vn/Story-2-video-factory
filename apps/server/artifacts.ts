@@ -20,9 +20,15 @@ import { HostProfileSchema, HostRigSchema, HostTimelineSchema, loadHost } from '
 import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/index.js';
 import { ExplanationPlanSchema } from '../../packages/explainer/schemas.js';
 import { validateExplainerStoryboard, writeHostTimeline } from '../../packages/explainer/storyboard.js';
+import { writeCinematicPlans } from '../../packages/director/index.js';
+import { CINEMATIC_EXPORT_FILES, CINEMATIC_PLAN_FILES } from '../../packages/director/schemas.js';
+import { inspectCinematicStoryboard, validateCinematicEdit } from './cinematic.js';
+import type { CinematicArtifactStatus } from './contracts.js';
+import {assertActorLocks} from '../../packages/actors/locks.js';
 
 interface ArtifactSpec { paths: string[]; schema?: z.ZodTypeAny; editable?: boolean; from?: ProjectStatus; text?: boolean; }
 export const ARTIFACTS: Record<string, ArtifactSpec> = {
+  ...Object.fromEntries(CINEMATIC_EXPORT_FILES.map(name => [name, { paths: [`work/${name}`, `output/${name}`] }])),
   'script.txt': {paths:['input/script.txt'],editable:true,from:'NEW',text:true},
   'script.md': {paths:['input/script.md'],editable:true,from:'NEW',text:true},
   'host.md': {paths:['input/host.md'],editable:true,from:'TIMED',text:true},
@@ -78,9 +84,14 @@ export async function readArtifact(root: string, name: string): Promise<{ name: 
   if ((await fs.stat(file)).size > 8 * 1024 * 1024) throw new ApiError(413, 'Artifact is too large for the editor. Download it instead.', 'TOO_LARGE');
   const content = await fs.readFile(file, 'utf8');
   let data: unknown = spec.text ? content : JSON.parse(content);
-  if (spec.schema) data = spec.schema.parse(data);
+  let obsolete=false;
+  if(name==='storyboard.json'){
+    const inspection=inspectCinematicStoryboard(data);
+    obsolete=inspection.migration.required;
+    data=obsolete?inspection.board:StoryboardSchema.parse(data);
+  }else if (spec.schema) data = spec.schema.parse(data);
   const derived=(await loadConfig(root)).content.mode==='narrated-explainer'&&['story.json','narration.json'].includes(name);
-  return { name, data, revision: hash(content), editable: !!spec.editable&&!derived };
+  return { name, data, revision: hash(content), editable: !!spec.editable&&!derived&&!obsolete };
 }
 
 export async function optionalArtifact<T>(root: string, name: string): Promise<T | null> {
@@ -113,14 +124,20 @@ export function srtSegments(source: string): Array<{ startMs: number; endMs: num
 }
 
 /** Extra boundary checks complement the workers' story validator. */
-export async function validateStoryboardEdit(root: string, board: Storyboard): Promise<void> {
+export async function validateStoryboardEdit(root: string, board: Storyboard, previous?: Storyboard | null): Promise<void> {
   const narration = await optionalArtifact<Narration>(root, 'narration.json');
   const beats = await optionalArtifact<Beat[]>(root, 'beats.json');
   const bible = await optionalArtifact<CharacterBible>(root, 'character-bible.json');
   if (!narration || !beats || !bible) throw new ApiError(409, 'Analyze narration, beats and characters before editing the storyboard.', 'CONTEXT_MISSING');
   try { validateStoryboard(board, narration, beats, bible); }
   catch (error) { throw new ApiError(422, (error as Error).message, 'STORYBOARD_INVALID'); }
-  const config=await loadConfig(root);if(config.content.mode==='narrated-explainer'){const{profile,rig}=await loadHost(root);validateExplainerStoryboard(board,narration,beats,profile,rig,config);}
+  const config = await loadConfig(root);
+  validateCinematicEdit(board, config, previous);
+  if (config.content.mode === 'narrated-explainer') {
+    const { profile, rig } = await loadHost(root);
+    try { validateExplainerStoryboard(board, narration, beats, profile, rig, config); }
+    catch (error) { throw new ApiError(422, (error as Error).message, board.shots.some(s => s.cinematic) ? 'CINEMATIC_INVALID' : 'STORYBOARD_INVALID'); }
+  }
   unique(board.shots.map(s => s.id), 'shot');
   const beatIds = new Set(beats.map(b => b.id));
   const characterIds = new Set(bible.characters.map(c => c.id));
@@ -129,7 +146,8 @@ export async function validateStoryboardEdit(root: string, board: Storyboard): P
     if (shot.startMs !== cursor || shot.endMs > narration.durationMs) throw new ApiError(422, 'Shots must form a continuous, ordered timeline inside narration duration.', 'COVERAGE_INVALID');
     cursor = shot.endMs;
     if (shot.beatIds.some(id => !beatIds.has(id))) throw new ApiError(422, `Unknown beat in ${shot.id}.`, 'REFERENCE_INVALID');
-    if (shot.characters.some(id => !characterIds.has(id))) throw new ApiError(422, `Unknown character in ${shot.id}.`, 'REFERENCE_INVALID');
+    const scene=shot.cinematic?.actorScene,castIds=new Set([...(scene?.primary?[scene.primary.id]:[]),...(scene?.supporting.map(a=>a.character.id)??[])]);
+    if (shot.characters.some(id => !characterIds.has(id)&&!castIds.has(id))) throw new ApiError(422, `Unknown character in ${shot.id}.`, 'REFERENCE_INVALID');
     for (const asset of shot.assetNeeds) {
       if (asset.characterId && !characterIds.has(asset.characterId)) throw new ApiError(422, `Unknown asset character in ${shot.id}.`, 'REFERENCE_INVALID');
       if (asset.localPath) await validateAssetPath(root, asset.localPath);
@@ -167,6 +185,7 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   if (!spec?.editable || !spec.from) throw new ApiError(403, 'This artifact is read-only.', 'READ_ONLY');
   const existing = await locate(root, spec.paths);
   await checkRevision(existing, revision);
+  if(name==='storyboard.json'&&(await cinematicMigration(root)).required)throw new ApiError(409,'This cinematic plan uses an earlier renderer. Resume production before editing; locked shots require an explicit unlock or their original renderer.','CINEMATIC_MIGRATION_REQUIRED');
   const state = await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root, 'project-state.json');
   let data: unknown = spec.text ? z.string().min(1).max(2 * 1024 * 1024).parse(value) : spec.schema!.parse(value);
   if(name==='script.txt'||name==='script.md')parseScript(data as string,`input/${name}`);
@@ -181,11 +200,13 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   }
   if (name === 'storyboard.json') {
     const board = data as Storyboard, previous = await optionalArtifact<Storyboard>(root, name);
+    try{assertActorLocks(previous??{shots:[]},board,state?.locked??{});}catch(error){throw new ApiError(423,(error as Error).message,'LOCKED');}
     if (state?.locked.storyboard && hash(previous) !== hash(board)) throw new ApiError(423, 'Unlock storyboard before editing.', 'LOCKED');
     for (const old of previous?.shots ?? []) {
-      if ((state?.locked[old.id] ?? old.locked) && hash(old) !== hash(board.shots.find(s => s.id === old.id))) throw new ApiError(423, `Unlock shot ${old.id} before editing.`, 'LOCKED');
+      if ((state?.locked[old.id] ?? state?.locked[`shot:${old.id}`] ?? old.locked) && hash(old) !== hash(board.shots.find(s => s.id === old.id))) throw new ApiError(423, `Unlock shot ${old.id} before editing.`, 'LOCKED');
     }
-    await validateStoryboardEdit(root, board);
+    for(const shot of board.shots)if(shot.cinematic?.artDirection&&hash(shot.cinematic)!==hash(previous?.shots.find(old=>old.id===shot.id)?.cinematic))shot.cinematic.artDirection.origin='authored';
+    await validateStoryboardEdit(root, board, previous);
   }
   if (name === 'character-bible.json') {
     const bible = data as CharacterBible, previous = await optionalArtifact<CharacterBible>(root, name);
@@ -206,6 +227,9 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
     data = manifest;
   }
   const relative = existing ? path.relative(root, existing).split(path.sep).join('/') : spec.paths[0]!;
+  if (name === 'storyboard.json' && (data as Storyboard).shots.some(s => s.cinematic)) {
+    for (const name of CINEMATIC_PLAN_FILES) await boundPath(root, `work/${name}`, true);
+  }
   // Invalidate generated dependents before replacing their canonical input.
   await coordinator.invalidateProject(root, name==='source.md'&&(await loadConfig(root)).content.mode==='narrated-explainer'?'TIMED':spec.from);
   const file = await boundPath(root, relative, true);
@@ -224,11 +248,42 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
     const beats = await optionalArtifact<Beat[]>(root, 'beats.json');
     await writeAtomic(await boundPath(root, 'work/storyboard.md', true), storyboardMarkdown(data as Storyboard, beats ?? []));
     if((await loadConfig(root)).content.mode==='narrated-explainer'){const {profile,rig}=await loadHost(root),n=await optionalArtifact<Narration>(root,'narration.json'),voice=await optionalArtifact<z.infer<typeof VoiceReportSchema>>(root,'voice-report.json');if(n)await writeHostTimeline(root,data as Storyboard,n,profile,rig,voice?.synchronization);}
+    if ((data as Storyboard).shots.some(s => s.cinematic)) {
+      await writeCinematicPlans(root, data as Storyboard);
+    }
   }
   return readArtifact(root, name);
 }
 
-export async function currentDownload(root:string,name:string):Promise<boolean>{const stage:Record<string,ProjectStatus>={'final.mp4':'FINAL_RENDERED','final.srt':'FINAL_RENDERED','thumbnail.png':'FINAL_RENDERED','qc-report.json':'QC_PASSED','production-report.md':'DONE','draft.mp4':'DRAFT_RENDERED'};if(!stage[name])return true;const state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');return !!state&&States.indexOf(state.state)>=States.indexOf(stage[name]!);}
+export async function cinematicMigration(root:string){
+  const file=await locate(root,ARTIFACTS['storyboard.json']!.paths);
+  if(!file)return {required:false,shotIds:[],lockedShotIds:[]};
+  const doc=await readArtifact(root,'storyboard.json'),state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');
+  return inspectCinematicStoryboard(doc.data,state?.locked).migration;
+}
+export async function cinematicArtifactStatus(root: string, name: string): Promise<CinematicArtifactStatus> {
+  const file = await locate(root, ARTIFACTS[name]!.paths);
+  if (!file) return { status: 'missing', reason: 'Production has not generated this artifact.' };
+  if((await cinematicMigration(root)).required)return {status:'stale',reason:'The cinematic renderer version changed. Resume production; approved locks are preserved.'};
+  const config = await loadConfig(root), state = await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root, 'project-state.json');
+  const required = name === 'performance-report.json' ? 'SCENES_READY' : 'STORYBOARDED';
+  if (config.presentation.mode !== 'story-cinematic' || !state || States.indexOf(state.state) < States.indexOf(required)) {
+    return { status: 'stale', reason: `Resume story-cinematic production through ${required}.` };
+  }
+  const data = z.object({ storyboardHash: z.string().optional() }).passthrough().parse(JSON.parse(await fs.readFile(file, 'utf8')));
+  if (!data.storyboardHash) return { status: 'unverified', reason: 'The producer did not include storyboardHash; correspondence to the current storyboard is unverified.' };
+  const board = await optionalArtifact<Storyboard>(root, 'storyboard.json');
+  return board && hash(board) === data.storyboardHash ? { status: 'current', reason: 'Storyboard hash matches the current canonical data.' } : { status: 'stale', reason: 'Storyboard hash differs; resume production to regenerate this artifact.' };
+}
+export async function cinematicArtifactStatuses(root: string): Promise<Record<string, CinematicArtifactStatus>> {
+  return Object.fromEntries(await Promise.all(CINEMATIC_EXPORT_FILES.map(async name => [name, await cinematicArtifactStatus(root, name)])));
+}
+export async function currentDownload(root:string,name:string):Promise<boolean>{
+  if ((CINEMATIC_EXPORT_FILES as readonly string[]).includes(name)) return (await cinematicArtifactStatus(root, name)).status !== 'stale';
+  const stage:Record<string,ProjectStatus>={'final.mp4':'FINAL_RENDERED','final.srt':'FINAL_RENDERED','thumbnail.png':'FINAL_RENDERED','qc-report.json':'QC_PASSED','production-report.md':'DONE','draft.mp4':'DRAFT_RENDERED'};if(!stage[name])return true;
+  if((await cinematicMigration(root)).required)return false;
+  const state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');return !!state&&States.indexOf(state.state)>=States.indexOf(stage[name]!);
+}
 export async function listDownloads(root: string): Promise<unknown[]> {
   const result: unknown[] = [];
   for (const [name, paths] of Object.entries(DOWNLOADS)) {
