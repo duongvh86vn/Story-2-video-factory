@@ -3,13 +3,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import type { FactoryConfig } from '../core/config.js';
-import { StorySchema, type Story, type Narration } from '../core/schemas.js';
+import { type Story, type Narration } from '../core/schemas.js';
 import type { ModelRouter } from '../models/registry.js';
 import { appendLog, safePath, safeRealPath, writeAtomic, writeJson } from '../core/utils.js';
 import { parseMarkdownDocument } from './markdown.js';
 import { parseSrtDocument, serializeSrt } from './srt.js';
 import { probeAudio, reconcileAudioDuration, validateNarration } from './audio.js';
 import { runIngestCommand } from './process.js';
+import { storyFromNarration } from './narrated-story.js';
 
 export { parseMarkdown, parseMarkdownDocument, characterId } from './markdown.js';
 export { parseSrt, parseSrtDocument, parseSrtTimestamp, serializeSrt, formatSrtTimestamp, SrtParseError } from './srt.js';
@@ -98,16 +99,7 @@ export async function ingestProject(projectRoot: string, config: FactoryConfig, 
     for (const segment of narration.segments) { if (segment.startMs > cursor) gaps.push({ startMs: cursor, endMs: segment.startMs }); cursor = segment.endMs; }
     if (cursor < narration.durationMs) gaps.push({ startMs: cursor, endMs: narration.durationMs });
     const timeline = { version: 1, durationMs: narration.durationMs, mode: narration.mode, segments: narration.segments, cues: narration.segments, words: narration.words, gaps, leadingSilenceMs: firstStart, trailingSilenceMs: narration.durationMs - finalEnd, ...(probe ? { audioDurationMs: probe.durationMs } : {}), ...(narration.audioPath ? { audioPath: narration.audioPath } : {}) };
-    const narrationText = narration.segments.map(segment => segment.text).join('\n');
-    const story = config.content.mode === 'legacy' ? document!.story : StorySchema.parse({
-      title: document?.story.title ?? config.project.name, genre: 'explainer', language: config.project.language,
-      story: narrationText, origin: 'narration', purpose: document?.story.purpose || 'Giải thích nội dung narration bằng một host cố định và hình minh họa.',
-      style: document?.story.style ?? { visual: '', era: '' },
-      rules: [...document?.story.rules ?? [], 'Narration is authoritative; host is a presenter, not a historical person.'],
-      characters: (document?.story.characters ?? []).filter(character => narrationText.toLocaleLowerCase().includes(character.name.toLocaleLowerCase())),
-      facts: narration.segments.map(segment => ({ claim: segment.text, type: 'fact', source: segment.id })),
-      ...(document ? { supplement: { story: document.story.story, facts: document.story.facts, sourcePath: config.input.source } } : {}),
-    });
+    const story = config.content.mode === 'legacy' ? document!.story : storyFromNarration(config,narration,document);
     await writeJson(path.join(work, 'story.json'), story);
     await writeJson(path.join(work, 'narration.json'), narration);
     await writeJson(path.join(work, 'timeline.json'), timeline);

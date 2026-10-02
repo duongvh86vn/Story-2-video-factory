@@ -6,12 +6,14 @@ import { execFileSync } from 'node:child_process';
 import YAML from 'yaml';
 import { createProject, runPipeline, loadState } from '../packages/orchestrator/index.js';
 import { loadConfig } from '../packages/core/config.js';
-import { NarrationSchema } from '../packages/core/schemas.js';
+import { NarrationSchema,StoryboardSchema } from '../packages/core/schemas.js';
 import { readJson, writeJson, exists, hash } from '../packages/core/utils.js';
 import { serializeSrt, parseSrt } from '../packages/ingest/srt.js';
 import { ffmpeg, probe } from '../packages/audio/ffmpeg.js';
 import { VoiceReportSchema } from '../packages/voice/schemas.js';
 import { requireVoice } from '../packages/voice/index.js';
+import { ActorCastManifestSchema } from '../packages/actors/assets.js';
+import { verifyLiteralSubtitles } from '../packages/captions/literal.js';
 
 const cases=['script','srt','wav','aligned','mismatch','no-tts','srt-no-tts','fit-failed'] as const;
 const args=process.argv.slice(2),requested=args.includes('--case')?args[args.indexOf('--case')+1]:undefined;
@@ -27,10 +29,43 @@ const base=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const names=execFileSync('git',['ls-files','--cached','--others','--exclude-standard'],{encoding:'utf8'}).trim().split(/\r?\n/);
 const sourceHash=hash(await Promise.all([...new Set(names)].sort().map(async name=>[name,hash(await fs.readFile(name))])));
 const text='Hơi nước được dẫn đến bình ngưng riêng. Xi-lanh được giữ nóng.';
+const words=(value:string)=>value.normalize('NFKC').toLocaleLowerCase('vi').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').trim();
+async function actorEvidence(root:string,delivered=true){
+  const config=await loadConfig(root);
+  assert.equal(config.presentation.mode,'story-cinematic');assert.equal(config.presentation.character_mode,'actors','Matrix must render actors, never silently substitute a presenter');
+  const board=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);
+  const artifactDirectory=delivered?'output':'work';
+  const cast=await readJson(path.join(root,artifactDirectory,'actor-cast.json'),ActorCastManifestSchema);
+  const timeline=await readJson<{storyboardHash:string;shots:Array<{shotId:string;startMs:number;endMs:number;scene:unknown}>}>(path.join(root,artifactDirectory,'actor-timeline.json'));
+  assert.equal(cast.storyboardHash,hash(board));assert.equal(timeline.storyboardHash,hash(board));
+  assert.ok(cast.actors.length>0,'This fixture requires actual story actors');
+  const expectedKind=host==='STICK-MAN'?'stick-man':'mini-robot';
+  assert.ok(cast.actors.every(actor=>actor.character.kind===expectedKind),'Cast must use the selected rig style');
+  assert.deepEqual(timeline.shots,board.shots.map(shot=>({shotId:shot.id,startMs:shot.startMs,endMs:shot.endMs,scene:shot.cinematic?.actorScene})));
+  const used=new Set<string>();
+  for(const shot of board.shots){
+    const scene=shot.cinematic?.actorScene;assert.ok(scene,`${shot.id}: actorScene is required in actors mode`);
+    const actors=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(item=>item.character)];
+    assert.equal(scene.speakingSegmentIds.length,0,'Narration in this fixture is offscreen voiceover');
+    for(const supporting of scene.supporting)assert.equal(supporting.speakingSegmentIds.length,0);
+    const html=await fs.readFile(path.join(root,`scenes/${shot.id}/index.html`),'utf8');
+    const report=await readJson<{actors:Array<{actorId:string;profileHash:string;rigHash:string}>}>(path.join(root,`scenes/${shot.id}/performance-report.json`));
+    assert.equal(report.actors.length,actors.length);
+    for(const actor of actors){
+      used.add(actor.id);const asset=cast.actors.find(item=>item.character.id===actor.id);assert.ok(asset);
+      assert.ok(html.includes(`data-actor-id="${actor.id}"`),`${shot.id}: production HTML must contain the actual actor`);
+      assert.ok(report.actors.some(item=>item.actorId===asset.profile.id&&item.profileHash===asset.profile.profileHash&&item.rigHash===asset.rig.rigHash));
+    }
+  }
+  assert.deepEqual([...used].sort(),cast.actors.map(actor=>actor.character.id).sort());
+  for(const actor of cast.actors)for(const [relative,digest] of [[actor.assetPath,actor.assetHash],[actor.previewPath,actor.previewHash],[actor.posePath,actor.poseHash],[actor.profilePath,actor.profileFileHash]])
+    assert.equal(hash(await fs.readFile(delivered?path.join(root,'output',relative!):path.join(root,relative!))),digest);
+  return {mode:config.presentation.character_mode,castCount:cast.actors.length,shotCount:board.shots.length,kind:expectedKind,actorIds:[...used].sort()};
+}
 async function project(name:string,mode:'script'|'wav'|'srt'){
   const root=resumeName&&await exists(path.join(runDir,name,'project.yaml'))?path.join(runDir,name):await createProject(name,{root:runDir});
   const configFile=path.join(root,'project.yaml'),raw=YAML.parse(await fs.readFile(configFile,'utf8')) as Record<string,unknown>;
-  raw.input={mode};raw.presentation={mode:'story-cinematic'};raw.host={profile:`library/characters/${host}.md`};
+  raw.input={mode};raw.presentation={...(raw.presentation as Record<string,unknown>??{}),mode:'story-cinematic',character_mode:'actors'};raw.host={profile:`library/characters/${host}.md`};
   raw.rendering={draft:{width:960,height:540,fps:30},final:{width:1280,height:720,fps:30}};
   raw.asr={engine:'faster-whisper',model:'small',language:'vi',device:'cpu',compute_type:'int8',allow_downloads:false};
   await fs.writeFile(configFile,YAML.stringify(raw));
@@ -46,6 +81,7 @@ const results:Array<Record<string,unknown>>=[];
 for(const name of requested?[requested as typeof cases[number]]:cases){
   const mode=name==='script'||name==='no-tts'?'script':name==='wav'||name==='aligned'||name==='mismatch'?'wav':'srt';
   const item=await project(name,mode),{root,raw,configFile}=item;
+  const observations:Record<string,unknown>={};
   try {
     if(mode==='script')await fs.writeFile(path.join(root,'input/script.txt'),text);
     if(mode==='wav')await fs.writeFile(path.join(root,'input/narration.wav'),audio);
@@ -70,6 +106,7 @@ for(const name of requested?[requested as typeof cases[number]]:cases){
       if(!timingOnly){
         assert.equal(state.waitingFor,'voice',String(error??state.error??'Voice gate must be reached after a silent draft'));
         assert.equal(await exists(path.join(root,'work/draft.mp4')),true);
+        observations.actors=await actorEvidence(root,false);
       }
     }else if(name==='mismatch'){
       assert.ok(error,'independent content verification must reject mismatched WAV/SRT');
@@ -78,6 +115,7 @@ for(const name of requested?[requested as typeof cases[number]]:cases){
     }else {
       assert.equal(state.state,timingOnly?'TIMED':'DONE',String(error??state.error??state.waitingFor));assert.equal(final,!timingOnly);
       const canonical=await readJson(path.join(root,'work/narration.json'),NarrationSchema);
+      observations.narrationContent={expected:text,actual:canonical.segments.map(s=>s.text).join(' '),wordsMatch:words(canonical.segments.map(s=>s.text).join(' '))===words(text)};
       assert.equal(canonical.mode,name==='aligned'?'aligned':mode);
       if(mode==='script')assert.equal(canonical.segments.map(s=>s.text).join(' '),text);
       if(name==='srt'||name==='aligned')assert.deepEqual(canonical.segments,parseSrt(subtitles).segments);
@@ -89,7 +127,8 @@ for(const name of requested?[requested as typeof cases[number]]:cases){
       assert.ok(voicedMedia.streams.some(s=>s.codec_type==='audio'));
       assert.ok(Math.abs(Number(voicedMedia.format.duration)*1000-canonical.durationMs)<=2);
       if(timingOnly){
-        results.push({name,status:'PASS',root,state:state.state,scope:'real narration/clock; rendering/review/QC NOT RUN'});
+        if(name==='wav')assert.equal(words(canonical.segments.map(s=>s.text).join(' ')),words(text),'WAV ASR must preserve fixture words even in timing-only scope');
+        results.push({name,status:'PASS',root,state:state.state,observations,scope:'real narration/clock and fixture word fidelity; rendering/review/QC NOT RUN'});
         await writeJson(resultPath,{base,sourceHash,host,language:'vi',timingOnly,results});
         continue;
       }
@@ -100,11 +139,14 @@ for(const name of requested?[requested as typeof cases[number]]:cases){
       assert.ok(metadata.streams.some(s=>s.codec_type==='audio'));
       assert.ok(metadata.streams.some(s=>s.codec_name==='mov_text'));
       assert.equal(metadata.streams.find(s=>s.codec_type==='video')!.r_frame_rate,'30/1');
+      observations.actors=await actorEvidence(root);
+      await verifyLiteralSubtitles(root,config,media,voiced);
+      if(name==='wav')assert.equal(words(canonical.segments.map(s=>s.text).join(' ')),words(text),'WAV ASR must preserve fixture words; a technical media PASS cannot hide wrong narration content');
     }
-    const result={name,status:'PASS',root,state:state.state,waitingFor:state.waitingFor,timingOnly,expectedFailure:['mismatch','no-tts','srt-no-tts','fit-failed'].includes(name),...(error?{observedError:String(error)}:{})};
+    const result={name,status:'PASS',root,state:state.state,waitingFor:state.waitingFor,timingOnly,observations,expectedFailure:['mismatch','no-tts','srt-no-tts','fit-failed'].includes(name),...(error?{observedError:String(error)}:{})};
     results.push(result);console.log(JSON.stringify(result));
-  }catch(error){results.push({name,status:'FAIL',root,error:String(error)});console.error(`${name}: ${String(error)}`);}
-  await writeJson(resultPath,{base,sourceHash,host,voiceFixture:fixture.root,language:'vi',timingOnly,reviewLimit:'Technical/rule gates; not semantic or full story acceptance',results});
+  }catch(error){results.push({name,status:'FAIL',root,observations,error:String(error)});console.error(`${name}: ${String(error)}`);}
+  await writeJson(resultPath,{base,sourceHash,host,characterMode:'actors',voiceFixture:fixture.root,language:'vi',timingOnly,reviewLimit:'Real input/actor/media gates and fixture word fidelity; not aesthetic/native full story acceptance',results});
 }
 console.log(JSON.stringify({runDir,base,sourceHash,results},null,2));
 if(results.some(r=>r.status!=='PASS'))process.exitCode=1;

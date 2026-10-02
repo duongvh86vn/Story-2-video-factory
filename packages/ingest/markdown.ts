@@ -5,7 +5,7 @@ import { StorySchema, type Story } from '../core/schemas.js';
 
 type Role = 'title' | 'purpose' | 'story' | 'characters' | 'rules' | 'visual' | 'era' | 'genre' | 'language' | 'facts' | 'chronology' | 'causalChain';
 interface Heading { start: number; bodyStart: number; end: number; level: number; text: string; role?: Role; value?: string }
-export interface MarkdownDocument { story: Story; sourceMarkdown: string; sections: Array<{ heading: string; start: number; end: number; role: string }> }
+export interface MarkdownDocument { story: Story; authoredStyle: Story['style']; sourceMarkdown: string; sections: Array<{ heading: string; start: number; end: number; role: string }> }
 
 const aliases: Record<Role, string[]> = {
   title: ['title', 'tieu de', 'ten', 'series'],
@@ -203,15 +203,19 @@ export function parseMarkdownDocument(source: string, config?: FactoryConfig): M
   const storyText = narrative.join('').trim() || metaString('story') || source.slice(from).trim();
   const metadataRules = Array.isArray(metadata.rules) ? metadata.rules.filter((r): r is string => typeof r === 'string') : [];
   const styleMeta = metadata.style && typeof metadata.style === 'object' ? metadata.style as Record<string, unknown> : {};
+  const authoredStyle = {
+    visual: values('visual').join('\n\n') || (typeof styleMeta.visual === 'string' ? styleMeta.visual : ''),
+    era: values('era').join('\n\n') || (typeof styleMeta.era === 'string' ? styleMeta.era : ''),
+  };
   const story = StorySchema.parse({
     title, story: storyText, genre: values('genre')[0] || metaString('genre') || 'documentary',
     language: values('language')[0] || metaString('language') || config?.project.language || 'vi',
     purpose: values('purpose').join('\n\n') || metaString('purpose'),
-    style: { visual: values('visual').join('\n\n') || (typeof styleMeta.visual === 'string' ? styleMeta.visual : '') || config?.style.preset || 'documentary', era: values('era').join('\n\n') || (typeof styleMeta.era === 'string' ? styleMeta.era : '') },
+    style: { visual: authoredStyle.visual || config?.style.preset || 'documentary', era: authoredStyle.era },
     rules: [...metadataRules, ...values('rules').flatMap(items)], characters,
     facts: values('facts').flatMap(items).map(claim => ({ claim, type: 'fact', source: config?.input.source || 'source.md' })),
     chronology: values('chronology').flatMap(items), causalChain: values('causalChain').flatMap(items),
   });
-  return { story, sourceMarkdown: source, sections: headings.map(h => ({ heading: h.text, start: h.start, end: h.end, role: h.role || 'narrative' })) };
+  return { story, authoredStyle, sourceMarkdown: source, sections: headings.map(h => ({ heading: h.text, start: h.start, end: h.end, role: h.role || 'narrative' })) };
 }
 export function parseMarkdown(source: string, config?: FactoryConfig): Story { return parseMarkdownDocument(source, config).story; }

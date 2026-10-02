@@ -4,6 +4,8 @@
 
 Selected narration is authoritative. `source.md` is optional supplemental data in narrated-explainer mode; legacy mode keeps the former source-driven contract. `narratedStory` refreshes supplements without regenerating voice. See BUILD-SPEC.md for selected-file precedence, voice blockers and runtime acceptance status.
 
+Script, WAV and SRT use the same `storyFromNarration` metadata contract. Explicit actors/presenter selection owns character roles; supplemental rules are data and cannot override narration. `MarkdownDocument.authoredStyle` contains only explicitly supplied visual/era fields; the legacy `story.style` renderer fallback remains compatible. An absent authored style does not prescribe a visual design. `narrated-story-2.2.1` changes the visual input fingerprint without invalidating narration/audio cache.
+
 
 Public imports from `packages/ingest/index.ts`:
 

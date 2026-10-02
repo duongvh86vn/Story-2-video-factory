@@ -44,6 +44,8 @@ Hai bài chạy cả stick-man và robot; ví dụ Tesla bổ sung chỉ khi inp
 
 ## Ba luồng và failure gates
 
+Matrix actors hiện tại [14/16, hai WAV FAIL](docs/validation/2026-10-02-actors-input-matrix.md) dùng cast thật; giữ nguyên câu nguồn để so transcript, không chỉ kiểm tra audio hash/duration. Kiểm tra TIMED script/WAV/SRT đều dùng cùng metadata, source.md thiếu style không áp preset thành yêu cầu thiết kế, rules bổ trợ không thành lệnh. Sau nâng metadata version, resume phải refresh phần hình và giữ narration/audio còn hợp lệ. Bộ test gốc `tests/ingest-actor-metadata.test.ts` giữ assertions trước sửa; báo follow-up riêng.
+
 | Nhóm | Điều cần kiểm tra |
 |---|---|
 | Script | TXT/MD UTF-8 nguyên văn; không WAV/SRT input vẫn có TTS/audio/cue/timeline/video; <=120Unicode chars/chunk không cắt từ;250ms giữa paragraph; clock theo audio đo |

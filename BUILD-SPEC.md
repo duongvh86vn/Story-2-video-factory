@@ -31,6 +31,8 @@ input.mode quyết định nguồn chính khi nhiều file cùng tồn tại. Ch
 
 source.md là tài liệu bổ trợ tùy chọn, không phải kịch bản. Host MD mô tả nhân vật. Hai loại MD không cung cấp quyền thực thi shell, tool, hướng dẫn hệ thống hoặc thay nội dung lời kể. Không có source.md vẫn phải chuẩn bị được video.
 
+Ba luồng đã có clock dùng chung metadata narration. source.md thiếu style giữ visual prescription rỗng; preset renderer không biến thành yêu cầu được tác giả khai. Actor/presenter role theo presentation được chọn. Metadata version đổi chỉ invalidates hình, giữ audio/narration cache còn hợp lệ. [Matrix actors hiện tại](docs/validation/2026-10-02-actors-input-matrix.md) còn hai WAV sai từ, không được gọi là nghiệm thu toàn bộ.
+
 ## 3. Luồng script không có clock
 
 1. Nhập trực tiếp hoặc tải .txt/.md UTF-8, tối đa 128 KiB, không NUL. Giữ bản gốc và hash/source path.

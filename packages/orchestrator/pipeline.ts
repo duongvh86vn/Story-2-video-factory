@@ -8,7 +8,7 @@ import { appendLog, exists, hash, readJson, safePath, safeRealPath, walk, writeA
 import { ModelRouter } from '../models/registry.js';
 import { ingestProject, prepareInput, ScriptDocumentSchema } from '../ingest/index.js';
 import { SCRIPT_PARSER_VERSION } from '../ingest/script.js';
-import { narratedStory } from '../ingest/narrated-story.js';
+import { narratedStory, NARRATED_STORY_VERSION } from '../ingest/narrated-story.js';
 import { analyzeProject } from '../story/index.js';
 import { createStoryboard, validateStoryboard, storyboardMarkdown } from '../storyboard/index.js';
 import { resolveAssets } from '../assets/index.js';
@@ -59,7 +59,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
-  return {all:hash({version:4,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
+  return {all:hash({version:4,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
     narration:hash({version:3,scriptParser:mode==='script'?SCRIPT_PARSER_VERSION:undefined,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {

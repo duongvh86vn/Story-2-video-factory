@@ -12,7 +12,7 @@ Kế hoạch tác vụ, files/contracts/checks và checkbox triển khai tại [
 | Design | Model director, SVG/layers/camera/artwork có provenance | Full bài do model thiết kế; không đứng cạnh bảng suốt bài |
 | Studio/API/CLI | Actors mặc định project mới; tương thích project cũ; artifact contract | Cast controls, edits/cache/resume/locks; phiên Studio mới |
 | Acceptance | Build scoped đã qua; model test actors độc lập đang kiểm tra | Hai bài/hai kiểu tạo hình, ba luồng, final QC và xem/nghe thực tế |
-| Delivery | Chưa commit/push đợt này | Source/docs/evidence cuối và GitHub đúng commit |
+| Delivery | Actors/runtime, multilingual/external TTS và literal subtitle đã push nhánh; ingest metadata đang follow-up | Source/docs/evidence cuối và GitHub đúng commit; không merge main như release đã nghiệm thu |
 
 Pipeline: narration → phân tích → cast/tình huống → storyboard/stage/performance/camera → assets → scenes → draft → review/repair → final → QC. Giọng/audio không phụ thuộc cast; đổi hình không dựng lại narration còn hợp lệ. Mọi lỗi nguồn/clock/identity/target/voice/security phải chặn final.
 
