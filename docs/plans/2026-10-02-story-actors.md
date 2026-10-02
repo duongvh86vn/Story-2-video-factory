@@ -56,7 +56,8 @@ Files: packages/orchestrator/{index,settings,pipeline}.ts; apps/server/{contract
 - [ ] Bài ô tô: những người chế tạo/sử dụng trong tình huống có nguồn; nguyên lý và tiến trình rõ.
 - [ ] Ví dụ Tesla chỉ khi input có Tesla; tạo vai riêng, hoàn cảnh/thử nghiệm/nguyên lý đúng nội dung.
 - [ ] Dựng và xem phim đủ giọng, chuyển động, biểu cảm và nhịp; ghi authored/model/offline đúng nguồn.
-- [ ] Model test chạy tests/story-actors.test.ts, test:typecheck và matrix TEST-HANDOFF; lưu tested fingerprint/FAIL/NOT RUN.
+- [x] Regression độc lập:145/145 tay/actors/API; full npm suite403/403 và test:typecheck0, exact fingerprints và lịch sử đỏ được giữ.
+- [ ] Media matrix TEST-HANDOFF trên snapshot actors hiện tại, nguồn/clock/audio và lỗi được nghiệm thu riêng.
 
 Commands: npm run build; npm run typecheck. Model độc lập: node --import tsx --test tests/story-actors.test.ts; npm run test:typecheck; npm run test:cinematic-inputs. Chỉ mở rộng suite khi failure hoặc source mới cần xác minh.
 
@@ -64,6 +65,6 @@ Commands: npm run build; npm run typecheck. Model độc lập: node --import ts
 
 - [ ] Build/typecheck cuối, đủ evidence thực tế và danh sách giới hạn.
 - [ ] Studio dùng được trên phiên bản mới, project người dùng được giữ.
-- [ ] Commit và cập nhật https://github.com/duongvh86vn/Story-2-video-factory; xác minh remote commit.
+- [x] Runtime snapshotb7f94e6 trên codex/stickman-acting-v22 đã cập nhật GitHub; remote SHA khớp local. Đây là nhánh review, không phải chứng nhận release.
 
 Không đóng plan bằng một demo, một MP4 DONE hoặc suite presenter cũ. Chất lượng cần xem/nghe video, gồm diễn biến, cảm xúc, contact/cut, nguyên lý và phụ đề.

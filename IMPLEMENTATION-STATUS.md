@@ -3,7 +3,7 @@
 > Contract hiện hành ngày 02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ người dẫn cố định và quota. Source2.2.21 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
 
-2026-10-01. Nhánh đang làm: `codex/stickman-acting-v22`, bắt đầu từ `22953fa`. **Đã có runtime cinematic trong pipeline; chưa nghiệm thu toàn bộ và chưa công bố release hoàn thành.** Tài liệu A0 và kết quả V1 không chứng minh runtime mới.
+2026-10-02. Nhánh đang làm: `codex/stickman-acting-v22`, bắt đầu từ `22953fa`. **Đã có runtime cinematic trong pipeline; chưa nghiệm thu toàn bộ và chưa công bố release hoàn thành.** Tài liệu A0 và kết quả V1 không chứng minh runtime mới.
 
 ## Source2.2.21 — trạng thái hiện hành
 
@@ -15,7 +15,9 @@ Animation hiện tại **performance-2.2.7**, artwork **passive-svg-2.2.4**, dir
 
 Authored adaptation37.154s đã DONE/QC; bản xưởng nhiều lớp có bàn và đạo cụ nhỏ hơn, Watt thay đổi biểu cảm khi đặt bình. Bản background minh họa được dựng lại bằng animation7/artwork4, không còn bị lớp màu phủ kín; diễn viên và cơ cấu là SVG chuyển động riêng. Đây là thiết kế được chỉnh tay từ response native bị từ chối, ghi rõ authored; không phải kết quả model tự hoàn thành hoặc chứng nhận thẩm mỹ. Ba request native source20 đều bị từ chối camera contract; native source21 dừng lỗi provider. Không đổi raw response thành model thành công.
 
-Chưa nghiệm thu: suite bàn giao đầy đủ trên snapshot cuối, autonomous model và chất lượng toàn bài, hai bài/hai kiểu tạo hình, ba luồng actors, chất lượng ASR Việt, tổ hợp edit/cache/locks ngoài phạm vi regression và GitHub. Mock/offline là seed; video presenter source18 không chứng minh sản phẩm actors đạt. Handoff đạo cụ giữa diễn viên hoặc xuyên cut chưa được hỗ trợ; báo lỗi, không giả lập bằng jump.
+Snapshot runtime **b7f94e6** đã push tới [nhánh GitHub](https://github.com/duongvh86vn/Story-2-video-factory/tree/codex/stickman-acting-v22); remote SHA được kiểm tra khớp local. Nhánh main vẫn là bản trước; đây là bản triển khai có thể review, chưa phải release hoàn thành. Hai plugin HyperFrames/Remotion đã được đọc: [bộ công cụ](docs/VIDEO-TOOLKIT.md) phân biệt HyperFrames renderer đã chạy với Remotion adapter chưa triển khai.
+
+Chưa nghiệm thu: autonomous model và chất lượng toàn bài, hai bài/hai kiểu tạo hình trên snapshot hiện tại, ba luồng actors/media matrix thật, chất lượng ASR Việt, tổ hợp edit/cache/locks ngoài regression và cài đặt sạch trên máy khác. Mock/offline là seed; video presenter source18 không chứng minh sản phẩm actors đạt. Handoff đạo cụ giữa diễn viên hoặc xuyên cut chưa được hỗ trợ; báo lỗi, không giả lập bằng jump.
 
 ## Lịch sử evidence trước khi đổi vai trò
 
