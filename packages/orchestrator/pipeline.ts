@@ -16,6 +16,7 @@ import { buildScenes, buildMaster, repairScenes } from '../scenes/index.js';
 import { HyperFramesEngine } from '../render/hyperframes.js';
 import { createPreviews, reviewProject } from '../review/index.js';
 import { produceMedia } from '../audio/index.js';
+import { MEDIA_TEXT_VERSION } from '../captions/literal.js';
 import { runQC } from '../qc/index.js';
 import { loadState, saveState, transition, stateIndex, ApprovalRequired } from './state-machine.js';
 import { ProductionStore } from './store.js';
@@ -58,7 +59,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
-  return {all:hash({version:4,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
+  return {all:hash({version:4,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
     narration:hash({version:3,scriptParser:mode==='script'?SCRIPT_PARSER_VERSION:undefined,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {

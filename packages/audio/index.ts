@@ -7,6 +7,8 @@ import { outputPath } from '../render/process.js';
 import { writeCaptions } from '../captions/index.js';
 import { ffmpeg, probe, seconds } from './ffmpeg.js';
 import { requireVoice } from '../voice/index.js';
+import { literalSubtitleTrack,verifyLiteralSubtitles } from '../captions/literal.js';
+import { primaryLanguage } from '../core/languages.js';
 export { ffmpeg, probe } from './ffmpeg.js';
 
 async function approvedFile(root:string,asset:Asset):Promise<string> {
@@ -80,13 +82,14 @@ export async function produceMedia(projectRoot:string,config:FactoryConfig,narra
   const masterMetadata=await exists(path.join(projectRoot,'work/master.json'))?await readJson<{captionsBurned?:boolean}>(await safeRealPath(projectRoot,'work/master.json')):undefined;
   const needsBurn=captions.burn&&!masterMetadata?.captionsBurned;
   const mux=['-y','-i',rendered,'-i',master];
-  if(captions.soft) mux.push('-i',captions.srt);
+  if(captions.soft) mux.push('-i',await literalSubtitleTrack(projectRoot,config,narration));
   mux.push('-map','0:v:0','-map','1:a:0');
-  if(captions.soft) mux.push('-map','2:s:0','-c:s','mov_text','-metadata:s:s:0',`language=${({vi:'vie',en:'eng',zh:'zho',ja:'jpn',ko:'kor'} as Record<string,string>)[config.project.language]??'und'}`,'-disposition:s:0','default');
+  if(captions.soft) mux.push('-map','2:s:0','-c:s','copy','-metadata:s:s:0',`language=${({vi:'vie',en:'eng',zh:'zho',ja:'jpn',ko:'kor'} as Record<string,string>)[primaryLanguage(config.project.language)]??'und'}`,'-disposition:s:0','default');
   if(needsBurn) mux.push('-vf',"ass=filename='work/captions.ass'",'-c:v','libx264','-crf','18','-pix_fmt','yuv420p');
   else mux.push('-c:v','copy');
   mux.push('-c:a','aac','-b:a','192k','-ar',String(rate),'-t',seconds(duration),'-movflags','+faststart',output);
   await ffmpeg(projectRoot,config,mux);
+  if(captions.soft)await verifyLiteralSubtitles(projectRoot,config,output,narration);
   const thumbnail=await outputPath(projectRoot,'output/thumbnail.png');
   const representative=storyboard.shots.find(shot=>!shot.intentionalBlack)??storyboard.shots[0]!;
   const time=Math.min(duration-.001,(representative.startMs+(representative.endMs-representative.startMs)*.5)/1000);

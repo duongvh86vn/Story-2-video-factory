@@ -8,7 +8,7 @@ Nhập **kịch bản hoàn chỉnh, WAV hoặc SRT**, chọn **người que ho�
 
 ## Bắt đầu
 
-Cần Node >=22.13, FFmpeg/FFprobe; WAV cần Python và ASR; WAV+SRT cần WhisperX/forced alignment. Dùng TTS tiếng Việt được cấu hình cho script/SRT. Không có TTS: script dừng trước timeline; SRT chỉ có nháp im lặng, không final.
+Cần Node >=22.13, FFmpeg/FFprobe; WAV cần Python và ASR; WAV+SRT cần WhisperX/forced alignment. Script/SRT cần TTS hỗ trợ ngôn ngữ lời kể đã chọn. Không có TTS: script dừng trước timeline; SRT chỉ có nháp im lặng, không final.
 
 ```powershell
 npm ci
@@ -50,6 +50,8 @@ Nhập script khác: `npm run cli -- script projects/steam C:/input/bai-ke.md`. 
 - Final cần giọng ready, review/gate hợp lệ; QC fail không DONE. Rule review có giới hạn, chưa là xác nhận kiến thức hoặc thẩm mỹ. Yêu cầu vision thật bằng workflow.allow_rule_based_review=false.
 
 MP4 có audio, SRT, thumbnail, storyboard, actor-cast/actor-timeline, narration/timeline/activity, manifest và production/QC reports nằm trong output/. Tạo hình/preview từng vai ở assets/actors; host profile/timeline là dữ liệu tương thích của rig nền. Artifact cũ giữ để truy vết; Studio ẩn final khi project bị invalidated.
+
+Soft subtitles lưu UTF-8 và clock nguyên văn bằng track riêng rồi stream-copy, kiểm tra trực tiếp samples sau mux; SRT xuất riêng từ narration. [Contract phụ đề](docs/LITERAL-SUBTITLES.md) và [phạm vi26/26 kiểm tra độc lập](docs/validation/2026-10-02-literal-subtitles.md) phân biệt stored text với extraction của FFmpeg vẫn có biến đổi whitespace.
 
 Director21, animation7 và artwork4 đã qua build. Audit độc lập **145/145** cho tay/khớp/GSAP, cast, Studio API, khóa vai, resume và export; [evidence sửa tay](docs/validation/2026-10-02-outward-elbows.md). Full suite sau sửa **403/403 PASS**, test:typecheck0; [báo cáo](docs/validation/2026-10-02-release-regressions.md) giữ lịch sử378/386 FAIL8 và các phần chưa kiểm tra. Đây vẫn là nhánh triển khai; chưa tuyên bố sản phẩm hoàn thành hoặc chất lượng toàn bài đạt.
 

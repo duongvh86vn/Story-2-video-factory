@@ -19,6 +19,10 @@ Contract mới: [EXTERNAL-TTS.md](docs/EXTERNAL-TTS.md). Kiểm tra EN/VI/JA/KO 
 
 Live OmniVoice/Azure/JA/KO hiện chưa được cấu hình trên máy. Ghi NOT RUN cho những phần đó; test bằng HTTP stub chỉ là protocol/audio pipeline. Typecheck/build không thay nghiệm thu nghe giọng và xem video.
 
+## Phụ đề trong MP4
+
+[Contract literal subtitles](docs/LITERAL-SUBTITLES.md) phân biệt text/clock được lưu trong samples, SRT xuất riêng và text do player/FFmpeg trích xuất. Model test dùng `tests/literal-subtitles.test.ts`: đọc bytes độc lập theo FFprobe offsets/time base; soft/both + locale tags; audio/video decode và packet integrity; tamper/mismatch/NUL/oversized; resume giữ narration. Candidate đầu16/17 FAIL, style-padding17/19 FAIL; bản dòng ngắn **26/26 PASS** với19 assertions nguyên vẹn,7 ca bổ sung, test:typecheck0. [Phạm vi và lịch sử](docs/validation/2026-10-02-literal-subtitles.md). Giữ lỗi extraction, không gọi stored-text PASS là extracted-SRT PASS hoặc chứng nhận chất lượng video.
+
 ## Cast và diễn xuất
 
 | Ca | Điều kiện đạt |

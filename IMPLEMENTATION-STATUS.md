@@ -23,6 +23,8 @@ Snapshot runtime **b7f94e6** đã push tới [nhánh GitHub](https://github.com/
 
 Chưa nghiệm thu: autonomous model và chất lượng toàn bài, hai bài/hai kiểu tạo hình trên snapshot hiện tại, ba luồng actors/media matrix thật, chất lượng ASR Việt, tổ hợp edit/cache/locks ngoài regression và cài đặt sạch trên máy khác. Mock/offline là seed; video presenter source18 không chứng minh sản phẩm actors đạt. Handoff đạo cụ giữa diễn viên hoặc xuyên cut chưa được hỗ trợ; báo lỗi, không giả lập bằng jump.
 
+Parent đã dựng thêm bản ô tô42.666667s có vai Karl Benz, người quan sát và năm cảnh cơ cấu không có người dẫn; clip được chỉnh tên khỏi mặt và chữ năm khỏi kéo dẹt sau khi xem frame thật. QC kỹ thuật qua nhưng chất lượng diễn xuất/autonomous/fullstory vẫn chưa nghiệm thu. [Phạm vi bản thiết kế](docs/validation/2026-10-02-car-actor-design.md). Điều tra subtitle độc lập xác nhận SRT/ASS/WebVTT qua FFmpeg đều có biến đổi literal text. Bản `literal-tx3g-1` stream-copy track UTF-8 nguyên văn đã qua **26/26** test FFmpeg thật và test:typecheck0, giữ nguyên19 assertions sau hai lượt FAIL16/17 và17/19. SRT export/stored samples giữ text và ms clock; FFmpeg extraction vẫn có biến đổi whitespace, không gọi strict extraction PASS. [Contract](docs/LITERAL-SUBTITLES.md), [phạm vi](docs/validation/2026-10-02-literal-subtitles.md).
+
 ## Lịch sử evidence trước khi đổi vai trò
 
 Các bảng và kết quả bên dưới thuộc các source cũ được nêu rõ. Yêu cầu một host, quota và mặc định diagram trong lịch sử đã bị thay thế; không áp dụng cho chế độ actors.
