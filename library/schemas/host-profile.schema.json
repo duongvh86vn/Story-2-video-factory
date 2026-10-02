@@ -22,7 +22,10 @@
         },
         "role": {
           "type": "string",
-          "const": "explainer-host"
+          "enum": [
+            "explainer-host",
+            "story-actor"
+          ]
         },
         "name": {
           "type": "string",
@@ -84,6 +87,35 @@
             "strokeWidth"
           ],
           "additionalProperties": false
+        },
+        "costume": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "joint": {
+                "type": "string",
+                "enum": [
+                  "head",
+                  "chest",
+                  "pelvis",
+                  "hand-left",
+                  "hand-right"
+                ]
+              },
+              "svg": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 24000
+              }
+            },
+            "required": [
+              "joint",
+              "svg"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 12
         },
         "actions": {
           "type": "array",

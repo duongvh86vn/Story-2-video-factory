@@ -61,6 +61,14 @@ Files: packages/orchestrator/{index,settings,pipeline}.ts; apps/server/{contract
 
 Commands: npm run build; npm run typecheck. Model độc lập: node --import tsx --test tests/story-actors.test.ts; npm run test:typecheck; npm run test:cinematic-inputs. Chỉ mở rộng suite khi failure hoặc source mới cần xác minh.
 
+## Bổ sung narration đa ngôn ngữ và TTS local
+
+- [x] EN/VI/JA/KO trong Studio/API/CLI; catalog Windows theo culture; preset theo ngôn ngữ, Japanese segmentation và font fallback.
+- [x] Local OmniVoice Studio/VoiceStudio, compatible speech API và custom HTTP field mapping/model/options; cùng pipeline script/SRT, giữ WAV đầu vào.
+- [x] Build/typecheck và contract/hướng dẫn cấu hình API local.
+- [x] Model độc lập: vòng đầu437/442 FAIL5 giữ lịch sử; sau sửa40/40 TTS +33/33 regression liên quan PASS, test:typecheck0. EN Windows audio thật5323ms có clock/text/cache, không đồng nghĩa nghiệm thu toàn phim.
+- [ ] Live backend OmniVoice/JA/KO/Azure khi được cấu hình; nghe phát âm và kiểm tra toàn video.
+
 ## Task 6 — bàn giao
 
 - [ ] Build/typecheck cuối, đủ evidence thực tế và danh sách giới hạn.

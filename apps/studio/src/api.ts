@@ -1,4 +1,4 @@
-import type { ArtifactDocument, ProjectDetail, ProjectSummary, SceneDocument, UploadedAsset } from '../../server/contracts.js';
+import type { ArtifactDocument, ProjectDetail, ProjectSummary, SceneDocument, UploadedAsset,VoiceCatalog } from '../../server/contracts.js';
 import type { Job } from '../../server/jobs.js';
 import type { ProjectStatus } from '../../../packages/core/schemas.js';
 import type {ActorDefinition} from '../../../packages/actors/schemas.js';
@@ -36,5 +36,6 @@ export const api = {
   upload: (name: string, data: FormData,settingsRevision?:string) => request<{ files: UploadedAsset[];settingsRevision:string }>(`${projectUrl(name)}/upload${settingsRevision?`?settingsRevision=${encodeURIComponent(settingsRevision)}`:''}`, { method: 'POST', body: data }),
   settings: (name:string,data:unknown)=>request<ProjectDetail>(`${projectUrl(name)}/settings`,{method:'PATCH',body:JSON.stringify(data)}),
   script: (name:string,text:string,format:'txt'|'md',revision?:string,settingsRevision?:string)=>request<ArtifactDocument>(`${projectUrl(name)}/script`,{method:'PUT',body:JSON.stringify({text,format,revision,settingsRevision})}),
-  voiceDefaults: (voice:unknown)=>request<{saved:boolean}>('/api/settings/voice',{method:'PUT',body:JSON.stringify(voice)}),
+  voices:()=>request<VoiceCatalog>('/api/voices'),
+  voiceDefaults: (voice:unknown,language?:string)=>request<{saved:boolean}>(`/api/settings/voice${language?`?language=${encodeURIComponent(language)}`:''}`,{method:'PUT',body:JSON.stringify(voice)}),
 };

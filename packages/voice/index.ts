@@ -7,6 +7,9 @@ import { execute, outputPath, redact } from '../render/process.js';
 import { ffmpeg, probe, seconds } from '../audio/ffmpeg.js';
 import { ActivitySchema, VoiceReportSchema, type SpeechActivity, type VoiceReport } from './schemas.js';
 import { ScriptDocumentSchema, type ScriptDocument } from '../ingest/script.js';
+import { primaryLanguage } from '../core/languages.js';
+import { azureVoiceId, synthesizeAzure } from './azure.js';
+import { synthesizeExternal } from './external.js';
 export * from './schemas.js';
 
 /** A second output bound protects PCM writers even if a filter mishandles EOF. */
@@ -17,24 +20,15 @@ function pcmBounds(durationMs:number,sampleRate:number):string[] {
 
 async function synthesize(root: string, config: FactoryConfig, text: string, output: string, requestPath: string): Promise<void> {
   const v = config.voice;
-  await writeJson(requestPath, { text, language: config.project.language.split('-')[0], voiceId: v.voice_id, output });
+  await writeJson(requestPath, { text, language: primaryLanguage(config.project.language), locale: config.project.language, provider:v.tts_provider,model:v.model,voiceId: v.voice_id, output });
   if (v.tts_provider === 'windows-speech') {
     if (process.platform !== 'win32') throw new Error('windows-speech requires Windows');
     await execute('powershell.exe', ['-NoProfile', '-NonInteractive', '-File', path.join(await findRepoRoot(), 'scripts/windows-tts.ps1'), '-RequestPath', requestPath],
       { cwd: root, logFile: await outputPath(root, 'work/logs/tts.jsonl'), timeoutMs: v.timeout_ms });
-  } else if (v.tts_provider === 'http') {
-    if (!v.base_url) throw new Error('HTTP TTS requires voice.base_url');
-    const key = process.env[v.api_key_env];
-    const response = await fetch(v.base_url, { method: 'POST', headers: { 'Content-Type': 'application/json', ...(key ? { Authorization: `Bearer ${key}` } : {}) },
-      body: JSON.stringify({ text, language: config.project.language, voice: v.voice_id, format: 'wav' }), signal: AbortSignal.timeout(v.timeout_ms), redirect: 'error' });
-    if (!response.ok) throw new Error(`TTS HTTP ${response.status}`);
-    if (!/audio\/(?:wav|x-wav|wave)|application\/octet-stream/i.test(response.headers.get('content-type') ?? '')) throw new Error('HTTP TTS must return WAV bytes');
-    const chunks: Uint8Array[] = []; let size = 0;
-    if (!response.body) throw new Error('Empty TTS response');
-    const reader = response.body.getReader();
-    try { for (;;) { const { done, value } = await reader.read(); if (done) break; size += value.length; if (size > 32 * 1024 * 1024) throw new Error('TTS cue audio exceeds 32 MB'); chunks.push(value); } }
-    finally { await reader.cancel(); }
-    await writeAtomic(output, Buffer.concat(chunks));
+  } else if (v.tts_provider === 'azure-speech') {
+    await synthesizeAzure(config,text,output);
+  } else if (v.tts_provider === 'http'||v.tts_provider==='openai-compatible'||v.tts_provider==='omnivoice-studio') {
+    await synthesizeExternal(config,text,output);
   } else if (v.tts_provider === 'command') {
     if (!v.command || !v.command_args.some(arg => arg.includes('{request}'))) throw new Error('Command TTS requires executable and a {request} argument');
     const args = v.command_args.map(arg => arg.replaceAll('{request}', requestPath).replaceAll('{output}', output));
@@ -47,7 +41,7 @@ async function cachedSpeech(root: string, config: FactoryConfig, id: string, tex
   const dir = await outputPath(root, `work/voice/cues/${id}`); await fs.mkdir(dir, { recursive: true });
   const raw = path.join(dir, 'raw.wav'), recordPath = path.join(dir, 'cache.json'), v = config.voice;
   const requestHash = hash({ text, provider: v.tts_provider, voice: v.voice_id, language: config.project.language,
-    endpoint: v.base_url, command: v.command, args: v.command_args, rate: 'default' });
+    endpoint: v.base_url, model:v.model,fields:v.http_fields,options:v.http_extra_body,command: v.command, args: v.command_args, rate: 'default' });
   if (await exists(raw) && await exists(recordPath)) {
     const record = await readJson<{ requestHash: string; audioHash: string }>(recordPath);
     if (record.requestHash === requestHash && record.audioHash === hash(await fs.readFile(raw))) return raw;
@@ -58,9 +52,10 @@ async function cachedSpeech(root: string, config: FactoryConfig, id: string, tex
 export async function narrateScript(root: string, config: FactoryConfig, script: ScriptDocument): Promise<Narration | undefined> {
   ScriptDocumentSchema.parse(script);
   const report: VoiceReport = { version: 2, status: 'needs-voice', source: 'tts', provider: config.voice.tts_provider, voiceId: config.voice.voice_id,
-    narrationHash: hash(script), textPreserved: true, timingPreserved: true, inputAudioPreserved: false, synchronization: 'segment', cues: [], warnings: [] };
+    language:config.project.language,narrationHash: hash(script), textPreserved: true, timingPreserved: true, inputAudioPreserved: false, synchronization: 'segment', cues: [], warnings: [] };
   let narration: Narration | undefined;
   try {
+    if(config.voice.tts_provider==='azure-speech')report.voiceId=azureVoiceId(config);
     if (!config.voice.tts_provider || config.voice.tts_provider === 'none' || config.voice.source === 'input') throw new Error('Script requires a configured TTS voice before creating its timeline');
     const pieces: string[] = [], segments: Narration['segments'] = []; let clock = 0;
     for (const [i, chunk] of script.chunks.entries()) {
@@ -132,7 +127,7 @@ export async function resolveVoice(root: string, config: FactoryConfig, narratio
   NarrationSchema.parse(narration);
   const narrationHash = hash(narration), v = config.voice;
   const report: VoiceReport = { version: 2, status: 'needs-voice', source: 'silent-draft', provider: v.tts_provider, voiceId: v.voice_id,
-    narrationHash, textPreserved: true, timingPreserved: true, inputAudioPreserved: Boolean(narration.audioPath), synchronization: 'segment',
+    language:config.project.language,narrationHash, textPreserved: true, timingPreserved: true, inputAudioPreserved: Boolean(narration.audioPath), synchronization: 'segment',
     cues: narration.segments.map(s => ({ id: s.id, textHash: hash(s.text), startMs: s.startMs, endMs: s.endMs })), warnings: [] };
   let resolved = narration;
   if (narration.audioPath) {
@@ -143,12 +138,13 @@ export async function resolveVoice(root: string, config: FactoryConfig, narratio
   } else if (v.source !== 'input' && v.tts_provider && v.tts_provider !== 'none') {
     report.source = 'tts';
     try {
+      if(v.tts_provider==='azure-speech')report.voiceId=azureVoiceId(config);
       const cueFiles: string[] = [];
       for (const [i, segment] of narration.segments.entries()) {
         const dir = await outputPath(root, `work/voice/cues/${segment.id}`); await fs.mkdir(dir, { recursive: true });
         const raw = path.join(dir, 'raw.wav'), rawReport = path.join(dir, 'cache.json');
         const requestHash = hash({ text: segment.text, provider: v.tts_provider, voice: v.voice_id, language: config.project.language,
-          endpoint: v.base_url, command: v.command, args: v.command_args });
+          endpoint: v.base_url, model:v.model,fields:v.http_fields,options:v.http_extra_body,command: v.command, args: v.command_args });
         let cached = false;
         if (await exists(raw) && await exists(rawReport)) {
           const record = await readJson<{ requestHash: string; audioHash: string }>(rawReport);

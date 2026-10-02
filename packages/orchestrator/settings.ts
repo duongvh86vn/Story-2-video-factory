@@ -6,6 +6,7 @@ import { ConfigSchema, ModelSettingsSchema, loadConfig, deepMerge } from '../cor
 import { exists, hash, safeRealPath, writeAtomic } from '../core/utils.js';
 import { reservation } from './reservation.js';
 import { invalidateProject } from './index.js';
+import { LANGUAGE_TAG, primaryLanguage } from '../core/languages.js';
 
 export const PresentationPatchSchema = z.object({ mode: ConfigSchema.shape.presentation.removeDefault().shape.mode.removeDefault().optional(),
   character_mode:ConfigSchema.shape.presentation.removeDefault().shape.character_mode.removeDefault().optional(),
@@ -13,7 +14,7 @@ export const PresentationPatchSchema = z.object({ mode: ConfigSchema.shape.prese
 export const CreativeModelPatchSchema=ModelSettingsSchema.pick({provider:true,model:true,base_url:true,api_key_env:true,temperature:true,timeout_ms:true}).partial().strict();
 export const SettingsPatchSchema = z.object({ revision: z.string().optional(),
   input: z.object({ mode: z.enum(['auto','script','wav','srt']), script: z.enum(['input/script.txt','input/script.md']).optional() }).strict().optional(),
-  host: z.enum(['mini-robot','stick-man','custom']).optional(), language: z.string().regex(/^[a-z]{2}(?:-[A-Za-z]{2,4})?$/).optional(),
+  host: z.enum(['mini-robot','stick-man','custom']).optional(), language: z.string().regex(LANGUAGE_TAG).optional(),
   voice: ConfigSchema.shape.voice.removeDefault().partial().strict().optional(), automatic: z.boolean().optional(),
   presentation: PresentationPatchSchema.optional(),
   models:z.object({storyboard:CreativeModelPatchSchema}).strict().optional(),
@@ -26,7 +27,7 @@ export async function updateSettings(root: string, update: SettingsPatch): Promi
   if (patch.revision && patch.revision !== hash(contents)) throw new Error('REVISION_CONFLICT: settings changed; reload before saving');
   const config = await loadConfig(root), changes: Record<string,unknown> = {};
   if (patch.input) changes.input = patch.input;
-  if (patch.language) changes.project = { language: patch.language };
+  if (patch.language) { changes.project = { language: patch.language }; if(patch.language!==config.project.language)changes.asr={language:primaryLanguage(patch.language)}; }
   if (patch.voice) changes.voice = patch.voice;
   if (patch.presentation) changes.presentation = patch.presentation;
   if (patch.models) changes.models=patch.models;
@@ -40,7 +41,7 @@ export async function updateSettings(root: string, update: SettingsPatch): Promi
   }
   const raw = YAML.parse(contents) as Record<string,unknown>, merged = deepMerge(raw,changes);
   if(patch.host==='custom' && merged.host && typeof merged.host==='object') delete (merged.host as Record<string,unknown>).profile_id;
-  const nextConfig=ConfigSchema.parse(deepMerge(config as unknown as Record<string,unknown>, changes));
+  const nextConfig=await loadConfig(root,changes);
   if (patch.presentation?.mode === 'story-cinematic' && nextConfig.content.mode !== 'narrated-explainer') {
     throw new z.ZodError([{ code: 'custom', path: ['presentation','mode'], message: 'story-cinematic requires narrated-explainer content; the legacy renderer does not support it.' }]);
   }

@@ -4,6 +4,12 @@ import type { HostProfile, HostRig } from '../../packages/host/schemas.js';
 import type { VoiceReport } from '../../packages/voice/schemas.js';
 import type { ScriptDocument } from '../../packages/ingest/script.js';
 import type { FactoryConfig } from '../../packages/core/config.js';
+import type { WindowsVoiceCatalog } from '../../packages/voice/catalog.js';
+
+export interface VoiceCatalog {
+  windows:WindowsVoiceCatalog;
+  profiles:Record<string,Omit<FactoryConfig['voice'],'command'|'command_args'>>;
+}
 
 export interface ProjectSummary {
   name: string;

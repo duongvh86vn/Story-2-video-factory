@@ -75,7 +75,7 @@ export async function ingestProject(projectRoot: string, config: FactoryConfig, 
         await writeJson(cueFile, { segments: srt.cues.map(({ id, startMs, endMs, text }) => ({ id, startMs, endMs, text })) });
       }
       const engine = srt || config.asr.align ? 'whisperx' : config.asr.engine;
-      const args = [await asrScript(), '--audio', audio, '--output', resultFile, '--diagnostics', diagnosticFile, '--engine', engine, '--model', config.asr.model, '--device', config.asr.device, '--compute-type', config.asr.compute_type, '--language', config.asr.language || config.project.language, '--duration-ms', String(probe!.durationMs), '--tolerance-ms', String(config.audio.duration_tolerance_ms)];
+      const args = [await asrScript(), '--audio', audio, '--output', resultFile, '--diagnostics', diagnosticFile, '--engine', engine, '--model', config.asr.model, '--device', config.asr.device, '--compute-type', config.asr.compute_type, '--language', (config.asr.language || config.project.language).split('-')[0]!, '--duration-ms', String(probe!.durationMs), '--tolerance-ms', String(config.audio.duration_tolerance_ms)];
       if (srt) args.push('--cues-json', cueFile);
       if (config.asr.allow_downloads) args.push('--allow-downloads');
       if (process.env.VIDEO_FACTORY_ALIGN_MODEL) args.push('--align-model', process.env.VIDEO_FACTORY_ALIGN_MODEL);

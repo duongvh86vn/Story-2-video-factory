@@ -37,6 +37,9 @@
             "null"
           ]
         },
+        "language": {
+          "type": "string"
+        },
         "narrationHash": {
           "type": "string"
         },

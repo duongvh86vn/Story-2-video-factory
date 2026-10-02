@@ -7,7 +7,7 @@ import { randomUUID } from 'node:crypto';
 import { Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { z } from 'zod';
-import { findRepoRoot, loadConfig, ConfigSchema } from '../../packages/core/config.js';
+import { findRepoRoot, loadConfig, ConfigSchema,PublicVoicePatchSchema,cleanVoiceSettings } from '../../packages/core/config.js';
 import YAML from 'yaml';
 import { updateSettings, SettingsPatchSchema, PresentationPatchSchema } from '../../packages/orchestrator/settings.js';
 import { parseScript } from '../../packages/ingest/script.js';
@@ -29,6 +29,8 @@ import {ActorDefinitionSchema} from '../../packages/actors/schemas.js';
 import {actorDefinitions,actorLockKey} from '../../packages/actors/locks.js';
 import {bindActorShot} from '../../packages/actors/model.js';
 import {loadHost} from '../../packages/host/index.js';
+import {installedWindowsVoices} from '../../packages/voice/catalog.js';
+import {LANGUAGE_TAG,primaryLanguage} from '../../packages/core/languages.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
 type Named = { name: string };
@@ -170,6 +172,7 @@ export async function buildServer(options: ServerOptions = {}) {
   app.get<{ Params: Named }>('/api/projects/:name', request => detail(ProjectName.parse(request.params.name)));
   app.patch<{Params:Named}>('/api/projects/:name/settings',async request=>{
     const body=SettingsPatchSchema.parse(request.body);
+    if(body.voice)PublicVoicePatchSchema.parse(body.voice);
     return mutate(request.params.name,async root=>{await checkRevision(await boundPath(root,'project.yaml'),body.revision);await updateSettings(root,body);return detail(request.params.name);});
   });
   app.put<{Params:Named}>('/api/projects/:name/script',async request=>{
@@ -188,13 +191,22 @@ export async function buildServer(options: ServerOptions = {}) {
     return reply.type('image/svg+xml').header('Content-Security-Policy',"default-src 'none'; style-src 'unsafe-inline'").send(hostPreviewSvg(profile));
   });
   app.post('/api/script-preview',async request=>{const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md'])}).strict().parse(request.body);const parsed=parseScript(body.text,`input/script.${body.format}`);return {text:parsed.text,chunks:parsed.chunks.length};});
-  app.put('/api/settings/voice',async request=>{
-    const patch=ConfigSchema.shape.voice.removeDefault().partial().strict().parse(request.body),repo=await findRepoRoot(),file=await boundPath(repo,'config/voice.yaml',true);
-    const current=await exists(file)?YAML.parse(await fs.readFile(file,'utf8'))?.voice??{}:{};
-    const voice=ConfigSchema.shape.voice.removeDefault().parse({...current,...patch});
+  app.get('/api/voices',async()=>{
+    const file=await boundPath(repo,'config/voice.yaml',true),raw=await exists(file)?YAML.parse(await fs.readFile(file,'utf8'))??{}:{};
+    const profiles=ConfigSchema.shape.voice_profiles.removeDefault().parse(raw.voice_profiles??{});
+    return {windows:await installedWindowsVoices(),profiles:Object.fromEntries(Object.entries(profiles).map(([language,preset])=>{
+      const {command,command_args,...voice}=ConfigSchema.shape.voice.removeDefault().parse({...raw.voice,...preset});return [language,voice];
+    }))};
+  });
+  app.put<{Querystring:{language?:string}}>('/api/settings/voice',async request=>{
+    const patch=PublicVoicePatchSchema.parse(request.body),file=await boundPath(repo,'config/voice.yaml',true);
+    const language=request.query.language===undefined?undefined:z.string().regex(LANGUAGE_TAG).parse(request.query.language);
+    const raw=await exists(file)?YAML.parse(await fs.readFile(file,'utf8'))??{}:{},profiles=ConfigSchema.shape.voice_profiles.removeDefault().parse(raw.voice_profiles??{});
+    const current=language?{...raw.voice,...(profiles[language]??profiles[primaryLanguage(language)])}:raw.voice??{};
+    const voice=cleanVoiceSettings(ConfigSchema.shape.voice.removeDefault().parse({...current,...patch}));
     if(voice.tts_provider==='command'&&!voice.command)throw new ApiError(422,'Configure the command adapter in config/voice.yaml before selecting it as default.','INVALID_SETTINGS');
     if(voice.base_url){const u=new URL(voice.base_url);if(u.username||u.password)throw new ApiError(422,'Use the API key environment variable for credentials.','INVALID_SETTINGS');}
-    await writeAtomic(file,YAML.stringify({voice}));return {saved:true};
+    await writeAtomic(file,YAML.stringify(language?{...raw,voice_profiles:{...profiles,[language]:voice}}:{...raw,voice}));return {saved:true};
   });
   app.post<{ Params: Named }>('/api/projects/:name/run', async (request, reply) => {
     const name = ProjectName.parse(request.params.name), body = RunBody.parse(request.body ?? {}), root = await rootFor(name);

@@ -10,7 +10,10 @@
         },
         "parserVersion": {
           "type": "string",
-          "const": "script-1"
+          "enum": [
+            "script-1",
+            "script-2"
+          ]
         },
         "sourcePath": {
           "type": "string"
@@ -65,6 +68,13 @@
               "text": {
                 "type": "string",
                 "minLength": 1
+              },
+              "separatorBefore": {
+                "type": "string",
+                "enum": [
+                  "",
+                  " "
+                ]
               },
               "paragraphIndex": {
                 "type": "integer"

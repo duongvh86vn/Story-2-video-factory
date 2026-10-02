@@ -14,19 +14,27 @@ import { updateSettings, PresentationPatchSchema } from '../../packages/orchestr
 import { outputPath } from '../../packages/render/process.js';
 import { parseScript } from '../../packages/ingest/script.js';
 import { writeAtomic } from '../../packages/core/utils.js';
+import { installedWindowsVoices,matchingWindowsVoices } from '../../packages/voice/catalog.js';
+import { NARRATION_LANGUAGES,LANGUAGE_TAG,primaryLanguage } from '../../packages/core/languages.js';
 
 const cli=new Command().name('video-factory').description('Compile script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
 cli.command('configure <project>')
-  .option('--language <code>','Narration language (default vi)').option('--input <mode>','script, wav, srt or auto')
+  .option('--language <code>','Narration language: en, vi, ja, ko or locale (e.g. en-US)').option('--input <mode>','script, wav, srt or auto')
   .option('--host <kind>','mini-robot, stick-man or custom actor rig').option('--style <mode>','diagram or story-cinematic; keeps valid narration/audio')
-  .option('--characters <mode>','actors or legacy presenter').option('--tts <provider>','windows-speech, http, command or none').option('--voice <id>').option('--tts-url <url>')
-  .action(async(project:string,o:{language?:string;input?:string;host?:string;style?:string;characters?:string;tts?:string;voice?:string;ttsUrl?:string})=>{
+  .option('--characters <mode>','actors or legacy presenter').option('--tts <provider>','windows-speech, azure-speech, omnivoice-studio, openai-compatible, http, command or none').option('--voice <id>').option('--tts-url <url>')
+  .option('--tts-model <id>','Model installed on the local TTS server').option('--tts-timeout <seconds>','Per-segment TTS timeout').option('--tts-options <json>','Additional provider parameters').option('--tts-fields <json>','Custom HTTP request field names')
+  .action(async(project:string,o:{language?:string;input?:string;host?:string;style?:string;characters?:string;tts?:string;voice?:string;ttsUrl?:string;ttsModel?:string;ttsTimeout?:string;ttsOptions?:string;ttsFields?:string})=>{
     await updateSettings(path.resolve(project),{...(o.language?{language:o.language}:{}),
       ...(o.style!==undefined||o.characters!==undefined?{presentation:PresentationPatchSchema.parse({...o.style?{mode:o.style}:{},...o.characters?{character_mode:o.characters}:{}})}:{}),
       ...(o.input?{input:{mode:z.enum(['auto','script','wav','srt']).parse(o.input)}}:{}),
       ...(o.host?{host:z.enum(['mini-robot','stick-man','custom']).parse(o.host)}:{}),
-      ...(o.tts||o.voice||o.ttsUrl?{voice:{...(o.tts?{tts_provider:z.enum(['none','windows-speech','http','command']).parse(o.tts)}:{}),...(o.voice?{voice_id:o.voice}:{}),...(o.ttsUrl?{base_url:o.ttsUrl}:{})}}:{})});console.log('Settings saved');
+      ...(o.tts||o.voice||o.ttsUrl||o.ttsModel||o.ttsTimeout||o.ttsOptions||o.ttsFields?{voice:{...(o.tts?{tts_provider:z.enum(['none','windows-speech','azure-speech','omnivoice-studio','openai-compatible','http','command']).parse(o.tts)}:{}),...(o.voice?{voice_id:o.voice}:{}),...(o.ttsUrl?{base_url:o.ttsUrl}:{}),
+        ...(o.ttsModel?{model:o.ttsModel}:{}),...(o.ttsTimeout?{timeout_ms:Number(o.ttsTimeout)*1000}:{}),...(o.ttsOptions?{http_extra_body:JSON.parse(o.ttsOptions)}:{}),...(o.ttsFields?{http_fields:JSON.parse(o.ttsFields)}:{})}}:{})});console.log('Settings saved');
   });
+cli.command('voices').description('List installed Windows voices and supported narration languages').option('--language <code>','Filter installed voices by narration language').action(async(o:{language?:string})=>{
+  const language=o.language?z.string().regex(LANGUAGE_TAG).parse(o.language):undefined,windows=await installedWindowsVoices();
+  console.log(JSON.stringify({languages:NARRATION_LANGUAGES.filter(item=>!language||item.id===primaryLanguage(language)),windows:{...windows,voices:language?matchingWindowsVoices(windows.voices,language):windows.voices}},null,2));
+});
 cli.command('script <project> <file>').description('Import a complete spoken script (.txt/.md)').action(async(project:string,file:string)=>{const root=path.resolve(project),extension=path.extname(file).toLowerCase();if(!['.txt','.md'].includes(extension))throw new Error('Script must be .txt or .md');const body=new TextDecoder('utf-8',{fatal:true}).decode(await fs.readFile(file)),relative=`input/script${extension}`;parseScript(body,relative);await coordinator.invalidateProject(root,'NEW');await writeAtomic(await outputPath(root,relative),body);await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md'}});console.log('Script imported');});
 cli.command('new <name>').option('--root <directory>','Projects directory').option('--example','Copy the explanatory steam script example').option('--style <mode>','diagram or story-cinematic').action(async(name:string,options:{root?:string,example?:boolean,style?:string})=>{
   const presentation = options.style !== undefined ? PresentationPatchSchema.parse({mode:options.style}) : undefined;

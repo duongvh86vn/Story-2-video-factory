@@ -2,6 +2,23 @@
 
 Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.7; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
 
+## Ngôn ngữ và dịch vụ TTS bên ngoài
+
+Contract mới: [EXTERNAL-TTS.md](docs/EXTERNAL-TTS.md). Kiểm tra EN/VI/JA/KO riêng cho script/WAV/SRT; không đổi input language chỉ để provider chạy được. Locale en-GB không dùng giọng Windows en-US. Japanese text dài không có khoảng trắng phải chia ở ranh giới từ, giữ mọi ký tự/thứ tự và separator gốc; Hangul và emoji không hỏng UTF-8. Cue SRT giữ nguyên clock/text.
+
+| Ca | Điều kiện đạt |
+|---|---|
+| English thật | Windows/local provider tạo WAV có speech, duration/clock đo từ file; lưu provider/voice/language; nghe nội dung thật |
+| JA/KO thật | Backend có giọng phù hợp, đọc đúng và caption có glyph đúng; stub không chứng minh giọng thật |
+| Custom HTTP API | Mapping field names + options đúng, text nguyên văn, WAV phản hồi hợp lệ, timeout/HTTP error/malformed/JSON response chặn final |
+| Compatible API | Root, /v1 và full speech endpoint thành cùng route; input/model/voice/response_format=wav/speed=1 đúng; không giả định mọi server có cùng model/voice |
+| OmniVoice Studio | API phiên bản thật khớp /v1/audio/speech; model đã cài và voice profile hợp lệ, extension language đúng; không tự cài/download/chọn model trong service |
+| Cache/resume | Same settings dùng cache; đổi model/voice/language/options/mapping tạo lại audio; đổi actor giữ narration |
+| Preset | Lưu EN giữ mặc định VI và JA/KO; locale preset ưu tiên mã chính; project/series override có hiệu lực; API không lộ executable/arguments/key |
+| Missing provider | Kịch bản dừng trước timeline; SRT chỉ silent draft có nhãn; không final/DONE |
+
+Live OmniVoice/Azure/JA/KO hiện chưa được cấu hình trên máy. Ghi NOT RUN cho những phần đó; test bằng HTTP stub chỉ là protocol/audio pipeline. Typecheck/build không thay nghiệm thu nghe giọng và xem video.
+
 ## Cast và diễn xuất
 
 | Ca | Điều kiện đạt |

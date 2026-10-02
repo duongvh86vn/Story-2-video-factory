@@ -516,6 +516,65 @@
                     },
                     "minItems": 1
                   },
+                  "configuration": {
+                    "type": "string",
+                    "enum": [
+                      "old-cylinder",
+                      "separate-condenser"
+                    ]
+                  },
+                  "states": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "enum": [
+                            "hot",
+                            "cold"
+                          ]
+                        },
+                        "sourceRefs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "narration",
+                                  "source"
+                                ]
+                              },
+                              "segmentId": {
+                                "type": "string",
+                                "maxLength": 96,
+                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                              },
+                              "quote": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "quote"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1
+                        }
+                      },
+                      "required": [
+                        "value",
+                        "sourceRefs"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 8
+                  },
                   "x": {
                     "type": "number",
                     "minimum": 0,
@@ -631,7 +690,8 @@
                       "part-motion",
                       "flow",
                       "reveal",
-                      "compare"
+                      "compare",
+                      "state"
                     ]
                   },
                   "targetId": {
@@ -696,6 +756,23 @@
                       "additionalProperties": false
                     },
                     "minItems": 1
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "hot",
+                      "cold"
+                    ]
+                  },
+                  "relationTo": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "contactPartId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                   }
                 },
                 "required": [
@@ -733,6 +810,1960 @@
         "captionRegion": {
           "type": "string",
           "const": "bottom-safe"
+        },
+        "cinematic": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "number",
+              "const": 22
+            },
+            "producer": {
+              "type": "string",
+              "const": "story-direction-2.2.21"
+            },
+            "shotId": {
+              "type": "string",
+              "maxLength": 96,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+            },
+            "leadCharacterId": {
+              "type": "string",
+              "maxLength": 96,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+            },
+            "motivation": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1000
+            },
+            "attentionPartId": {
+              "type": "string",
+              "maxLength": 96,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+            },
+            "sourceRefs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "narration",
+                      "source"
+                    ]
+                  },
+                  "segmentId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "quote": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "kind",
+                  "quote"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "setting": {
+              "type": "string",
+              "enum": [
+                "workshop",
+                "road",
+                "neutral"
+              ]
+            },
+            "environmentAssetId": {
+              "type": "string",
+              "maxLength": 96,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+            },
+            "provenance": {
+              "type": "string",
+              "const": "illustration"
+            },
+            "artDirection": {
+              "type": "object",
+              "properties": {
+                "origin": {
+                  "type": "string",
+                  "enum": [
+                    "authored",
+                    "model",
+                    "offline"
+                  ]
+                },
+                "brief": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                },
+                "useEnvironment": {
+                  "type": "boolean"
+                },
+                "palette": {
+                  "type": "object",
+                  "properties": {
+                    "background": {
+                      "type": "string",
+                      "pattern": "^#[\\da-f]{6}$"
+                    },
+                    "surface": {
+                      "type": "string",
+                      "pattern": "^#[\\da-f]{6}$"
+                    },
+                    "ink": {
+                      "type": "string",
+                      "pattern": "^#[\\da-f]{6}$"
+                    },
+                    "accent": {
+                      "type": "string",
+                      "pattern": "^#[\\da-f]{6}$"
+                    }
+                  },
+                  "required": [
+                    "background",
+                    "surface",
+                    "ink",
+                    "accent"
+                  ],
+                  "additionalProperties": false
+                },
+                "showHeading": {
+                  "type": "boolean"
+                },
+                "layers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "plane": {
+                        "type": "string",
+                        "enum": [
+                          "background",
+                          "midground",
+                          "foreground",
+                          "overlay"
+                        ]
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "decoration",
+                          "explanation"
+                        ]
+                      },
+                      "svg": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 150000
+                      },
+                      "sourceRefs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "narration",
+                                "source"
+                              ]
+                            },
+                            "segmentId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "quote": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "quote"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "keyframes": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "atMs": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "x": {
+                              "type": "number"
+                            },
+                            "y": {
+                              "type": "number"
+                            },
+                            "scale": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "rotation": {
+                              "type": "number"
+                            },
+                            "opacity": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "required": [
+                            "atMs",
+                            "x",
+                            "y",
+                            "scale",
+                            "rotation",
+                            "opacity"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1,
+                        "maxItems": 200
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "plane",
+                      "role",
+                      "svg",
+                      "keyframes"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 40
+                },
+                "models": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "partId": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "svg": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 150000
+                      },
+                      "sourceRefs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "narration",
+                                "source"
+                              ]
+                            },
+                            "segmentId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "quote": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "quote"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1
+                      },
+                      "labelMode": {
+                        "type": "string",
+                        "enum": [
+                          "renderer",
+                          "artwork",
+                          "none"
+                        ]
+                      },
+                      "motionOrigin": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "partId",
+                      "svg",
+                      "sourceRefs"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 40
+                }
+              },
+              "required": [
+                "origin",
+                "brief",
+                "useEnvironment",
+                "palette",
+                "showHeading",
+                "layers",
+                "models"
+              ],
+              "additionalProperties": false
+            },
+            "actorScene": {
+              "type": "object",
+              "properties": {
+                "primary": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "role": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1000
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "stick-man",
+                            "mini-robot"
+                          ]
+                        },
+                        "identity": {
+                          "type": "string",
+                          "enum": [
+                            "historical",
+                            "illustrative"
+                          ]
+                        },
+                        "sourceRefs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "narration",
+                                  "source"
+                                ]
+                              },
+                              "segmentId": {
+                                "type": "string",
+                                "maxLength": 96,
+                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                              },
+                              "quote": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "quote"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1
+                        },
+                        "appearance": {
+                          "type": "object",
+                          "properties": {
+                            "outline": {
+                              "type": "string",
+                              "pattern": "^#[\\da-f]{6}$"
+                            },
+                            "shell": {
+                              "type": "string",
+                              "pattern": "^#[\\da-f]{6}$"
+                            },
+                            "screen": {
+                              "type": "string",
+                              "pattern": "^#[\\da-f]{6}$"
+                            },
+                            "accent": {
+                              "type": "string",
+                              "pattern": "^#[\\da-f]{6}$"
+                            },
+                            "badge": {
+                              "type": "string",
+                              "pattern": "^#[\\da-f]{6}$"
+                            },
+                            "headScale": {
+                              "type": "number",
+                              "minimum": 0.75,
+                              "maximum": 1.25
+                            },
+                            "bodyScale": {
+                              "type": "number",
+                              "minimum": 0.75,
+                              "maximum": 1.25
+                            },
+                            "strokeWidth": {
+                              "type": "number",
+                              "minimum": 2,
+                              "maximum": 10
+                            }
+                          },
+                          "required": [
+                            "outline",
+                            "shell",
+                            "screen",
+                            "accent",
+                            "badge",
+                            "headScale",
+                            "bodyScale",
+                            "strokeWidth"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "costume": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "joint": {
+                                "type": "string",
+                                "enum": [
+                                  "head",
+                                  "chest",
+                                  "pelvis",
+                                  "hand-left",
+                                  "hand-right"
+                                ]
+                              },
+                              "svg": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 24000
+                              }
+                            },
+                            "required": [
+                              "joint",
+                              "svg"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "maxItems": 12
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "role",
+                        "kind",
+                        "identity",
+                        "sourceRefs",
+                        "appearance"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "speakingSegmentIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "default": []
+                },
+                "continuity": {
+                  "type": "string",
+                  "enum": [
+                    "continuous",
+                    "cut"
+                  ],
+                  "default": "cut"
+                },
+                "supporting": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "character": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "role": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1000
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "stick-man",
+                              "mini-robot"
+                            ]
+                          },
+                          "identity": {
+                            "type": "string",
+                            "enum": [
+                              "historical",
+                              "illustrative"
+                            ]
+                          },
+                          "sourceRefs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "narration",
+                                    "source"
+                                  ]
+                                },
+                                "segmentId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "quote": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 2000
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "quote"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 1
+                          },
+                          "appearance": {
+                            "type": "object",
+                            "properties": {
+                              "outline": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "shell": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "screen": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "accent": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "badge": {
+                                "type": "string",
+                                "pattern": "^#[\\da-f]{6}$"
+                              },
+                              "headScale": {
+                                "type": "number",
+                                "minimum": 0.75,
+                                "maximum": 1.25
+                              },
+                              "bodyScale": {
+                                "type": "number",
+                                "minimum": 0.75,
+                                "maximum": 1.25
+                              },
+                              "strokeWidth": {
+                                "type": "number",
+                                "minimum": 2,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "outline",
+                              "shell",
+                              "screen",
+                              "accent",
+                              "badge",
+                              "headScale",
+                              "bodyScale",
+                              "strokeWidth"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "costume": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "joint": {
+                                  "type": "string",
+                                  "enum": [
+                                    "head",
+                                    "chest",
+                                    "pelvis",
+                                    "hand-left",
+                                    "hand-right"
+                                  ]
+                                },
+                                "svg": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 24000
+                                }
+                              },
+                              "required": [
+                                "joint",
+                                "svg"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "maxItems": 12
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "role",
+                          "kind",
+                          "identity",
+                          "sourceRefs",
+                          "appearance"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "performance": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "number",
+                            "const": 22
+                          },
+                          "compilerVersion": {
+                            "type": "string",
+                            "const": "performance-2.2.7"
+                          },
+                          "id": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "leadCharacterId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "profileHash": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "stick-man",
+                              "mini-robot"
+                            ]
+                          },
+                          "durationMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "fps": {
+                            "type": "integer",
+                            "minimum": 24,
+                            "maximum": 60
+                          },
+                          "stage": {
+                            "type": "object",
+                            "properties": {
+                              "width": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              },
+                              "height": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              },
+                              "groundY": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "width",
+                              "height",
+                              "groundY"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "root": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number"
+                              },
+                              "y": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "scale": {
+                            "type": "number",
+                            "minimum": 0.25,
+                            "maximum": 4
+                          },
+                          "facing": {
+                            "type": "string",
+                            "enum": [
+                              "front",
+                              "left",
+                              "right"
+                            ]
+                          },
+                          "turns": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "startMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "endMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "direction": {
+                                  "type": "string",
+                                  "enum": [
+                                    "front",
+                                    "left",
+                                    "right"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "startMs",
+                                "endMs",
+                                "direction"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "walks": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "startMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "endMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "fromX": {
+                                  "type": "number"
+                                },
+                                "toX": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "startMs",
+                                "endMs",
+                                "fromX",
+                                "toX"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "gestures": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "startMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "endMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "action": {
+                                  "type": "string",
+                                  "enum": [
+                                    "address-viewer",
+                                    "point",
+                                    "inspect",
+                                    "think",
+                                    "operate",
+                                    "pick-place",
+                                    "carry",
+                                    "react",
+                                    "lead-next"
+                                  ]
+                                },
+                                "target": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "destination": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "propId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "contactMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "releaseMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "carryOffset": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "startMs",
+                                "endMs",
+                                "id",
+                                "action"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "expressions": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "startMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "endMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "mood": {
+                                  "type": "string",
+                                  "enum": [
+                                    "neutral",
+                                    "curious",
+                                    "thinking",
+                                    "concerned",
+                                    "effort",
+                                    "surprised",
+                                    "understanding",
+                                    "confident"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "startMs",
+                                "endMs",
+                                "mood"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "gazes": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "startMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "endMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "target": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "startMs",
+                                "endMs",
+                                "target"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "props": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "origin": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "destination": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "gripOffset": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "attachedTo": {
+                                  "type": "string",
+                                  "const": "right-hand"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "origin"
+                              ],
+                              "additionalProperties": false
+                            }
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "compilerVersion",
+                          "id",
+                          "leadCharacterId",
+                          "profileHash",
+                          "kind",
+                          "durationMs",
+                          "fps",
+                          "stage",
+                          "root",
+                          "scale",
+                          "walks",
+                          "gestures",
+                          "expressions",
+                          "gazes",
+                          "props"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "actions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "idle",
+                                "greet",
+                                "explain",
+                                "point",
+                                "operate-model",
+                                "compare",
+                                "think",
+                                "react",
+                                "summarize",
+                                "walk-to-marker"
+                              ]
+                            },
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "narrationAnchor": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "target": {
+                              "type": "object",
+                              "properties": {
+                                "modelId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "partId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "anchor": {
+                                  "type": "string",
+                                  "enum": [
+                                    "center",
+                                    "handle",
+                                    "label"
+                                  ],
+                                  "default": "center"
+                                }
+                              },
+                              "required": [
+                                "modelId",
+                                "partId"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "secondTarget": {
+                              "type": "object",
+                              "properties": {
+                                "modelId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "partId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "anchor": {
+                                  "type": "string",
+                                  "enum": [
+                                    "center",
+                                    "handle",
+                                    "label"
+                                  ],
+                                  "default": "center"
+                                }
+                              },
+                              "required": [
+                                "modelId",
+                                "partId"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "contactMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "startMs",
+                            "endMs"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "speakingSegmentIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "default": []
+                      }
+                    },
+                    "required": [
+                      "character",
+                      "performance",
+                      "actions"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "default": []
+                }
+              },
+              "required": [
+                "primary"
+              ],
+              "additionalProperties": false
+            },
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "partId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "variant": {
+                    "type": "string",
+                    "enum": [
+                      "conceptual",
+                      "historical-note",
+                      "vehicle-feature-schematic",
+                      "three-wheel-group",
+                      "electric-vehicle-schematic",
+                      "combustion-vehicle-schematic",
+                      "electric-motor",
+                      "combustion-engine",
+                      "steam-old",
+                      "steam-split"
+                    ]
+                  },
+                  "sourceRefs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "narration",
+                            "source"
+                          ]
+                        },
+                        "segmentId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "quote": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 2000
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "quote"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "partId",
+                  "variant",
+                  "sourceRefs"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "propBindings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "propId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "partId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "role": {
+                    "type": "string",
+                    "const": "illustrative-model"
+                  },
+                  "sourceRefs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "narration",
+                            "source"
+                          ]
+                        },
+                        "segmentId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "quote": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 2000
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "quote"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "propId",
+                  "partId",
+                  "role",
+                  "sourceRefs"
+                ],
+                "additionalProperties": false
+              },
+              "default": []
+            },
+            "continuity": {
+              "type": "object",
+              "properties": {
+                "entry": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                },
+                "exit": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                },
+                "facing": {
+                  "type": "string",
+                  "enum": [
+                    "front",
+                    "left",
+                    "right"
+                  ]
+                },
+                "carriedProps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  }
+                },
+                "models": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "partId": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "x": {
+                        "type": "number"
+                      },
+                      "y": {
+                        "type": "number"
+                      },
+                      "width": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      },
+                      "height": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      }
+                    },
+                    "required": [
+                      "partId",
+                      "x",
+                      "y",
+                      "width",
+                      "height"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "default": []
+                }
+              },
+              "required": [
+                "entry",
+                "exit",
+                "facing",
+                "carriedProps"
+              ],
+              "additionalProperties": false
+            },
+            "camera": {
+              "type": "object",
+              "properties": {
+                "framing": {
+                  "type": "string",
+                  "enum": [
+                    "wide",
+                    "medium",
+                    "close"
+                  ]
+                },
+                "movement": {
+                  "type": "string",
+                  "enum": [
+                    "locked",
+                    "push-in",
+                    "pull-out",
+                    "pan-left",
+                    "pan-right"
+                  ]
+                },
+                "focus": {
+                  "type": "string",
+                  "enum": [
+                    "ensemble",
+                    "face",
+                    "contact",
+                    "object"
+                  ]
+                },
+                "anchor": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                },
+                "designIntent": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1000
+                },
+                "startScale": {
+                  "type": "number",
+                  "minimum": 0.1,
+                  "maximum": 10
+                },
+                "endScale": {
+                  "type": "number",
+                  "minimum": 0.1,
+                  "maximum": 10
+                }
+              },
+              "required": [
+                "framing",
+                "movement",
+                "anchor",
+                "startScale",
+                "endScale"
+              ],
+              "additionalProperties": false
+            },
+            "performance": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "number",
+                  "const": 22
+                },
+                "compilerVersion": {
+                  "type": "string",
+                  "const": "performance-2.2.7"
+                },
+                "id": {
+                  "type": "string",
+                  "maxLength": 96,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                },
+                "leadCharacterId": {
+                  "type": "string",
+                  "maxLength": 96,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                },
+                "profileHash": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "stick-man",
+                    "mini-robot"
+                  ]
+                },
+                "durationMs": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "fps": {
+                  "type": "integer",
+                  "minimum": 24,
+                  "maximum": 60
+                },
+                "stage": {
+                  "type": "object",
+                  "properties": {
+                    "width": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "height": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "groundY": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "width",
+                    "height",
+                    "groundY"
+                  ],
+                  "additionalProperties": false
+                },
+                "root": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                },
+                "scale": {
+                  "type": "number",
+                  "minimum": 0.25,
+                  "maximum": 4
+                },
+                "facing": {
+                  "type": "string",
+                  "enum": [
+                    "front",
+                    "left",
+                    "right"
+                  ]
+                },
+                "turns": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "startMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "endMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": [
+                          "front",
+                          "left",
+                          "right"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "startMs",
+                      "endMs",
+                      "direction"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "walks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "startMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "endMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "fromX": {
+                        "type": "number"
+                      },
+                      "toX": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "startMs",
+                      "endMs",
+                      "fromX",
+                      "toX"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "gestures": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "startMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "endMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "id": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "address-viewer",
+                          "point",
+                          "inspect",
+                          "think",
+                          "operate",
+                          "pick-place",
+                          "carry",
+                          "react",
+                          "lead-next"
+                        ]
+                      },
+                      "target": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "destination": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "propId": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "contactMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "releaseMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "carryOffset": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "startMs",
+                      "endMs",
+                      "id",
+                      "action"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "expressions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "startMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "endMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "mood": {
+                        "type": "string",
+                        "enum": [
+                          "neutral",
+                          "curious",
+                          "thinking",
+                          "concerned",
+                          "effort",
+                          "surprised",
+                          "understanding",
+                          "confident"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "startMs",
+                      "endMs",
+                      "mood"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "gazes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "startMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "endMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "target": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "startMs",
+                      "endMs",
+                      "target"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "props": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "origin": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "destination": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "gripOffset": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "attachedTo": {
+                        "type": "string",
+                        "const": "right-hand"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "origin"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "version",
+                "compilerVersion",
+                "id",
+                "leadCharacterId",
+                "profileHash",
+                "kind",
+                "durationMs",
+                "fps",
+                "stage",
+                "root",
+                "scale",
+                "walks",
+                "gestures",
+                "expressions",
+                "gazes",
+                "props"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "version",
+            "producer",
+            "shotId",
+            "leadCharacterId",
+            "motivation",
+            "attentionPartId",
+            "sourceRefs",
+            "setting",
+            "provenance",
+            "models",
+            "continuity",
+            "camera",
+            "performance"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

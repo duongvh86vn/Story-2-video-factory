@@ -57,6 +57,12 @@ HTTP adapter: POST base_url, JSON {text, language, voice, format:"wav"}, trả W
 
 Command adapter: executable + command_args có {request}, tùy chọn {output}; request JSON UTF-8 chứa text/language/voiceId/output. Chạy shell=false, có timeout. Không đưa nội dung script thành shell command.
 
+### Ngôn ngữ và API TTS local (02/10/2026)
+
+Ngôn ngữ narration chọn `en`, `vi`, `ja`, `ko` hoặc locale; độc lập ngôn ngữ giao diện. Chia script Nhật tại ranh giới từ ICU và dấu câu, không thêm khoảng trắng vào nguyên văn; chunk có `separatorBefore` để khôi phục nguồn. Parser hiện tại `script-2`, nhận artifact `script-1` cũ; fingerprint script thay đổi để resume tạo narration hợp lệ. ASR nhận mã ngôn ngữ chính, đổi language qua Studio/CLI đồng thời cập nhật ASR. Caption Nhật/Hàn có font fallback theo ngôn ngữ; vẫn kiểm tra vùng phụ đề.
+
+Voice provider thêm `azure-speech`, `openai-compatible`, `omnivoice-studio`. OmniVoice/VoiceStudio dùng speech API tương thích với extension `language`, các provider local lấy WAV trực tiếp. `voice.model`, `http_fields`, `http_extra_body`, `timeout_ms` được cấu hình trong Studio/API/CLI. Tham số thêm không được ghi đè text/clock/format; cache gồm model/options/mapping. `voice_profiles` theo locale/mã chính dùng trước override series/project; lưu mặc định cho một language giữ preset khác. Contract, ví dụ và giới hạn phiên bản nằm tại [EXTERNAL-TTS.md](docs/EXTERNAL-TTS.md). Code/build và stub không được coi là live backend đã nghiệm thu.
+
 Speech activity đo RMS20ms. Trong actorScene chỉ áp dụng cho diễn viên được gán speakingSegmentIds; [] là voiceover, không mấp máy miệng theo narration. Đây không phải phoneme lip-sync. Silent draft phải ghi đúng mức đồng bộ.
 
 ## 5. Rig nền và cast diễn viên

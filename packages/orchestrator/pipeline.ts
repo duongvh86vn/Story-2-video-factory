@@ -7,6 +7,7 @@ import { AssetManifestSchema, BeatSchema, ChapterSchema, CharacterBibleSchema, N
 import { appendLog, exists, hash, readJson, safePath, safeRealPath, walk, writeAtomic, writeJson } from '../core/utils.js';
 import { ModelRouter } from '../models/registry.js';
 import { ingestProject, prepareInput, ScriptDocumentSchema } from '../ingest/index.js';
+import { SCRIPT_PARSER_VERSION } from '../ingest/script.js';
 import { narratedStory } from '../ingest/narrated-story.js';
 import { analyzeProject } from '../story/index.js';
 import { createStoryboard, validateStoryboard, storyboardMarkdown } from '../storyboard/index.js';
@@ -58,7 +59,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
   return {all:hash({version:4,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
-    narration:hash({version:3,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
+    narration:hash({version:3,scriptParser:mode==='script'?SCRIPT_PARSER_VERSION:undefined,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {
   const files=[...await walk(path.join(root,'input/assets')),...await walk(path.join(root,'assets'))];

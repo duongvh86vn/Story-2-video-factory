@@ -5,6 +5,7 @@ import YAML from 'yaml';
 import { z } from 'zod';
 import dotenv from 'dotenv';
 import { exists, safePath } from './utils.js';
+import { LANGUAGE_TAG, primaryLanguage } from './languages.js';
 
 export const RoleNames = ['planner','storyboard','coder','repair','visual_review','fallback'] as const;
 export type ModelRole = typeof RoleNames[number];
@@ -12,8 +13,25 @@ export const ModelSettingsSchema = z.object({ provider: z.enum(['gateway','opena
   command:z.string().min(1).optional(),max_call_cost_usd:z.number().positive().optional() });
 export type ModelSettings = z.infer<typeof ModelSettingsSchema>;
 const Profile = z.object({ width: z.number().int().positive(), height: z.number().int().positive(), fps: z.number().positive(), quality: z.enum(['draft','looks','delivery']).default('delivery') });
+export const VoiceSettingsSchema = z.object({ source: z.enum(['auto','input','tts']).default('auto'),
+  tts_provider: z.enum(['none','windows-speech','azure-speech','http','openai-compatible','omnivoice-studio','command']).nullable().default(null),
+  voice_id: z.string().nullable().default(null), base_url: z.string().url().optional(), api_key_env: z.string().default('TTS_API_KEY'),
+  command: z.string().optional(), command_args: z.array(z.string()).default([]), timeout_ms: z.number().positive().default(120000),
+  model:z.string().min(1).nullable().optional(), http_extra_body:z.record(z.unknown()).nullable().optional(),
+  http_fields:z.object({text:z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/),language:z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).nullable().optional(),
+    voice:z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).nullable().optional(),model:z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).nullable().optional(),
+    format:z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).nullable().optional()}).strict().nullable().optional(),
+  preserve_input_audio: z.literal(true).default(true), preserve_srt_text: z.literal(true).default(true),
+  preserve_srt_timing: z.literal(true).default(true), fit_rate_min: z.number().min(0.5).max(1).default(0.85),
+  fit_rate_max: z.number().min(1).max(2).default(1.20) }).strict();
+export const PublicVoicePatchSchema=VoiceSettingsSchema.omit({command:true,command_args:true}).partial().strict();
+export function cleanVoiceSettings(voice:z.infer<typeof VoiceSettingsSchema>):z.infer<typeof VoiceSettingsSchema>{
+  if(voice.tts_provider==='command')return voice;
+  const {command,command_args,...rest}=voice;
+  return {...rest,command_args:[]};
+}
 export const ConfigSchema = z.object({
-  project: z.object({ name: z.string().default('untitled'), language: z.string().default('vi'), series: z.string().optional() }).default({}),
+  project: z.object({ name: z.string().default('untitled'), language: z.string().regex(LANGUAGE_TAG).default('vi'), series: z.string().optional() }).default({}),
   content: z.object({ mode: z.enum(['narrated-explainer','legacy']).default('narrated-explainer') }).strict().default({}),
   host: z.object({ profile: z.string().default('library/characters/MINI-ROBOT.md'), profile_id: z.string().optional(),
     reuse_rig: z.literal(true).default(true), identity_locked: z.literal(true).default(true) }).strict().default({}),
@@ -23,13 +41,8 @@ export const ConfigSchema = z.object({
     minimum_host_speech_visibility: z.number().min(0).max(1).default(0.70),
     maximum_host_absence_seconds: z.number().nonnegative().default(6),
     require_meaningful_host_action_per_beat: z.boolean().default(true) }).strict().default({}),
-  voice: z.object({ source: z.enum(['auto','input','tts']).default('auto'),
-    tts_provider: z.enum(['none','windows-speech','http','command']).nullable().default(null),
-    voice_id: z.string().nullable().default(null), base_url: z.string().url().optional(), api_key_env: z.string().default('TTS_API_KEY'),
-    command: z.string().optional(), command_args: z.array(z.string()).default([]), timeout_ms: z.number().positive().default(120000),
-    preserve_input_audio: z.literal(true).default(true), preserve_srt_text: z.literal(true).default(true),
-    preserve_srt_timing: z.literal(true).default(true), fit_rate_min: z.number().min(0.5).max(1).default(0.85),
-    fit_rate_max: z.number().min(1).max(2).default(1.20) }).strict().default({}),
+  voice: VoiceSettingsSchema.default({}),
+  voice_profiles: z.record(z.string().regex(LANGUAGE_TAG), VoiceSettingsSchema.partial()).default({}),
   input: z.object({ mode: z.enum(['auto','script','wav','srt']).default('auto'), script: z.string().default('input/script.txt'),
     source: z.string().default('input/source.md'), narration: z.string().default('input/narration.wav'), subtitles: z.string().default('input/narration.srt') }).strict().default({}),
   models: z.object({planner:ModelSettingsSchema.default({}),storyboard:ModelSettingsSchema.default({}),coder:ModelSettingsSchema.default({}),repair:ModelSettingsSchema.default({}),visual_review:ModelSettingsSchema.default({}),fallback:ModelSettingsSchema.default({})}).default({}),
@@ -49,18 +62,25 @@ export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url
 export async function findRepoRoot(): Promise<string> { let p = REPO_ROOT; for (let i=0;i<5;i++) { if (await exists(path.join(p,'config','models.yaml'))) return p; p = path.dirname(p); } return process.cwd(); }
 export function deepMerge(base: Record<string, unknown>, overrides: Record<string, unknown>): Record<string, unknown> { const result = { ...base }; for (const [k,v] of Object.entries(overrides)) result[k] = v && typeof v === 'object' && !Array.isArray(v) && result[k] && typeof result[k] === 'object' ? deepMerge(result[k] as Record<string,unknown>,v as Record<string,unknown>) : v; return result; }
 function interpolate(value: unknown): unknown { if (typeof value === 'string') return value.replace(/\$\{([A-Z_][A-Z0-9_]*)(?::-([^}]*))?\}/g, (_,key:string,fallback:string) => process.env[key] || fallback || ''); if (Array.isArray(value)) return value.map(interpolate); if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k,v]) => [k,interpolate(v)])); return value; }
-export async function loadConfig(projectRoot: string): Promise<FactoryConfig> {
+export async function loadConfig(projectRoot: string, projectOverrides: Record<string,unknown> = {}): Promise<FactoryConfig> {
   const root = await findRepoRoot(); dotenv.config({ path: path.join(root,'.env'), quiet: true });
   let data: Record<string,unknown> = { models: {} };
   for (const name of ['models','rendering','audio','workflow','voice']) { const file=path.join(root,'config',`${name}.yaml`); if (await exists(file)) data=deepMerge(data,YAML.parse(await fs.readFile(file,'utf8')) ?? {}); }
-  const projectFile=path.join(projectRoot,'project.yaml'); const episode=await exists(projectFile) ? YAML.parse(await fs.readFile(projectFile,'utf8')) as Record<string,unknown> : {};
+  const projectFile=path.join(projectRoot,'project.yaml'); const episode=deepMerge(await exists(projectFile) ? YAML.parse(await fs.readFile(projectFile,'utf8')) ?? {} : {}, projectOverrides);
   const series=(episode.project as { series?: string } | undefined)?.series;
-  if (series) { const dir=safePath(path.join(root,'series'),series); const file=path.join(dir,'series.yaml'); if (await exists(file)) data=deepMerge(data,YAML.parse(await fs.readFile(file,'utf8'))); }
+  let seriesData:Record<string,unknown>={};
+  if (series) { const dir=safePath(path.join(root,'series'),series); const file=path.join(dir,'series.yaml'); if (await exists(file)) seriesData=YAML.parse(await fs.readFile(file,'utf8')) ?? {}; }
+  const combined=deepMerge(deepMerge(data,seriesData),episode), language=(combined.project as {language?:string}|undefined)?.language??'vi';
+  const profiles=combined.voice_profiles as Record<string,Record<string,unknown>>|undefined;
+  const preset=profiles?.[language]??profiles?.[primaryLanguage(language)];
+  if(preset)data=deepMerge(data,{voice:preset});
+  data=deepMerge(data,seriesData);
   data=deepMerge(data,episode);
   if (data.video) data=deepMerge(data,{ rendering: { final: data.video } });
   if (data.renderer) data=deepMerge(data,{ rendering: data.renderer });
   if (data.models && typeof data.models==='object') { const roles=data.models as Record<string,unknown>; if (roles.reviewer) roles.visual_review=roles.reviewer; for (const [role,value] of Object.entries(roles)) if (typeof value==='string') roles[role]={ provider:'gateway',model:value }; }
   const config=ConfigSchema.parse(interpolate(data));
+  config.voice=cleanVoiceSettings(config.voice);
   if(config.content.mode==='legacy'&&config.presentation.mode==='story-cinematic')
     throw new z.ZodError([{code:'custom',path:['presentation','mode'],message:'story-cinematic requires narrated-explainer content; choose diagram for the legacy renderer.'}]);
   if (config.rendering.final.width % 2 || config.rendering.final.height % 2) throw new Error('Video dimensions must be even for H.264');

@@ -13,6 +13,7 @@
             },
             "language": {
               "type": "string",
+              "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$",
               "default": "vi"
             },
             "series": {
@@ -64,6 +65,26 @@
         "presentation": {
           "type": "object",
           "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "diagram",
+                "story-cinematic"
+              ],
+              "default": "diagram"
+            },
+            "character_mode": {
+              "type": "string",
+              "enum": [
+                "actors",
+                "presenter"
+              ],
+              "default": "presenter"
+            },
+            "design_brief": {
+              "type": "string",
+              "maxLength": 6000
+            },
             "minimum_host_speech_visibility": {
               "type": "number",
               "minimum": 0,
@@ -102,7 +123,10 @@
                   "enum": [
                     "none",
                     "windows-speech",
+                    "azure-speech",
                     "http",
+                    "openai-compatible",
+                    "omnivoice-studio",
                     "command"
                   ]
                 },
@@ -142,6 +166,92 @@
               "exclusiveMinimum": 0,
               "default": 120000
             },
+            "model": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "http_extra_body": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": {}
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "http_fields": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "text": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                    },
+                    "language": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "voice": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "model": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "format": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
             "preserve_input_audio": {
               "type": "boolean",
               "const": true,
@@ -171,6 +281,191 @@
             }
           },
           "additionalProperties": false,
+          "default": {}
+        },
+        "voice_profiles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "input",
+                  "tts"
+                ],
+                "default": "auto"
+              },
+              "tts_provider": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "windows-speech",
+                      "azure-speech",
+                      "http",
+                      "openai-compatible",
+                      "omnivoice-studio",
+                      "command"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "voice_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "default": null
+              },
+              "base_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "api_key_env": {
+                "type": "string",
+                "default": "TTS_API_KEY"
+              },
+              "command": {
+                "type": "string"
+              },
+              "command_args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": []
+              },
+              "timeout_ms": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "default": 120000
+              },
+              "model": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "http_extra_body": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": {}
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "http_fields": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                      },
+                      "language": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "voice": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "model": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "format": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^[A-Za-z_][A-Za-z0-9_-]*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "preserve_input_audio": {
+                "type": "boolean",
+                "const": true,
+                "default": true
+              },
+              "preserve_srt_text": {
+                "type": "boolean",
+                "const": true,
+                "default": true
+              },
+              "preserve_srt_timing": {
+                "type": "boolean",
+                "const": true,
+                "default": true
+              },
+              "fit_rate_min": {
+                "type": "number",
+                "minimum": 0.5,
+                "maximum": 1,
+                "default": 0.85
+              },
+              "fit_rate_max": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 2,
+                "default": 1.2
+              }
+            },
+            "additionalProperties": false
+          },
+          "propertyNames": {
+            "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+          },
           "default": {}
         },
         "input": {
@@ -221,6 +516,8 @@
                     "deepseek",
                     "ollama",
                     "litellm",
+                    "claude-cli",
+                    "codex-cli",
                     "mock"
                   ],
                   "default": "mock"
@@ -261,6 +558,14 @@
                   "type": "number",
                   "minimum": 0,
                   "default": 0
+                },
+                "command": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "max_call_cost_usd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
                 }
               },
               "additionalProperties": false,
@@ -278,6 +583,8 @@
                     "deepseek",
                     "ollama",
                     "litellm",
+                    "claude-cli",
+                    "codex-cli",
                     "mock"
                   ],
                   "default": "mock"
@@ -318,6 +625,14 @@
                   "type": "number",
                   "minimum": 0,
                   "default": 0
+                },
+                "command": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "max_call_cost_usd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
                 }
               },
               "additionalProperties": false,
@@ -335,6 +650,8 @@
                     "deepseek",
                     "ollama",
                     "litellm",
+                    "claude-cli",
+                    "codex-cli",
                     "mock"
                   ],
                   "default": "mock"
@@ -375,6 +692,14 @@
                   "type": "number",
                   "minimum": 0,
                   "default": 0
+                },
+                "command": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "max_call_cost_usd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
                 }
               },
               "additionalProperties": false,
@@ -392,6 +717,8 @@
                     "deepseek",
                     "ollama",
                     "litellm",
+                    "claude-cli",
+                    "codex-cli",
                     "mock"
                   ],
                   "default": "mock"
@@ -432,6 +759,14 @@
                   "type": "number",
                   "minimum": 0,
                   "default": 0
+                },
+                "command": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "max_call_cost_usd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
                 }
               },
               "additionalProperties": false,
@@ -449,6 +784,8 @@
                     "deepseek",
                     "ollama",
                     "litellm",
+                    "claude-cli",
+                    "codex-cli",
                     "mock"
                   ],
                   "default": "mock"
@@ -489,6 +826,14 @@
                   "type": "number",
                   "minimum": 0,
                   "default": 0
+                },
+                "command": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "max_call_cost_usd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
                 }
               },
               "additionalProperties": false,
@@ -506,6 +851,8 @@
                     "deepseek",
                     "ollama",
                     "litellm",
+                    "claude-cli",
+                    "codex-cli",
                     "mock"
                   ],
                   "default": "mock"
@@ -546,6 +893,14 @@
                   "type": "number",
                   "minimum": 0,
                   "default": 0
+                },
+                "command": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "max_call_cost_usd": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
                 }
               },
               "additionalProperties": false,
@@ -709,7 +1064,7 @@
             "max_scene_bytes": {
               "type": "integer",
               "exclusiveMinimum": 0,
-              "default": 500000
+              "default": 2000000
             },
             "allow_rule_based_review": {
               "type": "boolean",

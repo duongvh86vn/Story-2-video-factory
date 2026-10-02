@@ -1,12 +1,13 @@
 import './style.css';
 import { api, projectUrl, staticUrl, RequestError } from './api.js';
 import { translator, type Locale, type TextKey } from './i18n.js';
-import type { ArtifactDocument, ProjectDetail, ProjectSummary, SceneDocument } from '../../server/contracts.js';
+import type { ArtifactDocument, ProjectDetail, ProjectSummary, SceneDocument,VoiceCatalog } from '../../server/contracts.js';
 import { SceneTypes, States, TransitionTypes, type Shot, type Storyboard, type ProjectStatus } from '../../../packages/core/schemas.js';
 import { EXPLAINER_RECIPES } from '../../../packages/explainer/recipes.js';
 import { Moods, type Mood } from '../../../packages/animation/schemas.js';
 import { cinematicReview } from './cinematic.js';
 import type {ActorDefinition} from '../../../packages/actors/schemas.js';
+import { NARRATION_LANGUAGES,primaryLanguage } from '../../../packages/core/languages.js';
 
 type Tab = 'inspector' | 'source' | 'narration' | 'storyboard' | 'scene' | 'characters' | 'reports' | 'logs';
 type Mode = 'composition' | 'draft' | 'final';
@@ -24,6 +25,7 @@ let editorGeneration = 0, previewShotId = '', pollBusy = false;
 let until: ProjectStatus = 'DONE';
 let setupMode:'script'|'wav'|'srt'='script',scriptRevision='new',scriptFormat:'txt'|'md'='txt';
 let setupSnapshot:Pick<ProjectDetail,'name'|'settings'>|null=null;
+let setupVoices:VoiceCatalog={windows:{status:'unavailable',voices:[]},profiles:{}};
 let actorSnapshot:{name:string;id:string;revision:string}|null=null;
 const v=(vi:string,en:string):string=>locale==='vi'?vi:en;
 const esc = (value: unknown): string => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
@@ -233,10 +235,50 @@ async function saveShot(form: HTMLFormElement): Promise<void> {
 function createDialog(): void {
   modal.innerHTML = `<form id="create-form"><p class="eyebrow">STORY FACTORY</p><h2 id="modal-title">${t('newProject')}</h2>${field('name',t('name'),'')}<p class="muted">${t('nameHint')}</p><label>${v('Phong cách trình bày','Presentation style')}<select name="presentationMode">${options(['story-cinematic','diagram'],'story-cinematic')}</select></label><label class="check"><input type="checkbox" name="example" checked>${t('example')}</label><footer>${btn('close-modal',t('cancel'))}<button class="primary" type="submit">${t('create')}</button></footer></form>`; modal.showModal();
 }
+function narrationLanguageField(language:string):string{
+  const values=[...NARRATION_LANGUAGES.map(item=>item.id),...NARRATION_LANGUAGES.some(item=>item.id===language)?[]:[language]];
+  return `<label>${v('Ngôn ngữ lời kể và nhận dạng WAV','Narration and WAV transcription language')}<select name="language" id="narration-language">${options(values,language,id=>NARRATION_LANGUAGES.find(item=>item.id===id)?.name??id)}</select></label>`;
+}
+function updateVoiceControls(changedLanguage=false,changedProvider=false):void{
+  const form=modal.querySelector<HTMLFormElement>('#setup-form');if(!form)return;
+  const language=form.querySelector<HTMLSelectElement>('[name=language]')!.value,provider=form.querySelector<HTMLSelectElement>('[name=tts_provider]')!;
+  const voice=form.querySelector<HTMLInputElement>('[name=voice_id]')!,url=form.querySelector<HTMLInputElement>('[name=base_url]')!,key=form.querySelector<HTMLInputElement>('[name=api_key_env]')!;
+  const windows=setupVoices.windows.voices.filter(item=>primaryLanguage(item.language)===primaryLanguage(language)&&(!language.includes('-')||item.language.toLowerCase()===language.toLowerCase()));
+  const azure=NARRATION_LANGUAGES.find(item=>item.id===primaryLanguage(language))?.azureVoices??[];
+  if(changedLanguage){
+    const preset=setupVoices.profiles[language]??setupVoices.profiles[primaryLanguage(language)];
+    if(preset){provider.value=preset.tts_provider??'none';voice.value=preset.voice_id??'';url.value=preset.base_url??'';key.value=preset.api_key_env;
+      form.querySelector<HTMLInputElement>('[name=tts_model]')!.value=preset.model??'';
+      form.querySelector<HTMLInputElement>('[name=tts_timeout]')!.value=String(preset.timeout_ms/1000);
+      form.querySelector<HTMLTextAreaElement>('[name=http_fields]')!.value=preset.http_fields?JSON.stringify(preset.http_fields,null,2):'';
+      form.querySelector<HTMLTextAreaElement>('[name=http_extra_body]')!.value=preset.http_extra_body?JSON.stringify(preset.http_extra_body,null,2):'';}
+    else if(provider.value==='azure-speech')voice.value=azure[0]??'';
+    else if(['http','openai-compatible','omnivoice-studio'].includes(provider.value))voice.value='';
+    else {provider.value=windows.length?'windows-speech':'none';voice.value='';}
+  }else if(changedProvider){
+    if(provider.value==='azure-speech'&&!azure.some(id=>id===voice.value))voice.value=azure[0]??'';
+    if(provider.value==='windows-speech'&&!windows.some(item=>item.id===voice.value))voice.value='';
+    if(provider.value==='omnivoice-studio'){
+      form.querySelector<HTMLInputElement>('[name=tts_model]')!.value='omnivoice';voice.value='default';
+      if(!url.value.trim())url.value='http://127.0.0.1:3900';
+    }
+  }
+  form.querySelector('#voice-choices')!.innerHTML=(provider.value==='windows-speech'?windows.map(item=>item.id):provider.value==='azure-speech'?[...azure]:[]).map(id=>`<option value="${esc(id)}"></option>`).join('');
+  let message='';
+  if(provider.value==='windows-speech')message=windows.length&&(!voice.value||windows.some(item=>item.id===voice.value))?v(`${windows.length} giọng Windows phù hợp. Để trống ID sẽ chọn giọng đầu tiên.`,`${windows.length} matching Windows voices. Leave the ID blank to select the first.`):v('Chưa có giọng Windows phù hợp với ngôn ngữ/ID này. Cài giọng hoặc chọn dịch vụ TTS khác.','No installed Windows voice matches this language/ID. Install a voice or choose another TTS provider.');
+  else if(provider.value==='azure-speech')message=v('Cần endpoint Azure Speech và API key trong biến môi trường. ID gợi ý được lọc theo ngôn ngữ; chưa xác nhận kết nối tài khoản.','Requires an Azure Speech endpoint and an API key environment variable. Suggested IDs match the language; account connectivity has not been verified.');
+  else if(provider.value==='none')message=v('Kịch bản/SRT cần giọng TTS trước khi xuất final. WAV giữ giọng trong file.','Script/SRT needs TTS before final export. WAV retains its original voice.');
+  else if(provider.value==='omnivoice-studio')message=v('Dùng API /v1/audio/speech của OmniVoice Studio/VoiceStudio. Chọn model đã cài và voice profile của bạn; dịch vụ local phải đang chạy.','Uses OmniVoice Studio/VoiceStudio /v1/audio/speech. Select an installed model and your voice profile; the local service must be running.');
+  else if(provider.value==='openai-compatible')message=v('Nhập base URL hoặc endpoint /v1/audio/speech, model và voice do server local hỗ trợ. Audio trả về phải là WAV.','Enter a base URL or /v1/audio/speech endpoint, with a model and voice supported by your local server. The response must be WAV audio.');
+  else message=v('Dịch vụ/trình đọc phải hỗ trợ ngôn ngữ đã chọn. ID giọng phụ thuộc provider.','The service/program must support the selected language. Voice IDs depend on the provider.');
+  form.querySelector('#voice-language-status')!.textContent=message;
+}
 async function setupDialog():Promise<void>{
   const p=project!;setupSnapshot={name:p.name,settings:structuredClone(p.settings)};setupMode=p.settings.input.mode==='auto'?(p.artifacts.narration?.mode==='srt'?'srt':p.artifacts.narration?'wav':'script'):p.settings.input.mode;
   const format=p.settings.input.script.endsWith('.md')?'md':'txt';scriptFormat=format;let script='';scriptRevision='new';
   try{const doc=await api.artifact<string>(p.name,`script.${format}`);script=doc.data;scriptRevision=doc.revision;}catch(error){if(!(error instanceof RequestError&&error.status===404))throw error;}
+  setupVoices=await api.voices().catch(()=>({windows:{status:'unavailable' as const,voices:[]},profiles:{}}));
+  if(project?.name!==p.name)throw new RequestError('Project changed before opening narration settings.',409,'REVISION_CONFLICT');
   const host=p.settings.host.profile.includes('STICK-MAN')?'stick-man':p.settings.host.profile.startsWith('library/')?'mini-robot':'custom',voice=p.settings.voice,director=p.settings.creativeModel;
   modal.innerHTML=`<form id="setup-form"><h2>${v('Nội dung, diễn viên và giọng kể','Story, actors and narration')}</h2><nav class="input-tabs">${(['script','wav','srt']as const).map(k=>`<button type="button" data-input-mode="${k}" class="${setupMode===k?'active':''}">${k==='script'?v('Kịch bản','Script'):k.toUpperCase()}</button>`).join('')}</nav>
     <section data-mode-panel="script" ${setupMode!=='script'?'hidden':''}><label>${v('Lời kể hoàn chỉnh — đọc nguyên văn','Complete spoken script — read verbatim')}<textarea id="script-input" name="scriptText" rows="7">${esc(script)}</textarea></label><button type="button" data-action="script-preview">${v('Xem lời kể sẽ đọc','Preview spoken text')}</button><pre id="spoken-preview" class="script-preview" hidden></pre><label>${v('Định dạng','Format')}<select name="scriptFormat">${options(['txt','md'],format)}</select></label><label>${v('Hoặc tải kịch bản','Or upload a script')}<input type="file" name="script" accept=".txt,.md"></label></section>
@@ -244,11 +286,11 @@ async function setupDialog():Promise<void>{
     <section data-mode-panel="srt" ${setupMode!=='srt'?'hidden':''}><label>SRT<input name="srt" type="file" accept=".srt"></label><p>${v('Giữ nguyên lời và clock; TTS đọc từng cue.','Preserve words and clock; TTS reads each cue.')}</p></section>
     <label>${v('Kiểu tạo hình diễn viên','Actor visual style')}<select id="setup-host" name="host">${options(['mini-robot','stick-man','custom'],host,k=>k==='mini-robot'?v('Robot mini','Mini robot'):k==='stick-man'?v('Người que','Stick man'):v('Rig từ MD riêng','Custom character rig MD'))}</select></label>
     <img id="host-choice-preview" class="host-choice-preview" alt="${v('Tạo hình mẫu','Base character poses')}" src="${host==='custom'?staticUrl(p.name,'previews/host-preview-sheet.png'):`${projectUrl(p.name)}/hosts/${host}/preview`}"><label>${v('Tạo hình MD tùy chỉnh (tùy chọn)','Custom character MD (optional)')}<input type="file" name="host" accept=".md"></label>
-    <fieldset class="voice-settings"><legend>${v('Giọng kể cho kịch bản/SRT','Voice for script/SRT')}</legend><label>${v('Dịch vụ giọng đọc','Speech provider')}<select name="tts_provider">${options(['none','windows-speech','http','command'],voice.tts_provider??'none',k=>k==='none'?v('Chưa cấu hình','Not configured'):k==='windows-speech'?v('Giọng cài trên Windows','Installed Windows voice'):k==='http'?'HTTP TTS':v('Trình đọc cục bộ đã cấu hình','Configured local speech program'))}</select></label>${field('voice_id',v('Tên/ID giọng (để trống dùng mặc định)','Voice name/ID (blank for default)'),voice.voice_id??'')}${field('base_url',v('Địa chỉ HTTP TTS','HTTP TTS address'),voice.base_url??'')}<details><summary>${v('Cấu hình nâng cao','Advanced settings')}</summary>${field('api_key_env',v('Tên biến môi trường chứa API key','API key environment variable'),voice.api_key_env)}${field('language',v('Ngôn ngữ','Language'),p.settings.language)}<label class="check"><input name="voiceDefault" type="checkbox">${v('Dùng giọng này làm mặc định cho dự án mới','Use this voice for new projects')}</label></details></fieldset>
+    <fieldset class="voice-settings"><legend>${v('Ngôn ngữ và giọng kể','Narration language and voice')}</legend>${narrationLanguageField(p.settings.language)}<label>${v('Dịch vụ giọng đọc cho kịch bản/SRT','Speech provider for script/SRT')}<select name="tts_provider">${options(['none','windows-speech','azure-speech','omnivoice-studio','openai-compatible','http','command'],voice.tts_provider??'none',k=>k==='none'?v('Chưa cấu hình','Not configured'):k==='windows-speech'?v('Giọng cài trên Windows','Installed Windows voice'):k==='azure-speech'?'Azure Speech':k==='omnivoice-studio'?'OmniVoice Studio / VoiceStudio (local)':k==='openai-compatible'?v('TTS local tương thích OpenAI','OpenAI-compatible local TTS'):k==='http'?v('API TTS riêng (HTTP JSON)','Custom TTS API (HTTP JSON)'):v('Trình đọc cục bộ đã cấu hình','Configured local speech program'))}</select></label><label>${v('Tên/ID giọng (chọn gợi ý hoặc nhập riêng)','Voice name/ID (choose a suggestion or enter one)')}<input name="voice_id" list="voice-choices" value="${esc(voice.voice_id??'')}"><datalist id="voice-choices"></datalist></label><p id="voice-language-status" class="muted" role="status"></p>${field('base_url',v('Endpoint / base URL của dịch vụ TTS','TTS service endpoint / base URL'),voice.base_url??'')}${field('tts_model',v('Model TTS (API local)','TTS model (local API)'),voice.model??'')}<details><summary>${v('Cấu hình nâng cao','Advanced settings')}</summary>${field('api_key_env',v('Tên biến môi trường chứa API key','API key environment variable'),voice.api_key_env)}${field('tts_timeout',v('Thời gian chờ mỗi đoạn (giây)','Timeout per segment (seconds)'),voice.timeout_ms/1000,'number')}${text('http_fields',v('Tên trường API riêng (JSON, tùy chọn)','Custom API field names (JSON, optional)'),voice.http_fields?JSON.stringify(voice.http_fields,null,2):'')}${text('http_extra_body',v('Tham số thêm của provider (JSON, tùy chọn)','Additional provider parameters (JSON, optional)'),voice.http_extra_body?JSON.stringify(voice.http_extra_body,null,2):'')}<p class="muted">${v('API riêng trả WAV trực tiếp. Các tham số thêm không được thay lời kể, ngôn ngữ, giọng hoặc định dạng.','Custom APIs return WAV directly. Additional parameters cannot replace narration, language, voice or format.')}</p><label class="check"><input name="voiceDefault" type="checkbox">${v('Lưu giọng mặc định cho ngôn ngữ này ở dự án mới','Save the voice default for this language in new projects')}</label></details></fieldset>
     <fieldset class="voice-settings"><legend>${v('Thiết kế hình ảnh và diễn xuất','Visual design and acting')}</legend><label>${v('Cách dùng nhân vật','Character roles')}<select name="character_mode">${options(['actors','presenter'],p.settings.presentation.character_mode,k=>k==='actors'?v('Diễn viên trong câu chuyện','Actors within the story'):v('Người dẫn chuyện (bản cũ)','Presenter (legacy)'))}</select></label>${text('design_brief',v('Ý tưởng hình ảnh (tùy chọn, không giới hạn vào mẫu có sẵn)','Visual idea (optional, no required preset)'),p.settings.presentation.design_brief??'')}<details><summary>${v('Model thiết kế cảnh','Scene design model')}</summary><label>${v('Dịch vụ','Provider')}<select name="creative_provider">${options(['codex-cli','claude-cli','gateway','openai-compatible','gemini','deepseek','ollama','litellm','mock'],director.provider,k=>k==='mock'?v('Ngoại tuyến — bản phác thảo theo quy tắc','Offline — rule-based sketch'):k)}</select></label>${field('creative_model',v('Tên model','Model name'),director.model)}${field('creative_base_url',v('Địa chỉ dịch vụ (nếu dùng API)','Service address (for API providers)'),director.base_url??'')}${field('creative_api_key_env',v('Tên biến môi trường chứa API key','API key environment variable'),director.api_key_env)}<p class="muted">${v('CLI dùng tài khoản đã đăng nhập trên máy. Codex có thể dùng model “default”; Claude dùng model tài khoản hỗ trợ. Ngoại tuyến vẫn là bản phác thảo, không chứng minh chất lượng thiết kế của model.','CLI uses an account already signed in on this machine. Codex can use model “default”; Claude needs an available account model. Offline output is a sketch and does not demonstrate model design quality.')}</p></details></fieldset>
     ${p.artifacts.script?`<details><summary>${v('Lời kể sau chuẩn hóa','Normalized spoken text')}</summary><pre class="script-preview">${esc(p.artifacts.script.text)}</pre></details>`:''}
     ${p.waitingFor==='host-approval'?`<p>${v('Host tùy chỉnh cần duyệt preview trước khi tiếp tục.','Approve the custom host preview before continuing.')}</p>`:''}
-    <footer>${btn('close-modal',t('cancel'))}<button type="submit" name="intent" value="save">${v('Lưu','Save')}</button><button class="primary" type="submit" name="intent" value="run">${v('Tạo video','Create video')}</button></footer></form>`;modal.showModal();
+    <footer>${btn('close-modal',t('cancel'))}<button type="submit" name="intent" value="save">${v('Lưu','Save')}</button><button class="primary" type="submit" name="intent" value="run">${v('Tạo video','Create video')}</button></footer></form>`;updateVoiceControls();modal.showModal();
 }
 async function saveSetup(form:HTMLFormElement,start:boolean):Promise<void>{
   const p=setupSnapshot;
@@ -264,11 +306,15 @@ async function saveSetup(form:HTMLFormElement,start:boolean):Promise<void>{
   if(Array.from(files.keys()).length)settingsRevision=(await api.upload(p.name,files,settingsRevision)).settingsRevision;
   if(setupMode==='script'&&!scriptFile){const body=String(data.get('scriptText')??'');if(!body.trim())throw new Error(v('Nhập hoặc tải kịch bản trước.','Enter or upload a script first.'));const format=String(data.get('scriptFormat'))==='md'?'md':'txt';let revision=scriptRevision;if(format!==scriptFormat){try{revision=(await api.artifact(p.name,`script.${format}`)).revision;}catch(error){if(error instanceof RequestError&&error.status===404)revision='new';else throw error;}}const saved=await api.script(p.name,body,format,revision,settingsRevision);if(!saved.settingsRevision)throw new Error('Missing script settings revision');settingsRevision=saved.settingsRevision;}
   const provider=String(data.get('tts_provider')??'none');
-  const voice={...p.settings.voice,source:'auto',tts_provider:provider,voice_id:String(data.get('voice_id')??'')||null,api_key_env:String(data.get('api_key_env')??'TTS_API_KEY'),...(String(data.get('base_url')??'').trim()?{base_url:String(data.get('base_url')).trim()}:{})};
+  const endpoint=String(data.get('base_url')??'').trim();
+  if(['http','azure-speech','openai-compatible','omnivoice-studio'].includes(provider)&&!endpoint)throw new Error(v('Nhập endpoint cho dịch vụ TTS đã chọn.','Enter the endpoint for the selected TTS service.'));
+  const jsonOption=(name:'http_fields'|'http_extra_body')=>{const value=String(data.get(name)??'').trim();return value?JSON.parse(value):p.settings.voice[name]===undefined?undefined:null;};
+  const voice={...p.settings.voice,source:'auto',tts_provider:provider,voice_id:String(data.get('voice_id')??'')||null,api_key_env:String(data.get('api_key_env')??'TTS_API_KEY'),
+    model:String(data.get('tts_model')??'').trim()||(p.settings.voice.model===undefined?undefined:null),timeout_ms:Number(data.get('tts_timeout'))*1000,http_fields:jsonOption('http_fields'),http_extra_body:jsonOption('http_extra_body'),...(endpoint?{base_url:endpoint}:{})};
   const creativeProvider=String(data.get('creative_provider')??p.settings.creativeModel.provider);
   const creativeModel={provider:creativeProvider,model:String(data.get('creative_model')??'').trim(),base_url:String(data.get('creative_base_url')??'').trim(),api_key_env:String(data.get('creative_api_key_env')??'MODEL_GATEWAY_KEY').trim(),timeout_ms:['codex-cli','claude-cli'].includes(creativeProvider)?900000:p.settings.creativeModel.timeout_ms};
   await api.settings(p.name,{revision:settingsRevision,input:{mode:setupMode},host:hostFile?'custom':String(data.get('host')),language:String(data.get('language')??'vi'),voice,automatic:true,presentation:{design_brief:String(data.get('design_brief')??''),character_mode:String(data.get('character_mode')??'actors')},models:{storyboard:creativeModel}});
-  if(data.has('voiceDefault'))await api.voiceDefaults(voice);
+  if(data.has('voiceDefault'))await api.voiceDefaults(voice,String(data.get('language')));
   modal.close();if(start)await api.run(p.name,'DONE');
 }
 async function actorDialog(id:string):Promise<void>{
@@ -344,6 +390,9 @@ window.document.addEventListener('input',event=>{
 });
 window.document.addEventListener('change',event=>{
   const el=event.target as HTMLSelectElement;
+  if(el.name==='language'){updateVoiceControls(true);return;}
+  if(el.name==='tts_provider'){updateVoiceControls(false,true);return;}
+  if(el.name==='voice_id'){updateVoiceControls();return;}
   if(el.name==='creative_provider'){
     const model=modal.querySelector<HTMLInputElement>('input[name="creative_model"]');
     if(model&&(!model.value.trim()||/^offline-/.test(model.value)))model.value=el.value==='codex-cli'?'default':el.value==='claude-cli'?'opus':el.value==='mock'?'offline-director':'';

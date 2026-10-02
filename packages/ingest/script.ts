@@ -5,9 +5,10 @@ import type { FactoryConfig } from '../core/config.js';
 import { Id } from '../core/identifiers.js';
 import { exists, hash, safeRealPath, writeJson } from '../core/utils.js';
 
-export const ScriptDocumentSchema = z.object({ version: z.literal(1), parserVersion: z.literal('script-1'), sourcePath: z.string(), sourceHash: z.string(),
+export const SCRIPT_PARSER_VERSION = 'script-2';
+export const ScriptDocumentSchema = z.object({ version: z.literal(1), parserVersion: z.enum(['script-1',SCRIPT_PARSER_VERSION]), sourcePath: z.string(), sourceHash: z.string(),
   original: z.string(), text: z.string().min(1), paragraphs: z.array(z.object({ index: z.number().int(), text: z.string(), sourceStartLine: z.number().int(), sourceEndLine: z.number().int() })),
-  chunks: z.array(z.object({ id: Id, text: z.string().min(1), paragraphIndex: z.number().int(), sourceStartLine: z.number().int(), sourceEndLine: z.number().int() })).min(1) });
+  chunks: z.array(z.object({ id: Id, text: z.string().min(1), separatorBefore: z.enum(['',' ']).optional(), paragraphIndex: z.number().int(), sourceStartLine: z.number().int(), sourceEndLine: z.number().int() })).min(1) });
 export type ScriptDocument = z.infer<typeof ScriptDocumentSchema>;
 export function parseScript(original: string, sourcePath = 'input/script.txt'): ScriptDocument {
   if (Buffer.byteLength(original, 'utf8') > 128 * 1024 || original.includes('\0')) throw new Error('Script must be UTF-8 text without NUL, at most 128 KB');
@@ -30,19 +31,27 @@ export function parseScript(original: string, sourcePath = 'input/script.txt'): 
   flush(); if (frontmatter) throw new Error('Unclosed script Markdown frontmatter');
   const chunks: ScriptDocument['chunks'] = [];
   for (const p of paragraphs) {
-    let current = '';
-    const emit = () => { if (current) chunks.push({ id: `script-${String(chunks.length + 1).padStart(4, '0')}`, text: current, paragraphIndex: p.index, sourceStartLine: p.sourceStartLine, sourceEndLine: p.sourceEndLine }); current = ''; };
-    for (const word of p.text.split(' ')) {
-      if ([...word].length > 120) throw new Error('Script contains a word longer than the 120-character cue limit');
-      if ([...(current ? `${current} ${word}` : word)].length > 120) emit();
-      current = current ? `${current} ${word}` : word;
-      if (/[.!?。！？;]$/.test(word)) emit();
+    let current = '', separatorBefore:''|' ' = '';
+    const emit = () => { if (current) chunks.push({ id: `script-${String(chunks.length + 1).padStart(4, '0')}`, text: current, separatorBefore, paragraphIndex: p.index, sourceStartLine: p.sourceStartLine, sourceEndLine: p.sourceEndLine }); current = ''; };
+    for (const [i, word] of p.text.split(' ').entries()) {
+      // Japanese words are not separated by spaces. ICU finds lexical boundaries,
+      // retaining every character, punctuation mark and original separator.
+      const units = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(word)
+        ? [...new Intl.Segmenter('ja',{granularity:'word'}).segment(word)].map(unit=>unit.segment) : [word];
+      for(const [j,unit] of units.entries()){
+        const separator = j===0&&i>0?' ':'';
+        if ([...unit].length > 120) throw new Error('Script contains a word longer than the 120-character cue limit');
+        if ([...current,...separator,...unit].length > 120) emit();
+        if(!current)separatorBefore=separator;
+        current += current?separator+unit:unit;
+        if (/[.!?。！？;]$/.test(unit)) emit();
+      }
     }
     emit();
+    if(chunks.filter(c=>c.paragraphIndex===p.index).map(c=>(c.separatorBefore??' ')+c.text).join('')!==p.text)throw new Error('Script segmentation changed spoken text');
   }
   const text = paragraphs.map(p => p.text).join('\n\n');
-  if (chunks.map(c => c.text).join(' ').replace(/\s+/gu, ' ') !== text.replace(/\s+/gu, ' ')) throw new Error('Script segmentation changed spoken text');
-  return ScriptDocumentSchema.parse({ version: 1, parserVersion: 'script-1', sourcePath, sourceHash: hash(original), original, text, paragraphs, chunks });
+  return ScriptDocumentSchema.parse({ version: 1, parserVersion: SCRIPT_PARSER_VERSION, sourcePath, sourceHash: hash(original), original, text, paragraphs, chunks });
 }
 export async function prepareInput(root: string, config: FactoryConfig): Promise<'script' | 'wav' | 'srt'> {
   const present = async (relative: string) => await exists(path.join(root, relative));

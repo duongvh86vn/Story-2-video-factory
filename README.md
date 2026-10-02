@@ -22,6 +22,8 @@ Project mới trong Studio mặc định chọn `story-cinematic`. Trong **Model
 
 Giọng mặc định lưu từ Studio hoặc sao chép config/voice.example.yaml sang config/voice.yaml. Windows Speech phải có voice đúng language; không tự chuyển giọng Việt sang tiếng Anh. HTTP/command cần adapter theo contract trong BUILD-SPEC.md; HTTP không mặc nhiên tương thích mọi dịch vụ TTS. Keys đặt trong .env/environment, không commit.
 
+Studio có ngôn ngữ narration **English / Việt / Nhật / Hàn**, preset giọng riêng và catalog Windows. TTS bên ngoài hỗ trợ **OmniVoice Studio/VoiceStudio local**, server tương thích `/v1/audio/speech`, HTTP JSON API riêng có field mapping và command. Nhập endpoint/model/voice rồi dùng cùng luồng Tạo video. [Cấu hình và contract TTS bên ngoài](docs/EXTERNAL-TTS.md) ghi rõ phần cần backend/credentials thật để nghiệm thu.
+
 Giọng Việt local có thể cài bằng `python scripts/setup-piper.py`; script cài phiên bản Piper cố định, kiểm tra checksum model và giữ cấu hình giọng đã có. Dùng `--replace-default` để chọn Piper làm mặc định, cấu hình cũ được sao lưu. Model/card nằm trong runtime/tts/models; đọc attribution và giấy phép dataset trong MODEL_CARD. Thư mục runtime và config/voice.yaml là dữ liệu riêng từng máy.
 
 ASR/alignment: tạo venv Python và cài `scripts/requirements.txt` hoặc `scripts/requirements-whisperx.txt`. Đặt `VIDEO_FACTORY_PYTHON` trỏ tới Python của venv; alignment Việt có thể chọn `VIDEO_FACTORY_ALIGN_MODEL=nguyenvulebinh/wav2vec2-base-vi-vlsp2020`. Xem packages/ingest/README.md để provision model cache trước khi chạy offline; pipeline không coi thiếu model là kết quả đạt.

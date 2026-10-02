@@ -15,3 +15,32 @@ voice:
   # tts_provider: command
   # command: python
   # command_args: [C:/adapters/tts.py, --request, '{request}', --output, '{output}']
+
+# Language-specific defaults. Explicit series/project voice settings take precedence.
+# Existing projects remain Vietnamese unless the narration language is selected.
+voice_profiles:
+  en:
+    tts_provider: windows-speech
+    voice_id: null
+  ja:
+    tts_provider: none  # Select an installed Japanese voice or configure local/cloud TTS.
+    voice_id: null
+  ko:
+    tts_provider: none
+    voice_id: null
+
+# Local OmniVoice Studio / VoiceStudio (version exposing /v1/audio/speech):
+# voice:
+#   source: auto
+#   tts_provider: omnivoice-studio
+#   base_url: http://127.0.0.1:3900
+#   model: omnivoice
+#   voice_id: default  # Or your voice profile ID.
+#   api_key_env: OMNIVOICE_API_KEY  # Optional for a loopback service without auth.
+#   timeout_ms: 600000
+#   http_extra_body: {num_step: 32}
+# Another compatible local server: use openai-compatible and its installed model ID.
+# Custom HTTP JSON API: tts_provider: http, base_url: http://127.0.0.1:8000/tts
+#   http_fields: {text: input_text, language: lang, voice: speaker, format: format}
+#   http_extra_body: {temperature: 0.7}
+# All adapters request WAV; text/clock are owned by the factory.

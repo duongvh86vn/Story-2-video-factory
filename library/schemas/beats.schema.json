@@ -157,6 +157,65 @@
                     "additionalProperties": false
                   },
                   "minItems": 1
+                },
+                "configuration": {
+                  "type": "string",
+                  "enum": [
+                    "old-cylinder",
+                    "separate-condenser"
+                  ]
+                },
+                "states": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "hot",
+                          "cold"
+                        ]
+                      },
+                      "sourceRefs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "narration",
+                                "source"
+                              ]
+                            },
+                            "segmentId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "quote": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "quote"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "sourceRefs"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 8
                 }
               },
               "required": [
