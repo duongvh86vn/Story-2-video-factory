@@ -59,6 +59,8 @@ Files: packages/orchestrator/{index,settings,pipeline}.ts; apps/server/{contract
 - [x] Regression độc lập:145/145 tay/actors/API; full npm suite403/403 và test:typecheck0, exact fingerprints và lịch sử đỏ được giữ.
 - [ ] Media matrix TEST-HANDOFF trên snapshot actors hiện tại, nguồn/clock/audio và lỗi được nghiệm thu riêng.
 
+Matrix actors thật14/16PASS, hai WAV sai từ còn FAIL; sáu lỗi metadata đã sửa với14/14 focused tests/typecheck qua và assertions cũ giữ nguyên. [Phạm vi](../validation/2026-10-02-actors-input-matrix.md). Không đóng checkbox matrix chỉ vì media/cast/QC qua.
+
 Commands: npm run build; npm run typecheck. Model độc lập: node --import tsx --test tests/story-actors.test.ts; npm run test:typecheck; npm run test:cinematic-inputs. Chỉ mở rộng suite khi failure hoặc source mới cần xác minh.
 
 ## Bổ sung narration đa ngôn ngữ và TTS local
@@ -74,5 +76,7 @@ Commands: npm run build; npm run typecheck. Model độc lập: node --import ts
 - [ ] Build/typecheck cuối, đủ evidence thực tế và danh sách giới hạn.
 - [ ] Studio dùng được trên phiên bản mới, project người dùng được giữ.
 - [x] Runtime snapshotb7f94e6 trên codex/stickman-acting-v22 đã cập nhật GitHub; remote SHA khớp local. Đây là nhánh review, không phải chứng nhận release.
+
+Snapshot a292794 đã cập nhật GitHub/remoteSHA; metadata/cache14/14 độc lập và build hiện tại qua. Parent npm ci/build trong Git archive riêng qua, không junction; chưa là runtime trên máy khác. Studio source mới được khởi động, project người dùng giữ riêng. Các checkbox cuối vẫn mở cho nghiệm thu đầy đủ, không thay bằng một bản build.
 
 Không đóng plan bằng một demo, một MP4 DONE hoặc suite presenter cũ. Chất lượng cần xem/nghe video, gồm diễn biến, cảm xúc, contact/cut, nguyên lý và phụ đề.
