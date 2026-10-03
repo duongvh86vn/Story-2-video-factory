@@ -53,7 +53,7 @@ export async function validateExplainerSources(root:string,config:FactoryConfig,
 interface SceneRecord { shotId: string; inputHash: string; sourceHash: string; assetHashes: Record<string,string>; renderer: string; version: string; recipeId: string; fallback: boolean; validated: boolean; notes: string[]; }
 interface Locks { locked: Record<string,boolean>; reviewIteration?:number; }
 async function locks(root:string):Promise<Locks> { return await exists(path.join(root,'project-state.json')) ? readJson<Locks>(await safeRealPath(root,'project-state.json')) : {locked:{}}; }
-function lockedShot(state:Locks,shot:Shot):boolean { return !!(state.locked?.storyboard || state.locked?.scenes || (state.locked?.[shot.id] ?? state.locked?.[`shot:${shot.id}`] ?? state.locked?.[`scene:${shot.id}`] ?? state.locked?.[`shots.${shot.id}`] ?? shot.locked)); }
+export function lockedShot(state:Locks,shot:Shot):boolean { return !!(state.locked?.storyboard || state.locked?.scenes || state.locked?.[shot.id] || state.locked?.[`shot:${shot.id}`] || state.locked?.[`scene:${shot.id}`] || state.locked?.[`shots.${shot.id}`] || shot.locked); }
 const sanitized=(value:unknown):unknown=>JSON.parse(redact(JSON.stringify(value)));
 async function readScene(dir:string):Promise<SceneFiles> { const files=[]; for(const name of SCENE_FILENAMES) files.push({path:name,content:await fs.readFile(path.join(dir,name),'utf8')}); return {files,dependencies:[],notes:[]}; }
 const sourceHash=(files:SceneFiles):string=>hash(files.files.slice().sort((a,b)=>a.path.localeCompare(b.path)).map(file=>({path:file.path,content:file.content})));
@@ -174,7 +174,8 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   const background=shot.cinematic?await cinematicBackground(root,shot):undefined;
   const narrated=shot.cinematic?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
   const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return shot.cinematic?renderCinematic(shot,host.profile,host.rig,activity,config,background,narrated):renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified);};
-  let candidate:SceneFiles|undefined, errors:string[]=options.issues?.map(issue=>`${issue.type}: ${issue.description}\nRequested repair: ${issue.repair}`)??[];
+  const reviewErrors=options.issues?.map(issue=>`${issue.type}: ${issue.description}\nRequested repair: ${issue.repair}`)??[];
+  let candidate:SceneFiles|undefined, errors:string[]=reviewErrors;
   if(options.issues?.length && complete.every(Boolean) && !explainer) candidate=await readScene(dir);
   if(!candidate) {
     if(explainer){const rendered=trustedExplainer();candidate=rendered.files;}
@@ -189,7 +190,7 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   }
   let valid=false;
   if(candidate && (!options.issues?.length || explainer)) {
-    const checked=await validateCandidate(root,config,shot,dir,candidate,staged.refs);candidate=checked.files;errors=checked.errors;
+    const checked=await validateCandidate(root,config,shot,dir,candidate,staged.refs);candidate=checked.files;errors=[...reviewErrors,...checked.errors];
     await persistAttempt(root,shot,0,'initial',candidate,errors); valid=!errors.length;
   }
   const maxRepairs=Math.min(3,config.retry.scene_repair);
@@ -264,11 +265,21 @@ export async function repairScenes(projectRoot:string,config:FactoryConfig,route
   const high=issues.filter(issue=>issue.severity==='high'); if(!high.length) return;
   const state=await locks(projectRoot), budgetPath=await outputPath(projectRoot,'work/scene-repair-budget.json');
   const budget=await exists(budgetPath) ? await readJson<Record<string,number>>(budgetPath) : {};
-  for(const shotId of new Set(high.map(issue=>issue.shotId))) {
+  const selected=[...new Set(high.map(issue=>issue.shotId))].map(shotId=>{
     const shot=storyboard.shots.find(shot=>shot.id===shotId); if(!shot) throw new Error(`Review references unknown shot: ${shotId}`);
-    if(lockedShot(state,shot)) {await persistAttempt(projectRoot,shot,0,'locked-review',undefined,['Scene is locked; manual repair required']);continue;}
+    return shot;
+  });
+  // Reject a blocked batch before modifying another shot or spending an artist call.
+  for(const shot of selected){
+    if(lockedShot(state,shot)) {
+      await persistAttempt(projectRoot,shot,0,'locked-review',undefined,['Scene is locked; manual repair required']);
+      throw new Error(`${shot.id}: scene is locked; manual repair or an explicit unlock is required`);
+    }
+    if((budget[shot.id]??0)>=config.workflow.max_review_iterations)throw new Error(`${shot.id}: visual repair iteration budget exhausted`);
+  }
+  for(const shot of selected) {
+    const shotId=shot.id;
     const used=budget[shotId]??0;
-    if(used>=config.workflow.max_review_iterations) throw new Error(`${shotId}: visual repair iteration budget exhausted`);
     budget[shotId]=used+1;await writeJson(budgetPath,budget);
     await compileShot(projectRoot,config,router,shot,characters,assets,{force:true,issues:high.filter(issue=>issue.shotId===shotId),state});
   }

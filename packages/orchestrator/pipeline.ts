@@ -12,12 +12,13 @@ import { narratedStory, NARRATED_STORY_VERSION } from '../ingest/narrated-story.
 import { analyzeProject } from '../story/index.js';
 import { createStoryboard, validateStoryboard, storyboardMarkdown } from '../storyboard/index.js';
 import { resolveAssets } from '../assets/index.js';
-import { buildScenes, buildMaster, repairScenes } from '../scenes/index.js';
+import { buildScenes, buildMaster, repairScenes, lockedShot } from '../scenes/index.js';
 import { HyperFramesEngine } from '../render/hyperframes.js';
 import { createPreviews, reviewProject } from '../review/index.js';
 import { produceMedia } from '../audio/index.js';
 import { MEDIA_TEXT_VERSION } from '../captions/literal.js';
 import { runQC } from '../qc/index.js';
+import { frozenArtworkIssues, qcArtworkRepairIteration, reserveQCArtworkRepair, finishQCArtworkRepair } from '../qc/artwork-repair.js';
 import { loadState, saveState, transition, stateIndex, ApprovalRequired } from './state-machine.js';
 import { ProductionStore } from './store.js';
 import { collectResearch } from './research.js';
@@ -176,6 +177,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     state.specVersion=config.content.mode==='narrated-explainer'?(config.presentation.mode==='story-cinematic'?4:3):1;state.narrationInputHash=fingerprints.narration;state.hostInputHash=hostHash;
     if(state.assetInputHash && state.assetInputHash!==assetHash && stateIndex(state.state)>stateIndex('STORYBOARDED')) {state.state='STORYBOARDED';state.reviewIteration=0;await writeJson(path.join(root,'work/scene-repair-budget.json'),{});}
     state.inputHash=fingerprint;state.assetInputHash=assetHash; await reconcile(root,state);
+    state.reviewIteration=Math.max(state.reviewIteration,await qcArtworkRepairIteration(root,state));
     const router=new ModelRouter(config,root,{retryModelErrors:options.retryModelErrors}); const engine=new HyperFramesEngine(config,root);
     if (options.shotIds?.length) {
       if(stateIndex(state.state)<stateIndex('SCENES_READY')) throw new Error('Build all scenes before rebuilding selected shots');
@@ -249,16 +251,43 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
           case 'REPAIRED': {
             let review=await readJson(path.join(root,'work/review.json'),ReviewSchema);
             while(review.issues.some(i=>i.severity==='high') && state.reviewIteration<config.workflow.max_review_iterations) {
+              state.reviewIteration++;await saveState(root,state);store.saveState(state);
               await repairScenes(root,config,router,await board(),await characters(),await assets(),review.issues.filter(i=>i.severity==='high'));
               await buildMaster(root,config,await board(),await voiced(),await assets()); const validation=await engine.validate(); if(!validation.pass) throw new Error(`Repaired master invalid: ${validation.errors.join('\n')}`);
               await retryRender(config,()=>engine.renderDraft()); await createPreviews(root,config,await board());
-              review=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); await writeJson(path.join(root,'work/review.json'),review); state.reviewIteration++; store.review(review); await saveState(root,state);
+              review=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); await writeJson(path.join(root,'work/review.json'),review); store.review(review); await saveState(root,state);
             }
             if(review.issues.some(i=>i.severity==='high') || !review.pass) throw new Error('Review failed after the configured repair budget; edit or unlock the affected shots before resuming'); break;
           }
           case 'FINAL_RENDERED': { const review=await readJson(path.join(root,'work/review.json'),ReviewSchema); if(!review.pass) throw new Error('Final render requires a passing draft review');if(config.content.mode==='narrated-explainer'){try{await requireVoice(root,await voiced());}catch(error){throw new ApprovalRequired('voice',String(error));}}
             const result=await retryRender(config,()=>engine.renderFinal()); store.render('final',result.path); await produceMedia(root,config,await voiced(),await board(),await assets()); break; }
-          case 'QC_PASSED': { const qc=await runQC(root,config,await voiced(),await board()); await writeJson(path.join(root,'output/qc-report.json'),qc); await report(root,config,state,router); if(!qc.pass) throw new Error(`Production QC failed: ${JSON.stringify(qc.issues)}`); break; }
+          case 'QC_PASSED': {
+            const sb=await board(),n=await voiced(),qc=await runQC(root,config,n,sb);
+            await writeJson(path.join(root,'output/qc-report.json'),qc);await report(root,config,state,router);
+            if(!qc.pass){
+              const issues=config.workflow.automatic&&config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'&&!router.isMock('storyboard')
+                ?frozenArtworkIssues(qc,sb,n.durationMs,shot=>lockedShot(state,shot)):undefined;
+              if(!issues?.length||state.reviewIteration>=config.workflow.max_review_iterations)throw new Error(`Production QC failed: ${JSON.stringify(qc.issues)}`);
+              const attempt=await reserveQCArtworkRepair(root,state,sb,qc,issues,config.workflow.max_review_iterations);
+              state.reviewIteration=attempt.iteration;await saveState(root,state);store.saveState(state);
+              try{
+                await repairScenes(root,config,router,sb,await characters(),await assets(),issues);
+                await buildMaster(root,config,await board(),n,await assets());
+                const validation=await engine.validate();if(!validation.pass)throw new Error(`QC-repaired master invalid: ${validation.errors.join('\n')}`);
+                await finishQCArtworkRepair(root,attempt.id,{status:'repaired',board:await board()});
+              }catch(error){await finishQCArtworkRepair(root,attempt.id,{status:'failed',error:redact(error instanceof Error?error.message:String(error),config)});throw error;}
+              // This is still a failed QC job. Rewind to produce a new draft, review and final.
+              state.state='SCENES_READY';delete state.error;delete state.waitingFor;
+              for(const [stage,files] of Object.entries(stageOutputs(state)))if(stateIndex(stage as ProjectStatus)>stateIndex(state.state))for(const file of files)delete state.artifactHashes[file];
+              for(const file of Object.keys(state.artifactHashes))if(file.startsWith('previews/')||file.startsWith('output/'))delete state.artifactHashes[file];
+              await artifactHashes(root,state);await saveState(root,state);store.saveState(state);
+              store.finishJob(job,'QC freeze detected; artwork repaired; a new render and QC pass are required');options.onProgress?.(state);
+              await writeJson(path.join(root,'work/cost-report.json'),costSummary(router,config));
+              await appendLog(path.join(root,'logs/orchestrator.log'),{time:new Date().toISOString(),event:'qc-artwork-repair',attemptId:attempt.id,iteration:state.reviewIteration,shotIds:[...new Set(issues.map(i=>i.shotId))],state:state.state});
+              continue;
+            }
+            break;
+          }
           case 'DONE': { const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name)); await report(root,config,state,router); break; }
         }
         transition(state,next);if(next==='STORYBOARDED'||next==='ASSETS_READY')state.assetInputHash=await assetFingerprint(root); await artifactHashes(root,state); await saveState(root,state); store.saveState(state); store.finishJob(job); options.onProgress?.(state);

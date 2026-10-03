@@ -11,7 +11,7 @@ import { repairCinematicArtwork, persistCinematicArtworkRepair, recoverCinematic
 import { writeCinematicPlans } from '../packages/director/index.js';
 import { writeHostTimeline } from '../packages/explainer/storyboard.js';
 import { storyboardMarkdown } from '../packages/storyboard/markdown.js';
-import { buildScenes } from '../packages/scenes/index.js';
+import { buildScenes, repairScenes } from '../packages/scenes/index.js';
 import { HyperFramesEngine } from '../packages/render/hyperframes.js';
 import type { ValidationResult } from '../packages/render/engine.js';
 import type { ArtDirection } from '../packages/director/art-direction-schemas.js';
@@ -475,3 +475,194 @@ test('artwork repair: validator pass=false cannot commit an empty-error repair r
   assert.equal(repair.status, 'runtime-rejected');
   assert.ok(repair.runtimeErrors.length > 0, 'inconsistent engine results need an explicit saved failure');
 });
+
+// External review exercises the public repair entry point, including its durable
+// per-shot budget. The provider transport and browser validator are boundaries;
+// routing, passive SVG validation, scene generation and publication remain real.
+function externalIssue(f: Fixture) {
+  return { shotId: f.shot.id, type: 'qc-frozen-frames', severity: 'high' as const,
+    description: 'Final video is frozen at 1200–2600ms; the sourced piston stops while its explanation continues.',
+    repair: 'Reveal the existing piston process during this interval; preserve facts, clock and contact.' };
+}
+function externalError(f: Fixture) {
+  const issue = externalIssue(f);
+  return `${issue.type}: ${issue.description}\nRequested repair: ${issue.repair}`;
+}
+
+test('external artwork review: a browser-valid existing scene still routes the exact issue to its artist and commits a validated change', async t => {
+  const f = await fixture(t);
+  runtime(t, () => ({ pass: true, errors: [] }));
+  await buildScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest);
+  const before = await sceneSnapshot(f), original = structuredClone(f.shot);
+  const calls = provider(t, { artDirection: revised(f) });
+  const validations = runtime(t, async (_n, _engine, dir) => {
+    assert.deepEqual(await sceneSnapshot(f), before, 'approved scene bytes remain unchanged during candidate validation');
+    assert.ok(dir && path.relative(path.join(f.root, 'work/scene-candidates'), dir).startsWith(f.shot.id));
+    const html = await fs.readFile(path.join(dir!, 'index.html'), 'utf8');
+    return { pass: true, errors: [], diagnostics: [{ repairedArtwork: html.includes('#E1A755') }] };
+  });
+  await repairScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest, [externalIssue(f)]);
+  assert.equal(calls.length, 1, 'an initial browser pass must not erase an external review failure');
+  assert.equal(validations(), 2, 'both the initial scene and artist replacement are validated');
+  const saved = await attempts(f);
+  assert.equal(saved.length, 1);
+  assert.deepEqual(saved[0]!.value.request.context.errors, [externalError(f)]);
+  assert.equal(saved[0]!.value.status, 'accepted');
+  assert.equal(saved[0]!.value.runtimeValidation, 'passed');
+  assert.deepEqual(withoutArt(f.shot), withoutArt(original));
+  assert.equal(f.shot.cinematic!.artDirection!.origin, 'model');
+  assert.notEqual((await sceneSnapshot(f))['index.html'], before['index.html']);
+  assert.match(await fs.readFile(path.join(f.root, `scenes/${f.shot.id}/index.html`), 'utf8'), /#E1A755/);
+  assert.deepEqual((await readJson(path.join(f.root, 'work/storyboard.json'), StoryboardSchema)).shots[0], f.shot);
+  assert.equal((await readJson<Record<string, any>>(path.join(f.root, `scenes/${f.shot.id}/scene.json`))).validated, true);
+  assert.equal((await readJson<Record<string, number>>(path.join(f.root, 'work/scene-repair-budget.json')))[f.shot.id], 1);
+});
+
+test('external artwork review: a rejected replacement preserves the accepted scene and spends the budget', async t => {
+  const f = await fixture(t);
+  f.config.workflow.max_review_iterations = 1;
+  runtime(t, () => ({ pass: true, errors: [] }));
+  await buildScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest);
+  const before = await sceneSnapshot(f), metadata = await snapshot(f);
+  const calls = provider(t, { artDirection: revised(f) });
+  runtime(t, n => n === 1 ? { pass: true, errors: [] } : { pass: false, errors: ['REPAIRED-LABEL-STILL-OCCLUDED'] });
+  await assert.rejects(repairScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest, [externalIssue(f)]), /REPAIRED-LABEL-STILL-OCCLUDED/);
+  assert.equal(calls.length, 1);
+  assert.deepEqual(await sceneSnapshot(f), before);
+  assert.deepEqual(await snapshot(f), metadata);
+  const saved = (await attempts(f))[0]!.value;
+  assert.deepEqual(saved.request.context.errors, [externalError(f)]);
+  assert.equal(saved.status, 'runtime-rejected');
+  assert.deepEqual(saved.runtimeErrors, ['REPAIRED-LABEL-STILL-OCCLUDED']);
+  await assert.rejects(repairScenes(f.root, f.config, new ModelRouter(f.config, f.root), f.board, f.characters, f.manifest, [externalIssue(f)]), /iteration budget exhausted/);
+  assert.equal(calls.length, 1, 'a fresh router must not reset the external review budget');
+});
+
+test('external artwork review: a real-provider failure retains its diagnostics, budget and every approved byte', async t => {
+  const f = await fixture(t);
+  f.config.workflow.max_review_iterations = 1;
+  runtime(t, () => ({ pass: true, errors: [] }));
+  await buildScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest);
+  const before = await sceneSnapshot(f), metadata = await snapshot(f);
+  let calls = 0;
+  t.mock.method(globalThis, 'fetch', async (input: string | URL | Request) => {
+    assert.equal(String(input), 'https://artwork-repair.invalid/v1/chat/completions');
+    calls++;
+    return new Response('ISOLATED-ARTIST-UNAVAILABLE', { status: 503 });
+  });
+  await assert.rejects(repairScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest, [externalIssue(f)]), /503|ISOLATED-ARTIST-UNAVAILABLE/);
+  assert.equal(calls, 1);
+  assert.deepEqual(await sceneSnapshot(f), before);
+  assert.deepEqual(await snapshot(f), metadata);
+  const saved = (await attempts(f))[0]!.value;
+  assert.equal(saved.status, 'model-failed');
+  assert.deepEqual(saved.request.context.errors, [externalError(f)]);
+  assert.notEqual(saved.runtimeValidation, 'passed');
+  assert.equal((await readJson<Record<string, number>>(path.join(f.root, 'work/scene-repair-budget.json')))[f.shot.id], 1);
+  await assert.rejects(repairScenes(f.root, f.config, new ModelRouter(f.config, f.root), f.board, f.characters, f.manifest, [externalIssue(f)]), /iteration budget exhausted/);
+  assert.equal(calls, 1);
+});
+
+test('external artwork review: mock artist cannot treat a browser-valid frozen scene as repaired', async t => {
+  const f = await fixture(t);
+  runtime(t, () => ({ pass: true, errors: [] }));
+  await buildScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest);
+  const before = await sceneSnapshot(f), metadata = await snapshot(f);
+  f.config.models.storyboard.provider = 'mock';
+  t.mock.method(globalThis, 'fetch', async () => { throw new Error('UNEXPECTED-REAL-NETWORK'); });
+  await assert.rejects(repairScenes(f.root, f.config, new ModelRouter(f.config, f.root), f.board, f.characters, f.manifest, [externalIssue(f)]), /cinematic scene validation failed.*qc-frozen-frames/s);
+  assert.deepEqual(await sceneSnapshot(f), before);
+  assert.deepEqual(await snapshot(f), metadata);
+  assert.equal((await attempts(f)).length, 0);
+  assert.equal((await readJson<Record<string, number>>(path.join(f.root, 'work/scene-repair-budget.json')))[f.shot.id], 1);
+});
+
+for (const alias of ['storyboard', 'scenes', 'bare-shot', 'shot:', 'scene:', 'shots.', 'shot-property'] as const)
+  test(`external artwork review: ${alias} lock refuses public repair rather than returning success`, async t => {
+    const f = await fixture(t);
+    runtime(t, () => ({ pass: true, errors: [] }));
+    await buildScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest);
+    if (alias === 'shot-property') f.shot.locked = true;
+    else {
+      const key = ['storyboard', 'scenes'].includes(alias) ? alias : alias === 'bare-shot' ? f.shot.id : `${alias}${f.shot.id}`;
+      await writeJson(path.join(f.root, 'project-state.json'), { locked: { [key]: true } });
+    }
+    const budgetPath = path.join(f.root, 'work/scene-repair-budget.json');
+    await writeJson(budgetPath, { [f.shot.id]: 1 });
+    const budgetBefore = await fs.readFile(budgetPath, 'utf8');
+    const before = await sceneSnapshot(f), metadata = await snapshot(f);
+    let calls = 0;
+    t.mock.method(globalThis, 'fetch', async () => { calls++; throw new Error('LOCKED-ARTIST-MUST-NOT-RUN'); });
+    await assert.rejects(repairScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest, [externalIssue(f)]), /locked/i);
+    assert.equal(calls, 0);
+    assert.deepEqual(await sceneSnapshot(f), before);
+    assert.deepEqual(await snapshot(f), metadata);
+    assert.equal((await attempts(f)).length, 0);
+    assert.equal(await fs.readFile(budgetPath, 'utf8'), budgetBefore, 'locked rejection must retain the spent budget');
+  });
+
+// Supplemental public batch preflight tests; original 42-test prefix is retained.
+async function twoShotReviewFixture(t: TestContext) {
+  const f = await fixture(t);
+  const { BeatSchema } = await import('../packages/core/schemas.js');
+  const { groundedExplanation } = await import('../packages/explainer/plan.js');
+  const { explainerShot } = await import('../packages/explainer/storyboard.js');
+  const { directCinematicShot } = await import('../packages/director/index.js');
+  const text = f.narration.segments[0]!.text;
+  const narration = NarrationSchema.parse({ ...f.narration, durationMs: 10000,
+    segments: [...f.narration.segments, { id: 'cue-two', startMs: 5000, endMs: 10000, text }] });
+  const base = BeatSchema.parse({ id: 'b2', chapterId: 'ch1', startMs: 5000, endMs: 10000,
+    segmentIds: ['cue-two'], narrationText: text, meaning: 'cause', visualGoal: 'mechanism', importance: 1 });
+  const secondBeat = { ...base, ...groundedExplanation(f.story, narration, [base], f.profile).beats[0]! };
+  const second = directCinematicShot(explainerShot('ch1.s002', 5000, 10000, secondBeat, narration, f.profile, f.rig),
+    secondBeat, f.profile, f.config);
+  const secondPart = second.visualization!.parts[0]!;
+  second.cinematic!.artDirection = { ...structuredClone(f.artDirection),
+    models: [{ ...structuredClone(f.artDirection.models[0]!), partId: secondPart.id, sourceRefs: secondPart.sourceRefs }] };
+  f.narration = narration;
+  f.board = StoryboardSchema.parse({ shots: [f.shot, second] });
+  f.shot = f.board.shots[0]!;
+  const secondRigNeed = second.assetNeeds.find(need => need.required && need.localPath === f.rig.assetPath)!;
+  assert.ok(secondRigNeed);
+  f.manifest.assets.push({ ...f.manifest.assets[0]!, id: secondRigNeed.id, shotIds: [second.id] });
+  f.config.workflow.max_review_iterations = 1;
+  await writeJson(path.join(f.root, 'work/narration.json'), narration);
+  await writeJson(path.join(f.root, 'work/beats.json'), [f.beat, secondBeat]);
+  await writeJson(path.join(f.root, 'work/storyboard.json'), f.board);
+  await fs.writeFile(path.join(f.root, 'work/storyboard.md'), storyboardMarkdown(f.board, [f.beat, secondBeat]));
+  await writeJson(path.join(f.root, 'work/asset-manifest.json'), f.manifest);
+  const voice = await readJson<Record<string, unknown>>(path.join(f.root, 'work/voice-report.json'));
+  await writeJson(path.join(f.root, 'work/voice-report.json'), { ...voice, narrationHash: hash(narration) });
+  await writeCinematicPlans(f.root, f.board);
+  await writeHostTimeline(f.root, f.board, narration, f.profile, f.rig, 'audio-activity');
+  await writeJson(path.join(f.root, 'work/creative-storyboard-cache.json'), { inputHash: 'batch-input', storyboard: f.board });
+  runtime(t, () => ({ pass: true, errors: [] }));
+  await buildScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest);
+  return f;
+}
+
+for (const blocker of ['locked', 'unknown', 'exhausted'] as const)
+  test(`external artwork batch: later ${blocker} shot prevents an earlier artist call or budget charge`, async t => {
+    const f = await twoShotReviewFixture(t);
+    const second = f.board.shots[1]!;
+    const budgetPath = path.join(f.root, 'work/scene-repair-budget.json');
+    const initialBudget = { [f.shot.id]: 0, [second.id]: blocker === 'exhausted' ? 1 : 0 };
+    await writeJson(budgetPath, initialBudget);
+    if (blocker === 'locked') await writeJson(path.join(f.root, 'project-state.json'), { locked: { [`scene:${second.id}`]: true } });
+    const budgetBefore = await fs.readFile(budgetPath, 'utf8');
+    const metadataBefore = await snapshot(f), boardBefore = structuredClone(f.board);
+    const sceneBefore = await Promise.all(f.board.shots.map(shot => sceneSnapshot({ ...f, shot })));
+    const calls = provider(t, { artDirection: revised(f) });
+    const validations = runtime(t, () => ({ pass: true, errors: [] }));
+    const issues = [externalIssue(f), { ...externalIssue(f),
+      shotId: blocker === 'unknown' ? 'missing-review-shot' : second.id }];
+    await assert.rejects(repairScenes(f.root, f.config, f.router, f.board, f.characters, f.manifest, issues),
+      blocker === 'locked' ? /locked.*manual repair/i : blocker === 'unknown' ? /unknown shot/ : /iteration budget exhausted/);
+    assert.equal(calls.length, 0, 'a valid earlier shot must not spend a routed provider call');
+    assert.equal(validations(), 0, 'batch preflight must precede compilation/browser validation');
+    assert.equal(await fs.readFile(budgetPath, 'utf8'), budgetBefore, 'no earlier budget charge or rewrite');
+    assert.deepEqual(await snapshot(f), metadataBefore, 'no partial metadata commit');
+    assert.deepEqual(await Promise.all(f.board.shots.map(shot => sceneSnapshot({ ...f, shot }))), sceneBefore);
+    assert.deepEqual(f.board, boardBefore);
+    assert.equal((await attempts(f)).length, 0, 'no substitute artwork attempt');
+  });
