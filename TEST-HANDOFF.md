@@ -1,5 +1,7 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
+Hai bản ô tô được dàn cảnh lại đã terminal0/DONE/QC kỹ thuật, giữ script/narration/WAV bytes; [provenance, các iteration lỗi và bản cuối](docs/validation/2026-10-03-car-workshop-production.md). Kiểm tra toàn phim về walk/lean/contact/model-response/recovery, biểu cảm, nhãn/qualifier, chuyển cảnh và lời kể với cả người que và robot. Parent chỉ xem khung hình để sửa artwork; không dùng kết quả này làm PASS cho native creative, input matrix hoặc live local TTS.
+
 Diagnostics CLI thêm sau audit đã qua: [scope mới NOT RUN](docs/validation/2026-10-03-cli-diagnostics.md). Test fake captures cho phân loại lỗi, timeout progress, secrecy, stop auto fallback/resume/explicit recovery và local journal failure; giữ regression Codex/Claude/model/retry. Worker readiness native bị quota trước khi chạy, chưa có small-call result. Không dùng92/92 trước đó làm PASS cho sửa diagnostics mới.
 
 Cập nhật03/10: [audit hiện tại](docs/validation/2026-10-03-current-runtime.md) đã chạy acting64/64, regression135/135 và pristine migration17/17. Retry FAIL thiếu completion marker đã sửa; independent rerun36/36 targeted,92/92 broad, whole test:typecheck và compiled proof qua với assertions giữ nguyên. Các đoạn NOT RUN phía dưới là checkpoint lịch sử. Bộ test mới vẫn cần browser SVG và xem/nghe phim; mock HTTP PCM không chứng minh live local TTS/OmniVoice hoặc phát âm EN/VI/JA/KO.
