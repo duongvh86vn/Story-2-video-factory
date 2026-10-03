@@ -66,10 +66,10 @@ export class CodexCliAdapter implements ModelAdapter {
         throw new ModelError('cli_start','Could not complete Codex CLI. Check executable, sign-in, installed CLI version and local journal storage outside the production job.');
       }
       if(result.timedOut)throw await this.failure(result,input,'timeout');
-      if(result.truncated)throw new ModelError('truncated','Codex CLI response exceeded the output limit.');
+      if(result.truncated)throw await this.failure(result,input,'truncated');
       let events:Record<string,unknown>[];
       try{events=result.stdout.trim().split(/\r?\n/).filter(Boolean).map(line=>object(JSON.parse(line)));}
-      catch{throw new ModelError('response_json','Codex CLI did not return complete JSON events.');}
+      catch{throw await this.failure(result,input,'response_json');}
       const completed=events.filter(e=>e.type==='turn.completed').at(-1);
       // CLI can emit a nonfatal startup diagnostic when code mode fails closed.
       // It is not a tool operation; a failed turn or nonzero exit still rejects the response.
@@ -87,7 +87,7 @@ export class CodexCliAdapter implements ModelAdapter {
       await fs.rmdir(cwd).catch(()=>{});
     }
   }
-  private async failure(result:ProcessResult,input:ModelRequest,defaultCode:'timeout'|'cli_provider'):Promise<ModelError>{
+  private async failure(result:ProcessResult,input:ModelRequest,defaultCode:'timeout'|'cli_provider'|'truncated'|'response_json'):Promise<ModelError>{
     const diagnostics=codexDiagnostics(result);
     try{
       await appendLog(path.join(this.options.projectRoot??process.cwd(),'logs/model-cli-diagnostics.jsonl'),{
@@ -96,6 +96,9 @@ export class CodexCliAdapter implements ModelAdapter {
       });
     }catch{throw new ModelError('cli_diagnostics','Could not persist the local Codex CLI diagnostics journal.');}
     const code=diagnostics.category==='unknown'?defaultCode:`cli_${diagnostics.category.replaceAll('-','_')}`;
-    return new ModelError(code,codexFailureMessage(diagnostics),code==='timeout'||code==='cli_network');
+    const message=diagnostics.category==='unknown'&&defaultCode==='truncated'?'Codex CLI response exceeded the output limit.'
+      :diagnostics.category==='unknown'&&defaultCode==='response_json'?'Codex CLI did not return complete JSON events.'
+      :codexFailureMessage(diagnostics);
+    return new ModelError(code,message,code==='timeout'||code==='cli_network');
   }
 }

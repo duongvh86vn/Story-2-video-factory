@@ -1,5 +1,7 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
+[Checkpoint04/10](docs/validation/2026-10-04-cli-capture-boundaries.md) thay trạng thái chờ diagnostics bằng bằng chứng thật: hai lỗi capture đã sửa, byte-identical rerun3/3 và14/14, regression48/48, supplemental13/13. Initializer/default30 có CLI/API/config và actual30-frame clock proof; chưa có whole-story new-project acceptance. Review bốn phim authored vẫn PARTIAL/FAIL vì nhãn bị che và recap thẻ chữ; full30fps playback/listening NOT RUN. Các checkpoint NOT RUN phía dưới giữ như lịch sử, không dùng thay trạng thái hiện hành.
+
 [Chuẩn bị native hiện hành](docs/validation/2026-10-03-native-deadline.md): bốn project cũ được đặt timeout storyboard20 phút và resume thật tớiANALYZED, terminal0; narration/audio/cache và phần journal cũ giữ nguyên. Chỉ thêm planner mock, zero native/TTS call mới; chưa có native storyboard/final. Giữ các attempt cũ và recovery cycle, kiểm readiness một lần sau khi worker thực sự có dịch vụ.
 
 Create-project thêm draft30fps cho cinematic mới sau audit trước. Kiểm tra new quaCLI/API dùng cùng initializer, cấu hình resolve đúng fps và real draft media có30fps/frame clock; giữ width/height/quality từ config, project cũ/override và narration/cache không đổi. Không chỉ assert field hoặc đổi fps bằng duplication sau render. Source mới build/typecheck, runtime NOT RUN.
