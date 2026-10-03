@@ -229,18 +229,19 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
   }
   for(const a of runs){
     const group=p.gestures.filter(g=>g.startMs>=a.startMs-shot.startMs&&g.endMs<=a.endMs-shot.startMs);
-    if(group.length!==(a.type==='compare'?2:1))throw new Error(`${shot.id}: missing performance action`);
+    if(group.length!==(a.type==='compare'?2:1))throw new Error(`${shot.id}: missing performance action for ${a.type} at shot-local ${a.startMs-shot.startMs}–${a.endMs-shot.startMs}ms; expected ${a.type==='compare'?2:1} contained gesture(s), received ${group.length}`);
     for(const [index,g] of group.entries()){
     consumed.add(g.id);
     const target=index===1?a.secondTarget:a.target;
     const midpoint=Math.floor((a.startMs+a.endMs-2*shot.startMs)/2);
-    if(g.startMs!==(index===1?midpoint:a.startMs-shot.startMs)||g.endMs!==(a.type==='compare'&&index===0?midpoint:a.endMs-shot.startMs))throw new Error(`${shot.id}: gesture/action clock mismatch`);
+    const expectedStart=index===1?midpoint:a.startMs-shot.startMs,expectedEnd=a.type==='compare'&&index===0?midpoint:a.endMs-shot.startMs;
+    if(g.startMs!==expectedStart||g.endMs!==expectedEnd)throw new Error(`${shot.id}: gesture/action clock mismatch for ${g.id} (${a.type}); expected shot-local ${expectedStart}–${expectedEnd}ms, received ${g.startMs}–${g.endMs}ms`);
     const expected=target?partAnchor(shot,target.partId,target.anchor,p.stage.width,p.stage.height):undefined;
     // JSON decimals and normalized stage multiplication can differ at machine precision.
     // One millionth of a pixel tolerates serialization noise, not a different target.
-    if(Boolean(expected)!==Boolean(g.target)||expected&&g.target&&Math.hypot(g.target.x-expected.x,g.target.y-expected.y)>1e-6)throw new Error(`${shot.id}: gesture ${g.id} points at the wrong world target`);
-    if(!CINEMATIC_ACTION_CLIPS[a.type]?.includes(g.action))throw new Error(`${shot.id}: performance action contradicts host intent`);
-    if(['operate','pick-place'].includes(g.action)!==(a.type==='operate-model')||g.contactMs!==(a.contactMs===undefined?undefined:a.contactMs-shot.startMs))throw new Error(`${shot.id}: contact/action mismatch`);
+    if(Boolean(expected)!==Boolean(g.target)||expected&&g.target&&Math.hypot(g.target.x-expected.x,g.target.y-expected.y)>1e-6)throw new Error(`${shot.id}: gesture ${g.id} points at the wrong world target for ${a.type}; expected ${expected?JSON.stringify(expected):'no gesture.target (omit it because this action has no object target; a walking destination belongs in performance.walks)'}, received ${g.target?JSON.stringify(g.target):'no gesture.target'}${target?`; object ${target.partId}, anchor ${target.anchor}`:''}`);
+    if(!CINEMATIC_ACTION_CLIPS[a.type]?.includes(g.action))throw new Error(`${shot.id}: performance action contradicts host intent for ${g.id}; ${a.type} requires ${CINEMATIC_ACTION_CLIPS[a.type]?.join(' or ')}, received ${g.action}`);
+    if(['operate','pick-place'].includes(g.action)!==(a.type==='operate-model')||g.contactMs!==(a.contactMs===undefined?undefined:a.contactMs-shot.startMs))throw new Error(`${shot.id}: contact/action mismatch for ${g.id}; intent ${a.type}, clip ${g.action}, expected shot-local contactMs ${a.contactMs===undefined?'omitted':a.contactMs-shot.startMs}, received ${g.contactMs??'omitted'}`);
     }
   }
   if(consumed.size!==p.gestures.length)throw new Error(`${shot.id}: missing performance action`);

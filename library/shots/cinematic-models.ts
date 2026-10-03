@@ -2,8 +2,10 @@ import type { Shot } from '../../packages/core/schemas.js';
 import type { CinematicModel } from '../../packages/director/schemas.js';
 import { escapeHtml } from '../../packages/core/utils.js';
 import { fold } from '../../packages/explainer/plan.js';
+import { steamComponentLabels } from '../../packages/explainer/configurations.js';
 import { component } from './explainer.js';
 
+export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.1';
 type Part=NonNullable<Shot['visualization']>['parts'][number];
 export interface ModelIllustration {svg:string;motionAnchors:Array<{selector:string;x:number;y:number}>;}
 
@@ -12,8 +14,9 @@ export function cinematicModel(part:Part,model:CinematicModel,w:number,h:number)
   if(model.variant==='steam-old')return {svg:`<g data-configuration="old-cylinder"><g data-config-component="cooled-cylinder">${component('cylinder',w*.72,h*.66,'#237CA6','#BBDDED')}<path d="M0 ${-h*.28}V${-h*.46}M${-w*.05} ${-h*.32}L${w*.05} ${-h*.42}M${-w*.05} ${-h*.42}L${w*.05} ${-h*.32}" stroke="#237CA6"/></g></g>`,motionAnchors:[]};
   if(model.variant==='steam-split'){
     const font=h*.11;
-    const label=(text:string)=>`<rect x="${-w*.21}" y="${h*.42-font}" width="${w*.42}" height="${font*1.35}" rx="3" fill="#FFF3DB" stroke="none"/><text x="0" y="${h*.42}" text-anchor="middle" fill="#201A15" stroke="none" font-family="Arial" font-size="${font}">${text}</text>`;
-    return {svg:`<g data-configuration="separate-condenser"><g data-config-component="hot-cylinder" transform="translate(${-w*.24} ${-h*.06})">${component('cylinder',w*.36,h*.49,'#BF482B','#F0B2A0')}${[-.08,0,.08].map(x=>`<path d="M${w*x} ${-h*.28}q${w*.035} ${-h*.06} 0 ${-h*.12}" stroke="#BF482B"/>`).join('')}${label('xi-lanh')}</g><g data-config-component="cold-condenser" transform="translate(${w*.24} ${-h*.06})">${component('condenser',w*.36,h*.49,'#237CA6','#BBDDED')}<path d="M0 ${-h*.28}V${-h*.46}M${-w*.04} ${-h*.32}L${w*.04} ${-h*.42}M${-w*.04} ${-h*.42}L${w*.04} ${-h*.32}" stroke="#237CA6"/>${label('bình ngưng')}</g></g>`,motionAnchors:[]};
+    const labels=steamComponentLabels([...part.sourceRefs,...model.sourceRefs]);
+    const label=(text:string)=>`<rect x="${-w*.21}" y="${h*.42-font}" width="${w*.42}" height="${font*1.35}" rx="3" fill="#FFF3DB" stroke="none"/><text x="0" y="${h*.42}" text-anchor="middle" fill="#201A15" stroke="none" font-family="Arial" font-size="${font}">${escapeHtml(text)}</text>`;
+    return {svg:`<g data-configuration="separate-condenser"><g data-config-component="hot-cylinder" transform="translate(${-w*.24} ${-h*.06})">${component('cylinder',w*.36,h*.49,'#BF482B','#F0B2A0')}${[-.08,0,.08].map(x=>`<path d="M${w*x} ${-h*.28}q${w*.035} ${-h*.06} 0 ${-h*.12}" stroke="#BF482B"/>`).join('')}${label(labels.cylinder)}</g><g data-config-component="cold-condenser" transform="translate(${w*.24} ${-h*.06})">${component('condenser',w*.36,h*.49,'#237CA6','#BBDDED')}<path d="M0 ${-h*.28}V${-h*.46}M${-w*.04} ${-h*.32}L${w*.04} ${-h*.42}M${-w*.04} ${-h*.42}L${w*.04} ${-h*.32}" stroke="#237CA6"/>${label(labels.condenser)}</g></g>`,motionAnchors:[]};
   }
   if(['electric-vehicle-schematic','combustion-vehicle-schematic'].includes(model.variant)){
     const electric=model.variant==='electric-vehicle-schematic',accent=electric?'#237CA6':'#BF6C36';

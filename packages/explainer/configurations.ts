@@ -15,6 +15,12 @@ export function configurationLabels(quote:string):{before:string;after:string}|u
   }
   return undefined;
 }
+/** Match diagram component wording to its narrated comparison, including inherited state citations. */
+export function steamComponentLabels(refs:Ref[]):{cylinder:string;condenser:string}{
+  const comparison=refs.map(ref=>configurationLabels(ref.quote)).find(Boolean);
+  if(comparison)return components[/\bcylinder\b/iu.test(comparison.before)?1:0]!;
+  return components[refs.some(ref=>/\bcylinder\b|\bcondenser\b/iu.test(ref.quote))?1:0]!;
+}
 /** A schematic grouping can carry only the component states established in earlier narration. */
 export function splitSteamEvidence(refs:Ref[]):boolean{
   return components.some(({cylinder,condenser})=>refs.some(ref=>{const states=thermalEvidence({kind:'cylinder',label:cylinder},ref.quote,[{label:condenser}]);return states.length>0&&states.every(state=>state.value==='hot');})
