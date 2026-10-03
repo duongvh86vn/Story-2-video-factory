@@ -1,5 +1,7 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
+[Chuẩn bị native hiện hành](docs/validation/2026-10-03-native-deadline.md): bốn project cũ được đặt timeout storyboard20 phút và resume thật tớiANALYZED, terminal0; narration/audio/cache và phần journal cũ giữ nguyên. Chỉ thêm planner mock, zero native/TTS call mới; chưa có native storyboard/final. Giữ các attempt cũ và recovery cycle, kiểm readiness một lần sau khi worker thực sự có dịch vụ.
+
 Create-project thêm draft30fps cho cinematic mới sau audit trước. Kiểm tra new quaCLI/API dùng cùng initializer, cấu hình resolve đúng fps và real draft media có30fps/frame clock; giữ width/height/quality từ config, project cũ/override và narration/cache không đổi. Không chỉ assert field hoặc đổi fps bằng duplication sau render. Source mới build/typecheck, runtime NOT RUN.
 
 Hai bản ô tô được dàn cảnh lại đã terminal0/DONE/QC kỹ thuật, giữ script/narration/WAV bytes; [provenance, các iteration lỗi và bản cuối](docs/validation/2026-10-03-car-workshop-production.md). Kiểm tra toàn phim về walk/lean/contact/model-response/recovery, biểu cảm, nhãn/qualifier, chuyển cảnh và lời kể với cả người que và robot. Parent chỉ xem khung hình để sửa artwork; không dùng kết quả này làm PASS cho native creative, input matrix hoặc live local TTS.

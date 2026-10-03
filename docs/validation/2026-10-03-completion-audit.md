@@ -52,6 +52,8 @@ File Downloads ngày01/10 vẫn ghi một nhân vật dẫn chuyện cố địn
 
 ## Bước tiếp theo và điều kiện chặn
 
+[Checkpoint chuẩn bị native](2026-10-03-native-deadline.md) tiếp theo đã thay đổi trạng thái sản xuất thật: bốn project cũ timeout20 phút, resume đếnANALYZED terminal0, giữ narration/audio/cache và journal prefix, chỉ thêm planner mock. Không có native/TTS call mới, không có native storyboard/final được chấp nhận; timeout dài hơn chưa chứng minh giải quyết sáu lỗi cũ. Diagnostics/default30 runtime và đầy đủ matrix vẫn còn mở.
+
 Previous goal turn là **PROGRESS**: sửa storage-recovery gate, build/typecheck, hai complete-film artwork resumes, provenance, GitHub exact và Studio mới đều thay đổi trạng thái thật. Lượt audit này phát hiện spec Downloads/sample cấu hình cũ có thể đưa người dùng về người dẫn/diagram, nên sửa chúng và bổ sung audit có phạm vi đầy đủ; không thu nhỏ mục tiêu.
 
 Kiểm tra authoritative worker handle lại ở lượt này: Gauss readiness vẫn terminal `errored` usage limit, hẹn18:30 Asia/Saigon03/10 (=11:30UTC); không có readiness call chạy. Boole chỉ trả completed report36/36/92/92 của lần trước, không phải diagnostics audit mới. Không có model/native production đang live, không gọi đây là verified wait. Không chạy lại provider hoặc đổi account/model để vượt hạn mức. Sáu native timeouts cũ vẫn timeout với nguyên nhân chưa biết.
