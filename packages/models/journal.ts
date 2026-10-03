@@ -57,6 +57,12 @@ function parseJournal(content: string): AttemptRecord[] {
       || !['pending', 'success', 'error'].includes(data.status)) throw new ModelError('journal', 'Model call journal contains invalid usage metadata');
     if (data.tokens) data.tokens = { inputTokens: tokenCount(data.tokens.inputTokens), outputTokens: tokenCount(data.tokens.outputTokens) };
     if (data.costUsd !== undefined && (!Number.isFinite(data.costUsd) || data.costUsd < 0)) throw new ModelError('journal', 'Model call journal contains invalid cost metadata');
+    const retryStart = data.event === 'completed'
+      ? records.find(record => record.event === 'started' && record.callId === data.callId) : undefined;
+    if (retryStart?.retryOf !== undefined
+      && (data.retryOf !== retryStart.retryOf || data.requestHash !== retryStart.requestHash)) {
+      throw new ModelError('journal', 'Model retry completion does not match its started boundary');
+    }
     if (data.retryOf!==undefined) {
       const previous=records.find(record=>record.callId===(data.event==='started'?data.retryOf:data.callId)&&
         record.event===(data.event==='started'?'completed':'started')&&record.requestHash===data.requestHash);

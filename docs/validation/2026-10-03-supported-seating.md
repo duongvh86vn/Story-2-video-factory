@@ -25,6 +25,8 @@ Both successful films are authored design iterations adapted from earlier compos
 
 ## Independent checks still required
 
+Follow-up: source76ac9e3 has independent acting/seating/carry64/64 and unchanged regressions135/135 through public APIs and secured actual GSAP. The missing report annotation was repaired; parent and subsequent independent whole test typecheck passed. Browser/movie fidelity remain pending. [Current scope and retained failures](2026-10-03-current-runtime.md) supersede the NOT RUN checkpoint below for covered cases.
+
 The user delegates runtime testing to another model. Build/typechecks/schema generation passed; current-source runtime acceptance is **NOT RUN**. Cover both rigs and seat directions, sit/hold/stand, mid-transition/endpoint/seek/reverse playback, fixed bone/foot invariants, support contacts and real browser SVG output. Check consecutive seated poses, continuous cuts/support integrity, multiple actor ownership, every rejection above, legacy7/8/9, cast/voice edits, visual-only cache rebuild and final media. Review whole films for arm ergonomics, readability, timing and participation in the story. Preserve original failed evidence and keep the full product acceptance open.
 
 Implementation: `packages/animation/{schemas,compiler,support,scene,library}.ts`, `packages/stage/seats.ts`, director/camera/actor continuity, `library/shots/cinematic.ts`, Studio review and visual fingerprints. See [TEST-HANDOFF](../../TEST-HANDOFF.md) and [approved rig migration history](2026-10-03-renderer-language.md).

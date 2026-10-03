@@ -28,6 +28,8 @@ Storyboard regeneration still invalidates storyboard approval. A locked cinemati
 
 ## Remaining acceptance
 
+Fresh independent follow-up on76ac9e3: genuine archived/compiled7b515 baseline and authenticated pristine copies passed17/17 checks. Unlocked scenes rebuilt through SCENES_READY with current English SVG labels; approved host/narration/audio/cache bytes survived and TTS3→3. Locked incompatible plan stopped explicitly without artifact changes. Prior FAIL evidence remains retained. [Current report](2026-10-03-current-runtime.md) supersedes the earlier NOT RUN checkpoint for this bounded probe; whole legacy-project/input/edit/final acceptance remains open.
+
 Use the public compiled API to check unchanged approved custom-host artifacts and approval across a visual/runtime update. Cover legacy 2.2.7/8/9 hashes, current stable identity, and rejection of changed profile, parts, viewBox, paths, poses, SVG or unknown hash. Then check unlocked scene regeneration/English labels, narration/cache preservation and no TTS requests. Verify storyboard reapproval and incompatible locked-plan conflicts separately; keep the original full-resume failure open until the complete audit explains and verifies those transitions. Include real script, SRT, WAV and aligned WAV+SRT edit/resume coverage before declaring the complete product accepted. Actual voice quality, autonomous story direction and full-film aesthetics remain separate gates.
 
 Portable checks for the model responsible for testing:

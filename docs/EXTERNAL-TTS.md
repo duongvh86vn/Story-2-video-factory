@@ -20,6 +20,8 @@ WAV đầu vào giữ giọng của người dùng và không gọi TTS để th
 
 ## API riêng do bạn phát triển
 
+Trong Studio, mở project → **Nội dung, diễn viên và giọng kể** → chọn ngôn ngữ và dịch vụ TTS → nhập endpoint, model/voice nếu API cần → lưu → **Tạo video**. Có thể lưu cấu hình làm mặc định riêng cho EN/VI/JA/KO. Factory gọi API từ server local; backend TTS có thể chạy cùng máy hoặc trên máy khác trong mạng của bạn. Luồng script và SRT cùng dùng adapter này; WAV giữ audio đầu vào.
+
 Chọn **API TTS riêng (HTTP JSON)**, nhập endpoint đầy đủ như `http://127.0.0.1:8000/tts`. Contract mặc định:
 
 ```json
@@ -84,4 +86,4 @@ Audit độc lập đầu tiên: 437/442 test qua, 5 lỗi cấu hình được 
 
 Lượt độc lập sau đó đã chạy cùng English script từ archive có dependencies sạch đến actors MP4/DONE. [Báo cáo runtime](validation/2026-10-03-clean-english-runtime.md) phân biệt pipeline thành công, raw audit30/31 và creative offline; không dùng kết quả Windows Speech để tuyên bố API riêng/OmniVoice đã chạy thật.
 
-Probe renderer migration thật03/10 giữ toàn bộ audio/cache bytes và HTTP TTS request count3→3 khi chỉ cập nhật phần hình. Lần đầu FAIL do thiếu version trong scene identity. Follow-up trên d882 cũng FAIL: animation version làm đổi rig hash và chặn ở duyệt host tùy chỉnh, chưa rebuild scene. Source đã tách rig identity khỏi animation; build/typecheck qua, runtime của sửa mới chưa được model khác chạy. [Phạm vi và việc cần test](validation/2026-10-03-renderer-language.md). Kết quả này không chứng nhận phát âm của API local hoặc live OmniVoice.
+Probe renderer migration thật03/10 giữ audio/cache bytes và HTTP TTS count3→3 khi chỉ cập nhật phần hình. Lần đầu FAIL do scene identity, follow-up d882 FAIL do rig hash/host approval; raw evidence vẫn giữ. Probe độc lập mới trên pristine baseline đã qua17/17 checks, nhánh chưa khóa rebuilt SCENES_READY, host đã duyệt/audio/cache giữ bytes và TTS3→3; nhánh khóa conflict rõ. [Phạm vi hiện tại](validation/2026-10-03-current-runtime.md), [lịch sử migration](validation/2026-10-03-renderer-language.md). Đây là HTTP stub PCM, không chứng nhận giọng API local hoặc live OmniVoice.
