@@ -1,5 +1,7 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
+Cập nhật03/10: tiếp tục mục tiêu đầy đủ. Đã triển khai nhãn thành phần hơi nước theo nguồn EN/VI và diagnostics action; thêm version renderer vào project/scene cache, giữ fingerprint narration. Probe thật trước sửa scene key FAIL, dù giữ toàn bộ audio/cues/cache. Kiểm tra độc lập sau sửa đang chờ model; xem [phạm vi](docs/validation/2026-10-03-renderer-language.md). Theo [review phim](docs/validation/2026-10-03-film-quality.md), ưu tiên độ rõ thao tác Watt, chú thích đọc được và diễn viên quay lại sau cutaway khi phù hợp. Native storyboard đã được chấp nhận nhưng contrast recap/provider còn chặn final; không đánh dấu hoàn thành ba luồng hoặc hai bài/hai kiểu tạo hình.
+
 Ngày02/10/2026. [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md) là đặc tả hiện hành. Người que đóng vai trong câu chuyện, có thể là người lịch sử được narration/source nêu tên. Bỏ người dẫn cố định và quota. Ba luồng script/WAV/SRT cùng WAV+SRT vẫn giữ nguyên văn và clock.
 
 Kế hoạch tác vụ, files/contracts/checks và checkbox triển khai tại [docs/plans/2026-10-02-story-actors.md](docs/plans/2026-10-02-story-actors.md). Kế hoạch thiết kế mở01/10 giữ nền artwork/provider/security; những đoạn về presenter đã bị thay thế. Evidence cũ giữ ở IMPLEMENTATION-STATUS và TEST-RESULTS; không đổi thành nghiệm thu actors.

@@ -1,5 +1,7 @@
 # Trạng thái triển khai V2.2
 
+03/10/2026 — cập nhật mới nhất: [nhãn theo nguồn và cache renderer](docs/validation/2026-10-03-renderer-language.md), [kiểm tra phim và diễn xuất](docs/validation/2026-10-03-film-quality.md). Nhãn English/Vietnamese và feedback action có 275/275 test scoped + typecheck qua. Probe migration thật giữ voice/cache và 3→3 request nhưng FAIL do thiếu version ở scene cache; source đã sửa/build qua, kiểm tra độc lập sau sửa chưa chạy vì model hết hạn mức. Hai phim người que được dàn cảnh lại đã DONE/QC kỹ thuật; chưa nghiệm thu thẩm mỹ. Native hơi nước đã qua storyboard nhưng dừng ASSETS_READY do contrast recap và provider/account error, chưa có final. Các ghi chép phía dưới là lịch sử evidence; không dùng checkpoint cũ để tuyên bố sản phẩm hoàn thành.
+
 > Contract hiện hành ngày 02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ người dẫn cố định và quota. Source2.2.21 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
 
