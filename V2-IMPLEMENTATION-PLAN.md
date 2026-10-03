@@ -4,6 +4,8 @@ Ngày02/10/2026. [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md) là đặc
 
 Kế hoạch tác vụ, files/contracts/checks và checkbox triển khai tại [docs/plans/2026-10-02-story-actors.md](docs/plans/2026-10-02-story-actors.md). Kế hoạch thiết kế mở01/10 giữ nền artwork/provider/security; những đoạn về presenter đã bị thay thế. Evidence cũ giữ ở IMPLEMENTATION-STATUS và TEST-RESULTS; không đổi thành nghiệm thu actors.
 
+Cập nhật03/10: external/local TTS đã triển khai và có audit contract; English script đã ra actors MP4 trong clean dependencies cùng máy, scope offline và raw audit30/31 giữ nguyên. Native hơi nước kết thúc semantic rejection; feedback đã sửa và lượt authoring mới dùng narration không đổi đang chạy. Patch comparison/state English và diagnostic qua120/120 scoped audit; exact version migration/audio retention chưa chạy trong scope này. Các mốc chất lượng toàn bài, hai kiểu diễn viên, live OmniVoice/JA/KO và ASR Việt không được đánh dấu hoàn thành bởi các probe này.
+
 | Phần | Trạng thái source2.2.21 | Điều còn phải xác minh |
 |---|---|---|
 | Narration | Ba luồng, TTS actual clock, SRT fit, ASR/alignment, cache và final gates đã có | Hồi quy trên source bàn giao; chất lượng ASR Việt |

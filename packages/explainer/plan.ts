@@ -9,6 +9,7 @@ import { ExplanationPlanSchema, type ExplanationPlan, type ExplanationBeat } fro
 import { narratedStates } from './thermal.js';
 import { steamConfigurations, validateConfiguration } from './configurations.js';
 
+export const EXPLANATION_VERSION='sourced-explanation-2.2.1';
 export const fold = (s: string) => s.normalize('NFKD').replace(/\p{M}/gu, '').replace(/[đĐ]/g, 'd').toLowerCase().replace(/\s+/g, ' ').trim();
 const transferPredicate=/\b(?:day|truyen|lam quay|dan|dua|di vao|tao ra|cap nang luong|push|transfer|drive|turn|supply|supplies)\b/;
 function narratedPredicate(quote:string,from:string,to:string,otherLabels:string[]):string|undefined{

@@ -14,4 +14,4 @@ Thực hiện ngày03/10/2026 Asia/Saigon (02/10UTC), snapshot `a292794a9066c244
 
 Raw build.log/build-result.json và source ZIP giữ trong temp riêng. Cài đặt/build không ghi hoặc thay node_modules của checkout người dùng. Một npm deprecation warning cho dependency glob được giữ trong output; chưa thực hiện audit bảo mật hay nâng dependency trong scope này.
 
-Đây là clean dependency build trên cùng máy, vẫn có npm cache và công cụ hệ thống hiện có. Chưa chứng minh cài trên máy khác, renderer/browser/FFmpeg/ASR/TTS từ đầu, lần chạy Studio đầu tiên hoặc final video trong thư mục sạch. Endpoint OmniVoice/JA/KO/Azure chưa được cung cấp; không dùng build để chứng nhận giọng thật hay chất lượng phim.
+Đây là clean dependency build trên cùng máy, vẫn có npm cache và công cụ hệ thống hiện có. Lượt kiểm tra độc lập sau đó đã dựng một English script → actors → final trong archive này; [phạm vi runtime và raw audit 30/31](2026-10-03-clean-english-runtime.md). Chưa chứng minh cài trên máy khác, renderer/browser/FFmpeg/ASR/TTS từ đầu hoặc lần chạy Studio đầu tiên. Endpoint OmniVoice/JA/KO/Azure chưa được cung cấp; không dùng build để chứng nhận giọng thật hay chất lượng phim.

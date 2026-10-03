@@ -11,7 +11,7 @@ export function validateAuthoredVisualSources(shot:Shot,canonical:ExplanationBea
   for(const part of v.parts){
     const original=entities.find(e=>e.id===part.id);
     if(original){
-      if(part.label!==original.label||!equivalent(part,original)||hash(part.states??[])!==hash(original.states??[]))throw new Error(`${shot.id}: model entity changed its sourced identity`);
+      if(part.label!==original.label||!equivalent(part,original)||hash(part.states??[])!==hash(original.states??[]))throw new Error(`${shot.id}: model entity changed its sourced identity: ${part.id} must preserve label=${JSON.stringify(original.label)}, kind=${original.kind}, configuration=${original.configuration??'absent'} and canonical states; customize displayed labels in artDirection artwork`);
       const matching=entities.filter(entity=>equivalent(entity,original));
       if(!part.sourceRefs.every(ref=>matching.some(entity=>entity.sourceRefs.some(source=>hash(ref)===hash(source)))))throw new Error(`${shot.id}: merged entity evidence belongs to a different subject`);
     }else if(!['object','stage','marker'].includes(part.kind)||part.configuration||part.states?.length||!part.sourceRefs.some(ref=>fold(ref.quote).includes(fold(part.label)))){

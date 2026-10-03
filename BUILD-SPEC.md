@@ -65,6 +65,8 @@ Ngôn ngữ narration chọn `en`, `vi`, `ja`, `ko` hoặc locale; độc lập 
 
 Voice provider thêm `azure-speech`, `openai-compatible`, `omnivoice-studio`. OmniVoice/VoiceStudio dùng speech API tương thích với extension `language`, các provider local lấy WAV trực tiếp. `voice.model`, `http_fields`, `http_extra_body`, `timeout_ms` được cấu hình trong Studio/API/CLI. Tham số thêm không được ghi đè text/clock/format; cache gồm model/options/mapping. `voice_profiles` theo locale/mã chính dùng trước override series/project; lưu mặc định cho một language giữ preset khác. Contract, ví dụ và giới hạn phiên bản nằm tại [EXTERNAL-TTS.md](docs/EXTERNAL-TTS.md). Code/build và stub không được coi là live backend đã nghiệm thu.
 
+English narration được giữ nguyên như tiếng Việt. Bộ suy luận nguồn hỗ trợ mẫu comparison tường minh `cooling inside/in the cylinder, a separate condenser` khi nguồn trước đó xác nhận xi-lanh giữ nóng và bình ngưng lạnh/làm lạnh; chu kỳ nóng/lạnh của thiết kế cũ không đủ xác nhận thiết kế cải tiến. Parser này có phạm vi hạn chế, không thay hiểu ngôn ngữ tổng quát. Identity label/kind/configuration/states là metadata nguồn; thiết kế chữ hiển thị có thể dùng SVG artwork riêng. Feedback trả chi tiết sai identity/configuration và gom các lỗi semantic; không âm thầm sửa output factual của model. `sourced-explanation-2.2.1` tham gia fingerprint hình, không thay fingerprint narration.
+
 Speech activity đo RMS20ms. Trong actorScene chỉ áp dụng cho diễn viên được gán speakingSegmentIds; [] là voiceover, không mấp máy miệng theo narration. Đây không phải phoneme lip-sync. Silent draft phải ghi đúng mức đồng bộ.
 
 ## 5. Rig nền và cast diễn viên

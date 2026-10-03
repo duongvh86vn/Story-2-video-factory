@@ -18,6 +18,7 @@ Thiết kế mở nguồn nền2.2.18; cast2.2.19: `packages/director/creative.t
 | Rig MD nền/hash/pose/preview | packages/host/profile.ts, rig.ts, index.ts |
 | IK target/contact, gaze/mouth/temporal geometry | packages/host/controller.ts |
 | Goal/entities/evidence/relationships | packages/explainer/plan.ts, schemas.ts; packages/story/ |
+| Comparison English/VI, thermal subject, semantic diagnostic | packages/explainer/configurations.ts, thermal.ts, visual-sources.ts; packages/director/creative.ts |
 | Tám recipe/diagram component/layout | packages/explainer/recipes.ts; library/shots/explainer.ts |
 | Storyboard/cue anchors/locks/validation | packages/explainer/storyboard.ts; packages/storyboard/ |
 | Scene compilation/source integrity/fallback/master | packages/scenes/index.ts, security.ts |

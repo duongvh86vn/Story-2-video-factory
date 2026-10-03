@@ -22,9 +22,10 @@ import { ExplanationBeatSchema, SourceRefSchema, VisualizationSchema } from '../
 import { ShotHostSchema } from '../host/schemas.js';
 import { CinematicPlanSchema } from './schemas.js';
 import { canonicalExplanationEvidence, normalizeCreativeSourceRefs } from '../explainer/citations.js';
-import {bindActorShot} from '../actors/model.js';
+import {bindActorShot,shotPerformer} from '../actors/model.js';
 import {actorLockKey,assertActorLocks} from '../actors/locks.js';
 import type {ActorDefinition} from '../actors/schemas.js';
+import {validateCamera} from './camera.js';
 
 /** The general shot contract also supports legacy video; creative production needs these fields. */
 export const CreativeStoryboardSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -66,7 +67,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
         c.sourceRefs=shot.sourceRefs!;
         // The scene owns this operational ID; it is derived metadata, not host identity.
         if(origin==='model'){
-          c.performance.id=shot.id;c.models=stageModels(shot);
+          c.performance.id=shot.id;check(()=>{c.models=stageModels(shot);});
           shot.camera={shotSize:c.camera.framing,movement:c.camera.movement,angle:'eye-level'};
           shot.sceneType='character-scene';shot.recipeId=EXPLAINER_RECIPES[shot.visualization!.type];
           c.continuity.entry={...c.performance.root};
@@ -85,6 +86,8 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}}));
       if(shot.cinematic?.artDirection&&shot.visualization)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot));
+      // Camera diagnostics must survive a separate early artwork/rendering failure.
+      check(()=>validateCamera(shot,shotPerformer(shot,context.profile,context.rig).profile));
       check(()=>{
         const rendered=renderCinematic(shot,context.profile,context.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,context.narration);
         const errors=validateSceneFiles(secureSceneFiles(rendered.files),shot,config.workflow.max_scene_bytes,[],config.rendering.final);

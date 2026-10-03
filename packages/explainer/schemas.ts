@@ -7,7 +7,7 @@ export const SourceRefSchema = z.object({ kind: z.enum(['narration', 'source']),
 export const EntitySchema = z.object({ id: Id, label: z.string().min(1).max(100),
   kind: z.enum(['boiler', 'condenser', 'piston', 'cylinder', 'wheel', 'gear', 'lever', 'car', 'engine', 'battery', 'pipe', 'flow', 'object', 'stage', 'marker']),
   sourceRefs: z.array(SourceRefSchema).min(1),
-  configuration:z.enum(['old-cylinder','separate-condenser']).optional(),
+  configuration:z.enum(['old-cylinder','separate-condenser']).optional().describe('Only for a sourced grouped design: kind=object, visualization type=comparison, exact canonical label and evidence. Omit on cylinder/condenser components. Preserve seed entity identity and states.'),
   states:z.array(z.object({value:z.enum(['hot','cold']),sourceRefs:z.array(SourceRefSchema).min(1)})).max(8).optional() });
 export const RelationSchema = z.object({ from: Id, to: Id, kind: z.enum(['sequence', 'cause', 'transfer', 'part-of', 'compare']),
   sourceRefs: z.array(SourceRefSchema).min(1) });

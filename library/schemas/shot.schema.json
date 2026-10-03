@@ -521,7 +521,8 @@
                     "enum": [
                       "old-cylinder",
                       "separate-condenser"
-                    ]
+                    ],
+                    "description": "Only for a sourced grouped design: kind=object, visualization type=comparison, exact canonical label and evidence. Omit on cylinder/condenser components. Preserve seed entity identity and states."
                   },
                   "states": {
                     "type": "array",

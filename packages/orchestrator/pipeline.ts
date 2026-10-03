@@ -23,7 +23,7 @@ import { ProductionStore } from './store.js';
 import { collectResearch } from './research.js';
 import { reservation } from './reservation.js';
 import { compileHost, loadHost, hostProfileFingerprint } from '../host/index.js';
-import { createExplanation } from '../explainer/plan.js';
+import { createExplanation, EXPLANATION_VERSION } from '../explainer/plan.js';
 import { ExplanationPlanSchema } from '../explainer/schemas.js';
 import { validateExplainerStoryboard, writeHostTimeline } from '../explainer/storyboard.js';
 import { narrateScript, resolveVoice, requireVoice, VoiceReportSchema } from '../voice/index.js';
@@ -59,7 +59,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
-  return {all:hash({version:4,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
+  return {all:hash({version:4,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
     narration:hash({version:3,scriptParser:mode==='script'?SCRIPT_PARSER_VERSION:undefined,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {

@@ -2,6 +2,8 @@
 
 Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.7; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
 
+Bổ sung03/10: [English runtime trong clean archive](docs/validation/2026-10-03-clean-english-runtime.md) đã DONE nhưng raw audit giữ30/31, creative offline. Patch `sourced-explanation-2.2.1` cần kiểm tra comparison English, cold/cooled/cooling đúng chủ thể, phủ định và câu sau nói về đối tượng khác không gán nhiệt sai; regression VI nguyên trạng. Model đạo diễn phải nhận được diagnostic chính xác cho configuration sai và entity đổi identity, cùng các lỗi khác trong một response. Rejection không ghi cache hoặc tạo final. Đổi semantic version chỉ refresh hình/phân tích, giữ narration/audio hash/cache. Kiểm tra này không thay nghiệm thu phát âm, OmniVoice thật hoặc thiết kế toàn phim.
+
 ## Ngôn ngữ và dịch vụ TTS bên ngoài
 
 Contract mới: [EXTERNAL-TTS.md](docs/EXTERNAL-TTS.md). Kiểm tra EN/VI/JA/KO riêng cho script/WAV/SRT; không đổi input language chỉ để provider chạy được. Locale en-GB không dùng giọng Windows en-US. Japanese text dài không có khoảng trắng phải chia ở ranh giới từ, giữ mọi ký tự/thứ tự và separator gốc; Hangul và emoji không hỏng UTF-8. Cue SRT giữ nguyên clock/text.
