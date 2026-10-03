@@ -1,8 +1,8 @@
 # STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
-> Contract hiện hành ngày 02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Ba luồng nguyên văn giữ nguyên. Source2.2.21 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
+> Contract hiện hành ngày 03/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Ba luồng nguyên văn giữ nguyên. Director2.2.22/animation2.2.10 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
-Contract source2.2.21 bổ sung actorScene: primary nullable, supporting actors, costume SVG gắn vào khớp, speakingSegmentIds và continuity cut/continuous. Identity thuộc từng vai; preview dùng cùng skeleton với phim. Artwork/layers/palette/camera tự chọn; source/clock/contact/security vẫn chặn final khi sai.
+Contract hiện tại có actorScene: primary nullable, supporting actors, costume SVG gắn khớp, speakingSegmentIds và continuity cut/continuous. Animation2.2.10 có body/posture, hai tay độc lập và ghế có support; director2.2.22 nối vào pipeline/cache. Identity thuộc từng vai; preview dùng cùng skeleton với phim. Artwork/layers/palette/camera tự chọn; source/clock/contact/security vẫn chặn final khi sai. [Audit độc lập hiện tại](docs/validation/2026-10-03-current-runtime.md) và [diagnostics mới còn chờ test](docs/validation/2026-10-03-cli-diagnostics.md) ghi scope theo đúng source; chưa nghiệm thu toàn phim/ba luồng/live backend.
 
 
 Đặc tả mục tiêu V2.2 · 2026-10-01. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Ba luồng narration được giữ; diễn xuất V2.2 đang triển khai/nghiệm thu. Phần đã chạy và phần còn chờ được ghi ở IMPLEMENTATION-STATUS.md.

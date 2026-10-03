@@ -1,10 +1,10 @@
 # Story-to-Video Factory — diễn viên trong câu chuyện
 
-> Contract hiện hành ngày 02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Ba luồng nguyên văn giữ nguyên. Source2.2.21 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
+> Contract hiện hành ngày 03/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Ba luồng nguyên văn giữ nguyên. Director2.2.22/animation2.2.10 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
 Nhập **kịch bản hoàn chỉnh, WAV hoặc SRT**, chọn **người que hoặc robot mini**, rồi tạo phim hoạt hình kể lại nội dung. Mỗi vai có identity và tạo hình riêng: nhà nghiên cứu, thợ, người sử dụng hoặc nhân vật lịch sử được nguồn nêu tên. Giọng kể có thể ở ngoài hình; lời kể giữ nguyên văn.
 
-**Source2.2.21 đang triển khai/nghiệm thu.** Dự án mới mặc định story-cinematic, character_mode=actors và người que. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
+**Director2.2.22/animation2.2.10 đang triển khai/nghiệm thu.** Dự án mới mặc định story-cinematic, character_mode=actors và người que. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
 
 ## Bắt đầu
 
@@ -25,6 +25,8 @@ Giọng mặc định lưu từ Studio hoặc sao chép config/voice.example.yam
 Studio có ngôn ngữ narration **English / Việt / Nhật / Hàn**, preset giọng riêng và catalog Windows. TTS bên ngoài hỗ trợ **OmniVoice Studio/VoiceStudio local**, server tương thích `/v1/audio/speech`, HTTP JSON API riêng có field mapping và command. Nhập endpoint/model/voice rồi dùng cùng luồng Tạo video. [Cấu hình và contract TTS bên ngoài](docs/EXTERNAL-TTS.md) ghi rõ phần cần backend/credentials thật để nghiệm thu.
 
 Sau khi lỗi dịch vụ model đã được giải quyết, Studio có **Thử lại yêu cầu model đã lỗi**; CLI dùng `resume <project> --retry-model-errors`. Lần gọi mới giữ lịch sử và vẫn tính vào giới hạn tổng; bấm Tạo video thông thường không xóa budget lỗi. [Contract và phạm vi nghiệm thu](docs/validation/2026-10-03-explicit-model-retry.md).
+
+Codex CLI ghi counters/category lỗi tại `logs/model-cli-diagnostics.jsonl`, giúp phân biệt tiến độ trước timeout và lỗi account/configuration đã nhận diện. Log diagnostics không chứa lời kể, nội dung model hoặc key; lỗi không rõ giữ nhãn unknown. [Phạm vi mới và test còn chờ](docs/validation/2026-10-03-cli-diagnostics.md).
 
 Giọng Việt local có thể cài bằng `python scripts/setup-piper.py`; script cài phiên bản Piper cố định, kiểm tra checksum model và giữ cấu hình giọng đã có. Dùng `--replace-default` để chọn Piper làm mặc định, cấu hình cũ được sao lưu. Model/card nằm trong runtime/tts/models; đọc attribution và giấy phép dataset trong MODEL_CARD. Thư mục runtime và config/voice.yaml là dữ liệu riêng từng máy.
 
