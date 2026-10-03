@@ -159,7 +159,7 @@ Giữ nền hiện có HyperFrames 0.8.96, SVG/GSAP paused timelines, FFmpeg cho
 
 Soft/both captions dùng `literal-tx3g-1`: tạo timed-text track bằng placeholder có dòng ngắn, kiểm tra offset/size/bytes/ms clock, thay UTF-8 có cùng chiều dài rồi stream-copy vào MP4. Xác minh lại stored samples trước media report/QC. Cue vượt65535 bytes hoặc có NUL bị chặn; không sửa text/clock. Media version làm invalidation tổng, giữ narration hợp lệ. SRT export vẫn từ canonical narration. [Contract](docs/LITERAL-SUBTITLES.md) ghi rõ FFmpeg-extracted text vẫn có thể mất whitespace; không gọi stored-byte PASS là strict extraction PASS.
 
-Default final hiện là 1920×1080/30fps, draft 960×540/15fps, tối đa 300 giây/100 shot, budgets cấu hình. V2.2 cần preview diễn xuất tối thiểu 30fps; draft 15fps chỉ phù hợp kiểm tra bố cục. 60fps là lựa chọn cần đo runtime, không phải lời hứa chữa lỗi rig.
+Default final hiện là1920×1080/30fps. Project cinematic mới ghi draft30fps, kế thừa kích thước960×540; cấu hình nền/legacy vẫn có draft15fps. Project cũ hoặc cấu hình override giữ fps đã chọn. Tối đa300giây/100shot, budgets cấu hình. Preview diễn xuất cần30fps; draft15fps chỉ phù hợp kiểm tra bố cục. 60fps là lựa chọn cần đo runtime, không phải lời hứa chữa lỗi rig. Mặc định mới cần model độc lập xác minh bằng media thật, không dùng phim authored đã cấu hình30fps từ trước làm PASS cho create-project.
 
 Frame state phải suy ra được từ masterTimeMs ở frame 0, seek tiến/lùi hoặc render theo batch. Compiler bake IK/foot plant/blend/attachment states vào scene allowlist; không dựa vào CSS clock độc lập, callback đã chạy, random hay frame trước. Không bỏ CSP/security để tạo animation. Contract diễn xuất ở STORY-ACTOR-DIRECTION.md; bản đồ compiler ở IMPLEMENTATION-MAP.md.
 

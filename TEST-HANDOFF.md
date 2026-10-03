@@ -1,5 +1,7 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
+Create-project thêm draft30fps cho cinematic mới sau audit trước. Kiểm tra new quaCLI/API dùng cùng initializer, cấu hình resolve đúng fps và real draft media có30fps/frame clock; giữ width/height/quality từ config, project cũ/override và narration/cache không đổi. Không chỉ assert field hoặc đổi fps bằng duplication sau render. Source mới build/typecheck, runtime NOT RUN.
+
 Hai bản ô tô được dàn cảnh lại đã terminal0/DONE/QC kỹ thuật, giữ script/narration/WAV bytes; [provenance, các iteration lỗi và bản cuối](docs/validation/2026-10-03-car-workshop-production.md). Kiểm tra toàn phim về walk/lean/contact/model-response/recovery, biểu cảm, nhãn/qualifier, chuyển cảnh và lời kể với cả người que và robot. Parent chỉ xem khung hình để sửa artwork; không dùng kết quả này làm PASS cho native creative, input matrix hoặc live local TTS.
 
 Diagnostics CLI thêm sau audit đã qua: [scope mới NOT RUN](docs/validation/2026-10-03-cli-diagnostics.md). Test fake captures cho phân loại lỗi, timeout progress, secrecy, stop auto fallback/resume/explicit recovery và local journal failure; giữ regression Codex/Claude/model/retry. Worker readiness native bị quota trước khi chạy, chưa có small-call result. Không dùng92/92 trước đó làm PASS cho sửa diagnostics mới.
