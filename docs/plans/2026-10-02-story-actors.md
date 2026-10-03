@@ -8,6 +8,8 @@
 
 **Contract:** [STORY-ACTOR-DIRECTION.md](../../STORY-ACTOR-DIRECTION.md). Plan này thay vai trò người dẫn cố định của kế hoạch trước; không thay lời kể/clock hoặc xóa lịch sử evidence. Checked nghĩa source đã viết, không phải nghiệm thu.
 
+Cập nhật hiện hành03/10: compiler/secured real GSAP numeric harness64/64 và unchanged regressions135/135 trên76ac9e3; pristine migration17/17 giữ rig/audio/cache/locks; journal fix36/36 targeted,92/92 broad và compiled proof qua. [Phạm vi](../validation/2026-10-03-current-runtime.md) không gồm browser/full-film/live TTS. Hai [phim ô tô authored](../validation/2026-10-03-car-workshop-production.md) mới đã DONE/QC kỹ thuật, chưa nghiệm thu chuyển động/toàn phim; [diagnostics/storage recovery](../validation/2026-10-03-cli-diagnostics.md) thêm sau audit vẫn NOT RUN. Checkpoint d882 và các câu “nháp chưa chạy” phía dưới là lịch sử; không dùng chúng thay kết quả hiện tại hoặc đóng phần nghiệm thu rộng hơn.
+
 Checkpoint03/10: source director2.2.21/animation2.2.9/`bound-model-motion-2.2.1` đã có body posture, hai kênh tay và primary nhấc–mang–đặt có nguồn trong common pipeline. Code/docs đã push tới commitd882b54; hai artist film carry DONE/QC kỹ thuật, runtime độc lập của batch mới chưa được nghiệm thu. [Handoff carry](../validation/2026-10-03-bound-model-motion.md) ghi đúng khác biệt source của từng film. Các dấu checked của audit/suite phía dưới là lịch sử ở snapshot được dẫn, không phải PASS toàn bộ source hiện tại.
 
 ## Task 1 — thống nhất sản phẩm và tài liệu

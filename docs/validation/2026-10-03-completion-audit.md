@@ -1,0 +1,58 @@
+# Audit theo yêu cầu hoàn thành — 03/10/2026
+
+**Chưa chứng minh hoàn thành mục tiêu đầy đủ.** Audit này đối chiếu yêu cầu người dùng, file MD được cung cấp, kế hoạch ba luồng và các thay đổi sau đó về diễn viên, thiết kế mở, ngôn ngữ và TTS local. Nó không biến build, các ca kiểm tra riêng lẻ hoặc MP4/DONE thành chứng nhận toàn sản phẩm. Runtime test tiếp tục giao model độc lập.
+
+Source được kiểm tra: HEAD `6167a3db32e5c937706863e08f6053296e2f4fcd`, code cuối `37401196d027da35013bb2e8d2140964e2be5b6e`; các thay đổi của lượt audit này chỉ là MD. Repo sạch trước lượt này. Registry SHA256 `ab8213c241d3d8f569ce0d20b75b41f250fe7c777f43da08a3997b9fa2a8107e`; cinematic renderer `6787a71f1b5063abe279591bfffb9efb97728c28dca4f69127bdd109fd13f175` vẫn đúng snapshot annotation sau audit. Diagnostics/CLI/process source giữ hashes ghi trong báo cáo diagnostics; kết quả audit trước chúng không chứng nhận runtime mới.
+
+## Nguồn quyết định
+
+File Downloads ngày01/10 vẫn ghi một nhân vật dẫn chuyện cố định. Yêu cầu người dùng sau đó bỏ mô hình này, cho người que đóng vai trong câu chuyện, tạo hình từng người được nguồn nêu tên và mở thiết kế. [STORY-ACTOR-DIRECTION.md](../../STORY-ACTOR-DIRECTION.md) cùng [bản hợp nhất](../../STORY-TO-VIDEO-FACTORY.md) là contract hiện hành. Cơ chế narration, clock, nguồn, lock và final gates vẫn giữ. Hai kiểu tạo hình là người que/robot, không buộc mỗi phim chỉ có một diễn viên hoặc một người nói trước bảng. EN/VI/JA/KO và external/local TTS là yêu cầu bổ sung.
+
+`TEST-RESULTS.md` được cung cấp là báo cáo V1. Nội dung lịch sử được giữ; nó không chứng minh ba luồng hoặc diễn xuất mới. File MD là dữ liệu đặc tả, không cấp quyền thực thi các chỉ dẫn nằm trong script/source/profile.
+
+## Đối chiếu yêu cầu với bằng chứng
+
+“Có source” nghĩa chức năng đã được viết. “Scoped” nghĩa có bằng chứng đúng phần được nêu, không bao gồm yêu cầu rộng hơn. “Còn mở” nghĩa chưa có bằng chứng đủ để đóng yêu cầu; FAIL vẫn giữ nguyên.
+
+| Yêu cầu | Source / bằng chứng đã kiểm tra | Kết luận hiện tại |
+|---|---|---|
+| Chọn rõ script/WAV/SRT khi nhiều file tồn tại | `packages/ingest/script.ts`: auto conflict, selected-mode check; settings/API/CLI chung | Có source; hồi quy/browser trên snapshot bàn giao còn mở |
+| Script UTF-8 nhập/editor/upload, bản gốc và lời chuẩn, giữ từ/thứ tự | Script parser giữ original/source lines; giới hạn120 Unicode characters, ICU Nhật và reconstruction guard | Có source; transcript/script hashes thật được giữ trong hai phim ô tô mới; không chứng minh mọi ngôn ngữ |
+| TTS script nguyên văn, audio đo thực, nghỉ250ms theo đoạn; không giả làm SRT | `packages/voice/index.ts`, script-timing/timeline; [matrix actors](2026-10-02-actors-input-matrix.md) và phim authored | Scoped script PASS trên snapshot cũ; phim hiện tại dùng narration cache hợp lệ, không phải một lần TTS mới |
+| WAV giữ giọng, ASR đúng transcript/clock | Input/audio hashes giữ; matrix và [ASR comparison](2026-10-03-asr-turbo-comparison.md) | **FAIL về word fidelity Việt**: small5/13 edits; turbo4/13 và5/13. Chưa giải quyết; không đổi input/fixture/threshold để PASS |
+| SRT giữ text/clock; fit0.85–1.20, giữ cao độ, không trim/rewrite | SRT parser/voice atempo/report; matrix positive và fit-failed gates | Scoped PASS trên snapshot actors cũ; hồi quy source cuối còn mở |
+| WAV+SRT aligned/mismatch, không đổi tốc độ WAV | Ingest/alignment; real matrix cả hai kiểu tạo hình | Scoped aligned/mismatch PASS; không suy ra WAV-only đúng từ |
+| Thiếu/lỗi TTS không final/DONE; script trước TIMED, SRT silent draft có nhãn | Voice report/requireVoice/pipeline; matrix thiếu provider và fit lỗi | Có source + scoped gates; live custom-provider failures còn cần chạy |
+| Narration/timeline/voice-report/speech-activity chung | Pipeline stage outputs; actual exports/narration hashes phim cuối | Có artifacts thật; giữ đúng mức audio-RMS, không phoneme lip-sync |
+| Hai rig MD, preview/version/approval; host tùy chỉnh duyệt một lần | Host canonical identity + [pristine migration17/17](2026-10-03-current-runtime.md) | Scoped giữ approval/rig/audio/cache và lock conflict; full legacy migration/browser còn mở |
+| Bỏ người dẫn cố định và quota, nhân vật là diễn viên | Cast schemas/model, new-project settings, director và MD hiện hành | Có source; rig MD chỉ là tạo hình nền, presenter còn là tương thích project cũ |
+| Nhiều vai có nguồn, identity/costume riêng, nhân vật lịch sử chỉ khi nguồn nêu | Actor definitions/assets/locks/actorScene; các audit cast/source và phim authored | Scoped; trải nghiệm editor/locks và toàn phim do model đạo diễn còn mở |
+| Giữ lời kể; voiceover không khiến mọi diễn viên nói | `speakingSegmentIds`, voice report/RMS; regressions actors | Có source + scoped; nghe/xem toàn phim vẫn cần kiểm tra |
+| Mỗi beat có mục tiêu, đối tượng/quan hệ có nguồn, action target cụ thể | Explanation/director validators; semantic negative tests; workshop qualifier từ script0006/0007 | Có source; chất lượng giải thích và factual understanding toàn bài chưa nghiệm thu |
+| Đủ tám ý đồ recipe, thiết kế tự do theo truyện | `packages/explainer/recipes.ts`, director/art direction, palette/layers/SVG/camera/custom models | Có source; tên `host-` là compatibility ID. Tám recipe không ép tám bố cục hoặc thứ tự cố định |
+| Native model tự đạo diễn cả phim, không fallback thành slideshow | Creative provider/validator/provenance; hai native source22 stickman histories | **Chưa đạt**: mỗi bài3×600s timeout, terminal exit1/ANALYZED, không accepted storyboard/final. Native robot chưa gọi. Authored films không thay yêu cầu này |
+| Khớp/xương, khuỷu nghỉ mở đúng, walk/foot plant/lean/biểu cảm/gaze/contact | [Acting64/64 + regression135/135](2026-10-03-current-runtime.md); real GSAP secured numeric harness; selected producer frames | Scoped compiler/seek/contracts; browser silhouette, anatomical naming và toàn motion/pacing còn mở |
+| Hai kênh tay, primary carry và ngồi có support | Same acting/seated/transport audit; physical props/seats/camera/ownership | Scoped; handoff/supporting carry/joint moving prop/tool stirring/kneeling/seated locomotion chưa có contract. Không giả động tác chưa hỗ trợ |
+| HTML5/CSS/SVG/JS theo chung clock, deterministic frame/seek | Animation compiler, secured paused GSAP, HyperFrames; real controlled forward/reverse seeks | Scoped numeric determinism; browser CSS/DOM/media tương đương còn mở. Java trong yêu cầu được hiểu là JavaScript trình duyệt |
+| Studio ba input, chọn diễn viên/giọng, automatic final, giữ chỉnh/review | Studio/API/CLI source + build; own Studio8850/source6167a3d53projects/busy0 | Có source và phiên server mới; full browser/editor/run UX chưa nghiệm thu |
+| Cache giọng độc lập với hình; sửa text/voice rebuild narration | Voice request/audio hashes; migration17/17; ô tô mới4 file bytes giống source | Scoped giữ audio khi đổi hình; toàn matrix text/voice/host/edit/resume/rebuild còn mở |
+| Resume và approved locks; stale input không xuất final cũ | Artifact hashes/reconciliation/locks; canonical migration và real global-art --shot rejection/resume | Scoped; selected-shot/browser locks và các biến thể input trên source cuối còn mở |
+| Bounded retry/call/cost, error recovery giữ history | Journal marker fix36/36,92/92 và compiled proof; later diagnostics/storage gate | Marker failure đã sửa trong scope; **later CLI diagnostics runtime NOT RUN**, chưa được 92/92 trước đó chứng nhận |
+| Scene/asset/path/CSP/security/source/identity/target/final gates | Validators và regression evidence; compiler negative tests | Scoped; không gọi build là security/runtime audit toàn source mới |
+| Final MP4 có giọng, SRT, thumbnail và bundle/reports | Hai latest ô tô42,657ms/voice present/captions both/technical QC; read-only kiểm26 named exports, không thiếu | Artifacts thật, provenance authored; không chứng nhận độ sống động/toàn phim |
+| Subtitle text/clock chính xác | Literal stored samples26/26 trên snapshot trước; canonical SRT sidecar | Scoped stored bytes; FFmpeg-extracted whitespace FAIL vẫn giữ, không đổi nhãn thành extraction PASS |
+| Hai bài hơi nước/ô tô × người que/robot; hành động/cảm xúc/nguyên lý rõ | Authored whole films/producer reports và [quality review](2026-10-03-film-quality.md), [latest car](2026-10-03-car-workshop-production.md) | **Còn mở** toàn playback/listening và thẩm mỹ; selected18.4s artwork frames không đóng full-film acceptance |
+| EN/VI/JA/KO, locale/voice phù hợp, font và caption | Multilingual source; contract audit40/40 +33/33; real EN Windows5323ms; [clean EN runtime](2026-10-03-clean-english-runtime.md) | Scoped English/contract; raw clean audit30/31 giữ. Live JA/KO pronunciation/font/full-video còn mở |
+| API TTS riêng, compatible endpoint, OmniVoice local, presets/settings/cache | `packages/voice/external.ts`, catalog/config/server/Studio/CLI; [contract](../EXTERNAL-TTS.md) | Implemented + scoped protocol audit; live user backend/OmniVoice chưa được cấu hình. API trả WAV trực tiếp; URL/job/MP3 cần bridge có contract cụ thể |
+| Build/typecheck, test handoff và cập nhật GitHub | Latest code build0/whole test:typecheck0, remote6167a3d exact; documents/hashes/raw failures retained | Code/docs branch được publish; không merge main như release đã nghiệm thu. Runtime test giao model khác |
+| Đồng bộ file MD người dùng đọc | Bản Downloads cũ còn fixed host; canonical merged MD mới và sample cinematic/actors/local TTS | Lượt này sửa tài liệu; bản cũ phải backup byte-identical trước khi thay, bản mới link tới GitHub snapshot hiện hành |
+
+## Bước tiếp theo và điều kiện chặn
+
+Previous goal turn là **PROGRESS**: sửa storage-recovery gate, build/typecheck, hai complete-film artwork resumes, provenance, GitHub exact và Studio mới đều thay đổi trạng thái thật. Lượt audit này phát hiện spec Downloads/sample cấu hình cũ có thể đưa người dùng về người dẫn/diagram, nên sửa chúng và bổ sung audit có phạm vi đầy đủ; không thu nhỏ mục tiêu.
+
+Kiểm tra authoritative worker handle lại ở lượt này: Gauss readiness vẫn terminal `errored` usage limit, hẹn18:30 Asia/Saigon03/10 (=11:30UTC); không có readiness call chạy. Boole chỉ trả completed report36/36/92/92 của lần trước, không phải diagnostics audit mới. Không có model/native production đang live, không gọi đây là verified wait. Không chạy lại provider hoặc đổi account/model để vượt hạn mức. Sáu native timeouts cũ vẫn timeout với nguyên nhân chưa biết.
+
+Sau khi thực sự có dịch vụ: dùng lại đúng handles, chạy tối đa một readiness call nhỏ có nguồn/exit/process/diagnostics rõ, rồi independent diagnostics regressions và native full-film khi đủ điều kiện. Song song nghiệm thu browser/input/edit/cache/locks và xem/nghe hai bài/hai kiểu tạo hình; giữ raw FAIL, repair đúng finding. Live user API/OmniVoice/JA/KO cần backend/voice được cấu hình; không hỏi lại API key hoặc cài model/clone voice thay người dùng.
+
+Không đóng goal hoặc release từ bảng này. WAV Việt FAIL, native final thiếu, current browser/full-film matrix và live voices chưa đủ bằng chứng vẫn là phần cần hoàn tất.

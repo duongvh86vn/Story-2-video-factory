@@ -1,5 +1,7 @@
 # Kết quả kiểm thử Story-to-Video Factory
 
+Cập nhật03/10/2026: nội dung lịch sử V1 bên dưới giữ nguyên. Code diễn viên source22/animation10 hiện đã triển khai; [audit độc lập mới](docs/validation/2026-10-03-current-runtime.md), [phim authored](docs/validation/2026-10-03-car-workshop-production.md) và [audit hoàn thành](docs/validation/2026-10-03-completion-audit.md) ghi phạm vi riêng. Diagnostics mới, browser/toàn phim/ba luồng hiện hành và live local TTS vẫn còn chờ; không dùng kết quả V1 làm chứng nhận release mới.
+
 Lưu ý phiên bản (2026-10-01): các kết quả lịch sử bên dưới đo **V1**. Code ba luồng/host V2.1 đã bổ sung và build/typecheck qua; thử nghiệm local sau đó chỉ là evidence từng phần, được ghi trong IMPLEMENTATION-STATUS.md. Hệ diễn xuất V2.2 hiện mới có đặc tả/kế hoạch, chưa có code/video nghiệm thu. Xem TEST-HANDOFF.md; không dùng kết quả cũ để khẳng định ba luồng hoặc style mới đạt. Nội dung lịch sử bên dưới được giữ nguyên.
 
 Ngày kiểm thử: 2026-09-30  

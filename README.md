@@ -6,6 +6,8 @@ Nhập **kịch bản hoàn chỉnh, WAV hoặc SRT**, chọn **người que ho�
 
 **Director2.2.22/animation2.2.10 đang triển khai/nghiệm thu.** Dự án mới mặc định story-cinematic, character_mode=actors và người que. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
 
+[STORY-TO-VIDEO-FACTORY.md](STORY-TO-VIDEO-FACTORY.md) là bản đặc tả hợp nhất để dùng thay file Downloads cũ còn mô hình người dẫn cố định. Bản này giữ toàn bộ contract narration, diễn viên và TTS bên ngoài; [audit hoàn thành](docs/validation/2026-10-03-completion-audit.md) liệt kê riêng bằng chứng đã có và yêu cầu còn mở.
+
 ## Bắt đầu
 
 Cần Node >=22.13, FFmpeg/FFprobe; WAV cần Python và ASR; WAV+SRT cần WhisperX/forced alignment. Script/SRT cần TTS hỗ trợ ngôn ngữ lời kể đã chọn. Không có TTS: script dừng trước timeline; SRT chỉ có nháp im lặng, không final.
