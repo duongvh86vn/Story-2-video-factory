@@ -20,6 +20,7 @@ Parent build/core/Studio and whole test typecheck passed; **runtime acceptance i
 - Known quota/auth/context/model-access failures in terminal events and partial timeout capture; no automatic next call or configured fallback, ordinary resume still blocked, explicit recovery retains charged history/budgets.
 - Startup diagnostics that accompany a successful turn stay nonfatal; generated agent/reasoning text mentioning an error does not become an error category.
 - Secrets/provider prose never appear in the diagnostic JSONL or serialized timeout error; journal-write failure stops safely.
+- A persisted `cli_diagnostics` storage failure also blocks ordinary resume and configured fallback. Source now uses the same recovery-required set for the initial failure and later resume; fix storage before an explicit recovery cycle. This follow-up has build/typecheck evidence only, with runtime still NOT RUN.
 - Network retry, forbidden tools, truncation, usage retention and scratch-directory cleanup keep their previous assertions.
 
 After actual service availability, run at most one restricted small native readiness call before another large production attempt. Preserve its process handle, real exit, redacted diagnostics and source fingerprint. A small successful call is not full native-film acceptance. If limits/access still reject, stop and retain the failure; do not substitute model/account/auth to bypass it.

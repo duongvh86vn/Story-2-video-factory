@@ -15,6 +15,8 @@ import { ClaudeCliAdapter } from './claude-cli.js';
 import { CodexCliAdapter } from './codex-cli.js';
 import { ModelJournal, type AttemptRecord, type UsageSummary } from './journal.js';
 
+const cliRecoveryErrors = new Set(['cli_usage_limit','cli_authentication','cli_context_limit','cli_model_access','cli_diagnostics']);
+
 export function createAdapter(settings: ModelSettings, options: AdapterOptions = {}): ModelAdapter {
   switch (settings.provider) {
     case 'gateway': return new GatewayAdapter(settings, options);
@@ -87,8 +89,8 @@ export class ModelRouter {
         const alreadyEscalated = candidates.length > 1 && cycle.some(record => record.routedRole === candidates[1]);
         if (alreadyEscalated) throw new ModelError('attempt_budget', 'Persistent fallback attempt budget exhausted for this request');
         const fatal = last?.error?.retryable === false;
-        if (last?.error && ['cli_usage_limit','cli_authentication','cli_context_limit','cli_model_access'].includes(last.error.code)) {
-          throw new ModelError(last.error.code, 'The recorded Codex CLI account or configuration error requires explicit recovery before another provider call.');
+        if (last?.error && cliRecoveryErrors.has(last.error.code)) {
+          throw new ModelError(last.error.code, 'The recorded Codex CLI account, configuration or diagnostics-storage error requires explicit recovery before another provider call.');
         }
         if (fatal && candidates.length < 2) throw new ModelError('attempt_budget', 'The persisted provider error cannot be retried');
         const routedRole = candidates.length > 1 && (attempt > retries + 1 || fatal) ? candidates[1]! : candidates[0]!;
@@ -117,7 +119,7 @@ export class ModelRouter {
         // Persist raw invalid output as well as successful output, with secrets redacted.
         try { await this.persistAttempt({ ...start, ...completion }, request, schema, response, completion.error); }
         finally { await this.journal.complete(start, completion); }
-        if (['cli_usage_limit','cli_authentication','cli_context_limit','cli_model_access','cli_diagnostics'].includes(failure.code)
+        if (cliRecoveryErrors.has(failure.code)
           || failure.code === 'attempt_artifact' || start.attempt >= maxAttempts
           || (candidates.length > 1 && start.routedRole === candidates[1]) || (!failure.retryable && candidates.length < 2)) throw failure;
         if (failure.retryable && !(error instanceof StructuredOutputError)) {
