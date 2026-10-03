@@ -32,7 +32,9 @@ export function createAdapter(settings: ModelSettings, options: AdapterOptions =
 
 export class ModelRouter {
   private readonly journal: ModelJournal;
-  constructor(private readonly config: FactoryConfig, private readonly projectRoot: string) {
+  private readonly restartedRequests=new Set<string>();
+  constructor(private readonly config: FactoryConfig, private readonly projectRoot: string,
+    private readonly options:{retryModelErrors?:boolean}={}) {
     this.journal = new ModelJournal(projectRoot);
   }
   isMock(role: ModelRole): boolean { return this.config.models[role].provider === 'mock'; }
@@ -76,6 +78,8 @@ export class ModelRouter {
     const maxAttempts = retries + 1 + (candidates.length > 1 ? 1 : 0);
     const requestHash = hash({ role, operation, input, schema,
       routing: candidates.map(candidate => { const { provider, model, base_url } = this.config.models[candidate]; return { provider, model, base_url }; }) });
+    let restartFailedCycle=!!this.options.retryModelErrors&&!this.restartedRequests.has(requestHash);
+    this.restartedRequests.add(requestHash);
     for (;;) {
       let request = input;
       const start = await this.journal.reserve(requestHash, (attempt, cycle) => {
@@ -89,7 +93,8 @@ export class ModelRouter {
         const feedback = last?.error?.feedback;
         request = feedback ? { ...input, prompt: `${input.prompt}\n\nCORRECTION REQUIRED:\n${feedback}\nReturn the complete corrected output.` } : input;
         return { role, routedRole, provider: settings.provider, model: this.redact(settings.model), operation, promptHash: hash(request) };
-      }, this.config.workflow.max_model_calls, maxAttempts, this.config.workflow.max_model_cost_usd);
+      }, this.config.workflow.max_model_calls, maxAttempts, this.config.workflow.max_model_cost_usd,restartFailedCycle);
+      restartFailedCycle=false;
       const settings = this.config.models[start.routedRole];
       const began = Date.now();
       let adapter: ModelAdapter | undefined;

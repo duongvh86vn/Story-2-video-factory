@@ -34,7 +34,7 @@ import {LANGUAGE_TAG,primaryLanguage} from '../../packages/core/languages.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
 type Named = { name: string };
-const RunBody = z.object({ until: z.enum(States).default('DONE'), force: z.boolean().default(false), shotIds: z.array(SafeId).min(1).max(100).optional() }).strict();
+const RunBody = z.object({ until: z.enum(States).default('DONE'), force: z.boolean().default(false), shotIds: z.array(SafeId).min(1).max(100).optional(),retryModelErrors:z.boolean().optional() }).strict();
 const loopback = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 
 function clean(value: unknown): unknown {

@@ -42,9 +42,9 @@ cli.command('new <name>').option('--root <directory>','Projects directory').opti
   if(presentation)await updateSettings(root,{presentation});console.log(root);
 });
 const stages:Record<string,ProjectStatus>={ingest:'TIMED',storyboard:'STORYBOARDED','build-scenes':'SCENES_READY',review:'REVIEWED',produce:'DONE',make:'DONE',resume:'DONE'};
-for(const [command,until] of Object.entries(stages)) cli.command(`${command} <project>`).description(`Resume production through ${until}`).option('--force','Invalidate planning while respecting locks').option('--until <state>','Stop at a specific persisted state').option('--shot <id...>','Rebuild only these shots').action(async(project:string,options:{force?:boolean,until?:string,shot?:string[]})=>{
+for(const [command,until] of Object.entries(stages)) cli.command(`${command} <project>`).description(`Resume production through ${until}`).option('--force','Invalidate planning while respecting locks').option('--until <state>','Stop at a specific persisted state').option('--shot <id...>','Rebuild only these shots').option('--retry-model-errors','Explicitly retry completed failed model requests; retains usage limits and failure history').action(async(project:string,options:{force?:boolean,until?:string,shot?:string[],retryModelErrors?:boolean})=>{
   const target=options.until ? z.enum(States).parse(options.until):until;
-  const state=await runPipeline(project,{until:target,force:options.force,shotIds:options.shot,onProgress:s=>console.log(`[${s.state}] ${s.name}`)});
+  const state=await runPipeline(project,{until:target,force:options.force,shotIds:options.shot,retryModelErrors:options.retryModelErrors,onProgress:s=>console.log(`[${s.state}] ${s.name}`)});
   console.log(JSON.stringify(state,null,2)); if(state.error) process.exitCode=2;
 });
 cli.command('render <project>').option('--draft','Render and snapshot a draft').action(async(project:string,options:{draft?:boolean})=>{ const state=await runPipeline(project,{until:options.draft?'DRAFT_RENDERED':'FINAL_RENDERED',onProgress:s=>console.log(`[${s.state}]`)}); console.log(JSON.stringify(state,null,2)); if(state.error) process.exitCode=2; });

@@ -4,6 +4,10 @@
 
 Contract hiện tại03/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md), director2.2.22, animation2.2.10, physical-seat2.2.1, bound-model-motion2.2.1, host-rig-identity2.2.1; artwork2.2.4 và host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
 
+## Tiếp tục sau lỗi dịch vụ model — runtime NOT RUN
+
+[Explicit model retry](docs/validation/2026-10-03-explicit-model-retry.md): Studio/CLI/API cho phép thử lại request đã kết thúc lỗi bằng cycle mới có `retryOf`, giữ journal/cost/call totals và global limits. Normal resume không reset budget; pending không được coi như lỗi; mỗi hash chỉ restart một lần trong invocation. Kiểm fatal/fallback/attempt exhaustion, journal marker integrity, legacy/redaction, API boolean/busy, CLI/UI, lock/approval và narration cache. Không dùng quota/account khác để bypass hạn mức. Feature này không reset review/scene repair budgets hoặc chứng nhận TTS backend thật.
+
 ## Nhấc–mang–đặt trong production — test NOT RUN
 
 Fingerprint `bound-model-motion-2.2.1`; [chi tiết](docs/validation/2026-10-03-bound-model-motion.md). Kiểm cả người que/robot, cả tay, nonzero gripOffset, source/binding/action owner và clock. Gesture destination là grip, prop destination là tâm: sai center hoặc nhầm tay phải lỗi. Carry đi trong cửa sổ sau250ms lift/trước250ms lowering, về stand trước khi đi; final có release/recovery và support đúng đáy vật. Target cố định vào vật sau pickup, supporting attachment, joint moving prop, sequential pickup và entering/unreleased/cross-cut carry phải bị chặn rõ.

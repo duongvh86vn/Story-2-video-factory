@@ -38,7 +38,7 @@ import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js
 import { PROP_BINDING_VERSION } from '../director/props.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
 
-export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; onProgress?:(state:ProjectState)=>void; }
+export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; retryModelErrors?:boolean; onProgress?:(state:ProjectState)=>void; }
 const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
 function stageOutputs(state:ProjectState):Partial<Record<ProjectStatus,string[]>> {
   if ((state.specVersion ?? 1)<3) return outputs;
@@ -176,7 +176,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     state.specVersion=config.content.mode==='narrated-explainer'?(config.presentation.mode==='story-cinematic'?4:3):1;state.narrationInputHash=fingerprints.narration;state.hostInputHash=hostHash;
     if(state.assetInputHash && state.assetInputHash!==assetHash && stateIndex(state.state)>stateIndex('STORYBOARDED')) {state.state='STORYBOARDED';state.reviewIteration=0;await writeJson(path.join(root,'work/scene-repair-budget.json'),{});}
     state.inputHash=fingerprint;state.assetInputHash=assetHash; await reconcile(root,state);
-    const router=new ModelRouter(config,root); const engine=new HyperFramesEngine(config,root);
+    const router=new ModelRouter(config,root,{retryModelErrors:options.retryModelErrors}); const engine=new HyperFramesEngine(config,root);
     if (options.shotIds?.length) {
       if(stateIndex(state.state)<stateIndex('SCENES_READY')) throw new Error('Build all scenes before rebuilding selected shots');
       const board=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema); for(const id of options.shotIds) if(!board.shots.some(s=>s.id===id)) throw new Error(`Unknown shot: ${id}`);

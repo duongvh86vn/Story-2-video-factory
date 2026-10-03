@@ -9,6 +9,7 @@ export interface AttemptRecord {
   timestamp: string; role: ModelRole; routedRole: ModelRole; provider: string; model: string;
   operation: 'structured' | 'text' | 'review'; attempt: number; promptHash: string;
   status: 'pending' | 'success' | 'error'; durationMs?: number; responseHash?: string;
+  retryOf?: string;
   tokens?: ModelResponse['usage']; costUsd?: number; error?: { code: string; status?: number; retryable?: boolean; feedback?: string };
 }
 export interface UsageTotals {
@@ -56,6 +57,12 @@ function parseJournal(content: string): AttemptRecord[] {
       || !['pending', 'success', 'error'].includes(data.status)) throw new ModelError('journal', 'Model call journal contains invalid usage metadata');
     if (data.tokens) data.tokens = { inputTokens: tokenCount(data.tokens.inputTokens), outputTokens: tokenCount(data.tokens.outputTokens) };
     if (data.costUsd !== undefined && (!Number.isFinite(data.costUsd) || data.costUsd < 0)) throw new ModelError('journal', 'Model call journal contains invalid cost metadata');
+    if (data.retryOf!==undefined) {
+      const previous=records.find(record=>record.callId===(data.event==='started'?data.retryOf:data.callId)&&
+        record.event===(data.event==='started'?'completed':'started')&&record.requestHash===data.requestHash);
+      if(typeof data.retryOf!=='string'||!data.retryOf||data.attempt!==1||!previous||
+        (data.event==='started'?previous.status!=='error':previous.retryOf!==data.retryOf))throw new ModelError('journal','Model retry boundary does not reference a completed failed request');
+    }
     records.push(data);
   }
   return records;
@@ -108,23 +115,30 @@ export class ModelJournal {
   }
   async reserve(requestHash: string,
     select: (attempt: number, cycle: AttemptRecord[]) => Omit<AttemptRecord, 'version' | 'event' | 'id' | 'callId' | 'requestHash' | 'timestamp' | 'status' | 'attempt'>,
-    maxCalls: number, maxAttempts: number, maxCostUsd?: number): Promise<AttemptRecord> {
+    maxCalls: number, maxAttempts: number, maxCostUsd?: number, restartFailedCycle=false): Promise<AttemptRecord> {
     await this.hydrate();
     return this.withLock(async () => {
       const records = this.read();
       const summary = summarize(records);
       if (summary.calls >= maxCalls) throw new ModelError('call_budget', `Model call budget exhausted (${maxCalls})`);
       if (maxCostUsd !== undefined && summary.costUsd >= maxCostUsd) throw new ModelError('cost_budget', 'Model cost budget exhausted');
-      // Failed/pending attempts survive restarts. A prior success starts a new request cycle.
+      // Failed/pending attempts survive ordinary restarts. Explicit retries retain
+      // all usage/history and start only after a completed failure, never pending work.
       const matching = records.filter(record => record.requestHash === requestHash);
-      let lastSuccess = -1;
-      for (let i = 0; i < matching.length; i++) if (matching[i]!.status === 'success') lastSuccess = i;
-      const cycle = matching.slice(lastSuccess + 1);
+      let boundary = -1;
+      for (let i = 0; i < matching.length; i++) {
+        if (matching[i]!.status === 'success') boundary = i;
+        else if(matching[i]!.event==='started'&&matching[i]!.retryOf)boundary=i-1;
+      }
+      const latest=matching.at(-1);
+      if(restartFailedCycle&&latest?.status==='pending')throw new ModelError('request_pending','A pending model request cannot be restarted as a failed request');
+      const retryOf=restartFailedCycle&&latest?.event==='completed'&&latest.status==='error'?latest.callId:undefined;
+      const cycle = retryOf?[]:matching.slice(boundary + 1);
       const attempt = new Set(cycle.filter(record => record.event === 'started').map(record => record.callId)).size + 1;
       if (attempt > maxAttempts) throw new ModelError('attempt_budget', 'Persistent model attempt budget exhausted for this request');
       const details = select(attempt, cycle); const id = randomUUID();
       const record: AttemptRecord = { ...details, requestHash, version: 1, event: 'started', id, callId: id,
-        timestamp: new Date().toISOString(), status: 'pending', attempt };
+        timestamp: new Date().toISOString(), status: 'pending', attempt,...(retryOf?{retryOf}:{}) };
       await this.append(record);
       return record;
     });
