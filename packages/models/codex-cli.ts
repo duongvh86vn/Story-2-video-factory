@@ -3,9 +3,11 @@ import os from 'node:os';
 import path from 'node:path';
 import type { ZodType, ZodTypeDef } from 'zod';
 import type { ModelSettings } from '../core/config.js';
-import { execute, mediaEnvironment, ProcessTimeoutError } from '../render/process.js';
+import { execute, mediaEnvironment, ProcessTimeoutError, type ProcessResult } from '../render/process.js';
 import { ModelError, object, requestText, structuredRequest, tokenCount, validateStructured,
   type AdapterOptions, type ModelAdapter, type ModelRequest, type ModelResponse, type VisionRequest } from './adapter.js';
+import { appendLog, hash } from '../core/utils.js';
+import { codexDiagnostics, codexFailureMessage } from './codex-diagnostics.js';
 
 // Per-invocation switches, never changes the user's CLI configuration.
 export const CODEX_DISABLED_FEATURES=['shell_tool','unified_exec','apps','plugins','hooks','multi_agent','multi_agent_v2',
@@ -56,8 +58,14 @@ export class CodexCliAdapter implements ModelAdapter {
       try{result=await this.run(command,args,{cwd,logFile:path.join(this.options.projectRoot??process.cwd(),'logs/model-cli.jsonl'),
         input:`Generate only the requested response. Do not use tools or inspect files.\n\nAPPLICATION INSTRUCTIONS:\n${input.system}\n\nREQUEST:\n${requestText(input)}`,
         env,timeoutMs:this.settings.timeout_ms,allowFailure:true,maxOutputBytes:8*1024*1024,logOutput:false});}
-      catch(error){if(error instanceof ProcessTimeoutError)throw new ModelError('timeout','Codex CLI exceeded the configured timeout.',true);throw new ModelError('cli_start','Could not complete Codex CLI. Check executable, sign-in, installed CLI version and local journal storage outside the production job.');}
-      if(result.timedOut)throw new ModelError('timeout','Codex CLI exceeded the configured timeout.',true);
+      catch(error){
+        if(error instanceof ProcessTimeoutError){
+          if(error.result)throw await this.failure(error.result,input,'timeout');
+          throw new ModelError('timeout','Codex CLI exceeded the configured timeout.',true);
+        }
+        throw new ModelError('cli_start','Could not complete Codex CLI. Check executable, sign-in, installed CLI version and local journal storage outside the production job.');
+      }
+      if(result.timedOut)throw await this.failure(result,input,'timeout');
       if(result.truncated)throw new ModelError('truncated','Codex CLI response exceeded the output limit.');
       let events:Record<string,unknown>[];
       try{events=result.stdout.trim().split(/\r?\n/).filter(Boolean).map(line=>object(JSON.parse(line)));}
@@ -71,12 +79,23 @@ export class CodexCliAdapter implements ModelAdapter {
       const text=String(object(messages.at(-1)?.item).text??'');
       const usage=object(completed?.usage);
       this.lastResponse={text,usage:{inputTokens:tokenCount(usage.input_tokens),outputTokens:tokenCount(usage.output_tokens)}};
-      if(result.code!==0||!completed||events.some(e=>e.type==='turn.failed'||e.type==='error'))throw new ModelError('cli_provider','Codex CLI did not complete generation. Check sign-in, model access and account limits.');
+      if(result.code!==0||!completed||events.some(e=>e.type==='turn.failed'||e.type==='error'))throw await this.failure(result,input,'cli_provider');
       if(!text.trim())throw new ModelError('empty_response','Codex CLI returned no generated content.',true);
       return this.lastResponse;
     }finally{
       // Only remove our empty scratch directory; unexpected files remain for diagnosis.
       await fs.rmdir(cwd).catch(()=>{});
     }
+  }
+  private async failure(result:ProcessResult,input:ModelRequest,defaultCode:'timeout'|'cli_provider'):Promise<ModelError>{
+    const diagnostics=codexDiagnostics(result);
+    try{
+      await appendLog(path.join(this.options.projectRoot??process.cwd(),'logs/model-cli-diagnostics.jsonl'),{
+        timestamp:new Date().toISOString(),requestHash:hash(input),provider:'codex-cli',model:this.settings.model,
+        timeoutMs:this.settings.timeout_ms,...diagnostics,
+      });
+    }catch{throw new ModelError('cli_diagnostics','Could not persist the local Codex CLI diagnostics journal.');}
+    const code=diagnostics.category==='unknown'?defaultCode:`cli_${diagnostics.category.replaceAll('-','_')}`;
+    return new ModelError(code,codexFailureMessage(diagnostics),code==='timeout'||code==='cli_network');
   }
 }

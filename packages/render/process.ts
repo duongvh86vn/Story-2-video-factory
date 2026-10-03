@@ -5,7 +5,11 @@ import { appendLog, safePath } from '../core/utils.js';
 
 export interface ProcessResult { code: number; stdout: string; stderr: string; timedOut: boolean; truncated?: boolean; }
 export class ProcessTimeoutError extends Error {
-  constructor(command:string){super(`${path.basename(command)} exceeded its execution timeout.`);this.name='ProcessTimeoutError';}
+  readonly result?:ProcessResult;
+  constructor(command:string,result?:ProcessResult){
+    super(`${path.basename(command)} exceeded its execution timeout.`);this.name='ProcessTimeoutError';
+    Object.defineProperty(this,'result',{value:result,enumerable:false});
+  }
 }
 /** Strip credentials from diagnostics without passing a model's context to a process. */
 export function redact(value: string): string {
@@ -66,7 +70,7 @@ export async function execute(command: string, args: string[], options: { cwd: s
   }
   // Return unmodified diagnostics for exact repair; persist only redacted diagnostics.
   await appendLog(options.logFile, { startedAt, command, args: args.map(redact), code: result.code, timedOut: result.timedOut,truncated:result.truncated, stdout: options.logOutput===false?'[provider response journaled separately]':redact(result.stdout), stderr: options.logOutput===false?'[provider diagnostics withheld]':redact(result.stderr) });
-  if(result.timedOut)throw new ProcessTimeoutError(command);
+  if(result.timedOut)throw new ProcessTimeoutError(command,result);
   if(result.code!==0&&!options.allowFailure)throw new Error(redact(`${path.basename(command)} exited ${result.code}\n${result.stderr}\n${result.stdout}`));
   return result;
 }
