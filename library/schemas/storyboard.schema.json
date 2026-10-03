@@ -850,7 +850,7 @@
                   },
                   "producer": {
                     "type": "string",
-                    "const": "story-direction-2.2.21"
+                    "const": "story-direction-2.2.22"
                   },
                   "shotId": {
                     "type": "string",
@@ -1535,6 +1535,7 @@
                                 "compilerVersion": {
                                   "type": "string",
                                   "enum": [
+                                    "performance-2.2.10",
                                     "performance-2.2.9",
                                     "performance-2.2.8",
                                     "performance-2.2.7"
@@ -1659,7 +1660,8 @@
                                       "enum": [
                                         "stand",
                                         "crouch",
-                                        "lean"
+                                        "lean",
+                                        "seated"
                                       ]
                                     },
                                     "intensity": {
@@ -1671,6 +1673,11 @@
                                       "type": "number",
                                       "minimum": -25,
                                       "maximum": 25
+                                    },
+                                    "supportId": {
+                                      "type": "string",
+                                      "maxLength": 96,
+                                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                                     }
                                   },
                                   "required": [
@@ -1696,7 +1703,8 @@
                                         "enum": [
                                           "stand",
                                           "crouch",
-                                          "lean"
+                                          "lean",
+                                          "seated"
                                         ]
                                       },
                                       "intensity": {
@@ -1708,6 +1716,11 @@
                                         "type": "number",
                                         "minimum": -25,
                                         "maximum": 25
+                                      },
+                                      "supportId": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                                       }
                                     },
                                     "required": [
@@ -1717,6 +1730,63 @@
                                     ],
                                     "additionalProperties": false
                                   }
+                                },
+                                "supports": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "id": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                      },
+                                      "kind": {
+                                        "type": "string",
+                                        "const": "seat"
+                                      },
+                                      "center": {
+                                        "type": "object",
+                                        "properties": {
+                                          "x": {
+                                            "type": "number"
+                                          },
+                                          "y": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "x",
+                                          "y"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "width": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                      },
+                                      "facing": {
+                                        "type": "string",
+                                        "enum": [
+                                          "left",
+                                          "right"
+                                        ]
+                                      },
+                                      "backHeight": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "id",
+                                      "kind",
+                                      "center",
+                                      "width",
+                                      "facing"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "maxItems": 12
                                 },
                                 "walks": {
                                   "type": "array",
@@ -2471,6 +2541,7 @@
                       "compilerVersion": {
                         "type": "string",
                         "enum": [
+                          "performance-2.2.10",
                           "performance-2.2.9",
                           "performance-2.2.8",
                           "performance-2.2.7"
@@ -2595,7 +2666,8 @@
                             "enum": [
                               "stand",
                               "crouch",
-                              "lean"
+                              "lean",
+                              "seated"
                             ]
                           },
                           "intensity": {
@@ -2607,6 +2679,11 @@
                             "type": "number",
                             "minimum": -25,
                             "maximum": 25
+                          },
+                          "supportId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                           }
                         },
                         "required": [
@@ -2632,7 +2709,8 @@
                               "enum": [
                                 "stand",
                                 "crouch",
-                                "lean"
+                                "lean",
+                                "seated"
                               ]
                             },
                             "intensity": {
@@ -2644,6 +2722,11 @@
                               "type": "number",
                               "minimum": -25,
                               "maximum": 25
+                            },
+                            "supportId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                             }
                           },
                           "required": [
@@ -2653,6 +2736,63 @@
                           ],
                           "additionalProperties": false
                         }
+                      },
+                      "supports": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "seat"
+                            },
+                            "center": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "width": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "facing": {
+                              "type": "string",
+                              "enum": [
+                                "left",
+                                "right"
+                              ]
+                            },
+                            "backHeight": {
+                              "type": "number",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "kind",
+                            "center",
+                            "width",
+                            "facing"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "maxItems": 12
                       },
                       "walks": {
                         "type": "array",

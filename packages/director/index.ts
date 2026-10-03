@@ -20,6 +20,7 @@ import { cueExpressions } from './emotion.js';
 import { validateArtDirection } from './art-direction.js';
 import {actorProfile} from '../actors/model.js';
 import {writeActorAssets} from '../actors/assets.js';
+import {sceneSeats} from '../stage/seats.js';
 
 const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'curious',mechanism:'effort',process:'understanding',
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
@@ -202,6 +203,8 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
   if(c.continuity.facing!==exitFacing)throw new Error(`${shot.id}: cinematic facing disagrees with turn exit`);
   if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
   validatePerformance(p,profile);
+  if(p.supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);
+  sceneSeats(shot);
   validateCamera(shot,profile);
   if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile);
   for(const actor of c.actorScene?.supporting??[]){

@@ -9,6 +9,7 @@ import {artworkSvg} from '../director/art-direction.js';
 import type {ActorDefinition} from './schemas.js';
 import type {SpeechActivity} from '../voice/schemas.js';
 import {postureAt} from '../animation/compiler.js';
+import {sameSeatSupport} from '../animation/support.js';
 
 export function actorProfile(character:ActorDefinition,_base?:HostProfile):HostProfile{
   for(const [i,layer] of (character.costume??[]).entries())artworkSvg(layer.svg,`actor.${character.id}.${i}`);
@@ -77,6 +78,9 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
       const facing=old.turns?.at(-1)?.direction??old.facing??'front';
       if(hash(exit)!==hash(p.root)||old.scale!==p.scale||facing!==(p.facing??'front'))throw new Error(`${shot.id}: actor ${id} jumps position, facing or scale in continuous action`);
       if(hash(postureAt(old,old.durationMs))!==hash(postureAt(p,0)))throw new Error(`${shot.id}: actor ${id} changes body posture at a continuous cut; preserve entryPosture or use a cut`);
+      for(const seatId of Object.keys(postureAt(old,old.durationMs).seatWeights??{})){
+        if(!sameSeatSupport(old.supports?.find(s=>s.id===seatId),p.supports?.find(s=>s.id===seatId)))throw new Error(`${shot.id}: actor ${id} changes seat geometry at a continuous cut`);
+      }
       if(old.props.length||p.props.length)throw new Error(`${shot.id}: continuous actor props require a supported handoff; use an explicit cut`);
     }
   }

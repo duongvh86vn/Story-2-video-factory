@@ -1,8 +1,9 @@
 import { z } from 'zod';
 import { Id, RigHandSchema } from '../core/identifiers.js';
 
-export const ANIMATION_VERSION = 'performance-2.2.9';
-export const PREVIOUS_ANIMATION_VERSION = 'performance-2.2.8';
+export const ANIMATION_VERSION = 'performance-2.2.10';
+export const PREVIOUS_ANIMATION_VERSION = 'performance-2.2.9';
+export const BODY_ANIMATION_VERSION = 'performance-2.2.8';
 export const LEGACY_ANIMATION_VERSION = 'performance-2.2.7';
 export const Moods = ['neutral', 'curious', 'thinking', 'concerned', 'effort', 'surprised', 'understanding', 'confident'] as const;
 const Time = z.number().int().nonnegative();
@@ -12,12 +13,15 @@ export const WalkSchema = z.object({ ...Interval, fromX: z.number().finite(), to
 export const FacingSchema=z.enum(['front','left','right']);
 export const TurnSchema=z.object({...Interval,direction:FacingSchema}).strict();
 const PostureTarget = {
-  pose:z.enum(['stand','crouch','lean']),
+  pose:z.enum(['stand','crouch','lean','seated']),
   intensity:z.number().finite().min(0).max(1).optional(),
   leanDeg:z.number().finite().min(-25).max(25).optional(),
+  supportId:Id.optional(),
 };
 export const PostureTargetSchema=z.object(PostureTarget).strict();
 export const PostureSchema=z.object({...Interval,...PostureTarget}).strict();
+export const SeatSupportSchema=z.object({id:Id,kind:z.literal('seat'),center:PointSchema,width:z.number().finite().positive(),
+  facing:z.enum(['left','right']),backHeight:z.number().finite().nonnegative().optional()}).strict();
 export const GestureSchema = z.object({ ...Interval, id: Id,
   action: z.enum(['address-viewer', 'point', 'inspect', 'think', 'operate', 'pick-place', 'carry', 'react', 'lead-next']),
   target: PointSchema.optional(), destination: PointSchema.optional(),
@@ -26,13 +30,14 @@ export const GestureSchema = z.object({ ...Interval, id: Id,
   propId: Id.optional(), contactMs: Time.optional(), releaseMs: Time.optional(), carryOffset: PointSchema.optional(),
 }).strict();
 export const PerformancePlanSchema = z.object({
-  version: z.literal(22), compilerVersion: z.enum([ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,
+  version: z.literal(22), compilerVersion: z.enum([ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,BODY_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,
   leadCharacterId: Id, profileHash: z.string().min(1), kind: z.enum(['stick-man', 'mini-robot']),
   durationMs: Time.refine(n => n > 0), fps: z.number().int().min(24).max(60),
   stage: z.object({ width: z.number().finite().positive(), height: z.number().finite().positive(), groundY: z.number().finite() }).strict(),
   root: PointSchema, scale: z.number().min(.25).max(4),
   facing:FacingSchema.optional(),turns:z.array(TurnSchema).optional(),
   entryPosture:PostureTargetSchema.optional(),postures:z.array(PostureSchema).optional(),
+  supports:z.array(SeatSupportSchema).max(12).optional(),
   walks: z.array(WalkSchema), gestures: z.array(GestureSchema),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
   gazes: z.array(z.object({ ...Interval, target: PointSchema }).strict()),
@@ -43,3 +48,4 @@ export type Gesture = z.infer<typeof GestureSchema>;
 export type Point = z.infer<typeof PointSchema>;
 export type Mood = typeof Moods[number];
 export type PostureTarget = z.infer<typeof PostureTargetSchema>;
+export type SeatSupport = z.infer<typeof SeatSupportSchema>;

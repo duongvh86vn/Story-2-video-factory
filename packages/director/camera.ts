@@ -24,6 +24,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
   for(const clip of [...p.walks,...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
+  for(const clip of p.postures??[])times.add((clip.startMs+clip.endMs)/2);
   for(const g of p.gestures){if(g.contactMs!==undefined)times.add(g.contactMs);if(g.releaseMs!==undefined)times.add(g.releaseMs);
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
@@ -110,6 +111,7 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
   else if(focus==='contact'){if(!options.target)throw new Error('Contact camera requires a world contact target.');anchor=options.target;}
   else {
     const xs=[...roots.map(x=>x-(m.upperArm+m.lowerArm)*performance.scale),...roots.map(x=>x+(m.upperArm+m.lowerArm)*performance.scale),
+      ...(performance.supports??[]).flatMap(seat=>[seat.center.x-seat.width*.6,seat.center.x+seat.width*.6]),
       ...(options.parts??[]).flatMap(p=>[(p.x-p.width*.56)*width,(p.x+p.width*.56)*width])];
     anchor={x:(Math.min(...xs)+Math.max(...xs))/2,y:bounds.feet.bottom-height*((framing==='wide'?.76:.78)-CAMERA_VIEWPORT.centerY)/maxScale};
   }
@@ -155,6 +157,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
       if(!boundsInView(bounds.feet))fail('feet/visual ground enter the subtitle region or leave the frame.');
       if(!boundsInView(bounds.body))fail('hands/body leave the safe action region; use a wider camera or replan its layout.');
       for(const g of p.gestures)if(g.target&&!inView(g.target,8*p.scale))fail(`${g.id} target is outside the safe action region.`);
+      for(const seat of p.supports??[])if(!boundsInView({left:seat.center.x-seat.width*.6-2,right:seat.center.x+seat.width*.6+2,top:seat.center.y-(seat.backHeight??0)-2,bottom:groundY+9}))fail(`seat ${seat.id} leaves the safe action region; preserve its support and ground in ensemble framing.`);
     }
     for(const part of shot.visualization?.parts??[]){
       if(!modelInView(part))fail(`model ${part.id} is cropped during its motion; use a wider camera or replan its world layout.`);

@@ -54,6 +54,8 @@ Files: packages/orchestrator/{index,settings,pipeline}.ts; apps/server/{contract
 
 ## Bổ sung diễn xuất và đạo cụ03/10
 
+- [x] Source10/director22 seated support nối compiler/render/camera/owner/continuous/Studio/schema/cache; pelvis đặt trên ghế, feet/xương cố định, đổi knee pole qua điểm duỗi, sit/stand ít nhất700ms.
+- [ ] Independent source10 cả hai rig/hướng ghế/negative/seek/media; dàn cảnh tự nhiên và full-film acceptance. [Handoff](../validation/2026-10-03-supported-seating.md).
 - [x] Crouch/lean/stand có blend/held pose, fixed feet/bones và guard đi sau khi đứng; continuous pose, idle không ép gesture.
 - [x] Hai kênh tay, per-hand action groups qua cue, ownership/contact đúng tay; event đợi tay được chỉ định của đúng actor; phiên bản7/8 tương thích khi không có data mới.
 - [x] Một primary actor nhấc–mang–đặt model có nguồn; gripOffset, owner/clock, support, labels/thermal/emphasis/relations/camera motion và cache hình đã nối vào production.
@@ -61,7 +63,7 @@ Files: packages/orchestrator/{index,settings,pipeline}.ts; apps/server/{contract
 - [ ] Test độc lập source8/9/carry/negative/GSAP/seek, migration giữ audio/locks và regression cần thiết trên batch hiện tại.
 - [ ] Xem/nghe toàn bộ hai bài/hai kiểu tạo hình, native model final và nghiệm thu chất lượng nhịp diễn/biểu cảm/nguyên lý.
 
-Files/contracts: packages/animation/, packages/director/{actions,props,camera,index}.ts, library/shots/{cinematic,cinematic-models}.ts; [body](../validation/2026-10-03-body-acting.md), [hai tay](../validation/2026-10-03-bilateral-acting.md), [carry](../validation/2026-10-03-bound-model-motion.md). Supporting attachments/joint moving prop/handoff và seated/tool manipulation chưa có production contract; khi cần phải triển khai geometry/support/ownership thật, không giả bằng một pose đang đứng.
+Files/contracts: packages/animation/, packages/director/{actions,props,camera,index}.ts, library/shots/{cinematic,cinematic-models}.ts; [body](../validation/2026-10-03-body-acting.md), [hai tay](../validation/2026-10-03-bilateral-acting.md), [carry](../validation/2026-10-03-bound-model-motion.md). Ngồi có support đã triển khai ở source10. Supporting attachments/joint moving prop/handoff, tool stirring và seated locomotion chưa có production contract; khi cần phải triển khai geometry/support/ownership thật, không giả bằng một pose đang đứng.
 
 ## Task 5 — phim thực tế và nghiệm thu độc lập
 

@@ -1,8 +1,8 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
-Ưu tiên mới03/10: [probe renderer migration](docs/validation/2026-10-03-renderer-language.md) đang FAIL toàn rebuild trước bản sửa scene key; 275 test scoped qua không thay kiểm tra sau sửa. Resume đúng fixture corrected đang ASSETS_READY, giữ nguyên input/config/voice/locks, xác nhận English scene được dựng lại và audio/cache/request count không đổi. Follow-up đã giao model nhưng chưa chạy do hạn mức; ghi NOT RUN. [Review phim](docs/validation/2026-10-03-film-quality.md) có finding thật về chú thích và độ rõ hành động; finding Benz7sreset đã rút lại bằng khung hình PTS/GSAP. Xem/nghe hai bài với cả người que và robot ở bản dàn cảnh mới trước nghiệm thu; không dùng DONE/QC làm bằng chứng thẩm mỹ.
+Ưu tiên mới03/10: [follow-up renderer migration thật](docs/validation/2026-10-03-renderer-language.md) trên d882 **FAIL** ở host approval và đã thay hai rig artifacts; giữ raw evidence và fixture lỗi. Source mới tách rig identity khỏi animation. Audit lại bằng bản sao baseline xác thực, giữ input/config/voice/locks, tách việc giữ host approval, rebuild unlocked scene và conflict locked-plan; không force approval hoặc retag artifact cũ để báo PASS. Current-source runtime của sửa rig/body/hai tay/carry/seated vẫn NOT RUN; 275 test scoped trước đó không thay nghiệm thu mới. [Review phim](docs/validation/2026-10-03-film-quality.md) có finding thật về chú thích và độ rõ hành động; finding Benz7sreset đã rút lại bằng khung hình PTS/GSAP. Xem/nghe hai bài với cả người que và robot ở bản dàn cảnh mới trước nghiệm thu; không dùng DONE/QC làm bằng chứng thẩm mỹ.
 
-Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.9; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
+Contract hiện tại03/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md), director2.2.22, animation2.2.10, physical-seat2.2.1, bound-model-motion2.2.1, host-rig-identity2.2.1; artwork2.2.4 và host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
 
 ## Nhấc–mang–đặt trong production — test NOT RUN
 
@@ -110,6 +110,8 @@ Các script có fixture clocks phải dùng audio khớp; SRT tác giả đặt1
 Kết quả mới ghi riêng, giữ TEST-RESULTS.md V1. Chỉ nghiệm thu khi đủ matrix, hai bài/hai kiểu tạo hình và evidence video thực tế; ghi mọi phần NOT RUN còn lại.
 
 ## Follow-up rig/resume và carry hiện tại
+
+Source10/director22 bổ sung seated support: [contract và producer evidence](docs/validation/2026-10-03-supported-seating.md). Model độc lập cần kiểm cả hai rig/hướng ghế, sit/hold/stand, gối qua điểm duỗi không flip, feet/xương/support, browser/GSAP seek/reverse, nhiều actor/owner/continuous, invalid geometry/facing/walk/turn/seat changes, legacy7/8/9 và visual-only cache/audio preservation. Runtime mới chưa được chạy độc lập; không dùng producer QC như audit. Bản nháp carry d882 cần dựng fixture hiện tại có provenance, giữ bản gốc; không đổi version tag của evidence cũ thành PASS mới.
 
 Migration d882 đã chạy thật và FAIL ở duyệt host tùy chỉnh; six language cases PASS trên cùng snapshot không thay kết quả này. Source mới tách `HOST_RIG_IDENTITY_VERSION` khỏi animation, nhận rig hash7/8/9 chỉ khi canonical profile/art/parts/poses khớp và kiểm tra toàn bộ metadata/files. Kiểm tra độc lập chưa chạy trên sửa mới. Giữ raw FAIL và fixture đã bị thay rig/poses; tạo bản sao baseline độc lập có provenance để kiểm tra việc giữ bytes, không sửa fixture cũ thành bằng chứng PASS. [Chi tiết](docs/validation/2026-10-03-renderer-language.md).
 
