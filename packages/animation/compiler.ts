@@ -2,7 +2,7 @@ import type { HostProfile } from '../host/schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
 import { rigMetrics } from './rig.js';
-import { ANIMATION_VERSION, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point } from './schemas.js';
+import { ANIMATION_VERSION, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import { selectedClips } from './library.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
@@ -15,6 +15,22 @@ const rotate = (p: Point, angle: number): Point => ({ x: p.x * Math.cos(rad(angl
 const add = (a: Point, b: Point): Point => ({ x: a.x + b.x, y: a.y + b.y });
 const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const chronological = <T extends {startMs:number}>(items:T[]):T[] => [...items].sort((a,b)=>a.startMs-b.startMs);
+export interface BodyPosture { pelvisDropRatio:number; leanDeg:number; }
+/** Body transitions finish in a held pose. They do not restart at subtitle boundaries. */
+export function postureAt(plan:PerformancePlan,timeMs:number):BodyPosture {
+  const target=(pose:PostureTarget):BodyPosture=>{
+    const intensity=pose.intensity??1,direction=plan.facing==='left'?-1:1;
+    return {pelvisDropRatio:(pose.pose==='crouch'?.42:pose.pose==='lean'?.04:0)*intensity,
+      leanDeg:(pose.leanDeg??(pose.pose==='crouch'?8:pose.pose==='lean'?16:0)*direction)*intensity};
+  };
+  let value=target(plan.entryPosture??{pose:'stand'});
+  for(const clip of chronological(plan.postures??[])){
+    if(timeMs<clip.startMs)break;
+    const next=target(clip),weight=smooth((timeMs-clip.startMs)/(clip.endMs-clip.startMs));
+    value={pelvisDropRatio:lerp(value.pelvisDropRatio,next.pelvisDropRatio,weight),leanDeg:lerp(value.leanDeg,next.leanDeg,weight)};
+  }
+  return value;
+}
 const recoveryStart = (g:Gesture) => g.releaseMs ?? (g.action==='carry'?g.endMs:g.endMs-Math.min(220,(g.endMs-g.startMs)*.18));
 const attaches = (g:Gesture) => g.action==='pick-place'||g.action==='carry';
 const contacts = (g:Gesture) => g.action==='operate'||attaches(g);
@@ -49,6 +65,12 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   if(Math.abs(plan.root.y-plan.stage.groundY)>1e-6) throw new Error('Performer root must use the ground anchor');
   for(const [name, items] of [['locomotion',plan.walks],['right-arm gesture',plan.gestures],['expression',plan.expressions],['gaze',plan.gazes]] as const) overlaps(items,name,plan.durationMs);
   overlaps(plan.turns??[],'turn',plan.durationMs);
+  overlaps(plan.postures??[],'body posture',plan.durationMs);
+  if(plan.compilerVersion!==ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires the current animation compiler version');
+  for(const pose of [...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])]){
+    if(pose.pose==='stand'&&pose.leanDeg)throw new Error('Standing posture must return to zero body lean; use a lean clip');
+  }
+  for(const pose of plan.postures??[])if(pose.endMs-pose.startMs<280)throw new Error('Body posture transition must be at least 280ms');
   for(const turn of plan.turns??[]){
     if(turn.endMs-turn.startMs<280)throw new Error('Turn window must be at least 280ms');
     if(plan.walks.some(w=>w.startMs<turn.endMs&&w.endMs>turn.startMs))throw new Error('Stationary turn overlaps walk locomotion');
@@ -56,6 +78,8 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   }
   let rootX=plan.root.x;
   for(const walk of chronological(plan.walks)){
+    const body=postureAt(plan,walk.startMs);
+    if(body.pelvisDropRatio!==0||body.leanDeg!==0||(plan.postures??[]).some(p=>p.startMs<walk.endMs&&p.endMs>walk.startMs))throw new Error('Walking requires a standing body posture; finish returning to stand before locomotion');
     if(Math.abs(walk.fromX-rootX)>.001)throw new Error('Walk entry position breaks continuity');
     const m=rigMetrics(profile), speed=Math.abs(walk.toX-walk.fromX)/plan.scale/((walk.endMs-walk.startMs)/1000);
     if(speed>m.upperLeg*3)throw new Error('Walk window too short for the distance; shorten the path');
@@ -102,6 +126,7 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
 
 export interface FrameState {
   timeMs:number; root:Point; feet:Record<'left'|'right',Point>; stance:Record<'left'|'right',boolean>;
+  bodyPosture:BodyPosture;
   hands:Record<'left'|'right',Point>; contactError:number; mood:Mood;
   transforms:Record<string,string>; face:Record<string,{opacity?:number;scaleY?:number;rotation?:number;x?:number;y?:number}>;
   props:Record<string,{point:Point;attached:boolean}>;
@@ -208,7 +233,10 @@ function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,s
 function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undefined,time:number,upper:number,lower:number,side:'left'|'right',aimAt:(time:number)=>Point):Chain{
   const restBend=side==='right'?1:-1;
   if(!gesture||side==='left')return solveChain(shoulder,target,upper,lower,restBend);
-  const activeBend=-1;
+  const activeBend=gesture.elbowPole==='rest'?restBend:-1;
+  // Reaching below the shoulder can keep the outward rest elbow. Its fixed
+  // pole needs no extension transition because it never changes branch.
+  if(activeBend===restBend)return solveChain(shoulder,target,upper,lower,restBend);
   // Carried entry/exit must preserve the established grip at the cut.
   if(enteringCarry(gesture)&&time<gesture.startMs+80||gesture.action==='carry'&&gesture.releaseMs===undefined&&time>=gesture.endMs-80)
     return solveChain(shoulder,target,upper,lower,activeBend);
@@ -236,8 +264,9 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4});
   const orientation=orientationAt(plan,t);
-  const lean=pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3;
-  const pelvis={x:root.x,y:root.y+m.pelvisY*s+walk.activation*m.upperLeg*.23*s};
+  const bodyPosture=postureAt(plan,t);
+  const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3;
+  const pelvis={x:root.x,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walk.activation*m.upperLeg*.23*s};
   transforms.pelvis=transform(pelvis);transforms.chest=transform(pelvis,lean,s*profile.appearance.bodyScale);
   const toWorld=(x:number,y:number)=>add(pelvis,rotate({x:x*s,y:y*s},lean));
   const headAngle=lean+pose.tilt*emotion.weight,headBottom=(profile.kind==='mini-robot'?42:40)*profile.appearance.headScale;
@@ -300,7 +329,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     contactError=distance(hands.right,expected);
     if(contactError>1)throw new Error(`${activeGesture.id}: hand misses contact anchor at ${t}ms (${contactError.toFixed(2)}px)`);
   }
-  return {timeMs:t,root,feet:walk.feet,stance:walk.stance,hands,transforms,face,props,mood:emotion.mood,contactError};
+  return {timeMs:t,root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,face,props,mood:emotion.mood,contactError};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
@@ -338,7 +367,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   validatePerformance(plan,profile);
   const times=new Set<number>([0,plan.durationMs]);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...plan.gestures,...plan.walks,...(plan.turns??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
+  for(const clip of [...plan.gestures,...plan.walks,...(plan.turns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
   for(const g of plan.gestures)for(const at of [g.contactMs,g.releaseMs,recoveryStart(g)])if(at!==undefined){times.add(at);times.add(at-.01);times.add(at+.01);}

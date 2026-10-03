@@ -23,6 +23,7 @@ const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'c
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
 /** Product intents can use every supported non-carry acting clip, including reactions and invitations. */
 export const CINEMATIC_ACTION_CLIPS:Record<string,string[]>={
+  idle:[],
   'operate-model':['operate','pick-place'],compare:['point','inspect'],point:['point','inspect'],
   think:['think'],summarize:['address-viewer'],explain:['address-viewer','lead-next'],
   greet:['address-viewer'],react:['react'],'walk-to-marker':['lead-next'],
@@ -96,6 +97,7 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
   for(const [i,a] of h.actions.entries()){
     let startMs=a.startMs-shot.startMs;const endMs=a.endMs-shot.startMs;
     if(endMs<=startMs)continue;
+    if(a.type==='idle'){nextActions.push({...a});continue;}
     if(pickup&&a.target?.partId===pickup.part.id){
       startMs=Math.max(startMs,moveMs);const span=endMs-startMs;
       if(span<1600)throw new Error(`${shot.id}: needs-clip: narration window is too short for pickup, placement and recovery`);
@@ -214,6 +216,7 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
   }
   for(let i=0;i<actions.length;i++){
     const action=actions[i]!,run={...action};
+    if(action.type==='idle'){runs.push(run);continue;}
     const spanning=action.contactMs===undefined&&action.type!=='operate-model'&&action.type!=='compare'
       ?p.gestures.find(g=>g.startMs===action.startMs-shot.startMs&&g.endMs>action.endMs-shot.startMs):undefined;
     if(spanning){
@@ -228,6 +231,10 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
     runs.push({...action});
   }
   for(const a of runs){
+    if(a.type==='idle'){
+      if(a.target||a.secondTarget||a.contactMs!==undefined||p.gestures.some(g=>g.startMs<a.endMs-shot.startMs&&g.endMs>a.startMs-shot.startMs))throw new Error(`${shot.id}: idle interval cannot own an arm gesture, target or contact; use performance.walks/postures for body motion`);
+      continue;
+    }
     const group=p.gestures.filter(g=>g.startMs>=a.startMs-shot.startMs&&g.endMs<=a.endMs-shot.startMs);
     if(group.length!==(a.type==='compare'?2:1))throw new Error(`${shot.id}: missing performance action for ${a.type} at shot-local ${a.startMs-shot.startMs}–${a.endMs-shot.startMs}ms; expected ${a.type==='compare'?2:1} contained gesture(s), received ${group.length}`);
     for(const [index,g] of group.entries()){

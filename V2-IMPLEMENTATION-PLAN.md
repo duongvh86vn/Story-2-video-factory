@@ -1,5 +1,7 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
+Ưu tiên acting03/10: animation2.2.8 bổ sung cúi/nghiêng/đứng và idle không kèm arm gesture; build qua, runtime độc lập chưa chạy. Tiếp tục kiểm tra feet/bone/seek/continuous/cache và xem full phim. Sau đó mở rộng tư thế ngồi có support, thao tác dụng cụ và phối hợp hai tay/diễn viên bằng contract hình học thật khi nội dung cần; không giả các động tác đó bằng một pose đứng hoặc chèn người bên cạnh poster. Yêu cầu này hướng tới chất lượng như video mẫu, không ép mọi bài dùng cùng động tác/cấu trúc cảnh.
+
 Cập nhật03/10: tiếp tục mục tiêu đầy đủ. Đã triển khai nhãn thành phần hơi nước theo nguồn EN/VI và diagnostics action; thêm version renderer vào project/scene cache, giữ fingerprint narration. Probe thật trước sửa scene key FAIL, dù giữ toàn bộ audio/cues/cache. Kiểm tra độc lập sau sửa đang chờ model; xem [phạm vi](docs/validation/2026-10-03-renderer-language.md). Theo [review phim](docs/validation/2026-10-03-film-quality.md), ưu tiên độ rõ thao tác Watt, chú thích đọc được và diễn viên quay lại sau cutaway khi phù hợp. Native storyboard đã được chấp nhận nhưng contrast recap/provider còn chặn final; không đánh dấu hoàn thành ba luồng hoặc hai bài/hai kiểu tạo hình.
 
 Ngày02/10/2026. [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md) là đặc tả hiện hành. Người que đóng vai trong câu chuyện, có thể là người lịch sử được narration/source nêu tên. Bỏ người dẫn cố định và quota. Ba luồng script/WAV/SRT cùng WAV+SRT vẫn giữ nguyên văn và clock.

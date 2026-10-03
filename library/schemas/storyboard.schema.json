@@ -1503,7 +1503,10 @@
                                 },
                                 "compilerVersion": {
                                   "type": "string",
-                                  "const": "performance-2.2.7"
+                                  "enum": [
+                                    "performance-2.2.8",
+                                    "performance-2.2.7"
+                                  ]
                                 },
                                 "id": {
                                   "type": "string",
@@ -1616,6 +1619,73 @@
                                     "additionalProperties": false
                                   }
                                 },
+                                "entryPosture": {
+                                  "type": "object",
+                                  "properties": {
+                                    "pose": {
+                                      "type": "string",
+                                      "enum": [
+                                        "stand",
+                                        "crouch",
+                                        "lean"
+                                      ]
+                                    },
+                                    "intensity": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 1
+                                    },
+                                    "leanDeg": {
+                                      "type": "number",
+                                      "minimum": -25,
+                                      "maximum": 25
+                                    }
+                                  },
+                                  "required": [
+                                    "pose"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "postures": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "startMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "endMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "pose": {
+                                        "type": "string",
+                                        "enum": [
+                                          "stand",
+                                          "crouch",
+                                          "lean"
+                                        ]
+                                      },
+                                      "intensity": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      "leanDeg": {
+                                        "type": "number",
+                                        "minimum": -25,
+                                        "maximum": 25
+                                      }
+                                    },
+                                    "required": [
+                                      "startMs",
+                                      "endMs",
+                                      "pose"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
                                 "walks": {
                                   "type": "array",
                                   "items": {
@@ -1708,6 +1778,13 @@
                                           "y"
                                         ],
                                         "additionalProperties": false
+                                      },
+                                      "elbowPole": {
+                                        "type": "string",
+                                        "enum": [
+                                          "rest",
+                                          "reach"
+                                        ]
                                       },
                                       "propId": {
                                         "type": "string",
@@ -2344,7 +2421,10 @@
                       },
                       "compilerVersion": {
                         "type": "string",
-                        "const": "performance-2.2.7"
+                        "enum": [
+                          "performance-2.2.8",
+                          "performance-2.2.7"
+                        ]
                       },
                       "id": {
                         "type": "string",
@@ -2457,6 +2537,73 @@
                           "additionalProperties": false
                         }
                       },
+                      "entryPosture": {
+                        "type": "object",
+                        "properties": {
+                          "pose": {
+                            "type": "string",
+                            "enum": [
+                              "stand",
+                              "crouch",
+                              "lean"
+                            ]
+                          },
+                          "intensity": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          "leanDeg": {
+                            "type": "number",
+                            "minimum": -25,
+                            "maximum": 25
+                          }
+                        },
+                        "required": [
+                          "pose"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "postures": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "pose": {
+                              "type": "string",
+                              "enum": [
+                                "stand",
+                                "crouch",
+                                "lean"
+                              ]
+                            },
+                            "intensity": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            },
+                            "leanDeg": {
+                              "type": "number",
+                              "minimum": -25,
+                              "maximum": 25
+                            }
+                          },
+                          "required": [
+                            "startMs",
+                            "endMs",
+                            "pose"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
                       "walks": {
                         "type": "array",
                         "items": {
@@ -2549,6 +2696,13 @@
                                 "y"
                               ],
                               "additionalProperties": false
+                            },
+                            "elbowPole": {
+                              "type": "string",
+                              "enum": [
+                                "rest",
+                                "reach"
+                              ]
                             },
                             "propId": {
                               "type": "string",

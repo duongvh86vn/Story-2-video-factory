@@ -1,0 +1,21 @@
+# Body acting: implementation and open acceptance
+
+Animation `performance-2.2.8` adds a separate body track so an actor can lower into a crouch, lean to inspect something and recover to standing. A transition has its own local clock and holds its destination until the next transition, rather than restarting at a subtitle boundary. Feet retain their ground points; fixed-length leg/arm solving, contact error and adaptive bone-connection checks still apply. Camera measurements include the posture transitions.
+
+The contract is optional `entryPosture` and `postures`, with `pose: stand|crouch|lean`, optional intensity0–1 and optional leanDeg±25. Transitions must last at least280ms and may not overlap. Walking requires completion of the return to stand. Continuous actor scenes compare body exit/entry for both primary and supporting cast. Sitting with a support, kneeling, tool stirring and independent bilateral arm choreography are **not implemented by this track**.
+
+An optional gesture `elbowPole: rest|reach` chooses a fixed IK branch. `rest` retains the outward neutral elbow when reaching below the shoulder; omitted/reach keeps the established reach branch and extension transitions. It is not an anatomical left/right label. Existing2.2.7 plans without new data remain readable; new body/pole data requires2.2.8. New source versions affect visual/scene fingerprints, not the narration fingerprint.
+
+Cinematic `idle` now explicitly owns no arm gesture, target or contact. This allows body/leg acting under voiceover without manufacturing an object to point at. Targeted actions and model response/contact checks remain in force.
+
+## Evidence and limits
+
+Parent production build exited0 after the final code change; schema generation exited0. The parent did not run runtime tests, following the user's delegation request. Independent test capacity returned an account usage error before starting the pending migration follow-up; agents were closed after their evidence was retained. New runtime tests and the post-fix renderer migration remain **NOT RUN**, with cases in [TEST-HANDOFF.md](../../TEST-HANDOFF.md). Earlier275 scoped tests and the Benz hold investigation do not certify the new body/pole/idle behavior.
+
+A parent-authored steam production iteration `story-actor-clarity-steam-stick-man-body-1790999273715` reached DONE/technical QC (MP4 SHA-256 `3275749177bca7b0efeafcf2bd83351152e229cc0b8d3c6c45bd2d19f70050c0`). Its Watt shot11878–14328ms compiled crouch/stand with contact error0 and reported maximum interpolation gap0.192627px. Those are producer measurements, not an independent test. Inspecting the actual13.103s preview exposed a forearm folding across the torso and an occluded label. This film remains preserved; it is not visual acceptance.
+
+The next authored iteration `story-actor-clarity-steam-stick-man-body-1790999864870` uses the outward-rest pole and puts the unchanged sourced condenser label in a free stage-pixel overlay. It reached DONE/QC with MP4 SHA-256 `8791fd739e893cee6a11468de16094234299adbababb3588170f8af7ef758751`. Its Watt shot reports191 compiler frames, contact error0 and maximum interpolation gap0.192627px. The parent inspected the13.103s preview: the elbow is outward and the label is clear. This is one production preview, not full-motion or independent acceptance and not autonomous native output. Actual GSAP/browser seek, robot posture behavior, default/legacy regression, negative cases, continuous cuts and narration/cache/locks still require independent verification.
+
+## Reference observations
+
+The user's [Facebook reel](https://www.facebook.com/reel/3650632571755231) was accessible in the authenticated browser. The first playing video was a10.0078s loop. Observations around2.3s and7.3s show two illustrated characters sitting around a cooking pot/fire, one manipulating a utensil while the other changes a hand gesture and facial expression. The landscape, costume and props belong to their shared scene. Audio was not listened to, and no remote media was downloaded. This supports a design direction toward actors reacting in their world; it does not identify the generation tool or prove that our current films match its quality.

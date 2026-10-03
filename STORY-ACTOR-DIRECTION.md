@@ -34,6 +34,12 @@ Theo hình chỉnh sửa của người dùng: ở tư thế thả tay, khuỷu 
 
 Voiceover không làm mọi diễn viên mấp máy miệng. Speech activity chỉ áp dụng cho diễn viên được phân đoạn nói; không gọi là phoneme lip-sync. Không tự thêm thoại vào audio đầu vào.
 
+Animation2.2.8 bổ sung `entryPosture` và `postures`: đứng, cúi/hạ người và nghiêng thân, chỉnh intensity và góc nghiêng theo tình huống. Clip blend tối thiểu280ms, giữ tư thế tới clip tiếp theo; chân giữ điểm đặt và chiều dài xương giữ nguyên. Quay về đứng trước khi đi. `idle` cho phép chân/thân diễn mà không ép đưa tay hoặc bịa mục tiêu chỉ. Continuous phải giữ tư thế cuối qua `entryPosture`; đổi tình huống dùng cut. Đây là phần source mới, chưa nghiệm thu chuyển động độc lập; chưa hỗ trợ tư thế ngồi có ghế/đầu gối, thao tác khuấy hoặc hai tay độc lập.
+
+Gesture có `elbowPole=rest|reach`: giữ nhánh khuỷu nghỉ mở ra ngoài khi nắm vật dưới vai, hoặc dùng nhánh với tay đã có. Một clip giữ một pole; không đảo khớp trong lúc nắm. Mặc định giữ behavior cũ. Source mới chưa có runtime test độc lập; cần kiểm cả silhouette cánh tay và khung hình thật như [báo cáo](docs/validation/2026-10-03-body-acting.md).
+
+Tham khảo chuyển động từ [video người dùng cung cấp](https://www.facebook.com/reel/3650632571755231): quan sát được hai diễn viên quanh nồi/lửa, tư thế ngồi, thao tác và nét mặt/động tác hướng về nhau. Chỉ dùng làm yêu cầu chất lượng; không sao chép artwork hoặc suy ra công cụ tạo video. Kịch bản hình cần diễn viên, đồ vật và không gian cùng tham gia diễn biến; một bảng thông tin có nhân vật đứng cạnh chưa đạt mục tiêu đó.
+
 ## Ba luồng đầu vào và nguồn
 
 Script giữ lời nguyên văn, TTS đo thời lượng thực; WAV giữ audio, ASR tạo transcript/clock; SRT giữ cue text/clock, TTS fit 0.85–1.20 giữ cao độ. WAV+SRT giữ audio và cue, kiểm tra mismatch. Thiếu TTS/fit lỗi không final đạt hoặc DONE.

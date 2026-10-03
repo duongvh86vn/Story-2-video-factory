@@ -2,7 +2,22 @@
 
 Ưu tiên mới03/10: [probe renderer migration](docs/validation/2026-10-03-renderer-language.md) đang FAIL toàn rebuild trước bản sửa scene key; 275 test scoped qua không thay kiểm tra sau sửa. Resume đúng fixture corrected đang ASSETS_READY, giữ nguyên input/config/voice/locks, xác nhận English scene được dựng lại và audio/cache/request count không đổi. Follow-up đã giao model nhưng chưa chạy do hạn mức; ghi NOT RUN. [Review phim](docs/validation/2026-10-03-film-quality.md) có finding thật về chú thích và độ rõ hành động; finding Benz7sreset đã rút lại bằng khung hình PTS/GSAP. Xem/nghe hai bài với cả người que và robot ở bản dàn cảnh mới trước nghiệm thu; không dùng DONE/QC làm bằng chứng thẩm mỹ.
 
-Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.7; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
+Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.8; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
+
+## Tư thế và đi lại tự nhiên — source mới, test NOT RUN
+
+Build source animation2.2.8 qua; đây không phải runtime acceptance. Model test đang hết hạn mức, không dùng 275 scoped test của source trước để chứng nhận body track/idle. Kế hoạch kiểm tra:
+
+- Cả hai rig: crouch/lean → giữ qua cue → stand; điểm chân giữ, xương không đổi chiều dài, không tách khớp; xem chuyển động thật và public samples/GSAP seek/reverse/random.
+- Clip ngắn hơn280ms, overlapping, NaN/Infinity, intensity ngoài0–1 hoặc lean ngoài±25 phải bị từ chối. Đi trong lúc đang cúi/nghiêng hoặc transition phải bị từ chối; đi sau khi đứng xong phải chạy.
+- `idle` trong cinematic không có gesture/target/contact. Đi với idle không bị đổi thành đưa tay chỉ; gesture chồng idle hoặc idle có target/contact phải lỗi. Action point/operate khác vẫn giữ source/clock/contact gate.
+- Continuous giữ tư thế cuối/entryPosture cho primary lẫn supporting; mismatch phải lỗi, cut cho phép dàn cảnh lại. Crouch/lean không được dùng giả tư thế ngồi có ghế hoặc khuấy bằng hai tay.
+- Performance2.2.7 cũ không có body data vẫn đọc được, transforms/hold cũ giữ nguyên; body data yêu cầu2.2.8. Bản7 gắn body mới phải bị từ chối.
+- `elbowPole=rest` giữ khuỷu mở khi nắm vật dưới vai; omitted/reach giữ behavior cũ. Cả hai branch phải giữ xương/khớp/contact trong seek, hold và recovery. Bản7 gắn pole mới lỗi; không chứng nhận trái/phải giải phẫu. Xem cánh tay không cắt vào thân; không dùng số error0 thay hình thật.
+- Version8 đổi visual/scene identity, giữ narration/audio/cache khi chỉ đổi hình; chạy cùng probe migration chưa nghiệm thu phía trên, bảo toàn các lock hợp lệ.
+- Xem/nghe full các bản artist revision, ghi đúng hash và origin=authored. DONE/QC chỉ là kỹ thuật; pending thẩm mỹ và native production vẫn mở.
+
+[Bằng chứng và giới hạn body acting](docs/validation/2026-10-03-body-acting.md) giữ bản artist có nhãn bị che và chỉ rõ phạm vi chưa test.
 
 Bổ sung03/10: [English runtime trong clean archive](docs/validation/2026-10-03-clean-english-runtime.md) đã DONE nhưng raw audit giữ30/31, creative offline. Patch `sourced-explanation-2.2.1` cần kiểm tra comparison English, cold/cooled/cooling đúng chủ thể, phủ định và câu sau nói về đối tượng khác không gán nhiệt sai; regression VI nguyên trạng. Model đạo diễn phải nhận được diagnostic chính xác cho configuration sai và entity đổi identity, cùng các lỗi khác trong một response. Rejection không ghi cache hoặc tạo final. Đổi semantic version chỉ refresh hình/phân tích, giữ narration/audio hash/cache. Kiểm tra này không thay nghiệm thu phát âm, OmniVoice thật hoặc thiết kế toàn phim.
 

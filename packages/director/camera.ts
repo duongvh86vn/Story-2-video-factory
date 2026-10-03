@@ -20,7 +20,7 @@ function include(bounds:Bounds,point:Point,pad=0){
 export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
   const times=new Set<number>([0,p.durationMs]);
   for(let ms=0;ms<p.durationMs;ms+=1000/p.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...p.walks,...p.gestures,...(p.turns??[]),...p.expressions]){
+  for(const clip of [...p.walks,...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
   for(const g of p.gestures)if(g.contactMs!==undefined)times.add(g.contactMs);
