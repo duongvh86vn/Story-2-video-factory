@@ -8,6 +8,8 @@
 
 **Contract:** [STORY-ACTOR-DIRECTION.md](../../STORY-ACTOR-DIRECTION.md). Plan này thay vai trò người dẫn cố định của kế hoạch trước; không thay lời kể/clock hoặc xóa lịch sử evidence. Checked nghĩa source đã viết, không phải nghiệm thu.
 
+Checkpoint03/10: source director2.2.21/animation2.2.9/`bound-model-motion-2.2.1` đã có body posture, hai kênh tay và primary nhấc–mang–đặt có nguồn trong common pipeline. Code/docs đã push tới commitd882b54; hai artist film carry DONE/QC kỹ thuật, runtime độc lập của batch mới chưa được nghiệm thu. [Handoff carry](../validation/2026-10-03-bound-model-motion.md) ghi đúng khác biệt source của từng film. Các dấu checked của audit/suite phía dưới là lịch sử ở snapshot được dẫn, không phải PASS toàn bộ source hiện tại.
+
 ## Task 1 — thống nhất sản phẩm và tài liệu
 
 - [x] Bỏ người dẫn bắt buộc, quota xuất hiện và kích thước cơ thể trong các MD hiện hành.
@@ -50,6 +52,17 @@ Files: packages/director/{creative,index,camera,schemas}.ts; library/shots/cinem
 
 Files: packages/orchestrator/{index,settings,pipeline}.ts; apps/server/{contracts,artifacts,index,cinematic}.ts; apps/studio/src/{main,cinematic}.ts; apps/cli/index.ts.
 
+## Bổ sung diễn xuất và đạo cụ03/10
+
+- [x] Crouch/lean/stand có blend/held pose, fixed feet/bones và guard đi sau khi đứng; continuous pose, idle không ép gesture.
+- [x] Hai kênh tay, per-hand action groups qua cue, ownership/contact đúng tay; event đợi tay được chỉ định của đúng actor; phiên bản7/8 tương thích khi không có data mới.
+- [x] Một primary actor nhấc–mang–đặt model có nguồn; gripOffset, owner/clock, support, labels/thermal/emphasis/relations/camera motion và cache hình đã nối vào production.
+- [x] Hai authored steam carry film đã xuất final có giọng/phụ đề, provenance và producer reports riêng; không ghi thành native/model tự đạo diễn.
+- [ ] Test độc lập source8/9/carry/negative/GSAP/seek, migration giữ audio/locks và regression cần thiết trên batch hiện tại.
+- [ ] Xem/nghe toàn bộ hai bài/hai kiểu tạo hình, native model final và nghiệm thu chất lượng nhịp diễn/biểu cảm/nguyên lý.
+
+Files/contracts: packages/animation/, packages/director/{actions,props,camera,index}.ts, library/shots/{cinematic,cinematic-models}.ts; [body](../validation/2026-10-03-body-acting.md), [hai tay](../validation/2026-10-03-bilateral-acting.md), [carry](../validation/2026-10-03-bound-model-motion.md). Supporting attachments/joint moving prop/handoff và seated/tool manipulation chưa có production contract; khi cần phải triển khai geometry/support/ownership thật, không giả bằng một pose đang đứng.
+
 ## Task 5 — phim thực tế và nghiệm thu độc lập
 
 - [ ] Bài hơi nước: người nghiên cứu/thợ/nhà phát minh có nguồn, quan sát vấn đề nhiệt, tách nơi nóng/lạnh; không thành slideshow giáo viên.
@@ -80,3 +93,5 @@ Commands: npm run build; npm run typecheck. Model độc lập: node --import ts
 Snapshot a292794 đã cập nhật GitHub/remoteSHA; metadata/cache14/14 độc lập và build hiện tại qua. Parent npm ci/build trong Git archive riêng qua, không junction; chưa là runtime trên máy khác. Studio source mới được khởi động, project người dùng giữ riêng. Các checkbox cuối vẫn mở cho nghiệm thu đầy đủ, không thay bằng một bản build.
 
 Không đóng plan bằng một demo, một MP4 DONE hoặc suite presenter cũ. Chất lượng cần xem/nghe video, gồm diễn biến, cảm xúc, contact/cut, nguyên lý và phụ đề.
+
+Checkpoint sau d882: follow-up migration thật FAIL do rig hash chứa animation version, còn language6/6PASS ở d882. Source đã tách approved rig identity/runtime và kiểm tra canonical metadata; build/typecheck qua, rerun độc lập chưa chạy. Cảnh/plan khóa giữ gate tương thích và storyboard dựng lại vẫn cần phê duyệt theo workflow. Bản nháp acting-transport chưa được chạy, không đóng các checkbox diễn xuất/carry/resume bằng việc có file test. Xem TEST-HANDOFF và báo cáo renderer-language.

@@ -7,10 +7,10 @@ import { outputPath } from '../render/process.js';
 import type { ModelRouter } from '../models/registry.js';
 import { HostProfileSchema, HostRigSchema, type HostProfile, type HostRig } from './schemas.js';
 import { parseHostProfile, hostProfileFingerprint } from './profile.js';
-import { buildRig, hostSvg, hostPreviewSvg } from './rig.js';
+import { buildRig, hostSvg, hostPreviewSvg, rigHashMatchesProfile } from './rig.js';
 export * from './schemas.js';
 export { hostProfilePath, hostProfileFingerprint } from './profile.js';
-export { hostSvg } from './rig.js';
+export { hostSvg, rigHashMatchesProfile, HOST_RIG_IDENTITY_VERSION } from './rig.js';
 
 export async function compileHost(root: string, config: FactoryConfig, router: ModelRouter): Promise<{ profile: HostProfile; rig: HostRig }> {
   const inputHash=hash({profile:await hostProfileFingerprint(root,config),id:config.host.profile_id}),cache=path.join(root,'work/host-compile-cache.json');
@@ -30,7 +30,8 @@ export async function loadHost(root: string): Promise<{ profile: HostProfile; ri
   if (!await exists(path.join(root, 'work/host-profile.json'))) throw new Error('Compile and approve the host before building scenes');
   const profile = await readJson(path.join(root, 'work/host-profile.json'), HostProfileSchema);
   const rig = await readJson(path.join(root, 'work/host-rig.json'), HostRigSchema);
-  if (profile.profileHash !== rig.profileHash || buildRig(profile).rigHash !== rig.rigHash) throw new Error('Host rig/profile integrity mismatch');
+  const canonical=buildRig(profile);
+  if (!rigHashMatchesProfile(profile,rig.rigHash) || hash(rig)!==hash({...canonical,rigHash:rig.rigHash})) throw new Error('Host rig/profile integrity mismatch');
   const actualSvg = await fs.readFile(await safeRealPath(root, rig.assetPath), 'utf8');
   const actualPoses = await readJson(await safeRealPath(root, rig.posePath));
   if (actualSvg !== hostSvg(profile) || hash(actualPoses) !== hash({ profileId: profile.id, profileVersion: profile.version, rigHash: rig.rigHash, poses: rig.poses })) throw new Error('Approved host SVG/poses changed; rebuild and approve the profile');

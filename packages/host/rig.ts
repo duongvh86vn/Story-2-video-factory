@@ -6,6 +6,10 @@ import { ANIMATION_VERSION } from '../animation/schemas.js';
 import { escapeHtml, hash } from '../core/utils.js';
 import { HostRigSchema, type HostProfile, type HostRig } from './schemas.js';
 const eyeCenters = [137,180] as const;
+export const HOST_RIG_IDENTITY_VERSION = 'host-rig-identity-2.2.1';
+// These released hashes included the runtime version despite identical rig art.
+// Compatibility is bounded and recomputed from the complete current profile.
+const LEGACY_RIG_ANIMATION_VERSIONS = ['performance-2.2.7','performance-2.2.8','performance-2.2.9'] as const;
 
 const rotations = (upperRight = 0, lowerRight = 0, upperLeft = 0, lowerLeft = 0) => ({
   'arm-right-upper': upperRight, 'arm-right-lower': lowerRight, 'arm-left-upper': upperLeft, 'arm-left-lower': lowerLeft,
@@ -63,8 +67,15 @@ export function buildRig(profile: HostProfile): HostRig {
   const folder = `assets/host/${profile.id}/${profile.version}`;
   const parts = rigParts(profile.kind);
   return HostRigSchema.parse({ id: profile.id, profileVersion: profile.version, profileHash: profile.profileHash,
-    rigHash: hash({ profile, svg: hostSvg(profile), performanceSvg:performanceSvg(profile), animationVersion:ANIMATION_VERSION, parts, poses }), compilerVersion: profile.compilerVersion,
+    rigHash: hash({ identityVersion:HOST_RIG_IDENTITY_VERSION, profile, svg:hostSvg(profile), performanceSvg:performanceSvg(profile), parts, poses }), compilerVersion: profile.compilerVersion,
     viewBox: hostViewBox(profile), assetPath: `${folder}/host.svg`, posePath: `${folder}/poses.json`, parts, poses });
+}
+/** Animation upgrades do not change the approved artwork, bones or pose identity. */
+export function rigHashMatchesProfile(profile:HostProfile,candidate:string):boolean {
+  if(candidate===buildRig(profile).rigHash)return true;
+  // hash() uses JSON serialization: preserve the released field order exactly.
+  const svg=hostSvg(profile),art=performanceSvg(profile),parts=rigParts(profile.kind);
+  return LEGACY_RIG_ANIMATION_VERSIONS.some(animationVersion=>candidate===hash({profile,svg,performanceSvg:art,animationVersion,parts,poses}));
 }
 export function hostPreviewSvg(profile: HostProfile): string {
   if(profile.role==='story-actor'){

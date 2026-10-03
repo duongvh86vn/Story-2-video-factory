@@ -22,7 +22,7 @@ import { loadState, saveState, transition, stateIndex, ApprovalRequired } from '
 import { ProductionStore } from './store.js';
 import { collectResearch } from './research.js';
 import { reservation } from './reservation.js';
-import { compileHost, loadHost, hostProfileFingerprint } from '../host/index.js';
+import { compileHost, loadHost, hostProfileFingerprint, rigHashMatchesProfile, HOST_RIG_IDENTITY_VERSION } from '../host/index.js';
 import { createExplanation, EXPLANATION_VERSION } from '../explainer/plan.js';
 import { ExplanationPlanSchema } from '../explainer/schemas.js';
 import { validateExplainerStoryboard, writeHostTimeline } from '../explainer/storyboard.js';
@@ -61,7 +61,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
-  return {all:hash({version:4,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
+  return {all:hash({version:4,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
     narration:hash({version:3,scriptParser:mode==='script'?SCRIPT_PARSER_VERSION:undefined,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {
@@ -221,7 +221,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
               if(standard){state.approvals.host=true;state.approvals.hostHash=rig.rigHash;}}
             await writeJson(path.join(root,'work/beats.json'),result.beats); break; }
           case 'STORYBOARDED': {
-            if(config.content.mode==='narrated-explainer') {const {rig}=await loadHost(root);if(!state.approvals.host||state.approvals.hostHash!==rig.rigHash)throw new ApprovalRequired('host');
+            if(config.content.mode==='narrated-explainer') {const {profile}=await loadHost(root);if(!state.approvals.host||!rigHashMatchesProfile(profile,state.approvals.hostHash??''))throw new ApprovalRequired('host');
               const plan=await readJson(path.join(root,'work/explanation-plan.json'),ExplanationPlanSchema);if(plan.contentIssues.some(i=>i.severity==='high'))throw new ApprovalRequired('source-review','Resolve conflicting narration/source facts before production');}
             if(config.workflow.require_character_approval && !state.approvals.characters) throw new ApprovalRequired('characters');
             const chars=await characters(); const n=await narration(); const b=await beats();

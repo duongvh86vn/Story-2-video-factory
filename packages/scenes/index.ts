@@ -19,7 +19,7 @@ import { renderCinematic } from '../../library/shots/cinematic.js';
 import { ANIMATION_VERSION } from '../animation/schemas.js';
 import { DIRECTION_VERSION } from '../director/schemas.js';
 import { PROP_BINDING_VERSION } from '../director/props.js';
-import { loadHost } from '../host/index.js';
+import { loadHost, HOST_RIG_IDENTITY_VERSION } from '../host/index.js';
 import { HOST_CONTROLLER_VERSION } from '../host/controller.js';
 import { ActivitySchema } from '../voice/index.js';
 import { captionFonts } from '../core/languages.js';
@@ -84,7 +84,7 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
 async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characters:CharacterBible,assetHashes:Record<string,string>,gsap:Buffer):Promise<string> {
   const source=await exists(path.join(root,config.input.source)) ? await fs.readFile(await safeRealPath(root,config.input.source)) : Buffer.alloc(0);
   const activity=config.content.mode==='narrated-explainer'?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
-  return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,controller:shot.cinematic?ANIMATION_VERSION:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,activity});
+  return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?ANIMATION_VERSION:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,activity});
 }
 async function writeScene(root:string,dir:string,files:SceneFiles):Promise<SceneFiles> {
   const secured=secureSceneFiles(files);

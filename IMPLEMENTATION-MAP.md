@@ -15,6 +15,7 @@ Thiết kế mở nguồn nền2.2.18; cast2.2.19: `packages/director/creative.t
 | WAV/SRT/ASR/alignment | packages/ingest/index.ts, audio.ts, srt.ts; scripts/asr.py |
 | Refresh supplemental story, giữ audio | packages/ingest/narrated-story.ts |
 | TTS script đo clock; SRT fit, cache, voice gate | packages/voice/index.ts, schemas.ts; scripts/windows-tts.ps1 |
+| API TTS riêng/compatible/OmniVoice; Azure; catalog/preset EN/VI/JA/KO | packages/voice/external.ts, azure.ts, catalog.ts; packages/core/languages.ts, config.ts; apps/server/contracts.ts; apps/studio/src/main.ts |
 | Rig MD nền/hash/pose/preview | packages/host/profile.ts, rig.ts, index.ts |
 | IK target/contact, gaze/mouth/temporal geometry | packages/host/controller.ts |
 | Goal/entities/evidence/relationships | packages/explainer/plan.ts, schemas.ts; packages/story/ |
@@ -37,7 +38,10 @@ Bản đồ này chứng minh vị trí source, không chứng minh toàn bộ c
 | Phần mới | Vị trí triển khai | Contract và kiểm tra |
 |---|---|---|
 | Face/gait/action clips | packages/host/ và packages/animation/ | Animation library, rig compatibility, clip preview/version/hash |
+| Rig được duyệt và animation runtime | packages/host/rig.ts, index.ts; packages/orchestrator/pipeline.ts; packages/scenes/index.ts | Identity hình/xương/pose độc lập runtime, nhận hash7/8/9 bằng tính lại canonical data, giữ artifact cũ hợp lệ; runtime follow-up còn chờ |
 | Track compiler/foot plant/blend/attachments | packages/animation/; packages/scenes/security.ts | Performance plan, ownership, stance/contact, deterministic seek |
+| Body posture và hai kênh tay | packages/animation/schemas.ts, compiler.ts; packages/director/actions.ts; apps/server/cinematic.ts; apps/studio/src/cinematic.ts | Version8/9, held pose, đứng trước khi đi, grouping theo tay, preview/contact đúng tay |
+| Primary released carry và mô hình di chuyển | packages/director/props.ts, index.ts, camera.ts; packages/animation/scene.ts; library/shots/cinematic.ts, cinematic-models.ts | Nguồn/owner/contact, grip khác tâm, support cố định, labels/thermal/relations/motion bounds, visual-only cache version |
 | Story director | packages/director/; packages/explainer/ | Story direction, source refs, emotional arc, continuity |
 | Staging/props/depth/assets | packages/stage/; asset resolver; shot templates | Stage plan, ground/grip anchors, provenance, missing assets |
 | Camera và scene emitter | packages/director/camera.ts; packages/scenes/; library/shots/cinematic.ts | Camera plan/safe regions; HTML5/CSS/SVG/JS tracks |

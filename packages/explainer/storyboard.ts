@@ -4,6 +4,7 @@ import { ShotSchema, type Beat, type Narration, type Shot, type Storyboard } fro
 import { hash, writeJson } from '../core/utils.js';
 import {rigHand,type RigHand} from '../core/identifiers.js';
 import { HostTimelineSchema, type HostProfile, type HostRig } from '../host/schemas.js';
+import {rigHashMatchesProfile} from '../host/rig.js';
 import type { ExplanationBeat, Visualization } from './schemas.js';
 import { ExplanationBeatSchema } from './schemas.js';
 import { fold } from './plan.js';
@@ -91,7 +92,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     else if(shot.cinematic)throw new Error(`${shot.id}: cinematic shot requires story-cinematic presentation`);
     if (!h || !v || !shot.explanationGoal || !shot.narrationSegmentIds?.length || !shot.sourceRefs?.length || shot.captionRegion !== 'bottom-safe') throw new Error(`${shot.id}: incomplete explainer specification`);
     if(shot.characters.length&&!shot.cinematic?.actorScene)throw new Error(`${shot.id}: character actors require an actor scene`);
-    if (h.id !== profile.id || h.profileVersion !== profile.version || h.rigHash !== rig.rigHash || !shot.cinematic?.actorScene&&shot.characters.includes(profile.id)) throw new Error(`${shot.id}: performer identity/role drift`);
+    if (h.id !== profile.id || h.profileVersion !== profile.version || !rigHashMatchesProfile(profile,rig.rigHash) || !rigHashMatchesProfile(profile,h.rigHash) || !shot.cinematic?.actorScene&&shot.characters.includes(profile.id)) throw new Error(`${shot.id}: performer identity/role drift`);
     if (shot.recipeId !== EXPLAINER_RECIPES[v.type]) throw new Error(`${shot.id}: wrong host recipe`);
     const ids = new Set(v.parts.map(p => p.id));
     const canonical = beats.filter(b => shot.beatIds.includes(b.id)).map(b => ExplanationBeatSchema.parse({ ...b, beatId: b.id }));

@@ -108,3 +108,9 @@ Ví dụ: npm run cli -- new acceptance-actors --example; configure projects/acc
 Các script có fixture clocks phải dùng audio khớp; SRT tác giả đặt10s/cue không mặc nhiên khớp TTS measured clock. Bổ sung đủ tám ý đồ giải thích khi kiểm tra recipe. Không chỉ đếm tên trong catalog, số snapshot hay file MP4 tồn tại.
 
 Kết quả mới ghi riêng, giữ TEST-RESULTS.md V1. Chỉ nghiệm thu khi đủ matrix, hai bài/hai kiểu tạo hình và evidence video thực tế; ghi mọi phần NOT RUN còn lại.
+
+## Follow-up rig/resume và carry hiện tại
+
+Migration d882 đã chạy thật và FAIL ở duyệt host tùy chỉnh; six language cases PASS trên cùng snapshot không thay kết quả này. Source mới tách `HOST_RIG_IDENTITY_VERSION` khỏi animation, nhận rig hash7/8/9 chỉ khi canonical profile/art/parts/poses khớp và kiểm tra toàn bộ metadata/files. Kiểm tra độc lập chưa chạy trên sửa mới. Giữ raw FAIL và fixture đã bị thay rig/poses; tạo bản sao baseline độc lập có provenance để kiểm tra việc giữ bytes, không sửa fixture cũ thành bằng chứng PASS. [Chi tiết](docs/validation/2026-10-03-renderer-language.md).
+
+[Bản nháp acting-transport](docs/validation/pending/acting-transport.test.ts.txt) giữ nguyên bytes/assertions model test đã viết, chưa có runtime result. File được lưu dạng tài liệu chờ rà soát, chưa thuộc executable test suite. Trước khi đưa vào suite cần rà lại fixture/hành vi mong đợi, đặc biệt bố cục tay trái và opacity lớp lạnh (renderer hiện dùng0.62; độ nhìn thấy không đồng nghĩa opacity>0.9). Lưu bản nháp đầu và mọi thay đổi với lý do; không nới contact/ownership/timing/security để làm test xanh. GSAP trên fake DOM chỉ kiểm tra declarative tracks, cần browser SVG/seek và xem phim để nghiệm thu chuyển động thực tế.
