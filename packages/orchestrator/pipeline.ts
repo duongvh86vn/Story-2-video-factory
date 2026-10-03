@@ -35,6 +35,7 @@ import { readStoryboardForDirection } from '../storyboard/director.js';
 import {actorAssetHashes,exportActorAssets} from '../actors/assets.js';
 import {actorDefinitions} from '../actors/locks.js';
 import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js';
+import { PROP_BINDING_VERSION } from '../director/props.js';
 
 export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; onProgress?:(state:ProjectState)=>void; }
 const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
@@ -57,7 +58,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
   const repo=await findRepoRoot(),seriesFiles=config.project.series?await walk(safePath(path.join(repo,'series'),config.project.series)):[];
   const series=await Promise.all(seriesFiles.sort().map(async file=>[path.relative(root,file),hash(await fs.readFile(file))]));
   const cinematic=config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'
-    ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,models:CINEMATIC_MODEL_VERSION,environments:await environmentLibraryFingerprint(),
+    ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
   return {all:hash({version:4,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),

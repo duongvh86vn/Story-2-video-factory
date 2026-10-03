@@ -1,7 +1,10 @@
 import type { Shot } from '../core/schemas.js';
-import type { PerformancePlan } from '../animation/schemas.js';
+import { rigHand } from '../core/identifiers.js';
 import { hash } from '../core/utils.js';
 import { fold } from '../explainer/plan.js';
+
+/** Bound-model motion/center/support semantics are visual-only cache inputs. */
+export const PROP_BINDING_VERSION='bound-model-motion-2.2.1';
 
 /** Legacy presenter pickup follows a literal narration instruction. Story acting uses sourced model bindings. */
 export function pickupPart(shot:Shot){
@@ -38,8 +41,15 @@ export function validatePropBindings(shot:Shot):void{
     const gesture=placements[0];
     const otherContact=[...(shot.host?.actions??[]),...(c.actorScene?.supporting.flatMap(a=>a.actions)??[])].filter(a=>a.type==='operate-model'&&a.target?.partId===part.id);
     if(otherContact.length!==1)throw new Error(`${shot.id}: moving model ${part.id} requires one hand owner; joint manipulation is not supported`);
-    if(!gesture||gesture.action!=='pick-place'||!gesture.destination||!prop.destination||hash(gesture.destination)!==hash(prop.destination)||prop.origin.x!==part.x*c.performance.stage.width||prop.origin.y!==part.y*c.performance.stage.height)throw new Error(`${shot.id}: prop target/destination changed its world anchor`);
+    if(!gesture||!['pick-place','carry'].includes(gesture.action)||!gesture.destination||gesture.releaseMs===undefined||!prop.destination||prop.origin.x!==part.x*c.performance.stage.width||prop.origin.y!==part.y*c.performance.stage.height)throw new Error(`${shot.id}: prop target/destination changed its world anchor`);
+    const owner=shot.host?.actions.find(a=>a.type==='operate-model'&&a.target?.partId===part.id&&rigHand(a)===rigHand(gesture)&&a.startMs===shot.startMs+gesture.startMs&&a.endMs===shot.startMs+gesture.endMs&&a.contactMs===shot.startMs+gesture.contactMs!);
+    if(!owner)throw new Error(`${shot.id}: moving model ${part.id} lacks its primary gesture's matching hand/action owner`);
+    const staleTarget=[...(shot.host?.actions??[]),...(c.actorScene?.supporting.flatMap(a=>a.actions)??[])].find(a=>a!==owner&&[a.target,a.secondTarget].some(target=>target?.partId===part.id)&&a.endMs>shot.startMs+gesture.contactMs!);
+    if(staleTarget)throw new Error(`${shot.id}: fixed ${staleTarget.type} target cannot follow moving model ${part.id}; finish it before pickup or replan the scene`);
+    if(gesture.action==='carry'&&!c.actorScene?.primary)throw new Error(`${shot.id}: carry binding requires a story actor and a completed in-shot placement`);
+    const offset=prop.gripOffset??{x:0,y:0},placed={x:gesture.destination.x-offset.x*c.performance.scale,y:gesture.destination.y-offset.y*c.performance.scale};
+    if(Math.hypot(placed.x-prop.destination.x,placed.y-prop.destination.y)>1e-6)throw new Error(`${shot.id}: prop destination must be the placed object center, not its hand grip`);
     if(!c.actorScene&&(gesture.destination.x<=prop.origin.x||Math.abs(gesture.destination.y-prop.origin.y)>.01))throw new Error(`${shot.id}: placement must follow its narrated direction`);
-    if(c.actorScene&&(gesture.destination.x<0||gesture.destination.x>c.performance.stage.width||gesture.destination.y<0||gesture.destination.y>c.performance.stage.groundY))throw new Error(`${shot.id}: illustrative placement must stay in the physical stage`);
+    if(c.actorScene&&(prop.destination.x-part.width*c.performance.stage.width*.5<0||prop.destination.x+part.width*c.performance.stage.width*.5>c.performance.stage.width||prop.destination.y-part.height*c.performance.stage.height*.5<0||prop.destination.y+part.height*c.performance.stage.height*.5>c.performance.stage.groundY))throw new Error(`${shot.id}: illustrative placement bounds must stay in the physical stage`);
   }
 }

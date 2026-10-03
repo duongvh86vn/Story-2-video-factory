@@ -4,6 +4,12 @@
 
 Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.9; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
 
+## Nhấc–mang–đặt trong production — test NOT RUN
+
+Fingerprint `bound-model-motion-2.2.1`; [chi tiết](docs/validation/2026-10-03-bound-model-motion.md). Kiểm cả người que/robot, cả tay, nonzero gripOffset, source/binding/action owner và clock. Gesture destination là grip, prop destination là tâm: sai center hoặc nhầm tay phải lỗi. Carry đi trong cửa sổ sau250ms lift/trước250ms lowering, về stand trước khi đi; final có release/recovery và support đúng đáy vật. Target cố định vào vật sau pickup, supporting attachment, joint moving prop, sequential pickup và entering/unreleased/cross-cut carry phải bị chặn rõ.
+
+Kiểm nhãn/thermal/emphasis/energy/shadow và relation endpoints trong Scene JS thật cùng prop, kể cả flow event trong lúc vật đang đi, reverse/random seek và close camera với actions hai tay xen kẽ. Không mở whitelist attr/d hoặc thực thi code của model để làm test qua. Static relations và standalone preview support cũ giữ behavior. Fingerprint chỉ dựng lại hình; resume corrected migration fixture giữ nguyên giọng/audio/cache/request count/locks. Producer measurements/DONE/QC của artist film không phải independent PASS; xem/nghe toàn phim riêng.
+
 ## Hai tay — source9, runtime NOT RUN
 
 - Cả hai rig: left point/think/operate/pick-place/carry/react, đồng thời right gesture khác; overlap cùng tay và duplicate gesture ID lỗi. Bỏ hand giữ behavior rig-right cũ; version7/8 không nhận hand data version9.

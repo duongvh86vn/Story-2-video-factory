@@ -19,9 +19,14 @@ import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../package
 import {buildRig} from '../../packages/host/rig.js';
 import {performanceSvg} from '../../packages/animation/rig.js';
 import {compilePerformance} from '../../packages/animation/compiler.js';
+import {PROP_BINDING_VERSION} from '../../packages/director/props.js';
+
+function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w:number,h:number):string{
+  return part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
+}
 
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):{
-  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>};
+  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[]};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
   validateCinematicShot(shot,profile,config);
@@ -31,7 +36,11 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
   const speech=c.actorScene?actorSpeech(activity,narration,c.actorScene.speakingSegmentIds,shot.startMs,shot.endMs):activity;
   const localActivity:SpeechActivity={...speech,intervals:speech.intervals.filter(a=>a.startMs<shot.endMs&&a.endMs>shot.startMs)
     .map(a=>({...a,startMs:Math.max(0,a.startMs-shot.startMs),endMs:Math.min(p.durationMs,a.endMs-shot.startMs)}))};
-  const result=performanceScene(p,profile,localActivity,background),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s}`);
+  const supports=c.propBindings.length?c.propBindings.flatMap(binding=>{
+    const part=v.parts.find(part=>part.id===binding.partId)!,prop=p.props.find(prop=>prop.id===binding.propId)!;
+    return [prop.origin,...(prop.destination?[prop.destination]:[])].map(center=>({x:center.x,y:center.y+part.height*height*.5,width:part.width*width*1.12}));
+  }):undefined;
+  const result=performanceScene(p,profile,localActivity,background,supports),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s}`);
   const decoration=c.setting==='road'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#A78C66"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#E8D6AF" stroke-width="5" stroke-dasharray="45 24"/>`
     :c.setting==='workshop'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#B79C72"/><path d="M${width*.6} ${height*.26}H${width*.9}V${height*.63}H${width*.6}Z" fill="#836D52" opacity=".3"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#876E4F" stroke-width="3"/>`
     :`<path d="M0 ${p.stage.groundY}H${width}" stroke="#A38B65" stroke-width="3"/>`;
@@ -58,11 +67,14 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     if(binding){
       const art=cinematicModel(part,model,w/p.scale,h/p.scale);
       art.svg=customModelArt(shot,part.id,w/p.scale,h/p.scale)??art.svg;
-      propArt.set(binding.propId,`<g id="prop-${binding.propId}" data-prop-entity="${escapeHtml(part.id)}" data-prop-role="${binding.role}" fill="none" stroke="#644931" stroke-width="${height*.003/p.scale}" stroke-linecap="round" stroke-linejoin="round">${art.svg}</g>`);
-      for(let ms=0;showLabel&&ms<=p.durationMs;ms=Math.min(p.durationMs,ms+1000/p.fps)){
-        const frame=samplePerformance(p,profile,ms,localActivity),prop=frame.props[binding.propId]!;
-        calls.push(`tl.set(${selector(`#object-${i} .model-label`)},{attr:{transform:"translate(${prop.point.x-x} ${prop.point.y-y})"}},${ms/1000});`);
-        if(ms===p.durationMs)break;
+      propArt.set(binding.propId,`<g id="prop-${binding.propId}" data-prop-entity="${escapeHtml(part.id)}" data-prop-role="${binding.role}" fill="none" stroke="#644931" stroke-width="${height*.003/p.scale}" stroke-linecap="round" stroke-linejoin="round">${art.svg}${modelThermal(part,w/p.scale,h/p.scale)}</g>`);
+      // Model labels, emphasis and effects share the exact adaptive prop clock.
+      for(const [frameIndex,frame] of result.compiled.frames.entries()){
+        const prop=frame.props[binding.propId]!,previous=result.compiled.frames[frameIndex-1],at=(previous?.timeMs??0)/1000;
+        const interpolation=previous?{duration:Number(((frame.timeMs-previous.timeMs)/1000).toFixed(6)),ease:'none'}:{immediateRender:true};
+        const method=previous?'to':'set',deltaY=prop.point.y-y;
+        calls.push(`tl.${method}(${selector(`#object-${i}`)},${JSON.stringify({attr:{transform:`translate(${prop.point.x-x} ${deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
+        calls.push(`tl.${method}(${selector(`#object-${i} .bound-model-shadow`)},${JSON.stringify({attr:{transform:`translate(0 ${-deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
       }
     }
     for(const anchor of illustration.motionAnchors)calls.push(`tl.set(${selector(`${binding?`#prop-${binding.propId}`:`#object-${i}`} ${anchor.selector}`)},{svgOrigin:${JSON.stringify(`${anchor.x} ${anchor.y}`)}},0);`);
@@ -70,19 +82,20 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     if(showLabel&&lines.length>4)throw new Error(`${shot.id}: model label too long for the cinematic stage`);
     if(showLabel&&labelY+labelHeight>height*.79)throw new Error(`${shot.id}: cinematic label crosses subtitle clearance`);
     const controlled=rendersModelControl(shot,part.id)&&actorActions(shot).some(a=>a.type==='operate-model'&&a.target?.partId===part.id);
-    const thermal=part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
+    const thermal=modelThermal(part,w,h);
     const control=binding?'':controlled?`<g data-control="illustrative" aria-label="Nút điều khiển mô hình minh họa" transform="translate(${handle.x} ${handle.y})"><circle r="${height*.011}" fill="#FFF3DB"/><g class="control-turn"><path d="M${-height*.007} 0H${height*.007}"/></g></g>`:`<circle class="handle" cx="${handle.x}" cy="${handle.y}" r="${height*.005}" fill="#B7803D"/>`;
-    return `<g id="object-${i}" data-entity-id="${escapeHtml(part.id)}" data-model-variant="${model.variant}" fill="none" stroke="#644931" stroke-width="${height*.003}" stroke-linecap="round" stroke-linejoin="round"><ellipse data-model-shadow="${escapeHtml(part.id)}" cx="${x+w*.08}" cy="${y+h*.53}" rx="${w*.48}" ry="${h*.09}" fill="${palette.ink}" opacity=".14" stroke="none"/><g class="focus-${i}" opacity="0"><ellipse cx="${x}" cy="${y}" rx="${w*.53}" ry="${h*.6}" fill="${palette.accent}" opacity=".35" stroke="none"/></g><g transform="translate(${x} ${y})">${binding?'':illustration.svg+thermal}<ellipse class="energy-effect" rx="${w*.4}" ry="${h*.4}" fill="#F0C545" opacity="0" stroke="none"/></g>${!art&&focal&&c.setting==='workshop'?`<path d="M${x-w*.5} ${y+h*.5}H${x+w*.5}M${x-w*.45} ${y+h*.5}V${p.stage.groundY}M${x+w*.45} ${y+h*.5}V${p.stage.groundY}" stroke="#765438"/>`:''}${control}${showLabel?`<g class="model-label"><rect x="${x-w*.56}" y="${labelY-font}" width="${w*1.12}" height="${labelHeight+font*.35}" rx="6" fill="${palette.surface}" stroke="none"/><text x="${x}" y="${labelY}" text-anchor="middle" stroke="none" fill="${palette.ink}" font-family="Arial" font-size="${font}">${lines.map((text,j)=>`<tspan x="${x}" dy="${j?font*1.15:0}">${escapeHtml(text)}</tspan>`).join('')}</text></g>`:''}</g>`;
+    return `<g id="object-${i}" data-entity-id="${escapeHtml(part.id)}" data-model-variant="${model.variant}" fill="none" stroke="#644931" stroke-width="${height*.003}" stroke-linecap="round" stroke-linejoin="round"><ellipse ${binding?'class="bound-model-shadow" ':''}data-model-shadow="${escapeHtml(part.id)}" cx="${x+w*.08}" cy="${binding?p.stage.groundY-4:y+h*.53}" rx="${w*.48}" ry="${h*.09}" fill="${palette.ink}" opacity=".14" stroke="none"/><g class="focus-${i}" opacity="0"><ellipse cx="${x}" cy="${y}" rx="${w*.53}" ry="${h*.6}" fill="${palette.accent}" opacity=".35" stroke="none"/></g><g transform="translate(${x} ${y})">${binding?'':illustration.svg+thermal}<ellipse class="energy-effect" rx="${w*.4}" ry="${h*.4}" fill="#F0C545" opacity="0" stroke="none"/></g>${!binding&&!art&&focal&&c.setting==='workshop'?`<path d="M${x-w*.5} ${y+h*.5}H${x+w*.5}M${x-w*.45} ${y+h*.5}V${p.stage.groundY}M${x+w*.45} ${y+h*.5}V${p.stage.groundY}" stroke="#765438"/>`:''}${control}${showLabel?`<g class="model-label"><rect x="${x-w*.56}" y="${labelY-font}" width="${w*1.12}" height="${labelHeight+font*.35}" rx="6" fill="${palette.surface}" stroke="none"/><text x="${x}" y="${labelY}" text-anchor="middle" stroke="none" fill="${palette.ink}" font-family="Arial" font-size="${font}">${lines.map((text,j)=>`<tspan x="${x}" dy="${j?font*1.15:0}">${escapeHtml(text)}</tspan>`).join('')}</text></g>`:''}</g>`;
   }).join('');
-  const relation=cinematicRelations(shot,width,height),connections=relation.html;
+  const relation=cinematicRelations(shot,width,height,result.compiled.frames),connections=relation.html;
   calls.push(...relation.calls);
   for(const e of v.events){
     const i=v.parts.findIndex(part=>part.id===e.targetId),start=(e.startMs-shot.startMs)/1000,end=(e.endMs-shot.startMs)/1000,span=end-start;
     const binding=c.propBindings.find(binding=>binding.partId===e.targetId),motionTarget=selector(`${binding?`#prop-${binding.propId}`:`#object-${i}`} .motion`);
     calls.push(`tl.set(${selector(`.focus-${i}`)},{opacity:1},${start});tl.set(${selector(`.focus-${i}`)},{opacity:0},${end});`);
     if(e.type==='state'){
-      for(const state of ['hot','cold'])calls.push(`tl.to(${selector(`#object-${i} .thermal-${state}-coat`)},{opacity:${e.state===state?.62:0},duration:${Math.min(.28,span)},ease:"sine.inOut"},${start});`);
-      calls.push(`tl.set(${selector(`#object-${i} .thermal-hot`)},{opacity:${e.state==='hot'?1:0}},${start});tl.set(${selector(`#object-${i} .thermal-cold`)},{opacity:${e.state==='cold'?1:0}},${start});`);
+      const thermalTarget=binding?`#prop-${binding.propId}`:`#object-${i}`;
+      for(const state of ['hot','cold'])calls.push(`tl.to(${selector(`${thermalTarget} .thermal-${state}-coat`)},{opacity:${e.state===state?.62:0},duration:${Math.min(.28,span)},ease:"sine.inOut"},${start});`);
+      calls.push(`tl.set(${selector(`${thermalTarget} .thermal-hot`)},{opacity:${e.state==='hot'?1:0}},${start});tl.set(${selector(`${thermalTarget} .thermal-cold`)},{opacity:${e.state==='cold'?1:0}},${start});`);
     }
     if(e.motion==='rotate')calls.push(`tl.to(${motionTarget},{rotation:120,duration:${span},ease:"none"},${start});`);
     if(e.motion==='translate')calls.push(`tl.to(${motionTarget},{x:${width*.018},duration:${span/2},ease:"sine.inOut"},${start});tl.to(${motionTarget},{x:0,duration:${span/2},ease:"sine.inOut"},${start+span/2});`);
@@ -145,7 +158,10 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
       ...(a.contactMs===undefined?{}:{contactMs:a.contactMs})});
   }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});
-  return {files,geometry,report:{...result.compiled.report,camera:validateCamera(shot,profile),actors:actorReports}};
+  return {files,geometry,report:{...result.compiled.report,camera:validateCamera(shot,profile),actors:actorReports,...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
+    const prop=p.props.find(prop=>prop.id===binding.propId)!,g=p.gestures.find(g=>g.propId===prop.id)!;
+    return {...binding,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs};
+  })}:{})}};
 }
 
 

@@ -23,10 +23,10 @@ import {writeActorAssets} from '../actors/assets.js';
 
 const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'curious',mechanism:'effort',process:'understanding',
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
-/** Product intents can use every supported non-carry acting clip, including reactions and invitations. */
+/** Story actors can transport sourced models with one completed carry/placement. */
 export const CINEMATIC_ACTION_CLIPS:Record<string,string[]>={
   idle:[],
-  'operate-model':['operate','pick-place'],compare:['point','inspect'],point:['point','inspect'],
+  'operate-model':['operate','pick-place','carry'],compare:['point','inspect'],point:['point','inspect'],
   think:['think'],summarize:['address-viewer'],explain:['address-viewer','lead-next'],
   greet:['address-viewer'],react:['react'],'walk-to-marker':['lead-next'],
 };
@@ -234,7 +234,7 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
     // One millionth of a pixel tolerates serialization noise, not a different target.
     if(Boolean(expected)!==Boolean(g.target)||expected&&g.target&&Math.hypot(g.target.x-expected.x,g.target.y-expected.y)>1e-6)throw new Error(`${shot.id}: gesture ${g.id} points at the wrong world target for ${a.type}; expected ${expected?JSON.stringify(expected):'no gesture.target (omit it because this action has no object target; a walking destination belongs in performance.walks)'}, received ${g.target?JSON.stringify(g.target):'no gesture.target'}${target?`; object ${target.partId}, anchor ${target.anchor}`:''}`);
     if(!CINEMATIC_ACTION_CLIPS[a.type]?.includes(g.action))throw new Error(`${shot.id}: performance action contradicts host intent for ${g.id}; ${a.type} requires ${CINEMATIC_ACTION_CLIPS[a.type]?.join(' or ')}, received ${g.action}`);
-    if(['operate','pick-place'].includes(g.action)!==(a.type==='operate-model')||g.contactMs!==(a.contactMs===undefined?undefined:a.contactMs-shot.startMs))throw new Error(`${shot.id}: contact/action mismatch for ${g.id}; intent ${a.type}, clip ${g.action}, expected shot-local contactMs ${a.contactMs===undefined?'omitted':a.contactMs-shot.startMs}, received ${g.contactMs??'omitted'}`);
+    if(['operate','pick-place','carry'].includes(g.action)!==(a.type==='operate-model')||g.contactMs!==(a.contactMs===undefined?undefined:a.contactMs-shot.startMs))throw new Error(`${shot.id}: contact/action mismatch for ${g.id}; intent ${a.type}, clip ${g.action}, expected shot-local contactMs ${a.contactMs===undefined?'omitted':a.contactMs-shot.startMs}, received ${g.contactMs??'omitted'}`);
     }
   }
   if(consumed.size!==p.gestures.length)throw new Error(`${shot.id}: missing performance action`);

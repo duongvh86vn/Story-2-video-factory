@@ -5,6 +5,7 @@ import { rigMetrics } from '../animation/rig.js';
 import { samplePerformance } from '../animation/compiler.js';
 import { CameraSchema, type CinematicCamera } from './schemas.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
+import { cinematicActionGroups } from './actions.js';
 
 export const CAMERA_VIEWPORT={left:.04,right:.96,top:.14,bottom:.80,centerY:.46,pan:.025} as const;
 export interface CameraMatrix { scale:number; x:number; y:number; }
@@ -23,10 +24,13 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
   for(const clip of [...p.walks,...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
-  for(const g of p.gestures)if(g.contactMs!==undefined)times.add(g.contactMs);
-  const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
+  for(const g of p.gestures){if(g.contactMs!==undefined)times.add(g.contactMs);if(g.releaseMs!==undefined)times.add(g.releaseMs);
+    if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
+  }
+  const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
   for(const time of times){
     const frame=samplePerformance(p,profile,time,{method:'segment-draft',windowMs:20,intervals:[]});
+    for(const [id,prop] of Object.entries(frame.props))include(props[id]??=emptyBounds(),prop.point);
     const match=/^translate\(([-\d.]+) ([-\d.]+)\) rotate\(([-\d.]+)\) scale\(([-\d.]+)\)$/.exec(frame.transforms.head!);
     if(!match)throw new Error('Camera cannot measure the production head transform.');
     const x=Number(match[1]),y=Number(match[2]),angle=Number(match[3])*Math.PI/180,scale=Number(match[4]),local=emptyBounds();
@@ -51,7 +55,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
     include(bodyBounds,{x:body.left,y:body.top});include(bodyBounds,{x:body.right,y:body.bottom});
     const height=(body.bottom-body.top)/p.stage.height;ratio.min=Math.min(ratio.min,height);ratio.max=Math.max(ratio.max,height);
   }
-  return {head,feet,body:bodyBounds,ratio};
+  return {head,feet,body:bodyBounds,props,ratio};
 }
 
 /** Keep wrapping and clearance identical to the production model labels. */
@@ -129,11 +133,19 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
       screen.y-padY*matrix.scale>=height*CAMERA_VIEWPORT.top-.01&&screen.y+padY*matrix.scale<=height*CAMERA_VIEWPORT.bottom+.01;
   });
   const boundsInView=(b:Bounds)=>inView({x:b.left,y:b.top})&&inView({x:b.right,y:b.bottom});
+  const movingBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
+    const binding=c.propBindings.find(b=>b.partId===part.id),motion=binding&&bounds.props[binding.propId];
+    return motion??{left:part.x*width,right:part.x*width,top:part.y*height,bottom:part.y*height};
+  };
+  const modelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
+    const b=movingBounds(part);return boundsInView({left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top-part.height*height*.6,bottom:b.bottom+part.height*height*.6});
+  };
   const labelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
     if(!rendersModelLabel(shot,part.id))return;
     const {font,lines,labelY,labelHeight}=cameraModelLabel(part,height,width);
     if(lines.length>4)fail(`model ${part.id} label is too long for the cinematic stage.`);
-    if(!inView({x:part.x*width,y:labelY-font},part.width*width*.56,0)||!inView({x:part.x*width,y:labelY+labelHeight},part.width*width*.56,0))fail(`model ${part.id} label leaves the safe viewport/subtitle clearance; use a wider framing or replan its layout.`);
+    const b=movingBounds(part),labelOffset=labelY-part.y*height;
+    if(!boundsInView({left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top+labelOffset-font,bottom:b.bottom+labelOffset+labelHeight}))fail(`model ${part.id} label leaves the safe viewport/subtitle clearance; use a wider framing or replan its layout.`);
   };
   if(camera.framing!=='close'){
     const [min,max]=camera.framing==='wide'?[.25,.4]:[.4,.65];
@@ -145,7 +157,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
       for(const g of p.gestures)if(g.target&&!inView(g.target,8*p.scale))fail(`${g.id} target is outside the safe action region.`);
     }
     for(const part of shot.visualization?.parts??[]){
-      if(!inView({x:part.x*width,y:part.y*height},part.width*width*.56,part.height*height*.6))fail(`model ${part.id} is cropped; use a wider camera or replan its world layout.`);
+      if(!modelInView(part))fail(`model ${part.id} is cropped during its motion; use a wider camera or replan its world layout.`);
       labelInView(part);
     }
   }else if(camera.focus==='face'){
@@ -155,16 +167,17 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
   }else if(camera.focus==='object'){
     if(c.actorScene?.primary!==null||c.actorScene.supporting.length)fail('object close must explicitly be a mechanism-only actor scene.');
     for(const part of shot.visualization?.parts??[]){
-      if(!inView({x:part.x*width,y:part.y*height},part.width*width*.56,part.height*height*.6))fail(`model ${part.id} is cropped in object focus.`);
+      if(!modelInView(part))fail(`model ${part.id} is cropped in object focus.`);
       labelInView(part);
     }
   }else {
-    const contacts=p.gestures.filter(g=>['operate','pick-place'].includes(g.action)&&g.target&&g.contactMs!==undefined);
+    const contacts=p.gestures.filter(g=>['operate','pick-place','carry'].includes(g.action)&&g.target&&g.contactMs!==undefined);
     if(!contacts.length)fail('contact close requires a validated contact action.');
     for(const g of p.gestures)if(g.target&&!inView(g.target,12*p.scale))fail(`${g.id} target/hand is cropped; contact close must show explanatory targets.`);
+    const actions=new Map(cinematicActionGroups(shot.host?.actions??[],p,shot.startMs).flatMap(group=>group.gestures.map(g=>[g.id,group.action] as const)));
     for(const g of contacts){
-      const a=shot.host?.actions[p.gestures.indexOf(g)],part=shot.visualization?.parts.find(part=>part.id===a?.target?.partId);
-      if(!part||!inView({x:part.x*width,y:part.y*height},part.width*width*.56,part.height*height*.6))fail('contact close crops its manipulated object.');
+      const a=actions.get(g.id),part=shot.visualization?.parts.find(part=>part.id===a?.target?.partId);
+      if(!part||!modelInView(part))fail('contact close crops its manipulated object.');
       labelInView(part!);
     }
   }
