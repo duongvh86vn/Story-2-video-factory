@@ -2,6 +2,8 @@ import path from 'node:path';
 import type { FactoryConfig } from '../core/config.js';
 import { ShotSchema, type Beat, type Shot, type Storyboard } from '../core/schemas.js';
 import { exists, hash, readJson, writeJson,writeAtomic } from '../core/utils.js';
+import {rigHand} from '../core/identifiers.js';
+import {cinematicActionGroups} from './actions.js';
 import type { HostProfile } from '../host/schemas.js';
 import { partAnchor } from '../host/controller.js';
 import { rigMetrics } from '../animation/rig.js';
@@ -99,12 +101,13 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
     if(endMs<=startMs)continue;
     if(a.type==='idle'){nextActions.push({...a});continue;}
     if(pickup&&a.target?.partId===pickup.part.id){
+      if(performance.props.length)throw new Error(`${shot.id}: repeated pickup requires a sequential placement plan; this seed supports one completed placement`);
       startMs=Math.max(startMs,moveMs);const span=endMs-startMs;
       if(span<1600)throw new Error(`${shot.id}: needs-clip: narration window is too short for pickup, placement and recovery`);
       const part=v.parts.find(part=>part.id===pickup.part.id)!,target={x:part.x*width,y:part.y*height},destination={x:target.x+28*scale,y:target.y},propId='model-prop-0';
       const contactMs=startMs+Math.min(500,Math.floor(span*.25)),releaseMs=endMs-260;
       performance.props.push({id:propId,origin:target,destination});
-      performance.gestures.push({id:`${shot.id}.pickup`,action:'pick-place',startMs,endMs,target,destination,propId,contactMs,releaseMs});
+      performance.gestures.push({id:`${shot.id}.pickup`,action:'pick-place',...(a.hand?{hand:a.hand}:{}),startMs,endMs,target,destination,propId,contactMs,releaseMs});
       performance.gazes.push({startMs,endMs,target:destination});
       nextActions.push({...a,type:'operate-model',startMs:startMs+shot.startMs,endMs:endMs+shot.startMs,contactMs:contactMs+shot.startMs,target:{...a.target,anchor:'center'}});
       propBindings.push({propId,partId:part.id,role:'illustrative-model',sourceRefs:[pickup.ref]});
@@ -114,7 +117,7 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
     const target=a.target?partAnchor(shot,a.target.partId,a.target.anchor,width,height):undefined;
     if(a.type==='operate-model'&&a.target?.partId===focal.id)startMs=Math.max(startMs,moveMs);
     const span=endMs-startMs;
-    const handle=target?{x:target.x-exitX-m.shoulderOffset*scale,y:target.y-groundY-m.shoulderY*scale}:undefined;
+    const handle=target?{x:target.x-exitX-m.shoulderOffset*scale*(rigHand(a)==='left'?-1:1),y:target.y-groundY-m.shoulderY*scale}:undefined;
     const operation=a.type==='operate-model'&&a.target?.partId===focal.id&&span>=800&&startMs>=moveMs&&!!handle&&Math.hypot(handle.x,handle.y)<(m.upperArm+m.lowerArm-8)*scale;
     const contactMs=operation?startMs+Math.min(500,Math.floor(span*.35)):undefined;
     const feasible=operation&&contactMs!+80<=endMs-Math.min(220,span*.18);
@@ -126,7 +129,7 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
     nextActions.push(action);
     const windows=compare?[{startMs,endMs:Math.floor((startMs+endMs)/2),target},{startMs:Math.floor((startMs+endMs)/2),endMs,target:partAnchor(shot,a.secondTarget!.partId,a.secondTarget!.anchor,width,height)}]:[{startMs,endMs,target}];
     for(const [j,window] of windows.entries()){
-      performance.gestures.push({id:`${shot.id}.g${i}${compare?`.${j}`:''}`,...window,action:feasible?'operate':type==='think'?'think':type==='summarize'?'address-viewer':window.target?'point':'address-viewer',...(feasible?{contactMs}:{})});
+      performance.gestures.push({id:`${shot.id}.g${i}${compare?`.${j}`:''}`,...window,...(a.hand?{hand:a.hand}:{}),action:feasible?'operate':type==='think'?'think':type==='summarize'?'address-viewer':window.target?'point':'address-viewer',...(feasible?{contactMs}:{})});
       if(window.target)performance.gazes.push({...window,target:window.target});
     }
     const original=v.events.find(e=>e.type!=='state'&&e.targetId===a.target?.partId);
@@ -152,6 +155,9 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
     events.push({type:'highlight',targetId:focal.id,narrationAnchor:shot.narrationSegmentIds![0]!,startMs:shot.startMs,endMs:shot.endMs,contactRequired:false,motion:'none',sourceRefs:focal.sourceRefs});
   }
   h.actions=nextActions;v.events=[...events,...v.events.filter(e=>e.type==='state')];
+  // Bilateral seed actions share one attention channel. Let the sampler prefer
+  // the right target (then left); overlapping arm cues must not create overlapping gazes.
+  if(h.actions.some(a=>a.hand==='left'))performance.gazes=[];
   performance.expressions=cueExpressions(shot,moods[v.type]);
   const text=fold((shot.sourceRefs??[]).filter(ref=>h.actions.some(a=>a.narrationAnchor===ref.segmentId)).map(ref=>ref.quote).join(' '));
   let facing=performance.facing!;
@@ -206,36 +212,16 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
         actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config);
   }
   const consumed=new Set<string>();
-  // Adjacent cues may continue the same performance. A cue boundary is not a reason
-  // to make the actor recover and repeat an otherwise uninterrupted gesture.
-  const runs:NonNullable<Shot['host']>['actions']=[];
   const actions=shot.host?.actions??[];
   if(c.actorScene?.primary===null){
     if(p.gestures.length||p.props.length||actions.some(a=>a.type!=='idle'||a.target))throw new Error(`${shot.id}: mechanism-only shot cannot contain primary actor actions`);
     return;
   }
-  for(let i=0;i<actions.length;i++){
-    const action=actions[i]!,run={...action};
-    if(action.type==='idle'){runs.push(run);continue;}
-    const spanning=action.contactMs===undefined&&action.type!=='operate-model'&&action.type!=='compare'
-      ?p.gestures.find(g=>g.startMs===action.startMs-shot.startMs&&g.endMs>action.endMs-shot.startMs):undefined;
-    if(spanning){
-      let j=i;
-      while(j+1<actions.length&&run.endMs<spanning.endMs+shot.startMs){
-        const next=actions[j+1]!;
-        if(next.startMs!==run.endMs||next.contactMs!==undefined||next.type!==action.type||hash(next.target)!==hash(action.target)||hash(next.secondTarget)!==hash(action.secondTarget))break;
-        run.endMs=next.endMs;j++;
-      }
-      if(run.endMs===spanning.endMs+shot.startMs){runs.push(run);i=j;continue;}
-    }
-    runs.push({...action});
-  }
-  for(const a of runs){
+  for(const {action:a,gestures:group} of cinematicActionGroups(actions,p,shot.startMs)){
     if(a.type==='idle'){
-      if(a.target||a.secondTarget||a.contactMs!==undefined||p.gestures.some(g=>g.startMs<a.endMs-shot.startMs&&g.endMs>a.startMs-shot.startMs))throw new Error(`${shot.id}: idle interval cannot own an arm gesture, target or contact; use performance.walks/postures for body motion`);
+      if(a.target||a.secondTarget||a.contactMs!==undefined||p.gestures.some(g=>(!a.hand||rigHand(g)===a.hand)&&g.startMs<a.endMs-shot.startMs&&g.endMs>a.startMs-shot.startMs))throw new Error(`${shot.id}: idle interval cannot own an arm gesture, target or contact; use performance.walks/postures for body motion`);
       continue;
     }
-    const group=p.gestures.filter(g=>g.startMs>=a.startMs-shot.startMs&&g.endMs<=a.endMs-shot.startMs);
     if(group.length!==(a.type==='compare'?2:1))throw new Error(`${shot.id}: missing performance action for ${a.type} at shot-local ${a.startMs-shot.startMs}–${a.endMs-shot.startMs}ms; expected ${a.type==='compare'?2:1} contained gesture(s), received ${group.length}`);
     for(const [index,g] of group.entries()){
     consumed.add(g.id);

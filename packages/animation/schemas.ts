@@ -1,8 +1,9 @@
 import { z } from 'zod';
-import { Id } from '../core/identifiers.js';
+import { Id, RigHandSchema } from '../core/identifiers.js';
 
-export const ANIMATION_VERSION = 'performance-2.2.8';
-export const PREVIOUS_ANIMATION_VERSION = 'performance-2.2.7';
+export const ANIMATION_VERSION = 'performance-2.2.9';
+export const PREVIOUS_ANIMATION_VERSION = 'performance-2.2.8';
+export const LEGACY_ANIMATION_VERSION = 'performance-2.2.7';
 export const Moods = ['neutral', 'curious', 'thinking', 'concerned', 'effort', 'surprised', 'understanding', 'confident'] as const;
 const Time = z.number().int().nonnegative();
 export const PointSchema = z.object({ x: z.number().finite(), y: z.number().finite() }).strict();
@@ -21,10 +22,11 @@ export const GestureSchema = z.object({ ...Interval, id: Id,
   action: z.enum(['address-viewer', 'point', 'inspect', 'think', 'operate', 'pick-place', 'carry', 'react', 'lead-next']),
   target: PointSchema.optional(), destination: PointSchema.optional(),
   elbowPole:z.enum(['rest','reach']).optional(),
+  hand:RigHandSchema.optional(),
   propId: Id.optional(), contactMs: Time.optional(), releaseMs: Time.optional(), carryOffset: PointSchema.optional(),
 }).strict();
 export const PerformancePlanSchema = z.object({
-  version: z.literal(22), compilerVersion: z.enum([ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION]), id: Id,
+  version: z.literal(22), compilerVersion: z.enum([ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,
   leadCharacterId: Id, profileHash: z.string().min(1), kind: z.enum(['stick-man', 'mini-robot']),
   durationMs: Time.refine(n => n > 0), fps: z.number().int().min(24).max(60),
   stage: z.object({ width: z.number().finite().positive(), height: z.number().finite().positive(), groundY: z.number().finite() }).strict(),
@@ -34,7 +36,7 @@ export const PerformancePlanSchema = z.object({
   walks: z.array(WalkSchema), gestures: z.array(GestureSchema),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
   gazes: z.array(z.object({ ...Interval, target: PointSchema }).strict()),
-  props: z.array(z.object({ id: Id, origin: PointSchema, destination: PointSchema.optional(), gripOffset: PointSchema.optional(), attachedTo:z.literal('right-hand').optional() }).strict()),
+  props: z.array(z.object({ id: Id, origin: PointSchema, destination: PointSchema.optional(), gripOffset: PointSchema.optional(), attachedTo:z.enum(['left-hand','right-hand']).optional() }).strict()),
 }).strict();
 export type PerformancePlan = z.infer<typeof PerformancePlanSchema>;
 export type Gesture = z.infer<typeof GestureSchema>;

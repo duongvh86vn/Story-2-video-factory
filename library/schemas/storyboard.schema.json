@@ -343,6 +343,13 @@
                           "type": "integer",
                           "minimum": 0
                         },
+                        "hand": {
+                          "type": "string",
+                          "enum": [
+                            "left",
+                            "right"
+                          ]
+                        },
                         "endMs": {
                           "type": "integer",
                           "exclusiveMinimum": 0
@@ -779,6 +786,23 @@
                           "type": "string",
                           "maxLength": 96,
                           "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "contactActorId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "contactHands": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right"
+                            ]
+                          },
+                          "minItems": 1,
+                          "maxItems": 2
                         }
                       },
                       "required": [
@@ -1129,6 +1153,13 @@
                                 "y"
                               ],
                               "additionalProperties": false
+                            },
+                            "controlMode": {
+                              "type": "string",
+                              "enum": [
+                                "renderer",
+                                "none"
+                              ]
                             }
                           },
                           "required": [
@@ -1504,6 +1535,7 @@
                                 "compilerVersion": {
                                   "type": "string",
                                   "enum": [
+                                    "performance-2.2.9",
                                     "performance-2.2.8",
                                     "performance-2.2.7"
                                   ]
@@ -1786,6 +1818,13 @@
                                           "reach"
                                         ]
                                       },
+                                      "hand": {
+                                        "type": "string",
+                                        "enum": [
+                                          "left",
+                                          "right"
+                                        ]
+                                      },
                                       "propId": {
                                         "type": "string",
                                         "maxLength": 96,
@@ -1958,7 +1997,10 @@
                                       },
                                       "attachedTo": {
                                         "type": "string",
-                                        "const": "right-hand"
+                                        "enum": [
+                                          "left-hand",
+                                          "right-hand"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -2012,6 +2054,13 @@
                                   "startMs": {
                                     "type": "integer",
                                     "minimum": 0
+                                  },
+                                  "hand": {
+                                    "type": "string",
+                                    "enum": [
+                                      "left",
+                                      "right"
+                                    ]
                                   },
                                   "endMs": {
                                     "type": "integer",
@@ -2422,6 +2471,7 @@
                       "compilerVersion": {
                         "type": "string",
                         "enum": [
+                          "performance-2.2.9",
                           "performance-2.2.8",
                           "performance-2.2.7"
                         ]
@@ -2704,6 +2754,13 @@
                                 "reach"
                               ]
                             },
+                            "hand": {
+                              "type": "string",
+                              "enum": [
+                                "left",
+                                "right"
+                              ]
+                            },
                             "propId": {
                               "type": "string",
                               "maxLength": 96,
@@ -2876,7 +2933,10 @@
                             },
                             "attachedTo": {
                               "type": "string",
-                              "const": "right-hand"
+                              "enum": [
+                                "left-hand",
+                                "right-hand"
+                              ]
                             }
                           },
                           "required": [

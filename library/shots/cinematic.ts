@@ -1,6 +1,8 @@
 import type { FactoryConfig } from '../../packages/core/config.js';
 import type { SceneFiles, Shot,Narration } from '../../packages/core/schemas.js';
 import { escapeHtml } from '../../packages/core/utils.js';
+import {rigHand} from '../../packages/core/identifiers.js';
+import {cinematicActionGroups} from '../../packages/director/actions.js';
 import type { HostProfile, HostRig } from '../../packages/host/schemas.js';
 import { partAnchor, type HostGeometry } from '../../packages/host/controller.js';
 import type { SpeechActivity } from '../../packages/voice/schemas.js';
@@ -12,7 +14,7 @@ import { validateCinematicShot } from '../../packages/director/index.js';
 import { cinematicModel, cinematicRelations } from './cinematic-models.js';
 import { CAMERA_VIEWPORT, cameraMatrixAt, cameraTimeline, cameraModelLabel, cameraEnvironmentBounds, validateCamera } from '../../packages/director/camera.js';
 import { artLayers, customModelArt, customModelMotionOrigin } from '../../packages/director/art-direction.js';
-import { rendersModelLabel } from '../../packages/director/art-direction-schemas.js';
+import { rendersModelLabel,rendersModelControl } from '../../packages/director/art-direction-schemas.js';
 import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../packages/actors/model.js';
 import {buildRig} from '../../packages/host/rig.js';
 import {performanceSvg} from '../../packages/animation/rig.js';
@@ -67,7 +69,7 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     const {font,lines,labelY,labelHeight}=cameraModelLabel(part,height,width);
     if(showLabel&&lines.length>4)throw new Error(`${shot.id}: model label too long for the cinematic stage`);
     if(showLabel&&labelY+labelHeight>height*.79)throw new Error(`${shot.id}: cinematic label crosses subtitle clearance`);
-    const controlled=actorActions(shot).some(a=>a.type==='operate-model'&&a.target?.partId===part.id);
+    const controlled=rendersModelControl(shot,part.id)&&actorActions(shot).some(a=>a.type==='operate-model'&&a.target?.partId===part.id);
     const thermal=part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
     const control=binding?'':controlled?`<g data-control="illustrative" aria-label="Nút điều khiển mô hình minh họa" transform="translate(${handle.x} ${handle.y})"><circle r="${height*.011}" fill="#FFF3DB"/><g class="control-turn"><path d="M${-height*.007} 0H${height*.007}"/></g></g>`:`<circle class="handle" cx="${handle.x}" cy="${handle.y}" r="${height*.005}" fill="#B7803D"/>`;
     return `<g id="object-${i}" data-entity-id="${escapeHtml(part.id)}" data-model-variant="${model.variant}" fill="none" stroke="#644931" stroke-width="${height*.003}" stroke-linecap="round" stroke-linejoin="round"><ellipse data-model-shadow="${escapeHtml(part.id)}" cx="${x+w*.08}" cy="${y+h*.53}" rx="${w*.48}" ry="${h*.09}" fill="${palette.ink}" opacity=".14" stroke="none"/><g class="focus-${i}" opacity="0"><ellipse cx="${x}" cy="${y}" rx="${w*.53}" ry="${h*.6}" fill="${palette.accent}" opacity=".35" stroke="none"/></g><g transform="translate(${x} ${y})">${binding?'':illustration.svg+thermal}<ellipse class="energy-effect" rx="${w*.4}" ry="${h*.4}" fill="#F0C545" opacity="0" stroke="none"/></g>${!art&&focal&&c.setting==='workshop'?`<path d="M${x-w*.5} ${y+h*.5}H${x+w*.5}M${x-w*.45} ${y+h*.5}V${p.stage.groundY}M${x+w*.45} ${y+h*.5}V${p.stage.groundY}" stroke="#765438"/>`:''}${control}${showLabel?`<g class="model-label"><rect x="${x-w*.56}" y="${labelY-font}" width="${w*1.12}" height="${labelHeight+font*.35}" rx="6" fill="${palette.surface}" stroke="none"/><text x="${x}" y="${labelY}" text-anchor="middle" stroke="none" fill="${palette.ink}" font-family="Arial" font-size="${font}">${lines.map((text,j)=>`<tspan x="${x}" dy="${j?font*1.15:0}">${escapeHtml(text)}</tspan>`).join('')}</text></g>`:''}</g>`;
@@ -86,9 +88,23 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     if(e.motion==='translate')calls.push(`tl.to(${motionTarget},{x:${width*.018},duration:${span/2},ease:"sine.inOut"},${start});tl.to(${motionTarget},{x:0,duration:${span/2},ease:"sine.inOut"},${start+span/2});`);
     if(e.motion==='pulse')calls.push(`tl.to(${motionTarget},{opacity:.4,duration:${span/2}},${start});tl.to(${motionTarget},{opacity:1,duration:${span/2}},${start+span/2});`);
   }
-  for(const action of actorActions(shot).filter(a=>a.type==='operate-model'&&!c.propBindings.some(b=>b.partId===a.target?.partId))){
-    const i=v.parts.findIndex(part=>part.id===action.target!.partId),anchor=partAnchor(shot,action.target!.partId,'handle',width,height);
+  const operations=actorActions(shot).filter(a=>a.type==='operate-model'&&rendersModelControl(shot,a.target!.partId)&&!c.propBindings.some(b=>b.partId===a.target?.partId));
+  const gated=new Map<string,typeof v.events>();
+  for(const partId of new Set(operations.map(a=>a.target!.partId))){
+    const explicit=v.events.filter(e=>e.contactRequired&&(e.contactActorId||e.contactHands)&&(e.contactPartId??e.targetId)===partId);
+    if(explicit.length)gated.set(partId,explicit);
+  }
+  // Keep original action order and generated calls for unchanged single-hand scenes.
+  for(const action of operations.filter(a=>!gated.has(a.target!.partId))){
+    const i=v.parts.findIndex(part=>part.id===action.target!.partId);
     calls.push(`tl.set(${selector(`#object-${i} .control-turn`)},{svgOrigin:"0 0"},0);tl.to(${selector(`#object-${i} .control-turn`)},{rotation:65,duration:.12,ease:"sine.inOut"},${(action.contactMs!-shot.startMs)/1000});`);
+  }
+  for(const [partId,explicit] of gated){
+    const i=v.parts.findIndex(part=>part.id===partId);
+    // An explicit two-hand/actor requirement also owns the control's visual response.
+    const times=[...new Set(explicit.map(e=>e.startMs))].sort((a,b)=>a-b);
+    calls.push(`tl.set(${selector(`#object-${i} .control-turn`)},{svgOrigin:"0 0"},0);`);
+    for(const time of times)calls.push(`tl.to(${selector(`#object-${i} .control-turn`)},{rotation:65,duration:.12,ease:"sine.inOut"},${(time-shot.startMs)/1000});`);
   }
   calls.push(...cameraTimeline(c.camera,p,`${scope} .camera-rig`));
   if(background){
@@ -120,12 +136,12 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     hostHeightRatio:rigMetrics(profile).height*p.scale/height,interactions:[]};
   const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity}]),
     ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,activity:{...activity,intervals:[]}}))];
-  for(const performer of performers)for(const a of performer.actions)if(a.target)for(const [index,g] of performer.performance.gestures.filter(g=>g.startMs>=a.startMs-shot.startMs&&g.endMs<=a.endMs-shot.startMs).entries()){
+  for(const performer of performers)for(const {action:a,gestures} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs))if(a.target)for(const [index,g] of gestures.entries()){
     const target=index===1?a.secondTarget!:a.target;
     const reach=g.contactMs??Math.min(g.endMs-1,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
-    const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity),anchor=g.target!;
-    geometry.interactions.push({actorId:performer.id,type:a.type,startMs:g.startMs+shot.startMs,reachMs:Math.round(reach)+shot.startMs,endMs:g.endMs+shot.startMs,partId:target.partId,
-      target:anchor,hand:f.hands.right,errorPx:Math.hypot(f.hands.right.x-anchor.x,f.hands.right.y-anchor.y),root:f.root,gaze:anchor,
+    const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity),anchor=g.target!,handSide=rigHand(g),hand=f.hands[handSide];
+    geometry.interactions.push({actorId:performer.id,handSide,type:a.type,startMs:g.startMs+shot.startMs,reachMs:Math.round(reach)+shot.startMs,endMs:g.endMs+shot.startMs,partId:target.partId,
+      target:anchor,hand,errorPx:Math.hypot(hand.x-anchor.x,hand.y-anchor.y),root:f.root,gaze:anchor,
       ...(a.contactMs===undefined?{}:{contactMs:a.contactMs})});
   }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});

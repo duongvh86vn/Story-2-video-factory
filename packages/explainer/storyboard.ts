@@ -2,6 +2,7 @@ import path from 'node:path';
 import type { FactoryConfig } from '../core/config.js';
 import { ShotSchema, type Beat, type Narration, type Shot, type Storyboard } from '../core/schemas.js';
 import { hash, writeJson } from '../core/utils.js';
+import {rigHand,type RigHand} from '../core/identifiers.js';
 import { HostTimelineSchema, type HostProfile, type HostRig } from '../host/schemas.js';
 import type { ExplanationBeat, Visualization } from './schemas.js';
 import { ExplanationBeatSchema } from './schemas.js';
@@ -12,7 +13,7 @@ import { validateCinematicShot, validateModelContinuity } from '../director/inde
 import { EXPLAINER_RECIPES } from './recipes.js';
 import { validateAuthoredVisualSources } from './visual-sources.js';
 import { canonicalExplanationEvidence } from './citations.js';
-import {actorProfile,actorActions,shotPerformer,validateActorCast} from '../actors/model.js';
+import {actorProfile,shotPerformer,validateActorCast} from '../actors/model.js';
 export { EXPLAINER_RECIPES } from './recipes.js';
 export function explainerShot(id: string, startMs: number, endMs: number, beat: Beat, narration: Narration, profile: HostProfile, rig: HostRig): Shot {
   const b = ExplanationBeatSchema.parse({ ...beat, beatId: beat.id });
@@ -114,9 +115,11 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     if (shot.narrationSegmentIds.some(id => !knownSegments.has(id))) throw new Error(`${shot.id}: unknown narration segment`);
     if(h.presence==='inset')throw new Error(`${shot.id}: inset presentation is not supported; use beside-model or absent`);
     const performers=[{actions:h.actions,profile,presence:h.presence},...(shot.cinematic?.actorScene?.supporting??[]).map(actor=>({actions:actor.actions,profile:actorProfile(actor.character),presence:'beside-model'}))];
-    for(const performer of performers){let actionEnd=shot.startMs;
+    for(const performer of performers){const actionEnd:Record<RigHand,number>={left:shot.startMs,right:shot.startMs};
     for (const a of [...performer.actions].sort((a,b)=>a.startMs-b.startMs)) {
-      if(a.startMs<actionEnd)throw new Error(`${shot.id}: host actions overlap`);actionEnd=a.endMs;
+      if(!shot.cinematic&&a.hand==='left')throw new Error(`${shot.id}: left-hand actions require the cinematic renderer`);
+      const hands=a.type==='idle'&&!a.hand?['left','right'] as const:[rigHand(a)];
+      for(const hand of hands){if(a.startMs<actionEnd[hand])throw new Error(`${shot.id}: ${hand} host actions overlap`);actionEnd[hand]=a.endMs;}
       if(a.secondTarget&&a.type!=='compare')throw new Error(`${shot.id}: second target is only supported for compare`);
       if(performer.presence==='absent'&&a.target)throw new Error(`${shot.id}: an absent actor cannot point or operate a model`);
       if (!performer.profile.actions.includes(a.type) || a.startMs < shot.startMs || a.endMs > shot.endMs) throw new Error(`${shot.id}: unsupported/out-of-bounds actor action`);
@@ -145,7 +148,18 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
         else if(!v.relations.some(r=>(r.kind==='transfer'||shot.cinematic?.artDirection&&r.kind==='cause')&&r.from===e.targetId&&r.to===e.relationTo&&(shot.cinematic?.artDirection||hash(r.sourceRefs)===hash(e.sourceRefs))))throw new Error(`${shot.id}: flow event has no sourced transfer`);
       }
       if(e.contactPartId&&!ids.has(e.contactPartId))throw new Error(`${shot.id}: missing control target`);
-      if (e.contactRequired && !actorActions(shot).some(a => a.type === 'operate-model' && a.target?.partId === (e.contactPartId??e.targetId) && a.contactMs !== undefined && a.contactMs < e.startMs && a.endMs >= e.endMs)) throw new Error(`${shot.id}: model reacts before actor contact`);
+      if(!e.contactRequired&&(e.contactActorId||e.contactHands))throw new Error(`${shot.id}: contact owner/hands require a contact-driven event`);
+      if(e.contactHands&&new Set(e.contactHands).size!==e.contactHands.length)throw new Error(`${shot.id}: duplicate required contact hand`);
+      if(e.contactActorId&&!performers.some(performer=>performer.profile.id===e.contactActorId))throw new Error(`${shot.id}: unknown contact actor ${e.contactActorId}`);
+      if(!shot.cinematic&&e.contactHands?.includes('left'))throw new Error(`${shot.id}: left-hand contact requires the cinematic renderer`);
+      if(e.contactRequired){
+        const eligible=performers.filter(performer=>!e.contactActorId||performer.profile.id===e.contactActorId);
+        const contacted=eligible.some(performer=>{
+          const actions=performer.actions.filter(a=>a.type==='operate-model'&&a.target?.partId===(e.contactPartId??e.targetId)&&a.contactMs!==undefined&&a.contactMs<e.startMs&&a.endMs>=e.endMs);
+          return e.contactHands?e.contactHands.every(hand=>actions.some(a=>rigHand(a)===hand)):actions.length>0;
+        });
+        if(!contacted)throw new Error(`${shot.id}: model reacts before actor contact${e.contactActorId||e.contactHands?`; required ${e.contactActorId??'one present actor'}, ${e.contactHands?.join('+')??'any hand'}`:''}`);
+      }
     }
     if (h.presence === 'absent') absent += shot.endMs - shot.startMs; else absent = 0;
     if (!shot.cinematic?.actorScene&&absent > config.presentation.maximum_host_absence_seconds * 1000) throw new Error('Host absent longer than configured limit');

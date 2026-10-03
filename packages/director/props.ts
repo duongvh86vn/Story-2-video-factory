@@ -21,17 +21,23 @@ export function modelExitParts(shot:Shot):NonNullable<Shot['visualization']>['pa
 export function validatePropBindings(shot:Shot):void{
   const c=shot.cinematic;if(!c)return;
   if(c.propBindings.length!==c.performance.props.length)throw new Error(`${shot.id}: every animated prop requires a sourced model binding`);
-  const pickup=pickupPart(shot),ids=new Set<string>();
+  const pickup=pickupPart(shot),ids=new Set<string>(),parts=new Set<string>();
   for(const binding of c.propBindings){
     const prop=c.performance.props.find(p=>p.id===binding.propId),part=shot.visualization!.parts.find(p=>p.id===binding.partId);
     if(!prop||!part||ids.has(binding.propId))throw new Error(`${shot.id}: prop binding lacks its sourced model pickup`);
+    if(parts.has(binding.partId))throw new Error(`${shot.id}: model entity ${binding.partId} cannot bind to multiple props`);
     if(c.actorScene?.primary){
       if(!binding.sourceRefs.length||binding.sourceRefs.some(ref=>!part.sourceRefs.some(source=>hash(source)===hash(ref))))throw new Error(`${shot.id}: illustrative actor pickup must retain the manipulated model's source evidence`);
       if(!c.artDirection||!['authored','model'].includes(c.artDirection.origin))throw new Error(`${shot.id}: illustrative pickup needs an authored/model story direction`);
     }else if(!pickup||pickup.part.id!==part.id||hash(binding.sourceRefs)!==hash([pickup.ref]))throw new Error(`${shot.id}: prop binding lacks its narrated model pickup`);
     ids.add(binding.propId);
+    parts.add(binding.partId);
     if(prop.attachedTo||c.continuity.carriedProps.length)throw new Error(`${shot.id}: cross-cut carried prop requires a continuity plan; use a completed placement`);
-    const gesture=c.performance.gestures.find(g=>g.propId===prop.id);
+    const placements=c.performance.gestures.filter(g=>g.propId===prop.id);
+    if(placements.length!==1)throw new Error(`${shot.id}: bound model ${part.id} requires one completed placement; sequential pickup/handoff is not supported`);
+    const gesture=placements[0];
+    const otherContact=[...(shot.host?.actions??[]),...(c.actorScene?.supporting.flatMap(a=>a.actions)??[])].filter(a=>a.type==='operate-model'&&a.target?.partId===part.id);
+    if(otherContact.length!==1)throw new Error(`${shot.id}: moving model ${part.id} requires one hand owner; joint manipulation is not supported`);
     if(!gesture||gesture.action!=='pick-place'||!gesture.destination||!prop.destination||hash(gesture.destination)!==hash(prop.destination)||prop.origin.x!==part.x*c.performance.stage.width||prop.origin.y!==part.y*c.performance.stage.height)throw new Error(`${shot.id}: prop target/destination changed its world anchor`);
     if(!c.actorScene&&(gesture.destination.x<=prop.origin.x||Math.abs(gesture.destination.y-prop.origin.y)>.01))throw new Error(`${shot.id}: placement must follow its narrated direction`);
     if(c.actorScene&&(gesture.destination.x<0||gesture.destination.x>c.performance.stage.width||gesture.destination.y<0||gesture.destination.y>c.performance.stage.groundY))throw new Error(`${shot.id}: illustrative placement must stay in the physical stage`);

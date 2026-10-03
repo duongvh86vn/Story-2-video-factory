@@ -1,5 +1,7 @@
 # Body acting: implementation and open acceptance
 
+This report preserves the version8 body checkpoint and its original evidence. Independent hand tracks were subsequently added in version9; see [the separate source9 report](2026-10-03-bilateral-acting.md). That later implementation does not turn these version8 producer measurements into runtime acceptance.
+
 Animation `performance-2.2.8` adds a separate body track so an actor can lower into a crouch, lean to inspect something and recover to standing. A transition has its own local clock and holds its destination until the next transition, rather than restarting at a subtitle boundary. Feet retain their ground points; fixed-length leg/arm solving, contact error and adaptive bone-connection checks still apply. Camera measurements include the posture transitions.
 
 The contract is optional `entryPosture` and `postures`, with `pose: stand|crouch|lean`, optional intensity0–1 and optional leanDeg±25. Transitions must last at least280ms and may not overlap. Walking requires completion of the return to stand. Continuous actor scenes compare body exit/entry for both primary and supporting cast. Sitting with a support, kneeling, tool stirring and independent bilateral arm choreography are **not implemented by this track**.

@@ -1,8 +1,9 @@
 import type { HostProfile } from '../host/schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
+import { rigHand, type RigHand } from '../core/identifiers.js';
 import { rigMetrics } from './rig.js';
-import { ANIMATION_VERSION, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
+import { ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import { selectedClips } from './library.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
@@ -36,7 +37,7 @@ const attaches = (g:Gesture) => g.action==='pick-place'||g.action==='carry';
 const contacts = (g:Gesture) => g.action==='operate'||attaches(g);
 const CARRY_TRANSITION_MS=250;
 const enteringCarry=(g:Gesture)=>g.action==='carry'&&g.startMs===0&&g.contactMs===0;
-const gestureAt=(plan:PerformancePlan,t:number)=>plan.gestures.find(g=>t>=g.startMs&&(t<g.endMs||g.action==='carry'&&g.releaseMs===undefined&&t===plan.durationMs&&g.endMs===plan.durationMs));
+const gestureAt=(plan:PerformancePlan,t:number,hand:RigHand='right')=>plan.gestures.find(g=>rigHand(g)===hand&&t>=g.startMs&&(t<g.endMs||g.action==='carry'&&g.releaseMs===undefined&&t===plan.durationMs&&g.endMs===plan.durationMs));
 export interface Chain { joint: Point; end: Point; upper: number; lower: number; reachable: boolean; error: number }
 
 /** Fixed lengths, explicit bend direction. Inputs and outputs are all in world space. */
@@ -63,10 +64,13 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   PerformancePlanSchema.parse(plan);
   if(plan.kind!==profile.kind || plan.leadCharacterId!==profile.id || plan.profileHash!==profile.profileHash) throw new Error('Performance identity/profile mismatch');
   if(Math.abs(plan.root.y-plan.stage.groundY)>1e-6) throw new Error('Performer root must use the ground anchor');
-  for(const [name, items] of [['locomotion',plan.walks],['right-arm gesture',plan.gestures],['expression',plan.expressions],['gaze',plan.gazes]] as const) overlaps(items,name,plan.durationMs);
+  for(const [name, items] of [['locomotion',plan.walks],['expression',plan.expressions],['gaze',plan.gazes]] as const) overlaps(items,name,plan.durationMs);
+  for(const hand of ['left','right'] as const)overlaps(plan.gestures.filter(g=>rigHand(g)===hand),`${hand}-arm gesture`,plan.durationMs);
+  if(new Set(plan.gestures.map(g=>g.id)).size!==plan.gestures.length)throw new Error('Duplicate gesture identity across arm tracks');
   overlaps(plan.turns??[],'turn',plan.durationMs);
   overlaps(plan.postures??[],'body posture',plan.durationMs);
-  if(plan.compilerVersion!==ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires the current animation compiler version');
+  if(plan.compilerVersion===LEGACY_ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires animation2.2.8 or newer');
+  if(plan.compilerVersion!==ANIMATION_VERSION&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require the current animation compiler version');
   for(const pose of [...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])]){
     if(pose.pose==='stand'&&pose.leanDeg)throw new Error('Standing posture must return to zero body lean; use a lean clip');
   }
@@ -87,16 +91,16 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   }
   const props=new Set(plan.props.map(p=>p.id));
   if(props.size!==plan.props.length)throw new Error('Duplicate prop identity');
-  if(plan.props.filter(p=>p.attachedTo).length>1)throw new Error('Only one prop can own the right-hand entry grip');
+  for(const hand of ['left','right'] as const)if(plan.props.filter(p=>p.attachedTo===`${hand}-hand`).length>1)throw new Error(`Only one prop can own the ${hand}-hand entry grip`);
   for(const prop of plan.props.filter(p=>p.attachedTo)){
-    if(!plan.gestures.some(g=>enteringCarry(g)&&g.propId===prop.id))throw new Error(`${prop.id}: attached entry prop requires carry ownership from time zero`);
+    if(!plan.gestures.some(g=>enteringCarry(g)&&g.propId===prop.id&&`${rigHand(g)}-hand`===prop.attachedTo))throw new Error(`${prop.id}: attached entry prop requires matching hand carry ownership from time zero`);
   }
   const propPoints=new Map(plan.props.map(p=>[p.id,p.origin]));
   for(const g of chronological(plan.gestures)){
     if(['point','inspect','operate','pick-place','carry'].includes(g.action)&&!g.target)throw new Error(`${g.id}: missing gesture target`);
     if(contacts(g) && (g.contactMs===undefined||g.contactMs<=g.startMs&&!enteringCarry(g)||g.contactMs>=g.endMs))throw new Error(`${g.id}: contact must follow approach`);
     if(attaches(g) && (!g.propId||!props.has(g.propId)))throw new Error(`${g.id}: attachment requires a known prop`);
-    if(enteringCarry(g)&&!plan.props.find(p=>p.id===g.propId)?.attachedTo)throw new Error(`${g.id}: entry carry requires an attached prop`);
+    if(enteringCarry(g)&&plan.props.find(p=>p.id===g.propId)?.attachedTo!==`${rigHand(g)}-hand`)throw new Error(`${g.id}: entry carry requires a prop attached to the same hand`);
     if(attaches(g)&&(g.action==='pick-place'||g.releaseMs!==undefined)&&(!g.destination||g.releaseMs===undefined||g.releaseMs<=g.contactMs!||g.releaseMs>=g.endMs))throw new Error(`${g.id}: released attachment requires destination and release`);
     if(g.action==='carry'&&g.releaseMs===undefined&&(g.endMs!==plan.durationMs||g.destination))throw new Error(`${g.id}: unreleased carry must own the arm through the scene exit`);
     if(g.propId&&!props.has(g.propId))throw new Error(`${g.id}: unknown prop`);
@@ -118,8 +122,10 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
       if(g.action==='carry'&&(walk.startMs<g.contactMs!+(enteringCarry(g)?0:CARRY_TRANSITION_MS)||walk.endMs>recoveryStart(g)-(g.releaseMs===undefined?0:CARRY_TRANSITION_MS)))throw new Error(`${g.id}: carry locomotion must fit after lift and before lowering window`);
     }
   }
+  for(const prop of plan.props)overlaps(plan.gestures.filter(g=>attaches(g)&&g.propId===prop.id).map(g=>({startMs:g.contactMs!,endMs:g.releaseMs??g.endMs})),`prop ${prop.id} ownership`,plan.durationMs);
   for(const prop of plan.props.filter(p=>p.attachedTo)){
-    const hand=samplePerformance(plan,profile,0,{method:'segment-draft',windowMs:20,intervals:[]}).hands.right,offset=prop.gripOffset??{x:0,y:0};
+    const side=prop.attachedTo==='left-hand'?'left':'right';
+    const hand=samplePerformance(plan,profile,0,{method:'segment-draft',windowMs:20,intervals:[]}).hands[side],offset=prop.gripOffset??{x:0,y:0};
     if(distance(hand,{x:prop.origin.x+offset.x*plan.scale,y:prop.origin.y+offset.y*plan.scale})>.01)throw new Error(`${prop.id}: entry grip anchor does not match the carried hand pose`);
   }
 }
@@ -127,7 +133,7 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
 export interface FrameState {
   timeMs:number; root:Point; feet:Record<'left'|'right',Point>; stance:Record<'left'|'right',boolean>;
   bodyPosture:BodyPosture;
-  hands:Record<'left'|'right',Point>; contactError:number; mood:Mood;
+  hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
   transforms:Record<string,string>; face:Record<string,{opacity?:number;scaleY?:number;rotation?:number;x?:number;y?:number}>;
   props:Record<string,{point:Point;attached:boolean}>;
 }
@@ -190,6 +196,7 @@ const moodPoses:Record<Mood,{brow:number;tilt:number;lean:number;smile:number;ro
   understanding:{brow:-1,tilt:3,lean:0,smile:1,round:0,lid:0},confident:{brow:-1,tilt:0,lean:0,smile:.7,round:0,lid:0},
 };
 function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,scale:number,shoulder:Point):Point {
+  const side=rigHand(g)==='left'?-1:1;
   const settle=Math.min(220,(g.endMs-g.startMs)*.18),recover=smooth((g.endMs-time)/settle);
   if(g.action==='pick-place'){
     const contact=g.contactMs!,release=g.releaseMs!,source=g.target!,dest=g.destination!;
@@ -207,7 +214,7 @@ function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,s
     return mix(dest!,neutral,smooth((time-release)/(g.endMs-release)));
   }
   // A think target owns attention, while the hand owns the thoughtful chin pose.
-  const aim=g.action==='think'?chin:g.target??(g.action==='react'?{x:neutral.x+25,y:neutral.y-110}:{x:neutral.x+55,y:neutral.y-45});
+  const aim=g.action==='think'?chin:g.target??(g.action==='react'?{x:neutral.x+25*side,y:neutral.y-110}:{x:neutral.x+55*side,y:neutral.y-45});
   if(g.action==='operate'){
     const contact=g.contactMs!,release=recoveryStart(g);
     return time<contact?mix(neutral,aim,smooth((time-g.startMs)/(contact-g.startMs))):time<=release?aim:mix(aim,neutral,smooth((time-release)/(g.endMs-release)));
@@ -221,7 +228,7 @@ function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,s
     if(progress===1)return chin;
     const start=Math.atan2(neutral.y-shoulder.y,neutral.x-shoulder.x);
     let end=Math.atan2(chin.y-shoulder.y,chin.x-shoulder.x);
-    while(end>start)end-=Math.PI*2;
+    if(side===1){while(end>start)end-=Math.PI*2;}else{while(end<start)end+=Math.PI*2;}
     const angle=lerp(start,end,progress),radius=lerp(distance(shoulder,neutral),distance(shoulder,chin),progress);
     return {x:shoulder.x+Math.cos(angle)*radius,y:shoulder.y+Math.sin(angle)*radius};
   }
@@ -232,8 +239,8 @@ function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,s
  * extension; flipping two bent solutions directly would teleport the elbow. */
 function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undefined,time:number,upper:number,lower:number,side:'left'|'right',aimAt:(time:number)=>Point):Chain{
   const restBend=side==='right'?1:-1;
-  if(!gesture||side==='left')return solveChain(shoulder,target,upper,lower,restBend);
-  const activeBend=gesture.elbowPole==='rest'?restBend:-1;
+  if(!gesture)return solveChain(shoulder,target,upper,lower,restBend);
+  const activeBend=gesture.elbowPole==='rest'?restBend:-restBend;
   // Reaching below the shoulder can keep the outward rest elbow. Its fixed
   // pole needs no extension transition because it never changes branch.
   if(activeBend===restBend)return solveChain(shoulder,target,upper,lower,restBend);
@@ -277,7 +284,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   transforms.neck=`translate(${number(neckStart.x)} ${number(neckStart.y)}) rotate(${number(degrees(Math.atan2(neckEnd.y-neckStart.y,neckEnd.x-neckStart.x))-90)}) scale(${number(s)} ${number(distance(neckStart,neckEnd))})`;
   transforms.head=transform(head,headAngle,s*profile.appearance.headScale);
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
-  const chin=add(head,rotate({x:m.headRadius*.3*s,y:m.headRadius*.875*s},lean+pose.tilt*emotion.weight));
+  const chinAt=(side:RigHand)=>add(head,rotate({x:m.headRadius*.3*s*(side==='left'?-1:1),y:m.headRadius*.875*s},lean+pose.tilt*emotion.weight));
   for(const [i,side] of (['left','right'] as const).entries()){
     // One continuous bend branch, including rest, walk entry and recovery.
     const hip={x:pelvis.x+(i?1:-1)*m.hipOffset*s,y:pelvis.y},leg=solveChain(hip,walk.feet[side],m.upperLeg*s,m.lowerLeg*s,1);
@@ -287,8 +294,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const shoulder=toWorld((i?1:-1)*m.shoulderOffset,m.shoulderY-m.pelvisY);
     const swing=Math.sin(walk.phase*Math.PI)*(i?-1:1)*25*walk.activation;
     const neutral=add(shoulder,rotate({x:(i?12:-12)*s,y:(m.upperArm+m.lowerArm-8)*s},swing));
-    const gesture=i?gestureAt(plan,t):undefined;
-    const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??50)*s,y:(gesture?.carryOffset?.y??35)*s},lean));
+    const gesture=gestureAt(plan,t,side),chin=chinAt(side);
+    const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??(i?50:-50))*s,y:(gesture?.carryOffset?.y??35)*s},lean));
     const target=gesture?goal(gesture,neutral,chin,carryAnchor,t,s,shoulder):neutral;
     const arm=armPose(shoulder,neutral,target,gesture,t,m.upperArm*s,m.lowerArm*s,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
@@ -296,7 +303,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     transforms[`arm-${side}-upper`]=transform(shoulder,arm.upper,s);transforms[`arm-${side}-lower`]=transform(arm.joint,arm.lower,s);
     transforms[`hand-${side}`]=transform(arm.end,0,s);hands[side]=arm.end;
   }
-  const activeGesture=gestureAt(plan,t),explicitGaze=plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
+  const activeGestures={right:gestureAt(plan,t,'right'),left:gestureAt(plan,t,'left')};
+  const activeGesture=activeGestures.right?.target?activeGestures.right:activeGestures.left??activeGestures.right,explicitGaze=plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
   const gazeOffset=(target:Point)=>{const angle=Math.atan2(target.y-head.y,target.x-head.x);return {x:Math.cos(angle)*3,y:Math.sin(angle)*2};};
   const gazeWeight=(cue:{startMs:number;endMs:number})=>smooth((t-cue.startMs)/140)*smooth((cue.endMs-t)/140);
   let gaze={x:0,y:0};
@@ -312,24 +320,26 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   face['mouth-talk']={opacity:speech?1:1-Math.max(pose.smile,pose.round)*emotion.weight,scaleY:speech?1+speech.level*2.3:.2};
   face['mouth-smile']={opacity:pose.smile*emotion.weight};
   face['mouth-round']={opacity:pose.round*emotion.weight};
-  const props:FrameState['props']={};let contactError=0;
+  const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
   for(const prop of plan.props){
     let point=prop.origin,attached=false;
     const offset=prop.gripOffset??{x:0,y:0};
     for(const g of chronological(plan.gestures).filter(g=>attaches(g)&&g.propId===prop.id)){
       if(g.releaseMs!==undefined&&t>=g.releaseMs){point={x:g.destination!.x-offset.x*s,y:g.destination!.y-offset.y*s};attached=false;}
-      else if(t>=g.contactMs!){point={x:hands.right.x-offset.x*s,y:hands.right.y-offset.y*s};attached=true;}
+      else if(t>=g.contactMs!){const hand=hands[rigHand(g)];point={x:hand.x-offset.x*s,y:hand.y-offset.y*s};attached=true;}
     }
     props[prop.id]={point,attached};transforms[`prop-${prop.id}`]=transform(point,0,s);
   }
-  if(activeGesture&&contacts(activeGesture)&&t>=activeGesture.contactMs!&&t<=recoveryStart(activeGesture)){
-    const shoulder=toWorld(m.shoulderOffset,m.shoulderY-m.pelvisY);
-    const anchor=add(shoulder,rotate({x:(activeGesture.carryOffset?.x??50)*s,y:(activeGesture.carryOffset?.y??35)*s},lean));
-    const expected=activeGesture.action==='carry'?goal(activeGesture,hands.right,chin,anchor,t,s,shoulder):activeGesture.action==='operate'?activeGesture.target!:mix(activeGesture.target!,activeGesture.destination!,smooth((t-activeGesture.contactMs!)/(activeGesture.releaseMs!-activeGesture.contactMs!)));
-    contactError=distance(hands.right,expected);
-    if(contactError>1)throw new Error(`${activeGesture.id}: hand misses contact anchor at ${t}ms (${contactError.toFixed(2)}px)`);
+  for(const side of ['left','right'] as const){const gesture=activeGestures[side];
+  if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)){
+    const shoulder=toWorld(m.shoulderOffset*(side==='left'?-1:1),m.shoulderY-m.pelvisY);
+    const anchor=add(shoulder,rotate({x:(gesture.carryOffset?.x??(side==='left'?-50:50))*s,y:(gesture.carryOffset?.y??35)*s},lean));
+    const expected=gesture.action==='carry'?goal(gesture,hands[side],chinAt(side),anchor,t,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((t-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
+    contactErrors[side]=distance(hands[side],expected);contactError=Math.max(contactError,contactErrors[side]);
+    if(contactErrors[side]>1)throw new Error(`${gesture.id}: ${side} hand misses contact anchor at ${t}ms (${contactErrors[side].toFixed(2)}px)`);
   }
-  return {timeMs:t,root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,face,props,mood:emotion.mood,contactError};
+  }
+  return {timeMs:t,root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,face,props,mood:emotion.mood,contactError,contactErrors};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
@@ -397,6 +407,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   }
   return {js:calls.join('\n'),frames,report:{compilerVersion:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
+    maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Id } from '../core/identifiers.js';
+import { Id, RigHandSchema } from '../core/identifiers.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker'] as const;
@@ -24,6 +24,7 @@ export const HostRigSchema = z.object({ id: Id, profileVersion: z.number().int()
 export type HostRig = z.infer<typeof HostRigSchema>;
 export const TargetSchema = z.object({ modelId: Id, partId: Id, anchor: z.enum(['center', 'handle', 'label']).default('center') });
 export const HostActionSchema = z.object({ type: z.enum(HostActions), startMs: z.number().int().nonnegative(),
+  hand:RigHandSchema.optional(),
   endMs: z.number().int().positive(), narrationAnchor: Id.optional(), target: TargetSchema.optional(),
   secondTarget: TargetSchema.optional(), contactMs: z.number().int().nonnegative().optional() })
   .refine(action => action.endMs > action.startMs, 'Host action interval must be positive');

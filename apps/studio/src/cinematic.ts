@@ -1,4 +1,6 @@
 import type { Shot } from '../../../packages/core/schemas.js';
+import {rigHand} from '../../../packages/core/identifiers.js';
+import {cinematicActionGroups} from '../../../packages/director/actions.js';
 
 const escape = (value: unknown): string => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]!);
 const point = (p: { x: number; y: number }) => `${p.x.toFixed(1)}, ${p.y.toFixed(1)}`;
@@ -10,11 +12,13 @@ export function cinematicReview(input: { shot: Shot; narration: string; locale: 
   const art=c.artDirection,origin=art?.origin??'offline';
   const originLabel=origin==='model'?label('Model thiết kế','Model directed'):origin==='authored'?label('Thiết kế riêng','Authored'):label('Bản dựng quy tắc ngoại tuyến','Offline rule seed');
   const design=`<section aria-label="${label('Thiết kế cảnh','Art direction')}"><h3>${label('Thiết kế cảnh','Art direction')}</h3><p>${escape(originLabel)}</p>${art?`<p>${escape(art.brief)}</p><p>${art.layers.length} ${label('lớp hình','art layers')} · ${art.models.length} ${label('hình mô hình riêng','custom model glyphs')}</p><p>${label('Bảng màu','Palette')}: ${Object.values(art.palette).map(escape).join(' · ')}</p>`:''}<p class="muted">${label('Đánh giá chất lượng bằng clip production; kiểm tra kỹ thuật không thay cho duyệt hình ảnh.','Judge quality from the production clip; technical checks do not replace visual review.')}</p></section>`;
-  const actions = c.performance.gestures.map((g, i) => {
-    const a = shot.host?.actions.find(a=>g.startMs>=a.startMs-shot.startMs&&g.endMs<=a.endMs-shot.startMs);
-    const id=a?.secondTarget&&g.startMs>a.startMs-shot.startMs?a.secondTarget.partId:a?.target?.partId;
+  const groups=cinematicActionGroups(shot.host?.actions??[],c.performance,shot.startMs);
+  const actions = c.performance.gestures.map(g => {
+    const group=groups.find(group=>group.gestures.includes(g)),a=group?.action;
+    const id=a?.secondTarget&&group?.gestures.indexOf(g)===1?a.secondTarget.partId:a?.target?.partId;
     const target = parts.find(p => p.id === id)?.label ?? label('Người xem', 'Viewer');
-    return `<li>${escape(g.action)} → ${escape(target)} · ${seconds(g.startMs)}–${seconds(g.endMs)}${g.contactMs === undefined ? '' : ` · ${label('tiếp xúc','contact')} ${seconds(g.contactMs)}`}</li>`;
+    const hand=rigHand(g)==='left'?label('Tay phía trái','Left rig hand'):label('Tay phía phải','Right rig hand');
+    return `<li>${escape(hand)} · ${escape(g.action)} → ${escape(target)} · ${seconds(g.startMs)}–${seconds(g.endMs)}${g.contactMs === undefined ? '' : ` · ${label('tiếp xúc','contact')} ${seconds(g.contactMs)}`}</li>`;
   }).join('');
   return `<div class="cinematic-review">
     ${design}

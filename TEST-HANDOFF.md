@@ -2,7 +2,16 @@
 
 Ưu tiên mới03/10: [probe renderer migration](docs/validation/2026-10-03-renderer-language.md) đang FAIL toàn rebuild trước bản sửa scene key; 275 test scoped qua không thay kiểm tra sau sửa. Resume đúng fixture corrected đang ASSETS_READY, giữ nguyên input/config/voice/locks, xác nhận English scene được dựng lại và audio/cache/request count không đổi. Follow-up đã giao model nhưng chưa chạy do hạn mức; ghi NOT RUN. [Review phim](docs/validation/2026-10-03-film-quality.md) có finding thật về chú thích và độ rõ hành động; finding Benz7sreset đã rút lại bằng khung hình PTS/GSAP. Xem/nghe hai bài với cả người que và robot ở bản dàn cảnh mới trước nghiệm thu; không dùng DONE/QC làm bằng chứng thẩm mỹ.
 
-Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.8; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
+Contract02/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Director2.2.21; animation2.2.9; artwork2.2.4; host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
+
+## Hai tay — source9, runtime NOT RUN
+
+- Cả hai rig: left point/think/operate/pick-place/carry/react, đồng thời right gesture khác; overlap cùng tay và duplicate gesture ID lỗi. Bỏ hand giữ behavior rig-right cũ; version7/8 không nhận hand data version9.
+- Held point qua nhiều cue không reset dù action tay khác chen giữa; compare giữ thứ tự target; Studio và geometry ghi đúng tay/target. Actual GSAP seek/reverse/random giữ xương và contact, không chỉ sample thuần.
+- `idle` không hand chặn mọi arm gesture; idle có hand cho phép tay kia diễn. Body/feet/gaze một kênh không chồng do hai action đồng thời; seed bilateral dùng attention ưu tiên right rồi left khi không có gaze riêng.
+- ContactRequired + contactActorId/contactHands: đủ hai tay của cùng một diễn viên, đúng part/clock trước event. Thiếu một tay, sai actor/target, contact sau event, duplicate hands, metadata trên event không contact đều lỗi. Control turn không xảy ra trước gate; controlMode none không sinh tay quay máy.
+- Prop: entry grip đúng hand, một prop không có hai owner đồng thời, hai prop không cùng một model; origin/grip/destination đúng. Một primary placement bằng left được dựng thực. Sequential placement/handoff/supporting attachment/cross-cut hoặc tay khác contact moving bound model phải chặn rõ.
+- Exact migration corrected fixture và audio/cache/locks vẫn pending; không dùng build hay artist DONE/QC chứng nhận. Xem/nghe bản hai tay và cả hai bài/hai kiểu tạo hình; [phạm vi](docs/validation/2026-10-03-bilateral-acting.md).
 
 ## Tư thế và đi lại tự nhiên — source mới, test NOT RUN
 

@@ -34,7 +34,11 @@ Theo hình chỉnh sửa của người dùng: ở tư thế thả tay, khuỷu 
 
 Voiceover không làm mọi diễn viên mấp máy miệng. Speech activity chỉ áp dụng cho diễn viên được phân đoạn nói; không gọi là phoneme lip-sync. Không tự thêm thoại vào audio đầu vào.
 
-Animation2.2.8 bổ sung `entryPosture` và `postures`: đứng, cúi/hạ người và nghiêng thân, chỉnh intensity và góc nghiêng theo tình huống. Clip blend tối thiểu280ms, giữ tư thế tới clip tiếp theo; chân giữ điểm đặt và chiều dài xương giữ nguyên. Quay về đứng trước khi đi. `idle` cho phép chân/thân diễn mà không ép đưa tay hoặc bịa mục tiêu chỉ. Continuous phải giữ tư thế cuối qua `entryPosture`; đổi tình huống dùng cut. Đây là phần source mới, chưa nghiệm thu chuyển động độc lập; chưa hỗ trợ tư thế ngồi có ghế/đầu gối, thao tác khuấy hoặc hai tay độc lập.
+Animation2.2.8 bổ sung `entryPosture` và `postures`: đứng, cúi/hạ người và nghiêng thân, chỉnh intensity và góc nghiêng theo tình huống. Clip blend tối thiểu280ms, giữ tư thế tới clip tiếp theo; chân giữ điểm đặt và chiều dài xương giữ nguyên. Quay về đứng trước khi đi. `idle` cho phép chân/thân diễn mà không ép đưa tay hoặc bịa mục tiêu chỉ. Continuous phải giữ tư thế cuối qua `entryPosture`; đổi tình huống dùng cut. Đây là phần source mới, chưa nghiệm thu chuyển động độc lập; chưa hỗ trợ tư thế ngồi có ghế/đầu gối hoặc thao tác khuấy.
+
+Animation2.2.9 bổ sung hai kênh tay độc lập. Action và gesture dùng cùng `hand: left|right`; bỏ trường này giữ mặc định rig-right của project cũ. Hai tay được chồng clock, một tay không được có hai gesture đồng thời. ID gesture duy nhất trong cả hai kênh; `idle` không hand giữ cả hai tay nghỉ, idle có hand chỉ giữ tay đó. Point liên tục qua cue được ghép riêng theo tay, không bị action của tay kia làm ngắt. Đây là phía trái/phải trong rig, chưa phải ánh xạ giải phẫu sau xoay người/camera.
+
+Event cần đủ tiếp xúc có `contactActorId` và `contactHands`; nếu yêu cầu hai tay thì phải là hai tay của cùng một diễn viên, đúng vật/clock và chạm trước phản ứng. Chữ năm trên giấy, nút máy hay thao tác quan sát không được biến thành một claim lịch sử mới. Custom model có thể đặt `controlMode: none` để không dựng tay quay điều khiển khi đồ vật không cần. Preview ghi tay và target; compiler report ghi sai số tiếp xúc riêng từng tay. Bản7/8 không có hand data tiếp tục đọc được; hand data mới yêu cầu version9. [Phạm vi source và nghiệm thu](docs/validation/2026-10-03-bilateral-acting.md).
 
 Gesture có `elbowPole=rest|reach`: giữ nhánh khuỷu nghỉ mở ra ngoài khi nắm vật dưới vai, hoặc dùng nhánh với tay đã có. Một clip giữ một pole; không đảo khớp trong lúc nắm. Mặc định giữ behavior cũ. Source mới chưa có runtime test độc lập; cần kiểm cả silhouette cánh tay và khung hình thật như [báo cáo](docs/validation/2026-10-03-body-acting.md).
 
@@ -52,7 +56,7 @@ Narration → phân tích câu chuyện → cast và tạo hình → kịch bả
 
 Xuất actor-cast, actor-timeline và tạo hình từng vai. Cache giọng độc lập với cast; sửa diễn viên chỉ dựng lại hình. Các video presenter cũ được giữ như dữ liệu cũ, không dùng chứng minh chất lượng chế độ diễn viên.
 
-Source hiện tại hỗ trợ primary actor nhấc/đặt mô hình có nguồn trong một shot. Đây là thao tác minh họa nguyên lý, không biến thành claim nhân vật lịch sử đã thực hiện hành động cụ thể đó. Prop phải có artwork authored/model, source của đúng vật thể, origin/target/destination, contact và vùng sân khấu hợp lệ. Chuyển vật giữa diễn viên hoặc mang xuyên cut chưa hỗ trợ; production báo lỗi rõ.
+Source hiện tại hỗ trợ primary actor nhấc/đặt mô hình có nguồn bằng một trong hai tay trong một shot. Đây là thao tác minh họa nguyên lý, không biến thành claim nhân vật lịch sử đã thực hiện hành động cụ thể đó. Prop phải có artwork authored/model, source của đúng vật thể, origin/target/destination, contact và vùng sân khấu hợp lệ. Một prop chỉ có một chủ tay, một model không bind thành hai prop. Chuyển vật giữa diễn viên, supporting actor mang vật, nhấc/đặt cùng một vật nhiều lần hoặc mang xuyên cut chưa hỗ trợ; production báo lỗi rõ. Hai tay chạm một vật đứng yên được phép; cùng điều khiển một vật đang di chuyển cần contract riêng, không giả bằng hai target cố định.
 
 ## Nghiệm thu
 
