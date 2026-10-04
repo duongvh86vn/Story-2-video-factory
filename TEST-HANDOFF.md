@@ -1,6 +1,6 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
-Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video. Native thư viện xuất phim27.067s nhưng QC FAIL cảnh tĩnh6.733–12.067s; sampled pixels còn yếu identity/bàn chồng nét. Typed actor-freeze repair qua41/41, regression512PASS/2SKIP/typecheck; public invocation giữ config và mọi budget. Một genuine sửa/render/QC tiếp đang chạy, chưa DONE/qualityPASS. Studio mới giữ68project. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md).
+Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video; người que là diễn viên theo nội dung. Native thư viện có phim27.067s nhưng QC FAIL cảnh tĩnh6.733–12.067s. Lượt sửa thật tiếp theo cũng FAIL: model thêm target vào react, không có phim mới;28 call hoàn tất/0 pending, review và scene budget2/2. Sửa schema/prompt react và regex màu đã build/export schema; kiểm tra độc lập50/50 và11/11, whole-test typecheck qua. Đây là kiểm tra contract, chưa nghiệm thu phim mới. Identity/bố cục, xem/nghe toàn phim và matrix nhiều chủ đề/input/ngôn ngữ/backend vẫn mở. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md).
 
 Các checkpoint bên dưới là lịch sử; trạng thái mới nhất ở đoạn đầu và evidence hiện hành.
 
@@ -156,3 +156,9 @@ Source10/director22 bổ sung seated support: [contract và producer evidence](d
 Migration d882 đã chạy thật và FAIL ở duyệt host tùy chỉnh; six language cases PASS trên cùng snapshot không thay kết quả này. Source mới tách `HOST_RIG_IDENTITY_VERSION` khỏi animation, nhận rig hash7/8/9 chỉ khi canonical profile/art/parts/poses khớp và kiểm tra toàn bộ metadata/files. Kiểm tra độc lập chưa chạy trên sửa mới. Giữ raw FAIL và fixture đã bị thay rig/poses; tạo bản sao baseline độc lập có provenance để kiểm tra việc giữ bytes, không sửa fixture cũ thành bằng chứng PASS. [Chi tiết](docs/validation/2026-10-03-renderer-language.md).
 
 [Bản nháp acting-transport](docs/validation/pending/acting-transport.test.ts.txt) giữ nguyên bytes/assertions model test đã viết, chưa có runtime result. File được lưu dạng tài liệu chờ rà soát, chưa thuộc executable test suite. Trước khi đưa vào suite cần rà lại fixture/hành vi mong đợi, đặc biệt bố cục tay trái và opacity lớp lạnh (renderer hiện dùng0.62; độ nhìn thấy không đồng nghĩa opacity>0.9). Lưu bản nháp đầu và mọi thay đổi với lý do; không nới contact/ownership/timing/security để làm test xanh. GSAP trên fake DOM chỉ kiểm tra declarative tracks, cần browser SVG/seek và xem phim để nghiệm thu chuyển động thực tế.
+
+### Kiểm contract actor repair và màu
+
+Model test chạy `node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/acting-freeze-repair.test.ts tests/color-json-schema.test.ts`.
+Mặc định ca response native bên ngoài repo SKIP rõ ràng. Đặt `ACTING_REPAIR_RETAINED_ATTEMPT` tới attempt đã giữ để kiểm nguyên payload thất bại; không sửa file đó hoặc dùng nó làm candidate.
+Các test này không dựng phim. Mọi lượt browser/media/native phải có phạm vi giao riêng, lưu PID/birth/argv trước khi chạy và release theo deadline; không lấy batch màu có browser ngoài phạm vi làm nghiệm thu toàn sản phẩm.

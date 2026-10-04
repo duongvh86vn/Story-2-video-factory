@@ -3,7 +3,7 @@ import { Id, RigHandSchema } from '../core/identifiers.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker'] as const;
-const Color = z.string().regex(/^#[\da-f]{6}$/i);
+const Color = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 export const HostProfileSchema = z.object({
   id: Id, version: z.number().int().positive(), kind: z.enum(HostKinds), role: z.enum(['explainer-host','story-actor']),
   name: z.string().min(1).max(80), description: z.string().min(1).max(24000),

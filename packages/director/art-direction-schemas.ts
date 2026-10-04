@@ -3,7 +3,7 @@ import { Id } from '../core/identifiers.js';
 import type { Shot } from '../core/schemas.js';
 import { SourceRefSchema } from '../explainer/schemas.js';
 
-const Color=z.string().regex(/^#[\da-f]{6}$/i);
+const Color=z.string().regex(/^#[0-9a-fA-F]{6}$/);
 export const ArtKeyframeSchema=z.object({atMs:z.number().finite().nonnegative(),x:z.number().finite(),y:z.number().finite(),
   scale:z.number().finite().positive(),rotation:z.number().finite(),opacity:z.number().min(0).max(1)}).strict();
 export const ArtDirectionSchema=z.object({

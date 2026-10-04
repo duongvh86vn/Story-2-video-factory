@@ -1,6 +1,6 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
-Ưu tiên hiện hành04/10: **tool chủ đề/câu chuyện → kịch bản → video**, người que là diễn viên theo nội dung. Native thư viện đã xuất phim thật nhưng QC FAIL cảnh tĩnh; typed actor-freeze repair và public recovery đã build, độc lập41/41 +512PASS/2SKIP/typecheck qua. Một genuine render/QC tiếp đang chạy; identity/bố cục, nhiều chủ đề/input/ngôn ngữ/live backend và chất lượng thành phẩm còn chờ. Máy hơi nước/ô tô chỉ là fixture. [Evidence hiện hành](docs/validation/2026-10-04-general-story-followup.md), [checklist](docs/plans/2026-10-04-general-story-tool.md), [luồng](docs/GENERAL-STORY-TOOL.md). Các checkpoint phía dưới là lịch sử, không thay nghiệm thu tool tổng quát.
+Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video; người que là diễn viên theo nội dung. Native thư viện có phim27.067s nhưng QC FAIL cảnh tĩnh6.733–12.067s. Lượt sửa thật tiếp theo cũng FAIL: model thêm target vào react, không có phim mới;28 call hoàn tất/0 pending, review và scene budget2/2. Sửa schema/prompt react và regex màu đã build/export schema; kiểm tra độc lập50/50 và11/11, whole-test typecheck qua. Đây là kiểm tra contract, chưa nghiệm thu phim mới. Identity/bố cục, xem/nghe toàn phim và matrix nhiều chủ đề/input/ngôn ngữ/backend vẫn mở. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md).
 
 ## Checkpoint lịch sử trước khi đổi phạm vi sang tool tổng quát
 

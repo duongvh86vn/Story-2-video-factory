@@ -11,15 +11,18 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 - [x] Prop-origin serialization ULP-only:149/149 scoped, default148PASS/1SKIP, regression289PASS/1SKIP/typecheck qua; genuine native thư viện đã tớiDRAFT_RENDERED/REVIEWED/REPAIRED.
 - [x] Native xuất phim27.067s qua FINAL_RENDERED nhưng QC FAIL cảnh tĩnh; sampled pixels yếu identity/bàn chồng nét. RawFAIL giữ; không DONE/qualityPASS.
 - [x] Typed actor-freeze repair source/protocol:41/41 +512PASS/2SKIP regression/typecheck; source/cast/motion protection, cache/timeline atomic, public override giữ config/budget; build qua.
+- [x] Lượt actor repair thật giữ nguyên project/cấu hình/journal:28 call/0 pending, FAIL target trong react; không có phim mới, review/scene budget2/2. Giữ dữ liệu bị từ chối và phim QC-failed.
+- [x] Dynamic provider schema loại target khỏi react mới, giữ gesture được bảo vệ; prompt tách idle/hand/clock. Independent50/50, default49PASS/1SKIP, regression706PASS/2SKIP và typecheck qua (snapshot trước sửa màu).
+- [x] JSON/Zod/adapter parity màu hoa/thường không coercion:11/11, uppercase acting50/50, default49PASS/1SKIP, typecheck qua; observedregression180PASS/1SKIP có bảy browser observations ngoài phạm vi worker. Build/schema đồng bộ, không nghiệm thu phim.
 - [ ] Genuine render/QC/xem nghe lại phim thư viện; cải thiện identity/bố cục và nghiệm thu nhiều chủ đề/input/ngôn ngữ/backend.
 
 - [x] Source31/explanation6 thêm indication/speech và coverage đúng target/cue/actor, mô tả nhãn source excerpt; build/typecheck/schema qua, không nới validator.
-- [ ] Nghiệm thu31 và genuine resume project native thư viện sau lỗi nhãn. Script/audio thật27.062s có sẵn;8call transport/schema thành công nhưng native đầu tiên chưa quaANALYZED, không có phim.
+- [x] Source31 đã qua102/102; genuine resume quaANALYZED và phim native đã được xuất ở checkpoint sau. Lỗi Library table ban đầu và mọi raw failure vẫn giữ nguyên; phim hiện tại QC FAIL.
 
 - [x] Source30: Studio không chọn sẵn ví dụ máy hơi nước, mở form nội dung khi tạo project; bộ raw input tổng quát, không có storyboard authored.
 - [x] Public runPipeline FINAL checkpoint source29:10/10 PASS, draft/repair-budget giữ nguyên, stale final không được nhận. Producer media bị chặn có chủ đích; chưa chứng minh video.
 - [x] Runtime29:26PASS/4FAIL focused số giữa frame,169/169 regression; giữ raw. Source30/animation13 sửa face refinement/độ chính xác clock, giữ12 và các version cũ. Build/typecheck/schema qua.
-- [ ] [Follow-up30](../validation/2026-10-04-general-story-followup.md): unchanged runtime assertions, Studio entry và native truyện đời thường tự viết/dàn cảnh/xuất video.
+- [x] [Follow-up30](../validation/2026-10-04-general-story-followup.md): unchanged runtime assertions và luồng nhập tổng quát đã kiểm tra; native thư viện có writer/dàn cảnh/phim thật, nhưng QC FAIL và chưa nghiệm thu chất lượng.
 
 - [x] Nhánh idea riêng, giữ bản gốc và nguồn; không giả làm SRT hoặc viết lại complete script.
 - [x] Writer qua model router/journal/budget hiện có; mock writer dừng needs-script.
@@ -40,6 +43,9 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 - [ ] Runtime source28: miệng/mày/mắt thật trong GSAP/browser, preview/camera/cache/legacy/locks và toàn phim. [Bàn giao và usage-limit của lượt FINAL](../validation/2026-10-04-story-emotions.md).
 - [ ] Public pipeline FINAL checkpoint/draft retention và phim/model/backend thật; helper/stub screenshot không thay acceptance.
 - [ ] Xem/nghe phim tổng quát để chứng nhận chuyển động, biểu cảm, kể chuyện và chất lượng hình ảnh.
+
+- [ ] Nhận diện tạo hình trùng giữa các vai do seed/model sao chép; hướng dẫn phân biệt vai nhưng cho phép giống nhau có chủ đích, không ép palette/trang phục.
+- [ ] Thiết kế depth ownership cho model đồ vật để đồ nội thất có thể che đúng thân/chân diễn viên; giữ source/target/contact. Audit source chưa chứng minh nguyên nhân bàn chồng nét.
 
 ## Nghiệm thu độc lập
 

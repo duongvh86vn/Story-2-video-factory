@@ -1,10 +1,10 @@
 # Tool câu chuyện/chủ đề → kịch bản → video
 
-Source31/explanation6 bổ sung loại chỉ tay/lời nói của diễn viên và làm rõ nhãn nguồn sau lỗi native truyện thư viện. Source30/animation13 đã qua focused30/30, supplemental32/32 và169/169 regression; whole npm test chưa hoàn tất. Studio tạo project trống và mở form nội dung, ví dụ máy hơi nước không chọn sẵn. Build/typecheck/schema31 qua; [evidence và nghiệm thu còn mở](validation/2026-10-04-general-story-followup.md).
+Sản phẩm nhận chủ đề/câu chuyện, lời kể hoàn chỉnh, WAV hoặc SRT. Nội dung quyết định kịch bản, các vai, bối cảnh và cách dàn cảnh; người que/robot là diễn viên. Video tự sinh mới nhất còn bị QC chặn, nên tính năng đã triển khai chưa đồng nghĩa chất lượng đã nghiệm thu. [Trạng thái hiện hành và evidence](validation/2026-10-04-general-story-followup.md).
 
 Phạm vi ngày 04/10/2026. Người que là diễn viên trong câu chuyện, không có host cố định. Ví dụ máy hơi nước/ô tô dùng kiểm tra riêng, không phải template bắt buộc.
 
-Source28/animation2.2.11 mở rộng16 biểu cảm và camera cận mặt cho các phản ứng như vui, buồn, giận, sợ; director chọn theo câu chuyện. Build/typecheck qua, runtime và chất lượng phim của phần mở rộng còn chờ [nghiệm thu riêng](validation/2026-10-04-story-emotions.md).
+Diễn xuất hỗ trợ tư thế, hai tay độc lập, ánh nhìn và16 biểu cảm. Cận mặt, cảnh tương tác nhiều vai và cảnh đồ vật/môi trường được chọn theo nội dung. Thiết kế không bắt buộc bộ mẫu máy móc.
 
 ## Chọn đúng nguồn
 
@@ -81,7 +81,7 @@ Runtime closure27:27/27 focused và210/210 regression qua. Public final helper/s
 
 ### Sửa cảnh bị QC chặn vì đứng yên
 
-Typed actor-freeze repair đã qua41/41 protocol và512PASS/2SKIP regression; render/QC thật còn chờ. Giữ đúng các vai,
+Typed actor-freeze repair có kiểm tra protocol độc lập. Lượt sửa model thật gần nhất bị từ chối vì động tác react có target sai contract; chưa có phim mới. Schema/prompt react và contract màu đã qua kiểm tra độc lập50/50 +11/11, build/typecheck/export schema qua; chưa có render/QC mới. Giữ đúng các vai,
 lời kể và clock; sửa biểu cảm/ánh nhìn/tư thế/phản ứng của diễn viên. Chưa lấy phim
 QC-failed làm thành phẩm. Studio hiện nút **Sửa chuyển động và dựng lại** ở lỗi
 freeze của FINAL_RENDERED. Mặc định giữ retry.scene_repair của project.
@@ -91,3 +91,5 @@ Cho phép một lượt sửa cảnh trong riêng invocation hiện tại:
 CLI `resume <project> --scene-repair-attempts 1`. Giá trị0–3, không reset lịch sử,
 call/cost ceiling hoặc review/scene iteration budget; không sửa config/fingerprint.
 Chỉ khi sửa được và phim render/QC lại đạt mới tiếp tục DONE.
+
+Project kiểm chứng đã dùng hết2/2 review/scene iterations; nút sửa cảnh không vượt giới hạn đó. Muốn tiếp tục cần quyết định phục hồi rõ ràng, giữ nguyên lịch sử và số lượt đã dùng. Không lấy final cũ làm phim đạt yêu cầu sau khi lần sửa thất bại.

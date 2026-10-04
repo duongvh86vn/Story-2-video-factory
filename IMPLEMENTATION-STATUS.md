@@ -1,6 +1,6 @@
 # Trạng thái triển khai V2.2
 
-Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video. Native thư viện xuất phim27.067s nhưng QC FAIL cảnh tĩnh6.733–12.067s; sampled pixels còn yếu identity/bàn chồng nét. Typed actor-freeze repair qua41/41, regression512PASS/2SKIP/typecheck; public invocation giữ config và mọi budget. Một genuine sửa/render/QC tiếp đang chạy, chưa DONE/qualityPASS. Studio mới giữ68project. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md).
+Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video; người que là diễn viên theo nội dung. Native thư viện có phim27.067s nhưng QC FAIL cảnh tĩnh6.733–12.067s. Lượt sửa thật tiếp theo cũng FAIL: model thêm target vào react, không có phim mới;28 call hoàn tất/0 pending, review và scene budget2/2. Sửa schema/prompt react và regex màu đã build/export schema; kiểm tra độc lập50/50 và11/11, whole-test typecheck qua. Đây là kiểm tra contract, chưa nghiệm thu phim mới. Identity/bố cục, xem/nghe toàn phim và matrix nhiều chủ đề/input/ngôn ngữ/backend vẫn mở. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md).
 
 Các checkpoint bên dưới là lịch sử; trạng thái mới nhất ở đoạn đầu và evidence hiện hành.
 

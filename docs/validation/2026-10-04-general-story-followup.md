@@ -393,3 +393,112 @@ birth16:11:17.126492UTC, session88753, port8850, all68project names preserved,
 busy[]. Prior owned27768 was absent when reload guard refused; no mismatched
 process was stopped. Free-port new launch loads compiled actor repair. This is
 service inventory only; Studio browser acceptance remains NOTRUN.
+
+## Genuine actor repair rejected; provider schema refinement
+
+The later actual outcome supersedes the pending checkpoint above. Independent
+report: C:/Users/Duongvh-pc/codex-test-evidence/general-native-acting-20261004T161111549Z/REPORT.md.
+Exactly one public same-project resume with sceneRepairAttempts:1 returned exit1
+in62108ms. Its native response introduced three react gestures with world targets,
+which the bounded repair contract does not support. The response was preserved
+and rejected, never stripped, rewritten or rendered into acceptance. The all-hand
+idle spanning the new gestures also needs correction; rejection occurred before
+that later canonical check. No new film or DONE. Accepted scene/cache/timelines,
+script/audio/config and prior journal prefix/reports remain unchanged.
+
+28 calls completed,0pending,2remaining under the30call ceiling. Review and the
+scene repair budget both reached2of2. Remaining call slots do not authorize
+additional repair iterations. No budget reset, settings fingerprint change,
+invalidation or alternate project/account used to evade these limits. Actual
+cost is UNMEASURED. Owned jobs/reservation released and8850 untouched; formal
+report16:22:06UTC, before16:43:11UTC deadline. Full viewing/listening remains
+NOTRUN; prior failed film and weak cast distinction/table overlap are unchanged.
+
+Production now supplies a shot-specific provider schema: new reaction gestures
+cannot include target/destination/prop/contact/carry fields; protected existing
+gestures are advertised as exact JSON choices. Primary/supporting entries are
+limited to the actual cast. Actor freeze feedback requires a present actor;
+object/environment-only shots use the existing artwork repair contract. Prompt
+explicitly puts gaze coordinates in gaze tracks, splits idle around reaction
+windows and matches absolute/local clock and selected hand. Canonical validators,
+locks, runtime publication and all budgets remain intact. Parent build:core
+session10562 exit0. Independent follow-up is in progress; no parent runtime tests
+and no further native invocation authorized. Earlier41/512PASS and whole963PASS
+remain evidence of their original source snapshots, not this new refinement.
+## Read-only general-tool and cast audit
+
+Descartes independently read source and retained native storyboard at HEAD0d5a775.
+New-project writer/Studio/director do not require machines or a fixed presenter;
+legacy machine recipe choices are below the cinematic inspector branch. No source
+changes, runtime tests, provider calls or server operations occurred.
+
+A concrete visual weakness is confirmed: all seed participants copy base.appearance
+(packages/actors/model.ts:104), and cross-shot identity validation does not compare
+visual definitions between different actors (model.ts:56). The retained native
+Lena and Amir definitions have identical appearance and costume SVG; the renderer
+preserves the supplied definitions. Future general-quality work should surface
+unintended duplicate cast designs and guide readable differentiation, while
+allowing deliberate similarity. A universal wardrobe/palette restriction is not
+appropriate and is not introduced by this audit.
+
+Depth ordering is fixed: canonical models then primary then supporting actors
+(library/shots/cinematic.ts:139). Generic passive layers have foreground planes,
+but sourced model art lacks equivalent depth ownership. Typed foreground model
+fragments may improve actor/furniture occlusion while retaining source/contact;
+this is a proposed capability, not evidence that layering caused the observed
+table overlap or that any existing film was repaired. Audit jobs released.
+## Dynamic repair schema independent closure; color parity follow-up
+
+Independent report: C:/Users/Duongvh-pc/codex-test-evidence/acting-schema-tests-20261004T163409212Z/REPORT.md.
+Focused supplemental50/50PASS includes the retained actual native-response
+rejection; default49PASS/1explicit historical-dataSKIP. Unchanged selected
+regressions706PASS/2SKIP; whole-test typecheck exit0. Prior50/706 are scoped to
+that source snapshot, not whole CI or film acceptance. Test SHA256:
+97F20835AD2C12221A0809423F3804E6710FA36889E0355FC3DEDCD8E513A212.
+Receipt16:34:09UTC; cutoff16:52:09; deadline16:56:09. All8jobs completed;
+release audit16:49:06 and evidence finalized16:52:13, before deadline. Old
+assertions unchanged; raw new harness/oracle failures preserved. No native,
+provider, browser,8850 or lost-notebook project operations.
+
+Converted schema and adapter reject actual target-bearing reactions without
+stripping/coercion. Legitimate target-free/disjoint idle reaction passes the
+real canonical validator. Wrong hand/clock/overlap still fail. Exact protected
+point/contact/carry choices and runtime multiplicity/order guards, actual cast,
+absent-primary/zero-cast routing and atomic publication are retained.
+
+The independent run found a pre-existing conversion mismatch: case-insensitive
+hex regex in host/artDirection loses its i flag in JSON schema. Production now
+spells the same accepted ASCII classes explicitly, /^#[0-9a-fA-F]{6}$/; no
+provider-color normalization is introduced. Ajv8.20.0 is declared exactly as a
+devDependency and locked, without shared node_modules mutation. A separate
+narrow independent color-parity test is underway. Clean install remains NOTRUN;
+no quality acceptance follows from schema tests or the regex correction.
+## Color contract closure and worker scope deviation
+
+C:/Users/Duongvh-pc/codex-test-evidence/color-schema-tests-20261004T165458614Z/REPORT.md:
+color parity11/11PASS; uppercase acting supplemental50/50PASS; default49PASS/
+1explicit historical-dataSKIP; whole-test typecheck exit0. Five test jobs ended
+before17:01:58 cutoff; ownership census17:02:38; formalreport17:04:33 before
+17:04:58deadline. Released color test SHA256:
+923EC0D9A7153B1428D939AEB0EE9F6DDBCE15BBC2156A8A833885790DD83F41;
+acting test5F17753BE026AC4A188011E9C1CBB1AB36210D05FA06A92DD56C754B4DA5F111.
+Uppercase fixture preserved; old assertions unchanged. Exact ASCII color/end
+behavior parity tested, unknown keys/types/invalid hex still rejected; provider
+values never normalized. Clean install NOTRUN. Parent fullbuild80627 exit0 and
+npm run schemas exit0; generated host/shot/storyboard schemas now match source.
+
+Observed narrow regressions180PASS/1SKIP include seven entries from an accidental
+real headless-browser test in artwork-projection.test.ts. This violated the
+parent's no-browser scope for this narrow assignment. The original human user
+requested test delegation to another model; the no-browser restriction came
+from the delegation, not a separate human instruction. Browser launch PID was
+not journaled; successful finally-close and later profile/time-window census
+found no remaining matching process. These browser observations are excluded
+from authorized color acceptance; the observed batch is not full task compliance
+or film-quality acceptance. No second attempt/account/auth workaround, native
+pipeline,8850 operation or old native-budget/project mutation occurred. Reports
+retain the deviation and process-audit limitation; no parent runtime tests.
+
+Current genuine native result remains FINAL_RENDERED/FAIL,28completedcalls/
+0pending and review/scene2of2. Source/typechecks cannot replace a successful new
+render/QC, normal whole-film viewing/listening, cast design and broader matrix.

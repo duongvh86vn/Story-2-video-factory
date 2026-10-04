@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {isDeepStrictEqual} from 'node:util';
 import type {Shot} from '../core/schemas.js';
 import {Id} from '../core/identifiers.js';
-import {PerformancePlanSchema, type PerformancePlan, type Gesture} from '../animation/schemas.js';
+import {PerformancePlanSchema, GestureSchema, type PerformancePlan, type Gesture} from '../animation/schemas.js';
 import {HostActionSchema, TargetSchema, type ShotHost} from '../host/schemas.js';
 import {ArtDirectionSchema} from './art-direction-schemas.js';
 
@@ -36,6 +36,32 @@ export const fixedMotionFields=[
 function editableGesture(gesture:Gesture):boolean {
   return gesture.action==='react'&&gesture.target===undefined&&gesture.destination===undefined&&
     gesture.propId===undefined&&gesture.contactMs===undefined&&gesture.releaseMs===undefined&&gesture.carryOffset===undefined;
+}
+/** Exact schema for a protected JSON entry; generation cannot rewrite contact data. */
+function exactJSONSchema(value:unknown):z.ZodTypeAny {
+  if(value===null)return z.null();
+  if(typeof value==='string'||typeof value==='number'||typeof value==='boolean')return z.literal(value);
+  if(Array.isArray(value))return z.tuple(value.map(exactJSONSchema) as [z.ZodTypeAny,...z.ZodTypeAny[]]);
+  if(value&&typeof value==='object')return z.object(Object.fromEntries(Object.entries(value).filter(([,v])=>v!==undefined).map(([k,v])=>[k,exactJSONSchema(v)]))).strict();
+  throw new Error('Protected repair entry must be JSON data');
+}
+const NewReactionGestureSchema=GestureSchema.omit({target:true,destination:true,propId:true,contactMs:true,releaseMs:true,carryOffset:true}).extend({action:z.literal('react')}).strict();
+function repairMotionSchemaFor(performance:PerformancePlan){
+  const protectedGestures=PerformancePlanSchema.parse(performance).gestures.filter(g=>!editableGesture(g));
+  const choices=[NewReactionGestureSchema,...protectedGestures.map(exactJSONSchema)];
+  const gesture=choices.length===1?choices[0]!:z.union(choices as [z.ZodTypeAny,z.ZodTypeAny,...z.ZodTypeAny[]]);
+  return MotionRepairSchema.extend({performance:PerformancePlanSchema.extend({gestures:z.array(gesture)})});
+}
+/** Advertise the same bounded motion contract enforced by applyActingRepair. */
+export function actingRepairSchemaFor(shot:Shot){
+  const c=shot.cinematic,cast=c?.actorScene;
+  if(!c||!cast)throw new Error('Acting repair requires an existing actor scene');
+  const supporting=cast.supporting.map(actor=>repairMotionSchemaFor(actor.performance).extend({id:z.literal(actor.character.id)}).strict());
+  const supportingEntry=supporting.length===1?supporting[0]!:supporting.length>1?z.union(supporting as [typeof supporting[number],typeof supporting[number],...typeof supporting[number][]]):z.never();
+  return z.object({artDirection:ArtDirectionSchema,
+    primary:cast.primary?repairMotionSchemaFor(c.performance).optional():z.never().optional(),
+    supporting:z.array(supportingEntry).optional(),
+  }).strict().pipe(ActingRepairSchema);
 }
 function editableAction(action:Action):boolean {
   return (action.type==='idle'||action.type==='react')&&action.target===undefined&&

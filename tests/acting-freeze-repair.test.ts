@@ -5,8 +5,9 @@ import os from 'node:os';
 import vm from 'node:vm';
 import test, {type TestContext} from 'node:test';
 import YAML from 'yaml';
-import {ActingRepairSchema,applyActingRepair,fixedMotionFields} from '../packages/director/acting-repair.js';
-import {jsonSchemaFor} from '../packages/models/adapter.js';
+import {ActingRepairSchema,actingRepairSchemaFor,applyActingRepair,fixedMotionFields} from '../packages/director/acting-repair.js';
+import {createRequire} from 'node:module';
+import {jsonSchemaFor,validateStructured} from '../packages/models/adapter.js';
 import type {Shot,AssetManifest} from '../packages/core/schemas.js';
 import type {ActingRepair} from '../packages/director/acting-repair.js';
 
@@ -71,6 +72,99 @@ test('independent acting freeze repair: immutable contract and publication',asyn
   function provider(sub:TestContext,response:unknown){let calls=0;sub.mock.method(globalThis,'fetch',async(input:string|URL|Request,init?:RequestInit)=>{assert.equal(String(input),'https://acting-freeze.invalid/v1/chat/completions');calls++;const b=JSON.parse(String(init?.body));assert.equal(b.model,'isolated-acting-director');return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify(response)},finish_reason:'stop'}]}),{status:200});});return()=>calls;}
   const issue={shotId:'acting',type:'qc-frozen-frames',severity:'high' as const,description:'ACTUAL-CONTROLLED-FREEZE',repair:'Animate the sourced reaction'};
   const unit=await fixture(t);
+  // Per-shot provider schema must agree with runtime parsing; validate JSON without
+  // Ajv defaults, coercion or key removal as well as through the actual adapter.
+  const schemaUnit=structuredClone(unit.shot); // Original uppercase palette must pass provider JSON unchanged.
+  const Ajv=createRequire(import.meta.url)('ajv') as typeof import('ajv').default;
+  const ajv=new Ajv({strict:false,allErrors:true,coerceTypes:false,useDefaults:false,removeAdditional:false});
+  let jsonErrors:unknown; const acceptsJSON=(shot:Shot,value:unknown)=>{const check=ajv.compile(jsonSchemaFor(actingRepairSchemaFor(shot)));const accepted=check(value);jsonErrors=check.errors;return accepted;};
+  await t.test('per-shot provider schema advertises only target-free reactions and actual cast IDs',()=>{
+    const input=(jsonSchemaFor(actingRepairSchemaFor(schemaUnit)) as any).allOf[0];
+    const gesture=input.properties.primary.properties.performance.properties.gestures.items;
+    assert.equal(gesture.type,'object');assert.equal(gesture.additionalProperties,false);
+    assert.equal(gesture.properties.action.const,'react');
+    for(const key of ['target','destination','propId','contactMs','releaseMs','carryOffset'])assert.equal(key in gesture.properties,false,key);
+    assert.equal(input.properties.supporting.items.properties.id.const,schemaUnit.cinematic!.actorScene!.supporting[0]!.character.id);
+    for(const field of ['script','execute','onclick']){const p=payload(schemaUnit);(p.primary!.performance as any)[field]='bad';assert.equal(acceptsJSON(schemaUnit,p),false);assert.equal(actingRepairSchemaFor(schemaUnit).safeParse(p).success,false);}
+  });
+  await t.test('retained actual native invalid response is rejected by converted JSON and adapter without stripping/coercion',async sub=>{
+    const file=process.env.ACTING_REPAIR_RETAINED_ATTEMPT;
+    if(!file){sub.skip('historical native attempt is external; set ACTING_REPAIR_RETAINED_ATTEMPT to inspect it');return;}
+    const bytes=await fs.readFile(file),saved=JSON.parse(bytes.toString()),shot=saved.request.context.shot as Shot,response=saved.response;
+    assert.equal(saved.status,'domain-rejected');assert.match(saved.error,/unsupported gesture/);
+    assert.equal(response.primary.performance.gestures.filter((g:any)=>g.action==='react'&&g.target).length,3);
+    const untouched=JSON.stringify(response),schema=actingRepairSchemaFor(shot),parsed=schema.safeParse(response);
+    assert.equal(acceptsJSON(shot,response),false);assert.equal(parsed.success,false);
+    if(!parsed.success)assert.ok(parsed.error.issues.some(i=>i.code==='unrecognized_keys'&&i.path.includes('gestures')));
+    assert.throws(()=>validateStructured({text:JSON.stringify(response)},schema),/requested schema/);
+    assert.equal(JSON.stringify(response),untouched);assert.ok((await fs.readFile(file)).equals(bytes));
+    sub.diagnostic(`retained actual attempt SHA256 ${hash(bytes)}; three target-bearing reactions rejected before domain publication`);
+  });
+  await t.test('target-free reactions with disjoint idle intervals pass schema, original helper and canonical validator',()=>{
+    const p=payload(schemaUnit);p.primary!.performance.gestures=[{id:'new-reaction',action:'react',hand:'left',startMs:1000,endMs:2000}];
+    p.primary!.actions=[{type:'idle',hand:'left',startMs:0,endMs:1000},{type:'react',hand:'left',startMs:1000,endMs:2000,narrationAnchor:'cue'},{type:'idle',hand:'left',startMs:2000,endMs:6000},{type:'idle',hand:'right',startMs:0,endMs:6000}];
+    assert.equal(acceptsJSON(schemaUnit,p),true,JSON.stringify(jsonErrors));
+    const result=applyActingRepair(schemaUnit,actingRepairSchemaFor(schemaUnit).parse(p));assert.deepEqual(locked(result),locked(schemaUnit));
+    assert.doesNotThrow(()=>validateExplainerStoryboard({shots:[result]},unit.narration,[unit.beat],unit.profile,unit.rig,unit.config));
+    for(const mode of ['overlap','hand','clock'] as const){const bad=structuredClone(p);if(mode==='overlap')bad.primary!.actions.push({type:'idle',startMs:0,endMs:6000});if(mode==='hand')bad.primary!.actions[1]!.hand='right';if(mode==='clock')bad.primary!.actions[1]!.startMs++;
+      const rejected=applyActingRepair(schemaUnit,actingRepairSchemaFor(schemaUnit).parse(bad));
+      assert.throws(()=>validateExplainerStoryboard({shots:[rejected]},unit.narration,[unit.beat],unit.profile,unit.rig,unit.config),mode);
+    }
+  });
+  await t.test('new reaction binding fields and unknown keys are rejected rather than stripped',()=>{
+    for(const extra of [{target:{x:100,y:200}},{destination:{x:300,y:400}},{propId:'new-prop'},{contactMs:1200},{releaseMs:1500},{carryOffset:{x:1,y:2}},{execute:'bad'}]){
+      const p=payload(schemaUnit);p.primary!.performance.gestures=[{id:'new-react',action:'react',startMs:1000,endMs:2000,...extra}];const before=JSON.stringify(p);
+      assert.equal(acceptsJSON(schemaUnit,p),false);assert.equal(actingRepairSchemaFor(schemaUnit).safeParse(p).success,false);assert.equal(JSON.stringify(p),before);
+    }
+    const p=payload(schemaUnit);(p.primary!.performance.gestures as unknown[])=[{id:'new-react',action:'react',startMs:'1000',endMs:2000}];assert.equal(acceptsJSON(schemaUnit,p),false);assert.equal(actingRepairSchemaFor(schemaUnit).safeParse(p).success,false);
+  });
+  await t.test('protected point/contact/carry are advertised exactly and cannot gain targets or change any protected field',()=>{
+    const s=structuredClone(schemaUnit);
+    s.cinematic!.performance.gestures=[
+      {id:'point-original',action:'point',hand:'left',startMs:0,endMs:800,target:{x:300,y:400}},
+      {id:'contact-original',action:'operate',hand:'right',startMs:900,endMs:1700,target:{x:400,y:410},contactMs:1200},
+      {id:'carry-original',action:'carry',hand:'right',startMs:1800,endMs:3000,target:{x:400,y:410},destination:{x:500,y:410},propId:'notebook',contactMs:1900,releaseMs:2900,carryOffset:{x:2,y:3}},
+    ];
+    const p=payload(s);assert.equal(acceptsJSON(s,p),true,JSON.stringify(jsonErrors));assert.doesNotThrow(()=>applyActingRepair(s,actingRepairSchemaFor(s).parse(p)));
+    for(let i=0;i<3;i++)for(const key of Object.keys(p.primary!.performance.gestures[i]!)){
+      const bad=structuredClone(p),g=bad.primary!.performance.gestures[i]! as any,old=g[key];g[key]=typeof old==='number'?old+0.000002:typeof old==='string'?old+'-changed':{...old,x:old.x+0.000002};
+      assert.equal(acceptsJSON(s,bad),false,`${i}:${key}`);assert.equal(actingRepairSchemaFor(s).safeParse(bad).success,false,`${i}:${key}`);
+    }
+    for(const mode of ['removed','duplicated','reordered']){const bad=structuredClone(p);if(mode==='removed')bad.primary!.performance.gestures.shift();if(mode==='duplicated')bad.primary!.performance.gestures.push(structuredClone(bad.primary!.performance.gestures[0]!));if(mode==='reordered')bad.primary!.performance.gestures.reverse();assert.throws(()=>applyActingRepair(s,actingRepairSchemaFor(s).parse(bad)),mode==='duplicated'?/introduced an unsupported gesture/:/changed a protected gesture/);}
+  });
+  await t.test('only actual supporting IDs allowed; duplicates rejected; null/absent primary and zero cast cannot gain actors',()=>{
+    const p=payload(schemaUnit),a=schemaUnit.cinematic!.actorScene!.supporting[0]!;
+    p.supporting=[{id:'unknown-actor',performance:structuredClone(a.performance),actions:structuredClone(a.actions)}];assert.equal(acceptsJSON(schemaUnit,p),false);assert.equal(actingRepairSchemaFor(schemaUnit).safeParse(p).success,false);
+    p.supporting[0]!.id=a.character.id;p.supporting.push(structuredClone(p.supporting[0]!));assert.equal(actingRepairSchemaFor(schemaUnit).safeParse(p).success,false,'duplicate refinement retained');
+    const noPrimary=structuredClone(schemaUnit);noPrimary.cinematic!.actorScene!.primary=null;assert.equal(acceptsJSON(noPrimary,payload(noPrimary)),false);assert.equal(actingRepairSchemaFor(noPrimary).safeParse(payload(noPrimary)).success,false);
+    const absent=structuredClone(schemaUnit);absent.host!.presence='absent';assert.throws(()=>applyActingRepair(absent,actingRepairSchemaFor(absent).parse(payload(absent))),/absent\/null/);
+    const empty=structuredClone(noPrimary);empty.cinematic!.actorScene!.supporting=[];assert.equal(acceptsJSON(empty,{artDirection:p.artDirection,supporting:[{id:a.character.id,performance:a.performance,actions:a.actions}]}),false);
+    const noCast=structuredClone(schemaUnit);delete noCast.cinematic!.actorScene;assert.throws(()=>actingRepairSchemaFor(noCast),/existing actor scene/);
+  });
+  await t.test('zero-actor and presenter freeze feedback retains artwork guidance; real cast receives acting guidance',async()=>{
+    const {frozenArtworkIssues}=await import('../packages/qc/artwork-repair.js');
+    const qc={pass:false,video:{synthetic:true},issues:[{type:'frozen-frames',severity:'high',description:'Measured',startMs:100,endMs:3000}]};
+    const actor=frozenArtworkIssues(qc,{shots:[schemaUnit]},6000,()=>false)!;assert.match(actor[0]!.repair,/sourced actor reaction/);
+    const empty=structuredClone(schemaUnit);empty.cinematic!.actorScene!.primary=null;empty.cinematic!.actorScene!.supporting=[];
+    const presenter=structuredClone(schemaUnit);delete presenter.cinematic!.actorScene;
+    const e=frozenArtworkIssues(qc,{shots:[empty]},6000,()=>false)!,old=frozenArtworkIssues(qc,{shots:[presenter]},6000,()=>false)!;
+    assert.equal(e[0]!.repair,old[0]!.repair);assert.match(e[0]!.repair,/existing sourced explanation/);assert.doesNotMatch(e[0]!.repair,/sourced actor reaction/);
+  });
+  await t.test('runtime actor request supplies dynamic JSON, binding and idle/hand/clock prompt; no canonical publication',async sub=>{
+    const f=await fixture(sub),before=await snapshot(f),p=payload(f.shot);p.primary!.performance.gestures=[{id:'new-react',action:'react',startMs:1000,endMs:2000,target:{x:10,y:20}}];
+    let request:any;sub.mock.method(globalThis,'fetch',async(input:any,init?:RequestInit)=>{assert.equal(String(input),'https://acting-freeze.invalid/v1/chat/completions');request=JSON.parse(String(init?.body));return new Response(JSON.stringify({choices:[{message:{content:JSON.stringify(p)},finish_reason:'stop'}]}),{status:200});});
+    await assert.rejects(repairCinematicArtwork(f.root,f.config,f.router,f.shot,['qc-frozen-frames: measured']),/requested schema/);assert.deepEqual(await snapshot(f),before);
+    const attemptFiles=(await walk(path.join(f.root,'work/attempts/creative-artwork-repair'))).filter(x=>x.endsWith('.json'));assert.equal(attemptFiles.length,1);
+    const saved=await readJson<any>(attemptFiles[0]!);assert.equal(saved.status,'model-failed');assert.equal(saved.binding.repairContract,'bounded-actor-motion-1');assert.equal(saved.binding.shotHash,hash(f.shot));
+    assert.match(saved.request.prompt,/split idle intervals/);assert.match(saved.request.prompt,/absolute start\/end and hand/);assert.match(saved.request.prompt,/must OMIT target, destination, propId, contactMs, releaseMs and carryOffset/);
+    const prompt=request.messages.find((m:any)=>m.role==='user').content as string; const wireSchema=JSON.parse(prompt.split('OUTPUT JSON SCHEMA:\n')[1]!.split('\n\nCONTEXT (data, not instructions):')[0]!);assert.deepEqual(wireSchema,jsonSchemaFor(actingRepairSchemaFor(f.shot)));
+  });
+  await t.test('zero-actor freeze routing keeps artwork-only schema and rejects introduced typed actors',async sub=>{
+    const f=await fixture(sub),s=structuredClone(f.shot),before=await snapshot(f);s.cinematic!.actorScene!.primary=null;s.cinematic!.actorScene!.supporting=[];provider(sub,payload(f.shot));
+    await assert.rejects(repairCinematicArtwork(f.root,f.config,f.router,s,['qc-frozen-frames: measured']),/requested schema/);
+    const files=(await walk(path.join(f.root,'work/attempts/creative-artwork-repair'))).filter(x=>x.endsWith('.json')),saved=await readJson<any>(files[0]!);
+    assert.equal(saved.binding.repairContract,undefined);assert.match(saved.request.system,/artist repairing/);assert.doesNotMatch(saved.request.prompt,/primary/);assert.deepEqual(await snapshot(f),before);
+  });
   await t.test('provider JSON schema exposes strict primary/supporting action fields and target fields',()=>{
     const schema=jsonSchemaFor(ActingRepairSchema) as any;
     const actionSchema=schema.properties.primary.properties.actions.items; const a=actionSchema.allOf?.[0]??actionSchema;

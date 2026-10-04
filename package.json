@@ -4,8 +4,12 @@
   "private": true,
   "type": "module",
   "description": "Topic/story, script, WAV or SRT to animated video with stick figure or robot actors",
-  "engines": { "node": ">=22.13.0" },
-  "bin": { "video-factory": "dist/apps/cli/index.js" },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "bin": {
+    "video-factory": "dist/apps/cli/index.js"
+  },
   "scripts": {
     "test": "node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/*.test.ts",
     "test:asr": "tsx scripts/acceptance-asr.ts",
@@ -37,5 +41,11 @@
     "zod": "^3.25.76",
     "zod-to-json-schema": "^3.24.6"
   },
-  "devDependencies": { "@types/node": "^24.5.0", "tsx": "^4.20.5", "typescript": "^5.9.2", "vite": "^7.1.7" }
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "ajv": "8.20.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7"
+  }
 }
