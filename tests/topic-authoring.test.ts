@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { promises as fs } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import test, { type TestContext } from 'node:test';
+import test, { after, type TestContext } from 'node:test';
 import { createServer } from 'node:http';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -25,6 +25,36 @@ const spoken = 'Mina finds a lost red scarf. She returns it to her friend Jo.';
 const draft = { title: 'The returned scarf', kind: 'fiction' as const, narration: spoken, warnings: ['Deterministic local test fiction; not a real model.'] };
 async function present(file: string) { try { await fs.access(file); return true; } catch (e) { if ((e as NodeJS.ErrnoException).code === 'ENOENT') return false; throw e; } }
 async function json(root: string, file: string) { return JSON.parse(await fs.readFile(path.join(root, file), 'utf8')); }
+const ownedDefaultRoots: Array<{ base: string; parent: string }> = [];
+// Per-test server/API/CLI hooks must finish writing receipts before deleting
+// their fixture. The root suite hook runs after all of those test hooks.
+after(async () => {
+  const cleanup: Array<Record<string, unknown>> = [];
+  for (const { base, parent } of ownedDefaultRoots) {
+    const entry = await fs.lstat(base), real = await fs.realpath(base), parentReal = await fs.realpath(parent);
+    assert.equal(entry.isSymbolicLink(), false); assert.equal(path.dirname(real), parentReal);
+    assert.ok(path.basename(real).startsWith('topic-authoring-'));
+    const serverBytes = await fs.readFile(path.join(real, 'local-http-receipt.json'));
+    const serverReceipt = JSON.parse(serverBytes.toString('utf8')) as { closed: boolean; port: number; requests: unknown[] };
+    assert.equal(serverReceipt.closed, true, 'fixture server must close and write its receipt before default cleanup');
+    const cliExpected = await present(path.join(real, 'incoming.md'));
+    let cliReceipt: Array<{ executable: string; args: string[]; exit: number }> | undefined;
+    if (cliExpected) {
+      cliReceipt = JSON.parse(await fs.readFile(path.join(real, 'cli-receipts.json'), 'utf8'));
+      assert.ok(cliReceipt!.length > 0, 'CLI receipts must finish before default cleanup');
+      assert.ok(cliReceipt!.every(command => command.exit === 0), 'all existing CLI commands must have terminal successful receipts');
+    }
+    await fs.rm(real, { recursive: true, force: true });
+    assert.equal(await present(real), false, 'default fixture root must actually be removed');
+    cleanup.push({ base, real, parentReal, removed: true, serverClosed: serverReceipt.closed,
+      port: serverReceipt.port, localRequests: serverReceipt.requests.length, serverReceiptHash: hash(serverBytes),
+      cliExpected, ...(cliReceipt ? { cliReceipt } : {}) });
+  }
+  const audit = { retentionEnabled: !!process.env.TOPIC_AUTHORING_EVIDENCE, defaultFixtures: cleanup.length, cleanup };
+  if (process.env.TOPIC_AUTHORING_CLEANUP_AUDIT)
+    await fs.writeFile(process.env.TOPIC_AUTHORING_CLEANUP_AUDIT, JSON.stringify(audit, null, 2));
+  console.log(JSON.stringify({ topicAuthoringDefaultCleanup: audit }));
+});
 function wav() {
   // Exactly one second of 16kHz mono PCM tone. Protocol/clock fixture, NOT speech.
   const samples = 16000, bytes = Buffer.alloc(44 + samples * 2);
@@ -38,11 +68,7 @@ function wav() {
 async function fixture(t: TestContext, mock = false) {
   const parent = process.env.TOPIC_AUTHORING_EVIDENCE || os.tmpdir(); await fs.mkdir(parent, { recursive: true });
   const base = await fs.mkdtemp(path.join(parent, 'topic-authoring-'));
-  if (!process.env.TOPIC_AUTHORING_EVIDENCE) t.after(async () => {
-    const entry = await fs.lstat(base), real = await fs.realpath(base), parentReal = await fs.realpath(parent);
-    assert.equal(entry.isSymbolicLink(), false); assert.equal(path.dirname(real), parentReal);
-    assert.ok(path.basename(real).startsWith('topic-authoring-')); await fs.rm(real, { recursive: true, force: true });
-  });
+  if (!process.env.TOPIC_AUTHORING_EVIDENCE) ownedDefaultRoots.push({ base, parent });
   else t.diagnostic(`retained fixture: ${base}`);
   const requests: Array<{ path: string; body: any }> = [];
   let gate: Promise<void> | undefined, release: (() => void) | undefined;

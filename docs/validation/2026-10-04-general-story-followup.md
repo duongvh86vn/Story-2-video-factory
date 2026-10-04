@@ -147,3 +147,116 @@ The call ceiling stays30. The failed call and any explicit retry remain billed/
 accounted attempts; no manual artwork/storyboard or account fallback is used.
 Outcome remains pending. No native film, full playback/listening, Studio browser
 flow or full genre/input/language/backend acceptance has been established.
+
+## Completed default cleanup and whole-suite check
+
+Independent report: `C:/Users/Duongvh-pc/.codex/task-state/story-video-v22/independent-authoring-cleanup-20261004T120818Z/report.txt`.
+The topic-authoring helper now removes its owned temporary roots in a suite-level
+hook after per-test HTTP/CLI receipt hooks finish. Original test bodies and
+deletion path/symlink safety assertions are unchanged. Released helper SHA256:
+`14CA50214DAAA9A336426238489E9B76A918751E8CC166A1D65F75F95A00D596`.
+
+Default focused run: **23/23 PASS**, retention variable absent. Normal `npm test`:
+**963 PASS, 3 existing SKIP, 0 FAIL**, exit0, 966 total. Test typecheck passed.
+Both runs removed all22 default fixture roots, closed22 fixture servers and
+completed six CLI commands with exit0 before cleanup. Runtime ownership released
+at12:22:32UTC before deadline12:36:18UTC. The three skips are optional historical
+baseline comparisons with required evidence variables absent. The earlier default
+23FAIL and incomplete broad run remain historical evidence; they are not relabeled.
+This verifies code/protocol integration, not film quality or real TTS backends.
+
+## Native fifteen-minute attempt returned a real storyboard, then failed
+
+Independent report: `C:/Users/Duongvh-pc/codex-test-evidence/general-native-timeout-20261004T120610226Z/REPORT.md`.
+Exactly one public same-project resume changed only storyboard timeout180000 to
+900000ms. It took13min37.882sec and exited1; its watchdog did not fire. The native
+model returned schema-valid8-shot art after9min4.383sec. STORYBOARDED was refused
+by production validation and durable state remains ANALYZED, with no accepted
+storyboard, draft, final, playback/listening or visual acceptance.
+
+Actual errors: bag reach about10pixels from its anchor; react action with no
+matching gesture; notebook point only0.000024pixels from its calculated anchor;
+two camera/feet/subtitle failures; pickup without retained object evidence;
+sceneIntent evidence outside verified scene sources; walk too far for its time.
+The minute notebook discrepancy is a precision defect, separate from the genuine
+acting/source/geometry failures. The rejected real response is preserved unchanged.
+
+All24 calls completed:23 provider/schema successes and1 historical timeout,
+0 pending, six slots left under ceiling30. Known input286357/output39151 tokens
+exclude the old timeout's unknown usage; actual account dollars are unmeasured.
+The journal's original prefix and eight script/narration/audio files are exact.
+Only project.yaml changed at the authorized timeout path. All owned processes,
+watchers and reservations were released before deadline12:34:10UTC. No quota,
+account, fallback, journal/budget reset or manual authored substitute was used.
+
+## Precision repair and genuine model repair pending
+
+The validator now permits at most0.001 stage pixels of serialized target
+round-trip noise. Object/anchor identity, clock, action and contact checks remain.
+The inline storyboard request clarifies source-preserving pickup, timed react
+gestures versus expressive facial-only idle, projected camera safe area and walk
+distance/time. It keeps story-specific design freedom. No director version,
+system prompt, request context or model settings changed: the retained matching
+domain-rejected response can be supplied by the existing `initialRepair` path to
+the actual configured model. No candidate is edited by the tool or parent.
+
+Parent `build:core` passed31a0dd; runtime is delegated to separate models.
+Focused numerical/negative regression and one same-project native resume are
+pending. The native ceiling stays30 and timeout900000ms, retries0. Earlier whole
+suite PASS applies before this small production repair. The full tool, film
+quality and input/language/backend matrix remain unaccepted.
+
+## First precision follow-up and native repair: preserved failures
+
+Independent precision report: `C:/Users/Duongvh-pc/.codex/task-state/story-video-v22/independent-target-precision-20261004T124148Z/REPORT.txt`.
+New broad-tolerance checks85/85, indication102/102 and creative/default117PASS
+with1 existing supplemental skip passed; typecheck passed. However, unchanged
+`cinematic-acting.test.ts:89` requires an arbitrary0.000002px shift to reject.
+The proposed0.001px neighborhood violated that contract; this existing regression
+remains FAIL. The old assertion is preserved. Owned jobs released12:53:26UTC.
+
+Native report: `C:/Users/Duongvh-pc/codex-test-evidence/general-native-repair-20261004T124145389Z/REPORT.md`.
+One genuine public resume supplied the full matching rejected candidate through
+`initialRepair`, with no eight-call reanalysis. The actual model returned another
+eight-shot design, then exited1 after9min17sec. Durable state ANALYZED, no film.
+Its remaining reported failure is `ch002.s006`: notebook prop is declared attached
+to right-hand; cross-cut/unreleased attachment is unsupported. That gate runs
+before later placement checks, so absence of other diagnostics does not establish
+all downstream invariants. Calls25 completed,0 pending,five slots under30. Nine
+original identity/config hashes and old journal prefix/reports remain exact.
+All owned jobs/watchers/reservations released before deadline13:13:45UTC.
+
+The refined source keeps the original1e-6px exact comparison and recognizes only
+the canonical anchor rounded to three stage-pixel decimals, also compared at
+1e-6px. It accepts419.999976→420 without accepting arbitrary nearby shifts. The
+inline request makes the existing completed in-shot placement contract explicit:
+omit prop.attachedTo, leave continuity.carriedProps empty, preserve destination,
+release/contact/hand clocks. No cross-cut capability or source gate was relaxed.
+Parent build:core passedf6f0bd. Independent unchanged regression plus refined
+representation tests, and one further genuine same-project resume, are pending.
+Provider/settings/system/context/director version remain unchanged; no manual
+artwork/candidate edit, budget reset or account workaround.
+
+## Refined representation closure
+
+Independent report: `C:/Users/Duongvh-pc/.codex/task-state/story-video-v22/independent-target-representation-20261004T125846Z/REPORT.txt`.
+Focused **225/225 PASS** with retained supplemental candidate; default **224 PASS,
+1 supplemental SKIP**, exit0; unchanged existing regressions **155/155 PASS**,
+including the original0.000002px rejection; whole test typecheck PASS. Exact and
+canonical-rounded anchors pass, arbitrary nearby offsets and genuine wrong
+targets fail. Source/actor/part/anchor/cue/action/clock/contact/camera negatives
+remain checked for both rigs, owners and accepted representations. Optional
+retained-candidate comparison is supplemental, not an accepted native storyboard.
+
+Released new test SHA256:
+`8E1F073BCDB19BDF97AB709BB3DD71A89A45463B7A674A0CB1BA123687E58EFA`.
+Frozen production hashes: director/index
+`E5425DF1F99D9803C5C560ED031AE804BEC9A864327202D12EBD7A6EF3F7E158`,
+creative request `8A60D90BE14E7E7FCAA053867F751314E7951319069216FBC01769A8D9674527`.
+No old assertions were changed. All owned file/jobs/listeners released13:04:08UTC
+before deadline13:20:46UTC. The old broad-tolerance FAIL remains in its original
+report. The whole963PASS integration applies before the new precision fix; this
+focused closure does not claim a rerun of that entire suite or film acceptance.
+
+The one further native same-project completed-placement repair is still pending.
+No script/audio/config/account/budget changes or parent runtime tests occurred.

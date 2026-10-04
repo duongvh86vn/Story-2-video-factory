@@ -6,7 +6,9 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 
 - [x] Nghiệm thu indication/speech31:102/102 PASS, whole test:typecheck qua. Regression100PASS/23FAIL cleanup; retained23/23 không xóa FAIL mặc định.
 - [x] Genuine native resume31 quaANALYZED: labels/point/speech do model thật,9artifact và journalprefix giữ nguyên. Sau đó STORYBOARDED provider timeout180s, không có phim.
-- [ ] Single native resume với timeout15phút, ceiling30/history giữ nguyên; sửa default authoring fixture cleanup và toàn-suite kiểm riêng.
+- [x] Native timeout15phút trả8-shot thật nhưng domainFAIL; ceiling30/history giữ nguyên,24call hoàn tất. Default fixture cleanup23/23, whole npm test963PASS/3SKIP/0FAIL và typecheck qua; chưa nghiệm thu phim.
+- [x] Precision representation exact1e-6 hoặc canonical anchor làm tròn3 chữ số:225/225 scoped, default224PASS/1SKIP và regression cũ155/155/typecheck qua. Old2e-6 assertion giữ nguyên; dung sai0.001px đã bỏ và rawFAIL giữ.
+- [ ] Genuine model repair tiếp cảnh attached prop, rồi dựng và xem/nghe thành phẩm; giữ provider/settings/ceiling/script/audio.
 
 - [x] Source31/explanation6 thêm indication/speech và coverage đúng target/cue/actor, mô tả nhãn source excerpt; build/typecheck/schema qua, không nới validator.
 - [ ] Nghiệm thu31 và genuine resume project native thư viện sau lỗi nhãn. Script/audio thật27.062s có sẵn;8call transport/schema thành công nhưng native đầu tiên chưa quaANALYZED, không có phim.

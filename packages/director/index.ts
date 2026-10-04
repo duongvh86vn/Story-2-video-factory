@@ -251,9 +251,12 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
     const expectedStart=index===1?midpoint:a.startMs-shot.startMs,expectedEnd=a.type==='compare'&&index===0?midpoint:a.endMs-shot.startMs;
     if(g.startMs!==expectedStart||g.endMs!==expectedEnd)throw new Error(`${shot.id}: gesture/action clock mismatch for ${g.id} (${a.type}); expected shot-local ${expectedStart}–${expectedEnd}ms, received ${g.startMs}–${g.endMs}ms`);
     const expected=target?partAnchor(shot,target.partId,target.anchor,p.stage.width,p.stage.height):undefined;
-    // JSON decimals and normalized stage multiplication can differ at machine precision.
-    // One millionth of a pixel tolerates serialization noise, not a different target.
-    if(Boolean(expected)!==Boolean(g.target)||expected&&g.target&&Math.hypot(g.target.x-expected.x,g.target.y-expected.y)>1e-6)throw new Error(`${shot.id}: gesture ${g.id} points at the wrong world target for ${a.type}; expected ${expected?JSON.stringify(expected):'no gesture.target (omit it because this action has no object target; a walking destination belongs in performance.walks)'}, received ${g.target?JSON.stringify(g.target):'no gesture.target'}${target?`; object ${target.partId}, anchor ${target.anchor}`:''}`);
+    // Keep the existing 1e-6px comparison. Also recognize the canonical anchor
+    // rounded to three stage-pixel decimals after normalized-coordinate input.
+    // This accepts 419.999976 -> 420, not arbitrary nearby shifted targets.
+    const exactTarget=expected&&g.target&&Math.hypot(g.target.x-expected.x,g.target.y-expected.y)<=1e-6;
+    const roundedTarget=expected&&g.target&&Math.hypot(g.target.x-Math.round(expected.x*1000)/1000,g.target.y-Math.round(expected.y*1000)/1000)<=1e-6;
+    if(Boolean(expected)!==Boolean(g.target)||expected&&g.target&&!exactTarget&&!roundedTarget)throw new Error(`${shot.id}: gesture ${g.id} points at the wrong world target for ${a.type}; expected ${expected?JSON.stringify(expected):'no gesture.target (omit it because this action has no object target; a walking destination belongs in performance.walks)'}, received ${g.target?JSON.stringify(g.target):'no gesture.target'}${target?`; object ${target.partId}, anchor ${target.anchor}`:''}`);
     if(!CINEMATIC_ACTION_CLIPS[a.type]?.includes(g.action))throw new Error(`${shot.id}: performance action contradicts host intent for ${g.id}; ${a.type} requires ${CINEMATIC_ACTION_CLIPS[a.type]?.join(' or ')}, received ${g.action}`);
     if(['operate','pick-place','carry'].includes(g.action)!==(a.type==='operate-model')||g.contactMs!==(a.contactMs===undefined?undefined:a.contactMs-shot.startMs))throw new Error(`${shot.id}: contact/action mismatch for ${g.id}; intent ${a.type}, clip ${g.action}, expected shot-local contactMs ${a.contactMs===undefined?'omitted':a.contactMs-shot.startMs}, received ${g.contactMs??'omitted'}`);
     }

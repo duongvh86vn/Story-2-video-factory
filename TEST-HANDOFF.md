@@ -1,6 +1,8 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
-Kết quả31:102/102 scoped và typecheckPASS, regression100PASS/23FAIL cleanup mặc định; retained23/23 không thay default nghiệm thu. Native resume giữ9bytes/journalprefix, quaANALYZED rồi provider timeout180s, không có phim. Theo dõi một resume mới với timeout storyboard15phút, giữ nguyên30call ceiling và failure accounting. Default helper cleanup và whole suite vẫn là nghiệm thu riêng. [Evidence](docs/validation/2026-10-04-general-story-followup.md).
+Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video. Sửa precision đã qua225/225 scoped, default224PASS/1 supplementalSKIP, regression cũ155/155 và typecheck; giữ nguyên assertion2e-6. Whole source31 trước sửa:963PASS/3SKIP/0FAIL, cleanup23/23. Native thư viện có8-shot model-origin nhưng chưa có phim; genuine repair cảnh đạo cụ tiếp đang chạy, giữ script/audio/config/journal và ceiling30. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md). Chưa nghiệm thu thành phẩm.
+
+Các checkpoint bên dưới là lịch sử; trạng thái mới nhất ở đoạn đầu và evidence hiện hành.
 
 Hiện hành31/explanation6: kiểm indication đúng gesture/action/target/clock/cue và speech đúng actor/cue, giữ label/source/negation/identity negatives. Genuine resume project native lost-notebook dùng cùng script/audio/journal sau lỗi Library table; không viết tay storyboard hoặc xóa failure. Source30 focused30/30, supplemental/default32/32 và169/169 qua; whole npm test chưa hoàn tất (685PASSlines,exit-1). [Phạm vi hiện hành và bằng chứng](docs/validation/2026-10-04-general-story-followup.md).
 
