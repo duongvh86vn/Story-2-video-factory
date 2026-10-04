@@ -61,6 +61,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       if(!c){failures.add(`${shot.id}: creative direction requires a canonical cinematic plan`);continue;}
       if(!lockIds.has(shot.id)){
         if(config.presentation.character_mode==='actors'&&!c.actorScene)failures.add(`${shot.id}: story actors mode requires actorScene; assign sourced roles or use a mechanism-only shot`);
+        if(config.presentation.character_mode==='actors'&&context.beats.some(beat=>beat.sceneIntent)&&!c.sceneIntent)failures.add(`${shot.id}: story actors mode requires an explicit sourced sceneIntent, including cutaways`);
         if(c.actorScene)bindActorShot(shot,context.profile,context.rig);
         if(!c.artDirection)failures.add(`${shot.id}: creative direction requires an authored brief and artwork contract`);
         else c.artDirection.origin=origin;
@@ -83,7 +84,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     check(()=>validateExplainerStoryboard(board,context.narration,context.beats,context.profile,context.rig,config));
     for(const shot of board.shots){
       // Per-shot diagnostics retain the full canonical world for persistent subjects and recaps.
-      check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}}));
+      check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true}));
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot));
       // Camera diagnostics must survive a separate early artwork/rendering failure.

@@ -31,8 +31,17 @@ export function eventPreviewTimes(shot:Shot):number[]{
     for(const ms of [event.startMs,Math.min(event.endMs-1,event.startMs+280),Math.floor((event.startMs+event.endMs)/2),event.endMs-1])times.add(clamp(ms));
   }
   if(shot.cinematic?.actorScene)for(const p of [shot.cinematic.performance,...shot.cinematic.actorScene.supporting.map(a=>a.performance)])
-    for(const clip of [...p.walks,...p.expressions,...(p.turns??[]),...p.gestures])
+    for(const clip of [...p.walks,...p.expressions,...(p.turns??[]),...p.gestures,...(p.postures??[]),...p.gazes])
       for(const local of [clip.startMs,Math.floor((clip.startMs+clip.endMs)/2),clip.endMs-1])times.add(clamp(shot.startMs+local));
+  if(shot.cinematic?.actorScene){
+    const plans=[shot.cinematic.performance,...shot.cinematic.actorScene.supporting.map(actor=>actor.performance)];
+    const step=Math.ceil(1000/shot.cinematic.performance.fps);
+    for(const p of plans)for(const clip of [...(p.postures??[]),...p.gazes])
+      for(const local of [clip.startMs-step,clip.endMs+step])times.add(clamp(shot.startMs+local));
+    // A sourced waiting/hold scene still needs temporal visual evidence, without fake targets.
+    if(!times.size&&(shot.cinematic.actorScene.primary||shot.cinematic.actorScene.supporting.length))
+      for(const ms of [shot.startMs,Math.floor((shot.startMs+shot.endMs)/2),shot.endMs-1])times.add(clamp(ms));
+  }
   return [...times].sort((a,b)=>a-b);
 }
 async function contactSheet(root:string,frames:PreviewFrame[],destination:string):Promise<string> {
@@ -194,8 +203,9 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
       const step=Math.ceil(1000/config.rendering.final.fps);
       for(const shot of storyboard.shots){const geometry=await readJson<HostGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`));
         for(const action of geometry.interactions)for(const sample of [action.reachMs-step,action.reachMs,action.reachMs+step])if(!actionTimes.has(`${shot.id}:${Math.max(shot.startMs,Math.min(shot.endMs-1,sample))}`))throw new Error(`${shot.id}: missing before/during/after target evidence`);
-        for(const sample of eventPreviewTimes(shot))if(!actionTimes.has(`${shot.id}:${sample}`))throw new Error(`${shot.id}: missing timed event evidence`);
-        const sheet=`previews/${shot.id}/action-sheet.jpg`;if(geometry.interactions.length&&(!manifest.sheetHashes[sheet]||hash(await fs.readFile(await safeRealPath(projectRoot,sheet)))!==manifest.sheetHashes[sheet]))throw new Error(`${shot.id}: missing/stale action sheet`);
+        const eventTimes=eventPreviewTimes(shot);
+        for(const sample of eventTimes)if(!actionTimes.has(`${shot.id}:${sample}`))throw new Error(`${shot.id}: missing timed event evidence`);
+        const sheet=`previews/${shot.id}/action-sheet.jpg`;if((geometry.interactions.length||eventTimes.length)&&(!manifest.sheetHashes[sheet]||hash(await fs.readFile(await safeRealPath(projectRoot,sheet)))!==manifest.sheetHashes[sheet]))throw new Error(`${shot.id}: missing/stale action sheet`);
       }
     }
     // Vision reads sheets, so checking only their constituent PNGs cannot detect stale edits.

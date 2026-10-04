@@ -23,6 +23,8 @@ Phạm vi ngày 04/10/2026. Người que là diễn viên trong câu chuyện, k
 
 Writer mock/chưa cấu hình dừng với `needs-script`, không tạo clock/final. Thiếu TTS ở idea/script dừng trước TIMED. Custom rig MD vẫn cần duyệt preview một lần. Không lấy final cũ sau sửa nội dung làm kết quả của lần chạy mới.
 
+Model thiết kế cảnh chưa cấu hình chỉ tạo nháp seed có origin=offline. Final cần artDirection từ model hoặc authored direction hợp lệ; nếu thiếu sẽ báo `needs-art-direction` và hiện nút cấu hình thiết kế cảnh. Đây không phải yêu cầu duyệt tay mọi storyboard.
+
 ## CLI
 
 ```powershell
@@ -57,8 +59,14 @@ Director mới dùng `sceneIntent`: người tham gia, hành động, mục đí
 
 Cảnh chỉ có diễn viên được phép không có parts/events/models; object attention và prop bindings cũng phải rỗng. Như vậy một phản ứng hay tình huống giữa các vai không phải tạo sơ đồ giả. Cảnh có đối tượng vẫn kiểm source identity, target, reach, contact, camera và các event liên quan; chuyển cảnh liên tục giữ cast/pose/ownership. Các hành động nằm ngoài capability hoặc không tới được target phải yêu cầu sửa motion/layout; không thay thao tác thành chỉ tay để báo thành công.
 
+Planner AI khai báo acting từng vai theo ý nghĩa câu nguồn. Director27 kiểm cả beat giữ các vai đã lập và có track cho hành động tương ứng: đi, thao tác đúng đối tượng/cue/contact, thay tư thế, quan sát hoặc phản ứng. Cutaway được xen kẽ; hold có chủ đích được đứng yên. Preview/review kiểm cả posture/gaze và action sheet từng cảnh. Phân loại semantic vẫn phụ thuộc model và cần nghiệm thu, không được xem gate kỹ thuật là hiểu đúng mọi truyện.
+
+Đạo cụ generic object/stage/marker trong actor scene mặc định không có knob hoặc marker điều khiển. controlMode=none bỏ cả hai; renderer override được chọn chủ động. Các tọa độ target/contact và clock vẫn được kiểm như cũ. Artwork2.2.6 đổi fingerprint hình; kiểm tra độc lập HTML/GSAP đã qua 7/7 ca, chưa thay cho nghiệm thu hình ảnh/chuyển động trong phim.
+
 Version director/semantic plan tham gia cache hình. Cảnh cũ đã khóa phải giữ phiên bản đã duyệt hoặc được người dùng mở khóa để migrate; hệ thống không tự gán version mới. Voice/audio cache độc lập phần này.
 
 ## Phạm vi nghiệm thu
 
 Source mới và tài liệu không phải chứng nhận chất lượng phim. Model độc lập kiểm runtime; bản factual do AI viết ghi rõ chưa kiểm chứng độc lập. Cue nguồn chứng minh bám nội dung đã chọn, không chứng minh lịch sử ngoài đời. Nghiệm thu phải có chủ đề đời thường, hư cấu, lịch sử và khoa học; không chỉ các ví dụ máy móc. Theo dõi [kế hoạch tổng quát](plans/2026-10-04-general-story-tool.md) và [TEST-HANDOFF](../TEST-HANDOFF.md).
+
+Runtime closure27:27/27 focused và210/210 regression qua. Public final helper/source/clock/cast được kiểm bằng protocol; public pipeline FINAL, native model và toàn phim vẫn là nghiệm thu riêng. [Evidence và giới hạn](validation/2026-10-04-story-acting-coverage.md).

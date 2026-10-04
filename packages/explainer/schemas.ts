@@ -11,6 +11,10 @@ export const SceneIntentSchema = z.object({
     sourceRefs:z.array(SourceRefSchema).min(1)}).strict()).max(8),
   action:z.string().trim().min(1).max(2000),objective:z.string().trim().min(1).max(2000),
   result:z.string().trim().min(1).max(2000).optional(),sourceRefs:z.array(SourceRefSchema).min(1),
+  acting:z.array(z.object({participantId:Id,
+    kind:z.enum(['locomotion','manipulation','posture','observation','reaction','hold','unsupported']),
+    statement:z.string().trim().min(1).max(2000),sourceRefs:z.array(SourceRefSchema).min(1),targetIds:z.array(Id).min(1).max(8).optional(),
+  }).strict()).max(16).optional(),
 }).strict();
 export type SceneIntent=z.infer<typeof SceneIntentSchema>;
 export const EntitySchema = z.object({ id: Id, label: z.string().min(1).max(100),

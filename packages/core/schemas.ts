@@ -53,7 +53,7 @@ export const ProjectStateSchema = z.object({
   version: z.literal(1), specVersion: z.number().int().optional(), name: z.string(), state: z.enum(States), updatedAt: z.string(), inputHash: z.string(), narrationInputHash: z.string().default(''), hostInputHash: z.string().default(''),
   assetInputHash: z.string().default(''), artifactHashes: z.record(z.string()).default({}), reviewIteration: z.number().int().nonnegative().default(0),
   approvals: z.object({ storyboard: z.boolean().default(false), characters: z.boolean().default(false), host: z.boolean().default(false), hostHash: z.string().default('') }).default({}),
-  locked: z.record(z.boolean()).default({}), waitingFor: z.enum(['host-approval','characters-approval','storyboard-approval','voice','source-review','script']).optional(), error: z.string().optional(),
+  locked: z.record(z.boolean()).default({}), waitingFor: z.enum(['host-approval','characters-approval','storyboard-approval','voice','source-review','script','art-direction']).optional(), error: z.string().optional(),
 });
 export type Story = z.infer<typeof StorySchema>;
 export type Narration = z.infer<typeof NarrationSchema>;

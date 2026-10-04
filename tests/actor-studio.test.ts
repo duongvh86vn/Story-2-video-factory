@@ -198,10 +198,33 @@ async function propFixture(t:TestContext){
   const origin={x:part.x*p.stage.width,y:part.y*p.stage.height},destination={x:origin.x-20,y:origin.y};
   p.scale=1;p.root={x:origin.x-rigMetrics(profile).shoulderOffset-55,y:p.stage.groundY};p.walks=[];p.turns=[];p.facing='front';p.gazes=[];
   p.props=[{id:'actor-model',origin,destination}];p.gestures=[{id:'pick-model',action:'pick-place',startMs:0,endMs:5000,contactMs:1000,releaseMs:4000,propId:'actor-model',target:{...origin},destination:{...destination}}];
+  const gesture=p.gestures[0]!;gesture.hand='right';
+  // This controlled placement replaces the seed pointing choreography. Its one
+  // primary owner uses the same contact schedule as the new gesture. Keep the
+  // contact accessor shared so the existing bad-contact case reaches the motion
+  // validator; owner-specific negatives below deliberately detach that schedule.
+  shot.host!.actions=[{type:'operate-model',hand:'right',startMs:shot.startMs+gesture.startMs,endMs:shot.startMs+gesture.endMs,
+    get contactMs(){return shot.startMs+gesture.contactMs!;},narrationAnchor:'cue1',
+    target:{modelId:shot.visualization!.modelId,partId:part.id,anchor:'center'}}];
   c.propBindings=[{propId:'actor-model',partId:part.id,role:'illustrative-model',sourceRefs:part.sourceRefs}];
   c.artDirection={origin:'authored',brief:'Sourced actor places a conceptual piston on the physical stage.',useEnvironment:false,palette:{background:'#142d40',surface:'#eaf3f5',ink:'#142d40',accent:'#f7be52'},showHeading:false,layers:[],models:[]};
   return {...f,shot,p,profile,part};
 }
+for(const defect of ['missing','wrong-hand','wrong-clock','wrong-contact','wrong-part','supporting-only','duplicate'] as const)test(`actor pick-place owner rejects ${defect}`,async t=>{
+  const f=await propFixture(t),owner={...f.shot.host!.actions[0]!,target:{...f.shot.host!.actions[0]!.target!}};
+  // Materialize the shared clock before independently corrupting ownership.
+  f.shot.host!.actions=[owner];
+  if(defect==='missing')f.shot.host!.actions=[];
+  if(defect==='wrong-hand')owner.hand='left';
+  if(defect==='wrong-clock')owner.endMs--;
+  if(defect==='wrong-contact')owner.contactMs!--;
+  if(defect==='wrong-part')owner.target!.partId='not-the-sourced-piston';
+  if(defect==='supporting-only'){
+    f.shot.host!.actions=[];f.shot.cinematic!.actorScene!.supporting[0]!.actions=[owner];
+  }
+  if(defect==='duplicate')f.shot.host!.actions.push({...owner});
+  assert.throws(()=>validatePropBindings(f.shot),/hand owner|matching hand\/action owner/);
+});
 for(const origin of ['authored','model'] as const)test(`primary actor sourced pick-place accepts ${origin} direction and real contact geometry`,async t=>{
   const f=await propFixture(t);f.shot.cinematic!.artDirection!.origin=origin;assert.doesNotThrow(()=>validatePropBindings(f.shot));
   const compiled=compilePerformance(f.p,f.profile,{method:'audio-rms',windowMs:20,intervals:[]});assert.ok(compiled.report.maxContactError<1);assert.ok(compiled.report.maxInterpolationGapPx<=.2);

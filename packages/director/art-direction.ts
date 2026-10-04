@@ -2,7 +2,7 @@ import type { Shot } from '../core/schemas.js';
 import { escapeHtml, hash } from '../core/utils.js';
 import { ArtDirectionSchema, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
 export { ArtDirectionSchema, type ArtDirection } from './art-direction-schemas.js';
-export const ARTWORK_RENDER_VERSION='passive-svg-2.2.5';
+export const ARTWORK_RENDER_VERSION='passive-svg-2.2.6';
 const tags=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask']);
 function decodeAttribute(value:string):string{
   return value.replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos);/gi,(_,entity:string)=>{

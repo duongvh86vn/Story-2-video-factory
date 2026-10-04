@@ -15,6 +15,7 @@ import { EXPLAINER_RECIPES } from './recipes.js';
 import { validateAuthoredVisualSources } from './visual-sources.js';
 import { canonicalExplanationEvidence } from './citations.js';
 import {actorProfile,shotPerformer,validateActorCast} from '../actors/model.js';
+import {validateStoryActingCoverage} from '../director/story-coverage.js';
 export { EXPLAINER_RECIPES } from './recipes.js';
 export function explainerShot(id: string, startMs: number, endMs: number, beat: Beat, narration: Narration, profile: HostProfile, rig: HostRig): Shot {
   const b = ExplanationBeatSchema.parse({ ...beat, beatId: beat.id });
@@ -88,8 +89,9 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
     assetNeeds: [{ id: `${id}.host-rig`, type: 'image', description: `Reusable explainer ${profile.id} v${profile.version}`, localPath: rig.assetPath, required: true }],
   });
 }
-export function validateExplainerStoryboard(board: Storyboard, narration: Narration, beats: Beat[], baseProfile: HostProfile, baseRig: HostRig, config: FactoryConfig): void {
+export function validateExplainerStoryboard(board: Storyboard, narration: Narration, beats: Beat[], baseProfile: HostProfile, baseRig: HostRig, config: FactoryConfig,options:{fragment?:boolean}={}): void {
   validateActorCast(board,narration,beats.flatMap(b=>ExplanationBeatSchema.parse({...b,beatId:b.id}).sourceRefs));
+  if(config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'&&!options.fragment)validateStoryActingCoverage(board,beats,narration);
   let absent = 0, speech = 0, visible = 0;
   for (const shot of board.shots) {
     if(config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'&&!shot.cinematic?.actorScene)throw new Error(`${shot.id}: actors mode requires a story actor scene; replan the old presenter storyboard`);

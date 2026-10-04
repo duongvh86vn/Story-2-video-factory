@@ -433,6 +433,85 @@
                   "additionalProperties": false
                 },
                 "minItems": 1
+              },
+              "acting": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "participantId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "locomotion",
+                        "manipulation",
+                        "posture",
+                        "observation",
+                        "reaction",
+                        "hold",
+                        "unsupported"
+                      ]
+                    },
+                    "statement": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "sourceRefs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "narration",
+                              "source"
+                            ]
+                          },
+                          "segmentId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "quote": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2000
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "quote"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1
+                    },
+                    "targetIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "minItems": 1,
+                      "maxItems": 8
+                    }
+                  },
+                  "required": [
+                    "participantId",
+                    "kind",
+                    "statement",
+                    "sourceRefs"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 16
               }
             },
             "required": [

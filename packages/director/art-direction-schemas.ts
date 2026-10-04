@@ -24,5 +24,11 @@ export function rendersModelLabel(shot:Shot,partId:string):boolean{
   return (shot.cinematic?.artDirection?.models.find(model=>model.partId===partId)?.labelMode??'renderer')==='renderer';
 }
 export function rendersModelControl(shot:Shot,partId:string):boolean{
-  return (shot.cinematic?.artDirection?.models.find(model=>model.partId===partId)?.controlMode??'renderer')==='renderer';
+  const override=shot.cinematic?.artDirection?.models.find(model=>model.partId===partId)?.controlMode;
+  if(override!==undefined)return override==='renderer';
+  const part=shot.visualization?.parts.find(part=>part.id===partId);
+  // Story props are touched or carried using the planned anchors; that does not
+  // make a scarf, book or ordinary stage object into a machine with a control knob.
+  if(shot.cinematic?.actorScene&&part&&['object','stage','marker'].includes(part.kind))return false;
+  return true;
 }

@@ -32,6 +32,7 @@ import { narrateScript, resolveVoice, requireVoice, VoiceReportSchema } from '..
 import { ANIMATION_VERSION } from '../animation/schemas.js';
 import { CINEMATIC_PLAN_FILES, CINEMATIC_EXPORT_FILES, DIRECTION_VERSION } from '../director/schemas.js';
 import { ARTWORK_RENDER_VERSION } from '../director/art-direction.js';
+import { requireFinalStoryDirection } from '../director/story-coverage.js';
 import { writeCinematicPlans } from '../director/index.js';
 import { environmentLibraryFingerprint, prepareCinematicEnvironments } from '../stage/index.js';
 import { readStoryboardForDirection } from '../storyboard/director.js';
@@ -283,7 +284,12 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             }
             if(review.issues.some(i=>i.severity==='high') || !review.pass) throw new Error('Review failed after the configured repair budget; edit or unlock the affected shots before resuming'); break;
           }
-          case 'FINAL_RENDERED': { const review=await readJson(path.join(root,'work/review.json'),ReviewSchema); if(!review.pass) throw new Error('Final render requires a passing draft review');if(config.content.mode==='narrated-explainer'){try{await requireVoice(root,await voiced());}catch(error){throw new ApprovalRequired('voice',String(error));}}
+          case 'FINAL_RENDERED': { const review=await readJson(path.join(root,'work/review.json'),ReviewSchema); if(!review.pass) throw new Error('Final render requires a passing draft review');
+            if(config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'){
+              const sb=await board(),b=await beats();requireFinalStoryDirection(sb,b);
+              const n=await narration(),{profile,rig}=await loadHost(root);validateExplainerStoryboard(sb,n,b,profile,rig,config);
+            }
+            if(config.content.mode==='narrated-explainer'){try{await requireVoice(root,await voiced());}catch(error){throw new ApprovalRequired('voice',String(error));}}
             const result=await retryRender(config,()=>engine.renderFinal()); store.render('final',result.path); await produceMedia(root,config,await voiced(),await board(),await assets()); break; }
           case 'QC_PASSED': {
             const sb=await board(),n=await voiced(),qc=await runQC(root,config,n,sb);
