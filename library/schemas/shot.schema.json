@@ -1125,6 +1125,13 @@
                         },
                         "minItems": 1
                       },
+                      "projection": {
+                        "type": "string",
+                        "enum": [
+                          "normalized-stretch",
+                          "model-viewport"
+                        ]
+                      },
                       "labelMode": {
                         "type": "string",
                         "enum": [

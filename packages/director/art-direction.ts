@@ -2,7 +2,7 @@ import type { Shot } from '../core/schemas.js';
 import { escapeHtml, hash } from '../core/utils.js';
 import { ArtDirectionSchema, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
 export { ArtDirectionSchema, type ArtDirection } from './art-direction-schemas.js';
-export const ARTWORK_RENDER_VERSION='passive-svg-2.2.4';
+export const ARTWORK_RENDER_VERSION='passive-svg-2.2.5';
 const tags=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask']);
 function decodeAttribute(value:string):string{
   return value.replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos);/gi,(_,entity:string)=>{
@@ -106,6 +106,7 @@ export function validateArtDirection(shot:Shot):void{
     if(!part||models.has(model.partId)||!sourced(model.sourceRefs)||!model.sourceRefs.some(ref=>part.sourceRefs.some(original=>hash(ref)===hash(original))))throw new Error(`${shot.id}: custom model changed its source identity`);
     models.add(model.partId);
     const canonical=artworkSvg(model.svg,`${shot.id}.art.model.${model.partId}`);
+    if(model.projection==='model-viewport')modelViewportAttributes(canonical);
     if(shot.visualization!.events.some(event=>event.targetId===model.partId&&event.motion!=='none')&&
       !hasRenderedMotionGeometry(canonical))throw new Error(`${shot.id}: custom motion event has no rendered motion geometry`);
   }
@@ -126,10 +127,37 @@ export function artLayers(shot:Shot,plane:ArtDirection['layers'][number]['plane'
   }).join('');
   return {html,calls};
 }
+/** A viewport projection is explicit: fragments and legacy models keep their own coordinates. */
+function modelViewportAttributes(canonical:string):string{
+  const svg=canonical.trim(),root=/^<svg\b([^>]*)>/.exec(svg);
+  if(!root||root[1]!.endsWith('/'))throw new Error('Model viewport projection requires one complete SVG root with a finite positive viewBox');
+  let depth=0,rootEnd=-1;
+  for(const token of svg.matchAll(/<([^>]*)>/g)){
+    const value=token[1]!;
+    if(value.startsWith('/'))depth--;
+    else if(!value.endsWith('/'))depth++;
+    if(depth===0){rootEnd=token.index!+token[0].length;break;}
+  }
+  const value=/\bviewBox="([^"]+)"/.exec(root[1]!)?.[1];
+  const number='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
+  const separator='(?:[ \\t\\r\\n]*,[ \\t\\r\\n]*|[ \\t\\r\\n]+)';
+  const coordinates=new RegExp(`^[ \\t\\r\\n]*(${number})${separator}(${number})${separator}(${number})${separator}(${number})[ \\t\\r\\n]*$`).exec(value??'');
+  const box=coordinates?.slice(1).map(Number);
+  if(rootEnd!==svg.length||!box||box.length!==4||!box.every(Number.isFinite)||box[2]!<=0||box[3]!<=0)
+    throw new Error('Model viewport projection requires one complete SVG root with a finite positive viewBox');
+  return root[1]!.replace(/\s(?:x|y|width|height)="[^"]*"/g,'');
+}
+
 export function customModelArt(shot:Shot,partId:string,width:number,height:number):string|undefined {
   const model=shot.cinematic?.artDirection?.models.find(model=>model.partId===partId);
   if(!model)return undefined;
   let svg=artworkSvg(model.svg,`${shot.id}.art.model.${partId}`);
+  if(model.projection==='model-viewport'){
+    if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw new Error('Model viewport dimensions must be finite and positive');
+    const attributes=modelViewportAttributes(svg);
+    svg=svg.trim().replace(/^<svg\b[^>]*>/,`<svg x="${-width/2}" y="${-height/2}" width="${width}" height="${height}"${attributes}>`);
+    return `<g data-custom-model="${escapeHtml(partId)}" fill="#000000" stroke="none" stroke-width="1">${svg}</g>`;
+  }
   // A complete SVG is an image in the centered model box; fragments already use centered coordinates.
   if(/^<svg\b[^>]*>[\s\S]*<\/svg>$/.test(svg.trim())){
     svg=svg.trim().replace(/^<svg\b([^>]*)>/,(_,attributes:string)=>{

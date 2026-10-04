@@ -1,0 +1,38 @@
+# Copy this file to config/voice.yaml after setting your actual endpoint.
+# Studio language selection supplies the narration language without translating text.
+voice:
+  source: auto
+  tts_provider: http
+  base_url: http://127.0.0.1:8000/tts
+  voice_id: null # Set a speaker ID if your API requires one.
+  model: null # Set the installed model ID if your API requires one.
+  api_key_env: TTS_API_KEY # Optional: no Authorization header when this env var is absent.
+  timeout_ms: 600000
+  preserve_input_audio: true
+  preserve_srt_text: true
+  preserve_srt_timing: true
+  fit_rate_min: 0.85
+  fit_rate_max: 1.20
+  http_fields:
+    text: text
+    language: language
+    voice: voice
+    model: model
+    format: format
+  http_extra_body: {}
+
+# Optional per-language speaker IDs. These inherit the HTTP endpoint/model above.
+# Replace null with IDs provided by your own backend; one multilingual speaker is valid.
+voice_profiles:
+  en:
+    voice_id: null
+  vi:
+    voice_id: null
+  ja:
+    voice_id: null
+  ko:
+    voice_id: null
+
+# POST JSON: {text, language, format: wav}, plus configured voice/model.
+# Rename http_fields to match your API; do not add narration overrides to extra_body.
+# Return HTTP 200 with audio/wav bytes, not a JSON file path or job ID.

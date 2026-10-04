@@ -30,6 +30,7 @@ import { validateExplainerStoryboard, writeHostTimeline } from '../explainer/sto
 import { narrateScript, resolveVoice, requireVoice, VoiceReportSchema } from '../voice/index.js';
 import { ANIMATION_VERSION } from '../animation/schemas.js';
 import { CINEMATIC_PLAN_FILES, CINEMATIC_EXPORT_FILES, DIRECTION_VERSION } from '../director/schemas.js';
+import { ARTWORK_RENDER_VERSION } from '../director/art-direction.js';
 import { writeCinematicPlans } from '../director/index.js';
 import { environmentLibraryFingerprint, prepareCinematicEnvironments } from '../stage/index.js';
 import { readStoryboardForDirection } from '../storyboard/director.js';
@@ -60,7 +61,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
   const repo=await findRepoRoot(),seriesFiles=config.project.series?await walk(safePath(path.join(repo,'series'),config.project.series)):[];
   const series=await Promise.all(seriesFiles.sort().map(async file=>[path.relative(root,file),hash(await fs.readFile(file))]));
   const cinematic=config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'
-    ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,seats:SEAT_SUPPORT_VERSION,environments:await environmentLibraryFingerprint(),
+    ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,artwork:ARTWORK_RENDER_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,seats:SEAT_SUPPORT_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
   return {all:hash({version:4,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),

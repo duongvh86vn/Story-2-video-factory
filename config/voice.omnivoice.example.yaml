@@ -1,0 +1,33 @@
+# For VoiceStudio/OmniVoice Studio exposing POST /v1/audio/speech.
+# Copy to config/voice.yaml after starting your installed backend/model.
+# Replace the example port, model and profile IDs with your actual settings.
+voice:
+  source: auto
+  tts_provider: omnivoice-studio
+  base_url: http://127.0.0.1:3900
+  model: omnivoice
+  voice_id: default
+  api_key_env: OMNIVOICE_API_KEY # Optional for a backend without authentication.
+  timeout_ms: 600000
+  preserve_input_audio: true
+  preserve_srt_text: true
+  preserve_srt_timing: true
+  fit_rate_min: 0.85
+  fit_rate_max: 1.20
+  http_extra_body: {}
+
+# Language-specific voice profiles inherit the installed model and endpoint.
+# A selected project locale takes precedence; the script is never translated.
+voice_profiles:
+  en:
+    voice_id: default
+  vi:
+    voice_id: default
+  ja:
+    voice_id: default
+  ko:
+    voice_id: default
+
+# Other servers with the same speech protocol: openai-compatible + their model ID.
+# A fork with a different protocol should use voice.local-api.example.yaml instead.
+# Factory receives a complete WAV, measures it, then builds script/SRT timing.

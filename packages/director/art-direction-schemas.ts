@@ -13,6 +13,7 @@ export const ArtDirectionSchema=z.object({
     role:z.enum(['decoration','explanation']),svg:z.string().min(1).max(150000),sourceRefs:z.array(SourceRefSchema).optional(),
     keyframes:z.array(ArtKeyframeSchema).min(1).max(200)}).strict()).max(40),
   models:z.array(z.object({partId:Id,svg:z.string().min(1).max(150000),sourceRefs:z.array(SourceRefSchema).min(1),
+    projection:z.enum(['normalized-stretch','model-viewport']).optional(),
     labelMode:z.enum(['renderer','artwork','none']).optional(),motionOrigin:z.object({x:z.number().finite(),y:z.number().finite()}).strict().optional(),
     controlMode:z.enum(['renderer','none']).optional(),
   }).strict()).max(40),

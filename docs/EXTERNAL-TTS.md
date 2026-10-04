@@ -20,6 +20,8 @@ WAV đầu vào giữ giọng của người dùng và không gọi TTS để th
 
 ## API riêng do bạn phát triển
 
+Hai cấu hình đầy đủ để lưu mặc định: [API local riêng](../config/voice.local-api.example.yaml) và [OmniVoice/VoiceStudio local](../config/voice.omnivoice.example.yaml). Sửa endpoint/model/voice theo backend của bạn rồi chép **một** file vào `config/voice.yaml`; không nối hai cấu hình vào cùng file hoặc ghi đè cấu hình đang dùng khi chưa sửa các giá trị ví dụ. EN/VI/JA/KO có preset riêng, kế thừa endpoint và model chung. Project đã có cấu hình riêng tiếp tục ưu tiên cấu hình project; có thể đổi trực tiếp trong Studio.
+
 Trong Studio, mở project → **Nội dung, diễn viên và giọng kể** → chọn ngôn ngữ và dịch vụ TTS → nhập endpoint, model/voice nếu API cần → lưu → **Tạo video**. Có thể lưu cấu hình làm mặc định riêng cho EN/VI/JA/KO. Factory gọi API từ server local; backend TTS có thể chạy cùng máy hoặc trên máy khác trong mạng của bạn. Luồng script và SRT cùng dùng adapter này; WAV giữ audio đầu vào.
 
 Chọn **API TTS riêng (HTTP JSON)**, nhập endpoint đầy đủ như `http://127.0.0.1:8000/tts`. Contract mặc định:
@@ -62,7 +64,7 @@ Tên giọng và tham số thêm trong ví dụ phải thay bằng giá trị ba
 
 ## OmniVoice Studio / VoiceStudio local
 
-Adapter `omnivoice-studio` nhắm đến phiên bản có API `/v1/audio/speech`, được đối chiếu với [router chính thức](https://github.com/debpalash/VoiceStudio/blob/main/backend/api/routers/openai_compat.py) ngày 02/10/2026. Tên upstream hiện là VoiceStudio. Phiên bản cũ hoặc fork dùng API khác cần chọn HTTP/command adapter tương ứng.
+Adapter `omnivoice-studio` nhắm đến phiên bản có API `/v1/audio/speech`, được đối chiếu lại với [router chính thức](https://github.com/debpalash/VoiceStudio/blob/main/backend/api/routers/openai_compat.py) ngày 04/10/2026: `input`, `model`, `voice`, WAV response và extension `language` được backend nhận. Tên upstream hiện là VoiceStudio. Phiên bản cũ hoặc fork dùng API khác cần chọn HTTP/command adapter tương ứng.
 
 Bạn cài và chạy dịch vụ local, chọn model đã cài trong dịch vụ, rồi cấu hình:
 
@@ -81,7 +83,7 @@ voice:
     num_step: 32
 ```
 
-Port 3900 là ví dụ theo upstream, thay bằng endpoint thực tế của máy. Có thể nhập root, `/v1` hoặc endpoint `/v1/audio/speech`; client tạo URL speech tương ứng. Request chứa `input` nguyên văn, `model`, `voice`, `language` mã chính, `response_format: wav`, `speed: 1`. Voice profile là ID do dịch vụ cung cấp. Factory không cài/download model, tạo voice clone hoặc thay model đang chạy trong VoiceStudio. Cấu hình được giữ riêng cho từng ngôn ngữ nếu bấm lưu mặc định ở Studio.
+Port3900 theo [tài liệu local API](https://github.com/debpalash/VoiceStudio/blob/main/docs/speech-platform.md), thay bằng endpoint thực tế của máy. Có thể nhập root, `/v1` hoặc endpoint `/v1/audio/speech`; client tạo URL speech tương ứng. Request chứa `input` nguyên văn, `model`, `voice`, `language` mã chính, `response_format: wav`, `speed: 1`. Voice profile là ID do dịch vụ cung cấp. Factory không cài/download model, tạo voice clone hoặc thay model đang chạy trong VoiceStudio. Cấu hình được giữ riêng cho từng ngôn ngữ nếu bấm lưu mặc định ở Studio.
 
 Chọn `openai-compatible` cho server local khác có cùng speech endpoint. Model là bắt buộc; provider này không tự thêm trường language ngoài protocol chuẩn. Dịch vụ cần nhận diện đúng ngôn ngữ văn bản. Dùng `omnivoice-studio` khi cần trường language theo extension của VoiceStudio.
 
@@ -97,6 +99,8 @@ npm.cmd run cli -- make projects/my-english-video
 Adapter `azure-speech` dùng endpoint HTTPS theo vùng (ví dụ `https://southeastasia.tts.speech.microsoft.com`) và key từ environment. TTS sử dụng SSML chỉ để đóng gói text đã escape, không đọc input như markup. Mặc định gợi ý Jenny/Guy (EN), HoaiMy/NamMinh (VI), Nanami/Keita (JA), SunHi/InJoon (KO). Giọng khác có thể nhập ID. Locale/voice sai chặn tạo giọng. [Contract REST](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/rest-text-to-speech), [danh sách ngôn ngữ/giọng](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support).
 
 ## Preset và phạm vi nghiệm thu
+
+[Kiểm tra public local-TTS04/10](validation/2026-10-04-external-local-tts.md):15 scoped checks qua bằng HTTP bridge trả giọng Windows English thật,10 schema/preset checks qua. CLI/settings, measured clock, scenes, cache/resume, voice/content/host edits và voice/failure gates đã được kiểm tra độc lập. Bridge thuộc auditor đã tắt; đây chưa phải backend của bạn hoặc live OmniVoice/JA/KO, cũng chưa là full MP4/listening acceptance.
 
 `config/voice.yaml` có `voice` mặc định và `voice_profiles` theo ngôn ngữ. Thứ tự: mặc định → preset khớp locale (hoặc mã chính) → series → project. Giọng ghi rõ trong project được ưu tiên. `PUT /api/settings/voice?language=en` lưu preset EN, giữ nguyên mặc định VI và preset khác. `GET /api/voices` chỉ công bố catalog Windows/preset đã bỏ executable và arguments; không công bố API key. HTTP/command tùy chỉnh phải tự xác nhận hỗ trợ ngôn ngữ; catalog không phải kiểm tra âm thanh của provider.
 

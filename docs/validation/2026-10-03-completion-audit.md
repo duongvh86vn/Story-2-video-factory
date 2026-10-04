@@ -2,6 +2,8 @@
 
 **Chưa chứng minh hoàn thành mục tiêu đầy đủ.** Audit này đối chiếu yêu cầu người dùng, file MD được cung cấp, kế hoạch ba luồng và các thay đổi sau đó về diễn viên, thiết kế mở, ngôn ngữ và TTS local. Nó không biến build, các ca kiểm tra riêng lẻ hoặc MP4/DONE thành chứng nhận toàn sản phẩm. Runtime test tiếp tục giao model độc lập.
 
+[Bằng chứng actual04/10](2026-10-04-real-film-and-input-results.md) thay checkpoint “native chưa final” lịch sử: đã có native car final/QC nhưng independent visualFAIL; authored V2 support/contact/recovery PASS trong mẫu, toàn phimPARTIAL vì nhãn chồng viền và chưa xem/nghe full-rate. Public scriptEN final/resume được kiểm thật; SRT/WAV mớiTIMED, WAV+SRT thiếu WhisperX, full edits/gates/livebackend còn NOTRUN. Completion vẫn chưa chứng minh.
+
 Cập nhật04/10: [sửa artwork từ QC](2026-10-04-qc-artwork-repair.md) là follow-up sau native car FINAL_RENDERED nhưng FAIL freeze. Source/build/typecheck và independent unchanged11/11,42/42,4/4, batch3/3/storage negatives đã qua sau hai lỗi thật; raw FAIL giữ nguyên. Genuine repaired-film71165 còn chạy; không đổi các finding PARTIAL/FAIL hoặc live local-TTS NOT RUN thành PASS từ scoped checks.
 
 Cập nhật04/10: [capture-boundary repair và bằng chứng hiện hành](2026-10-04-cli-capture-boundaries.md) đã có independent diagnostics/recovery PASS sau hai FAIL thật, và actual30-frame proof cho initializer/config/renderer. Các dòng NOT RUN về hai scope này bên dưới mô tả checkpoint trước; whole-story/API media/full-film/input matrix không được suy ra từ chúng. Review bốn phim hiện tại vẫn PARTIAL/FAIL, có timecode thật cần sửa; native final và nghe narration chưa được chứng minh.
