@@ -470,7 +470,8 @@
                   "label": {
                     "type": "string",
                     "minLength": 1,
-                    "maxLength": 100
+                    "maxLength": 100,
+                    "description": "Canonical semantic name: copy one contiguous excerpt from a verified sourceRef.quote. Do not compose, paraphrase or title-case a new description. Decorative display text belongs in artwork."
                   },
                   "kind": {
                     "type": "string",
@@ -955,6 +956,8 @@
                           "manipulation",
                           "posture",
                           "observation",
+                          "indication",
+                          "speech",
                           "reaction",
                           "hold",
                           "unsupported"
@@ -1051,7 +1054,7 @@
             },
             "producer": {
               "type": "string",
-              "const": "story-direction-2.2.29"
+              "const": "story-direction-2.2.31"
             },
             "shotId": {
               "type": "string",
@@ -1745,6 +1748,7 @@
                           "compilerVersion": {
                             "type": "string",
                             "enum": [
+                              "performance-2.2.13",
                               "performance-2.2.12",
                               "performance-2.2.11",
                               "performance-2.2.10",
@@ -2594,6 +2598,8 @@
                           "manipulation",
                           "posture",
                           "observation",
+                          "indication",
+                          "speech",
                           "reaction",
                           "hold",
                           "unsupported"
@@ -2968,6 +2974,7 @@
                 "compilerVersion": {
                   "type": "string",
                   "enum": [
+                    "performance-2.2.13",
                     "performance-2.2.12",
                     "performance-2.2.11",
                     "performance-2.2.10",

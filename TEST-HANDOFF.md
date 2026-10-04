@@ -1,6 +1,10 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
-Source hiện hành29: ưu tiên [emotion-continuity](docs/validation/2026-10-04-emotion-continuity.md) cùng bộ28, sau đó public FINAL checkpoint/draft và phim tổng quát tự sinh. Runtime29 NOT RUN; nguyên nhân reset-neutral được tìm từ source, chưa phải reproduction.
+Kết quả31:102/102 scoped và typecheckPASS, regression100PASS/23FAIL cleanup mặc định; retained23/23 không thay default nghiệm thu. Native resume giữ9bytes/journalprefix, quaANALYZED rồi provider timeout180s, không có phim. Theo dõi một resume mới với timeout storyboard15phút, giữ nguyên30call ceiling và failure accounting. Default helper cleanup và whole suite vẫn là nghiệm thu riêng. [Evidence](docs/validation/2026-10-04-general-story-followup.md).
+
+Hiện hành31/explanation6: kiểm indication đúng gesture/action/target/clock/cue và speech đúng actor/cue, giữ label/source/negation/identity negatives. Genuine resume project native lost-notebook dùng cùng script/audio/journal sau lỗi Library table; không viết tay storyboard hoặc xóa failure. Source30 focused30/30, supplemental/default32/32 và169/169 qua; whole npm test chưa hoàn tất (685PASSlines,exit-1). [Phạm vi hiện hành và bằng chứng](docs/validation/2026-10-04-general-story-followup.md).
+
+Source hiện hành30/animation13: ưu tiên [follow-up tool tổng quát](docs/validation/2026-10-04-general-story-followup.md). Runtime29 có26PASS/4FAIL số giữa frame; regression169/169 và public FINAL checkpoint10/10 qua. Giữ raw FAIL; sửa interpolation13 đang được model khác kiểm lại. Input tổng quát ở examples/general-stories, không viết tay storyboard để thay phim native. Kiểm Studio tạo project trống/mở form và phim tự sinh từ ý tưởng đời thường; xem/nghe toàn phim trước khi kết luận chất lượng. Ma trận input/ngôn ngữ/backend vẫn cần nghiệm thu.
 
 Ưu tiên hiện hành source28: [story-emotions](docs/validation/2026-10-04-story-emotions.md) — GSAP/preview/camera/cache/legacy/locks, public FINAL checkpoint/draft retention, rồi phim tổng quát tự sinh. Build/typecheck qua; lượt runtime mới chưa chạy hoàn tất vì usage limit. Không dùng27/27 và210/210 của27 làm evidence cho28.
 

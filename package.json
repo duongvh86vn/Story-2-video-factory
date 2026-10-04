@@ -7,7 +7,7 @@
   "engines": { "node": ">=22.13.0" },
   "bin": { "video-factory": "dist/apps/cli/index.js" },
   "scripts": {
-    "test": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
+    "test": "node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/*.test.ts",
     "test:asr": "tsx scripts/acceptance-asr.ts",
     "animation:preview": "tsx scripts/animation-preview.ts",
     "animation:serve": "tsx scripts/animation-player.ts",

@@ -105,7 +105,8 @@
                 "label": {
                   "type": "string",
                   "minLength": 1,
-                  "maxLength": 100
+                  "maxLength": 100,
+                  "description": "Canonical semantic name: copy one contiguous excerpt from a verified sourceRef.quote. Do not compose, paraphrase or title-case a new description. Decorative display text belongs in artwork."
                 },
                 "kind": {
                   "type": "string",
@@ -451,6 +452,8 @@
                         "manipulation",
                         "posture",
                         "observation",
+                        "indication",
+                        "speech",
                         "reaction",
                         "hold",
                         "unsupported"

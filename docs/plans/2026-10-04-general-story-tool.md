@@ -4,6 +4,18 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 
 ## Triển khai
 
+- [x] Nghiệm thu indication/speech31:102/102 PASS, whole test:typecheck qua. Regression100PASS/23FAIL cleanup; retained23/23 không xóa FAIL mặc định.
+- [x] Genuine native resume31 quaANALYZED: labels/point/speech do model thật,9artifact và journalprefix giữ nguyên. Sau đó STORYBOARDED provider timeout180s, không có phim.
+- [ ] Single native resume với timeout15phút, ceiling30/history giữ nguyên; sửa default authoring fixture cleanup và toàn-suite kiểm riêng.
+
+- [x] Source31/explanation6 thêm indication/speech và coverage đúng target/cue/actor, mô tả nhãn source excerpt; build/typecheck/schema qua, không nới validator.
+- [ ] Nghiệm thu31 và genuine resume project native thư viện sau lỗi nhãn. Script/audio thật27.062s có sẵn;8call transport/schema thành công nhưng native đầu tiên chưa quaANALYZED, không có phim.
+
+- [x] Source30: Studio không chọn sẵn ví dụ máy hơi nước, mở form nội dung khi tạo project; bộ raw input tổng quát, không có storyboard authored.
+- [x] Public runPipeline FINAL checkpoint source29:10/10 PASS, draft/repair-budget giữ nguyên, stale final không được nhận. Producer media bị chặn có chủ đích; chưa chứng minh video.
+- [x] Runtime29:26PASS/4FAIL focused số giữa frame,169/169 regression; giữ raw. Source30/animation13 sửa face refinement/độ chính xác clock, giữ12 và các version cũ. Build/typecheck/schema qua.
+- [ ] [Follow-up30](../validation/2026-10-04-general-story-followup.md): unchanged runtime assertions, Studio entry và native truyện đời thường tự viết/dàn cảnh/xuất video.
+
 - [x] Nhánh idea riêng, giữ bản gốc và nguồn; không giả làm SRT hoặc viết lại complete script.
 - [x] Writer qua model router/journal/budget hiện có; mock writer dừng needs-script.
 - [x] Kịch bản cache riêng, nguồn/title/kind/warnings; ngôn ngữ độc lập UI; clock từ TTS thật.

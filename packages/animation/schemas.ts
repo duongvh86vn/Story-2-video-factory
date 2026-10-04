@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { Id, RigHandSchema } from '../core/identifiers.js';
 
-export const ANIMATION_VERSION = 'performance-2.2.12';
+export const ANIMATION_VERSION = 'performance-2.2.13';
+export const CONTINUOUS_ANIMATION_VERSION = 'performance-2.2.12';
 export const STORY_ANIMATION_VERSION = 'performance-2.2.11';
 export const SEATED_ANIMATION_VERSION = 'performance-2.2.10';
 export const PREVIOUS_ANIMATION_VERSION = 'performance-2.2.9';
@@ -34,7 +35,7 @@ export const GestureSchema = z.object({ ...Interval, id: Id,
   propId: Id.optional(), contactMs: Time.optional(), releaseMs: Time.optional(), carryOffset: PointSchema.optional(),
 }).strict();
 export const PerformancePlanSchema = z.object({
-  version: z.literal(22), compilerVersion: z.enum([ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,BODY_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,
+  version: z.literal(22), compilerVersion: z.enum([ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,BODY_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,
   leadCharacterId: Id, profileHash: z.string().min(1), kind: z.enum(['stick-man', 'mini-robot']),
   durationMs: Time.refine(n => n > 0), fps: z.number().int().min(24).max(60),
   stage: z.object({ width: z.number().finite().positive(), height: z.number().finite().positive(), groundY: z.number().finite() }).strict(),

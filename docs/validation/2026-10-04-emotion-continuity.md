@@ -1,5 +1,7 @@
 # Nối biểu cảm giữa các đoạn — source29
 
+Cập nhật sau checkpoint này: independent focused26PASS/4FAIL, regression169/169 và test:typecheck qua; raw numerical FAIL được giữ. Source30/animation13 sửa nội suy face/độ chính xác timestamp và kiểm lại bằng model khác. Public FINAL controlled checkpoint đã qua10/10, media/full phim chưa chứng nhận. Xem [evidence mới](2026-10-04-general-story-followup.md); các NOT RUN phía dưới mô tả thời điểm bàn giao29 ban đầu.
+
 Trạng thái PROGRESS; runtime và chất lượng phim chưa nghiệm thu. Phạm vi vẫn là câu chuyện/chủ đề → kịch bản → diễn viên trong câu chuyện → video. Các kết quả source27 và28 giữ nguyên phạm vi snapshot riêng.
 
 ## Nguyên nhân từ source

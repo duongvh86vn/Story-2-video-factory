@@ -233,7 +233,7 @@ async function saveShot(form: HTMLFormElement): Promise<void> {
   await api.save(p.name,'storyboard.json',board,doc.revision);
 }
 function createDialog(): void {
-  modal.innerHTML = `<form id="create-form"><p class="eyebrow">STORY FACTORY</p><h2 id="modal-title">${t('newProject')}</h2>${field('name',t('name'),'')}<p class="muted">${t('nameHint')}</p><label>${v('Phong cách trình bày','Presentation style')}<select name="presentationMode">${options(['story-cinematic','diagram'],'story-cinematic')}</select></label><label class="check"><input type="checkbox" name="example" checked>${t('example')}</label><footer>${btn('close-modal',t('cancel'))}<button class="primary" type="submit">${t('create')}</button></footer></form>`; modal.showModal();
+  modal.innerHTML = `<form id="create-form"><p class="eyebrow">STORY FACTORY</p><h2 id="modal-title">${t('newProject')}</h2>${field('name',t('name'),'')}<p class="muted">${t('nameHint')}</p><label>${v('Phong cách trình bày','Presentation style')}<select name="presentationMode">${options(['story-cinematic','diagram'],'story-cinematic')}</select></label><label class="check"><input type="checkbox" name="example">${t('example')}</label><footer>${btn('close-modal',t('cancel'))}<button class="primary" type="submit">${t('create')}</button></footer></form>`; modal.showModal();
 }
 function narrationLanguageField(language:string):string{
   const values=[...NARRATION_LANGUAGES.map(item=>item.id),...NARRATION_LANGUAGES.some(item=>item.id===language)?[]:[language]];
@@ -384,7 +384,7 @@ window.document.addEventListener('submit',event=>{
   if(form.id==='setup-form'){const value=(event as SubmitEvent).submitter?.getAttribute('value');void operation(()=>saveSetup(form,value==='run'?'run':value==='script'?'script':'save'));return;}
   if(form.id==='create-form'){
     const values=new FormData(form),name=String(values.get('name')??'');
-    void operation(async()=>{await api.create(name,values.has('example'),String(values.get('presentationMode')) as 'diagram'|'story-cinematic');project=await api.project(name);shotId='';clock=0;modal.close();},t('created'));
+    void operation(async()=>{await api.create(name,values.has('example'),String(values.get('presentationMode')) as 'diagram'|'story-cinematic');project=await api.project(name);shotId='';clock=0;modal.close();await setupDialog();},t('created'));
   }else if(form.id==='upload-form'){
     const data=new FormData();for(const input of form.querySelectorAll<HTMLInputElement>('input[type=file]'))for(const file of input.files??[])data.append(input.name,file);
     void operation(async()=>{await api.upload(project!.name,data);modal.close();},t('uploaded'));

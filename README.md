@@ -1,12 +1,12 @@
 # Story-to-Video Factory — diễn viên trong câu chuyện
 
-> Contract hiện hành ngày 04/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Ba luồng nguyên văn giữ nguyên. Director2.2.24/animation2.2.10 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
+> Contract hiện hành ngày 04/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Nhánh chủ đề/câu chuyện tạo kịch bản trước ba luồng nguyên văn. Director2.2.31/animation2.2.13 đang nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
 Nhập **chủ đề/câu chuyện → tạo kịch bản → phân vai → dựng video**. Người que hoặc robot là diễn viên trong nội dung: đời thường, hư cấu, văn hóa, lịch sử, khoa học hay giải thích. Máy hơi nước và ô tô chỉ là ví dụ kiểm tra. Kịch bản hoàn chỉnh, WAV và SRT vẫn có nhánh đọc nguyên văn; voiceover độc lập diễn viên.
 
 Studio có tab **Chủ đề / Câu chuyện**, model viết kịch bản, nút **Chỉ tạo kịch bản để xem trước** và **Tạo video**. Có thể đưa kịch bản AI sang tab Kịch bản để sửa và dùng nguyên văn. [Hướng dẫn luồng tổng quát](docs/GENERAL-STORY-TOOL.md). Source mới đang kiểm tra độc lập; video mẫu đã dựng không chứng nhận tool tổng quát hay chất lượng mục tiêu đã đạt.
 
-**Director2.2.24/animation2.2.10 đang triển khai/nghiệm thu.** Dự án mới mặc định story-cinematic, character_mode=actors và người que. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
+**Director2.2.31/animation2.2.13 đang nghiệm thu.** Dự án mới mặc định trống, story-cinematic, character_mode=actors và người que. Ví dụ máy hơi nước là lựa chọn riêng, không chọn sẵn. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
 
 [STORY-TO-VIDEO-FACTORY.md](STORY-TO-VIDEO-FACTORY.md) là bản đặc tả hợp nhất đã đồng bộ với file Downloads, dùng mô hình diễn viên trong câu chuyện. Bản này giữ toàn bộ contract narration, diễn viên và TTS bên ngoài; [audit hoàn thành](docs/validation/2026-10-03-completion-audit.md) liệt kê riêng bằng chứng đã có và yêu cầu còn mở.
 
@@ -20,7 +20,7 @@ npm run build
 npm run studio
 ```
 
-Mở địa chỉ Studio do server in ra (mặc định http://127.0.0.1:8787). Tạo project, mở **Nội dung, diễn viên và giọng kể**, chọn tab **Chủ đề / Câu chuyện, Kịch bản, WAV hoặc SRT**, chọn tạo hình/giọng và **Tạo video**. Nhánh chủ đề cần model writer thật; nhánh Kịch bản đọc đúng lời bạn đưa. Rig MD riêng cần duyệt preview một lần; vai do director phân từ nội dung có preview riêng, không bắt buộc duyệt từng vai.
+Mở địa chỉ Studio do server in ra (mặc định http://127.0.0.1:8787). Tạo project; form **Nội dung, diễn viên và giọng kể** tự mở. Chọn tab **Chủ đề / Câu chuyện, Kịch bản, WAV hoặc SRT**, chọn tạo hình/giọng và **Tạo video**. Nhánh chủ đề cần model writer thật; nhánh Kịch bản đọc đúng lời bạn đưa. Rig MD riêng cần duyệt preview một lần; vai do director phân từ nội dung có preview riêng, không bắt buộc duyệt từng vai. [Input tổng quát](examples/general-stories/README.md) là dữ liệu cho tool tự dàn cảnh, không phải video authored.
 
 Project mới trong Studio mặc định chọn `story-cinematic`. Trong **Model thiết kế cảnh**, chọn dịch vụ/model đang dùng; Codex CLI có thể chọn `default` với tài khoản đã đăng nhập, Claude CLI cần model và credit khả dụng. Có thể ghi ý tưởng hình ảnh tùy chọn, để model tự chọn thiết kế, dàn cảnh và nhịp diễn. Cấu hình phát hành sẵn dùng mock để mở ngoại tuyến; đây là bản phác thảo theo quy tắc. Muốn model thiết kế video, cấu hình role `storyboard` theo [OPEN-ART-DIRECTION.md](OPEN-ART-DIRECTION.md). Một lời gọi model thành công hoặc QC qua chưa chứng minh chất lượng toàn bài.
 

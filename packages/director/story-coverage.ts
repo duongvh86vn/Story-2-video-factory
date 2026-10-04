@@ -7,7 +7,7 @@ import {isWholeSourceStatement} from '../explainer/plan.js';
 import {ApprovalRequired} from '../orchestrator/state-machine.js';
 
 type Acting=NonNullable<SceneIntent['acting']>[number];
-function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],shot:Shot,beat:Beat,narration:Narration):boolean{
+function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],speakingSegmentIds:string[],shot:Shot,beat:Beat,narration:Narration):boolean{
   const kind=expected.kind;
   if(kind==='hold')return true; // Presence is the intended performance; no artificial activity quota.
   const windows=expected.sourceRefs.flatMap(ref=>{
@@ -24,6 +24,11 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
       action.contactMs===shot.startMs+clip.contactMs!&&action.startMs===shot.startMs+clip.startMs&&action.endMs===shot.startMs+clip.endMs&&
       (!expected.targetIds?.length||expected.targetIds.includes(action.target?.partId??''))&&windows.some(window=>window.id===action.narrationAnchor&&action.contactMs!>=window.startMs&&action.contactMs!<window.endMs)));
   if(kind==='observation')return p.gazes.some(overlaps)||p.gestures.some(clip=>overlaps(clip)&&clip.action==='inspect');
+  if(kind==='indication')return !!expected.targetIds?.length&&p.gestures.some(clip=>overlaps(clip)&&clip.action==='point'&&actions.some(action=>
+    action.type==='point'&&expected.targetIds!.includes(action.target?.partId??'')&&
+    action.startMs===shot.startMs+clip.startMs&&action.endMs===shot.startMs+clip.endMs&&
+    windows.some(window=>window.id===action.narrationAnchor)));
+  if(kind==='speech')return speakingSegmentIds.some(id=>windows.some(window=>window.id===id));
   if(kind==='reaction')return p.gestures.some(clip=>overlaps(clip)&&clip.action==='react')||p.expressions.some(clip=>overlaps(clip)&&clip.mood!=='neutral');
   if(kind==='posture'){
     let previous=p.entryPosture??{pose:'stand' as const};
@@ -43,16 +48,16 @@ export function validateStoryActingCoverage(board:Storyboard,beats:Beat[],narrat
     const intent=beat.sceneIntent;if(!intent?.participants.length)continue;
     const scenes=board.shots.filter(shot=>shot.beatIds.includes(beat.id)&&shot.startMs<beat.endMs&&shot.endMs>beat.startMs);
     for(const participant of intent.participants){
-      const performances:Array<{shot:Shot;performance:PerformancePlan;actions:NonNullable<Shot['host']>['actions']}>=[];
+      const performances:Array<{shot:Shot;performance:PerformancePlan;actions:NonNullable<Shot['host']>['actions'];speakingSegmentIds:string[]}>=[];
       const same=(actor:ActorDefinition)=>actor.id===participant.id&&actor.name===participant.name&&actor.role===participant.role&&actor.identity===participant.identity;
       for(const shot of scenes){
         const c=shot.cinematic,cast=c?.actorScene;if(!c||!cast)continue;
-        if(cast.primary&&same(cast.primary)&&shot.host?.presence!=='absent')performances.push({shot,performance:c.performance,actions:shot.host?.actions??[]});
-        for(const actor of cast.supporting)if(same(actor.character))performances.push({shot,performance:actor.performance,actions:actor.actions});
+        if(cast.primary&&same(cast.primary)&&shot.host?.presence!=='absent')performances.push({shot,performance:c.performance,actions:shot.host?.actions??[],speakingSegmentIds:cast.speakingSegmentIds});
+        for(const actor of cast.supporting)if(same(actor.character))performances.push({shot,performance:actor.performance,actions:actor.actions,speakingSegmentIds:actor.speakingSegmentIds});
       }
       if(!performances.length)throw new Error(`${beat.id}: needs-layout: missing story actor ${participant.name}; cutaways cannot replace the entire accepted actor situation`);
       for(const expected of intent.acting?.filter(acting=>acting.participantId===participant.id)??[])
-        if(!performances.some(({shot,performance,actions})=>hasPerformance(expected,performance,actions,shot,beat,narration)))
+        if(!performances.some(({shot,performance,actions,speakingSegmentIds})=>hasPerformance(expected,performance,actions,speakingSegmentIds,shot,beat,narration)))
           throw new Error(`${beat.id}: needs-motion: ${participant.name} has no ${expected.kind} performance for its sourced statement; preserve narration and repair the actual acting`);
     }
   }
@@ -62,7 +67,7 @@ export function validateStoryActingCoverage(board:Storyboard,beats:Beat[],narrat
 export function requireFinalStoryDirection(board:Storyboard,beats:Beat[]):void{
   if(beats.some(beat=>!beat.sceneIntent||beat.sceneIntent.participants.some(participant=>!beat.sceneIntent!.acting?.some(acting=>acting.participantId===participant.id))))
     throw new ApprovalRequired('art-direction','needs-art-direction: configure a semantic planning or scene-design model to classify the sourced actor actions before final production. The offline draft is retained.');
-  if(beats.some(beat=>beat.sceneIntent?.acting?.some(acting=>acting.kind==='unsupported'||acting.kind==='manipulation'&&!acting.targetIds?.length)))
+  if(beats.some(beat=>beat.sceneIntent?.acting?.some(acting=>acting.kind==='unsupported'||['manipulation','indication'].includes(acting.kind)&&!acting.targetIds?.length)))
     throw new ApprovalRequired('art-direction','needs-motion: repair the canonical supported action and intended target before final production.');
   for(const shot of board.shots){
     const cast=shot.cinematic?.actorScene;

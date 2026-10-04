@@ -1,6 +1,6 @@
 # Tool câu chuyện/chủ đề → kịch bản → video
 
-Source29/animation2.2.12 giữ cùng cảm xúc qua các cue liền nhau và blend trực tiếp phản ứng kế tiếp, thay cho reset neutral ở mỗi đoạn. Build/typecheck qua; runtime còn chờ [nghiệm thu continuity](validation/2026-10-04-emotion-continuity.md).
+Source31/explanation6 bổ sung loại chỉ tay/lời nói của diễn viên và làm rõ nhãn nguồn sau lỗi native truyện thư viện. Source30/animation13 đã qua focused30/30, supplemental32/32 và169/169 regression; whole npm test chưa hoàn tất. Studio tạo project trống và mở form nội dung, ví dụ máy hơi nước không chọn sẵn. Build/typecheck/schema31 qua; [evidence và nghiệm thu còn mở](validation/2026-10-04-general-story-followup.md).
 
 Phạm vi ngày 04/10/2026. Người que là diễn viên trong câu chuyện, không có host cố định. Ví dụ máy hơi nước/ô tô dùng kiểm tra riêng, không phải template bắt buộc.
 
@@ -19,7 +19,7 @@ Source28/animation2.2.11 mở rộng16 biểu cảm và camera cận mặt cho c
 
 ## Studio
 
-1. Tạo project và mở **Nội dung, diễn viên và giọng kể**.
+1. Tạo project; form **Nội dung, diễn viên và giọng kể** tự mở. Project mặc định trống, không nhận bài máy hơi nước trừ khi bạn chọn ví dụ tùy chọn.
 2. Chọn **Chủ đề / Câu chuyện**, nhập văn bản hoặc tải .txt/.md UTF-8. Chọn loại nội dung, thời lượng mục tiêu và yêu cầu kể chuyện nếu cần.
 3. Cấu hình **Model viết kịch bản**, hoặc đánh dấu dùng model thiết kế cảnh. Chọn ngôn ngữ EN/VI/JA/KO, tạo hình người que/robot, model cảnh và giọng kể.
 4. **Chỉ tạo kịch bản để xem trước** dừng trước TTS. Mở lại form để xem lời kể và cảnh báo. **Dùng và chỉnh sửa như kịch bản hoàn chỉnh** chuyển bản sửa sang nguồn script; các bước sau đọc nguyên văn bản đó.
@@ -65,6 +65,8 @@ Cảnh chỉ có diễn viên được phép không có parts/events/models; obj
 
 Planner AI khai báo acting từng vai theo ý nghĩa câu nguồn. Director27 kiểm cả beat giữ các vai đã lập và có track cho hành động tương ứng: đi, thao tác đúng đối tượng/cue/contact, thay tư thế, quan sát hoặc phản ứng. Cutaway được xen kẽ; hold có chủ đích được đứng yên. Preview/review kiểm cả posture/gaze và action sheet từng cảnh. Phân loại semantic vẫn phụ thuộc model và cần nghiệm thu, không được xem gate kỹ thuật là hiểu đúng mọi truyện.
 
+Director31 thêm `indication` cho chỉ tay không tiếp xúc, yêu cầu đúng đối tượng và point/action/cue thật; `speech` yêu cầu cue lời nói thuộc đúng diễn viên. Giọng kể ngoài hình không làm nhân vật tự nói. Speech activity không cam kết phoneme lip-sync, giọng riêng từng vai hoặc ngữ điệu thì thầm. Nhãn semantic lấy nguyên cụm có trong nguồn; phần chữ/đồ họa hiển thị vẫn do thiết kế cảnh quyết định.
+
 Đạo cụ generic object/stage/marker trong actor scene mặc định không có knob hoặc marker điều khiển. controlMode=none bỏ cả hai; renderer override được chọn chủ động. Các tọa độ target/contact và clock vẫn được kiểm như cũ. Artwork2.2.6 đổi fingerprint hình; kiểm tra độc lập HTML/GSAP đã qua 7/7 ca, chưa thay cho nghiệm thu hình ảnh/chuyển động trong phim.
 
 Version director/semantic plan tham gia cache hình. Cảnh cũ đã khóa phải giữ phiên bản đã duyệt hoặc được người dùng mở khóa để migrate; hệ thống không tự gán version mới. Voice/audio cache độc lập phần này.
@@ -72,5 +74,7 @@ Version director/semantic plan tham gia cache hình. Cảnh cũ đã khóa phả
 ## Phạm vi nghiệm thu
 
 Source mới và tài liệu không phải chứng nhận chất lượng phim. Model độc lập kiểm runtime; bản factual do AI viết ghi rõ chưa kiểm chứng độc lập. Cue nguồn chứng minh bám nội dung đã chọn, không chứng minh lịch sử ngoài đời. Nghiệm thu phải có chủ đề đời thường, hư cấu, lịch sử và khoa học; không chỉ các ví dụ máy móc. Theo dõi [kế hoạch tổng quát](plans/2026-10-04-general-story-tool.md) và [TEST-HANDOFF](../TEST-HANDOFF.md).
+
+[Bộ nội dung tổng quát](../examples/general-stories/README.md) gồm ý tưởng truyện ở thư viện, lời kể tại trạm xe buýt và chủ đề giọt sương. Đây là dữ liệu đầu vào để tool tự viết/phân vai/dàn cảnh, không phải video mẫu đã nghiệm thu.
 
 Runtime closure27:27/27 focused và210/210 regression qua. Public final helper/source/clock/cast được kiểm bằng protocol; public pipeline FINAL, native model và toàn phim vẫn là nghiệm thu riêng. [Evidence và giới hạn](validation/2026-10-04-story-acting-coverage.md).

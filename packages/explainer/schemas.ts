@@ -12,12 +12,12 @@ export const SceneIntentSchema = z.object({
   action:z.string().trim().min(1).max(2000),objective:z.string().trim().min(1).max(2000),
   result:z.string().trim().min(1).max(2000).optional(),sourceRefs:z.array(SourceRefSchema).min(1),
   acting:z.array(z.object({participantId:Id,
-    kind:z.enum(['locomotion','manipulation','posture','observation','reaction','hold','unsupported']),
+    kind:z.enum(['locomotion','manipulation','posture','observation','indication','speech','reaction','hold','unsupported']),
     statement:z.string().trim().min(1).max(2000),sourceRefs:z.array(SourceRefSchema).min(1),targetIds:z.array(Id).min(1).max(8).optional(),
   }).strict()).max(16).optional(),
 }).strict();
 export type SceneIntent=z.infer<typeof SceneIntentSchema>;
-export const EntitySchema = z.object({ id: Id, label: z.string().min(1).max(100),
+export const EntitySchema = z.object({ id: Id, label: z.string().min(1).max(100).describe('Canonical semantic name: copy one contiguous excerpt from a verified sourceRef.quote. Do not compose, paraphrase or title-case a new description. Decorative display text belongs in artwork.'),
   kind: z.enum(['boiler', 'condenser', 'piston', 'cylinder', 'wheel', 'gear', 'lever', 'car', 'engine', 'battery', 'pipe', 'flow', 'object', 'stage', 'marker']),
   sourceRefs: z.array(SourceRefSchema).min(1),
   configuration:z.enum(['old-cylinder','separate-condenser']).optional().describe('Only for a sourced grouped design: kind=object, visualization type=comparison, exact canonical label and evidence. Omit on cylinder/condenser components. Preserve seed entity identity and states.'),
