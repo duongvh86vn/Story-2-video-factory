@@ -3,7 +3,7 @@ import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
 import { rigHand, type RigHand } from '../core/identifiers.js';
 import { rigMetrics } from './rig.js';
-import { ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
+import { ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy} from './support.js';
 import { selectedClips } from './library.js';
 
@@ -72,8 +72,9 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   overlaps(plan.turns??[],'turn',plan.durationMs);
   overlaps(plan.postures??[],'body posture',plan.durationMs);
   if(plan.compilerVersion===LEGACY_ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires animation2.2.8 or newer');
-  if(![ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
-  if(plan.compilerVersion!==ANIMATION_VERSION&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
+  if(![ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
+  if(![ANIMATION_VERSION,SEATED_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
+  if(plan.compilerVersion!==ANIMATION_VERSION&&plan.expressions.some(e=>(STORY_MOODS as readonly string[]).includes(e.mood)))throw new Error('Story emotions require animation2.2.11 or newer');
   const supportIds=new Set((plan.supports??[]).map(s=>s.id));
   if(supportIds.size!==(plan.supports?.length??0))throw new Error('Duplicate seat support identity');
   const m=rigMetrics(profile),s=plan.scale;
@@ -164,7 +165,7 @@ export interface FrameState {
   bodyPosture:BodyPosture;
   seatContact?:{supportId:string;errorPx:number};
   hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
-  transforms:Record<string,string>; face:Record<string,{opacity?:number;scaleY?:number;rotation?:number;x?:number;y?:number}>;
+  transforms:Record<string,string>; face:Record<string,{opacity?:number;scaleY?:number;rotation?:number;x?:number;y?:number;attr?:{transform:string}}>;
   props:Record<string,{point:Point;attached:boolean}>;
 }
 const number = (n:number)=>String(Number(n.toFixed(4)));
@@ -219,11 +220,19 @@ function orientationAt(plan:PerformancePlan,time:number):number {
   }
   return current;
 }
-const moodPoses:Record<Mood,{brow:number;tilt:number;lean:number;smile:number;round:number;lid:number}>={
+const moodPoses:Record<Mood,{brow:number;tilt:number;lean:number;smile:number;round:number;lid:number;frown?:number;browAngle?:number;eyeOpen?:number}>={
   neutral:{brow:0,tilt:0,lean:0,smile:0,round:0,lid:0},curious:{brow:-4,tilt:-7,lean:4,smile:0,round:0,lid:0},
   thinking:{brow:2,tilt:7,lean:-2,smile:0,round:0,lid:.3},concerned:{brow:4,tilt:-4,lean:-3,smile:0,round:0,lid:.25},
   effort:{brow:4,tilt:2,lean:5,smile:0,round:0,lid:.25},surprised:{brow:-7,tilt:-5,lean:-6,smile:0,round:1,lid:0},
   understanding:{brow:-1,tilt:3,lean:0,smile:1,round:0,lid:0},confident:{brow:-1,tilt:0,lean:0,smile:.7,round:0,lid:0},
+  happy:{brow:-3,tilt:3,lean:0,smile:1,round:0,lid:.1,browAngle:-5},
+  sad:{brow:1,tilt:9,lean:-3,smile:0,round:0,lid:.35,frown:1,browAngle:20,eyeOpen:.8},
+  angry:{brow:3,tilt:-3,lean:3,smile:0,round:0,lid:.15,frown:.65,browAngle:-24,eyeOpen:.75},
+  afraid:{brow:-5,tilt:-8,lean:-6,smile:0,round:.8,lid:0,browAngle:18,eyeOpen:1.2},
+  excited:{brow:-6,tilt:4,lean:3,smile:1,round:0,lid:0,browAngle:-6,eyeOpen:1.15},
+  disappointed:{brow:2,tilt:6,lean:-2,smile:0,round:0,lid:.4,frown:.8,browAngle:12,eyeOpen:.85},
+  relieved:{brow:0,tilt:2,lean:0,smile:.8,round:0,lid:.3,browAngle:6,eyeOpen:.9},
+  tired:{brow:2,tilt:8,lean:-4,smile:0,round:0,lid:.7,browAngle:5,eyeOpen:.55},
 };
 function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,scale:number,shoulder:Point):Point {
   const side=rigHand(g)==='left'?-1:1;
@@ -345,13 +354,17 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(explicitGaze)gaze=mix(gaze,gazeOffset(explicitGaze.target),gazeWeight(explicitGaze));
   const blinkPhase=(t+800)%3500,blink=blinkPhase<140?Math.sin(Math.PI*blinkPhase/140):0;
   for(const [i,side] of (['left','right'] as const).entries()){
-    face[`eye-${side}`]={x:gaze.x,y:gaze.y,scaleY:Math.max(.05,1-blink)};
-    face[`brow-${side}`]={y:pose.brow*emotion.weight,rotation:(i?-1:1)*(emotion.mood==='concerned'?12:emotion.mood==='effort'?-12:0)*emotion.weight};
+    face[`eye-${side}`]={x:gaze.x,y:gaze.y,scaleY:Math.max(.05,(1-blink)*lerp(1,pose.eyeOpen??1,emotion.weight))};
+    face[`brow-${side}`]={y:pose.brow*emotion.weight,rotation:(i?-1:1)*(pose.browAngle??(emotion.mood==='concerned'?12:emotion.mood==='effort'?-12:0))*emotion.weight};
     face[`lid-${side}`]={opacity:pose.lid*emotion.weight};
   }
   const speech=activity.intervals.find(a=>t>=a.startMs&&t<a.endMs);
-  face['mouth-talk']={opacity:speech?1:1-Math.max(pose.smile,pose.round)*emotion.weight,scaleY:speech?1+speech.level*2.3:.2};
-  face['mouth-smile']={opacity:pose.smile*emotion.weight};
+  face['mouth-talk']={opacity:speech?1:1-Math.max(pose.smile,pose.round,pose.frown??0)*emotion.weight,scaleY:speech?1+speech.level*2.3:.2};
+  // Reflect the approved mouth curve about its own y=18 anchor. Explicit SVG
+  // matrices seek deterministically and preserve the exact existing rig artwork.
+  const frown=(pose.frown??0)*emotion.weight;
+  face['mouth-smile']={opacity:Math.max(pose.smile,pose.frown??0)*emotion.weight,
+    ...(plan.compilerVersion===ANIMATION_VERSION?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
   face['mouth-round']={opacity:pose.round*emotion.weight};
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
   for(const prop of plan.props){

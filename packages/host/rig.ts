@@ -2,7 +2,7 @@ import { faceLayers } from '../animation/face.js';
 import { performanceSvg } from '../animation/rig.js';
 import { samplePerformance } from '../animation/compiler.js';
 import type {PerformancePlan,Mood} from '../animation/schemas.js';
-import { ANIMATION_VERSION } from '../animation/schemas.js';
+import { ANIMATION_VERSION, Moods } from '../animation/schemas.js';
 import { escapeHtml, hash } from '../core/utils.js';
 import { HostRigSchema, type HostProfile, type HostRig } from './schemas.js';
 const eyeCenters = [137,180] as const;
@@ -79,9 +79,10 @@ export function rigHashMatchesProfile(profile:HostProfile,candidate:string):bool
 }
 export function hostPreviewSvg(profile: HostProfile): string {
   if(profile.role==='story-actor'){
-    const moods: Mood[]=['neutral','curious','thinking','concerned','effort','surprised','understanding','confident'];
+    const moods: readonly Mood[]=Moods;
     const cells=moods.map((mood,i)=>`<g transform="translate(${(i%4)*320} ${Math.floor(i/4)*450})">${actorPoseSvg(profile,mood).replace(/<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</g><text x="${(i%4)*320+160}" y="${Math.floor(i/4)*450+430}" text-anchor="middle" font-family="Arial" font-size="18" fill="#172B36">${mood}</text>`).join('');
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900"><rect width="1280" height="900" fill="#E8EEF1"/>${cells}</svg>`;
+    const height=Math.ceil(moods.length/4)*450;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="${height}" viewBox="0 0 1280 ${height}"><rect width="1280" height="${height}" fill="#E8EEF1"/>${cells}</svg>`;
   }
   const entries=[{name:'front',pose:'idle',gaze:0},{name:'left (3/4 schematic)',pose:'point',gaze:-5},{name:'right (3/4 schematic)',pose:'point',gaze:5},...Object.keys(poses).map(name=>({name,pose:name,gaze:undefined}))];
   const cells = entries.map(({name,pose,gaze}, i) => {
@@ -100,6 +101,6 @@ export function actorPoseSvg(profile:HostProfile,mood:Mood='neutral'):string{
   const frame=samplePerformance(plan,profile,600,{method:'segment-draft',windowMs:20,intervals:[]});
   let svg=performanceSvg(profile);
   for(const [id,transform] of Object.entries(frame.transforms))svg=svg.replace(`id="${id}"`,`id="${id}" transform="${transform}"`);
-  for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp(`<g id="${id}"[^>]*>`),`<g id="${id}"${face.opacity===undefined?'':` opacity="${face.opacity}"`} transform="translate(${face.x??0} ${face.y??0}) rotate(${face.rotation??0}) scale(1 ${face.scaleY??1})">`);
+  for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp(`<g id="${id}"[^>]*>`),`<g id="${id}"${face.opacity===undefined?'':` opacity="${face.opacity}"`} transform="${face.attr?.transform??`translate(${face.x??0} ${face.y??0}) rotate(${face.rotation??0}) scale(1 ${face.scaleY??1})`}">`);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 420">${svg}</svg>`;
 }

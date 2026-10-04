@@ -8,13 +8,29 @@ import type { ModelRouter } from '../models/registry.js';
 import { HostProfileSchema, HostRigSchema, type HostProfile, type HostRig } from './schemas.js';
 import { parseHostProfile, hostProfileFingerprint } from './profile.js';
 import { buildRig, hostSvg, hostPreviewSvg, rigHashMatchesProfile } from './rig.js';
+import { ANIMATION_VERSION } from '../animation/schemas.js';
 export * from './schemas.js';
 export { hostProfilePath, hostProfileFingerprint } from './profile.js';
 export { hostSvg, rigHashMatchesProfile, HOST_RIG_IDENTITY_VERSION } from './rig.js';
 
 export async function compileHost(root: string, config: FactoryConfig, router: ModelRouter): Promise<{ profile: HostProfile; rig: HostRig }> {
   const inputHash=hash({profile:await hostProfileFingerprint(root,config),id:config.host.profile_id}),cache=path.join(root,'work/host-compile-cache.json');
-  if(await exists(cache)&&await exists(path.join(root,'previews/host-preview-sheet.png'))){const previous=await readJson<{inputHash:string}>(cache);if(previous.inputHash===inputHash){try{return await loadHost(root);}catch{/* regenerate invalid derived assets */}}}
+  if(await exists(cache)&&await exists(path.join(root,'previews/host-preview-sheet.png'))){
+    const previous=await readJson<{inputHash:string;previewVersion?:string}>(cache);
+    if(previous.inputHash===inputHash){
+      let cached:Awaited<ReturnType<typeof loadHost>>|undefined;
+      try{cached=await loadHost(root);}catch{/* regenerate invalid derived assets */}
+      if(cached){
+        // Preview vocabulary may expand without changing approved rig artwork or
+        // re-running a custom MD model to reconstruct its accepted identity.
+        if(previous.previewVersion!==ANIMATION_VERSION){
+          await sharp(Buffer.from(hostPreviewSvg(cached.profile))).png().toFile(await outputPath(root,'previews/host-preview-sheet.png'));
+          await writeJson(cache,{inputHash,previewVersion:ANIMATION_VERSION});
+        }
+        return cached;
+      }
+    }
+  }
   const profile = await parseHostProfile(root, config, router), rig = buildRig(profile);
   await writeJson(await outputPath(root, 'work/host-profile.json'), profile);
   await writeJson(await outputPath(root, 'work/host-rig.json'), rig);
@@ -23,7 +39,7 @@ export async function compileHost(root: string, config: FactoryConfig, router: M
   const sheet = await outputPath(root, 'previews/host-preview-sheet.png');
   await fs.mkdir(path.dirname(sheet), { recursive: true });
   await sharp(Buffer.from(hostPreviewSvg(profile))).png().toFile(sheet);
-  await writeJson(cache,{inputHash});
+  await writeJson(cache,{inputHash,previewVersion:ANIMATION_VERSION});
   return { profile, rig };
 }
 export async function loadHost(root: string): Promise<{ profile: HostProfile; rig: HostRig }> {

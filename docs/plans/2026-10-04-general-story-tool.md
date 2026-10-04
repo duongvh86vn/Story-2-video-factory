@@ -17,6 +17,8 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 - [x] Baseline archive9b94593 tái hiện sáu propFixture FAIL; sửa setup owner, giữ assertions cũ và thêm bảy owner negatives; actor53/53, tám-file193/193 PASS trên24.
 - [x] Source25 thêm acting/source/target theo vai, coverage qua beat, posture/gaze temporal review và offline final gate; build/test:typecheck/schema qua.
 - [x] Runtime closure source27: focused27/27, regression210/210, whole test:typecheck qua; source/clock/canonical cast gaps đóng bằng protocol checks. [Scope và raw failures](../validation/2026-10-04-story-acting-coverage.md).
+- [x] Source28/animation2.2.11 mở rộng16 mood và actor reaction close-ups, giữ artwork/rig và voice identity; build và test:typecheck qua.
+- [ ] Runtime source28: miệng/mày/mắt thật trong GSAP/browser, preview/camera/cache/legacy/locks và toàn phim. [Bàn giao và usage-limit của lượt FINAL](../validation/2026-10-04-story-emotions.md).
 - [ ] Public pipeline FINAL checkpoint/draft retention và phim/model/backend thật; helper/stub screenshot không thay acceptance.
 - [ ] Xem/nghe phim tổng quát để chứng nhận chuyển động, biểu cảm, kể chuyện và chất lượng hình ảnh.
 

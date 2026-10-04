@@ -2,6 +2,8 @@
 
 Phạm vi ngày 04/10/2026. Người que là diễn viên trong câu chuyện, không có host cố định. Ví dụ máy hơi nước/ô tô dùng kiểm tra riêng, không phải template bắt buộc.
 
+Source28/animation2.2.11 mở rộng16 biểu cảm và camera cận mặt cho các phản ứng như vui, buồn, giận, sợ; director chọn theo câu chuyện. Build/typecheck qua, runtime và chất lượng phim của phần mở rộng còn chờ [nghiệm thu riêng](validation/2026-10-04-story-emotions.md).
+
 ## Chọn đúng nguồn
 
 | Nội dung bạn có | Tab / input.mode | Hệ thống làm gì |

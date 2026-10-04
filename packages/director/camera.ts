@@ -185,7 +185,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
     }
   }else if(camera.focus==='face'){
     if(p.gestures.some(g=>['operate','pick-place','carry'].includes(g.action)))fail('face close would hide contact; use contact focus or medium.');
-    if(!p.expressions.some(e=>['curious','thinking','surprised','understanding'].includes(e.mood)))fail('face close requires an informative expression/discovery.');
+    if(!p.expressions.some(e=>c.actorScene?e.mood!=='neutral':['curious','thinking','surprised','understanding'].includes(e.mood)))fail('face close requires an informative expression/reaction.');
     if(!boundsInView(bounds.head))fail('face close crops the face; move the anchor to the face, preserving subtitle clearance.');
   }else if(camera.focus==='object'){
     if(c.actorScene?.primary!==null||c.actorScene.supporting.length)fail('object close must explicitly be a mechanism-only actor scene.');

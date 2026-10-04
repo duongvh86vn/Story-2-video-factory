@@ -1056,7 +1056,7 @@
                   },
                   "producer": {
                     "type": "string",
-                    "const": "story-direction-2.2.27"
+                    "const": "story-direction-2.2.28"
                   },
                   "shotId": {
                     "type": "string",
@@ -1750,6 +1750,7 @@
                                 "compilerVersion": {
                                   "type": "string",
                                   "enum": [
+                                    "performance-2.2.11",
                                     "performance-2.2.10",
                                     "performance-2.2.9",
                                     "performance-2.2.8",
@@ -2172,7 +2173,15 @@
                                           "effort",
                                           "surprised",
                                           "understanding",
-                                          "confident"
+                                          "confident",
+                                          "happy",
+                                          "sad",
+                                          "angry",
+                                          "afraid",
+                                          "excited",
+                                          "disappointed",
+                                          "relieved",
+                                          "tired"
                                         ]
                                       }
                                     },
@@ -2963,6 +2972,7 @@
                       "compilerVersion": {
                         "type": "string",
                         "enum": [
+                          "performance-2.2.11",
                           "performance-2.2.10",
                           "performance-2.2.9",
                           "performance-2.2.8",
@@ -3385,7 +3395,15 @@
                                 "effort",
                                 "surprised",
                                 "understanding",
-                                "confident"
+                                "confident",
+                                "happy",
+                                "sad",
+                                "angry",
+                                "afraid",
+                                "excited",
+                                "disappointed",
+                                "relieved",
+                                "tired"
                               ]
                             }
                           },
