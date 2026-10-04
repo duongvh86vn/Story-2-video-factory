@@ -280,7 +280,8 @@ export async function buildScenes(projectRoot:string,config:FactoryConfig,router
     await writeJson(path.join(projectRoot,'work/performance-report.json'),{version:22,producer:ANIMATION_VERSION,storyboardHash:hash(storyboard),shots});
   }
 }
-export async function repairScenes(projectRoot:string,config:FactoryConfig,router:ModelRouter,storyboard:Storyboard,characters:CharacterBible,assets:AssetManifest,issues:ReviewIssue[]):Promise<void> {
+export async function repairScenes(projectRoot:string,config:FactoryConfig,router:ModelRouter,storyboard:Storyboard,characters:CharacterBible,assets:AssetManifest,issues:ReviewIssue[],options:{sceneRepairAttempts?:number}={}):Promise<void> {
+  if(options.sceneRepairAttempts!==undefined&&(!Number.isInteger(options.sceneRepairAttempts)||options.sceneRepairAttempts<0||options.sceneRepairAttempts>3))throw new Error('sceneRepairAttempts must be an integer from 0 to 3');
   const high=issues.filter(issue=>issue.severity==='high'); if(!high.length) return;
   const state=await locks(projectRoot), budgetPath=await outputPath(projectRoot,'work/scene-repair-budget.json');
   const budget=await exists(budgetPath) ? await readJson<Record<string,number>>(budgetPath) : {};
@@ -300,7 +301,8 @@ export async function repairScenes(projectRoot:string,config:FactoryConfig,route
     const shotId=shot.id;
     const used=budget[shotId]??0;
     budget[shotId]=used+1;await writeJson(budgetPath,budget);
-    await compileShot(projectRoot,config,router,shot,characters,assets,{force:true,issues:high.filter(issue=>issue.shotId===shotId),state});
+    const repairConfig=options.sceneRepairAttempts===undefined?config:{...config,retry:{...config.retry,scene_repair:options.sceneRepairAttempts}};
+    await compileShot(projectRoot,repairConfig,router,shot,characters,assets,{force:true,issues:high.filter(issue=>issue.shotId===shotId),state});
   }
 }
 export async function buildMaster(projectRoot:string,config:FactoryConfig,storyboard:Storyboard,narration:Narration,assets:AssetManifest):Promise<string> {

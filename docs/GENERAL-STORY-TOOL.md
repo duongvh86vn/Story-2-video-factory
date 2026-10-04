@@ -78,3 +78,16 @@ Source mới và tài liệu không phải chứng nhận chất lượng phim. 
 [Bộ nội dung tổng quát](../examples/general-stories/README.md) gồm ý tưởng truyện ở thư viện, lời kể tại trạm xe buýt và chủ đề giọt sương. Đây là dữ liệu đầu vào để tool tự viết/phân vai/dàn cảnh, không phải video mẫu đã nghiệm thu.
 
 Runtime closure27:27/27 focused và210/210 regression qua. Public final helper/source/clock/cast được kiểm bằng protocol; public pipeline FINAL, native model và toàn phim vẫn là nghiệm thu riêng. [Evidence và giới hạn](validation/2026-10-04-story-acting-coverage.md).
+
+### Sửa cảnh bị QC chặn vì đứng yên
+
+Typed actor-freeze repair đã qua41/41 protocol và512PASS/2SKIP regression; render/QC thật còn chờ. Giữ đúng các vai,
+lời kể và clock; sửa biểu cảm/ánh nhìn/tư thế/phản ứng của diễn viên. Chưa lấy phim
+QC-failed làm thành phẩm. Studio hiện nút **Sửa chuyển động và dựng lại** ở lỗi
+freeze của FINAL_RENDERED. Mặc định giữ retry.scene_repair của project.
+
+Cho phép một lượt sửa cảnh trong riêng invocation hiện tại:
+`POST /api/projects/:name/run` với `{until:"DONE",sceneRepairAttempts:1}` hoặc
+CLI `resume <project> --scene-repair-attempts 1`. Giá trị0–3, không reset lịch sử,
+call/cost ceiling hoặc review/scene iteration budget; không sửa config/fingerprint.
+Chỉ khi sửa được và phim render/QC lại đạt mới tiếp tục DONE.

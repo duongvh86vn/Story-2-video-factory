@@ -6,6 +6,12 @@ import { fold } from '../explainer/plan.js';
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
 export const PROP_BINDING_VERSION='bound-model-motion-2.2.1';
 
+// JSON coordinates and normalized-to-stage multiplication may differ by a few
+// floating-point units. This is a serialization check, not a spatial tolerance.
+function sameSerializedCoordinate(actual:number,expected:number):boolean {
+  return Math.abs(actual-expected)<=Number.EPSILON*4*Math.max(1,Math.abs(actual),Math.abs(expected));
+}
+
 /** Legacy presenter pickup follows a literal narration instruction. Story acting uses sourced model bindings. */
 export function pickupPart(shot:Shot){
   const v=shot.visualization;if(!v||v.parts.length!==1||v.relations.length)return;
@@ -41,7 +47,7 @@ export function validatePropBindings(shot:Shot):void{
     const gesture=placements[0];
     const otherContact=[...(shot.host?.actions??[]),...(c.actorScene?.supporting.flatMap(a=>a.actions)??[])].filter(a=>a.type==='operate-model'&&a.target?.partId===part.id);
     if(otherContact.length!==1)throw new Error(`${shot.id}: moving model ${part.id} requires one hand owner; joint manipulation is not supported`);
-    if(!gesture||!['pick-place','carry'].includes(gesture.action)||!gesture.destination||gesture.releaseMs===undefined||!prop.destination||prop.origin.x!==part.x*c.performance.stage.width||prop.origin.y!==part.y*c.performance.stage.height)throw new Error(`${shot.id}: prop target/destination changed its world anchor`);
+    if(!gesture||!['pick-place','carry'].includes(gesture.action)||!gesture.destination||gesture.releaseMs===undefined||!prop.destination||!sameSerializedCoordinate(prop.origin.x,part.x*c.performance.stage.width)||!sameSerializedCoordinate(prop.origin.y,part.y*c.performance.stage.height))throw new Error(`${shot.id}: prop target/destination changed its world anchor`);
     const owner=shot.host?.actions.find(a=>a.type==='operate-model'&&a.target?.partId===part.id&&rigHand(a)===rigHand(gesture)&&a.startMs===shot.startMs+gesture.startMs&&a.endMs===shot.startMs+gesture.endMs&&a.contactMs===shot.startMs+gesture.contactMs!);
     if(!owner)throw new Error(`${shot.id}: moving model ${part.id} lacks its primary gesture's matching hand/action owner`);
     const staleTarget=[...(shot.host?.actions??[]),...(c.actorScene?.supporting.flatMap(a=>a.actions)??[])].find(a=>a!==owner&&[a.target,a.secondTarget].some(target=>target?.partId===part.id)&&a.endMs>shot.startMs+gesture.contactMs!);

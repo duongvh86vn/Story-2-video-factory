@@ -23,7 +23,7 @@ export const api = {
   projects: () => request<{ projects: ProjectSummary[] }>('/api/projects'),
   create: (name: string, example: boolean, mode: 'diagram' | 'story-cinematic') => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example, presentation: { mode } }) }),
   project: (name: string) => request<ProjectDetail>(projectUrl(name)),
-  run: (name: string, until: ProjectStatus, shotIds?: string[],retryModelErrors=false) => request<{ job: Job }>(`${projectUrl(name)}/run`, { method: 'POST', body: JSON.stringify({ until, ...(shotIds ? { shotIds } : {}),...(retryModelErrors?{retryModelErrors:true}:{}) }) }),
+  run: (name: string, until: ProjectStatus, shotIds?: string[],retryModelErrors=false,sceneRepairAttempts?:number) => request<{ job: Job }>(`${projectUrl(name)}/run`, { method: 'POST', body: JSON.stringify({ until, ...(shotIds ? { shotIds } : {}),...(retryModelErrors?{retryModelErrors:true}:{}),...(sceneRepairAttempts===undefined?{}:{sceneRepairAttempts}) }) }),
   approve: (name: string, kind: 'storyboard' | 'characters' | 'host') => request<ProjectSummary>(`${projectUrl(name)}/approve`, { method: 'POST', body: JSON.stringify({ kind }) }),
   locks: (name: string, locked: Record<string, boolean>) => request<ProjectSummary>(`${projectUrl(name)}/locks`, { method: 'PATCH', body: JSON.stringify({ locked }) }),
   artifact: <T = unknown>(name: string, artifact: string) => request<ArtifactDocument<T>>(`${projectUrl(name)}/artifacts/${encodeURIComponent(artifact)}`),

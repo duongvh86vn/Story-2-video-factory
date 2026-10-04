@@ -42,7 +42,7 @@ import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js
 import { PROP_BINDING_VERSION } from '../director/props.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
 
-export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; retryModelErrors?:boolean; onProgress?:(state:ProjectState)=>void; }
+export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; retryModelErrors?:boolean; sceneRepairAttempts?:number; onProgress?:(state:ProjectState)=>void; }
 const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
 function stageOutputs(state:ProjectState):Partial<Record<ProjectStatus,string[]>> {
   if ((state.specVersion ?? 1)<3) return outputs;
@@ -174,6 +174,7 @@ async function report(root:string,config:FactoryConfig,state:ProjectState,router
   await writeAtomic(path.join(root,'output/production-report.md'),text);
 }
 export async function runPipeline(projectRoot:string,options:PipelineOptions={}):Promise<ProjectState> {
+  if(options.sceneRepairAttempts!==undefined&&(!Number.isInteger(options.sceneRepairAttempts)||options.sceneRepairAttempts<0||options.sceneRepairAttempts>3))throw new Error('sceneRepairAttempts must be an integer from 0 to 3');
   const resolved=path.resolve(projectRoot); if (!await exists(path.join(resolved,'project.yaml'))) throw new Error('Missing project.yaml; use video-factory new first');
   // Canonicalize Windows short paths and directory aliases before deriving asset-relative paths.
   const root=await fs.realpath(resolved);
@@ -277,7 +278,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             let review=await readJson(path.join(root,'work/review.json'),ReviewSchema);
             while(review.issues.some(i=>i.severity==='high') && state.reviewIteration<config.workflow.max_review_iterations) {
               state.reviewIteration++;await saveState(root,state);store.saveState(state);
-              await repairScenes(root,config,router,await board(),await characters(),await assets(),review.issues.filter(i=>i.severity==='high'));
+              await repairScenes(root,config,router,await board(),await characters(),await assets(),review.issues.filter(i=>i.severity==='high'),{sceneRepairAttempts:options.sceneRepairAttempts});
               await buildMaster(root,config,await board(),await voiced(),await assets()); const validation=await engine.validate(); if(!validation.pass) throw new Error(`Repaired master invalid: ${validation.errors.join('\n')}`);
               await retryRender(config,()=>engine.renderDraft()); await createPreviews(root,config,await board());
               review=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); await writeJson(path.join(root,'work/review.json'),review); store.review(review); await saveState(root,state);
@@ -301,7 +302,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
               const attempt=await reserveQCArtworkRepair(root,state,sb,qc,issues,config.workflow.max_review_iterations);
               state.reviewIteration=attempt.iteration;await saveState(root,state);store.saveState(state);
               try{
-                await repairScenes(root,config,router,sb,await characters(),await assets(),issues);
+                await repairScenes(root,config,router,sb,await characters(),await assets(),issues,{sceneRepairAttempts:options.sceneRepairAttempts});
                 await buildMaster(root,config,await board(),n,await assets());
                 const validation=await engine.validate();if(!validation.pass)throw new Error(`QC-repaired master invalid: ${validation.errors.join('\n')}`);
                 await finishQCArtworkRepair(root,attempt.id,{status:'repaired',board:await board()});

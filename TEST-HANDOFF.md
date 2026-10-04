@@ -1,6 +1,6 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
-Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video. Sửa precision đã qua225/225 scoped, default224PASS/1 supplementalSKIP, regression cũ155/155 và typecheck; giữ nguyên assertion2e-6. Whole source31 trước sửa:963PASS/3SKIP/0FAIL, cleanup23/23. Native thư viện có8-shot model-origin nhưng chưa có phim; genuine repair cảnh đạo cụ tiếp đang chạy, giữ script/audio/config/journal và ceiling30. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md). Chưa nghiệm thu thành phẩm.
+Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video. Native thư viện xuất phim27.067s nhưng QC FAIL cảnh tĩnh6.733–12.067s; sampled pixels còn yếu identity/bàn chồng nét. Typed actor-freeze repair qua41/41, regression512PASS/2SKIP/typecheck; public invocation giữ config và mọi budget. Một genuine sửa/render/QC tiếp đang chạy, chưa DONE/qualityPASS. Studio mới giữ68project. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md).
 
 Các checkpoint bên dưới là lịch sử; trạng thái mới nhất ở đoạn đầu và evidence hiện hành.
 

@@ -1,6 +1,6 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
-Ưu tiên hiện hành04/10: **tool chủ đề/câu chuyện → kịch bản → video** với người que là diễn viên. Máy hơi nước/ô tô chỉ là fixture; dừng lặp sản xuất mẫu để thay cho tính năng tổng quát. Nhánh idea, writer/cache/title/kind, preview/promote script, Studio/API/CLI đã có source; sceneIntent/cast/cảnh không đạo cụ giả đã triển khai; source24 build/test:typecheck/schema đã qua. Runtime source23 có PASS/FAIL theo [evidence](docs/validation/2026-10-04-general-story-tool.md); source24 còn chờ chạy lại sau worker usage limit. [Kế hoạch có checklist](docs/plans/2026-10-04-general-story-tool.md), [hướng dẫn](docs/GENERAL-STORY-TOOL.md). Các mốc mẫu phía dưới là lịch sử, không thay nghiệm thu tool theo chủ đề tùy người dùng.
+Ưu tiên hiện hành04/10: **tool chủ đề/câu chuyện → kịch bản → video**, người que là diễn viên theo nội dung. Native thư viện đã xuất phim thật nhưng QC FAIL cảnh tĩnh; typed actor-freeze repair và public recovery đã build, độc lập41/41 +512PASS/2SKIP/typecheck qua. Một genuine render/QC tiếp đang chạy; identity/bố cục, nhiều chủ đề/input/ngôn ngữ/live backend và chất lượng thành phẩm còn chờ. Máy hơi nước/ô tô chỉ là fixture. [Evidence hiện hành](docs/validation/2026-10-04-general-story-followup.md), [checklist](docs/plans/2026-10-04-general-story-tool.md), [luồng](docs/GENERAL-STORY-TOOL.md). Các checkpoint phía dưới là lịch sử, không thay nghiệm thu tool tổng quát.
 
 ## Checkpoint lịch sử trước khi đổi phạm vi sang tool tổng quát
 

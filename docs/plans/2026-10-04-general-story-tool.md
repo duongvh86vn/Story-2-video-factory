@@ -8,7 +8,10 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 - [x] Genuine native resume31 quaANALYZED: labels/point/speech do model thật,9artifact và journalprefix giữ nguyên. Sau đó STORYBOARDED provider timeout180s, không có phim.
 - [x] Native timeout15phút trả8-shot thật nhưng domainFAIL; ceiling30/history giữ nguyên,24call hoàn tất. Default fixture cleanup23/23, whole npm test963PASS/3SKIP/0FAIL và typecheck qua; chưa nghiệm thu phim.
 - [x] Precision representation exact1e-6 hoặc canonical anchor làm tròn3 chữ số:225/225 scoped, default224PASS/1SKIP và regression cũ155/155/typecheck qua. Old2e-6 assertion giữ nguyên; dung sai0.001px đã bỏ và rawFAIL giữ.
-- [ ] Genuine model repair tiếp cảnh attached prop, rồi dựng và xem/nghe thành phẩm; giữ provider/settings/ceiling/script/audio.
+- [x] Prop-origin serialization ULP-only:149/149 scoped, default148PASS/1SKIP, regression289PASS/1SKIP/typecheck qua; genuine native thư viện đã tớiDRAFT_RENDERED/REVIEWED/REPAIRED.
+- [x] Native xuất phim27.067s qua FINAL_RENDERED nhưng QC FAIL cảnh tĩnh; sampled pixels yếu identity/bàn chồng nét. RawFAIL giữ; không DONE/qualityPASS.
+- [x] Typed actor-freeze repair source/protocol:41/41 +512PASS/2SKIP regression/typecheck; source/cast/motion protection, cache/timeline atomic, public override giữ config/budget; build qua.
+- [ ] Genuine render/QC/xem nghe lại phim thư viện; cải thiện identity/bố cục và nghiệm thu nhiều chủ đề/input/ngôn ngữ/backend.
 
 - [x] Source31/explanation6 thêm indication/speech và coverage đúng target/cue/actor, mô tả nhãn source excerpt; build/typecheck/schema qua, không nới validator.
 - [ ] Nghiệm thu31 và genuine resume project native thư viện sau lỗi nhãn. Script/audio thật27.062s có sẵn;8call transport/schema thành công nhưng native đầu tiên chưa quaANALYZED, không có phim.

@@ -260,3 +260,136 @@ focused closure does not claim a rerun of that entire suite or film acceptance.
 
 The one further native same-project completed-placement repair is still pending.
 No script/audio/config/account/budget changes or parent runtime tests occurred.
+
+## Completed-placement native result and prop-origin serialization repair
+
+Independent report: `C:/Users/Duongvh-pc/codex-test-evidence/general-native-placement-20261004T125837372Z/REPORT.md`.
+One public resume supplied the full matching real repair candidate through
+initialRepair with no reanalysis. The real model removed attachedTo, returned
+another eight-shot design and failed after9min25sec at a strict prop-origin
+equality:380.000016 versus0.5277778×720 =380.00001599999996, a5.68e-14pixel
+difference. Durable state ANALYZED, no render/draft/final. Later placement gates
+were not reached. Calls26 completed,0 pending,four remaining under30; nine
+identity/config hashes, journal prefix and old reports preserved. All owned jobs,
+watchers and reservations released before deadline13:30:37UTC.
+
+The prop-origin validator now allows only floating-point serialization roundoff:
+abs(actual−expected)≤4×Number.EPSILON×max(1,abs(actual),abs(expected)) per axis.
+This is not a stage-pixel spatial tolerance. Source/identity, one completed
+placement, hand/contact/release/destination and unsupported-attachment checks
+remain. Parent build:core passedc32ffd. Independent origin/regression checks and
+one same-project public resume are pending. The matching unchanged rejected
+response may be revalidated by the existing attempt-reuse path without a new
+storyboard call if every current validator passes; it is never edited manually.
+
+Independent origin closure:
+`C:/Users/Duongvh-pc/.codex/task-state/story-video-v22/independent-prop-origin-20261004T131438Z/REPORT.txt`.
+Focused149/149 PASS; default148PASS/1 supplementalSKIP; unchanged regressions
+289PASS/1 supplementalSKIP; test typecheck PASS. Real one-ULP serialization
+passes while signed1e-9pixel/2e-6pixel/10pixel origin shifts reject. Both rigs and
+pick-place/carry keep source, identity, ownership, clocks, release/destination,
+attachment and repeated-placement negatives. Released test SHA256:
+`B448525A36D7A7B9D70AAD0B400DDC257D23420B135FAC22C79093680ABFD6F7`.
+Frozen props.ts hash:
+`FE7249D4092A909C13D2B0A908B2E0F24156AD67A088BB3B53CF17B139A2B626`.
+File/jobs/listeners released13:23:19UTC before deadline13:36:38UTC.
+
+The genuine native run has reached STORYBOARDED13:24:53UTC, ASSETS_READY,
+SCENES_READY13:25:59UTC, DRAFT_RENDERED13:27:22UTC, REVIEWED and REPAIRED.
+These are actual public-pipeline stages, not hand-authored replacement scenes.
+Final/QC, accounting and independent observations remain pending. A draft or
+technical QC is not whole-film visual/audiovisual acceptance.
+
+## First genuine general-story film: QC and sampled design FAIL
+
+Independent report: `C:/Users/Duongvh-pc/codex-test-evidence/general-native-ulp-20261004T131431958Z/REPORT.md`.
+The public pipeline produced a genuine27.067-second film with model-origin
+storyboard/art, real English narration and subtitles, then exited1 at
+FINAL_RENDERED. QC rejects an unplanned frozen interval6.733–12.067seconds in
+ch001.s003. The actual reaction stays in one pose; the automatic artwork-only
+repair cannot alter the actor motion, and this fixture explicitly sets
+retry.scene_repair=0. No DONE or film-quality PASS is claimed.
+
+Latest candidate needed one more genuine storyboard call rather than reuse; all
+27calls completed,0pending,three slots under30. Provider/schema successes26 plus
+one historical timeout, unknown old timeout usage and account dollars UNMEASURED.
+Nine original input/script/narration/audio/config identities, journal prefix and
+all old reports preserved. Processes/watchers/reservation released before the
+13:46:31UTC deadline; report closed13:33:16UTC. Earlier pending draft checkpoint
+is historical. No reanalysis, manual candidate/artwork or accounting reset.
+
+Independent actual sampled final pixels show legible subtitles and library/story
+objects, varied framing and some expression/action changes. Two actors are
+visually too similar; narrow and broad table artwork overlap confusingly. Sampled
+reaction frames repeat a pose, consistent with QC. These are design weaknesses,
+not accepted quality. Full normal-speed viewing/listening and Studio browser
+interaction remain NOTRUN. The parent also inspected the saved contact sheet;
+that is a design review of existing pixels, not a runtime test or full playback.
+
+Retained failed movie and images:
+`C:/Users/Duongvh-pc/codex-test-evidence/general-native-ulp-20261004T131431958Z/media/final-qc-rejected.mp4`,
+`media/draft.mp4`, `media/sampled-contact-sheet.png` and
+`pipeline-previews/contact-sheet-global.jpg` under that evidence root.
+
+## Actor-freeze repair source, pending independent runtime
+
+New bounded typed actor repair permits expressions/gazes/postures and unbound
+non-contact reaction gestures of existing primary/supporting actors. It preserves
+cast/appearance/speech ownership, narration/source/camera/clocks/assets and fixed
+stage/root/scale/locomotion/props/supports. Original non-idle actions and protected
+target/contact gestures stay exact. Artwork-only, renamed motion and action-only
+edits do not count as actor motion. Existing scene/storyboard/security/actual
+runtime validators and atomic publication still apply. Cache, host/actor timelines
+and scene revisions must publish the same accepted tracks together.
+
+QC feedback selects this contract for frozen actor scenes; presenter/mechanism
+artwork-only repair remains available. Default scene-repair config is honored.
+An explicit per-invocation sceneRepairAttempts integer0–3 is supported by public
+pipeline/API/CLI. Studio offers one attempt for QC-frozen final failures. This
+option neither edits project settings/fingerprint nor resets review iteration,
+scene budget, call ceiling, cost accounting or earlier failures. A passing new
+render/QC is still required.
+
+The source helper was implemented by Descartes and source-typechecked13:50:41UTC;
+its late post-reinitialization release revalidation15:42:22UTC cannot establish
+an on-time process census. Parent integration fullbuild74516 exit0 and final
+provider-schema compile676120 exit0; no parent runtime tests. Provider action
+schema now exposes concrete required fields and rejects extra keys before the
+canonical action refinement. Independent tester Lagrange is verifying this
+separate implementation; runtime and new native film remain pending. No schema
+or source update is a claim that the current QC-failed film has been repaired.
+
+## Independent actor-freeze repair closure
+
+`C:/Users/Duongvh-pc/codex-test-evidence/acting-freeze-tests-20261004T154741039Z/REPORT.md`:
+new scoped41/41 PASS (one parent+40subtests), unchanged regressions512PASS/2
+supplementalSKIP/0FAIL, whole test typecheck PASS. Frozen released test SHA256:
+`DEA9733B8B26BE7EAE2A64C215E81FB89371AA43B347E4F041CB5741DCA4D206`.
+Concrete provider JSON action fields, strict envelope/actions/targets, protected
+motion/source/cast/camera/clock/contact, actual emitted face commands, full cache/
+actor timelines/scene bundles, invalid runtime rollback and invocation bounds
+were checked. Default retry0 prevents spending; explicit invocation1 allows one
+repair without config mutation; locks and journal/review ceilings still block.
+CLI/Studio wiring is source verification, not browser/CLI runtime acceptance.
+No real provider, render, normal-speed watch/listening or full actorQC→DONE
+claim follows from these controlled integration tests.
+
+Earlier new-test failures are preserved: wrong API400 expectation (actual422),
+fixture provenance/journal mistakes, HTML hash oracle for JS-encoded animation,
+and a mood string oracle for numeric baked commands. The final test asserts
+changed scene.js/bundle/cachedtracks/timelines and changed actual emitted numeric
+facial commands, while original physics remain exact. No old tests/assertions
+or production gates were relaxed. Jobs/file released and report finalized
+16:09:06UTC before16:09:41UTC deadline.
+
+Exactly one further genuine public same-project resume is authorized with
+sceneRepairAttempts:1, until:DONE, retryModelErrors:true. Current27calls/three
+slots under30, persisted config/retry0, journal, QC/scene iteration budgets,
+script/audio and all prior evidence remain. No force/invalidation or settings
+change is used. Outcome is pending; existing QC-failed film remains unaccepted.
+
+Studio operational16:12:11UTC: own new PID28760, parent23836,
+birth16:11:17.126492UTC, session88753, port8850, all68project names preserved,
+busy[]. Prior owned27768 was absent when reload guard refused; no mismatched
+process was stopped. Free-port new launch loads compiled actor repair. This is
+service inventory only; Studio browser acceptance remains NOTRUN.
