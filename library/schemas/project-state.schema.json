@@ -99,7 +99,8 @@
             "characters-approval",
             "storyboard-approval",
             "voice",
-            "source-review"
+            "source-review",
+            "script"
           ]
         },
         "error": {

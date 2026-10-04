@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { findRepoRoot, loadConfig, ConfigSchema,PublicVoicePatchSchema,cleanVoiceSettings } from '../../packages/core/config.js';
 import YAML from 'yaml';
 import { updateSettings, SettingsPatchSchema, PresentationPatchSchema } from '../../packages/orchestrator/settings.js';
-import { parseScript } from '../../packages/ingest/script.js';
+import { parseScript, validateIdea } from '../../packages/ingest/script.js';
 import { parseHostProfile } from '../../packages/host/profile.js';
 import { hostPreviewSvg } from '../../packages/host/rig.js';
 import { ModelRouter } from '../../packages/models/registry.js';
@@ -140,13 +140,14 @@ export async function buildServer(options: ServerOptions = {}) {
     return {
       ...await summary(name), locked: state.locked,
       progress: { completed, total: States.length - 1, percent: Math.round(completed / (States.length - 1) * 100), stage: state.state },
-      artifacts: clean(raw.artifacts ?? {}) as ProjectDetail['artifacts'], production: clean(raw.production ?? {}), downloads,
+      artifacts: clean({...((raw.artifacts??{}) as Record<string,unknown>),...(await currentDownload(root,'generated-script.txt')?{}:{'script-generation':undefined})}) as ProjectDetail['artifacts'], production: clean(raw.production ?? {}), downloads,
       cinematicArtifacts: await cinematicArtifactStatuses(root),
       cinematicMigration:migration,
       preview: { composition: scenesCurrent ? await available(['scenes/index.html']) : null, draft: framesCurrent ? await available(DOWNLOADS['draft.mp4']!) : null, final: !migration.required&&completed>=States.indexOf('FINAL_RENDERED')?await available(DOWNLOADS['final.mp4']!):null, contactSheet: framesCurrent ? await available([...DOWNLOADS['contact-sheet.jpg']!, ...DOWNLOADS['contact-sheet.png']!]) : null, shots: shotPreviews },
       settings: {revision:hash(await fs.readFile(await boundPath(root,'project.yaml'))),language:config.project.language,contentMode:config.content.mode,input:config.input,host:config.host,
         voice:((({command,command_args,...rest})=>rest)(config.voice)),automatic:config.workflow.automatic,presentation:config.presentation,format:config.rendering.final,
         creativeModel:((({command,...rest})=>rest)(config.models.storyboard)),
+        scriptModel:((({command,...rest})=>rest)(config.models.planner)),scriptGeneration:config.script_generation,
         approvalRequired:{storyboard:config.workflow.require_storyboard_approval||!config.workflow.automatic,characters:config.workflow.require_character_approval,host:config.workflow.require_host_approval}},
     };
   };
@@ -182,6 +183,16 @@ export async function buildServer(options: ServerOptions = {}) {
       const relative=`input/script.${body.format}`,file=await boundPath(root,relative,true);await checkRevision(await locate(root,[relative]),body.revision);
       parseScript(body.text,relative);if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
       await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md'}});return {...await readArtifact(root,`script.${body.format}`),settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
+    });
+  });
+  app.put<{Params:Named}>('/api/projects/:name/idea',async request=>{
+    const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']).default('txt'),revision:z.string().optional(),settingsRevision:z.string().optional()}).strict().parse(request.body);
+    return mutate(request.params.name,async(root,core)=>{
+      await checkRevision(await boundPath(root,'project.yaml'),body.settingsRevision);
+      const relative=`input/idea.${body.format}`,file=await boundPath(root,relative,true);await checkRevision(await locate(root,[relative]),body.revision);
+      try{validateIdea(body.text);}catch(error){throw new ApiError(422,error instanceof Error?error.message:'Invalid idea','INVALID_INPUT');}if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
+      await updateSettings(root,{input:{mode:'idea',idea:relative as 'input/idea.txt'|'input/idea.md'}});
+      return {...await readArtifact(root,`idea.${body.format}`),settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
     });
   });
   app.get<{Params:Named &{kind:string}}>('/api/projects/:name/hosts/:kind/preview',async(request,reply)=>{
@@ -342,7 +353,8 @@ export async function buildServer(options: ServerOptions = {}) {
           const original = uploadFilename(part.filename), extension = path.extname(original).toLowerCase();
           const category = part.fieldname;
           let relative: string;
-          if(category==='script'&&['.txt','.md'].includes(extension))relative=`input/script${extension}`;
+          if(category==='idea'&&['.txt','.md'].includes(extension))relative=`input/idea${extension}`;
+          else if(category==='script'&&['.txt','.md'].includes(extension))relative=`input/script${extension}`;
           else if(category==='host'&&extension==='.md')relative='input/host.md';
           else if (category === 'source' && extension === '.md') relative = 'input/source.md';
           else if ((category === 'subtitles' || category === 'srt') && extension === '.srt') relative = 'input/narration.srt';
@@ -358,10 +370,11 @@ export async function buildServer(options: ServerOptions = {}) {
           } });
           await pipeline(part.file, counter, createWriteStream(staged, { flags: 'wx' }));
           if (part.file.truncated || !size) throw new ApiError(413, 'File is empty or exceeds the upload limit.', 'TOO_LARGE');
-          if(category==='script'||category==='host'){
+          if(category==='idea'||category==='script'||category==='host'){
             if(size>128*1024)throw new ApiError(413,'Script/host exceeds 128 KB.','TOO_LARGE');
             let text:string;try{text=new TextDecoder('utf-8',{fatal:true}).decode(await fs.readFile(staged));}catch{throw new ApiError(422,'Script/host must be UTF-8.','INVALID_INPUT');}
             if(category==='script')parseScript(text,relative);
+            if(category==='idea')try{validateIdea(text);}catch(error){throw new ApiError(422,error instanceof Error?error.message:'Invalid idea','INVALID_INPUT');}
           } else if (relative.endsWith('.srt')) {
             if (size > 2 * 1024 * 1024) throw new ApiError(413, 'Subtitles exceed 2 MB.', 'TOO_LARGE');
             srtSegments(await fs.readFile(staged, 'utf8'));
@@ -382,6 +395,8 @@ export async function buildServer(options: ServerOptions = {}) {
           pending.push({ staged, relative, original, size });
         }
         if (!pending.length) throw new ApiError(422, 'Choose at least one file.', 'EMPTY_UPLOAD');
+        const writingInputs=pending.filter(item=>/^input\/(?:idea|script)\.(?:txt|md)$/.test(item.relative));
+        if(writingInputs.length>1)throw new ApiError(422,'Upload one idea or one complete script at a time; choose its input mode explicitly.','AMBIGUOUS_INPUT');
         await checkRevision(await boundPath(root,'project.yaml'),query.settingsRevision);
         // Validate all destinations before touching canonical inputs.
         for (const item of pending) await boundPath(root, item.relative, true);
@@ -393,6 +408,8 @@ export async function buildServer(options: ServerOptions = {}) {
         }
         const script=pending.find(item=>/^input\/script\.(?:txt|md)$/.test(item.relative));
         if(script)await updateSettings(root,{input:{mode:'script',script:script.relative as 'input/script.txt'|'input/script.md'}});
+        const idea=pending.find(item=>/^input\/idea\.(?:txt|md)$/.test(item.relative));
+        if(idea)await updateSettings(root,{input:{mode:'idea',idea:idea.relative as 'input/idea.txt'|'input/idea.md'}});
         if(pending.some(item=>item.relative==='input/host.md'))await updateSettings(root,{host:'custom'});
         return {files:result,settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
       } finally {

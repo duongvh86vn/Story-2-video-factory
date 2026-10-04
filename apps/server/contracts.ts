@@ -3,6 +3,8 @@ import type { Job } from './jobs.js';
 import type { HostProfile, HostRig } from '../../packages/host/schemas.js';
 import type { VoiceReport } from '../../packages/voice/schemas.js';
 import type { ScriptDocument } from '../../packages/ingest/script.js';
+import type { ScriptGenerationReportSchema } from '../../packages/orchestrator/script-generation.js';
+import type { z } from 'zod';
 import type { FactoryConfig } from '../../packages/core/config.js';
 import type { WindowsVoiceCatalog } from '../../packages/voice/catalog.js';
 
@@ -31,7 +33,7 @@ export interface ProjectDetail extends ProjectSummary {
     story?: Story; narration?: Narration; chapters?: Chapter[]; beats?: Beat[];
     'character-bible'?: CharacterBible; storyboard?: Storyboard; 'asset-manifest'?: AssetManifest;
     review?: Review; 'cost-report'?: unknown; 'qc-report'?: unknown;
-    script?: ScriptDocument; 'voiced-narration'?: Narration; 'voice-report'?: VoiceReport; 'host-profile'?: HostProfile; 'host-rig'?: HostRig; 'host-timeline'?: unknown; 'explanation-plan'?: unknown;
+    script?: ScriptDocument; 'script-generation'?: z.infer<typeof ScriptGenerationReportSchema>; 'voiced-narration'?: Narration; 'voice-report'?: VoiceReport; 'host-profile'?: HostProfile; 'host-rig'?: HostRig; 'host-timeline'?: unknown; 'explanation-plan'?: unknown;
     'story-direction'?: unknown; 'stage-plan'?: unknown; 'performance-plan'?: unknown; 'camera-plan'?: unknown;
     'environment-provenance'?: unknown; 'performance-report'?: unknown; 'animation-library'?: unknown;
     'creative-direction-report'?: unknown;
@@ -44,6 +46,7 @@ export interface ProjectDetail extends ProjectSummary {
   settings: { revision: string; language: string; contentMode: FactoryConfig['content']['mode']; input: FactoryConfig['input']; host: FactoryConfig['host']; voice: Omit<FactoryConfig['voice'],'command'|'command_args'>; automatic: boolean;
     presentation: FactoryConfig['presentation'];
     creativeModel:Omit<FactoryConfig['models']['storyboard'],'command'>;
+    scriptModel:Omit<FactoryConfig['models']['planner'],'command'>; scriptGeneration:FactoryConfig['script_generation'];
     format: { width: number; height: number; fps: number }; approvalRequired: { storyboard: boolean; characters: boolean; host: boolean } };
 }
 export interface ArtifactDocument<T = unknown> { name: string; data: T; revision: string; editable: boolean; settingsRevision?:string; }

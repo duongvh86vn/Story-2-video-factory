@@ -59,7 +59,7 @@ async function readScene(dir:string):Promise<SceneFiles> { const files=[]; for(c
 const sourceHash=(files:SceneFiles):string=>hash(files.files.slice().sort((a,b)=>a.path.localeCompare(b.path)).map(file=>({path:file.path,content:file.content})));
 async function libraryRuntime():Promise<Buffer> { const require=createRequire(import.meta.url); return fs.readFile(require.resolve('gsap/dist/gsap.min.js')); }
 
-async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManifest,config:FactoryConfig):Promise<{refs:RecipeAsset[]; hashes:Record<string,string>}> {
+async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManifest,config:FactoryConfig,publish=true):Promise<{refs:RecipeAsset[]; hashes:Record<string,string>}> {
   const selected=manifest.assets.filter(asset=>asset.shotIds.includes(shot.id) || shot.assetNeeds.some(need=>need.id===asset.id));
   const refs:RecipeAsset[]=[], hashes:Record<string,string>={};
   for(const need of shot.assetNeeds) if(need.required && !selected.some(asset=>asset.id===need.id && asset.status==='approved')) throw new Error(`${shot.id}: required asset ${need.id} unavailable`);
@@ -70,6 +70,7 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
     hashes[asset.id]=asset.hash;
     const relative=visualAssetPath(asset);
     if(!relative) continue;
+    if(!publish){refs.push({id:asset.id,type:asset.type,path:relative,characterId:asset.characterId});continue;}
     const destination=await outputPath(root,path.relative(root,path.join(dir,relative)));
     if(asset.type==='video') {
       if(!await exists(destination) || !(await fs.stat(destination)).size) {
@@ -86,6 +87,23 @@ async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characte
   const source=await exists(path.join(root,config.input.source)) ? await fs.readFile(await safeRealPath(root,config.input.source)) : Buffer.alloc(0);
   const activity=config.content.mode==='narrated-explainer'?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
   return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?ANIMATION_VERSION:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,activity});
+}
+/** Check every approved scene before staging assets, resetting state or rebuilding another shot. */
+export async function assertLockedSceneCompatibility(root:string,config:FactoryConfig,board:Storyboard,characters:CharacterBible,manifest:AssetManifest,state:Locks,shotIds?:string[]):Promise<void> {
+  const selected=board.shots.filter(shot=>lockedShot(state,shot)&&(!shotIds||shotIds.includes(shot.id)));
+  if(!selected.length)return;
+  const gsap=await libraryRuntime();
+  for(const shot of selected){
+    const dir=path.join(root,'scenes',shot.id),complete=await Promise.all(SCENE_FILENAMES.map(name=>exists(path.join(dir,name))));
+    const recordFile=path.join(dir,'scene.json');
+    // A lock may be placed before the first scene build. It cannot approve a partial bundle.
+    if(!complete.some(Boolean)&&!await exists(recordFile))continue;
+    if(!complete.every(Boolean))throw new Error(`Locked shot ${shot.id} has an incomplete scene; unlock or restore its approved scene`);
+    const record=await exists(recordFile)?await readJson<SceneRecord>(recordFile):undefined;
+    const staged=await stageAssets(root,dir,shot,manifest,config,false);
+    const expected=await inputIdentity(root,config,shot,characters,staged.hashes,gsap);
+    if(!record?.validated||record.inputHash!==expected)throw new Error(`${shot.id}: locked scene input/renderer conflict; restore the approved inputs and renderer, or explicitly unlock and rebuild this shot. The approved scene has been retained.`);
+  }
 }
 async function writeScene(root:string,dir:string,files:SceneFiles):Promise<SceneFiles> {
   const secured=secureSceneFiles(files);
@@ -255,6 +273,7 @@ export async function buildScenes(projectRoot:string,config:FactoryConfig,router
   if(options?.shotIds?.some(id=>!storyboard.shots.some(shot=>shot.id===id))) throw new Error('Unknown requested shotId');
   if(config.content.mode==='narrated-explainer'){const{profile,rig}=await loadHost(projectRoot),n=await readJson(path.join(projectRoot,'work/narration.json'),NarrationSchema),beats=await readJson(path.join(projectRoot,'work/beats.json'),z.array(BeatSchema));validateExplainerStoryboard(storyboard,n,beats,profile,rig,config);}
   const state=await locks(projectRoot);
+  await assertLockedSceneCompatibility(projectRoot,config,storyboard,characters,assets,state,options?.shotIds);
   for(const shot of storyboard.shots.filter(shot=>!options?.shotIds || options.shotIds.includes(shot.id))) await compileShot(projectRoot,config,router,shot,characters,assets,{force:options?.force,state});
   if(config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'){
     const shots=await Promise.all(storyboard.shots.map(async shot=>({shotId:shot.id,...await readJson<Record<string,unknown>>(path.join(projectRoot,`scenes/${shot.id}/performance-report.json`))})));

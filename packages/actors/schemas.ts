@@ -6,7 +6,7 @@ import {PerformancePlanSchema} from '../animation/schemas.js';
 
 export const ActorDefinitionSchema=z.object({
   id:Id,name:z.string().min(1).max(80).refine(value=>value.trim().length>0,'Actor name must contain text'),role:z.string().min(1).max(1000).refine(value=>value.trim().length>0,'Actor role must contain text'),kind:z.enum(['stick-man','mini-robot']),
-  identity:z.enum(['historical','illustrative']),sourceRefs:z.array(SourceRefSchema).min(1),
+  identity:z.enum(['historical','fictional','illustrative']),sourceRefs:z.array(SourceRefSchema).min(1),
   appearance:HostProfileSchema.shape.appearance,
   costume:HostProfileSchema.shape.costume,
 }).strict();

@@ -97,11 +97,31 @@ export function cameraEnvironmentBounds(camera:CinematicCamera,stage:{width:numb
   const bottom=Math.max(stage.height,...matrices.map(matrix=>(stage.height*CAMERA_VIEWPORT.bottom-matrix.y)/matrix.scale))+2;
   return {left,top,width:right-left,height:bottom-top};
 }
-export function planCamera(performance:PerformancePlan,profile:HostProfile,options:{framing:CinematicCamera['framing'];movement:CinematicCamera['movement'];focus?:CinematicCamera['focus'];target?:Point;parts?:NonNullable<Shot['visualization']>['parts']}):CinematicCamera {
+export function planCamera(performance:PerformancePlan,profile:HostProfile,options:{framing:CinematicCamera['framing'];movement:CinematicCamera['movement'];focus?:CinematicCamera['focus'];target?:Point;parts?:NonNullable<Shot['visualization']>['parts'];supporting?:Array<{performance:PerformancePlan;profile:HostProfile}>}):CinematicCamera {
   const {width,height}=performance.stage,m=rigMetrics(profile),roots=[performance.root.x,...performance.walks.flatMap(w=>[w.fromX,w.toX])];
   const focus=options.focus??'ensemble',framing=options.framing;
   const bounds=cameraHostBounds(performance,profile),wideCap=.39/bounds.ratio.max;
   const scales=framing==='wide'?[Math.min(1,wideCap),Math.min(1.04,wideCap)]:framing==='medium'?[1.25,1.32]:focus==='face'?[2.4,2.5]:[2.1,2.2];
+  if(options.supporting?.length&&focus==='ensemble'){
+    // Frame the complete cast on the same master clock, rather than anchoring on the lead alone.
+    const ensemble=emptyBounds(),cast=[bounds,...options.supporting.map(actor=>cameraHostBounds(actor.performance,actor.profile))];
+    for(const actor of cast){include(ensemble,{x:actor.body.left,y:actor.body.top});include(ensemble,{x:actor.body.right,y:actor.body.bottom});}
+    for(const part of options.parts??[]){
+      include(ensemble,{x:(part.x-part.width*.56)*width,y:(part.y-part.height*.6)*height});
+      const label=cameraModelLabel(part,height,width);
+      include(ensemble,{x:(part.x+part.width*.56)*width,y:Math.max((part.y+part.height*.6)*height,label.labelY+label.labelHeight)});
+    }
+    const pad=Math.max(2,height*.008),spanX=ensemble.right-ensemble.left+pad*2,spanY=ensemble.bottom-ensemble.top+pad*2;
+    const cap=Math.min(width*(CAMERA_VIEWPORT.right-CAMERA_VIEWPORT.left)/spanX,
+      height*2*Math.min(CAMERA_VIEWPORT.centerY-CAMERA_VIEWPORT.top,CAMERA_VIEWPORT.bottom-CAMERA_VIEWPORT.centerY)/spanY);
+    const fittedFraming=framing==='medium'&&cap<1.1?'wide':framing;
+    const far=Math.min(fittedFraming==='wide'?Math.min(1.04,wideCap):scales[1]!,cap);
+    let near=Math.min(fittedFraming==='wide'?Math.min(1,wideCap):scales[0]!,far);
+    if(['push-in','pull-out'].includes(options.movement)&&near===far)near=far*.97;
+    const start=options.movement==='pull-out'?far:near,end=options.movement==='push-in'?far:options.movement==='pull-out'?near:start;
+    return CameraSchema.parse({framing:fittedFraming,movement:options.movement,focus,anchor:{x:(ensemble.left+ensemble.right)/2,y:(ensemble.top+ensemble.bottom)/2},
+      startScale:start,endScale:end});
+  }
   // Keep purposeful motion even when a larger approved head limits the wide scale.
   if(framing==='wide'&&scales[0]===scales[1])scales[0]=scales[1]!*.97;
   const moving=['push-in','pull-out'].includes(options.movement),startScale=moving&&options.movement==='pull-out'?scales[1]!:scales[0]!,endScale=moving?(options.movement==='push-in'?scales[1]!:scales[0]!):startScale;

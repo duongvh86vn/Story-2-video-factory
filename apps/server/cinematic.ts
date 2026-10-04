@@ -10,7 +10,7 @@ import { validateArtDirection } from '../../packages/director/art-direction.js';
 
 // This schema is for inspection only. Production and edits still use current literals.
 const inspectionSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
-  cinematic:CinematicPlanSchema.extend({
+  cinematic:CinematicPlanSchema.innerType().extend({
     producer:z.string().regex(/^story-direction-2\.2\.\d+$/),
     performance:PerformancePlanSchema.extend({compilerVersion:z.string().regex(/^performance-2\.2\.\d+$/)}),
   }).optional(),
@@ -19,7 +19,7 @@ export function inspectCinematicStoryboard(value:unknown,locks:Record<string,boo
   const board=inspectionSchema.parse(value);
   const obsolete=board.shots.filter(s=>s.cinematic&&(s.cinematic.producer!==DIRECTION_VERSION||s.cinematic.performance.compilerVersion!==ANIMATION_VERSION));
   return {board,migration:{required:obsolete.length>0,shotIds:obsolete.map(s=>s.id),
-    lockedShotIds:obsolete.filter(s=>locks.storyboard||(locks[s.id]??locks[`shot:${s.id}`]??s.locked)).map(s=>s.id)}};
+    lockedShotIds:obsolete.filter(s=>locks.storyboard||locks.scenes||locks[s.id]||locks[`shot:${s.id}`]||locks[`scene:${s.id}`]||locks[`shots.${s.id}`]||s.locked).map(s=>s.id)}};
 }
 
 /** Bound editing to values the current production scene actually consumes. */

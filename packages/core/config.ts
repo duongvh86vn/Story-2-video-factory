@@ -43,8 +43,10 @@ export const ConfigSchema = z.object({
     require_meaningful_host_action_per_beat: z.boolean().default(true) }).strict().default({}),
   voice: VoiceSettingsSchema.default({}),
   voice_profiles: z.record(z.string().regex(LANGUAGE_TAG), VoiceSettingsSchema.partial()).default({}),
-  input: z.object({ mode: z.enum(['auto','script','wav','srt']).default('auto'), script: z.string().default('input/script.txt'),
+  input: z.object({ mode: z.enum(['auto','idea','script','wav','srt']).default('auto'), idea: z.string().default('input/idea.txt'), script: z.string().default('input/script.txt'),
     source: z.string().default('input/source.md'), narration: z.string().default('input/narration.wav'), subtitles: z.string().default('input/narration.srt') }).strict().default({}),
+  script_generation: z.object({ kind: z.enum(['auto','factual','fiction']).default('auto'),
+    target_seconds: z.number().int().min(10).max(300).default(60), brief: z.string().max(6000).default('') }).strict().default({}),
   models: z.object({planner:ModelSettingsSchema.default({}),storyboard:ModelSettingsSchema.default({}),coder:ModelSettingsSchema.default({}),repair:ModelSettingsSchema.default({}),visual_review:ModelSettingsSchema.default({}),fallback:ModelSettingsSchema.default({})}).default({}),
   rendering: z.object({ engine: z.literal('hyperframes').default('hyperframes'), draft: Profile.default({ width: 960, height: 540, fps: 15, quality: 'draft' }), final: Profile.default({ width: 1920, height: 1080, fps: 30, quality: 'delivery' }), timeout_ms: z.number().positive().default(1800000), docker: z.boolean().default(false), max_duration_seconds: z.number().positive().default(300), max_shots: z.number().int().positive().default(100), workers: z.number().int().positive().default(2) }).default({}),
   workflow: z.object({ automatic: z.boolean().default(true), require_host_approval: z.literal(true).default(true), require_storyboard_approval: z.boolean().default(false), require_character_approval: z.boolean().default(false), max_review_iterations: z.number().int().nonnegative().default(2), max_model_calls: z.number().int().positive().default(250), max_model_cost_usd: z.number().nonnegative().optional(), max_generated_assets_per_shot: z.number().int().nonnegative().default(3), max_scene_bytes: z.number().int().positive().default(2000000), allow_rule_based_review: z.boolean().default(true) }).default({}),
@@ -81,6 +83,7 @@ export async function loadConfig(projectRoot: string, projectOverrides: Record<s
   if (data.models && typeof data.models==='object') { const roles=data.models as Record<string,unknown>; if (roles.reviewer) roles.visual_review=roles.reviewer; for (const [role,value] of Object.entries(roles)) if (typeof value==='string') roles[role]={ provider:'gateway',model:value }; }
   const config=ConfigSchema.parse(interpolate(data));
   config.voice=cleanVoiceSettings(config.voice);
+  if(config.content.mode==='legacy'&&config.input.mode==='idea')throw new Error('Idea authoring requires narrated-explainer content; select the modern story pipeline.');
   if(config.content.mode==='legacy'&&config.presentation.mode==='story-cinematic')
     throw new z.ZodError([{code:'custom',path:['presentation','mode'],message:'story-cinematic requires narrated-explainer content; choose diagram for the legacy renderer.'}]);
   if (config.rendering.final.width % 2 || config.rendering.final.height % 2) throw new Error('Video dimensions must be even for H.264');

@@ -16,6 +16,8 @@ export const StorySchema = z.object({
   rules: z.array(z.string()).default([]), characters: z.array(SourceCharacterSchema).default([]),
   facts: z.array(FactSchema).default([]), chronology: z.array(z.string()).default([]), causalChain: z.array(z.string()).default([]),
   origin: z.enum(['narration','source']).optional(),
+  authoring: z.object({kind:z.enum(['factual','fiction']),identity:z.string(),title:z.string(),
+    sourcePath:z.string(),factualVerification:z.literal('not-independently-verified'),warnings:z.array(z.string())}).optional(),
   supplement: z.object({ story: z.string(), facts: z.array(FactSchema), sourcePath: z.string() }).optional(),
 });
 export const SegmentSchema = z.object({ id: Id, startMs: Time, endMs: Time, text: z.string().min(1) }).refine(s => s.endMs > s.startMs, 'endMs must exceed startMs');
@@ -51,7 +53,7 @@ export const ProjectStateSchema = z.object({
   version: z.literal(1), specVersion: z.number().int().optional(), name: z.string(), state: z.enum(States), updatedAt: z.string(), inputHash: z.string(), narrationInputHash: z.string().default(''), hostInputHash: z.string().default(''),
   assetInputHash: z.string().default(''), artifactHashes: z.record(z.string()).default({}), reviewIteration: z.number().int().nonnegative().default(0),
   approvals: z.object({ storyboard: z.boolean().default(false), characters: z.boolean().default(false), host: z.boolean().default(false), hostHash: z.string().default('') }).default({}),
-  locked: z.record(z.boolean()).default({}), waitingFor: z.enum(['host-approval','characters-approval','storyboard-approval','voice','source-review']).optional(), error: z.string().optional(),
+  locked: z.record(z.boolean()).default({}), waitingFor: z.enum(['host-approval','characters-approval','storyboard-approval','voice','source-review','script']).optional(), error: z.string().optional(),
 });
 export type Story = z.infer<typeof StorySchema>;
 export type Narration = z.infer<typeof NarrationSchema>;

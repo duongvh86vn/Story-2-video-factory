@@ -18,7 +18,8 @@ import { validateComparisonReadability } from './readability.js';
 import { pickupPart, modelExitParts, validatePropBindings } from './props.js';
 import { cueExpressions } from './emotion.js';
 import { validateArtDirection } from './art-direction.js';
-import {actorProfile} from '../actors/model.js';
+import {actorProfile,seedActorShot} from '../actors/model.js';
+import {buildRig} from '../host/rig.js';
 import {writeActorAssets} from '../actors/assets.js';
 import {sceneSeats} from '../stage/seats.js';
 
@@ -38,26 +39,28 @@ export function cinematicSetting(text:string,fallback:CinematicPlan['setting']='
 }
 
 /** Choreographs inside the immutable audio interval. No dialogue generation or retiming. */
-export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,config:FactoryConfig,entry?:Point,context?:{setting?:CinematicPlan['setting'];facing?:'front'|'left'|'right';parts?:NonNullable<Shot['visualization']>['parts'];nextControlId?:string}):Shot {
+export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,config:FactoryConfig,entry?:Point,context?:{seed?:boolean;setting?:CinematicPlan['setting'];facing?:'front'|'left'|'right';parts?:NonNullable<Shot['visualization']>['parts'];nextControlId?:string}):Shot {
   const shot=structuredClone(input),v=shot.visualization,h=shot.host;
   if(!v||!h||!shot.sourceRefs?.length)throw new Error(`${shot.id}: cinematic direction requires sourced explanation and approved host`);
+  const actors=config.presentation.character_mode==='actors',seed=actors&&context?.seed;
+  if(seed){h.actions=[{type:'idle',startMs:shot.startMs,endMs:shot.endMs}];v.events=v.events.map(e=>({...e,type:e.type==='state'?'state' as const:'highlight' as const,contactRequired:false,contactActorId:undefined,contactHands:undefined,contactPartId:undefined,motion:'none' as const}));}
   const {width,height,fps}=config.rendering.final,duration=shot.endMs-shot.startMs,m=rigMetrics(profile);
   const groundY=height*.76,scale=height*.38/m.height;
   const root=entry??{x:width*.24,y:groundY};
   if(Math.abs(root.y-groundY)>.01)throw new Error(`${shot.id}: entry ground changed between scenes`);
   const maximumTravel=m.upperLeg*scale*.8*duration/1000;
-  let exitX=duration>=1800?Math.max(root.x,Math.min(width*.34,root.x+maximumTravel*.35)):root.x;
+  let exitX=!actors&&duration>=1800?Math.max(root.x,Math.min(width*.34,root.x+maximumTravel*.35)):root.x;
   let moveMs=exitX-root.x>1?Math.min(1100,Math.floor(duration*.3)):0;
   // Objects occupy the character's world, with a foreground focal object and supporting depth.
   const plannedOperation=h.actions.find(a=>a.type==='operate-model'&&a.endMs-a.startMs>=800);
-  const pickup=duration>=2400?pickupPart(shot):undefined;
+  const pickup=!seed&&duration>=2400?pickupPart(shot):undefined;
   if(plannedOperation&&plannedOperation.startMs-shot.startMs<moveMs){exitX=root.x;moveMs=0;}
   const attention=plannedOperation?.target?.partId
-    ??h.actions.find(a=>a.target)?.target?.partId??v.parts[0]!.id;
+    ??h.actions.find(a=>a.target)?.target?.partId??v.parts[0]?.id;
   const focal=v.parts.find(p=>p.id===attention)!;
   const others=v.parts.filter(p=>p.id!==attention);
   const shoulder={x:exitX+m.shoulderOffset*scale,y:groundY+m.shoulderY*scale};
-  focal.width=.18;focal.height=.19;focal.x=(shoulder.x+52*scale)/width+focal.width*.35;
+  if(focal){focal.width=.18;focal.height=.19;focal.x=(shoulder.x+52*scale)/width+focal.width*.35;
   focal.y=(shoulder.y+32*scale)/height;
   if(pickup){Object.assign(focal,{width:.09,height:.09,x:(shoulder.x+40*scale)/width,y:(shoulder.y+32*scale)/height});}
   for(const [i,p] of others.entries()){
@@ -65,6 +68,7 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
     p.x=Math.min(.9,focal.x+.12+.12*Math.cos(angle));
     p.y=(v.type==='mechanism'||v.type==='breakdown')&&duration>=2400?.47+.10*Math.sin(angle):.43+.16*Math.sin(angle);
     p.width=Math.min(.14,.38/Math.max(3,others.length));p.height=.12;
+  }
   }
   if(v.parts.length===2&&v.parts.every(part=>part.configuration)){
     for(const [i,part] of v.parts.entries())Object.assign(part,{x:i===0?.57:.84,y:.32,width:.21,height:.17});
@@ -79,13 +83,13 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
   }
   // Attention changes the acting, not an existing model's world transform.
   for(const part of v.parts){const previous=context?.parts?.find(p=>p.id===part.id);if(previous){part.x=previous.x;part.y=previous.y;part.width=previous.width;part.height=previous.height;}}
-  if(plannedOperation&&context?.parts?.some(p=>p.id===attention)){
+  if(plannedOperation&&attention&&context?.parts?.some(p=>p.id===attention)){
     const anchor=partAnchor(shot,attention,'handle',width,height),desired=anchor.x-(m.shoulderOffset+52)*scale;
     const travel=Math.abs(desired-root.x),needed=travel>1?Math.max(220,Math.ceil(travel/(m.upperLeg*scale*1.8)*1000)):0;
     if(needed<plannedOperation.endMs-shot.startMs-800){exitX=desired;moveMs=needed;}
     else {exitX=root.x;moveMs=0;}
   }
-  if(!plannedOperation&&duration>800&&context?.nextControlId&&v.parts.some(part=>part.id===context.nextControlId)){
+  if(!actors&&!plannedOperation&&duration>800&&context?.nextControlId&&v.parts.some(part=>part.id===context.nextControlId)){
     const anchor=partAnchor(shot,context.nextControlId,'handle',width,height),desired=anchor.x-(m.shoulderOffset+52)*scale;
     const travel=Math.abs(desired-root.x),needed=travel>1?Math.max(220,Math.ceil(travel/(m.upperLeg*scale*1.8)*1000)):0;
     // Prepare a short next cue by approaching its control during this longer, non-contact explanation.
@@ -116,21 +120,23 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
       continue;
     }
     const target=a.target?partAnchor(shot,a.target.partId,a.target.anchor,width,height):undefined;
-    if(a.type==='operate-model'&&a.target?.partId===focal.id)startMs=Math.max(startMs,moveMs);
+    if(a.type==='operate-model'&&a.target?.partId===focal?.id)startMs=Math.max(startMs,moveMs);
     const span=endMs-startMs;
     const handle=target?{x:target.x-exitX-m.shoulderOffset*scale*(rigHand(a)==='left'?-1:1),y:target.y-groundY-m.shoulderY*scale}:undefined;
-    const operation=a.type==='operate-model'&&a.target?.partId===focal.id&&span>=800&&startMs>=moveMs&&!!handle&&Math.hypot(handle.x,handle.y)<(m.upperArm+m.lowerArm-8)*scale;
+    const operation=a.type==='operate-model'&&a.target?.partId===focal?.id&&span>=800&&startMs>=moveMs&&!!handle&&Math.hypot(handle.x,handle.y)<(m.upperArm+m.lowerArm-8)*scale;
     const contactMs=operation?startMs+Math.min(500,Math.floor(span*.35)):undefined;
     const feasible=operation&&contactMs!+80<=endMs-Math.min(220,span*.18);
     const compare=a.type==='compare'&&a.secondTarget&&span>=500;
-    const type=feasible?'operate-model':compare?'compare':a.type==='think'?'think':a.type==='summarize'?'summarize':a.target?'point':'explain';
+    if(actors&&a.type==='operate-model'&&!feasible)throw new Error(`${shot.id}: needs-layout/needs-motion: sourced operation cannot reach its target with approach, contact and recovery inside the narration clock`);
+    if(actors&&a.type==='compare'&&!compare)throw new Error(`${shot.id}: needs-layout/needs-motion: comparison requires two targets and a complete action window`);
+    const type=feasible?'operate-model':compare?'compare':actors?a.type:a.type==='think'?'think':a.type==='summarize'?'summarize':a.target?'point':'explain';
     const action={...a,type:type as typeof a.type,startMs:startMs+shot.startMs,endMs:endMs+shot.startMs,
       ...(feasible?{contactMs:contactMs!+shot.startMs}:{})};
     if(!feasible)delete action.contactMs;if(!compare)delete action.secondTarget;
     nextActions.push(action);
     const windows=compare?[{startMs,endMs:Math.floor((startMs+endMs)/2),target},{startMs:Math.floor((startMs+endMs)/2),endMs,target:partAnchor(shot,a.secondTarget!.partId,a.secondTarget!.anchor,width,height)}]:[{startMs,endMs,target}];
     for(const [j,window] of windows.entries()){
-      performance.gestures.push({id:`${shot.id}.g${i}${compare?`.${j}`:''}`,...window,...(a.hand?{hand:a.hand}:{}),action:feasible?'operate':type==='think'?'think':type==='summarize'?'address-viewer':window.target?'point':'address-viewer',...(feasible?{contactMs}:{})});
+      performance.gestures.push({id:`${shot.id}.g${i}${compare?`.${j}`:''}`,...window,...(a.hand?{hand:a.hand}:{}),action:feasible?'operate':type==='think'?'think':type==='react'?'react':type==='walk-to-marker'?'lead-next':type==='summarize'?'address-viewer':window.target?'point':'address-viewer',...(feasible?{contactMs}:{})});
       if(window.target)performance.gazes.push({...window,target:window.target});
     }
     const original=v.events.find(e=>e.type!=='state'&&e.targetId===a.target?.partId);
@@ -148,14 +154,15 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
       events.push({type:'flow',targetId:relation.from,relationTo:relation.to,contactPartId:a.target!.partId,startMs:begin,endMs:finish,contactRequired:true,motion:'none',narrationAnchor:a.narrationAnchor!,sourceRefs:relation.sourceRefs});
     }
   }
-  if(!nextActions.length){
+  if(!nextActions.length&&(actors||!focal))nextActions.push({type:'idle',startMs:shot.startMs,endMs:shot.endMs});
+  if(!nextActions.length&&focal){
     const target=partAnchor(shot,focal.id,'center',width,height);
     nextActions.push({type:'point',startMs:shot.startMs,endMs:shot.endMs,target:{modelId:v.modelId,partId:focal.id,anchor:'center'},narrationAnchor:shot.narrationSegmentIds![0]});
     performance.gestures.push({id:`${shot.id}.notice`,action:'inspect',startMs:0,endMs:duration,target});
     performance.gazes.push({startMs:0,endMs:duration,target});
     events.push({type:'highlight',targetId:focal.id,narrationAnchor:shot.narrationSegmentIds![0]!,startMs:shot.startMs,endMs:shot.endMs,contactRequired:false,motion:'none',sourceRefs:focal.sourceRefs});
   }
-  h.actions=nextActions;v.events=[...events,...v.events.filter(e=>e.type==='state')];
+  h.actions=nextActions;v.events=seed?v.events:[...events,...v.events.filter(e=>e.type==='state')];
   // Bilateral seed actions share one attention channel. Let the sampler prefer
   // the right target (then left); overlapping arm cues must not create overlapping gazes.
   if(h.actions.some(a=>a.hand==='left'))performance.gazes=[];
@@ -178,10 +185,19 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
   const camera=planCamera(performance,profile,{framing,movement,focus:discovery?'face':contactFocus?'contact':'ensemble',target:contact?.target,parts:v.parts});
   shot.camera={shotSize:framing,movement,angle:'eye-level'};
   shot.sceneType='character-scene';
-  shot.cinematic=CinematicPlanSchema.parse({version:22,producer:DIRECTION_VERSION,shotId:shot.id,leadCharacterId:profile.id,
-    motivation:beat.hostIntent??shot.explanationGoal,attentionPartId:attention,sourceRefs:shot.sourceRefs,setting,provenance:'illustration',models:stageModels(shot),propBindings,
+  shot.cinematic={version:22,producer:DIRECTION_VERSION,shotId:shot.id,leadCharacterId:profile.id,...(v.sceneIntent?{sceneIntent:v.sceneIntent}:{}),
+    motivation:beat.hostIntent??shot.explanationGoal??beat.visualGoal,attentionPartId:attention,sourceRefs:shot.sourceRefs,setting,provenance:'illustration',models:stageModels(shot),propBindings,
     continuity:{entry:root,exit:{x:exitX,y:groundY},facing,carriedProps:[],models:v.parts.map(part=>{const binding=propBindings.find(b=>b.partId===part.id),prop=binding&&performance.props.find(p=>p.id===binding.propId);return {partId:part.id,x:prop?.destination?prop.destination.x/width:part.x,y:prop?.destination?prop.destination.y/height:part.y,width:part.width,height:part.height};})},
-    camera,performance});
+    camera,performance};
+  // A legacy object plan can be directed before its caller supplies the actual cast.
+  // Only the story-aware seed owns cast creation; do not erase pre-existing contact choreography.
+  if(actors&&(seed||v.sceneIntent))seedActorShot(shot,profile,buildRig(profile));
+  if(seed&&shot.cinematic.actorScene?.supporting.length){
+    shot.cinematic.camera=planCamera(performance,profile,{framing,movement,focus:'ensemble',parts:v.parts,
+      supporting:shot.cinematic.actorScene.supporting.map(actor=>({performance:actor.performance,profile:actorProfile(actor.character)}))});
+    shot.camera={shotSize:shot.cinematic.camera.framing,movement:shot.cinematic.camera.movement,angle:'eye-level'};
+  }
+  shot.cinematic=CinematicPlanSchema.parse(shot.cinematic);
   shot.motion=performance.gestures.map(g=>`${g.action} → ${h.actions.find(a=>a.startMs===g.startMs+shot.startMs)?.target?.partId??'viewer'}`);
   validateCinematicShot(shot,profile,config);
   return ShotSchema.parse(shot);
@@ -194,7 +210,9 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
   if(c.camera.designIntent&&!c.artDirection)throw new Error(`${shot.id}: authored camera requires an art direction brief`);
   if(c.shotId!==shot.id||c.leadCharacterId!==profile.id||p.id!==shot.id||p.durationMs!==shot.endMs-shot.startMs)throw new Error(`${shot.id}: cinematic identity/clock mismatch`);
   if(p.stage.width!==config.rendering.final.width||p.stage.height!==config.rendering.final.height)throw new Error(`${shot.id}: stage dimensions changed; replan cinematic shots`);
-  if(hash(c.sourceRefs)!==hash(shot.sourceRefs)||!shot.visualization?.parts.some(part=>part.id===c.attentionPartId))throw new Error(`${shot.id}: cinematic attention/source mismatch`);
+  const parts=shot.visualization?.parts;
+  if(hash(c.sourceRefs)!==hash(shot.sourceRefs)||!parts||(parts.length?!parts.some(part=>part.id===c.attentionPartId):!!c.attentionPartId))throw new Error(`${shot.id}: cinematic attention/source mismatch`);
+  if(!parts.length&&(config.presentation.character_mode!=='actors'||!c.sceneIntent?.participants.length||!(c.actorScene?.primary||c.actorScene?.supporting.length)||shot.visualization!.events.length||shot.visualization!.relations.length||p.props.length||shot.host?.actions.some(a=>a.target||a.secondTarget||a.contactMs!==undefined)))throw new Error(`${shot.id}: objectless scene requires real sourced actors without dangling objects or contact`);
   if(hash(c.models)!==hash(stageModels(shot)))throw new Error(`${shot.id}: cinematic model variant lacks its source evidence`);
   if(hash(c.continuity.entry)!==hash(p.root)||Math.abs(c.continuity.exit.x-(p.walks.at(-1)?.toX??p.root.x))>.01)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
   validatePropBindings(shot);

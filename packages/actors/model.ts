@@ -10,6 +10,7 @@ import type {ActorDefinition} from './schemas.js';
 import type {SpeechActivity} from '../voice/schemas.js';
 import {postureAt} from '../animation/compiler.js';
 import {sameSeatSupport} from '../animation/support.js';
+import {validateSceneIntent} from '../explainer/plan.js';
 
 export function actorProfile(character:ActorDefinition,_base?:HostProfile):HostProfile{
   for(const [i,layer] of (character.costume??[]).entries())artworkSvg(layer.svg,`actor.${character.id}.${i}`);
@@ -61,8 +62,8 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
           :!!segment&&!!ref.quote.trim()&&segment.text.normalize('NFC').includes(ref.quote.normalize('NFC'));
         if(!valid)throw new Error(`${shot.id}: actor ${character.id} has unverifiable source evidence`);
       }
-      if(character.identity==='historical'&&!character.sourceRefs.some(r=>r.quote.normalize('NFC').toLocaleLowerCase().includes(character.name.normalize('NFC').toLocaleLowerCase())))throw new Error(`${shot.id}: named actor ${character.name} lacks source identity`);
-      if(character.identity==='historical'&&!character.sourceRefs.some(r=>r.quote.normalize('NFC').toLocaleLowerCase().includes(character.role.trim().normalize('NFC').toLocaleLowerCase())))throw new Error(`${shot.id}: historical actor ${character.name} role must be a literal excerpt of verified source evidence`);
+      if(['historical','fictional'].includes(character.identity)&&!character.sourceRefs.some(r=>r.kind==='narration'&&r.quote.normalize('NFC').toLocaleLowerCase().includes(character.name.normalize('NFC').toLocaleLowerCase())))throw new Error(`${shot.id}: named actor ${character.name} lacks exact narration identity`);
+      if(['historical','fictional'].includes(character.identity)&&!character.sourceRefs.some(r=>r.kind==='narration'&&r.quote.normalize('NFC').toLocaleLowerCase().includes(character.role.trim().normalize('NFC').toLocaleLowerCase())))throw new Error(`${shot.id}: ${character.identity} actor ${character.name} role must be a literal excerpt of verified narration evidence`);
       if(actor.speakingSegmentIds.some(id=>!shot.narrationSegmentIds?.includes(id)))throw new Error(`${shot.id}: actor speech is outside this shot's narration anchors`);
     }
   }
@@ -86,12 +87,33 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
   }
 }
 export function seedActorStoryboard(board:Storyboard,base:HostProfile,rig:HostRig,narration:Narration):Storyboard{
-  const result=structuredClone(board),first=narration.segments[0]!;
-  const character:ActorDefinition={id:'illustrative-researcher',name:'Người nghiên cứu',role:'Vai minh họa tham gia tìm hiểu và thử nghiệm các ý được kể; không gán sự kiện lịch sử chưa có nguồn.',
-    identity:'illustrative',kind:base.kind,sourceRefs:[{kind:'narration',segmentId:first.id,quote:first.text}],appearance:base.appearance};
+  const result=structuredClone(board);
   for(const shot of result.shots){if(!shot.cinematic)continue;
-    shot.cinematic.actorScene={primary:character,speakingSegmentIds:[],continuity:'cut',supporting:[]};
-    bindActorShot(shot,base,rig);
+    const c=shot.cinematic,intent=c.sceneIntent;
+    if(intent)validateSceneIntent(intent,narration,shot.sourceRefs??[],shot.narrationSegmentIds??[]);
+    seedActorShot(shot,base,rig);
   }
   return result;
+}
+/** Builds an editable cast seed; final narration/source validation remains mandatory. */
+export function seedActorShot(shot:Shot,base:HostProfile,rig:HostRig):void{
+    const c=shot.cinematic! ,intent=c.sceneIntent;
+    // Already directed cast is authoritative; a seed conversion must not redesign it.
+    if(c.actorScene){bindActorShot(shot,base,rig);return;}
+    const characters=(intent?.participants??[]).map(participant=>({id:participant.id,name:participant.name,role:participant.role,
+      identity:participant.identity,kind:base.kind,sourceRefs:participant.sourceRefs,appearance:base.appearance} satisfies ActorDefinition));
+    c.actorScene={primary:characters[0]??null,speakingSegmentIds:[],continuity:'cut',supporting:characters.slice(1).map((character,i)=>{
+      const performance=structuredClone(c.performance);
+      performance.root={x:performance.stage.width*(.24+.48*(i+1)/(characters.length-1)),y:performance.stage.groundY};
+      performance.walks=[];performance.turns=[];performance.gestures=[];performance.gazes=[];performance.props=[];
+      performance.entryPosture=undefined;performance.postures=[];performance.supports=[];
+      return {character,performance,actions:[{type:'idle' as const,startMs:shot.startMs,endMs:shot.endMs}],speakingSegmentIds:[]};
+    })};
+    if(!characters.length){
+      // A mechanism/cutaway without a sourced participant is not a universal researcher.
+      shot.host!.actions=[{type:'idle',startMs:shot.startMs,endMs:shot.endMs}];
+      c.performance.walks=[];c.performance.turns=[];c.performance.gestures=[];c.performance.gazes=[];c.performance.props=[];
+      c.propBindings=[];c.continuity.exit={...c.performance.root};c.continuity.facing=c.performance.facing??'front';
+    }
+    bindActorShot(shot,base,rig);
 }

@@ -36,6 +36,7 @@ export const api = {
   upload: (name: string, data: FormData,settingsRevision?:string) => request<{ files: UploadedAsset[];settingsRevision:string }>(`${projectUrl(name)}/upload${settingsRevision?`?settingsRevision=${encodeURIComponent(settingsRevision)}`:''}`, { method: 'POST', body: data }),
   settings: (name:string,data:unknown)=>request<ProjectDetail>(`${projectUrl(name)}/settings`,{method:'PATCH',body:JSON.stringify(data)}),
   script: (name:string,text:string,format:'txt'|'md',revision?:string,settingsRevision?:string)=>request<ArtifactDocument>(`${projectUrl(name)}/script`,{method:'PUT',body:JSON.stringify({text,format,revision,settingsRevision})}),
+  idea: (name:string,text:string,format:'txt'|'md',revision?:string,settingsRevision?:string)=>request<ArtifactDocument>(`${projectUrl(name)}/idea`,{method:'PUT',body:JSON.stringify({text,format,revision,settingsRevision})}),
   voices:()=>request<VoiceCatalog>('/api/voices'),
   voiceDefaults: (voice:unknown,language?:string)=>request<{saved:boolean}>(`/api/settings/voice${language?`?language=${encodeURIComponent(language)}`:''}`,{method:'PUT',body:JSON.stringify(voice)}),
 };

@@ -32,7 +32,7 @@ export async function readStoryboardForDirection(file:string,stateLocks:Record<s
       const version=z.object({producer:z.string(),performance:z.object({compilerVersion:z.string()}).passthrough()}).passthrough().parse(shot.cinematic);
       if(version.producer!==DIRECTION_VERSION||version.performance.compilerVersion!==ANIMATION_VERSION){
         if(!/^story-direction-2\.2\.\d+$/.test(version.producer)||!/^performance-2\.2\.\d+$/.test(version.performance.compilerVersion))throw new Error(`${shot.id}: unrecognized cinematic plan version`);
-        if(stateLocks.storyboard||(stateLocks[shot.id]??stateLocks[`shot:${shot.id}`]??shot.locked))throw new Error(`${shot.id}: locked cinematic plan version requires migration; unlock the shot or restore its compiler`);
+        if(stateLocks.storyboard||stateLocks.scenes||stateLocks[shot.id]||stateLocks[`shot:${shot.id}`]||stateLocks[`scene:${shot.id}`]||stateLocks[`shots.${shot.id}`]||shot.locked)throw new Error(`${shot.id}: locked cinematic plan version requires migration; unlock the shot or restore its compiler`);
         return {...shot,cinematic:undefined};
       }
     }
@@ -70,7 +70,7 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
       if (!existing) throw new Error('Locked storyboard is missing');
       storyboard = existing;
     } else {
-      const locks = existing?.shots.filter(s => stateLocks[s.id] ?? stateLocks[`shot:${s.id}`] ?? s.locked) ?? [];
+      const locks = existing?.shots.filter(s => stateLocks.scenes||stateLocks[s.id]||stateLocks[`shot:${s.id}`]||stateLocks[`scene:${s.id}`]||stateLocks[`shots.${s.id}`]||s.locked) ?? [];
       const anchors = [...narrationBoundaries(narration, beats)].sort((a, b) => a - b);
       const endpoints = [...new Set([0, narration.durationMs, ...beats.flatMap(b => [b.startMs, b.endMs]), ...locks.flatMap(s => [s.startMs, s.endMs])])].sort((a, b) => a - b);
       const planned: Shot[] = []; let serial = 0;
@@ -95,7 +95,7 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
           if(locks.some(s=>s.id===shot.id)){
             if(!shot.cinematic)throw new Error(`${shot.id}: locked diagram shot cannot become cinematic; unlock the shot or keep diagram mode`);
             validateCinematicShot(shot,profile,config);
-          }else ordered[i]=directCinematicShot(shot,beats.find(b=>shot.beatIds.includes(b.id))!,profile,config,entry,{setting,facing,parts:ordered[i-1]?modelExitParts(ordered[i-1]!):undefined,nextControlId:ordered[i+1]?.host?.actions.find(a=>a.type==='operate-model')?.target?.partId});
+          }else ordered[i]=directCinematicShot(shot,beats.find(b=>shot.beatIds.includes(b.id))!,profile,config,entry,{setting,facing,seed:config.presentation.character_mode==='actors',parts:ordered[i-1]?modelExitParts(ordered[i-1]!):undefined,nextControlId:ordered[i+1]?.host?.actions.find(a=>a.type==='operate-model')?.target?.partId});
           validateModelContinuity(ordered[i-1],ordered[i]!);
           const next=ordered[i]!.cinematic!;
           if(entry&&hash(next.continuity.entry)!==hash(entry))throw new Error(`${shot.id}: locked entry breaks character continuity`);
@@ -111,7 +111,7 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
       if(config.presentation.mode==='story-cinematic')storyboard=await createCreativeStoryboard(projectRoot,config,router,{story,narration,characters,beats,profile,rig,lockedActors},storyboard,locks);
     }
     assertActorLocks(retained,storyboard,stateLocks);
-    if(config.presentation.mode==='story-cinematic')await prepareCinematicEnvironments(projectRoot,storyboard,new Set(stateLocks.storyboard?storyboard.shots.map(s=>s.id):storyboard.shots.filter(s=>stateLocks[s.id]??stateLocks[`shot:${s.id}`]??s.locked).map(s=>s.id)));
+    if(config.presentation.mode==='story-cinematic')await prepareCinematicEnvironments(projectRoot,storyboard,new Set(stateLocks.storyboard?storyboard.shots.map(s=>s.id):storyboard.shots.filter(s=>stateLocks.scenes||stateLocks[s.id]||stateLocks[`shot:${s.id}`]||stateLocks[`scene:${s.id}`]||stateLocks[`shots.${s.id}`]||s.locked).map(s=>s.id)));
     storyboard=StoryboardSchema.parse(storyboard);
     validateStoryboard(storyboard, narration, beats, characters);
     validateExplainerStoryboard(storyboard, narration, beats, profile, rig, config);

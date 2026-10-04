@@ -1,0 +1,43 @@
+{
+  "$ref": "#/definitions/generated-script",
+  "definitions": {
+    "generated-script": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "factual",
+            "fiction"
+          ]
+        },
+        "narration": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 131072
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "maxItems": 30
+        }
+      },
+      "required": [
+        "title",
+        "kind",
+        "narration",
+        "warnings"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

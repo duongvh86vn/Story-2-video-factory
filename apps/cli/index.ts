@@ -12,21 +12,21 @@ import { readArtifact, saveArtifact, cinematicArtifactStatuses, cinematicArtifac
 import { HyperFramesEngine } from '../../packages/render/hyperframes.js';
 import { updateSettings, PresentationPatchSchema } from '../../packages/orchestrator/settings.js';
 import { outputPath } from '../../packages/render/process.js';
-import { parseScript } from '../../packages/ingest/script.js';
+import { parseScript, validateIdea, resolveInputMode } from '../../packages/ingest/script.js';
 import { writeAtomic } from '../../packages/core/utils.js';
 import { installedWindowsVoices,matchingWindowsVoices } from '../../packages/voice/catalog.js';
 import { NARRATION_LANGUAGES,LANGUAGE_TAG,primaryLanguage } from '../../packages/core/languages.js';
 
-const cli=new Command().name('video-factory').description('Compile script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
+const cli=new Command().name('video-factory').description('Turn a topic/story, complete script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
 cli.command('configure <project>')
-  .option('--language <code>','Narration language: en, vi, ja, ko or locale (e.g. en-US)').option('--input <mode>','script, wav, srt or auto')
+  .option('--language <code>','Narration language: en, vi, ja, ko or locale (e.g. en-US)').option('--input <mode>','idea, script, wav, srt or auto')
   .option('--host <kind>','mini-robot, stick-man or custom actor rig').option('--style <mode>','diagram or story-cinematic; keeps valid narration/audio')
   .option('--characters <mode>','actors or legacy presenter').option('--tts <provider>','windows-speech, azure-speech, omnivoice-studio, openai-compatible, http, command or none').option('--voice <id>').option('--tts-url <url>')
   .option('--tts-model <id>','Model installed on the local TTS server').option('--tts-timeout <seconds>','Per-segment TTS timeout').option('--tts-options <json>','Additional provider parameters').option('--tts-fields <json>','Custom HTTP request field names')
   .action(async(project:string,o:{language?:string;input?:string;host?:string;style?:string;characters?:string;tts?:string;voice?:string;ttsUrl?:string;ttsModel?:string;ttsTimeout?:string;ttsOptions?:string;ttsFields?:string})=>{
     await updateSettings(path.resolve(project),{...(o.language?{language:o.language}:{}),
       ...(o.style!==undefined||o.characters!==undefined?{presentation:PresentationPatchSchema.parse({...o.style?{mode:o.style}:{},...o.characters?{character_mode:o.characters}:{}})}:{}),
-      ...(o.input?{input:{mode:z.enum(['auto','script','wav','srt']).parse(o.input)}}:{}),
+      ...(o.input?{input:{mode:z.enum(['auto','idea','script','wav','srt']).parse(o.input)}}:{}),
       ...(o.host?{host:z.enum(['mini-robot','stick-man','custom']).parse(o.host)}:{}),
       ...(o.tts||o.voice||o.ttsUrl||o.ttsModel||o.ttsTimeout||o.ttsOptions||o.ttsFields?{voice:{...(o.tts?{tts_provider:z.enum(['none','windows-speech','azure-speech','omnivoice-studio','openai-compatible','http','command']).parse(o.tts)}:{}),...(o.voice?{voice_id:o.voice}:{}),...(o.ttsUrl?{base_url:o.ttsUrl}:{}),
         ...(o.ttsModel?{model:o.ttsModel}:{}),...(o.ttsTimeout?{timeout_ms:Number(o.ttsTimeout)*1000}:{}),...(o.ttsOptions?{http_extra_body:JSON.parse(o.ttsOptions)}:{}),...(o.ttsFields?{http_fields:JSON.parse(o.ttsFields)}:{})}}:{})});console.log('Settings saved');
@@ -36,6 +36,16 @@ cli.command('voices').description('List installed Windows voices and supported n
   console.log(JSON.stringify({languages:NARRATION_LANGUAGES.filter(item=>!language||item.id===primaryLanguage(language)),windows:{...windows,voices:language?matchingWindowsVoices(windows.voices,language):windows.voices}},null,2));
 });
 cli.command('script <project> <file>').description('Import a complete spoken script (.txt/.md)').action(async(project:string,file:string)=>{const root=path.resolve(project),extension=path.extname(file).toLowerCase();if(!['.txt','.md'].includes(extension))throw new Error('Script must be .txt or .md');const body=new TextDecoder('utf-8',{fatal:true}).decode(await fs.readFile(file)),relative=`input/script${extension}`;parseScript(body,relative);await coordinator.invalidateProject(root,'NEW');await writeAtomic(await outputPath(root,relative),body);await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md'}});console.log('Script imported');});
+cli.command('idea <project> <file>').description('Import a topic, idea or rough story (.txt/.md)').action(async(project:string,file:string)=>{const root=path.resolve(project),extension=path.extname(file).toLowerCase();if(!['.txt','.md'].includes(extension))throw new Error('Idea must be .txt or .md');const body=new TextDecoder('utf-8',{fatal:true}).decode(await fs.readFile(file)),relative=`input/idea${extension}`;validateIdea(body);await coordinator.invalidateProject(root,'NEW');await writeAtomic(await outputPath(root,relative),body);await updateSettings(root,{input:{mode:'idea',idea:relative as 'input/idea.txt'|'input/idea.md'}});console.log('Idea imported');});
+cli.command('authoring <project>').description('Configure the script-writing model and story preferences')
+  .option('--provider <name>').option('--model <id>').option('--url <url>').option('--key-env <name>').option('--timeout <seconds>')
+  .option('--kind <kind>','auto, factual or fiction').option('--seconds <seconds>','Writing target only; audio establishes the clock').option('--brief <text>')
+  .action(async(project:string,o:{provider?:string;model?:string;url?:string;keyEnv?:string;timeout?:string;kind?:string;seconds?:string;brief?:string})=>{
+    const config=await loadConfig(path.resolve(project));
+    await updateSettings(path.resolve(project),{models:{planner:{...(o.provider?{provider:z.enum(['gateway','openai-compatible','gemini','deepseek','ollama','litellm','claude-cli','codex-cli','mock']).parse(o.provider)}:{}),...(o.model?{model:o.model}:{}),...(o.url?{base_url:o.url}:{}),...(o.keyEnv?{api_key_env:o.keyEnv}:{}),timeout_ms:o.timeout?Number(o.timeout)*1000:o.provider&&['codex-cli','claude-cli'].includes(o.provider)?900000:config.models.planner.timeout_ms}},
+      script_generation:{...(o.kind?{kind:z.enum(['auto','factual','fiction']).parse(o.kind)}:{}),...(o.seconds?{target_seconds:Number(o.seconds)}:{}),...(o.brief!==undefined?{brief:o.brief}:{})}});console.log('Authoring settings saved');
+  });
+cli.command('write-script <project>').description('Generate a script from the selected idea, stopping before TTS').action(async(project:string)=>{const root=path.resolve(project);if(await resolveInputMode(root,await loadConfig(root))!=='idea')throw new Error('Select idea input to generate a script');const state=await runPipeline(root,{until:'INGESTED'});console.log(JSON.stringify(state,null,2));if(state.error)process.exitCode=2;});
 cli.command('new <name>').option('--root <directory>','Projects directory').option('--example','Copy the explanatory steam script example').option('--style <mode>','diagram or story-cinematic').action(async(name:string,options:{root?:string,example?:boolean,style?:string})=>{
   const presentation = options.style !== undefined ? PresentationPatchSchema.parse({mode:options.style}) : undefined;
   const root = await createProject(name,{root:options.root,example:options.example});

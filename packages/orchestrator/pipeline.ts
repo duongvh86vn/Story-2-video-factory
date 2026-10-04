@@ -8,11 +8,12 @@ import { appendLog, exists, hash, readJson, safePath, safeRealPath, walk, writeA
 import { ModelRouter } from '../models/registry.js';
 import { ingestProject, prepareInput, ScriptDocumentSchema } from '../ingest/index.js';
 import { SCRIPT_PARSER_VERSION } from '../ingest/script.js';
+import { generateScript, scriptGenerationIdentity } from './script-generation.js';
 import { narratedStory, NARRATED_STORY_VERSION } from '../ingest/narrated-story.js';
 import { analyzeProject } from '../story/index.js';
 import { createStoryboard, validateStoryboard, storyboardMarkdown } from '../storyboard/index.js';
 import { resolveAssets } from '../assets/index.js';
-import { buildScenes, buildMaster, repairScenes, lockedShot } from '../scenes/index.js';
+import { buildScenes, buildMaster, repairScenes, lockedShot, assertLockedSceneCompatibility } from '../scenes/index.js';
 import { HyperFramesEngine } from '../render/hyperframes.js';
 import { createPreviews, reviewProject } from '../review/index.js';
 import { produceMedia } from '../audio/index.js';
@@ -53,9 +54,10 @@ function stageOutputs(state:ProjectState):Partial<Record<ProjectStatus,string[]>
 }
 export function redact(message:string,config:FactoryConfig):string { for (const role of [...Object.values(config.models),config.voice]) { const key=process.env[role.api_key_env]; if (key) message=message.split(key).join('[REDACTED]'); } return message.replace(/Bearer\s+[^\s"']+/gi,'Bearer [REDACTED]'); }
 async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string):Promise<{all:string;narration:string}> {
-  const mode=config.input.mode==='auto' ? await exists(safePath(root,config.input.script)) ? 'script' : await exists(safePath(root,config.input.narration)) ? 'wav' : 'srt' : config.input.mode;
-  const autoPresence=config.input.mode==='auto'?await Promise.all([config.input.script,config.input.narration,config.input.subtitles].map(file=>exists(safePath(root,file)))):undefined;
-  const relativeFiles=mode==='script'?[config.input.script]:mode==='wav'?[config.input.narration,config.input.subtitles]:[config.input.subtitles];
+  const mode=config.input.mode==='auto' ? await exists(safePath(root,config.input.idea)) ? 'idea' : await exists(safePath(root,config.input.script)) ? 'script' : await exists(safePath(root,config.input.narration)) ? 'wav' : 'srt' : config.input.mode;
+  const autoPresence=config.input.mode==='auto'?await Promise.all([...(await exists(safePath(root,config.input.idea))?[config.input.idea]:[]),config.input.script,config.input.narration,config.input.subtitles].map(file=>exists(safePath(root,file)))):undefined;
+  const relativeFiles=mode==='idea'?[config.input.idea]:mode==='script'?[config.input.script]:mode==='wav'?[config.input.narration,config.input.subtitles]:[config.input.subtitles];
+  const authoring=mode==='idea'&&await exists(safePath(root,config.input.idea))?await scriptGenerationIdentity(root,config):undefined;
   const digest=async(relative:string)=>await exists(safePath(root,relative))?hash(await fs.readFile(await safeRealPath(root,relative))):null;
   const inputContents=await Promise.all(relativeFiles.map(async file=>[file,await digest(file)]));
   const repo=await findRepoRoot(),seriesFiles=config.project.series?await walk(safePath(path.join(repo,'series'),config.project.series)):[];
@@ -64,8 +66,8 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,artwork:ARTWORK_RENDER_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,seats:SEAT_SUPPORT_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
-  return {all:hash({version:4,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
-    narration:hash({version:3,scriptParser:mode==='script'?SCRIPT_PARSER_VERSION:undefined,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
+  return {all:hash({version:4,authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
+    narration:hash({version:3,scriptParser:mode==='script'||mode==='idea'?SCRIPT_PARSER_VERSION:undefined,authoring,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {
   const files=[...await walk(path.join(root,'input/assets')),...await walk(path.join(root,'assets'))];
@@ -74,7 +76,11 @@ async function assetFingerprint(root:string):Promise<string> {
 }
 async function artifactHashes(root:string,state:ProjectState):Promise<void> {
   for (const [stage,files] of Object.entries(stageOutputs(state))) if (stateIndex(stage as ProjectStatus)<=stateIndex(state.state)) for (const file of files) if (await exists(path.join(root,file))) state.artifactHashes[file]=hash(await fs.readFile(path.join(root,file)));
-  if((state.specVersion??1)>=3&&stateIndex(state.state)>=stateIndex('INGESTED')&&await exists(path.join(root,'work/script.json'))){const input=await readJson<{mode:string}>(path.join(root,'work/input-document.json'));if(input.mode==='script')state.artifactHashes['work/script.json']=hash(await fs.readFile(path.join(root,'work/script.json')));}
+  if((state.specVersion??1)>=3&&stateIndex(state.state)>=stateIndex('INGESTED')){
+    const input=await readJson<{mode:string}>(path.join(root,'work/input-document.json'));
+    const files=input.mode==='idea'?['script.json','generated-script.txt','script-generation.json']:input.mode==='script'?['script.json']:[];
+    for(const file of files){state.artifactHashes[`work/${file}`]=hash(await fs.readFile(path.join(root,'work',file)));if(input.mode==='idea'&&state.state==='DONE')state.artifactHashes[`output/${file}`]=hash(await fs.readFile(path.join(root,'output',file)));}
+  }
   if(stateIndex(state.state)>=stateIndex('ANALYZED')) for(const file of await walk(path.join(root,'assets/host'))) state.artifactHashes[path.relative(root,file).replace(/\\/g,'/')]=hash(await fs.readFile(file));
   if((state.specVersion??1)>=4&&stateIndex(state.state)>=stateIndex('STORYBOARDED'))for(const [file,expected] of Object.entries(await actorAssetHashes(root))){
     if(hash(await fs.readFile(await safeRealPath(root,file)))!==expected)throw new Error(`Actor asset differs from its canonical cast: ${file}`);
@@ -103,7 +109,12 @@ async function reconcile(root:string,state:ProjectState):Promise<void> {
       }
     }
   }
-  if((state.specVersion??1)>=3&&initial>=stateIndex('INGESTED')){const input=await readJson<{mode:string}>(path.join(root,'work/input-document.json')).catch(()=>undefined);if(input?.mode==='script'&&(!await exists(path.join(root,'work/script.json'))||state.artifactHashes['work/script.json']&&hash(await fs.readFile(path.join(root,'work/script.json')))!==state.artifactHashes['work/script.json']))target=stateIndex('NEW');}
+  if((state.specVersion??1)>=3&&initial>=stateIndex('INGESTED')){
+    const input=await readJson<{mode:string}>(path.join(root,'work/input-document.json')).catch(()=>undefined);
+    const files=input?.mode==='idea'?['script.json','generated-script.txt','script-generation.json']:input?.mode==='script'?['script.json']:[];
+    for(const file of files){const relative=`work/${file}`;if(!await exists(path.join(root,relative))||state.artifactHashes[relative]&&hash(await fs.readFile(path.join(root,relative)))!==state.artifactHashes[relative])target=stateIndex('NEW');}
+    if(input?.mode==='idea'&&initial===stateIndex('DONE'))for(const file of files){const relative=`output/${file}`;if(!await exists(path.join(root,relative))||state.artifactHashes[relative]&&hash(await fs.readFile(path.join(root,relative)))!==state.artifactHashes[relative])target=Math.min(target,stateIndex('QC_PASSED'));}
+  }
   if((state.specVersion??1)>=4&&initial>=stateIndex('STORYBOARDED')){
     try{for(const [file,expected] of Object.entries(await actorAssetHashes(root))){
       if(!await exists(path.join(root,file))||hash(await fs.readFile(await safeRealPath(root,file)))!==expected)target=Math.min(target,stateIndex('ANALYZED'));
@@ -171,7 +182,19 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     // or reconciling cached artifact hashes.
     const {recoverCinematicArtworkTransactions}=await import('../director/artwork-repair.js');
     await recoverCinematicArtworkTransactions(root);
-    config=await loadConfig(root); const state=await loadState(root); store=new ProductionStore(root); store.failInterruptedJobs();
+    config=await loadConfig(root); const state=await loadState(root);
+    if(await exists(path.join(root,'work/storyboard.json'))){
+      const raw=await readJson<{shots:Array<{locked?:boolean}>}>(path.join(root,'work/storyboard.json'));
+      if(Object.values(state.locked).some(Boolean)||raw.shots.some(shot=>shot.locked)){
+        const board=await readStoryboardForDirection(path.join(root,'work/storyboard.json'),state.locked);
+        if(board.shots.some(shot=>lockedShot(state,shot))){
+          if(await exists(path.join(root,'work/asset-manifest.json'))){
+            await assertLockedSceneCompatibility(root,config,board,await readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema),await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema),state);
+          }else if(stateIndex(state.state)>=stateIndex('SCENES_READY'))throw new Error('Locked scene inputs are incomplete; restore the approved asset manifest before resuming');
+        }
+      }
+    }
+    store=new ProductionStore(root); store.failInterruptedJobs();
     const hostHash=config.content.mode==='narrated-explainer'?await hostProfileFingerprint(root,config):'',fingerprints=await inputFingerprint(root,config,hostHash),fingerprint=fingerprints.all,assetHash=await assetFingerprint(root);
     if (options.force || (state.inputHash && state.inputHash!==fingerprint)) { state.state=!options.force&&state.narrationInputHash===fingerprints.narration&&stateIndex(state.state)>=stateIndex('TIMED')?'TIMED':'NEW'; state.reviewIteration=0; state.artifactHashes={}; state.approvals.storyboard=false; if(!state.locked.characterBible) state.approvals.characters=false; await writeJson(path.join(root,'work/scene-repair-budget.json'),{}); }
     if(state.hostInputHash!==hostHash){state.approvals.host=false;state.approvals.hostHash='';}
@@ -203,12 +226,12 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
         switch(next) {
           case 'INGESTED': {
             if(config.content.mode==='legacy'){await ingestProject(root,config,router);break;}
-            await prepareInput(root,config); break;
+            const mode=await prepareInput(root,config);if(mode==='idea')await generateScript(root,config,router);break;
           }
           case 'TIMED': {
             if(config.content.mode==='narrated-explainer') {
-              const input=await readJson<{mode:'script'|'wav'|'srt'}>(path.join(root,'work/input-document.json'));
-              if(input.mode==='script') {
+              const input=await readJson<{mode:'idea'|'script'|'wav'|'srt'}>(path.join(root,'work/input-document.json'));
+              if(input.mode==='script'||input.mode==='idea') {
                 const script=await readJson(path.join(root,'work/script.json'),ScriptDocumentSchema),n=await narrateScript(root,config,script);
                 if(!n)throw new ApprovalRequired('voice',(await readJson(path.join(root,'work/voice-report.json'),VoiceReportSchema)).error);
                 await writeJson(path.join(root,'work/narration.json'),n);
@@ -289,7 +312,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             }
             break;
           }
-          case 'DONE': { const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name)); await report(root,config,state,router); break; }
+          case 'DONE': { const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(config.content.mode==='narrated-explainer'&&(await readJson<{mode:string}>(path.join(root,'work/input-document.json'))).mode==='idea')names.push('script.json','generated-script.txt','script-generation.json');if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name)); await report(root,config,state,router); break; }
         }
         transition(state,next);if(next==='STORYBOARDED'||next==='ASSETS_READY')state.assetInputHash=await assetFingerprint(root); await artifactHashes(root,state); await saveState(root,state); store.saveState(state); store.finishJob(job); options.onProgress?.(state);
         await writeJson(path.join(root,'work/cost-report.json'),costSummary(router,config));

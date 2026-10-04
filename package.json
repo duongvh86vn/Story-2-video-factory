@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "private": true,
   "type": "module",
-  "description": "Script/WAV/SRT to narrated robot or stick-man explainer video",
+  "description": "Topic/story, script, WAV or SRT to animated video with stick figure or robot actors",
   "engines": { "node": ">=22.13.0" },
   "bin": { "video-factory": "dist/apps/cli/index.js" },
   "scripts": {

@@ -4,15 +4,15 @@ Cập nhật theo yêu cầu ngày 02/10/2026. Đây là đặc tả hiện hàn
 
 ## Sản phẩm
 
-Người dùng nhập kịch bản, WAV hoặc SRT. Hệ thống tạo phim hoạt hình kể lại nội dung đó, trong đó người que là **diễn viên sống trong câu chuyện**. Giọng kể có thể ở ngoài hình. Không bắt buộc xuất hiện người thuyết trình, quay ra khán giả, mở miệng theo toàn bộ lời kể hoặc đứng cạnh sơ đồ.
+Người dùng nhập chủ đề/ý tưởng/câu chuyện thô để tạo kịch bản, hoặc đưa kịch bản hoàn chỉnh/WAV/SRT để giữ lời kể. Hệ thống tạo phim theo nội dung đó, trong đó người que là **diễn viên sống trong câu chuyện**. Giọng kể có thể ở ngoài hình. Bối cảnh, vai, hành động và biểu cảm theo từng truyện, không bắt buộc người thuyết trình hoặc đứng cạnh sơ đồ.
 
-Một bài về máy hơi nước có những người nghiên cứu, chế tạo hoặc sử dụng máy mà đầu vào nói tới. Bài có Nikola Tesla có thể phân vai Tesla thành người que riêng, diễn lại nghiên cứu và các tình huống được kể. Không tự thêm Tesla vào mọi bài về điện, hoặc đổi lời kể thành khẳng định Tesla phát minh ra điện năng.
+Máy hơi nước, ô tô và Tesla chỉ là ví dụ, không xác định miền nội dung hay template sản phẩm. Truyện về bạn bè có các vai bạn bè; truyện hành trình có các vai và địa điểm được kể; kiến thức tự nhiên có đối tượng/cảnh giải thích phù hợp. Người lịch sử phải có nguồn nhận diện; nhân vật hư cấu giữ vai hư cấu, không tự thêm tên lịch sử vào chủ đề khác.
 
 ## Phân vai và tạo hình
 
 - Lập cast theo nội dung: ID, tên, vai, mục tiêu, nguồn nhận diện, tạo hình và rig. Giữ identity của **từng diễn viên**; một phim có thể có nhiều vai.
 - Nhân vật lịch sử là tạo hình hoạt hình cách điệu. Tóc, ria, áo, kính và đạo cụ giúp phân biệt vai; ghi provenance minh họa, không coi như ảnh tư liệu hoặc bằng chứng lịch sử.
-- Nhân vật không được nêu tên có thể là người nghiên cứu, thợ hoặc người sử dụng trong tình huống minh họa. Không bịa tên riêng hoặc sự kiện lịch sử.
+- Nhân vật không được nêu tên có vai minh họa thích hợp với tình huống cụ thể; không mặc định tất cả thành người nghiên cứu/thợ. Nhân vật hư cấu có thể có tên trong kịch bản đã chọn. Không bịa tên riêng hoặc sự kiện lịch sử.
 - Không ép mọi diễn viên dùng một khăn cổ, bảng màu, trang phục hay silhouette chi tiết. Giữ ngôn ngữ người que dễ đọc; tự thiết kế theo truyện.
 - Preview, chỉnh và khóa từng vai có sẵn. Nhân vật sinh tự động không cần một vòng duyệt bắt buộc; giữ các lock người dùng đặt và báo xung đột rõ.
 

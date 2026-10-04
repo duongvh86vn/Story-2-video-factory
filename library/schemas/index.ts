@@ -10,6 +10,7 @@ import { HostProfileSchema, HostRigSchema, HostTimelineSchema } from '../../pack
 import { ExplanationPlanSchema } from '../../packages/explainer/schemas.js';
 import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/schemas.js';
 import { ConfigSchema } from '../../packages/core/config.js';
+import { GeneratedDraftSchema, ScriptGenerationReportSchema } from '../../packages/orchestrator/script-generation.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary = {
@@ -20,6 +21,7 @@ export const schemaLibrary = {
   'chapter-plan': ChapterPlanSchema, 'beat-plan': BeatPlanSchema,
   config:ConfigSchema,script:ScriptDocumentSchema,'host-profile':HostProfileSchema,'host-rig':HostRigSchema,'host-timeline':HostTimelineSchema,
   'explanation-plan':ExplanationPlanSchema,'voice-report':VoiceReportSchema,'speech-activity':ActivitySchema,
+  'generated-script':GeneratedDraftSchema,'script-generation':ScriptGenerationReportSchema,
 };
 
 export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(import.meta.url))): Promise<void> {

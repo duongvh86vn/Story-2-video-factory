@@ -53,17 +53,25 @@ export function parseScript(original: string, sourcePath = 'input/script.txt'): 
   const text = paragraphs.map(p => p.text).join('\n\n');
   return ScriptDocumentSchema.parse({ version: 1, parserVersion: SCRIPT_PARSER_VERSION, sourcePath, sourceHash: hash(original), original, text, paragraphs, chunks });
 }
-export async function prepareInput(root: string, config: FactoryConfig): Promise<'script' | 'wav' | 'srt'> {
+export function validateIdea(text: string): void {
+  if (!text.trim() || text.includes('\0') || Buffer.byteLength(text,'utf8') > 128 * 1024) throw new Error('Idea/story must be nonempty UTF-8 text without NUL, at most 128 KB');
+}
+export async function resolveInputMode(root: string, config: FactoryConfig): Promise<'idea' | 'script' | 'wav' | 'srt'> {
   const present = async (relative: string) => await exists(path.join(root, relative));
-  const script = await present(config.input.script), audio = await present(config.input.narration), subtitles = await present(config.input.subtitles);
+  const idea = await present(config.input.idea), script = await present(config.input.script), audio = await present(config.input.narration), subtitles = await present(config.input.subtitles);
   let mode = config.input.mode;
   if (mode === 'auto') {
-    if (script && (audio || subtitles)) throw new Error('Multiple input types found; choose input.mode explicitly');
-    mode = script ? 'script' : audio ? 'wav' : subtitles ? 'srt' : 'auto';
+    if (Number(idea) + Number(script) + Number(audio || subtitles) > 1) throw new Error('Multiple input types found; choose input.mode explicitly');
+    mode = idea ? 'idea' : script ? 'script' : audio ? 'wav' : subtitles ? 'srt' : 'auto';
   }
-  if (mode === 'auto' || mode === 'script' && !script || mode === 'wav' && !audio || mode === 'srt' && !subtitles) throw new Error(`Supply the selected ${mode} input before production`);
-  const relative = mode === 'script' ? config.input.script : mode === 'wav' ? config.input.narration : config.input.subtitles;
+  if (mode === 'auto' || mode === 'idea' && !idea || mode === 'script' && !script || mode === 'wav' && !audio || mode === 'srt' && !subtitles) throw new Error(`Supply the selected ${mode} input before production`);
+  return mode;
+}
+export async function prepareInput(root: string, config: FactoryConfig): Promise<'idea' | 'script' | 'wav' | 'srt'> {
+  const mode = await resolveInputMode(root, config), subtitles = await exists(path.join(root,config.input.subtitles));
+  const relative = mode === 'idea' ? config.input.idea : mode === 'script' ? config.input.script : mode === 'wav' ? config.input.narration : config.input.subtitles;
   const file = await safeRealPath(root, relative), bytes = await fs.readFile(file);
+  if (mode === 'idea') validateIdea(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
   await writeJson(path.join(root, 'work/input-document.json'), { version: 2, mode, sourcePath: relative, sourceHash: hash(bytes),
     companionSubtitles: mode === 'wav' && subtitles ? config.input.subtitles : null });
   if (mode === 'script') await writeJson(path.join(root, 'work/script.json'), parseScript(new TextDecoder('utf-8', { fatal: true }).decode(bytes), relative));

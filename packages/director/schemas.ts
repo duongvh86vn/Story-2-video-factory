@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import { Id } from '../core/identifiers.js';
 import { PointSchema, PerformancePlanSchema } from '../animation/schemas.js';
-import { SourceRefSchema } from '../explainer/schemas.js';
+import { SourceRefSchema,SceneIntentSchema } from '../explainer/schemas.js';
 import { ArtDirectionSchema } from './art-direction-schemas.js';
 import {ActorSceneSchema} from '../actors/schemas.js';
 
-export const DIRECTION_VERSION='story-direction-2.2.22';
+export const DIRECTION_VERSION='story-direction-2.2.24';
 export const CINEMATIC_PLAN_FILES=['story-direction.json','stage-plan.json','performance-plan.json','camera-plan.json','creative-direction-report.json','actor-cast.json','actor-timeline.json'] as const;
 export const CINEMATIC_EXPORT_FILES=[...CINEMATIC_PLAN_FILES,'environment-provenance.json','performance-report.json','animation-library.json'] as const;
 export const CinematicModelSchema=z.object({partId:Id,variant:z.enum(['conceptual','historical-note','vehicle-feature-schematic','three-wheel-group','electric-vehicle-schematic','combustion-vehicle-schematic','electric-motor','combustion-engine','steam-old','steam-split']),sourceRefs:z.array(SourceRefSchema).min(1)}).strict();
@@ -24,16 +24,25 @@ export const CameraSchema=z.object({framing:z.enum(['wide','medium','close']),mo
 export type CinematicCamera=z.infer<typeof CameraSchema>;
 export const CinematicPlanSchema=z.object({
   version:z.literal(22),producer:z.literal(DIRECTION_VERSION),shotId:Id,leadCharacterId:Id,
-  motivation:z.string().min(1).max(1000),attentionPartId:Id,sourceRefs:z.array(SourceRefSchema).min(1),
+  motivation:z.string().min(1).max(1000),attentionPartId:Id.optional(),sourceRefs:z.array(SourceRefSchema).min(1),
   setting:z.enum(['workshop','road','neutral']),environmentAssetId:Id.optional(),
   provenance:z.literal('illustration'),
   artDirection:ArtDirectionSchema.optional(),
   actorScene:ActorSceneSchema.optional(),
-  models:z.array(CinematicModelSchema).min(1),
+  sceneIntent:SceneIntentSchema.optional(),
+  models:z.array(CinematicModelSchema),
   propBindings:z.array(z.object({propId:Id,partId:Id,role:z.literal('illustrative-model'),sourceRefs:z.array(SourceRefSchema).min(1)}).strict()).default([]),
   continuity:z.object({entry:PointSchema,exit:PointSchema,facing:z.enum(['front','left','right']),carriedProps:z.array(Id),
     models:z.array(z.object({partId:Id,x:z.number().finite(),y:z.number().finite(),width:z.number().positive(),height:z.number().positive()})).default([])}).strict(),
   camera:CameraSchema,
   performance:PerformancePlanSchema,
-}).strict();
+}).strict().superRefine((c,ctx)=>{
+  if(c.models.length&&!c.attentionPartId)ctx.addIssue({code:'custom',path:['attentionPartId'],message:'A scene with models requires object attention.'});
+  if(!c.models.length){
+    if(!c.sceneIntent?.participants.length||!(c.actorScene?.primary||c.actorScene?.supporting.length))
+      ctx.addIssue({code:'custom',path:['models'],message:'Empty models require a sourced sceneIntent and a real actorScene cast.'});
+    if(c.attentionPartId||c.propBindings.length||c.continuity.models.length||c.continuity.carriedProps.length)
+      ctx.addIssue({code:'custom',path:['attentionPartId'],message:'Objectless actor scene cannot retain object attention, bindings or model continuity.'});
+  }
+});
 export type CinematicPlan=z.infer<typeof CinematicPlanSchema>;

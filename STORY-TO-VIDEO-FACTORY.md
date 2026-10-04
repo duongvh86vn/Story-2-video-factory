@@ -1,33 +1,42 @@
 # STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
-> Contract hiện hành ngày 03/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Ba luồng nguyên văn giữ nguyên. Director2.2.22/animation2.2.10 đang triển khai/nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
+> Phạm vi hiện hành 04/10/2026: **tool tổng quát chủ đề/câu chuyện → kịch bản → video**, người que là diễn viên trong chính câu chuyện. Máy hơi nước và ô tô chỉ là ví dụ kiểm tra. Nhánh ý tưởng được bổ sung trước ba luồng narration nguyên văn; source mới đang nghiệm thu, không lấy video mẫu hoặc QC kỹ thuật làm bằng chứng sản phẩm đã hoàn thành. [Luồng và cách dùng](docs/GENERAL-STORY-TOOL.md).
 
-Contract hiện tại có actorScene: primary nullable, supporting actors, costume SVG gắn khớp, speakingSegmentIds và continuity cut/continuous. Animation2.2.10 có body/posture, hai tay độc lập và ghế có support; director2.2.22 nối vào pipeline/cache. Identity thuộc từng vai; preview dùng cùng skeleton với phim. Artwork/layers/palette/camera tự chọn; source/clock/contact/security vẫn chặn final khi sai. [Audit độc lập hiện tại](docs/validation/2026-10-03-current-runtime.md) và [diagnostics mới còn chờ test](docs/validation/2026-10-03-cli-diagnostics.md) ghi scope theo đúng source; chưa nghiệm thu toàn phim/ba luồng/live backend.
+Contract hiện tại có actorScene: primary nullable, supporting actors, costume SVG gắn khớp, speakingSegmentIds và continuity cut/continuous. Animation2.2.10 có body/posture, hai tay độc lập và ghế có support; director2.2.24 nối vào pipeline/cache. Identity thuộc từng vai; preview dùng cùng skeleton với phim. Artwork/layers/palette/camera tự chọn; source/clock/contact/security vẫn chặn final khi sai. [Kiểm tra source24](docs/validation/2026-10-04-general-story-tool.md) và [audit source trước](docs/validation/2026-10-03-current-runtime.md) ghi scope theo đúng source; chưa nghiệm thu toàn phim/ba luồng/live backend.
 
 
-Đặc tả mục tiêu V2.2 · cập nhật 2026-10-03. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Ba luồng narration được giữ; diễn xuất V2.2 đang triển khai/nghiệm thu. Phần đã chạy và phần còn chờ được ghi ở IMPLEMENTATION-STATUS.md.
+Đặc tả mục tiêu V2.2 · cập nhật 2026-10-04. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Nhánh ý tưởng nối vào ba luồng narration; diễn xuất V2.2 đang triển khai/nghiệm thu. Phần đã chạy và phần còn chờ được ghi ở IMPLEMENTATION-STATUS.md.
 
 ## 1. Trải nghiệm và phạm vi
 
-**Nhập nội dung → chọn người que hoặc robot mini → Tạo video.** Kịch bản là lời kể hoàn chỉnh. Hệ thống đọc nguyên văn, không tự viết lại, thêm lời thoại, câu chào hoặc lời kết.
+**Nhập chủ đề/câu chuyện → tạo kịch bản → phân vai → dựng video theo nội dung.** Chủ đề, ý tưởng hoặc câu chuyện thô dùng chế độ `idea`; AI phát triển lời kể trước TTS. Kịch bản hoàn chỉnh dùng `script` và được đọc nguyên văn, không tự viết lại hoặc thêm thoại ở các bước sau. WAV/SRT tiếp tục giữ lời kể và clock theo contract.
 
-Sản phẩm là phim hoạt hình giải thích/mô tả/kể lại sự vật, sự việc. Người que đóng vai trong câu chuyện. Người có tên trong nguồn được dựng thành vai cách điệu; người chưa có tên chỉ là vai minh họa, không bịa lịch sử. Có nhiều vai, voiceover và cảnh chỉ có cơ cấu. Không bắt buộc diễn viên nhìn khán giả hoặc thuyết trình cạnh bảng.
+Sản phẩm hỗ trợ kiến thức, lịch sử, khoa học, đời thường và truyện hư cấu. Người que đóng vai theo người tham gia, sự kiện và tình huống của nội dung, giữ identity từng vai. Nhân vật hư cấu không bị gán thành nhân vật lịch sử; vai minh họa phù hợp từng truyện. Có nhiều vai, voiceover và cảnh chỉ có đối tượng/môi trường. Thiết kế, bối cảnh, camera, màu sắc và nhịp diễn chọn theo truyện, không bắt buộc thuyết trình cạnh bảng hoặc cảnh máy móc.
 
 Đặc tả vai diễn và hướng HTML5/CSS/SVG/JavaScript nằm trong [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Lời kể giữ nguyên văn; chỉ bổ sung kịch bản hình ảnh và diễn xuất. Video tham khảo là tư liệu về cách biểu đạt, không phải bằng chứng công nghệ hoặc lịch sử.
 
 Dự án mới dùng story-cinematic/actors. Project cũ thiếu trường character_mode vẫn dùng presenter để tương thích; không âm thầm thay phim đã duyệt. Chuyển sang actors dựng lại phần hình, giữ narration/audio còn hợp lệ. Kết quả cũ lưu riêng và không đóng nghiệm thu mới.
 
-## 2. Ba luồng đầu vào
+## 2. Nhánh ý tưởng và ba luồng narration
 
 | Chế độ | Nguồn chính | Giọng và clock |
 |---|---|---|
+| idea | input/idea.txt hoặc input/idea.md UTF-8 | Model viết kịch bản trước; TTS và clock thực dùng lại nhánh script |
 | script | input/script.txt hoặc input/script.md UTF-8 | TTS nguyên văn; clock từ audio thực tế đã đo |
 | wav | input/narration.wav | Giữ audio; ASR tạo transcript/timestamp |
 | srt | input/narration.srt | Giữ cue text/clock; TTS từng cue và fit |
 
 WAV + SRT thuộc luồng WAV: giữ WAV, giữ cue ID/text/clock SRT, kiểm tra/forced-align trước sản xuất. Không đổi tốc độ WAV để che mismatch. Thiếu backend alignment hoặc mismatch phải báo rõ và chặn final.
 
-input.mode quyết định nguồn chính khi nhiều file cùng tồn tại. Chế độ srt bỏ qua WAV; script bỏ qua WAV/SRT; wav dùng SRT đi kèm nếu có. auto nhận diện project cũ theo WAV/SRT, hoặc script khi chỉ có script. auto gặp script cùng WAV/SRT phải yêu cầu chọn mode; không âm thầm đổi nguồn.
+input.mode quyết định nguồn chính khi nhiều file cùng tồn tại. `idea` phát triển đúng nội dung ý tưởng; `script` chỉ đọc kịch bản; `srt` giữ SRT; `wav` dùng WAV và SRT đi kèm nếu có. `auto` chỉ nhận một nhóm nguồn (WAV+SRT là một nhóm); ý tưởng/kịch bản/audio cùng tồn tại phải chọn mode rõ ràng, không âm thầm chuyển nguồn.
+
+### 2.1. Chủ đề/câu chuyện → kịch bản
+
+Model writer là `models.planner`, cấu hình riêng trong Studio/CLI/API hoặc chủ động chọn dùng model thiết kế cảnh. `script_generation` có kind=auto/factual/fiction, target_seconds và brief; thời lượng này chỉ hướng dẫn viết, không phải clock audio. Writer giữ chủ đề, sự kiện và ý nghĩa; lời kể hoàn chỉnh lưu `work/generated-script.txt`, `work/script.json`, `work/script-generation.json`, bản gốc ở input/idea.*. Title/kind/warnings theo xuống Story; nội dung factual do model viết có nhãn chưa kiểm chứng độc lập. Cue citation chứng minh bám kịch bản, không chứng minh mọi claim là đúng lịch sử.
+
+Chỉ tạo kịch bản dừng ở INGESTED trước TTS. Người dùng có thể xem và đưa bản sửa sang `script` để đọc nguyên văn; hoặc Tạo video chạy tự động đến final khi đủ điều kiện. Thiếu writer thật báo `needs-script`/waitingFor=script trước timeline, không giả làm kịch bản bằng mock hay đổi provider tự động. TTS thiếu/lỗi vẫn chặn TIMED/final như nhánh script.
+
+Cache writer gồm nguyên liệu/nguồn bổ trợ, ngôn ngữ, yêu cầu viết, prompt và cấu hình model. Đổi tạo hình hoặc giọng giữ kịch bản đã tạo; sửa ý tưởng/ngôn ngữ/model viết/nguồn làm tạo lại kịch bản và phần phụ thuộc. Kết quả đã chấp nhận lưu cache trước khi xuất artifact để resume không phát sinh lời gọi writer chỉ vì thiếu file xuất. Video xuất thêm kịch bản và provenance của nhánh idea.
 
 source.md là tài liệu bổ trợ tùy chọn, không phải kịch bản. Host MD mô tả nhân vật. Hai loại MD không cung cấp quyền thực thi shell, tool, hướng dẫn hệ thống hoặc thay nội dung lời kể. Không có source.md vẫn phải chuẩn bị được video.
 
@@ -102,13 +111,16 @@ Chế độ actors bỏ quota 70%, absence6s và kích thước wide/medium bắ
 Pipeline chung:
 
 ```text
-input document → narration có clock → analysis → explanation plan
+idea → viết kịch bản ─┐
+script/WAV/SRT ─────┴→ narration có clock → analysis → explanation plan
   → story direction → stage/performance/camera plans → storyboard
   → assets + rig/clips → compile scenes → voiced preview
   → review/repair → final → QC → DONE
 ```
 
 Mỗi beat giữ explanationGoal, narrationSegmentIds, sourceRefs, entities, evidenced relations, visualMethod, hostIntent. V2.2 bổ sung mục đích hành động, emotional arc, stage/prop targets, entry/exit pose và continuity. Người que phải làm một việc có ý nghĩa, thấy kết quả và nối sang ý sau. Không áp một bộ động tác giống nhau vào mọi câu.
+
+Director `story-direction-2.2.24` và explanation `sourced-explanation-2.2.2` dùng thêm `sceneIntent`: người tham gia, hành động, mục đích/quan sát và kết quả được kể. Tên/vai/identity phải khớp cast thực và nguồn narration; câu khẳng định giữ toàn bộ câu nguồn, gồm phủ định. Cảnh diễn viên có thể không có entities/parts/events/models khi không cần đối tượng; cũng không có target/contact/binding treo. Cảnh sơ đồ/presenter giữ contract đối tượng cũ. Seed không thêm researcher hoặc bước đi theo độ dài cue; model thiết kế cảnh phải dàn diễn xuất theo câu chuyện. Ý đồ ngoài capability hoặc thao tác không với tới target báo lỗi để sửa, không bị đổi thành chỉ tay.
 
 Clock của chapter/beat/shot do code tính từ narration. Model chỉ cung cấp cấu trúc/ý đồ, không sở hữu phép tính timestamp hoặc identity. Beat hình ảnh có thể đi qua nhiều cue hoặc một cue có nhiều shot; không buộc cut theo từng chunk TTS.
 
@@ -131,19 +143,21 @@ Minh họa có provenance=visualization, fidelity=conceptual. Bộ từ vựng V
 
 Recipe giữ ý đồ giải thích theo STORY-ACTOR-DIRECTION.md: diễn viên sống trong cảnh, đi/quan sát/thử/phản ứng theo tình huống. Tên recipe có `host-` là ID tương thích, không buộc một người dẫn cố định. Không biến toàn bài thành tám biến thể của grid icon. Quan hệ và nhãn không được đổi thành claim mới khi chỉnh storyboard. Action chọn theo narration anchors; model reaction sau contact khi có thao tác. Các mũi tên nhân quả cần evidence; chỉ cùng xuất hiện không đủ chứng minh nguyên nhân.
 
+Đây là bộ công cụ cho nội dung cần giải thích, không phải checklist phải dùng đủ tám recipe trong mọi phim. Truyện đời thường hoặc hư cấu chọn hành động, phản ứng và chuyển cảnh theo nội dung.
+
 Không thay nhân vật bằng portrait, slideshow hoặc một tấm chữ dài. Fallback chỉ giảm chi tiết phụ khi vẫn giữ diễn xuất/hành động chính, source parts, relations và interaction. Thiếu clip/asset cần thiết phải dừng để sửa; không âm thầm đổi cinematic thành diagram hoặc thành cảnh đứng yên. Lỗi semantic không được biến thành pass bằng fallback trang trí.
 
 ## 8. Studio, API và CLI
 
-Studio có ba tab Kịch bản/WAV/SRT → kiểu tạo hình/diễn viên → giọng → Tạo video. Story-cinematic/actors mặc định cho dự án mới. Ba cột Lời kể | Dàn cảnh và diễn xuất | Preview clip; preview cast riêng. Chỉnh/khóa/rebuild có sẵn; automatic không bắt buộc duyệt storyboard.
+Studio có bốn tab Chủ đề/Câu chuyện, Kịch bản, WAV, SRT → kiểu tạo hình/diễn viên → giọng → Tạo video. Nhánh idea cấu hình model viết, kind và thời lượng mục tiêu; có thể chỉ tạo kịch bản để xem/sửa trước TTS. Story-cinematic/actors mặc định cho dự án mới. Ba cột Lời kể | Dàn cảnh và diễn xuất | Preview clip; preview cast riêng. Chỉnh/khóa/rebuild có sẵn; automatic không bắt buộc duyệt storyboard.
 
 API có PATCH project settings (input.mode/script, host, language, voice, automatic), PUT script editor, multipart script/host upload, POST script preview, voice-default settings, approve host và run tới DONE. Settings/artifact edits có revision check. Generated story/narration chỉ đọc; chỉnh script hoặc input SRT/WAV để đổi lời kể. Host scene source được sinh từ kế hoạch đã validate; chỉnh storyboard rồi rebuild thay vì sửa SVG/JS làm mất identity/target guarantees.
 
-CLI new/configure/script/make/resume/approve/status/lock/edit dùng cùng contract với Studio. `new --example` lấy bài hơi nước thuần script, không đưa người dùng về truyện hư cấu V1. Các project V1 có thể opt-in content.mode=legacy để dùng pipeline cũ; không được coi nghiệm thu legacy là nghiệm thu host explainer.
+CLI new/configure/idea/authoring/write-script/script/make/resume/approve/status/lock/edit dùng cùng contract với Studio. `new --example` chỉ là fixture tùy chọn; không quy định chủ đề sản phẩm. Các project V1 có thể opt-in content.mode=legacy để dùng pipeline cũ; legacy không hỗ trợ idea và không được coi là nghiệm thu pipeline hiện hành.
 
 ## 9. Cache, resume, lock và chặn lỗi
 
-Cache raw TTS theo text/provider/voice/language/endpoint/command/settings và audio hash. Script sửa hoặc đổi giọng làm lại narration/phần phụ thuộc; cue raw còn hợp lệ được tái sử dụng. Đổi host chỉ làm lại phần hình, giữ audio/timeline hợp lệ. Thay source bổ trợ cũng giữ narration, làm lại analysis/explanation.
+Cache raw TTS theo text/provider/voice/language/endpoint/command/settings và audio hash. Script sửa hoặc đổi giọng làm lại narration/phần phụ thuộc; cue raw còn hợp lệ được tái sử dụng. Đổi host chỉ làm lại phần hình, giữ audio/timeline hợp lệ. Với script/WAV/SRT, thay source bổ trợ giữ narration và làm lại analysis/explanation. Với idea, source bổ trợ thuộc nguồn viết nên sửa nó tạo lại kịch bản và các phần phụ thuộc.
 
 Fingerprint chỉ xét input đang chọn (WAV có companion SRT). Resume kiểm tra artifact hashes và producer checkpoints. Mất/đổi script JSON, audio, rig, scene hay preview phải rewind đúng checkpoint. Lock đã duyệt được giữ; lock mâu thuẫn clock/host mới phải báo sửa/unlock, không tự bỏ lock.
 
@@ -174,9 +188,10 @@ QC: codec/resolution/fps/duration, audio presence/hash/duration, sample rate/lou
 ## 11. Artifacts hiện có V2.1 và bổ sung dự kiến
 
 ```text
-input/script.txt|script.md, narration.wav, narration.srt  # theo mode
+input/idea.txt|idea.md, script.txt|script.md, narration.wav, narration.srt  # theo mode
 input/source.md, host.md, assets/                       # tùy chọn
 work/input-document.json, script.json, script-timing.json
+work/generated-script.txt, script-generation.json         # nhánh idea
 work/narration.json, voiced-narration.json, timeline.json
 work/voice-report.json, speech-activity.json, voice/cues/
 work/story.json, chapters.json, beats.json, character-bible.json

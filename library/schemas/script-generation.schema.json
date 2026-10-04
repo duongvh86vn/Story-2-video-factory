@@ -1,0 +1,99 @@
+{
+  "$ref": "#/definitions/script-generation",
+  "definitions": {
+    "script-generation": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 1
+        },
+        "generatorVersion": {
+          "type": "string",
+          "const": "story-authoring-1"
+        },
+        "identity": {
+          "type": "string"
+        },
+        "sourcePath": {
+          "type": "string"
+        },
+        "sourceHash": {
+          "type": "string"
+        },
+        "referenceHash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "language": {
+          "type": "string"
+        },
+        "targetSeconds": {
+          "type": "number"
+        },
+        "title": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "factual",
+            "fiction"
+          ]
+        },
+        "requestedProvider": {
+          "type": "string"
+        },
+        "requestedModel": {
+          "type": "string"
+        },
+        "promptHash": {
+          "type": "string"
+        },
+        "scriptHash": {
+          "type": "string"
+        },
+        "documentHash": {
+          "type": "string"
+        },
+        "factualVerification": {
+          "type": "string",
+          "const": "not-independently-verified"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "generatorVersion",
+        "identity",
+        "sourcePath",
+        "sourceHash",
+        "referenceHash",
+        "language",
+        "targetSeconds",
+        "title",
+        "kind",
+        "requestedProvider",
+        "requestedModel",
+        "promptHash",
+        "scriptHash",
+        "documentHash",
+        "factualVerification",
+        "warnings",
+        "createdAt"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

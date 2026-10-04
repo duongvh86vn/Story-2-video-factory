@@ -475,11 +475,16 @@
               "type": "string",
               "enum": [
                 "auto",
+                "idea",
                 "script",
                 "wav",
                 "srt"
               ],
               "default": "auto"
+            },
+            "idea": {
+              "type": "string",
+              "default": "input/idea.txt"
             },
             "script": {
               "type": "string",
@@ -496,6 +501,33 @@
             "subtitles": {
               "type": "string",
               "default": "input/narration.srt"
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
+        "script_generation": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "factual",
+                "fiction"
+              ],
+              "default": "auto"
+            },
+            "target_seconds": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 300,
+              "default": 60
+            },
+            "brief": {
+              "type": "string",
+              "maxLength": 6000,
+              "default": ""
             }
           },
           "additionalProperties": false,

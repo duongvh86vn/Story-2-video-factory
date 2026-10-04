@@ -137,6 +137,46 @@
             "source"
           ]
         },
+        "authoring": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "factual",
+                "fiction"
+              ]
+            },
+            "identity": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "sourcePath": {
+              "type": "string"
+            },
+            "factualVerification": {
+              "type": "string",
+              "const": "not-independently-verified"
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "kind",
+            "identity",
+            "title",
+            "sourcePath",
+            "factualVerification",
+            "warnings"
+          ],
+          "additionalProperties": false
+        },
         "supplement": {
           "type": "object",
           "properties": {

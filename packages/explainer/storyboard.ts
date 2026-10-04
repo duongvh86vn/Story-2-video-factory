@@ -7,7 +7,7 @@ import { HostTimelineSchema, type HostProfile, type HostRig } from '../host/sche
 import {rigHashMatchesProfile} from '../host/rig.js';
 import type { ExplanationBeat, Visualization } from './schemas.js';
 import { ExplanationBeatSchema } from './schemas.js';
-import { fold } from './plan.js';
+import { fold,validateSceneIntent } from './plan.js';
 import { thermalEvidence } from './thermal.js';
 import { validateCinematicShot, validateModelContinuity } from '../director/index.js';
 
@@ -20,7 +20,7 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
   const b = ExplanationBeatSchema.parse({ ...beat, beatId: beat.id });
   const modelId = `${id}.model`, seconds = endMs - startMs;
   const entities = b.entities;
-  const columns = entities.length < 3 ? entities.length : Math.min(3, entities.length), rows = Math.ceil(entities.length / columns);
+  const columns = Math.max(1,entities.length < 3 ? entities.length : Math.min(3, entities.length)), rows = Math.ceil(entities.length / columns);
   const parts: Visualization['parts'] = entities.map((e, i) => ({ ...e,
     x: .43 + (i % columns) * (.48 / columns), y: .29 + Math.floor(i / columns) * (.32 / Math.max(1, rows - 1)),
     width: Math.min(.21, .39 / columns), height: Math.min(.17, .27 / rows) }));
@@ -39,6 +39,12 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
     const next = anchors.find(a => a.time > time)?.time ?? endMs;
     const aStart = time + Math.floor(ordinal * (next - time) / group.length), slotEnd = time + Math.floor((ordinal + 1) * (next - time) / group.length);
     if (slotEnd <= aStart) return; // Another action on this beat still supplies meaningful explanation.
+    if(b.sceneIntent){
+      // Actor intent is not a noun-pointing schedule or an automatically invented operation.
+      events.push({type:'highlight',targetId:entity.id,narrationAnchor:anchor,startMs:aStart,endMs:slotEnd,
+        contactRequired:false,motion:'none',sourceRefs:entity.sourceRefs});
+      return;
+    }
     const transfer=b.relations.find(r=>r.kind==='transfer'&&(r.from===entity.id||r.to===entity.id)&&r.sourceRefs.some(ref=>ref.segmentId===cue.id));
     const operation = b.visualMethod!=='question' && slotEnd - aStart >= 800 && (transfer ? transfer.from===entity.id
       :b.visualMethod === 'mechanism' && ['piston', 'wheel', 'gear', 'lever', 'flow'].includes(entity.kind));
@@ -56,6 +62,7 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
       narrationAnchor: anchor, startMs: contact !== undefined ? contact + 1 : aStart, endMs: slotEnd,
       contactRequired: operation, motion: movement, sourceRefs: entity.sourceRefs });
   });
+  if(b.sceneIntent)actions.push({type:'idle',startMs,endMs});
   for(const entity of entities)for(const ref of entity.sourceRefs){
     const cue=narration.segments.find(s=>s.id===ref.segmentId);if(!cue||cue.startMs>=endMs)continue;
     const states=thermalEvidence(entity,ref.quote,entities.filter(e=>e.id!==entity.id));
@@ -71,12 +78,12 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
     }
   }
   return ShotSchema.parse({ id, startMs, endMs, beatIds: [beat.id], narrationSegmentIds: beat.segmentIds,
-    explanationGoal: b.explanationGoal, sourceRefs: b.sourceRefs, subject: entities.map(e => e.label).join(' / '),
+    explanationGoal: b.explanationGoal, sourceRefs: b.sourceRefs, subject: entities.map(e => e.label).join(' / ')||b.sceneIntent!.action,
     sceneType: ['evolution', 'event-sequence'].includes(b.visualMethod) ? 'timeline' : b.visualMethod === 'comparison' ? 'comparison' : 'technical-diagram',
     characters: [], visualDescription: `${b.explanationGoal}. ${b.hostIntent}. Minh họa khái niệm, không phải tư liệu lịch sử.`,
     camera: { shotSize: 'wide', movement: 'locked', angle: 'eye-level' }, motion: actions.map(a => `${a.type}: ${a.target?.partId}`),
     host: { id: profile.id, profileVersion: profile.version, rigHash: rig.rigHash, presence: 'beside-model', actions },
-    visualization: { type: b.visualMethod, modelId, parts, relations: b.relations, events, provenance: 'visualization', fidelity: 'conceptual' },
+    visualization: { type: b.visualMethod, modelId, parts, relations: b.relations, events, provenance: 'visualization', fidelity: 'conceptual',...(b.sceneIntent?{sceneIntent:b.sceneIntent}:{}) },
     captionRegion: 'bottom-safe', recipeId: EXPLAINER_RECIPES[b.visualMethod], renderer: 'hyperframes',
     assetNeeds: [{ id: `${id}.host-rig`, type: 'image', description: `Reusable explainer ${profile.id} v${profile.version}`, localPath: rig.assetPath, required: true }],
   });
@@ -91,6 +98,10 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     if(config.presentation.mode==='story-cinematic')validateCinematicShot(shot,profile,config);
     else if(shot.cinematic)throw new Error(`${shot.id}: cinematic shot requires story-cinematic presentation`);
     if (!h || !v || !shot.explanationGoal || !shot.narrationSegmentIds?.length || !shot.sourceRefs?.length || shot.captionRegion !== 'bottom-safe') throw new Error(`${shot.id}: incomplete explainer specification`);
+    const actorScene=shot.cinematic?.actorScene,intent=shot.cinematic?.sceneIntent;
+    if(!v.parts.length&&(!(actorScene?.primary||actorScene?.supporting.length)||!intent||config.presentation.character_mode!=='actors'||v.events.length||v.relations.length))throw new Error(`${shot.id}: objectless scenes require a real sourced actor cast, without object events or relations`);
+    if(!actorScene&&(!v.parts.length||!v.events.length||v.sceneIntent||intent))throw new Error(`${shot.id}: diagram/presenter scenes require the legacy objects/events contract`);
+    if(hash(v.sceneIntent)!==hash(intent))throw new Error(`${shot.id}: cinematic/visualization sceneIntent mismatch`);
     if(shot.characters.length&&!shot.cinematic?.actorScene)throw new Error(`${shot.id}: character actors require an actor scene`);
     if (h.id !== profile.id || h.profileVersion !== profile.version || !rigHashMatchesProfile(profile,rig.rigHash) || !rigHashMatchesProfile(profile,h.rigHash) || !shot.cinematic?.actorScene&&shot.characters.includes(profile.id)) throw new Error(`${shot.id}: performer identity/role drift`);
     if (shot.recipeId !== EXPLAINER_RECIPES[v.type]) throw new Error(`${shot.id}: wrong host recipe`);
@@ -102,7 +113,12 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     const sourced = (references: typeof refs) => references.every(r => refs.some(c => hash(c) === hash(r)) &&
       (r.kind === 'source' || narration.segments.some(s => s.id === r.segmentId && fold(s.text).includes(fold(r.quote)))));
     if (!sourced(shot.sourceRefs)) throw new Error(`${shot.id}: changed/unverifiable narration sources`);
-    if(shot.cinematic?.artDirection)validateAuthoredVisualSources(shot,world,narration,profile.id);
+    if(intent){
+      validateSceneIntent(intent,narration,shot.sourceRefs,shot.narrationSegmentIds);
+      const cast=[...(actorScene?.primary?[actorScene.primary]:[]),...(actorScene?.supporting.map(actor=>actor.character)??[])];
+      if(intent.participants.length!==cast.length||intent.participants.some(participant=>!cast.some(actor=>actor.id===participant.id&&actor.name===participant.name&&actor.role===participant.role&&actor.identity===participant.identity)))throw new Error(`${shot.id}: sceneIntent participants must match the actual sourced cast`);
+    }
+    if(shot.cinematic?.artDirection&&v.parts.length)validateAuthoredVisualSources(shot,world,narration,profile.id);
     else for (const p of v.parts) {
       const original = canonical.flatMap(b => b.entities).find(e => e.id === p.id);
       if (!original || p.label !== original.label || p.kind !== original.kind || p.configuration!==original.configuration || hash(p.sourceRefs) !== hash(original.sourceRefs) || hash(p.states??[])!==hash(original.states??[]) || !sourced(p.sourceRefs)) throw new Error(`${shot.id}: model entity changed its sourced identity`);

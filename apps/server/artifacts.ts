@@ -14,7 +14,8 @@ import { validateStoryboard } from '../../packages/storyboard/validate.js';
 import { storyboardMarkdown } from '../../packages/storyboard/markdown.js';
 import { ApiError, boundPath, redact } from './security.js';
 import type { Coordinator } from './jobs.js';
-import { parseScript, ScriptDocumentSchema } from '../../packages/ingest/script.js';
+import { parseScript, ScriptDocumentSchema, validateIdea, resolveInputMode } from '../../packages/ingest/script.js';
+import { ScriptGenerationReportSchema, scriptGenerationIdentity } from '../../packages/orchestrator/script-generation.js';
 import { loadConfig } from '../../packages/core/config.js';
 import { HostProfileSchema, HostRigSchema, HostTimelineSchema, loadHost } from '../../packages/host/index.js';
 import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/index.js';
@@ -31,6 +32,10 @@ export const ARTIFACTS: Record<string, ArtifactSpec> = {
   ...Object.fromEntries(CINEMATIC_EXPORT_FILES.map(name => [name, { paths: [`work/${name}`, `output/${name}`] }])),
   'script.txt': {paths:['input/script.txt'],editable:true,from:'NEW',text:true},
   'script.md': {paths:['input/script.md'],editable:true,from:'NEW',text:true},
+  'idea.txt': {paths:['input/idea.txt'],editable:true,from:'NEW',text:true},
+  'idea.md': {paths:['input/idea.md'],editable:true,from:'NEW',text:true},
+  'generated-script.txt': {paths:['work/generated-script.txt','output/generated-script.txt'],text:true},
+  'script-generation.json': {paths:['work/script-generation.json','output/script-generation.json'],schema:ScriptGenerationReportSchema},
   'host.md': {paths:['input/host.md'],editable:true,from:'TIMED',text:true},
   'script.json': {paths:['work/script.json'],schema:ScriptDocumentSchema},
   'input-document.json': {paths:['work/input-document.json']},
@@ -189,6 +194,7 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   const state = await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root, 'project-state.json');
   let data: unknown = spec.text ? z.string().min(1).max(2 * 1024 * 1024).parse(value) : spec.schema!.parse(value);
   if(name==='script.txt'||name==='script.md')parseScript(data as string,`input/${name}`);
+  if(name==='idea.txt'||name==='idea.md')validateIdea(data as string);
   if(name==='host.md'&&Buffer.byteLength(data as string,'utf8')>128*1024)throw new ApiError(413,'Host MD exceeds 128 KB','TOO_LARGE');
   if(['story.json','narration.json'].includes(name)&&(await loadConfig(root)).content.mode==='narrated-explainer')throw new ApiError(403,'Edit the script or input SRT; generated narration is immutable.','READ_ONLY');
   if (name === 'narration.json') validateNarrationTiming(data as Narration, await optionalArtifact<Narration>(root, name));
@@ -279,6 +285,13 @@ export async function cinematicArtifactStatuses(root: string): Promise<Record<st
   return Object.fromEntries(await Promise.all(CINEMATIC_EXPORT_FILES.map(async name => [name, await cinematicArtifactStatus(root, name)])));
 }
 export async function currentDownload(root:string,name:string):Promise<boolean>{
+  if(['generated-script.txt','script-generation.json'].includes(name)){
+    const config=await loadConfig(root);if(await resolveInputMode(root,config).catch(()=>null)!=='idea')return false;
+    const report=await optionalArtifact<z.infer<typeof ScriptGenerationReportSchema>>(root,'script-generation.json');
+    if(!report||report.identity!==await scriptGenerationIdentity(root,config))return false;
+    const script=await locate(root,['work/generated-script.txt']),document=await locate(root,['work/script.json']);
+    return !!script&&!!document&&hash(await fs.readFile(script))===report.scriptHash&&hash(await fs.readFile(document))===report.documentHash;
+  }
   if ((CINEMATIC_EXPORT_FILES as readonly string[]).includes(name)) return (await cinematicArtifactStatus(root, name)).status !== 'stale';
   const stage:Record<string,ProjectStatus>={'final.mp4':'FINAL_RENDERED','final.srt':'FINAL_RENDERED','thumbnail.png':'FINAL_RENDERED','qc-report.json':'QC_PASSED','production-report.md':'DONE','draft.mp4':'DRAFT_RENDERED'};if(!stage[name])return true;
   if((await cinematicMigration(root)).required)return false;

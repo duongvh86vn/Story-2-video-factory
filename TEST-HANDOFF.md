@@ -1,5 +1,9 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
+Ưu tiên04/10: kiểm **tool tổng quát chủ đề/câu chuyện → script → video**, không chỉ demo máy móc. [Hướng dẫn](docs/GENERAL-STORY-TOOL.md), [checklist](docs/plans/2026-10-04-general-story-tool.md). Nhánh idea phải tạo kịch bản trước TTS, dừng INGESTED để xem/sửa được; thiếu writer/mock báo needs-script và không clock/final. Script hoàn chỉnh không gọi writer. Kiểm cache nguồn/model/ngôn ngữ/giọng/cast, revision/busy/upload, metadata fiction/factual và download freshness. [Evidence source23 và sửa24](docs/validation/2026-10-04-general-story-tool.md): authoring23/23, lock15/15; generic và regression còn FAIL trước sửa camera/cast/contact. Model test dừng usage limit; source24 runtime NOT RUN. Dùng tests/topic-authoring.test.ts, tests/general-story-scenes.test.ts, tests/locked-scene-migration.test.ts cùng suites diễn viên/creative giữ assertions. Runtime giao model khác; source/build không được coi là nghiệm thu.
+
+Nghiệm thu phần cảnh bằng hư cấu, đời thường, lịch sử và khoa học: cast/scene intent theo nội dung, phản ứng nhiều vai không cần mô hình giả, đạo cụ thường không mọc nút máy, thao tác không làm được báo layout/capability và không biến thành chỉ/think cho qua. Kiểm chuyển động/biểu cảm/tình huống/voiceover và toàn phim; không thay old FAIL/PARTIAL hoặc lấy QC kỹ thuật làm PASS chất lượng.
+
 [Artwork projection04/10](docs/validation/2026-10-04-artwork-projection.md): opt-in viewport có named5/5/final-file typecheck/build sau grammar fix; giữ raw camera/CTM/hex/bounds FAIL và quantified bbox precision correction. Default byte identity và4 browser cases thuộc snapshot trước grammar. Source cuối vẫn cần genuine migration giữ audio/locks và full-film quality; không retag phim nativeFAIL hoặc authoredPARTIAL.
 
 [TTS local public04/10](docs/validation/2026-10-04-external-local-tts.md):15 runtime checks với HTTP bridge có giọng WindowsEN thật và10 schema/preset checks đã qua. Voice/content/host edit, cache/resume, compatible `/v1` và missing/HTTP503/SRT-fit negatives có evidence thật; không phải user API hoặc live OmniVoice/JA/KO, chưa full MP4/listening. Hai file cấu hình mẫu đã bàn giao, không đổi global config. Các ca NOTRUN trong checkpoint trước cần đọc theo scope này.
@@ -22,7 +26,7 @@ Cập nhật03/10: [audit hiện tại](docs/validation/2026-10-03-current-runti
 
 Ưu tiên mới03/10: [follow-up renderer migration thật](docs/validation/2026-10-03-renderer-language.md) trên d882 **FAIL** ở host approval và đã thay hai rig artifacts; giữ raw evidence và fixture lỗi. Source mới tách rig identity khỏi animation. Audit lại bằng bản sao baseline xác thực, giữ input/config/voice/locks, tách việc giữ host approval, rebuild unlocked scene và conflict locked-plan; không force approval hoặc retag artifact cũ để báo PASS. Current-source runtime của sửa rig/body/hai tay/carry/seated vẫn NOT RUN; 275 test scoped trước đó không thay nghiệm thu mới. [Review phim](docs/validation/2026-10-03-film-quality.md) có finding thật về chú thích và độ rõ hành động; finding Benz7sreset đã rút lại bằng khung hình PTS/GSAP. Xem/nghe hai bài với cả người que và robot ở bản dàn cảnh mới trước nghiệm thu; không dùng DONE/QC làm bằng chứng thẩm mỹ.
 
-Contract hiện tại03/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md), director2.2.22, animation2.2.10, physical-seat2.2.1, bound-model-motion2.2.1, host-rig-identity2.2.1; artwork2.2.4 và host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
+Contract lịch sử03/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md), director2.2.22, animation2.2.10, physical-seat2.2.1, bound-model-motion2.2.1, host-rig-identity2.2.1; artwork2.2.4 và host compiler2.2.7. Runtime test giao model độc lập theo yêu cầu người dùng. Ghi commit/diff fingerprint thực tế, command/exit, PASS/FAIL/NOT RUN, input tối thiểu và evidence; không lấy V1/presenter source18 làm nghiệm thu mới.
 
 ## Tiếp tục sau lỗi dịch vụ model — runtime NOT RUN
 
@@ -96,9 +100,9 @@ Live OmniVoice/Azure/JA/KO hiện chưa được cấu hình trên máy. Ghi NOT
 | Cut/continuous | Cut đổi bối cảnh/vai/scale được; continuous giữ cast và vị trí/hướng/scale/model; đạo cụ chưa hỗ trợ không được giả pass |
 | Motion | Xem30fps1×/slow và seek/reverse: không snap, khớp rời, chân trượt hoặc đồ vật nhảy; biểu cảm có nguyên nhân |
 | Tay/khuỷu | Khuỷu nghỉ mở ra ngoài theo hình người dùng; vai–khuỷu–cổ tay liền, chiều dài cố định, đổi hướng không bật; think không xoay nhanh sát tâm vai; không nhầm rigside với giải phẫu |
-| Story quality | Hơi nước/ô tô có tình huống và nguyên lý dễ hiểu; người que diễn trong truyện; không phải slideshow/giáo viên đứng bên bảng |
+| Story quality | Đời thường/hư cấu/lịch sử/khoa học đều có tình huống, diễn xuất và hình ảnh theo nội dung; ví dụ máy móc chỉ là fixture phụ |
 
-Hai bài chạy cả stick-man và robot; ví dụ Tesla bổ sung chỉ khi input có nguồn tên và sự kiện. Không tự coi Tesla phát minh điện năng. Bối cảnh/tạo hình minh họa không phải tư liệu lịch sử. Cần xem/nghe full video, cuối cue, hành động và chuyển cảnh; QC kỹ thuật không đóng tiêu chí hấp dẫn.
+Chạy cả stick-man và robot trên nhiều thể loại; có hai vai và tình huống không cần đạo cụ. Bài máy hơi nước/ô tô chỉ là fixture regression; ví dụ Tesla bổ sung khi input có nguồn tên và sự kiện. Không tự coi Tesla phát minh điện năng. Bối cảnh/tạo hình minh họa không phải tư liệu lịch sử. Cần xem/nghe full video, cuối cue, hành động và chuyển cảnh; QC kỹ thuật không đóng tiêu chí hấp dẫn.
 
 ## Ba luồng và failure gates
 
@@ -134,6 +138,8 @@ Các script có fixture clocks phải dùng audio khớp; SRT tác giả đặt1
 Kết quả mới ghi riêng, giữ TEST-RESULTS.md V1. Chỉ nghiệm thu khi đủ matrix, hai bài/hai kiểu tạo hình và evidence video thực tế; ghi mọi phần NOT RUN còn lại.
 
 ## Follow-up rig/resume và carry hiện tại
+
+04/10: [renderer migration](docs/validation/2026-10-04-renderer-migration.md) giữ original7PASS/3FAIL. Audio/cache preservation và unlocked rebuild qua; locked old renderer vẫn nhận SCENES_READY nên đã thêm [preflight xung đột](docs/LOCKED-SCENE-RESUME.md). Follow-up dùng custom MD byte/path giống nhau ngay từ baseline thật, public host approval; không sửa fixture cũ bị CRLF/path confound thành PASS. Model độc lập kiểm runtime, gồm việc dừng trước thay state/approval/scene và batch chưa được ghi. Chờ báo cáo cuối để ghi scope, không coi một test hoặc DONE là nghiệm thu cả sản phẩm.
 
 Source10/director22 bổ sung seated support: [contract và producer evidence](docs/validation/2026-10-03-supported-seating.md). Model độc lập cần kiểm cả hai rig/hướng ghế, sit/hold/stand, gối qua điểm duỗi không flip, feet/xương/support, browser/GSAP seek/reverse, nhiều actor/owner/continuous, invalid geometry/facing/walk/turn/seat changes, legacy7/8/9 và visual-only cache/audio preservation. Runtime mới chưa được chạy độc lập; không dùng producer QC như audit. Bản nháp carry d882 cần dựng fixture hiện tại có provenance, giữ bản gốc; không đổi version tag của evidence cũ thành PASS mới.
 

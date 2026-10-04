@@ -1,0 +1,64 @@
+# Tool câu chuyện/chủ đề → kịch bản → video
+
+Phạm vi ngày 04/10/2026. Người que là diễn viên trong câu chuyện, không có host cố định. Ví dụ máy hơi nước/ô tô dùng kiểm tra riêng, không phải template bắt buộc.
+
+## Chọn đúng nguồn
+
+| Nội dung bạn có | Tab / input.mode | Hệ thống làm gì |
+|---|---|---|
+| Chủ đề, ý tưởng, câu chuyện chưa thành lời kể | Chủ đề / Câu chuyện / idea | Writer tạo lời kể, rồi TTS, phân vai và dựng video |
+| Lời kể hoàn chỉnh | Kịch bản / script | Đọc nguyên văn; không gọi writer để viết lại |
+| Giọng bạn đã thu | WAV / wav | Giữ audio; ASR/transcript tạo clock; SRT đi kèm được kiểm tra khớp |
+| Phụ đề đã có clock | SRT / srt | Giữ lời/clock; fit TTS từng cue |
+
+`source.md` là tài liệu tham khảo, không phải nguồn tự động thay thế nội dung đã chọn. File MD là dữ liệu; không thực thi lệnh nằm trong file.
+
+## Studio
+
+1. Tạo project và mở **Nội dung, diễn viên và giọng kể**.
+2. Chọn **Chủ đề / Câu chuyện**, nhập văn bản hoặc tải .txt/.md UTF-8. Chọn loại nội dung, thời lượng mục tiêu và yêu cầu kể chuyện nếu cần.
+3. Cấu hình **Model viết kịch bản**, hoặc đánh dấu dùng model thiết kế cảnh. Chọn ngôn ngữ EN/VI/JA/KO, tạo hình người que/robot, model cảnh và giọng kể.
+4. **Chỉ tạo kịch bản để xem trước** dừng trước TTS. Mở lại form để xem lời kể và cảnh báo. **Dùng và chỉnh sửa như kịch bản hoàn chỉnh** chuyển bản sửa sang nguồn script; các bước sau đọc nguyên văn bản đó.
+5. **Tạo video** chạy tiếp narration → phân tích → cast/tình huống → storyboard → assets/scenes → draft → review/repair → final → QC.
+
+Writer mock/chưa cấu hình dừng với `needs-script`, không tạo clock/final. Thiếu TTS ở idea/script dừng trước TIMED. Custom rig MD vẫn cần duyệt preview một lần. Không lấy final cũ sau sửa nội dung làm kết quả của lần chạy mới.
+
+## CLI
+
+```powershell
+npm run cli -- new my-story
+npm run cli -- idea projects/my-story C:/stories/story-idea.txt
+npm run cli -- authoring projects/my-story --provider codex-cli --model default --kind fiction --seconds 60 --timeout 900
+npm run cli -- configure projects/my-story --language en --host stick-man --characters actors --style story-cinematic --tts windows-speech
+npm run cli -- write-script projects/my-story
+```
+
+Đây là ví dụ chọn provider chủ động; dùng provider/model tài khoản của bạn hỗ trợ. Cấu hình `models.storyboard` cho thiết kế cảnh trong Studio/project.yaml trước `make`; writer và director có thể dùng model khác nhau.
+
+```powershell
+npm run cli -- make projects/my-story
+```
+
+Muốn sửa lời kể: tải `generated-script.txt`, sửa, nhập bằng `script <project> <file>`, rồi `make`. Kịch bản gốc do writer tạo vẫn giữ để truy vết. TTS local/API dùng [EXTERNAL-TTS.md](EXTERNAL-TTS.md).
+
+## API và artifact
+
+- `PUT /api/projects/:name/idea`: `{text, format:"txt"|"md", revision?, settingsRevision?}`. Lưu input/idea.* và chọn mode idea; revision/busy dùng cùng guard như script.
+- `PATCH /api/projects/:name/settings`: `input.mode="idea"`, `script_generation={kind,target_seconds,brief}`, `models.planner={provider,model,base_url?,api_key_env?,timeout_ms?}`.
+- `POST /api/projects/:name/run`: `{"until":"INGESTED"}` để tạo kịch bản; `{"until":"DONE"}` để chạy video.
+- `work/generated-script.txt`: lời kể writer đã chấp nhận. `work/script.json`: bản chuẩn/chunks. `work/script-generation.json`: nguồn/hash/ngôn ngữ/kind/title/warnings và cấu hình writer yêu cầu. Provider thực và attempt nằm trong journal; fallback không bị gán thành provider chính.
+- Nhánh idea xuất thêm ba file trên vào output. Download kịch bản/provenance chỉ hiện khi identity và bytes khớp nguồn hiện tại.
+
+Cache writer độc lập giọng/cast. Sửa ý tưởng, nguồn bổ trợ, ngôn ngữ, model hoặc yêu cầu viết tạo identity mới; đổi giọng hoặc diễn viên giữ lời kể đã chấp nhận. Duration mục tiêu không tạo clock giả; timeline chỉ dùng thời lượng TTS đo thật.
+
+## Dàn cảnh theo câu chuyện
+
+Director mới dùng `sceneIntent`: người tham gia, hành động, mục đích/quan sát và kết quả nếu nguồn có. Tên/vai và các khẳng định giữ bằng chứng từ kịch bản đã chọn. Vai `fictional` giữ nhân vật truyện hư cấu; `historical` phải có nguồn tên/vai; `illustrative` dùng cho dàn cảnh minh họa.
+
+Cảnh chỉ có diễn viên được phép không có parts/events/models; object attention và prop bindings cũng phải rỗng. Như vậy một phản ứng hay tình huống giữa các vai không phải tạo sơ đồ giả. Cảnh có đối tượng vẫn kiểm source identity, target, reach, contact, camera và các event liên quan; chuyển cảnh liên tục giữ cast/pose/ownership. Các hành động nằm ngoài capability hoặc không tới được target phải yêu cầu sửa motion/layout; không thay thao tác thành chỉ tay để báo thành công.
+
+Version director/semantic plan tham gia cache hình. Cảnh cũ đã khóa phải giữ phiên bản đã duyệt hoặc được người dùng mở khóa để migrate; hệ thống không tự gán version mới. Voice/audio cache độc lập phần này.
+
+## Phạm vi nghiệm thu
+
+Source mới và tài liệu không phải chứng nhận chất lượng phim. Model độc lập kiểm runtime; bản factual do AI viết ghi rõ chưa kiểm chứng độc lập. Cue nguồn chứng minh bám nội dung đã chọn, không chứng minh lịch sử ngoài đời. Nghiệm thu phải có chủ đề đời thường, hư cấu, lịch sử và khoa học; không chỉ các ví dụ máy móc. Theo dõi [kế hoạch tổng quát](plans/2026-10-04-general-story-tool.md) và [TEST-HANDOFF](../TEST-HANDOFF.md).

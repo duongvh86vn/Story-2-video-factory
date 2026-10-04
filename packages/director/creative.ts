@@ -84,7 +84,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     for(const shot of board.shots){
       // Per-shot diagnostics retain the full canonical world for persistent subjects and recaps.
       check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}}));
-      if(shot.cinematic?.artDirection&&shot.visualization)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
+      if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
       check(()=>validateCamera(shot,shotPerformer(shot,context.profile,context.rig).profile));
@@ -110,7 +110,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     if(hash(authored.identity)!==hash(identity))throw new Error('needs-art-direction: authored direction belongs to a different narration, explanation, host or producer; re-author input/art-direction.json');
     return report(normalize(authored.storyboard,'authored'),'authored',hash(authored));
   }
-  const requestContext={task:'creative-storyboard',story:{title:context.story.title,style:context.story.style},narration:{durationMs:context.narration.durationMs,segments:context.narration.segments,words:context.narration.words},
+  const requestContext={task:'creative-storyboard',story:{title:context.story.title,style:context.story.style,genre:context.story.genre,authoring:context.story.authoring},narration:{durationMs:context.narration.durationMs,segments:context.narration.segments,words:context.narration.words},
     characterMode:config.presentation.character_mode,characters:context.characters.characters,
     beats:context.beats,host:context.profile,rig:{rigHash:context.rig.rigHash},seed:seed.shots,lockedShots:locks,...(context.lockedActors?.length?{lockedActors:context.lockedActors}:{}),
     dimensions:config.rendering.final,...(config.presentation.design_brief?{designBrief:config.presentation.design_brief}:{}),artworkCoordinates:'Layers use stage pixels. Models default to normalized-stretch: centered 100x100 is scaled independently into part width/height, including text. Use sourced stage-pixel labels or explicit projection=model-viewport with one complete valid SVG viewBox to preserve its authored aspect policy in the actual part viewport. Recheck geometry and contact if letterboxing changes the illustration. Keyframes use the local shot clock.',
