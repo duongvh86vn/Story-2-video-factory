@@ -18,6 +18,8 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 - [x] Source25 thêm acting/source/target theo vai, coverage qua beat, posture/gaze temporal review và offline final gate; build/test:typecheck/schema qua.
 - [x] Runtime closure source27: focused27/27, regression210/210, whole test:typecheck qua; source/clock/canonical cast gaps đóng bằng protocol checks. [Scope và raw failures](../validation/2026-10-04-story-acting-coverage.md).
 - [x] Source28/animation2.2.11 mở rộng16 mood và actor reaction close-ups, giữ artwork/rig và voice identity; build và test:typecheck qua.
+- [x] Source29/animation2.2.12 nối mood liền nhau, blend trực tiếp phản ứng mới và bake mốc clip ngắn; giữ evaluator cũ và clock. Build/typecheck qua, chưa runtime.
+- [ ] [Nghiệm thu biểu cảm liên tục](../validation/2026-10-04-emotion-continuity.md), gồm cả hai rig, GSAP/seek/boundaries/contact/speech/legacy.
 - [ ] Runtime source28: miệng/mày/mắt thật trong GSAP/browser, preview/camera/cache/legacy/locks và toàn phim. [Bàn giao và usage-limit của lượt FINAL](../validation/2026-10-04-story-emotions.md).
 - [ ] Public pipeline FINAL checkpoint/draft retention và phim/model/backend thật; helper/stub screenshot không thay acceptance.
 - [ ] Xem/nghe phim tổng quát để chứng nhận chuyển động, biểu cảm, kể chuyện và chất lượng hình ảnh.

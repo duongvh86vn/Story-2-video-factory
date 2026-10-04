@@ -3,7 +3,7 @@ import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
 import { rigHand, type RigHand } from '../core/identifiers.js';
 import { rigMetrics } from './rig.js';
-import { ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
+import { ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy} from './support.js';
 import { selectedClips } from './library.js';
 
@@ -72,9 +72,9 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   overlaps(plan.turns??[],'turn',plan.durationMs);
   overlaps(plan.postures??[],'body posture',plan.durationMs);
   if(plan.compilerVersion===LEGACY_ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires animation2.2.8 or newer');
-  if(![ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
-  if(![ANIMATION_VERSION,SEATED_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
-  if(plan.compilerVersion!==ANIMATION_VERSION&&plan.expressions.some(e=>(STORY_MOODS as readonly string[]).includes(e.mood)))throw new Error('Story emotions require animation2.2.11 or newer');
+  if(![ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
+  if(![ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
+  if(![ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)&&plan.expressions.some(e=>(STORY_MOODS as readonly string[]).includes(e.mood)))throw new Error('Story emotions require animation2.2.11 or newer');
   const supportIds=new Set((plan.supports??[]).map(s=>s.id));
   if(supportIds.size!==(plan.supports?.length??0))throw new Error('Duplicate seat support identity');
   const m=rigMetrics(profile),s=plan.scale;
@@ -234,6 +234,39 @@ const moodPoses:Record<Mood,{brow:number;tilt:number;lean:number;smile:number;ro
   relieved:{brow:0,tilt:2,lean:0,smile:.8,round:0,lid:.3,browAngle:6,eyeOpen:.9},
   tired:{brow:2,tilt:8,lean:-4,smile:0,round:0,lid:.7,browAngle:5,eyeOpen:.55},
 };
+/** Contiguous identical emotion clips are one held performance, not cue resets. */
+function expressionRanges(plan:PerformancePlan):PerformancePlan['expressions'] {
+  const ranges:PerformancePlan['expressions']=[];
+  for(const clip of chronological(plan.expressions)){
+    const last=ranges.at(-1);
+    if(last?.endMs===clip.startMs&&last.mood===clip.mood)last.endMs=clip.endMs;
+    else ranges.push({...clip});
+  }
+  return ranges;
+}
+const expressionBlendMs=(clip:PerformancePlan['expressions'][number])=>Math.min(140,(clip.endMs-clip.startMs)/2);
+const expressionPose=(mood:Mood)=>({...moodPoses[mood],frown:moodPoses[mood].frown??0,
+  browAngle:moodPoses[mood].browAngle??(mood==='concerned'?12:mood==='effort'?-12:0),eyeOpen:moodPoses[mood].eyeOpen??1});
+type ExpressionPose=ReturnType<typeof expressionPose>;
+function blendExpression(a:ExpressionPose,b:ExpressionPose,weight:number):ExpressionPose {
+  return {brow:lerp(a.brow,b.brow,weight),tilt:lerp(a.tilt,b.tilt,weight),lean:lerp(a.lean,b.lean,weight),
+    smile:lerp(a.smile,b.smile,weight),round:lerp(a.round,b.round,weight),lid:lerp(a.lid,b.lid,weight),
+    frown:lerp(a.frown,b.frown,weight),browAngle:lerp(a.browAngle,b.browAngle,weight),eyeOpen:lerp(a.eyeOpen,b.eyeOpen,weight)};
+}
+function expressionAt(plan:PerformancePlan,time:number) {
+  if(plan.compilerVersion!==ANIMATION_VERSION){
+    const legacy=moodAt(plan,time);return {...legacy,pose:moodPoses[legacy.mood]};
+  }
+  const ranges=expressionRanges(plan),index=ranges.findIndex(clip=>time>=clip.startMs&&time<clip.endMs),neutral=expressionPose('neutral');
+  if(index<0)return {mood:'neutral' as const,weight:0,pose:neutral};
+  const clip=ranges[index]!,previous=ranges[index-1],next=ranges[index+1],window=expressionBlendMs(clip);
+  const from=previous?.endMs===clip.startMs?expressionPose(previous.mood):neutral;
+  let pose=blendExpression(from,expressionPose(clip.mood),smooth((time-clip.startMs)/window));
+  // Adjacent reactions blend directly after the new cue begins. Actual gaps and
+  // the end of the last clip still recover to neutral without extending clocks.
+  if(next?.startMs!==clip.endMs)pose=blendExpression(neutral,pose,smooth((clip.endMs-time)/window));
+  return {mood:clip.mood,weight:1,pose};
+}
 function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,scale:number,shoulder:Point):Point {
   const side=rigHand(g)==='left'?-1:1;
   const settle=Math.min(220,(g.endMs-g.startMs)*.18),recover=smooth((g.endMs-time)/settle);
@@ -306,7 +339,7 @@ function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undef
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity):FrameState {
-  const t=clamp(time,0,plan.durationMs),m=rigMetrics(profile),s=plan.scale,root=rootAt(plan,t),walk=gait(plan,profile,t),emotion=moodAt(plan,t),pose=moodPoses[emotion.mood];
+  const t=clamp(time,0,plan.durationMs),m=rigMetrics(profile),s=plan.scale,root=rootAt(plan,t),walk=gait(plan,profile,t),emotion=expressionAt(plan,t),pose=emotion.pose;
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4});
   const orientation=orientationAt(plan,t);
@@ -364,7 +397,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   // matrices seek deterministically and preserve the exact existing rig artwork.
   const frown=(pose.frown??0)*emotion.weight;
   face['mouth-smile']={opacity:Math.max(pose.smile,pose.frown??0)*emotion.weight,
-    ...(plan.compilerVersion===ANIMATION_VERSION?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
+    ...([ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
   face['mouth-round']={opacity:pose.round*emotion.weight};
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
   for(const prop of plan.props){
@@ -426,6 +459,9 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...plan.gestures,...plan.walks,...(plan.turns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
+  }
+  if(plan.compilerVersion===ANIMATION_VERSION)for(const clip of expressionRanges(plan)){
+    const window=expressionBlendMs(clip);times.add(clip.startMs+window);times.add(clip.endMs-window);
   }
   for(const clip of plan.postures??[])for(const at of [(clip.startMs+clip.endMs)/2,(clip.startMs+clip.endMs)/2-.01,(clip.startMs+clip.endMs)/2+.01])times.add(at);
   for(const g of plan.gestures)for(const at of [g.contactMs,g.releaseMs,recoveryStart(g)])if(at!==undefined){times.add(at);times.add(at-.01);times.add(at+.01);}

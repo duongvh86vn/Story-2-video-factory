@@ -1051,7 +1051,7 @@
             },
             "producer": {
               "type": "string",
-              "const": "story-direction-2.2.28"
+              "const": "story-direction-2.2.29"
             },
             "shotId": {
               "type": "string",
@@ -1745,6 +1745,7 @@
                           "compilerVersion": {
                             "type": "string",
                             "enum": [
+                              "performance-2.2.12",
                               "performance-2.2.11",
                               "performance-2.2.10",
                               "performance-2.2.9",
@@ -2967,6 +2968,7 @@
                 "compilerVersion": {
                   "type": "string",
                   "enum": [
+                    "performance-2.2.12",
                     "performance-2.2.11",
                     "performance-2.2.10",
                     "performance-2.2.9",
