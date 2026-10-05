@@ -57,3 +57,24 @@ REPORT.mdSHA25661C767D80140A1F7971C0F295DA42E49E022BEAFAA6379ED73E9675630739C5D.
 The [retained rainy-film acceptance](2026-10-05-rainy-readonly-acceptance.md)
 is a separate PARTIAL result. General genre/input/language/backend quality
 acceptance remains open.
+
+
+### Follow-up15:14UTC — independent checks interrupted
+
+Source candidate ddfe672 built and was pushed, but targeted runtime checks
+and same-case public resume are NOTRUN. The helper command failed to parse
+(Missing closing parenthesis, exit1) before execution or evidence-folder
+creation. The tester then failed with actual account usage limit. The
+reported retry time is Oct6th12:50AM, not a verified capacity observation.
+No model/account/provider switch, credit reset or parent test substitution.
+
+Parent read-only check15:14UTC found all16 protected case files unchanged,
+11started/11completed calls, ANALYZED/source-review and no factory lock.
+Native vision remains NOTRUN; no video was created. The new source has not
+proved it removes the blocker. The previous phase report remains unchanged.
+
+Own Studio was reloaded onto runtime ddfe672 at15:13:01UTC, port8850. HTTP
+200,68matching project names and unchanged project-state hashes were
+verified. A mistaken default8787 launch was stopped by exact PID/birth
+before the corrected8850 launch; this operational correction is not a test.
+The general quality/input/language/backend acceptance remains OPEN.

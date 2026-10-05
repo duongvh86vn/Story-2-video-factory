@@ -4,7 +4,9 @@
 
 Contract: chủ đề/câu chuyện → writer → kịch bản → narration → phân vai → dàn cảnh → video; kịch bản hoàn chỉnh giữ lời nguyên văn, WAV/SRT giữ nguồn và clock tương ứng. Người que hoặc robot đóng vai trong câu chuyện; primary có thể vắng mặt, nhiều vai và cảnh đồ vật/môi trường được phép. Không áp quota người dẫn hoặc dùng máy móc làm thiết kế mặc định. Animation2.2.13/director2.2.31/explanation2.2.6 có tư thế, hai tay độc lập, ghế, biểu cảm và hành động có nguồn. EN/VI/JA/KO và adapter TTS local/API/command đã có, backend thực tế còn chờ kiểm chứng. Source/clock/contact/identity/security/voice/QC vẫn chặn final khi sai.
 
-Nghiệm thu hiện tại 05/10/2026: ca tiếng Anh trạm xe buýt đã public resume tới DONE/QC PASS, giữ nguyên narration/WAV/clock và journal13started/12completed/1pending; không gọi model mới. Cảnh đầu tái dùng đúng phản hồi sửa diễn xuất đã hoàn tất qua browser/full merged-board validation. Đây là kết quả kỹ thuật của một ca, chưa là nghiệm thu chất lượng tạo hình và toàn tool: ảnh preview còn nhỏ/giống vai và cảnh sơ sài, review chỉ rule-based, chưa xem/nghe đầy đủ hoặc real vision. Model test hết hạn mức trước báo cáo cuối; không đổi tài khoản/model để thay kết quả. Source3718 có hồi quy205PASS1SKIP + foreground18PASS/typecheck0 và14/14 synthetic renderer/cache checks ở các lần chạy riêng; không suy ra chất lượng native từ synthetic. Phim thư viện trước đó vẫn QC FAIL và giữ nguyên lịch sử/hạn mức. [Bằng chứng mới và giới hạn](docs/validation/2026-10-05-rainy-native-resume.md), [luồng tổng quát](docs/GENERAL-STORY-TOOL.md). Toàn mục tiêu vẫn OPEN.
+Nghiệm thu hiện hành 05/10/2026 15:14UTC: ca chủ đề sinh nhật đã tự tạo lời kể tiếng Anh và audio51,421s/12cues nhưng dừng trước phim tại source-review. Source ddfe672 đã sửa lỗi nhận “pin” trong “dropping”, thêm ngữ cảnh rig và hướng dẫn seed; build/typecheck qua, GitHub đã cập nhật. Model test hết hạn mức trước kiểm hồi quy/resume; helper lỗi cú pháp chưa thực thi, không có test hoặc native vision mới. Ca gốc giữ11callscomplete/0pending, audio/clock/config nguyên trạng. Studio8850 đã nạp bản sửa, giữ68project. Video trạm xe buýt được đánh giá chỉ đọc PARTIAL, xác nhận chân lệch nền48,8–68,8px; xem/nghe toàn phim NOTRUN. [Báo cáo và bàn giao hiện hành](docs/validation/2026-10-05-birthday-garden-source.md). Toàn mục tiêu OPEN.
+
+Snapshot trước đánh giá độc lập và ca sinh nhật (05/10/2026): ca tiếng Anh trạm xe buýt đã public resume tới DONE/QC PASS, giữ nguyên narration/WAV/clock và journal13started/12completed/1pending; không gọi model mới. Cảnh đầu tái dùng đúng phản hồi sửa diễn xuất đã hoàn tất qua browser/full merged-board validation. Đây là kết quả kỹ thuật của một ca, chưa là nghiệm thu chất lượng tạo hình và toàn tool: ảnh preview còn nhỏ/giống vai và cảnh sơ sài, review chỉ rule-based, chưa xem/nghe đầy đủ hoặc real vision. Model test hết hạn mức trước báo cáo cuối; không đổi tài khoản/model để thay kết quả. Source3718 có hồi quy205PASS1SKIP + foreground18PASS/typecheck0 và14/14 synthetic renderer/cache checks ở các lần chạy riêng; không suy ra chất lượng native từ synthetic. Phim thư viện trước đó vẫn QC FAIL và giữ nguyên lịch sử/hạn mức. [Bằng chứng mới và giới hạn](docs/validation/2026-10-05-rainy-native-resume.md), [luồng tổng quát](docs/GENERAL-STORY-TOOL.md). Toàn mục tiêu vẫn OPEN.
 
 
 Đặc tả mục tiêu V2.2 · cập nhật 2026-10-04. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Nhánh ý tưởng nối vào ba luồng narration; diễn xuất V2.2 đang triển khai/nghiệm thu. Phần đã chạy và phần còn chờ được ghi ở IMPLEMENTATION-STATUS.md.
@@ -670,3 +672,19 @@ Model test hết hạn mức trước báo cáo đánh giá cuối; parent chỉ
 visual design/normal-speed watch/full audio/real vision hoặc matrix toàn sản phẩm.
 Source3718:205PASS1SKIP,18PASS và14PASS synthetic ở các lần kiểm riêng; typecheck0.
 [Report có phạm vi và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-native-resume.md).
+
+
+## Checkpoint05/10 — ca chủ đề sinh nhật và bản sửa lexical/rig
+
+Ca mới đã được người dùng duyệt với review ảnh thật: chủ đề Riley/Sam chuẩn bị
+sinh nhật trong vườn → writer tạo lời kể tiếng Anh → Zira tạo audio51,421s/12cues.
+Lượt đầu dừng tại source-review do seed nhận nhầm “pin” trong “dropping” và
+một visualGoal vượt lời kể;11callscomplete/0pending, chưa có phim/review ảnh.
+Source ddfe672 sửa ranh giới từ Unicode, ngữ cảnh rig và quyền sửa seed; giữ
+audio/narration/clock và consumed budget khi migration chỉ do lỗi lexical.
+Build/typecheck qua và cập nhật GitHub nhánh codex/stickman-acting-v22.
+Kiểm hồi quy độc lập và resume còn NOTRUN: helper lỗi cú pháp trước thực thi,
+sau đó model test hết hạn mức. Studio8850 đã nạp source mới, giữ68project.
+[Raw failures và bàn giao](docs/validation/2026-10-05-birthday-garden-source.md).
+Video tổng quát, native vision và matrix đầu vào/ngôn ngữ/backend vẫn chưa
+nghiệm thu; không dùng V1, build hoặc audio PASS để tuyên bố hoàn thành.

@@ -158,3 +158,11 @@ mượt hoặc audio sync. [Cấu hình, giới hạn và bộ kiểm tiếp](CO
 board thực với video tham khảo người dùng. Bước tiếp là kiểm thiết kế tự sinh
 mới và toàn phim khi model test có hạn mức, không phải giảm QC, sửa tay một
 phim demo hoặc ép mọi câu chuyện theo cùng bố cục.
+
+### Runtime handoff15:14UTC
+
+Studio8850 now runs source ddfe672 with68projects preserved. Independent source
+regressions and birthday resume have not run: helper parse failure occurred
+before execution, then the tester hit actual usage limit. Source candidate is
+built and on GitHub; runtime effect/video/native image review remains unverified.
+[Precise result](validation/2026-10-05-birthday-garden-source.md).

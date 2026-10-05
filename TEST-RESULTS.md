@@ -250,3 +250,11 @@ Birthday rawtopic→writer→ENZira51.421s/12cues PASS technical, nhưng source-
 chặn trước phim:11callscomplete/0pending, nativevisionNOTRUN. Source lexical/rig
 fix build/typecheckPASS, runtime regression/resumePENDING.
 [Raw failures và giới hạn](docs/validation/2026-10-05-birthday-garden-source.md).
+
+### Follow-up15:14UTC
+
+Candidate ddfe672: build/typecheck PASS only. Independent lexical/budget/cache/rig
+regressions and original-case resume NOTRUN after helper parse failure and
+actual account usage limit. Native vision/video NOTRUN.11call history and16
+protectedcasefiles unchanged; no parent test/provider substitution.
+[Scope](docs/validation/2026-10-05-birthday-garden-source.md).

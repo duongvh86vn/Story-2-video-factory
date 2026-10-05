@@ -393,3 +393,14 @@ accepted direction không bị redesign. Giữ source/text/contact/target/securi
 gates. Chỉ sau scoped PASS và exact source binding mới public resume project
 sinh nhật gốc; tổng30model calls/2review/2scene repair, nativevisiontrue/rulefallbackfalse.
 Không clone, force, reset pending hoặc viết lại accepted artifacts.
+
+### Handoff interruption15:14UTC
+
+The independent follow-up failed before helper execution (PowerShell parse error)
+and then hit actual account usage limit. No runtime regression or public resume
+was launched. Existing permissions remain; do not ask again for the same case.
+After actual capacity returns, reuse the same tester/context, a fresh evidence
+root and fresh execution/cleanup deadlines. First prove focused checks, then
+resume the same original project within its unchanged total30calls/2reviews/2scene
+repairs and11-call history. Do not clone, force/reset, or clear source-review by
+hand. Candidate source ddfe672/Studio8850; no vision result or new film yet.
