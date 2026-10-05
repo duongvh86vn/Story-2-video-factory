@@ -314,3 +314,13 @@ C:/Users/Duongvh-pc/codex-test-evidence/source-protocol-20261005T083200Z/REPORT.
 Build0b446e+7897a9 đã qua trước test, source sau release không đổi. Đây là
 nghiệm thu source/protocol riêng, không biến native rainy case time-bound
 FAIL hoặc phim thư viện QCFAIL thành video đạt. Full product/matrix OPEN.
+
+
+<!-- ARTWORK-FRAGMENT-FOLLOWUP-20261005 -->
+### Sửa cảnh riêng sau ca đời thường
+
+[Ca tiếp tục trạm xe buýt](docs/validation/2026-10-05-rainy-bus-stop-continuation.md)
+đã có MP4 nhưng QC FAIL và repair bị kiểm sai phạm vi cast. Source sửa
+fragment validation/replay response hoàn tất đã build; runtime test PENDING.
+Không dùng 125+5 test trước để đóng bản sửa mới. Báo cáo formal của tester
+chưa hoàn tất do usage limit; journal/budget/input/failed-film giữ nguyên.

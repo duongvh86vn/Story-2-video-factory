@@ -37,28 +37,43 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
   }
   const binding={modelsHash:hash({primary:config.models.storyboard,fallback:config.models.fallback}),shotHash:hash(shot),narrationHash:hash(narration),...(actingRepair?{repairContract:'bounded-actor-motion-1'}:{})};
   const validate=(candidate:Shot)=>{
-    validateExplainerStoryboard({shots:[candidate]},narration,beats,profile,rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}});
+    validateExplainerStoryboard({shots:[candidate]},narration,beats,profile,rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true});
     const files=renderCinematic(candidate,profile,rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,narration).files;
     const problems=validateSceneFiles(secureSceneFiles(files),candidate,config.workflow.max_scene_bytes,[],config.rendering.final);
     if(problems.length)throw new Error(`${shot.id}: artwork repair is invalid: ${problems.join('\n')}`);
   };
-  // A valid browser-checked design survives a failed local commit. Revalidate it
-  // against the current contract before spending another model call.
-  for(const file of (await walk(path.join(root,'work/attempts/creative-artwork-repair',shot.id))).filter(file=>file.endsWith('.json')).reverse()){
-    const saved=await readJson<{status:string;binding:unknown;runtimeValidation?:string;result?:unknown}>(file);
-    if(!['commit-failed','domain-validated'].includes(saved.status)||saved.runtimeValidation!=='passed'||hash(saved.binding)!==hash(binding))continue;
-    try{const candidate=StoryboardSchema.parse({shots:[saved.result]}).shots[0]!;validate(candidate);return {shot:candidate,attemptFile:file};}catch{/* Current source must approve a replay. */}
-  }
+  const responseCandidate=(value:unknown):Shot=>{
+    const repaired=actingRepair?applyActingRepair(shot,actingRepairSchemaFor(shot).parse(value))
+      :{...shot,cinematic:{...shot.cinematic!,artDirection:RepairSchema.parse(value).artDirection}};
+    if(repaired.cinematic!.artDirection!.useEnvironment!==shot.cinematic!.artDirection!.useEnvironment)throw new Error(`${shot.id}: artwork repair changed its environment asset source`);
+    repaired.cinematic!.artDirection!.origin='model';
+    const candidate=normalizeCreativeSourceRefs({shots:[repaired]},narration).shots[0]!;
+    candidate.cinematic!.sourceRefs=candidate.sourceRefs!;
+    return candidate;
+  };
   const persist=(value:unknown)=>writeJson(attemptFile,JSON.parse(redact(JSON.stringify(value))));
+  // Revalidate completed designs against current source before spending another
+  // call. A rejected response must match the exact current request and binding;
+  // its original receipt stays unchanged and browser validation is still required.
+  for(const file of (await walk(path.join(root,'work/attempts/creative-artwork-repair',shot.id))).filter(file=>file.endsWith('.json')).reverse()){
+    const saved=await readJson<{status:string;binding:unknown;request?:unknown;response?:unknown;runtimeValidation?:string;result?:unknown}>(file);
+    if(hash(saved.binding)!==hash(binding))continue;
+    if(['commit-failed','domain-validated'].includes(saved.status)&&saved.runtimeValidation==='passed'){
+      try{const candidate=StoryboardSchema.parse({shots:[saved.result]}).shots[0]!;validate(candidate);return {shot:candidate,attemptFile:file};}catch{/* Current source must approve a replay. */}
+    }
+    if(saved.status!=='domain-rejected'||saved.response===undefined||!saved.request||hash(saved.request)!==hash(request))continue;
+    let candidate:Shot;
+    try{candidate=responseCandidate(saved.response);validate(candidate);}catch{continue;}
+    // Local persistence failure must not trigger a second billed provider call.
+    await persist({status:'domain-validated',request,binding,response:saved.response,result:candidate,
+      revalidation:'completed-domain-rejection',replayedFrom:path.relative(root,file).split(path.sep).join('/'),originalAttemptHash:hash(await fs.readFile(file))});
+    return {shot:candidate,attemptFile};
+  }
   await persist({status:'started',request,binding});
   let response:unknown;
   try{
     const value=actingRepair?await router.structured('storyboard',request,actingRepairSchemaFor(shot)):await router.structured('storyboard',request,RepairSchema);response=value;
-    if(value.artDirection.useEnvironment!==shot.cinematic.artDirection.useEnvironment)throw new Error(`${shot.id}: artwork repair changed its environment asset source`);
-    const repaired=actingRepair?applyActingRepair(shot,value):{...shot,cinematic:{...shot.cinematic,artDirection:value.artDirection}};
-    repaired.cinematic!.artDirection!.origin='model';
-    const candidate=normalizeCreativeSourceRefs({shots:[repaired]},narration).shots[0]!;
-    candidate.cinematic!.sourceRefs=candidate.sourceRefs!;
+    const candidate=responseCandidate(value);
     validate(candidate);
     await persist({status:'domain-validated',request,binding,response,result:candidate});
     return {shot:candidate,attemptFile};
