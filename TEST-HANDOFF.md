@@ -366,3 +366,18 @@ narration/audio, actor/shot locks và source/contact/QC gates vẫn giữ nguyê
 Source/build đã triển khai; nghiệm thu runtime mới PENDING model test. Phim trạm
 xe buýt cũ còn QC FAIL; khác hệ tọa độ không chứng minh đã sửa freeze hay video
 đã đạt kỳ vọng. [Contract và bộ kiểm](docs/ARTWORK-WORLD-SPACE.md).
+
+
+<!-- RAINY-NATIVE-RESUME-20261005 -->
+### Một ca native đã DONE/QC PASS; chất lượng toàn tool vẫn mở
+
+Ca tiếng Anh trạm xe buýt public resume exit0/QC PASS, giữ nguyên nguồn/audio/clock,
+journal13started12completed1oldpending và không gọi provider mới. Cảnh đầu dùng
+lại đúng completed response, qua browser/full merged-board trước khi xuất.
+Review/scene budget2/2, lỗi/phim cũ được giữ; không reset/clone/force.
+
+Model test hết hạn mức trước báo cáo đánh giá cuối; parent chỉ đọc artifact đã có.
+Ảnh preview còn diễn viên nhỏ, hai vai gần giống và nền sơ sài. Chưa nghiệm thu
+visual design/normal-speed watch/full audio/real vision hoặc matrix toàn sản phẩm.
+Source3718:205PASS1SKIP,18PASS và14PASS synthetic ở các lần kiểm riêng; typecheck0.
+[Report có phạm vi và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-native-resume.md).

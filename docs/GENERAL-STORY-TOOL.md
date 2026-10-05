@@ -1,6 +1,6 @@
 # Tool câu chuyện/chủ đề → kịch bản → video
 
-Sản phẩm nhận chủ đề/câu chuyện, lời kể hoàn chỉnh, WAV hoặc SRT. Nội dung quyết định kịch bản, các vai, bối cảnh và cách dàn cảnh; người que/robot là diễn viên. Video tự sinh mới nhất còn bị QC chặn, nên tính năng đã triển khai chưa đồng nghĩa chất lượng đã nghiệm thu. [Trạng thái hiện hành và evidence](validation/2026-10-04-general-story-followup.md).
+Sản phẩm nhận chủ đề/câu chuyện, lời kể hoàn chỉnh, WAV hoặc SRT. Nội dung quyết định kịch bản, các vai, bối cảnh và cách dàn cảnh; người que/robot là diễn viên. Ca tiếng Anh trạm xe buýt đã public resume/QC PASS, nhưng tạo hình/cảnh/normal-speed watch/listen và real vision vẫn chưa được nghiệm thu. [Kết quả có phạm vi và giới hạn](validation/2026-10-05-rainy-native-resume.md).
 
 Phạm vi ngày 04/10/2026. Người que là diễn viên trong câu chuyện, không có host cố định. Ví dụ máy hơi nước/ô tô dùng kiểm tra riêng, không phải template bắt buộc.
 
@@ -236,3 +236,18 @@ Guidance chỉ dùng khi sinh/sửa thiết kế; cache đã chấp nhận khôn
 tự động. Đây chưa là bằng chứng chất lượng hình mới. Build/typecheck đã qua;
 kiểm runtime/lock/cache/director và video mới vẫn PENDING do tester hết hạn mức.
 [Ca đã chạy và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-bus-stop-continuation.md).
+
+
+<!-- RAINY-NATIVE-RESUME-20261005 -->
+### Một ca native đã DONE/QC PASS; chất lượng toàn tool vẫn mở
+
+Ca tiếng Anh trạm xe buýt public resume exit0/QC PASS, giữ nguyên nguồn/audio/clock,
+journal13started12completed1oldpending và không gọi provider mới. Cảnh đầu dùng
+lại đúng completed response, qua browser/full merged-board trước khi xuất.
+Review/scene budget2/2, lỗi/phim cũ được giữ; không reset/clone/force.
+
+Model test hết hạn mức trước báo cáo đánh giá cuối; parent chỉ đọc artifact đã có.
+Ảnh preview còn diễn viên nhỏ, hai vai gần giống và nền sơ sài. Chưa nghiệm thu
+visual design/normal-speed watch/full audio/real vision hoặc matrix toàn sản phẩm.
+Source3718:205PASS1SKIP,18PASS và14PASS synthetic ở các lần kiểm riêng; typecheck0.
+[Report có phạm vi và bộ kiểm tiếp](validation/2026-10-05-rainy-native-resume.md).

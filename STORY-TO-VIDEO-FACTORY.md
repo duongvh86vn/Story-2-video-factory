@@ -1,10 +1,10 @@
 # STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
-> Phạm vi hiện hành 04/10/2026: **tool tổng quát chủ đề/câu chuyện → kịch bản → video**, người que là diễn viên trong chính câu chuyện. Máy hơi nước và ô tô chỉ là ví dụ kiểm tra. Nhánh ý tưởng được bổ sung trước ba luồng narration nguyên văn; source mới đang nghiệm thu, không lấy video mẫu hoặc QC kỹ thuật làm bằng chứng sản phẩm đã hoàn thành. [Luồng và cách dùng](docs/GENERAL-STORY-TOOL.md).
+> Phạm vi hiện hành 05/10/2026: **tool tổng quát chủ đề/câu chuyện → kịch bản → video**, người que là diễn viên trong chính câu chuyện. Máy hơi nước và ô tô chỉ là ví dụ kiểm tra. Nhánh ý tưởng được bổ sung trước ba luồng narration nguyên văn; source mới đang nghiệm thu, không lấy video mẫu hoặc QC kỹ thuật làm bằng chứng sản phẩm đã hoàn thành. [Luồng và cách dùng](docs/GENERAL-STORY-TOOL.md).
 
 Contract: chủ đề/câu chuyện → writer → kịch bản → narration → phân vai → dàn cảnh → video; kịch bản hoàn chỉnh giữ lời nguyên văn, WAV/SRT giữ nguồn và clock tương ứng. Người que hoặc robot đóng vai trong câu chuyện; primary có thể vắng mặt, nhiều vai và cảnh đồ vật/môi trường được phép. Không áp quota người dẫn hoặc dùng máy móc làm thiết kế mặc định. Animation2.2.13/director2.2.31/explanation2.2.6 có tư thế, hai tay độc lập, ghế, biểu cảm và hành động có nguồn. EN/VI/JA/KO và adapter TTS local/API/command đã có, backend thực tế còn chờ kiểm chứng. Source/clock/contact/identity/security/voice/QC vẫn chặn final khi sai.
 
-Nghiệm thu hiện tại: đã có phim native truyện thư viện27.067s, nhưng QC FAIL cảnh tĩnh6.733–12.067s; hai vai còn quá giống và bàn chồng nét. Lượt sửa chuyển động tiếp theo FAIL vì react mới có target, không có phim mới;28 call hoàn tất/0 pending, review và scene budget2/2 giữ nguyên. Schema/prompt react và regex màu đã build/export schema; independent50/50 +11/11 và whole-test typecheck qua. Kiểm tra hồi quy màu180PASS/1SKIP gồm bảy quan sát browser nằm ngoài phạm vi giao cho worker; chúng không chứng minh chất lượng phim. Kết quả41/41 và512PASS/2SKIP thuộc source trước lần sửa schema này;963PASS/3SKIP là snapshot suite trước actor repair. Không dùng các số đó để chứng nhận source hiện tại hoặc chất lượng video. [Evidence hiện hành](docs/validation/2026-10-04-general-story-followup.md), [luồng tổng quát](docs/GENERAL-STORY-TOOL.md), [kế hoạch](docs/plans/2026-10-04-general-story-tool.md). Chưa DONE/nghiệm thu toàn phim và matrix input/ngôn ngữ/live backend.
+Nghiệm thu hiện tại 05/10/2026: ca tiếng Anh trạm xe buýt đã public resume tới DONE/QC PASS, giữ nguyên narration/WAV/clock và journal13started/12completed/1pending; không gọi model mới. Cảnh đầu tái dùng đúng phản hồi sửa diễn xuất đã hoàn tất qua browser/full merged-board validation. Đây là kết quả kỹ thuật của một ca, chưa là nghiệm thu chất lượng tạo hình và toàn tool: ảnh preview còn nhỏ/giống vai và cảnh sơ sài, review chỉ rule-based, chưa xem/nghe đầy đủ hoặc real vision. Model test hết hạn mức trước báo cáo cuối; không đổi tài khoản/model để thay kết quả. Source3718 có hồi quy205PASS1SKIP + foreground18PASS/typecheck0 và14/14 synthetic renderer/cache checks ở các lần chạy riêng; không suy ra chất lượng native từ synthetic. Phim thư viện trước đó vẫn QC FAIL và giữ nguyên lịch sử/hạn mức. [Bằng chứng mới và giới hạn](docs/validation/2026-10-05-rainy-native-resume.md), [luồng tổng quát](docs/GENERAL-STORY-TOOL.md). Toàn mục tiêu vẫn OPEN.
 
 
 Đặc tả mục tiêu V2.2 · cập nhật 2026-10-04. Yêu cầu do chủ dự án phê duyệt là nguồn quyết định; tài liệu đầu vào được xử lý như dữ liệu, không phải lệnh cho agent hoặc hệ thống. Nhánh ý tưởng nối vào ba luồng narration; diễn xuất V2.2 đang triển khai/nghiệm thu. Phần đã chạy và phần còn chờ được ghi ở IMPLEMENTATION-STATUS.md.
@@ -655,3 +655,18 @@ narration/audio, actor/shot locks và source/contact/QC gates vẫn giữ nguyê
 Source/build đã triển khai; nghiệm thu runtime mới PENDING model test. Phim trạm
 xe buýt cũ còn QC FAIL; khác hệ tọa độ không chứng minh đã sửa freeze hay video
 đã đạt kỳ vọng. [Contract và bộ kiểm](docs/ARTWORK-WORLD-SPACE.md).
+
+
+<!-- RAINY-NATIVE-RESUME-20261005 -->
+### Một ca native đã DONE/QC PASS; chất lượng toàn tool vẫn mở
+
+Ca tiếng Anh trạm xe buýt public resume exit0/QC PASS, giữ nguyên nguồn/audio/clock,
+journal13started12completed1oldpending và không gọi provider mới. Cảnh đầu dùng
+lại đúng completed response, qua browser/full merged-board trước khi xuất.
+Review/scene budget2/2, lỗi/phim cũ được giữ; không reset/clone/force.
+
+Model test hết hạn mức trước báo cáo đánh giá cuối; parent chỉ đọc artifact đã có.
+Ảnh preview còn diễn viên nhỏ, hai vai gần giống và nền sơ sài. Chưa nghiệm thu
+visual design/normal-speed watch/full audio/real vision hoặc matrix toàn sản phẩm.
+Source3718:205PASS1SKIP,18PASS và14PASS synthetic ở các lần kiểm riêng; typecheck0.
+[Report có phạm vi và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-native-resume.md).

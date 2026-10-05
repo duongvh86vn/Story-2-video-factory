@@ -225,3 +225,18 @@ Ngày 2026-10-01. Source ba luồng script/WAV/SRT, voice/host/explainer pipelin
 | TTS/ASR/alignment/render/video host V2.1 | NOT RUN | Chưa có evidence nghiệm thu mới |
 
 Mẫu script/SRT và matrix acceptance nằm trong TEST-HANDOFF.md. Cần provider tiếng Việt thật, alignment backend và planner/vision phù hợp để ghi evidence audio/video/source/contact/layout. Rule-only pass, schema generation, compilation hoặc kết quả V1 không thay thế các ca này.
+
+
+<!-- RAINY-NATIVE-RESUME-20261005 -->
+### Một ca native đã DONE/QC PASS; chất lượng toàn tool vẫn mở
+
+Ca tiếng Anh trạm xe buýt public resume exit0/QC PASS, giữ nguyên nguồn/audio/clock,
+journal13started12completed1oldpending và không gọi provider mới. Cảnh đầu dùng
+lại đúng completed response, qua browser/full merged-board trước khi xuất.
+Review/scene budget2/2, lỗi/phim cũ được giữ; không reset/clone/force.
+
+Model test hết hạn mức trước báo cáo đánh giá cuối; parent chỉ đọc artifact đã có.
+Ảnh preview còn diễn viên nhỏ, hai vai gần giống và nền sơ sài. Chưa nghiệm thu
+visual design/normal-speed watch/full audio/real vision hoặc matrix toàn sản phẩm.
+Source3718:205PASS1SKIP,18PASS và14PASS synthetic ở các lần kiểm riêng; typecheck0.
+[Report có phạm vi và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-native-resume.md).
