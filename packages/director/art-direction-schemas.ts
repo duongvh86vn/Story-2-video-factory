@@ -4,8 +4,10 @@ import type { Shot } from '../core/schemas.js';
 import { SourceRefSchema } from '../explainer/schemas.js';
 
 const Color=z.string().regex(/^#[0-9a-fA-F]{6}$/);
+/** Finite, non-overshooting incoming-segment curves; no provider-supplied code. */
+export const ArtEasingSchema=z.enum(['none','sine.in','sine.out','sine.inOut']);
 export const ArtKeyframeSchema=z.object({atMs:z.number().finite().nonnegative(),x:z.number().finite(),y:z.number().finite(),
-  scale:z.number().finite().positive(),rotation:z.number().finite(),opacity:z.number().min(0).max(1)}).strict();
+  scale:z.number().finite().positive(),rotation:z.number().finite(),opacity:z.number().min(0).max(1),ease:ArtEasingSchema.optional()}).strict();
 export const ArtDirectionSchema=z.object({
   origin:z.enum(['authored','model','offline']),brief:z.string().min(1).max(4000),useEnvironment:z.boolean(),
   palette:z.object({background:Color,surface:Color,ink:Color,accent:Color}).strict(),showHeading:z.boolean(),

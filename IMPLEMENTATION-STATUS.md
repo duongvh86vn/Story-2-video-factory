@@ -308,3 +308,16 @@ của từng vai đã duyệt, không khóa mọi diễn viên vào mascot của
 Bản vá đã build/typecheck; test độc lập và native vision mới PENDING. Phim trạm
 xe buýt đã render trước đó vẫn QC FAIL. Ảnh tĩnh chưa chứng minh chuyển động
 mượt hoặc audio sync. [Cấu hình, giới hạn và bộ kiểm tiếp](docs/CODEX-IMAGE-REVIEW.md).
+
+
+<!-- ARTWORK-EASING-20261005 -->
+### Nhịp chuyển động theo từng keyframe artwork
+
+Artwork có ease tùy chọn ở keyframe đích:none, sine.in, sine.out, sine.inOut.
+Model có thể chọn tốc độ đều hoặc tăng/giảm tốc theo ý đồ, giữ clock narration.
+Shot khai báo nhận renderer identity riêng; thiếu ease giữ nhánh legacy. Không
+áp template, movement quota hoặc tự thêm motion để vượt QC.
+
+Build/typecheck b42000 đã qua; runtime/seek/cache/video mới PENDING model test.
+Giới hạn renderer đã được xác nhận từ source, chưa chứng minh nguyên nhân
+freeze hoặc phim đã mượt. [Contract và nghiệm thu](docs/ARTWORK-MOTION-TIMING.md).

@@ -1,8 +1,10 @@
 import type { Shot } from '../core/schemas.js';
 import { escapeHtml, hash } from '../core/utils.js';
-import { ArtDirectionSchema, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
+import { ArtDirectionSchema, ArtEasingSchema, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
 export { ArtDirectionSchema, type ArtDirection } from './art-direction-schemas.js';
 export const ARTWORK_RENDER_VERSION='passive-svg-2.2.6';
+/** Only shots opting into incoming-keyframe easing acquire this renderer identity. */
+export const ARTWORK_EASING_VERSION='typed-art-easing-1';
 /** Opt-in sourced model fragments; legacy artwork keeps its byte/cache contract. */
 export const MODEL_FOREGROUND_VERSION='sourced-model-foreground-1';
 const tags=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask']);
@@ -132,7 +134,8 @@ export function artLayers(shot:Shot,plane:ArtDirection['layers'][number]['plane'
     calls.push(`tl.set(${target},{attr:{transform:${JSON.stringify(transform(first))}},opacity:${first.opacity},immediateRender:true},0);`);
     for(let i=1;i<layer.keyframes.length;i++){
       const frame=layer.keyframes[i]!,previous=layer.keyframes[i-1]!;
-      calls.push(`tl.to(${target},{attr:{transform:${JSON.stringify(transform(frame))}},opacity:${frame.opacity},duration:${(frame.atMs-previous.atMs)/1000},ease:"sine.inOut"},${previous.atMs/1000});`);
+      const ease=ArtEasingSchema.parse(frame.ease??'sine.inOut');
+      calls.push(`tl.to(${target},{attr:{transform:${JSON.stringify(transform(frame))}},opacity:${frame.opacity},duration:${(frame.atMs-previous.atMs)/1000},ease:${JSON.stringify(ease)}},${previous.atMs/1000});`);
     }
     return `<g id="art-layer-${escapeHtml(layer.id)}" data-art-layer="${escapeHtml(layer.id)}" data-art-role="${layer.role}">${artworkSvg(layer.svg,`${shot.id}.art.${layer.id}`)}</g>`;
   }).join('');

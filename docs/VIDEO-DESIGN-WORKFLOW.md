@@ -135,3 +135,16 @@ Guidance chỉ dùng khi sinh/sửa thiết kế; cache đã chấp nhận khôn
 tự động. Đây chưa là bằng chứng chất lượng hình mới. Build/typecheck đã qua;
 kiểm runtime/lock/cache/director và video mới vẫn PENDING do tester hết hạn mức.
 [Ca đã chạy và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-bus-stop-continuation.md).
+
+
+<!-- ARTWORK-EASING-20261005 -->
+### Nhịp chuyển động theo từng keyframe artwork
+
+Artwork có ease tùy chọn ở keyframe đích:none, sine.in, sine.out, sine.inOut.
+Model có thể chọn tốc độ đều hoặc tăng/giảm tốc theo ý đồ, giữ clock narration.
+Shot khai báo nhận renderer identity riêng; thiếu ease giữ nhánh legacy. Không
+áp template, movement quota hoặc tự thêm motion để vượt QC.
+
+Build/typecheck b42000 đã qua; runtime/seek/cache/video mới PENDING model test.
+Giới hạn renderer đã được xác nhận từ source, chưa chứng minh nguyên nhân
+freeze hoặc phim đã mượt. [Contract và nghiệm thu](ARTWORK-MOTION-TIMING.md).
