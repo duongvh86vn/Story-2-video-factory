@@ -26,6 +26,8 @@ import { CINEMATIC_EXPORT_FILES, CINEMATIC_PLAN_FILES } from '../../packages/dir
 import { inspectCinematicStoryboard, validateCinematicEdit } from './cinematic.js';
 import type { CinematicArtifactStatus } from './contracts.js';
 import {assertActorLocks} from '../../packages/actors/locks.js';
+import {outdatedSceneInputs,lockedShot} from '../../packages/scenes/index.js';
+import {readJson} from '../../packages/core/utils.js';
 
 interface ArtifactSpec { paths: string[]; schema?: z.ZodTypeAny; editable?: boolean; from?: ProjectStatus; text?: boolean; }
 export const ARTIFACTS: Record<string, ArtifactSpec> = {
@@ -265,7 +267,14 @@ export async function cinematicMigration(root:string){
   const file=await locate(root,ARTIFACTS['storyboard.json']!.paths);
   if(!file)return {required:false,shotIds:[],lockedShotIds:[]};
   const doc=await readArtifact(root,'storyboard.json'),state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');
-  return inspectCinematicStoryboard(doc.data,state?.locked).migration;
+  const migration=inspectCinematicStoryboard(doc.data,state?.locked).migration;
+  if(migration.required||!state||States.indexOf(state.state)<States.indexOf('SCENES_READY'))return migration;
+  const config=await loadConfig(root);if(config.content.mode!=='narrated-explainer')return migration;
+  const board=StoryboardSchema.parse(doc.data);
+  let shotIds:string[];
+  try{shotIds=await outdatedSceneInputs(root,config,board,await readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema),await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema));}
+  catch{shotIds=board.shots.map(shot=>shot.id);}
+  return {required:shotIds.length>0,shotIds,lockedShotIds:board.shots.filter(shot=>shotIds.includes(shot.id)&&lockedShot(state,shot)).map(shot=>shot.id)};
 }
 export async function cinematicArtifactStatus(root: string, name: string): Promise<CinematicArtifactStatus> {
   const file = await locate(root, ARTIFACTS[name]!.paths);
@@ -295,7 +304,16 @@ export async function currentDownload(root:string,name:string):Promise<boolean>{
   if ((CINEMATIC_EXPORT_FILES as readonly string[]).includes(name)) return (await cinematicArtifactStatus(root, name)).status !== 'stale';
   const stage:Record<string,ProjectStatus>={'final.mp4':'FINAL_RENDERED','final.srt':'FINAL_RENDERED','thumbnail.png':'FINAL_RENDERED','qc-report.json':'QC_PASSED','production-report.md':'DONE','draft.mp4':'DRAFT_RENDERED'};if(!stage[name])return true;
   if((await cinematicMigration(root)).required)return false;
-  const state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');return !!state&&States.indexOf(state.state)>=States.indexOf(stage[name]!);
+  const state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');
+  if(!state||States.indexOf(state.state)<States.indexOf(stage[name]!))return false;
+  const config=await loadConfig(root);
+  if(config.content.mode==='narrated-explainer'){
+    try{
+      const outdated=await outdatedSceneInputs(root,config,await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema),await readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema),await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema));
+      if(outdated.length)return false;
+    }catch{return false;}
+  }
+  return true;
 }
 export async function listDownloads(root: string): Promise<unknown[]> {
   const result: unknown[] = [];

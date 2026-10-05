@@ -16,6 +16,7 @@ import { visualAssetPath } from './assets.js';
 import { ffmpeg } from '../audio/ffmpeg.js';
 import { renderExplainer } from '../../library/shots/explainer.js';
 import { renderCinematic } from '../../library/shots/cinematic.js';
+import {sceneLabelIdentity} from '../../library/shots/scene-labels.js';
 import { ANIMATION_VERSION } from '../animation/schemas.js';
 import { DIRECTION_VERSION } from '../director/schemas.js';
 import { PROP_BINDING_VERSION } from '../director/props.js';
@@ -46,7 +47,7 @@ export async function validateExplainerSources(root:string,config:FactoryConfig,
     if(config.presentation.mode!=='story-cinematic')return ['Cinematic scene requires story-cinematic presentation'];
     return actual===sourceHash(secureSceneFiles(renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema)).files))?[]:['Cinematic scene differs from its validated stage/performance/camera plan. Rebuild the shot.'];
   }
-  for(const simple of [false,true])if(actual===sourceHash(secureSceneFiles(renderExplainer(shot,profile,rig,activity,style,d.width,d.height,simple).files)))return [];
+  for(const simple of [false,true])if(actual===sourceHash(secureSceneFiles(renderExplainer(shot,profile,rig,activity,style,d.width,d.height,simple,config.project.language).files)))return [];
   return ['Explainer scene differs from its validated host/model/action plan. Edit the storyboard plan and rebuild this shot.'];
 }
 
@@ -86,7 +87,7 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
 async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characters:CharacterBible,assetHashes:Record<string,string>,gsap:Buffer):Promise<string> {
   const source=await exists(path.join(root,config.input.source)) ? await fs.readFile(await safeRealPath(root,config.input.source)) : Buffer.alloc(0);
   const activity=config.content.mode==='narrated-explainer'?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
-  return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?ANIMATION_VERSION:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,activity});
+  return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?ANIMATION_VERSION:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,sceneLabels:sceneLabelIdentity(shot,config),activity});
 }
 /** Check every approved scene before staging assets, resetting state or rebuilding another shot. */
 export async function assertLockedSceneCompatibility(root:string,config:FactoryConfig,board:Storyboard,characters:CharacterBible,manifest:AssetManifest,state:Locks,shotIds?:string[]):Promise<void> {
@@ -104,6 +105,24 @@ export async function assertLockedSceneCompatibility(root:string,config:FactoryC
     const expected=await inputIdentity(root,config,shot,characters,staged.hashes,gsap);
     if(!record?.validated||record.inputHash!==expected)throw new Error(`${shot.id}: locked scene input/renderer conflict; restore the approved inputs and renderer, or explicitly unlock and rebuild this shot. The approved scene has been retained.`);
   }
+}
+/** Read-only check shared by resume and download gates; never stages media or resets budgets. */
+export async function outdatedSceneInputs(root:string,config:FactoryConfig,board:Storyboard,characters:CharacterBible,manifest:AssetManifest):Promise<string[]> {
+  if(config.content.mode!=='narrated-explainer')return [];
+  StoryboardSchema.parse(board);CharacterBibleSchema.parse(characters);AssetManifestSchema.parse(manifest);
+  const gsap=await libraryRuntime(),outdated:string[]=[];
+  for(const shot of board.shots){
+    const dir=path.join(root,'scenes',shot.id),recordFile=path.join(dir,'scene.json');
+    const complete=await Promise.all([...SCENE_FILENAMES,'scene.json'].map(name=>exists(path.join(dir,name))));
+    if(!complete.every(Boolean)){outdated.push(shot.id);continue;}
+    const record=await readJson<SceneRecord>(await safeRealPath(root,path.relative(root,recordFile))).catch(()=>undefined);
+    const staged=await stageAssets(root,dir,shot,manifest,config,false);
+    const expected=await inputIdentity(root,config,shot,characters,staged.hashes,gsap);
+    if(!record?.validated||record.inputHash!==expected){outdated.push(shot.id);continue;}
+    const files:SceneFiles={files:await Promise.all(SCENE_FILENAMES.map(async name=>({path:name,content:await fs.readFile(await safeRealPath(root,path.relative(root,path.join(dir,name))),'utf8')}))),dependencies:[],notes:[]};
+    if(record.sourceHash!==sourceHash(files))outdated.push(shot.id);
+  }
+  return outdated;
 }
 async function writeScene(root:string,dir:string,files:SceneFiles):Promise<SceneFiles> {
   const secured=secureSceneFiles(files);
@@ -147,7 +166,7 @@ async function hostGeometryPublication(root:string,config:FactoryConfig,shot:Sho
     add('host-geometry.json',rendered.geometry);
     add('performance-report.json',{...rendered.report,rigHash:rendered.geometry.rigHash});
   }else{
-    const rendered=renderExplainer(shot,profile,rig,activity,getStyle(config),config.rendering.final.width,config.rendering.final.height);
+    const rendered=renderExplainer(shot,profile,rig,activity,getStyle(config),config.rendering.final.width,config.rendering.final.height,false,config.project.language);
     add('host-geometry.json',rendered.geometry);
   }
   return pending;
@@ -191,7 +210,7 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   const host=explainer?await loadHost(root):undefined, activity=explainer?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
   const background=shot.cinematic?await cinematicBackground(root,shot):undefined;
   const narrated=shot.cinematic?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
-  const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return shot.cinematic?renderCinematic(shot,host.profile,host.rig,activity,config,background,narrated):renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified);};
+  const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return shot.cinematic?renderCinematic(shot,host.profile,host.rig,activity,config,background,narrated):renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified,config.project.language);};
   const reviewErrors=options.issues?.map(issue=>`${issue.type}: ${issue.description}\nRequested repair: ${issue.repair}`)??[];
   let candidate:SceneFiles|undefined, errors:string[]=reviewErrors;
   if(options.issues?.length && complete.every(Boolean) && !explainer) candidate=await readScene(dir);

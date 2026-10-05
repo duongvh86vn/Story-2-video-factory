@@ -492,3 +492,59 @@ Chi tiết: [cast/depth evidence](docs/validation/2026-10-05-cast-and-model-dept
 Phim native truyện thư viện cũ vẫn QCFAIL; không render lại hoặc reset28calls,
 review/scene2/2. Nghiệm thu phim đa chủ đề, toàn thời lượng/âm thanh và matrix
 input/ngôn ngữ/backend vẫn mở. Không báo DONE vì source/fixture checks đã qua.
+
+<!-- SCENE-LABELS-RESUME-SOURCE-20261005 -->
+## Nhãn theo ngôn ngữ và tiếp tục dự án hoàn thành
+
+Tool vẫn nhận chủ đề/câu chuyện bất kỳ; người que hoặc robot đóng vai trong
+câu chuyện. Máy hơi nước và ô tô chỉ là ví dụ. Nhãn có sẵn của renderer dùng
+EN/VI/JA/KO theo project.language, gồm tiêu đề tám recipe, mô tả và control
+ARIA. Font Nhật/Hàn có fallback phù hợp. Không dịch lại lời kể, cue, tên vai
+hoặc chữ trong artwork nguồn. VI và các cảnh không phát sinh chữ thay đổi giữ
+cache cũ; không tăng phiên bản toàn bộ animation/director/art.
+
+Model test độc lập release02:39:10UTC:40/40 focused,29/29 regression và whole-test
+typecheck qua. Actual Chrome AUTHORED chứng minh nhãn/glyph/font, không chứng
+minh chất lượng diễn xuất hay phim model thật. Raw lỗi oracle/typecheck đầu
+và các giới hạn được giữ nguyên. Báo cáo: docs/validation/2026-10-05-scene-labels-and-resume.md.
+
+Đọc nguồn phát hiện DONE cũ có thể bỏ qua identity nhãn mới. Source tiếp theo
+thêm kiểm tra inputHash/sourceHash scene read-only dùng chung cho resume và
+cổng download. Dự án đã dựng cảnh bị ảnh hưởng quay về ASSETS_READY; giữ
+narration/audio, kế hoạch đã duyệt, locks, review iteration và toàn bộ budget/
+journal. Scene đã khóa xung đột phải chặn trước khi viết. Các file final cũ
+giữ để truy vết nhưng không được tải như kết quả hiện hành khi scene stale.
+Fullbuild fb8cf8 exit0; runtime sửa DONE-resume đang được model khác kiểm tra,
+chưa ghi PASS cho source mới. Ca đời thường rainy-bus-stop là đầu vào khác
+cần assignment native riêng, chưa có phim mới. Nghiệm thu đa chủ đề/đầu vào/
+hai rig/live TTS/EN-VI-JA-KO/toàn phim vẫn mở; không thay bằng fixture authored.
+
+<!-- SCENE-LABELS-FINAL-RELEASE-20261005 -->
+### Checkpoint đã kiểm độc lập: nhãn, resume và preview
+
+EN/VI/JA/KO factory labels đã triển khai; cache chỉ đổi khi chữ/font phát
+sinh thay đổi. Source-only scene migration kiểm cả DONE, dựng lại từ
+ASSETS_READY và giữ narration, approved plans, locks cùng consumed budgets.
+Studio bỏ các link preview stale và chặn truy cập clip cũ. Lỗi semantic/art
+của actor vẫn báo tại FINAL job và giữ draft đã có.
+
+Locale40/40 +29/29 relevant regressions; migration9/9 +39/39 locale source
+regressions +3/3 screened pipeline; source cuốiFINAL10/10 +migration9/9 và
+whole-test typecheckPASS. Fullbuildd6a785PASS. Không gộp các lượt này thành
+full suite hoặc nghiệm thu phim. Fixture FINAL được sửa phần setup bằng
+public buildScenes/buildMaster; toàn assertion tail byte-identical vớia321.
+Report cuối release07:25:58UTC sau fresh read-only closeout: deadline gốc bị
+lỡ trong gián đoạn quota, không viết lại lịch sử thành release đúng giờ.
+
+Báo cáo và raw failures: docs/validation/2026-10-05-scene-labels-and-resume.md.
+Mixed-shot migration chưa kiểm riêng; coordinated scene/record tampering còn
+là giới hạn hash gate, không gọi đó là trusted render validation. Mẫu browser
+authored và protocol media giả không chứng minh chất lượng video model tự dựng.
+
+Đã chuẩn bị project rainy-bus-stop-native với nguyên scriptMaya/Noah, EN và
+giọngZira, actors/story-cinematic; NEW/0calls, productionNOTRUN tại release
+prep07:24:55UTC. Bước tiếp theo là chạy pipeline thật bằng model độc lập trong
+phạm vi mới. Tool nhận nội dung bất kỳ; máy móc chỉ là ví dụ.
+Hướng dẫn thiết kế và vai trò hai plugin: docs/VIDEO-DESIGN-WORKFLOW.md.
+Remotion chưa là backend chọn được; renderer hiệnHyperFrames0.8.96. Nghiệm
+thu đa chủ đề/input/hai rig/ngôn ngữ/backend và xem/nghe toàn phim vẫn mở.

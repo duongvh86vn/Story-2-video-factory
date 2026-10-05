@@ -13,7 +13,7 @@ import { narratedStory, NARRATED_STORY_VERSION } from '../ingest/narrated-story.
 import { analyzeProject } from '../story/index.js';
 import { createStoryboard, validateStoryboard, storyboardMarkdown } from '../storyboard/index.js';
 import { resolveAssets } from '../assets/index.js';
-import { buildScenes, buildMaster, repairScenes, lockedShot, assertLockedSceneCompatibility } from '../scenes/index.js';
+import { buildScenes, buildMaster, repairScenes, lockedShot, assertLockedSceneCompatibility, outdatedSceneInputs } from '../scenes/index.js';
 import { HyperFramesEngine } from '../render/hyperframes.js';
 import { createPreviews, reviewProject } from '../review/index.js';
 import { produceMedia } from '../audio/index.js';
@@ -203,6 +203,24 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     state.specVersion=config.content.mode==='narrated-explainer'?(config.presentation.mode==='story-cinematic'?4:3):1;state.narrationInputHash=fingerprints.narration;state.hostInputHash=hostHash;
     if(state.assetInputHash && state.assetInputHash!==assetHash && stateIndex(state.state)>stateIndex('STORYBOARDED')) {state.state='STORYBOARDED';state.reviewIteration=0;await writeJson(path.join(root,'work/scene-repair-budget.json'),{});}
     state.inputHash=fingerprint;state.assetInputHash=assetHash; await reconcile(root,state);
+    // A source-only renderer upgrade must also migrate completed projects. Keep
+    // narration, approved plans, and all consumed repair/model budgets intact.
+    // Let the existing FINAL job report a semantic/scene-design blocker at its
+    // accepted draft checkpoint before attempting a renderer-only migration.
+    let finalDirectionBlocked=false;
+    if(state.state==='REPAIRED'&&stateIndex(options.until??'DONE')>=stateIndex('FINAL_RENDERED')&&config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'){
+      try{requireFinalStoryDirection(await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema),await readJson(path.join(root,'work/beats.json'),z.array(BeatSchema)));}
+      catch(error){if(!(error instanceof ApprovalRequired))throw error;finalDirectionBlocked=true;}
+    }
+    if(!finalDirectionBlocked&&config.content.mode==='narrated-explainer'&&stateIndex(state.state)>=stateIndex('SCENES_READY')){
+      const shotIds=await outdatedSceneInputs(root,config,await readStoryboardForDirection(path.join(root,'work/storyboard.json'),state.locked),await readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema),await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema));
+      if(shotIds.length){
+        const previousState=state.state;state.state='ASSETS_READY';delete state.error;delete state.waitingFor;
+        for(const [stage,files] of Object.entries(stageOutputs(state)))if(stateIndex(stage as ProjectStatus)>stateIndex(state.state))for(const file of files)delete state.artifactHashes[file];
+        for(const file of Object.keys(state.artifactHashes))if(file.startsWith('scenes/')||file.startsWith('previews/')||file.startsWith('output/'))delete state.artifactHashes[file];
+        await appendLog(path.join(root,'logs/orchestrator.log'),{time:new Date().toISOString(),event:'scene-input-migration',previousState,state:state.state,shotIds});
+      }
+    }
     state.reviewIteration=Math.max(state.reviewIteration,await qcArtworkRepairIteration(root,state));
     const router=new ModelRouter(config,root,{retryModelErrors:options.retryModelErrors}); const engine=new HyperFramesEngine(config,root);
     if (options.shotIds?.length) {

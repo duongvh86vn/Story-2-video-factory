@@ -25,6 +25,9 @@ test('public FINAL checkpoint retains drafts and refuses incomplete story direct
     execFileSync: () => { forbiddenCalls.push('native-execFileSync'); throw new Error('PROHIBITED_BOUNDARY:native-execFileSync'); },
     fork: () => { forbiddenCalls.push('native-fork'); throw new Error('PROHIBITED_BOUNDARY:native-fork'); },
   } });
+  const puppeteer = (await import('puppeteer-core')).default;
+  t.mock.method(puppeteer, 'launch', forbidden('browser-launch'));
+  t.mock.method(puppeteer, 'connect', forbidden('browser-connect'));
   const processBoundary = await import('../packages/render/process.js');
   t.mock.module(new URL('../packages/render/process.ts', import.meta.url).href, {
     namedExports: { ...processBoundary, execute: forbidden('native-execute') },
@@ -53,12 +56,17 @@ test('public FINAL checkpoint retains drafts and refuses incomplete story direct
   const { loadState, saveState } = await import('../packages/orchestrator/state-machine.js');
   const { ProductionStore } = await import('../packages/orchestrator/store.js');
   const { serializeSrt } = await import('../packages/ingest/srt.js');
-  const { renderCinematic } = await import('../library/shots/cinematic.js');
-  const { secureSceneFiles } = await import('../packages/scenes/security.js');
+  const { buildScenes, buildMaster } = await import('../packages/scenes/index.js');
+
   t.mock.method(ModelRouter.prototype, 'structured', forbidden('provider-structured'));
   t.mock.method(ModelRouter.prototype, 'text', forbidden('provider-text'));
   t.mock.method(ModelRouter.prototype, 'review', forbidden('provider-vision'));
-  for (const method of ['validate', 'renderDraft', 'snapshot', 'snapshots'] as const)
+  let fixturePreparation = false, fixtureValidations = 0;
+  t.mock.method(HyperFramesEngine.prototype, 'validate', async () => {
+    if (!fixturePreparation) return forbidden('engine-validate')();
+    fixtureValidations++; return { pass: true, errors: [], diagnostics: [] };
+  });
+  for (const method of ['renderDraft', 'snapshot', 'snapshots'] as const)
     t.mock.method(HyperFramesEngine.prototype, method, forbidden(`engine-${method}`));
   let finalCalls = 0;
   t.mock.method(HyperFramesEngine.prototype, 'renderFinal', async () => {
@@ -113,7 +121,7 @@ test('public FINAL checkpoint retains drafts and refuses incomplete story direct
     assert.equal(board.shots[0]!.cinematic!.actorScene!.supporting.length, 1);
     validateExplainerStoryboard(board, narration, [beat], profile, rig, config);
     const activity = { method: 'segment-draft' as const, windowMs: 20, intervals: [] };
-    const manifest = { assets: [{ id: 'approved-host', type: 'image', path: rig.assetPath, hash: hash(await fs.readFile(path.join(root, rig.assetPath))), source: 'code', status: 'approved', shotIds: ['acting'] }] };
+    const manifest = { assets: [{ id: shot.assetNeeds.find(need => need.localPath === rig.assetPath)!.id, type: 'image', path: rig.assetPath, hash: hash(await fs.readFile(path.join(root, rig.assetPath))), source: 'code' as const, status: 'approved' as const, shotIds: ['acting'] }] };
     for (const [name, value] of Object.entries({ 'story.json': story, 'narration.json': narration, 'voiced-narration.json': narration,
       'timeline.json': { durationMs: 6000, segments, words: [] }, 'beats.json': [beat],
       'chapters.json': [{ id: 'ch1', startMs: 0, endMs: 6000, title: story.title, summary: text, narrativePurpose: text, segmentIds: ['cue'] }],
@@ -126,13 +134,19 @@ test('public FINAL checkpoint retains drafts and refuses incomplete story direct
     await fs.writeFile(path.join(root, 'work/storyboard.md'), 'Controlled checkpoint; no visual acceptance');
     await writeCinematicPlans(root, board);
     await writeHostTimeline(root, board, narration, profile, rig, 'audio-activity');
-    const rendered = renderCinematic(board.shots[0]!, profile, rig, activity, config, undefined, narration);
-    const scene = path.join(root, 'scenes/acting'); await fs.mkdir(scene, { recursive: true });
-    for (const file of secureSceneFiles(rendered.files).files) await fs.writeFile(path.join(scene, file.path), file.content);
-    await writeJson(path.join(scene, 'host-geometry.json'), rendered.geometry);
-    await writeJson(path.join(scene, 'scene.json'), { shotId: 'acting', validated: true });
-    await writeJson(path.join(root, 'work/performance-report.json'), rendered.report);
-    await fs.writeFile(path.join(root, 'scenes/index.html'), 'CONTROLLED CHECKPOINT MASTER: NO BROWSER');
+    // Real public producer cache; the only runtime-validation stub is scoped to fixture preparation.
+    const protectedSetup = structuredClone({ board, beat, narration, profile, rig, manifest });
+    const validationsBefore = fixtureValidations;
+    fixturePreparation = true;
+    try {
+      await buildScenes(root, config, router, board, { characters: [] }, manifest);
+      await buildMaster(root, config, board, narration, manifest);
+    } finally { fixturePreparation = false; }
+    assert.equal(fixtureValidations - validationsBefore, 1, 'public fixture compilation actually validated once');
+    assert.deepEqual({ board, beat, narration, profile, rig, manifest }, protectedSetup, 'accepted canonical inputs preserved');
+    const producerRecord = await readJson<{ inputHash: string; sourceHash: string; validated: boolean }>(path.join(root, 'scenes/acting/scene.json'));
+    assert.ok(producerRecord.validated && /^[a-f0-9]{64}$/.test(producerRecord.inputHash) && /^[a-f0-9]{64}$/.test(producerRecord.sourceHash), 'complete public scene producer record');
+    await writeJson(path.join(root, 'fixture-producer-proof.json'), { producerRecord, fixtureValidations: fixtureValidations - validationsBefore, mediaAcceptance: 'NOTRUN' });
     const draftBytes = Buffer.from('RETAINED CONTROLLED DRAFT BYTES: NO FILM QUALITY CLAIM');
     await fs.writeFile(path.join(root, 'work/draft.mp4'), draftBytes);
     const previewBytes = Buffer.from('CONTROLLED CONTACT SHEET BYTES: NO SCREENSHOT');
