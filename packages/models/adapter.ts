@@ -2,10 +2,11 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import type { ZodType, ZodTypeDef } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { hash } from '../core/utils.js';
 import type { ModelSettings } from '../core/config.js';
 
 export interface ModelRequest { system: string; prompt: string; context?: unknown; }
-export interface VisionRequest extends ModelRequest { images: Array<{ path: string; mimeType?: string }>; }
+export interface VisionRequest extends ModelRequest { images: Array<{ path: string; mimeType?: string }>; expectedImageHashes?: string[]; }
 export interface ModelResponse { text: string; usage?: { inputTokens: number; outputTokens: number }; costUsd?:number; model?:string; }
 export interface ModelAdapter {
   generateText(input: ModelRequest): Promise<ModelResponse>;
@@ -107,10 +108,16 @@ export async function fetchJson(url: string, headers: Record<string, string>, bo
 }
 
 export interface EncodedImage { mimeType: string; data: string; }
+/** Bind MIME and exact immutable image bytes, without storing base64 in the call journal. */
+export const encodedImageHash=(image:EncodedImage):string=>hash(image);
 export async function encodeImages(input: VisionRequest, projectRoot?: string): Promise<EncodedImage[]> {
   if (!input.images.length) throw new ModelError('images', 'Vision requests require at least one image');
+  if(input.images.length>64)throw new ModelError('images','Vision review accepts at most 64 images per request; reduce the review batch.');
+  if(input.expectedImageHashes&&input.expectedImageHashes.length!==input.images.length)throw new ModelError('images_changed','Review image binding does not match its image count');
   const formats: Record<string, string> = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif' };
-  return Promise.all(input.images.map(async image => {
+  const images:EncodedImage[]=[];let total=0;
+  // Read sequentially so rejected batches cannot load every file concurrently.
+  for(const [index,image] of input.images.entries()){
     const file = path.resolve(projectRoot ?? process.cwd(), image.path);
     const mimeType = image.mimeType ?? formats[path.extname(file).toLowerCase()];
     if (!mimeType || !Object.values(formats).includes(mimeType)) throw new ModelError('images', 'Unsupported image MIME type');
@@ -120,14 +127,22 @@ export async function encodeImages(input: VisionRequest, projectRoot?: string): 
         const relative = path.relative(root, real);
         if (relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) throw new ModelError('images', 'Image path escapes the project');
       }
+      const stat=await fs.stat(file);
+      if(!stat.isFile()||stat.size<1||stat.size>20*1024*1024)throw new ModelError('images','Images must be files containing between 1 byte and 20 MiB');
+      if(total+stat.size>128*1024*1024)throw new ModelError('images','Vision review images exceed the 128 MiB request limit; reduce the review batch.');
       const bytes = await fs.readFile(file);
       if (!bytes.length || bytes.length > 20 * 1024 * 1024) throw new ModelError('images', 'Images must contain between 1 byte and 20 MiB');
-      return { mimeType, data: bytes.toString('base64') };
+      total+=bytes.length;
+      if(total>128*1024*1024)throw new ModelError('images','Vision review images exceed the 128 MiB request limit; reduce the review batch.');
+      const encoded={mimeType,data:bytes.toString('base64')};
+      if(input.expectedImageHashes&&encodedImageHash(encoded)!==input.expectedImageHashes[index])throw new ModelError('images_changed','Review image changed after its model-call identity was captured; rebuild or review the current preview');
+      images.push(encoded);
     } catch (error) {
       if (error instanceof ModelError) throw error;
       throw new ModelError('images', 'Could not read the requested image');
     }
-  }));
+  }
+  return images;
 }
 
 export abstract class FetchModelAdapter implements ModelAdapter {

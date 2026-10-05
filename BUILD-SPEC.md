@@ -613,3 +613,17 @@ Guidance chỉ dùng khi sinh/sửa thiết kế; cache đã chấp nhận khôn
 tự động. Đây chưa là bằng chứng chất lượng hình mới. Build/typecheck đã qua;
 kiểm runtime/lock/cache/director và video mới vẫn PENDING do tester hết hạn mức.
 [Ca đã chạy và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-bus-stop-continuation.md).
+
+
+<!-- CODEX-IMAGE-REVIEW-20261005 -->
+### Review ảnh tùy chọn qua Codex CLI
+
+Role visual_review với provider=codex-cli và vision=true có thể gửi contact/
+action/reference sheets bằng --image. Request được gắn hash đúng bytes/MIME;
+giới hạn64ảnh/20MiB mỗi ảnh/128MiB tổng. Workspace vẫn read-only, tool disabled;
+không tự đổi model/account/configuration hoặc xóa budget. Review dùng identity
+của từng vai đã duyệt, không khóa mọi diễn viên vào mascot của rig nền.
+
+Bản vá đã build/typecheck; test độc lập và native vision mới PENDING. Phim trạm
+xe buýt đã render trước đó vẫn QC FAIL. Ảnh tĩnh chưa chứng minh chuyển động
+mượt hoặc audio sync. [Cấu hình, giới hạn và bộ kiểm tiếp](docs/CODEX-IMAGE-REVIEW.md).

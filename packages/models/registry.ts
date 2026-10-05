@@ -2,7 +2,7 @@ import type { ZodType, ZodTypeDef } from 'zod';
 import path from 'node:path';
 import type { FactoryConfig, ModelRole, ModelSettings } from '../core/config.js';
 import { hash, writeAtomic } from '../core/utils.js';
-import { ModelError, StructuredOutputError, jsonSchemaFor, validateStructured, type AdapterOptions,
+import { ModelError, StructuredOutputError, encodeImages, encodedImageHash, jsonSchemaFor, validateStructured, type AdapterOptions,
   type ModelAdapter, type ModelRequest, type ModelResponse, type VisionRequest } from './adapter.js';
 import { GatewayAdapter } from './gateway.js';
 import { OpenAICompatibleAdapter } from './openai-compatible.js';
@@ -52,12 +52,14 @@ export class ModelRouter {
   }
   async review(input: VisionRequest): Promise<ModelResponse> {
     if (!this.supportsVision()) throw new ModelError('vision_unsupported', 'No configured real model supports vision; use the rule-based reviewer');
+    const encoded=await encodeImages(input,this.projectRoot),expectedImageHashes=encoded.map(encodedImageHash);
+    const imageEvidence=input.images.map((image,index)=>({path:image.path,mimeType:encoded[index]!.mimeType,hash:expectedImageHashes[index]}));
     // Review responses are validated too, before they can be reported as successful calls.
     const { ReviewSchema } = await import('../core/schemas.js');
-    const request = { ...input, system: `${input.system}\nReturn only JSON describing objective issues using the supplied schema.`,
+    const request = { ...input, expectedImageHashes, context:{reviewContext:input.context,imageEvidence},system: `${input.system}\nReturn only JSON describing objective issues using the supplied schema.`,
       prompt: `${input.prompt}\n\nOUTPUT JSON SCHEMA:\n${JSON.stringify(jsonSchemaFor(ReviewSchema))}` };
     return this.run('visual_review', request, 'review', async (adapter, next) => {
-      const response = await adapter.analyzeImages({ ...next, images: input.images });
+      const response = await adapter.analyzeImages({ ...next, images: input.images, expectedImageHashes });
       const review = validateStructured(response, ReviewSchema);
       return { ...response, text: JSON.stringify(review) };
     }, jsonSchemaFor(ReviewSchema));

@@ -324,3 +324,17 @@ FAIL hoặc phim thư viện QCFAIL thành video đạt. Full product/matrix OPE
 fragment validation/replay response hoàn tất đã build; runtime test PENDING.
 Không dùng 125+5 test trước để đóng bản sửa mới. Báo cáo formal của tester
 chưa hoàn tất do usage limit; journal/budget/input/failed-film giữ nguyên.
+
+
+<!-- CODEX-IMAGE-REVIEW-20261005 -->
+### Review ảnh tùy chọn qua Codex CLI
+
+Role visual_review với provider=codex-cli và vision=true có thể gửi contact/
+action/reference sheets bằng --image. Request được gắn hash đúng bytes/MIME;
+giới hạn64ảnh/20MiB mỗi ảnh/128MiB tổng. Workspace vẫn read-only, tool disabled;
+không tự đổi model/account/configuration hoặc xóa budget. Review dùng identity
+của từng vai đã duyệt, không khóa mọi diễn viên vào mascot của rig nền.
+
+Bản vá đã build/typecheck; test độc lập và native vision mới PENDING. Phim trạm
+xe buýt đã render trước đó vẫn QC FAIL. Ảnh tĩnh chưa chứng minh chuyển động
+mượt hoặc audio sync. [Cấu hình, giới hạn và bộ kiểm tiếp](docs/CODEX-IMAGE-REVIEW.md).

@@ -4,8 +4,8 @@ import path from 'node:path';
 import type { ZodType, ZodTypeDef } from 'zod';
 import type { ModelSettings } from '../core/config.js';
 import { execute, mediaEnvironment, ProcessTimeoutError, type ProcessResult } from '../render/process.js';
-import { ModelError, object, requestText, structuredRequest, tokenCount, validateStructured,
-  type AdapterOptions, type ModelAdapter, type ModelRequest, type ModelResponse, type VisionRequest } from './adapter.js';
+import { ModelError, encodeImages, encodedImageHash, object, requestText, structuredRequest, tokenCount, validateStructured,
+  type AdapterOptions, type EncodedImage, type ModelAdapter, type ModelRequest, type ModelResponse, type VisionRequest } from './adapter.js';
 import { appendLog, hash } from '../core/utils.js';
 import { codexDiagnostics, codexFailureMessage } from './codex-diagnostics.js';
 
@@ -26,7 +26,7 @@ async function defaultCommand():Promise<string>{
   return 'codex';
 }
 
-/** Restricted CLI generation in an empty read-only workspace; application validates the returned data. */
+/** Restricted CLI generation/review in an empty read-only workspace; attached images are immutable data. */
 export class CodexCliAdapter implements ModelAdapter {
   lastResponse?:ModelResponse;
   constructor(private readonly settings:ModelSettings,private readonly options:AdapterOptions={},private readonly run:typeof execute=execute){}
@@ -34,26 +34,44 @@ export class CodexCliAdapter implements ModelAdapter {
   async generateStructured<T>(input:ModelRequest,schema:ZodType<T,ZodTypeDef,any>):Promise<T>{
     return validateStructured(await this.request(structuredRequest(input,schema)),schema);
   }
-  async analyzeImages(_input:VisionRequest):Promise<ModelResponse>{
-    throw new ModelError('vision_unsupported','The restricted Codex CLI provider does not provide image review; configure a vision API provider.');
+  async analyzeImages(input:VisionRequest):Promise<ModelResponse>{
+    this.lastResponse=undefined;
+    if(!this.settings.vision)throw new ModelError('vision_unsupported','Enable vision for the configured Codex CLI review role before submitting images.');
+    const images=await encodeImages(input,this.options.projectRoot);
+    const imageEvidence=images.map((image,index)=>({attachment:index+1,mimeType:image.mimeType,hash:encodedImageHash(image)}));
+    return this.request({...input,context:{reviewContext:input.context,imageEvidence},
+      prompt:input.prompt+'\nInspect the attached images as source data. Attachment order matches imageEvidence. Do not call tools or read files; return only the requested review response.'},images);
   }
-  private async request(input:ModelRequest):Promise<ModelResponse>{
+  private async request(input:ModelRequest,images:EncodedImage[]=[]):Promise<ModelResponse>{
     this.lastResponse=undefined;
     const command=this.settings.command??await defaultCommand();
     if(/\.(?:cmd|bat|ps1)$/i.test(command)||command.includes('\0'))throw new ModelError('configuration','Codex CLI requires a native executable. On Windows set command to codex.exe.');
     if(this.settings.model==='mock')throw new ModelError('configuration','Set an available Codex model, or default to use the CLI default.');
     if(this.settings.max_call_cost_usd!==undefined)throw new ModelError('configuration','Codex CLI does not report or enforce a dollar cost cap; use account limits or a priced API provider.');
     const cwd=await fs.mkdtemp(path.join(os.tmpdir(),'story-video-model-'));
+    let imageDir:string|undefined;const ownedImagePaths:string[]=[];
     const args=['exec','--json','--ephemeral','--ignore-user-config','--skip-git-repo-check','--sandbox','read-only',
       '-c','approval_policy="never"','-c','project_doc_max_bytes=0','-c','web_search="disabled"','-c','mcp_servers={}',
       ...CODEX_DISABLED_FEATURES.flatMap(feature=>['--disable',feature])];
     if(this.settings.model!=='default')args.push('--model',this.settings.model);
-    args.push('-');
     const env=mediaEnvironment();
     for(const name of ['CODEX_HOME','OPENAI_API_KEY','HTTP_PROXY','HTTPS_PROXY','NO_PROXY','NODE_EXTRA_CA_CERTS']){
       if(process.env[name])env[name]=process.env[name];
     }
     try{
+      if(images.length){
+        try{
+          imageDir=await fs.mkdtemp(path.join(os.tmpdir(),'story-video-review-images-'));
+          const suffix:Record<string,string>={'image/png':'.png','image/jpeg':'.jpg','image/webp':'.webp','image/gif':'.gif'};
+          for(const [index,image] of images.entries()){
+            const file=path.join(imageDir,`frame-${String(index+1).padStart(3,'0')}${suffix[image.mimeType]}`);
+            const handle=await fs.open(file,'wx',0o600);ownedImagePaths.push(file);
+            try{await handle.writeFile(Buffer.from(image.data,'base64'));}finally{await handle.close();}
+            args.push('--image',file);
+          }
+        }catch{throw new ModelError('images','Could not stage the review image attachments.');}
+      }
+      args.push('-');
       let result;
       try{result=await this.run(command,args,{cwd,logFile:path.join(this.options.projectRoot??process.cwd(),'logs/model-cli.jsonl'),
         input:`Generate only the requested response. Do not use tools or inspect files.\n\nAPPLICATION INSTRUCTIONS:\n${input.system}\n\nREQUEST:\n${requestText(input)}`,
@@ -83,6 +101,10 @@ export class CodexCliAdapter implements ModelAdapter {
       if(!text.trim())throw new ModelError('empty_response','Codex CLI returned no generated content.',true);
       return this.lastResponse;
     }finally{
+      // Remove only attachment files created by this invocation, never the source
+      // images or an unexpected file. The model workspace stays empty.
+      for(const file of ownedImagePaths)await fs.unlink(file).catch(()=>{});
+      if(imageDir)await fs.rmdir(imageDir).catch(()=>{});
       // Only remove our empty scratch directory; unexpected files remain for diagnosis.
       await fs.rmdir(cwd).catch(()=>{});
     }

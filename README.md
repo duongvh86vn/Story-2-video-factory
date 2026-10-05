@@ -88,6 +88,8 @@ Soft subtitles lưu UTF-8 và clock nguyên văn bằng track riêng rồi strea
 
 Director21, animation7 và artwork4 đã qua build. Audit độc lập **145/145** cho tay/khớp/GSAP, cast, Studio API, khóa vai, resume và export; [evidence sửa tay](docs/validation/2026-10-02-outward-elbows.md). Full suite sau sửa **403/403 PASS**, test:typecheck0; [báo cáo](docs/validation/2026-10-02-release-regressions.md) giữ lịch sử378/386 FAIL8 và các phần chưa kiểm tra. Đây vẫn là nhánh triển khai; chưa tuyên bố sản phẩm hoàn thành hoặc chất lượng toàn bài đạt.
 
+[Review ảnh qua Codex CLI](docs/CODEX-IMAGE-REVIEW.md) là tùy chọn cho model vision: xem contact/action sheets và đối chiếu identity từng vai. Bản vá đã build; nghiệm thu runtime/native còn chờ model test. Không tự bật cho các project hiện có.
+
 ## Tài liệu và mẫu
 
 - [Đặc tả sản phẩm V2.2 và ba luồng](BUILD-SPEC.md), [vai diễn và diễn xuất](STORY-ACTOR-DIRECTION.md), [trạng thái](IMPLEMENTATION-STATUS.md), [bản đồ code](IMPLEMENTATION-MAP.md).
