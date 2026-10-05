@@ -93,3 +93,25 @@ call/cost ceiling hoặc review/scene iteration budget; không sửa config/fing
 Chỉ khi sửa được và phim render/QC lại đạt mới tiếp tục DONE.
 
 Project kiểm chứng đã dùng hết2/2 review/scene iterations; nút sửa cảnh không vượt giới hạn đó. Muốn tiếp tục cần quyết định phục hồi rõ ràng, giữ nguyên lịch sử và số lượt đã dùng. Không lấy final cũ làm phim đạt yêu cầu sau khi lần sửa thất bại.
+
+<!-- CAST-MODEL-DEPTH-SOURCE-20261005 -->
+### Nhận diện vai và đồ vật phía trước
+
+Model thiết kế mỗi vai theo câu chuyện. Cảnh báo tạo hình trùng gợi ý xem lại
+hai vai có cùng rendered inputs trong cùng cảnh, vẫn cho phép giống nhau có
+chủ đích. Không tự đổi màu/trang phục.
+
+foregroundSvg của model là mảnh cùng đồ vật vẽ trước diễn viên, dùng chung
+source/anchor/projection/clock; đi cùng vật khi nhấc/đặt. Mặt, tay, tiếp xúc và
+phụ đề vẫn cần đọc rõ trong hình thật. Source đã build, nghiệm thu mới đang
+được giao model khác; xem validation/2026-10-05-cast-and-model-depth.md.
+<!-- CAST-DEPTH-SCOPED-PASS-20261005 -->
+### Cập nhật cast/depth05/10
+
+Đã bổ sung advisory tạo hình cùng cảnh và mảnh foreground cùng sourced model;
+không áp palette/wardrobe/người dẫn/chủ đề bắt buộc.32/32focused và563PASS/2SKIP
+relevant regression/whole-test typecheck đã qua trên source đã sửa. Default cache
+và khóa cũ được giữ; prop hai rig/eventclock/tua ngược kiểm bằng AUTHORED browser
+fixtures. Nghiệm thu tự viết/phân vai/dàn cảnh/phim đa chủ đề và livevoices còn mở,
+không lấy phim QCFAIL cũ làm thành phẩm. Chi tiết ở validation/2026-10-05-cast-and-model-depth.md
+(đường dẫn từ root: docs/validation/2026-10-05-cast-and-model-depth.md).

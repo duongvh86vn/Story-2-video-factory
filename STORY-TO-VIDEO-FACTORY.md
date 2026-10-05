@@ -448,3 +448,47 @@ Audit độc lập đầu tiên: 437/442 test qua, 5 lỗi cấu hình được 
 Lượt độc lập sau đó đã chạy cùng English script từ archive có dependencies sạch đến actors MP4/DONE. [Báo cáo runtime](docs/validation/2026-10-03-clean-english-runtime.md) phân biệt pipeline thành công, raw audit30/31 và creative offline; không dùng kết quả Windows Speech để tuyên bố API riêng/OmniVoice đã chạy thật.
 
 Probe renderer migration thật03/10 giữ audio/cache bytes và HTTP TTS count3→3 khi chỉ cập nhật phần hình. Lần đầu FAIL do scene identity, follow-up d882 FAIL do rig hash/host approval; raw evidence vẫn giữ. Probe độc lập mới trên pristine baseline đã qua17/17 checks, nhánh chưa khóa rebuilt SCENES_READY, host đã duyệt/audio/cache giữ bytes và TTS3→3; nhánh khóa conflict rõ. [Phạm vi hiện tại](docs/validation/2026-10-03-current-runtime.md), [lịch sử migration](docs/validation/2026-10-03-renderer-language.md). Đây là HTTP stub PCM, không chứng nhận giọng API local hoặc live OmniVoice.
+
+<!-- CAST-MODEL-DEPTH-SOURCE-20261005 -->
+## Tạo hình nhiều vai và chiều sâu đồ vật — source05/10, nghiệm thu còn mở
+
+Tool tổng quát nhận câu chuyện/chủ đề; người que/robot đóng vai theo nội dung.
+Tạo hình seed là placeholder. Model nhận seedVisualAdvisories và báo cáo
+visualAdvisories/review cast-design-similarity cho hai vai đồng thời có cùng
+kind/appearance/costume inputs. Đây là cảnh báo medium, không phải đo pixel,
+không ép khác màu/trang phục và không tự thay actor. Cho phép giống nhau có
+chủ đích; giữ nguồn vai và lock đã duyệt.
+
+ArtDirection.models có foregroundSvg tùy chọn: mảnh phía trước của chính đồ
+vật đã có nguồn. Nó dùng chung sourceRefs, bounds/anchors, projection,
+coordinate plane/viewBox/aspect policy và motionOrigin, không thêm
+clock/target/contact/actor. Mảnh này vẽ sau cả primary/supporting actors,
+trước foreground trang trí/overlay và trong cùng camera clip. Với bound prop,
+nó theo cùng compiled world center/clock; .motion và thermal classes theo
+cùng event clock. Cần xem hình thật để mặt/tay/tiếp xúc/phụ đề đọc được.
+
+Không bật tính năng thì renderer/cache mặc định phải giữ contract cũ;
+MODEL_FOREGROUND_VERSION chỉ tham gia scene cache khi dùng. Fullbuild49223 và
+schema0992a8 exit0; kiểm tra độc lập mới đã giao model khác. Chưa nghiệm thu
+runtime/video/thẩm mỹ. Native thư viện cũ vẫn FINAL_RENDERED/QCFAIL,
+28calls/0pending/reviewscene2of2, không chạy lại/reset vì sửa source.
+Chi tiết: docs/validation/2026-10-05-cast-and-model-depth.md.
+<!-- CAST-DEPTH-SCOPED-PASS-20261005 -->
+### Nghiệm thu có phạm vi: tạo hình vai và lớp đạo cụ (05/10/2026)
+
+Tool vẫn nhận chủ đề/câu chuyện → writer → kịch bản → video; người que/robot
+đóng vai theo nội dung. Không có chủ đề máy móc, người dẫn, trang phục hoặc palette
+bắt buộc. Cast advisory chỉ nhắc xem lại các vai trùng tạo hình cùng xuất hiện.
+foregroundSvg dùng cùng đối tượng/nguồn/clock để có lớp trước diễn viên.
+
+Model độc lập đã hoàn tất32/32focused (9cast,23foreground, tính cả aggregates),
+563PASS/2SKIP hồi quy trên source đã sửa và whole-test typecheckPASS. Build backend/
+Studio và schema exportPASS. Default bytes/cache so với779 được giữ; opt-in cache,
+lock, source/security/viewBox, event clock, tua ngược và prop cả hai rig đã kiểm.
+Đây là AUTHORED fixtures/contract acceptance, chưa là phim tự sinh đạt chất lượng.
+Các lỗi/lượt test trước vẫn giữ, không cộng kết quả lặp thành nhiều ca độc lập.
+Chi tiết: [cast/depth evidence](docs/validation/2026-10-05-cast-and-model-depth.md).
+
+Phim native truyện thư viện cũ vẫn QCFAIL; không render lại hoặc reset28calls,
+review/scene2/2. Nghiệm thu phim đa chủ đề, toàn thời lượng/âm thanh và matrix
+input/ngôn ngữ/backend vẫn mở. Không báo DONE vì source/fixture checks đã qua.

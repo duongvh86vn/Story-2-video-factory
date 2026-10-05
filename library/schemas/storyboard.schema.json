@@ -1308,6 +1308,11 @@
                               "minLength": 1,
                               "maxLength": 150000
                             },
+                            "foregroundSvg": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 150000
+                            },
                             "sourceRefs": {
                               "type": "array",
                               "items": {

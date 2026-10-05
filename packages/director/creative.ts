@@ -23,6 +23,7 @@ import { ShotHostSchema } from '../host/schemas.js';
 import { CinematicPlanSchema } from './schemas.js';
 import { canonicalExplanationEvidence, normalizeCreativeSourceRefs } from '../explainer/citations.js';
 import {bindActorShot,shotPerformer} from '../actors/model.js';
+import {castDesignAdvisories} from '../actors/design.js';
 import {actorLockKey,assertActorLocks} from '../actors/locks.js';
 import type {ActorDefinition} from '../actors/schemas.js';
 import {validateCamera} from './camera.js';
@@ -100,6 +101,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   };
   const report=async (board:Storyboard,origin:'model'|'authored'|'offline',inputHash:string)=>{
     await writeJson(reportFile,{version:22,producer:DIRECTION_VERSION,origin,inputHash,storyboardHash:hash(board),
+      visualAdvisories:castDesignAdvisories(board),
       configuredProvider:origin==='model'?config.models.storyboard.provider:null,configuredModel:origin==='model'?config.models.storyboard.model:null,
       canonicalFields:origin==='model'?['literal narration citations resolved to full original cues; static artwork citations included in shot provenance','scene/performance IDs and renderer recipe','model variants/evidence from sourced visualization','2D camera metadata','continuity from actual performance/model exit transforms']:[],
       warning:origin==='offline'?'Rule seed only; no creative model was called. Visual acceptance is pending.':'Technical validation does not constitute visual acceptance.'});
@@ -113,7 +115,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   }
   const requestContext={task:'creative-storyboard',story:{title:context.story.title,style:context.story.style,genre:context.story.genre,authoring:context.story.authoring},narration:{durationMs:context.narration.durationMs,segments:context.narration.segments,words:context.narration.words},
     characterMode:config.presentation.character_mode,characters:context.characters.characters,
-    beats:context.beats,host:context.profile,rig:{rigHash:context.rig.rigHash},seed:seed.shots,lockedShots:locks,...(context.lockedActors?.length?{lockedActors:context.lockedActors}:{}),
+    beats:context.beats,host:context.profile,rig:{rigHash:context.rig.rigHash},seed:seed.shots,seedVisualAdvisories:castDesignAdvisories(seed),lockedShots:locks,...(context.lockedActors?.length?{lockedActors:context.lockedActors}:{}),
     dimensions:config.rendering.final,...(config.presentation.design_brief?{designBrief:config.presentation.design_brief}:{}),artworkCoordinates:'Layers use stage pixels. Models default to normalized-stretch: centered 100x100 is scaled independently into part width/height, including text. Use sourced stage-pixel labels or explicit projection=model-viewport with one complete valid SVG viewBox to preserve its authored aspect policy in the actual part viewport. Recheck geometry and contact if letterboxing changes the illustration. Keyframes use the local shot clock.',
     creativeFreedom:'Choose a visual language for this story. The seed is editable, not a mandatory layout, mood schedule, palette or recipe sequence.'};
   const inputHash=hash({identity,system,context:requestContext,models:config.models.storyboard,fallback:config.models.fallback,retry:config.retry.structured_output,schema:DIRECTION_VERSION});

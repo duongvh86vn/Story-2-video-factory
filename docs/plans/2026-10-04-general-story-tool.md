@@ -52,3 +52,24 @@ Yêu cầu hiện hành: đưa một câu chuyện hoặc chủ đề vào để
 Kiểm nhánh idea và ba nhánh narration; nguồn/ngôn ngữ/model/giọng/cast sửa được và resume giữ cache hợp lệ. Dùng ít nhất một truyện hư cấu, một tình huống đời thường, một chủ đề lịch sử và một bài kiến thức tự nhiên. Cảnh có nhiều vai, phản ứng không đạo cụ, tương tác với đối tượng thường và cutaway khi nội dung cần. Giữ gate source/text/clock/contact/identity/camera/security/locks và final voice/QC. Test runtime do model khác thực hiện theo yêu cầu người dùng.
 
 Video máy hơi nước/ô tô đã có chỉ là fixture có provenance; native FAIL/PARTIAL và raw failures giữ nguyên. Không đổi demo authored thành bằng chứng tool tự sinh mọi chủ đề. Không gọi build, stub TTS, một lời gọi writer hoặc QC kỹ thuật là nghiệm thu sản phẩm.
+
+<!-- CAST-MODEL-DEPTH-SOURCE-20261005 -->
+## Checkpoint source05/10 — bổ sung cho checklist trước
+
+- [x] Source advisory cho co-present rendered-input trùng; medium, không tự sửa tạo hình hoặc cấm giống có chủ đích.
+- [x] Source foregroundSvg cùng sourced model/shared projection/clock/props/events và cache opt-in.
+- [x] Fullbuild49223 và export schema0992a8 exit0.
+- [ ] Kiểm độc lập cast/depth/security/default cache/actual frames/locks, đúng scope/deadline/ownership.
+- [ ] Nghiệm thu video model thật đa chủ đề/đầu vào/ngôn ngữ/backend; toàn phim và âm thanh. Phim thư viện cũ QCFAIL không đổi.
+
+Source và giới hạn: ../validation/2026-10-05-cast-and-model-depth.md.
+<!-- CAST-DEPTH-SCOPED-PASS-20261005 -->
+### Cập nhật cast/depth05/10
+
+Đã bổ sung advisory tạo hình cùng cảnh và mảnh foreground cùng sourced model;
+không áp palette/wardrobe/người dẫn/chủ đề bắt buộc.32/32focused và563PASS/2SKIP
+relevant regression/whole-test typecheck đã qua trên source đã sửa. Default cache
+và khóa cũ được giữ; prop hai rig/eventclock/tua ngược kiểm bằng AUTHORED browser
+fixtures. Nghiệm thu tự viết/phân vai/dàn cảnh/phim đa chủ đề và livevoices còn mở,
+không lấy phim QCFAIL cũ làm thành phẩm. Chi tiết ở validation/2026-10-05-cast-and-model-depth.md
+(đường dẫn từ root: docs/validation/2026-10-05-cast-and-model-depth.md).

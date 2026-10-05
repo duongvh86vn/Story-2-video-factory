@@ -19,6 +19,7 @@ import type { HostGeometry } from '../host/controller.js';
 import { validateCamera } from '../director/camera.js';
 import { rigMetrics } from '../animation/rig.js';
 import {actorProfile,shotPerformer} from '../actors/model.js';
+import {castDesignAdvisories} from '../actors/design.js';
 import {hostPreviewSvg} from '../host/rig.js';
 
 interface PreviewFrame { shotId:string; fraction:number; timeMs:number; path:string; hash:string; }
@@ -110,6 +111,7 @@ function tokens(text:string):Set<string> {return new Set(text.toLocaleLowerCase(
 function issue(shot:Shot,type:string,severity:ReviewIssue['severity'],description:string,repair:string):ReviewIssue {return {shotId:shot.id,type,severity,description,repair};}
 export async function ruleReview(root:string,config:FactoryConfig,storyboard:Storyboard,story:Story,characters:CharacterBible,assets:AssetManifest):Promise<ReviewIssue[]> {
   const issues:ReviewIssue[]=[], source=`${story.title}\n${story.story}\n${story.facts.map(fact=>fact.claim).join('\n')}\n${story.chronology.join('\n')}\n${story.causalChain.join('\n')}`;
+  for(const advisory of castDesignAdvisories(storyboard))issues.push({shotId:advisory.shotId,type:advisory.type,severity:advisory.severity,description:advisory.description,repair:advisory.repair});
   let cursor=0, previous:Shot|undefined, cameraStart=0;
   const narration=await exists(path.join(root,'work/narration.json'))?await readJson<Narration>(await safeRealPath(root,'work/narration.json')):undefined;
   const known=new Map(characters.characters.map(character=>[character.id,character]));

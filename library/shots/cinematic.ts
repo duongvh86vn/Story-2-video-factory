@@ -13,7 +13,7 @@ import { ANIMATION_VERSION } from '../../packages/animation/schemas.js';
 import { validateCinematicShot } from '../../packages/director/index.js';
 import { cinematicModel, cinematicRelations } from './cinematic-models.js';
 import { CAMERA_VIEWPORT, cameraMatrixAt, cameraTimeline, cameraModelLabel, cameraEnvironmentBounds, validateCamera } from '../../packages/director/camera.js';
-import { artLayers, customModelArt, customModelMotionOrigin } from '../../packages/director/art-direction.js';
+import { artLayers, customModelArt, customModelForegroundArt, customModelMotionOrigin, MODEL_FOREGROUND_VERSION } from '../../packages/director/art-direction.js';
 import { rendersModelLabel,rendersModelControl } from '../../packages/director/art-direction-schemas.js';
 import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../packages/actors/model.js';
 import {buildRig} from '../../packages/host/rig.js';
@@ -27,7 +27,7 @@ function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w
 }
 
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):{
-  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[]};
+  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;propId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[]};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
   validateCinematicShot(shot,profile,config);
@@ -56,7 +56,9 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     calls.push(compiled.js.replace(/#[a-zA-Z][\w.-]*/g,id=>`#${prefix}${id.slice(1)}`));
     return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${performanceSvg(definition).replace(/id="([^"]+)"/g,(_,id:string)=>`id="${prefix}${id}"`).replace(/url\(#([^)]+)\)/g,(_,id:string)=>`url(#${prefix}${id})`)}</g>`;
   }).join('');
-  const propArt=new Map<string,string>();
+  const propArt=new Map<string,string>(),foregroundModels:string[]=[];
+  const foregroundParts=new Set(art?.models.filter(model=>model.foregroundSvg!==undefined).map(model=>model.partId));
+  const modelTargets=(partId:string,base:string,suffix:string)=>[selector(`${base} ${suffix}`),...(foregroundParts.has(partId)?[selector(`#foreground-object-${v.parts.findIndex(part=>part.id===partId)} ${suffix}`)]:[])];
   const objects=v.parts.map((part,i)=>{
     const x=part.x*width,y=part.y*height,w=part.width*width,h=part.height*height,handle=partAnchor(shot,part.id,'handle',width,height);
     const focal=part.id===c.attentionPartId;
@@ -65,6 +67,11 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     const authoredGlyph=customModelArt(shot,part.id,w,h);
     if(authoredGlyph){illustration.svg=authoredGlyph;illustration.motionAnchors=[...authoredGlyph.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion'))?[{selector:'.motion',...customModelMotionOrigin(shot,part.id)}]:[];}
     const binding=c.propBindings.find(binding=>binding.partId===part.id),showLabel=rendersModelLabel(shot,part.id);
+    const foreground=customModelForegroundArt(shot,part.id,w,h);
+    if(foreground){
+      foregroundModels.push(`<g id="foreground-object-${i}" data-sourced-foreground="${escapeHtml(part.id)}"${binding?` data-bound-prop-id="${escapeHtml(binding.propId)}"`:''} transform="translate(${x} ${y})">${foreground}</g>`);
+      if([...foreground.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion')))calls.push(`tl.set(${selector(`#foreground-object-${i} .motion`)},{svgOrigin:${JSON.stringify(`${customModelMotionOrigin(shot,part.id).x} ${customModelMotionOrigin(shot,part.id).y}`)}},0);`);
+    }
     if(binding){
       const art=cinematicModel(part,model,w/p.scale,h/p.scale);
       art.svg=customModelArt(shot,part.id,w/p.scale,h/p.scale)??art.svg;
@@ -75,6 +82,7 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
         const interpolation=previous?{duration:Number(((frame.timeMs-previous.timeMs)/1000).toFixed(6)),ease:'none'}:{immediateRender:true};
         const method=previous?'to':'set',deltaY=prop.point.y-y;
         calls.push(`tl.${method}(${selector(`#object-${i}`)},${JSON.stringify({attr:{transform:`translate(${prop.point.x-x} ${deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
+        if(foreground)calls.push(`tl.${method}(${selector(`#foreground-object-${i}`)},${JSON.stringify({attr:{transform:`translate(${prop.point.x} ${prop.point.y})`},...interpolation})},${Number(at.toFixed(6))});`);
         calls.push(`tl.${method}(${selector(`#object-${i} .bound-model-shadow`)},${JSON.stringify({attr:{transform:`translate(0 ${-deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
       }
     }
@@ -92,16 +100,17 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
   calls.push(...relation.calls);
   for(const e of v.events){
     const i=v.parts.findIndex(part=>part.id===e.targetId),start=(e.startMs-shot.startMs)/1000,end=(e.endMs-shot.startMs)/1000,span=end-start;
-    const binding=c.propBindings.find(binding=>binding.partId===e.targetId),motionTarget=selector(`${binding?`#prop-${binding.propId}`:`#object-${i}`} .motion`);
+    const binding=c.propBindings.find(binding=>binding.partId===e.targetId),motionTargets=modelTargets(e.targetId,binding?`#prop-${binding.propId}`:`#object-${i}`,'.motion');
     calls.push(`tl.set(${selector(`.focus-${i}`)},{opacity:1},${start});tl.set(${selector(`.focus-${i}`)},{opacity:0},${end});`);
     if(e.type==='state'){
       const thermalTarget=binding?`#prop-${binding.propId}`:`#object-${i}`;
-      for(const state of ['hot','cold'])calls.push(`tl.to(${selector(`${thermalTarget} .thermal-${state}-coat`)},{opacity:${e.state===state?.62:0},duration:${Math.min(.28,span)},ease:"sine.inOut"},${start});`);
-      calls.push(`tl.set(${selector(`${thermalTarget} .thermal-hot`)},{opacity:${e.state==='hot'?1:0}},${start});tl.set(${selector(`${thermalTarget} .thermal-cold`)},{opacity:${e.state==='cold'?1:0}},${start});`);
+      for(const state of ['hot','cold'])for(const target of modelTargets(e.targetId,thermalTarget,`.thermal-${state}-coat`))calls.push(`tl.to(${target},{opacity:${e.state===state?.62:0},duration:${Math.min(.28,span)},ease:"sine.inOut"},${start});`);
+      const hotTargets=modelTargets(e.targetId,thermalTarget,'.thermal-hot'),coldTargets=modelTargets(e.targetId,thermalTarget,'.thermal-cold');
+      for(const [index,target] of hotTargets.entries())calls.push(`tl.set(${target},{opacity:${e.state==='hot'?1:0}},${start});tl.set(${coldTargets[index]},{opacity:${e.state==='cold'?1:0}},${start});`);
     }
-    if(e.motion==='rotate')calls.push(`tl.to(${motionTarget},{rotation:120,duration:${span},ease:"none"},${start});`);
-    if(e.motion==='translate')calls.push(`tl.to(${motionTarget},{x:${width*.018},duration:${span/2},ease:"sine.inOut"},${start});tl.to(${motionTarget},{x:0,duration:${span/2},ease:"sine.inOut"},${start+span/2});`);
-    if(e.motion==='pulse')calls.push(`tl.to(${motionTarget},{opacity:.4,duration:${span/2}},${start});tl.to(${motionTarget},{opacity:1,duration:${span/2}},${start+span/2});`);
+    if(e.motion==='rotate')for(const motionTarget of motionTargets)calls.push(`tl.to(${motionTarget},{rotation:120,duration:${span},ease:"none"},${start});`);
+    if(e.motion==='translate')for(const motionTarget of motionTargets)calls.push(`tl.to(${motionTarget},{x:${width*.018},duration:${span/2},ease:"sine.inOut"},${start});tl.to(${motionTarget},{x:0,duration:${span/2},ease:"sine.inOut"},${start+span/2});`);
+    if(e.motion==='pulse')for(const motionTarget of motionTargets)calls.push(`tl.to(${motionTarget},{opacity:.4,duration:${span/2}},${start});tl.to(${motionTarget},{opacity:1,duration:${span/2}},${start+span/2});`);
   }
   const operations=actorActions(shot).filter(a=>a.type==='operate-model'&&rendersModelControl(shot,a.target!.partId)&&!c.propBindings.some(b=>b.partId===a.target?.partId));
   const gated=new Map<string,typeof v.events>();
@@ -137,7 +146,7 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
       if(art&&!background)base=base.replace(/<rect width="[^"]+" height="[^"]+" fill="url\(#stage-light\)"\/>/, '').replace(/<path d="M0 [^"]+" stroke="#8F7852" stroke-width="2"\/>/,'');
       const content=base.replace('</defs>',`<clipPath id="${clip}"><rect x="0" y="${top}" width="${width}" height="${bottom-top}"/></clipPath></defs>${art&&!background?`<rect width="${width}" height="${height}" fill="${palette.background}"/>`:''}<g data-stage-plane="background">${planes.background.html}</g><g clip-path="url(#${clip})"><g class="camera-rig" data-light-direction="upper-left" data-framing="${c.camera.framing}" data-focus="${c.camera.focus??'ensemble'}">`)
         .replace('<ellipse id="ground-shadow"',`<g data-stage-plane="midground">${!background&&!art?decoration:''}${planes.midground.html}${connections}${objects}</g><ellipse id="ground-shadow"`)
-        .replace('</svg></div>',`${supporting}<g data-stage-plane="foreground">${foreground}</g></g></g><g data-stage-plane="overlay">${planes.overlay.html}</g>${title}</svg></div>`);
+        .replace('</svg></div>',`${supporting}<g data-stage-plane="foreground">${foregroundModels.join('')}${foreground}</g></g></g><g data-stage-plane="overlay">${planes.overlay.html}</g>${title}</svg></div>`);
       let authored=content;for(const [id,svg] of propArt)authored=authored.replace(new RegExp(`<g id="prop-${id}">[\\s\\S]*?</g>`),svg);
       if(c.actorScene?.primary===null)authored=authored.replace('<g id="performer"','<g opacity="0" id="performer"').replace('<ellipse id="ground-shadow"','<ellipse visibility="hidden" id="ground-shadow"');
       else if(c.actorScene?.primary)authored=authored.replace('<g id="performer"',`<g data-actor-id="${escapeHtml(c.actorScene.primary.id)}" id="performer"`);
@@ -160,7 +169,7 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
       ...(a.contactMs===undefined?{}:{contactMs:a.contactMs})});
   }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});
-  return {files,geometry,report:{...result.compiled.report,camera:validateCamera(shot,profile),actors:actorReports,...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
+  return {files,geometry,report:{...result.compiled.report,camera:validateCamera(shot,profile),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>({partId,...(c.propBindings.find(binding=>binding.partId===partId)?{propId:c.propBindings.find(binding=>binding.partId===partId)!.propId}:{})}))}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
     const prop=p.props.find(prop=>prop.id===binding.propId)!,g=p.gestures.find(g=>g.propId===prop.id)!;
     return {...binding,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs};
   })}:{})}};

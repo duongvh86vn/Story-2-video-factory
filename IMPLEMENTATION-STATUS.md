@@ -154,3 +154,22 @@ Scene hơi nước 2.2.10 dừng đúng gate vì tween fill nằm ngoài declara
 ## Điều kiện bàn giao còn mở
 
 Theo [kế hoạch A0–A7](V2-IMPLEMENTATION-PLAN.md) và [TEST-HANDOFF.md](TEST-HANDOFF.md): đủ hai bài × hai host, script/WAV/SRT/aligned thật; gates lỗi, sửa nội dung/giọng/host, locks/resume/rebuild; final QC cùng kiểm tra diễn xuất/ngữ nghĩa; Studio dùng được và GitHub đúng commit.
+
+<!-- CAST-MODEL-DEPTH-SOURCE-20261005 -->
+## Source05/10: tạo hình vai và chiều sâu đồ vật
+
+Đã có source cast-design-similarity medium, report/context của model và
+foregroundSvg thuộc cùng sourced model/shared projection/prop/event clock.
+Không ép palette/trang phục hoặc tự đổi actor. Fullbuild49223/schema0992a8
+exit0; test độc lập đã giao, chưa nghiệm thu source mới hoặc video.
+Native thư viện vẫn QCFAIL/28call/reviewscene2of2, chưa chạy lại.
+Xem docs/validation/2026-10-05-cast-and-model-depth.md.
+<!-- CAST-DEPTH-SCOPED-PASS-20261005 -->
+### Cast/depth contract đã kiểm độc lập; nghiệm thu sản phẩm còn mở
+
+32/32focused,563PASS/2SKIP relevant regression trên current patched source,
+whole-test typecheckPASS; parent build1861f9PASS. Cảnh báo trùng vai không tự đổi
+identity; foreground cùng nguồn/clock và prop cả hai rig được kiểm bằng actual
+headless AUTHORED SVG. Không thêm presenter/máy móc bắt buộc. Phim native QCFAIL
+cũ, full playback/listening và input/language/livebackend matrix còn mở.
+Xem [evidence](docs/validation/2026-10-05-cast-and-model-depth.md).

@@ -3,6 +3,8 @@ import { escapeHtml, hash } from '../core/utils.js';
 import { ArtDirectionSchema, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
 export { ArtDirectionSchema, type ArtDirection } from './art-direction-schemas.js';
 export const ARTWORK_RENDER_VERSION='passive-svg-2.2.6';
+/** Opt-in sourced model fragments; legacy artwork keeps its byte/cache contract. */
+export const MODEL_FOREGROUND_VERSION='sourced-model-foreground-1';
 const tags=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask']);
 function decodeAttribute(value:string):string{
   return value.replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos);/gi,(_,entity:string)=>{
@@ -63,12 +65,14 @@ export function artworkSvg(svg:string,prefix:string):string {
 }
 
 /** Structural check: a motion target must own drawable content in the visible SVG tree. */
-export function hasRenderedMotionGeometry(canonical:string):boolean{
+export function hasRenderedMotionGeometry(canonical:string):boolean{return hasDrawableGeometry(canonical,true);}
+export function hasRenderedArtworkGeometry(canonical:string):boolean{return hasDrawableGeometry(canonical,false);}
+function hasDrawableGeometry(canonical:string,requireMotion:boolean):boolean{
   const stack:Array<{definition:boolean;hidden:boolean;motion:boolean}>=[];
   let cursor=0;
   for(const match of canonical.matchAll(/<([^>]*)>/g)){
     const parent=stack.at(-1);
-    if(parent?.motion&&!parent.definition&&!parent.hidden&&canonical.slice(cursor,match.index).trim())return true;
+    if(parent&&(!requireMotion||parent.motion)&&!parent.definition&&!parent.hidden&&canonical.slice(cursor,match.index).trim())return true;
     cursor=match.index!+match[0].length;
     const raw=match[1]!;
     if(raw.startsWith('/')){stack.pop();continue;}
@@ -80,7 +84,7 @@ export function hasRenderedMotionGeometry(canonical:string):boolean{
     const drawable=tag==='path'?!!attributes.get('d')?.trim():tag==='rect'?positive('width')&&positive('height'):tag==='circle'?positive('r'):
       tag==='ellipse'?positive('rx')&&positive('ry'):tag==='line'?attributes.get('x1')!==attributes.get('x2')||attributes.get('y1')!==attributes.get('y2'):
       ['polygon','polyline'].includes(tag)?(attributes.get('points')?.match(/[-+]?\d*\.?\d+/g)?.length??0)>=4:false;
-    if(state.motion&&!state.definition&&!state.hidden&&drawable)return true;
+    if((!requireMotion||state.motion)&&!state.definition&&!state.hidden&&drawable)return true;
     if(!raw.endsWith('/'))stack.push(state);
   }
   return false;
@@ -107,8 +111,13 @@ export function validateArtDirection(shot:Shot):void{
     models.add(model.partId);
     const canonical=artworkSvg(model.svg,`${shot.id}.art.model.${model.partId}`);
     if(model.projection==='model-viewport')modelViewportAttributes(canonical);
+    const foreground=model.foregroundSvg===undefined?undefined:artworkSvg(model.foregroundSvg,`${shot.id}.art.model.${model.partId}.foreground`);
+    if(foreground!==undefined){
+      validateSharedModelSpace(canonical,foreground,model.projection);
+      if(!hasRenderedArtworkGeometry(foreground))throw new Error(`${shot.id}: model foreground requires visible drawable content`);
+    }
     if(shot.visualization!.events.some(event=>event.targetId===model.partId&&event.motion!=='none')&&
-      !hasRenderedMotionGeometry(canonical))throw new Error(`${shot.id}: custom motion event has no rendered motion geometry`);
+      !hasRenderedMotionGeometry(canonical)&&!(foreground&&hasRenderedMotionGeometry(foreground)))throw new Error(`${shot.id}: custom motion event has no rendered motion geometry`);
   }
 }
 
@@ -149,9 +158,16 @@ function modelViewportAttributes(canonical:string):string{
 }
 
 export function customModelArt(shot:Shot,partId:string,width:number,height:number):string|undefined {
+  return projectedModelArt(shot,partId,width,height,false);
+}
+export function customModelForegroundArt(shot:Shot,partId:string,width:number,height:number):string|undefined {
+  return projectedModelArt(shot,partId,width,height,true);
+}
+function projectedModelArt(shot:Shot,partId:string,width:number,height:number,foreground:boolean):string|undefined {
   const model=shot.cinematic?.artDirection?.models.find(model=>model.partId===partId);
-  if(!model)return undefined;
-  let svg=artworkSvg(model.svg,`${shot.id}.art.model.${partId}`);
+  if(!model||(foreground&&model.foregroundSvg===undefined))return undefined;
+  let svg=artworkSvg(foreground?model.foregroundSvg!:model.svg,`${shot.id}.art.model.${partId}${foreground?'.foreground':''}`);
+  if(foreground)validateSharedModelSpace(artworkSvg(model.svg,`${shot.id}.art.model.${partId}`),svg,model.projection);
   if(model.projection==='model-viewport'){
     if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw new Error('Model viewport dimensions must be finite and positive');
     const attributes=modelViewportAttributes(svg);
@@ -168,6 +184,26 @@ export function customModelArt(shot:Shot,partId:string,width:number,height:numbe
   // A custom SVG owns its own paint. Stock-model outlines must not stroke its
   // typography or backing shapes. Explicit artist strokes still override these defaults.
   return `<g data-custom-model="${escapeHtml(partId)}" fill="#000000" stroke="none" stroke-width="1" transform="scale(${width/100} ${height/100})">${svg}</g>`;
+}
+
+
+/** Both fragments use one glyph coordinate plane and one aspect policy. */
+function validateSharedModelSpace(base:string,foreground:string,projection:ArtDirection['models'][number]['projection']):void{
+  function space(svg:string){
+    if(!/^<svg\b[^>]*>[\s\S]*<\/svg>$/.test(svg.trim())){
+      if(projection==='model-viewport')throw new Error('Model viewport foreground requires a complete SVG root');
+      return {kind:'fragment'};
+    }
+    if(projection==='model-viewport')modelViewportAttributes(svg);
+    const normalized=svg.trim().replace(/^<svg\b([^>]*)>/,(_,attributes:string)=>`<svg${attributes}${/\bviewBox=/i.test(attributes)?'':' viewBox="-50 -50 100 100"'}>`);
+    const attributes=modelViewportAttributes(normalized);
+    const viewBox=/\bviewBox="([^"]+)"/.exec(attributes)![1]!.trim().split(/[\s,]+/).map(Number);
+    const rawAspect=/\bpreserveAspectRatio="([^"]+)"/.exec(attributes)?.[1]?.trim().replace(/\s+/g,' ')||'xMidYMid meet';
+    if(!/^(?:defer )?(?:none|x(?:Min|Mid|Max)Y(?:Min|Mid|Max))(?: (?:meet|slice))?$/.test(rawAspect))throw new Error('Model foreground requires a valid shared aspect policy');
+    const aspect=rawAspect==='none'||/ (?:meet|slice)$/.test(rawAspect)?rawAspect:rawAspect+' meet';
+    return {kind:'svg',viewBox,aspect};
+  }
+  if(hash(space(base))!==hash(space(foreground)))throw new Error('Model foreground must share the model viewBox and aspect policy');
 }
 
 /** GSAP SVG origins live in the motion group's own SVG coordinates, never stage pixels. */

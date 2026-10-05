@@ -162,3 +162,34 @@ Migration d882 đã chạy thật và FAIL ở duyệt host tùy chỉnh; six la
 Model test chạy `node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/acting-freeze-repair.test.ts tests/color-json-schema.test.ts`.
 Mặc định ca response native bên ngoài repo SKIP rõ ràng. Đặt `ACTING_REPAIR_RETAINED_ATTEMPT` tới attempt đã giữ để kiểm nguyên payload thất bại; không sửa file đó hoặc dùng nó làm candidate.
 Các test này không dựng phim. Mọi lượt browser/media/native phải có phạm vi giao riêng, lưu PID/birth/argv trước khi chạy và release theo deadline; không lấy batch màu có browser ngoài phạm vi làm nghiệm thu toàn sản phẩm.
+<!-- CAST-MODEL-DEPTH-SOURCE-20261005 -->
+## Nghiệm thu source tạo hình vai và model depth05/10
+
+Giao model khác kiểm cast co-presence/determinism/case/no mutation/unsafe SVG,
+report/router/review/locks; shared normalized/full SVG/model-viewport/aspect,
+security/motion/source/contact/clock; default legacy byte/cache và scene hash
+khi bật foreground. Kiểm bound prop cả hai rig/nonunit scale/seek/reverse và
+camera projection, actual headless frames có PID/birth/argv trước khi chạy,
+đóng/release theo deadline. Fixtures authored phải ghi AUTHORED; không thay
+native movie acceptance. Không gọi provider/TTS/full-native/8850 hoặc sửa
+project thư viện/budget/journal cũ trong assignment này. Build/schema qua;
+status/evidence ở docs/validation/2026-10-05-cast-and-model-depth.md.
+<!-- CAST-DEPTH-SCOPED-PASS-20261005 -->
+### Kết quả cast/depth và phần test tiếp theo
+
+Lagrange release02:06:35UTC:32/32focused,563PASS/2SKIP relevant regression,
+whole-test typecheckPASS trên source đã sửa. Hai source faults comma selector/
+viewBox đã có proof, các lỗi probe mới và raw trước được giữ nguyên. Không dùng
+những kiểm tra AUTHORED này chứng nhận phim model tự thiết kế.
+
+Bước nghiệm thu sản phẩm tiếp theo cần nội dung khác nhau: thư viện hư cấu, trạm
+xe buýt đời thường, giọt sương tự nhiên; cùng input bất kỳ khác do người dùng nhập.
+Tool tự writer/phân vai/dàn cảnh. Cảnh quay, costume/palette và motion không được
+viết tay thay đầu ra model thật để chứng minh auto pipeline. Giữ script nguyên
+văn; WAV/SRT/combined giữ audio/text/clock và chặn mismatch. Cần kiểm cả hai rig,
+EN/VI/JA/KO, TTS API local/custom/OmniVoice, sửa/resume/locks và xem/nghe toàn phim.
+Phim thư viện cũ đã hếtreview/scene2/2: không gọi lại, reset journal/budget hay
+lập bản sao để né giới hạn. Trạm xe buýt là đầu vào khác trong matrix, cần scope
+kiểm chứng riêng. Chữ renderer mặc định còn cần đối chiếu EN/JA/KO; phần này chưa
+được sửa bằng draft temp. Parent chỉ build/typecheck, runtime tiếp tục model khác.
+[evidence và giới hạn](docs/validation/2026-10-05-cast-and-model-depth.md).

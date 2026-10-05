@@ -45,3 +45,23 @@ Cập nhật03/10: external/local TTS đã triển khai và có audit contract; 
 Pipeline: narration → phân tích → cast/tình huống → storyboard/stage/performance/camera → assets → scenes → draft → review/repair → final → QC. Giọng/audio không phụ thuộc cast; đổi hình không dựng lại narration còn hợp lệ. Mọi lỗi nguồn/clock/identity/target/voice/security phải chặn final.
 
 Các video presenter source18 và animation benchmark chứng minh phạm vi được nêu trong evidence; không chứng minh phim nhiều diễn viên hay chất lượng mục tiêu mới. Model test độc lập chạy runtime; người triển khai kiểm tra build/typecheck và xem bản dựng để sửa thiết kế.
+
+<!-- CAST-MODEL-DEPTH-SOURCE-20261005 -->
+## Source05/10: tạo hình vai và chiều sâu đồ vật
+
+Đã có source cast-design-similarity medium, report/context của model và
+foregroundSvg thuộc cùng sourced model/shared projection/prop/event clock.
+Không ép palette/trang phục hoặc tự đổi actor. Fullbuild49223/schema0992a8
+exit0; test độc lập đã giao, chưa nghiệm thu source mới hoặc video.
+Native thư viện vẫn QCFAIL/28call/reviewscene2of2, chưa chạy lại.
+Xem docs/validation/2026-10-05-cast-and-model-depth.md.
+<!-- CAST-DEPTH-SCOPED-PASS-20261005 -->
+### Cập nhật cast/depth05/10
+
+Đã bổ sung advisory tạo hình cùng cảnh và mảnh foreground cùng sourced model;
+không áp palette/wardrobe/người dẫn/chủ đề bắt buộc.32/32focused và563PASS/2SKIP
+relevant regression/whole-test typecheck đã qua trên source đã sửa. Default cache
+và khóa cũ được giữ; prop hai rig/eventclock/tua ngược kiểm bằng AUTHORED browser
+fixtures. Nghiệm thu tự viết/phân vai/dàn cảnh/phim đa chủ đề và livevoices còn mở,
+không lấy phim QCFAIL cũ làm thành phẩm. Chi tiết ở validation/2026-10-05-cast-and-model-depth.md
+(đường dẫn từ root: docs/validation/2026-10-05-cast-and-model-depth.md).
