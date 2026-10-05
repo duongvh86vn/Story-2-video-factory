@@ -66,10 +66,12 @@ kể với hành động/biểu cảm/đạo cụ/camera; phần chưa quan sát
 
 Xem [công cụ tổng quát](GENERAL-STORY-TOOL.md),
 [TTS bên ngoài](EXTERNAL-TTS.md),
-[bàn giao test](../TEST-HANDOFF.md). Luồng trạm xe buýt đang chuẩn bị để
-kiểm kịch bản tiếng Anh; chưa thay thế matrix idea/WAV/SRT, hai rig,
-EN/VI/JA/KO hoặc backend local/API. Phim thư viện QCFAIL cũ và mọi journal
-được giữ nguyên.
+[bàn giao test](../TEST-HANDOFF.md). Ca trạm xe buýt đã public resume và
+xuất video tiếng Anh/DONE/QC kỹ thuật PASS trên source3718. Kết quả này chưa
+nghiệm thu tạo hình, diễn xuất, toàn phim, matrix idea/WAV/SRT, hai rig,
+EN/VI/JA/KO hoặc backend local/API. [Kết quả và giới hạn](validation/2026-10-05-rainy-native-resume.md).
+Phim thư viện QCFAIL cũ và mọi journal được giữ nguyên. Các đoạn checkpoint
+bên dưới ghi kết quả tại thời điểm đó.
 
 
 <!-- NATIVE-RAINY-BUS-DIAGNOSTICS-20261005 -->

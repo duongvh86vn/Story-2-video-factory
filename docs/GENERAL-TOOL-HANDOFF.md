@@ -21,7 +21,7 @@ Cảnh có thể chỉ có diễn viên hoặc môi trường; không cần tạ
 | Phần | Đã có trong source | Giới hạn bằng chứng hiện tại |
 |---|---|---|
 | Chủ đề/câu chuyện | Writer riêng; kịch bản có nguồn, cache và editor | Truyện thư viện có writer/TTS/phim thật nhưng phim bị QC chặn; chưa đạt chất lượng |
-| Kịch bản hoàn chỉnh | Đọc nguyên văn, clock từ audio thực | Ca trạm xe buýt có audio thật nhưng dừng ANALYZED; không có phim |
+| Kịch bản hoàn chỉnh | Đọc nguyên văn, clock từ audio thực | Ca trạm xe buýt đã xuất MP4 27,933 giây / DONE / QC kỹ thuật PASS; chất lượng diễn xuất và hình ảnh còn mở |
 | WAV/SRT/WAV+SRT | Nguồn và clock riêng, kiểm mismatch/fit/voice | Không suy ra toàn bộ matrix video từ các kiểm tra audio hoặc protocol; alignment cần backend |
 | Diễn viên | Cast theo nguồn, identity, hai tay, tư thế, gaze, 16 biểu cảm | Test rig/clock không chứng minh đạo diễn và hình ảnh tự sinh tốt |
 | Thiết kế | Artwork/camera/set theo truyện, cảnh không có đồ vật, foreground cùng đối tượng | Cần xem phim thực để đánh giá silhouette, tương tác, biểu cảm, bố cục và nhịp kể |
@@ -29,12 +29,14 @@ Cảnh có thể chỉ có diễn viên hoặc môi trường; không cần tạ
 | Preview/resume | Giữ audio khi đổi hình; stale scene chặn preview/download; locks và lịch sử giữ nguyên | Phần hash gate không được coi là chứng minh an toàn với mọi coordinated tampering |
 | Renderer | HyperFrames/HTML/CSS/SVG/JavaScript theo clock cố định | Plugin Remotion đã tham khảo; Remotion chưa là backend chọn được |
 
-Checkpoint của ca native trước bản sửa: `0ba63bb0e60b930bfceff766720f44f7b8bc43b4`, branch
-`codex/stickman-acting-v22`, đã cập nhật repository người dùng chỉ định.
+Source runtime của ca native mới nhất: `3718b2d9a5a7bd7a69c2792e970fbdb8abc78714`,
+branch `codex/stickman-acting-v22`, đã cập nhật repository người dùng chỉ định.
+Các commit tài liệu sau đó không đổi runtime. Checkpoint lỗi ban đầu
+`0ba63bb0e60b930bfceff766720f44f7b8bc43b4` vẫn được giữ trong báo cáo lịch sử.
 Build/typecheck và các kiểm tra nguồn/cache có bằng chứng độc lập riêng.
 Không gọi các kết quả đó là nghiệm thu chất lượng video.
 
-## Ca kiểm chứng: FAIL, chưa có video
+## Ca kiểm chứng hiện hành: video đã xuất, chất lượng còn mở
 
 Lời kể tiếng Anh gồm Maya chờ xe trong mưa, Noah đến trú mưa, họ nhận thấy
 và mỉm cười với nhau. Đây là kịch bản đầu vào để pipeline tự phân vai và dựng
@@ -53,9 +55,16 @@ ngôn ngữ/provider khả dụng, sửa nội dung/giọng/cast và resume. Xem
 phim là nghiệm thu riêng. Phim QC FAIL, fixture authored, ảnh chụp hoặc trạng
 thái DONE kỹ thuật không thay thế các điều kiện này.
 
-Báo cáo thực tế: [native trạm xe buýt](validation/2026-10-05-rainy-bus-stop-native.md).
-Có 9 lượt gọi hoàn tất và 1 lượt bị ngắt còn pending; hai storyboard bị
-validator từ chối, chưa có storyboard được chấp nhận hoặc MP4.
+Báo cáo hiện hành: [public resume trạm xe buýt](validation/2026-10-05-rainy-native-resume.md).
+Lần resume thông thường cùng project đã thoát0 và tạo video/QC PASS, không
+phát sinh lời gọi model mới. Journal giữ13 started/12 completed/1 pending cũ;
+review và scene repair đã dùng2/2. Chưa xem/nghe toàn phim hoặc review vision
+thật; báo cáo cuối model test còn thiếu vì hết hạn mức.
+
+[Lần thất bại ban đầu](validation/2026-10-05-rainy-bus-stop-native.md) và
+[các lượt tiếp tục](validation/2026-10-05-rainy-bus-stop-continuation.md) là
+lịch sử riêng, không phải trạng thái hiện tại của video. Không chạy thêm
+resume, đặt lại budget hoặc nhân bản ca này để vượt giới hạn.
 
 ## Dùng đúng phiên bản
 
@@ -67,7 +76,9 @@ Source được cập nhật GitHub ở nhánh `codex/stickman-acting-v22`; main
 và báo sourceSHA; không chạy npm từ folder cũ rồi suy ra kết quả bản mới.
 
 Source sửa diagnostic/guidance sau nativeFAIL đã build; independent source
-checks riêng đã PASS (xem release bên dưới). Chưa chạy thêm một native invocation.
+checks riêng đã PASS (xem release bên dưới). Native resume mới nhất đã chạy
+trên source3718; những ghi chú FAIL/PENDING ở các checkpoint bên dưới có
+phạm vi và thời điểm riêng.
 
 
 <!-- NATIVE-WATCHDOG-INTERPRETATION-20261005 -->
@@ -134,3 +145,10 @@ của từng vai đã duyệt, không khóa mọi diễn viên vào mascot của
 Bản vá đã build/typecheck; test độc lập và native vision mới PENDING. Phim trạm
 xe buýt đã render trước đó vẫn QC FAIL. Ảnh tĩnh chưa chứng minh chuyển động
 mượt hoặc audio sync. [Cấu hình, giới hạn và bộ kiểm tiếp](CODEX-IMAGE-REVIEW.md).
+
+## Đối chiếu chất lượng hiện tại
+
+[Audit thiết kế05/10](validation/2026-10-05-current-quality-gap.md) đối chiếu
+board thực với video tham khảo người dùng. Bước tiếp là kiểm thiết kế tự sinh
+mới và toàn phim khi model test có hạn mức, không phải giảm QC, sửa tay một
+phim demo hoặc ép mọi câu chuyện theo cùng bố cục.
