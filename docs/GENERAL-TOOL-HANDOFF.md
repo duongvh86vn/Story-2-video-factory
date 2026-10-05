@@ -105,3 +105,18 @@ C:/Users/Duongvh-pc/codex-test-evidence/source-protocol-20261005T083200Z/REPORT.
 Build0b446e+7897a9 đã qua trước test, source sau release không đổi. Đây là
 nghiệm thu source/protocol riêng, không biến native rainy case time-bound
 FAIL hoặc phim thư viện QCFAIL thành video đạt. Full product/matrix OPEN.
+
+
+<!-- STORY-DESIGN-GUIDANCE-FOLLOWUP-20261005 -->
+### Dàn cảnh và tạo hình theo nội dung: bản sửa tiếp
+
+Director nhận brief thiết kế phim ở đầu generation prompt và danh sách actor/shot
+locks thực sự đã duyệt. Preview/immutable của rig nền không khóa mọi vai thành
+một mascot giống nhau. Tạo hình, costume, góc máy, chiều sâu và nhịp diễn chọn
+theo câu chuyện; không áp palette, chủ đề, tỉ lệ actor, quota góc máy hay mẫu
+layout cố định. Lời kể, nguồn, identity và lock đã duyệt vẫn giữ nguyên.
+
+Guidance chỉ dùng khi sinh/sửa thiết kế; cache đã chấp nhận không bị redesign
+tự động. Đây chưa là bằng chứng chất lượng hình mới. Build/typecheck đã qua;
+kiểm runtime/lock/cache/director và video mới vẫn PENDING do tester hết hạn mức.
+[Ca đã chạy và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-bus-stop-continuation.md).
