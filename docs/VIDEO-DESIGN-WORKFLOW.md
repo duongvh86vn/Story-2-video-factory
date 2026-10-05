@@ -148,3 +148,18 @@ Shot khai báo nhận renderer identity riêng; thiếu ease giữ nhánh legacy
 Build/typecheck b42000 đã qua; runtime/seek/cache/video mới PENDING model test.
 Giới hạn renderer đã được xác nhận từ source, chưa chứng minh nguyên nhân
 freeze hoặc phim đã mượt. [Contract và nghiệm thu](ARTWORK-MOTION-TIMING.md).
+
+
+<!-- WORLD-BACKGROUND-20261005 -->
+### Nền cảnh cùng camera với diễn viên
+
+Background SVG có coordinateSpace tùy chọn:world đi theo camera của actor/model;
+frame hoặc bỏ trường giữ bố cục cũ. Midground/foreground đã là world, overlay là
+frame; khai báo coordinateSpace ở plane khác bị reject. Designer có thể dựng sàn,
+đường, tường và bối cảnh theo câu chuyện; không có mẫu nền/chủ đề bắt buộc.
+
+Opt-in world background nhận scene renderer identity riêng; accepted-cache,
+narration/audio, actor/shot locks và source/contact/QC gates vẫn giữ nguyên.
+Source/build đã triển khai; nghiệm thu runtime mới PENDING model test. Phim trạm
+xe buýt cũ còn QC FAIL; khác hệ tọa độ không chứng minh đã sửa freeze hay video
+đã đạt kỳ vọng. [Contract và bộ kiểm](ARTWORK-WORLD-SPACE.md).

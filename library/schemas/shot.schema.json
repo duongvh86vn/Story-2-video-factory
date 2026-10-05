@@ -1193,6 +1193,13 @@
                           "overlay"
                         ]
                       },
+                      "coordinateSpace": {
+                        "type": "string",
+                        "enum": [
+                          "frame",
+                          "world"
+                        ]
+                      },
                       "role": {
                         "type": "string",
                         "enum": [
@@ -1261,6 +1268,15 @@
                               "type": "number",
                               "minimum": 0,
                               "maximum": 1
+                            },
+                            "ease": {
+                              "type": "string",
+                              "enum": [
+                                "none",
+                                "sine.in",
+                                "sine.out",
+                                "sine.inOut"
+                              ]
                             }
                           },
                           "required": [

@@ -5,6 +5,8 @@ export { ArtDirectionSchema, type ArtDirection } from './art-direction-schemas.j
 export const ARTWORK_RENDER_VERSION='passive-svg-2.2.6';
 /** Only shots opting into incoming-keyframe easing acquire this renderer identity. */
 export const ARTWORK_EASING_VERSION='typed-art-easing-1';
+/** Background layers may opt into the actors/models camera; legacy frame layers keep their identity. */
+export const ARTWORK_WORLD_BACKGROUND_VERSION='world-background-1';
 /** Opt-in sourced model fragments; legacy artwork keeps its byte/cache contract. */
 export const MODEL_FOREGROUND_VERSION='sourced-model-foreground-1';
 const tags=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask']);
@@ -125,8 +127,8 @@ export function validateArtDirection(shot:Shot):void{
   }
 }
 
-export function artLayers(shot:Shot,plane:ArtDirection['layers'][number]['plane']){
-  const layers=shot.cinematic?.artDirection?.layers.filter(layer=>layer.plane===plane)??[];
+export function artLayers(shot:Shot,plane:ArtDirection['layers'][number]['plane'],backgroundSpace?:'frame'|'world'){
+  const layers=shot.cinematic?.artDirection?.layers.filter(layer=>layer.plane===plane&&(backgroundSpace===undefined||(layer.coordinateSpace??'frame')===backgroundSpace))??[];
   const scope=`[data-composition-id="${shot.id}"]`,calls:string[]=[];
   const transform=(f:ArtKeyframe)=>`translate(${f.x} ${f.y}) rotate(${f.rotation}) scale(${f.scale})`;
   const html=layers.map(layer=>{
