@@ -59,7 +59,13 @@ Báo cáo hiện hành: [public resume trạm xe buýt](validation/2026-10-05-ra
 Lần resume thông thường cùng project đã thoát0 và tạo video/QC PASS, không
 phát sinh lời gọi model mới. Journal giữ13 started/12 completed/1 pending cũ;
 review và scene repair đã dùng2/2. Chưa xem/nghe toàn phim hoặc review vision
-thật; báo cáo cuối model test còn thiếu vì hết hạn mức.
+thật; báo cáo formal của lượt resume cũ không được ghi đúng hạn. Đánh giá chỉ đọc
+mới đã release và có [kết quả PARTIAL](validation/2026-10-05-rainy-readonly-acceptance.md),
+gồm lỗi chân lệch nền. Xem/nghe toàn phim vẫn NOTRUN.
+
+Ca chủ đề sinh nhật/robot đã được duyệt và chạy: writer/audio qua, dừng trước
+render do source-review. [Bản sửa source và kiểm tiếp](validation/2026-10-05-birthday-garden-source.md)
+chưa có nghiệm thu video; budget11/30 vẫn giữ, native vision chưa tới.
 
 [Lần thất bại ban đầu](validation/2026-10-05-rainy-bus-stop-native.md) và
 [các lượt tiếp tục](validation/2026-10-05-rainy-bus-stop-continuation.md) là

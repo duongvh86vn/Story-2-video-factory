@@ -381,3 +381,15 @@ Model test hết hạn mức trước báo cáo đánh giá cuối; parent chỉ
 visual design/normal-speed watch/full audio/real vision hoặc matrix toàn sản phẩm.
 Source3718:205PASS1SKIP,18PASS và14PASS synthetic ở các lần kiểm riêng; typecheck0.
 [Report có phạm vi và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-native-resume.md).
+
+## Kiểm tiếp05/10: lexical seed, rig và cùng ca sinh nhật
+
+[Báo cáo và source candidate](docs/validation/2026-10-05-birthday-garden-source.md).
+Model độc lập kiểm substring negatives (dropping/spinning/clever), token VI/EN
+đúng và Unicode/sentence xe; fingerprint/cache mặc định giữ nguyên; migration
+chỉ lexical giữ narration/audio/locks và review/scene/model budgets đã dùng;
+fresh TIMED/resume không rebuild lần nữa; rig context cho hai family và cached
+accepted direction không bị redesign. Giữ source/text/contact/target/security
+gates. Chỉ sau scoped PASS và exact source binding mới public resume project
+sinh nhật gốc; tổng30model calls/2review/2scene repair, nativevisiontrue/rulefallbackfalse.
+Không clone, force, reset pending hoặc viết lại accepted artifacts.

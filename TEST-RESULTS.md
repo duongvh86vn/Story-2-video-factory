@@ -240,3 +240,13 @@ Model test hết hạn mức trước báo cáo đánh giá cuối; parent chỉ
 visual design/normal-speed watch/full audio/real vision hoặc matrix toàn sản phẩm.
 Source3718:205PASS1SKIP,18PASS và14PASS synthetic ở các lần kiểm riêng; typecheck0.
 [Report có phạm vi và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-native-resume.md).
+
+## Checkpoint05/10 — độc lập rainy PARTIAL; birthday source candidate
+
+Retained rainy đã kiểm chỉ đọc: technical decode PASS, story PASS_SAMPLED,
+cast/framing PARTIAL, planted feet/floor alignment FAIL; full watch/listen NOTRUN.
+[Scope](docs/validation/2026-10-05-rainy-readonly-acceptance.md).
+Birthday rawtopic→writer→ENZira51.421s/12cues PASS technical, nhưng source-review
+chặn trước phim:11callscomplete/0pending, nativevisionNOTRUN. Source lexical/rig
+fix build/typecheckPASS, runtime regression/resumePENDING.
+[Raw failures và giới hạn](docs/validation/2026-10-05-birthday-garden-source.md).

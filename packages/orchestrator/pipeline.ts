@@ -25,7 +25,7 @@ import { ProductionStore } from './store.js';
 import { collectResearch } from './research.js';
 import { reservation } from './reservation.js';
 import { compileHost, loadHost, hostProfileFingerprint, rigHashMatchesProfile, HOST_RIG_IDENTITY_VERSION } from '../host/index.js';
-import { createExplanation, EXPLANATION_VERSION } from '../explainer/plan.js';
+import { createExplanation, EXPLANATION_VERSION, explanationVocabularyRevision } from '../explainer/plan.js';
 import { ExplanationPlanSchema } from '../explainer/schemas.js';
 import { validateExplainerStoryboard, writeHostTimeline } from '../explainer/storyboard.js';
 import { narrateScript, resolveVoice, requireVoice, VoiceReportSchema } from '../voice/index.js';
@@ -54,7 +54,7 @@ function stageOutputs(state:ProjectState):Partial<Record<ProjectStatus,string[]>
     SCENES_READY:[...outputs.SCENES_READY!,'work/performance-report.json'],DONE:[...narrated.DONE,...CINEMATIC_EXPORT_FILES.map(n=>`output/${n}`)]};
 }
 export function redact(message:string,config:FactoryConfig):string { for (const role of [...Object.values(config.models),config.voice]) { const key=process.env[role.api_key_env]; if (key) message=message.split(key).join('[REDACTED]'); } return message.replace(/Bearer\s+[^\s"']+/gi,'Bearer [REDACTED]'); }
-async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string):Promise<{all:string;narration:string}> {
+async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string):Promise<{all:string;narration:string;priorVocabulary?:string}> {
   const mode=config.input.mode==='auto' ? await exists(safePath(root,config.input.idea)) ? 'idea' : await exists(safePath(root,config.input.script)) ? 'script' : await exists(safePath(root,config.input.narration)) ? 'wav' : 'srt' : config.input.mode;
   const autoPresence=config.input.mode==='auto'?await Promise.all([...(await exists(safePath(root,config.input.idea))?[config.input.idea]:[]),config.input.script,config.input.narration,config.input.subtitles].map(file=>exists(safePath(root,file)))):undefined;
   const relativeFiles=mode==='idea'?[config.input.idea]:mode==='script'?[config.input.script]:mode==='wav'?[config.input.narration,config.input.subtitles]:[config.input.subtitles];
@@ -67,7 +67,11 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,artwork:ARTWORK_RENDER_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,seats:SEAT_SUPPORT_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
-  return {all:hash({version:4,authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic}),
+  const vocabularyRevision=config.content.mode==='narrated-explainer'&&await exists(path.join(root,'work/narration.json'))
+    ?explanationVocabularyRevision(await readJson(path.join(root,'work/narration.json'),NarrationSchema)):undefined;
+  const allInput={version:4,authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic};
+  return {all:hash({...allInput,...(vocabularyRevision?{explanationVocabulary:vocabularyRevision}:{})}),
+    priorVocabulary:vocabularyRevision?hash(allInput):undefined,
     narration:hash({version:3,scriptParser:mode==='script'||mode==='idea'?SCRIPT_PARSER_VERSION:undefined,authoring,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {
@@ -198,7 +202,12 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     }
     store=new ProductionStore(root); store.failInterruptedJobs();
     const hostHash=config.content.mode==='narrated-explainer'?await hostProfileFingerprint(root,config):'',fingerprints=await inputFingerprint(root,config,hostHash),fingerprint=fingerprints.all,assetHash=await assetFingerprint(root);
-    if (options.force || (state.inputHash && state.inputHash!==fingerprint)) { state.state=!options.force&&state.narrationInputHash===fingerprints.narration&&stateIndex(state.state)>=stateIndex('TIMED')?'TIMED':'NEW'; state.reviewIteration=0; state.artifactHashes={}; state.approvals.storyboard=false; if(!state.locked.characterBible) state.approvals.characters=false; await writeJson(path.join(root,'work/scene-repair-budget.json'),{}); }
+    if (options.force || (state.inputHash && state.inputHash!==fingerprint)) {
+      const vocabularyOnly=!options.force&&state.inputHash===fingerprints.priorVocabulary&&state.narrationInputHash===fingerprints.narration;
+      state.state=!options.force&&state.narrationInputHash===fingerprints.narration&&stateIndex(state.state)>=stateIndex('TIMED')?'TIMED':'NEW';
+      if(!vocabularyOnly){state.reviewIteration=0;state.artifactHashes={};await writeJson(path.join(root,'work/scene-repair-budget.json'),{});}
+      state.approvals.storyboard=false;if(!state.locked.characterBible)state.approvals.characters=false;
+    }
     if(state.hostInputHash!==hostHash){state.approvals.host=false;state.approvals.hostHash='';}
     state.specVersion=config.content.mode==='narrated-explainer'?(config.presentation.mode==='story-cinematic'?4:3):1;state.narrationInputHash=fingerprints.narration;state.hostInputHash=hostHash;
     if(state.assetInputHash && state.assetInputHash!==assetHash && stateIndex(state.state)>stateIndex('STORYBOARDED')) {state.state='STORYBOARDED';state.reviewIteration=0;await writeJson(path.join(root,'work/scene-repair-budget.json'),{});}
@@ -339,7 +348,8 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
           }
           case 'DONE': { const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(config.content.mode==='narrated-explainer'&&(await readJson<{mode:string}>(path.join(root,'work/input-document.json'))).mode==='idea')names.push('script.json','generated-script.txt','script-generation.json');if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name)); await report(root,config,state,router); break; }
         }
-        transition(state,next);if(next==='STORYBOARDED'||next==='ASSETS_READY')state.assetInputHash=await assetFingerprint(root); await artifactHashes(root,state); await saveState(root,state); store.saveState(state); store.finishJob(job); options.onProgress?.(state);
+        transition(state,next);if(next==='TIMED')state.inputHash=(await inputFingerprint(root,config,hostHash)).all;
+        if(next==='STORYBOARDED'||next==='ASSETS_READY')state.assetInputHash=await assetFingerprint(root); await artifactHashes(root,state); await saveState(root,state); store.saveState(state); store.finishJob(job); options.onProgress?.(state);
         await writeJson(path.join(root,'work/cost-report.json'),costSummary(router,config));
         const calls=path.join(root,'logs/model-calls.jsonl'); if(await exists(calls)) { const content=await fs.readFile(calls,'utf8'); for(const line of content.slice(0,content.lastIndexOf('\n')+1).split('\n').filter(Boolean)) store.modelCall(JSON.parse(line) as Record<string,unknown>); }
         await appendLog(path.join(root,'logs/orchestrator.log'),{time:new Date().toISOString(),event:'complete',state:next});

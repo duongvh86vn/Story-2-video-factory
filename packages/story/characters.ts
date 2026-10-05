@@ -188,7 +188,9 @@ export async function buildCharacterBible(root: string, config: FactoryConfig, r
   const characters = await planWithValidation(root, config, router, 'planner', 'character-bible', {
     system: await loadPrompt('character-bible'),
     prompt: 'Build the canonical character bible. Preserve inherited and existing locked characters exactly, including asset paths and locks. Ground all additions in story.characters. Retain source immutable/mutable traits verbatim. Every resulting character is locked.',
-    context: { task: 'character-bible', story, narration: { segments: narration.segments }, inherited: series.bible, existing, seriesSource: series.source, approvedCharacters },
+    context: { task: 'character-bible', story, narration: { segments: narration.segments }, inherited: series.bible, existing, seriesSource: series.source, approvedCharacters,
+      ...(config.content.mode==='narrated-explainer'&&config.presentation.character_mode==='actors'?{visualPresentation:{characterMode:'actors',rigProfile:config.host.profile,designBrief:config.presentation.design_brief,authority:'Use the selected rig family for illustrative story roles. Preserve supplied identity facts and explicit inherited/approved locks. Visual styling is an illustration, not an invented biographical claim; a seed silhouette is not a mandatory shared costume.'}}:{}),
+    },
   }, CharacterBibleSchema, result => {
     const withReferences = { ...result, characters: result.characters.map(character => {
       if (series.bible.characters.some(item => item.id === character.id) || existing.characters.some(item => item.id === character.id && (locks[item.id] ?? locks[`character:${item.id}`] ?? locks[`characters.${item.id}`] ?? item.locked))) return character;
