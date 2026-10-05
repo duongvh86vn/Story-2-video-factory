@@ -171,3 +171,53 @@ phạm vi mới. Tool nhận nội dung bất kỳ; máy móc chỉ là ví dụ
 Hướng dẫn thiết kế và vai trò hai plugin: docs/VIDEO-DESIGN-WORKFLOW.md.
 Remotion chưa là backend chọn được; renderer hiệnHyperFrames0.8.96. Nghiệm
 thu đa chủ đề/input/hai rig/ngôn ngữ/backend và xem/nghe toàn phim vẫn mở.
+
+
+<!-- NATIVE-RAINY-BUS-DIAGNOSTICS-20261005 -->
+### Ca truyện đời thường và thông tin sửa dàn cảnh
+
+Ca rainy-bus-stop-native đã chạy đúng một public make trên source0ba63bb.
+Windows Speech Zira tạo audio27.906521s,7cue/clock27907ms và giữ nguyên
+lời kể. Pipeline dừng ANALYZED: hai thiết kế bị từ chối bởi SVG/camera/source
+gates; watchdog ngắt yêu cầu cuối08:13:21UTC. Không có storyboard được
+chấp nhận, scene, draft hoặc video. Frame/acting/filmQC/xem-nghe toàn phim
+NOTRUN.9call hoàn tất ở provider/schema,1call interrupted còn pending;
+169793input/31462outputtokens đã ghi, usage của call ngắt và actualUSD chưa
+đo được. Không gọi provider success là domain/filmPASS. Budget30call/2review,
+review0 và scene{} giữ nguyên; dead-owner lock/journal được bảo tồn.
+
+Release08:17:36UTC/report08:19:38UTC trước deadline08:21:06; không còn known
+ownedprocess/listener. Giới hạn census/watchdog và raw failures nằm tại
+docs/validation/2026-10-05-rainy-bus-stop-native.md. Full tool/matrix chưa
+nghiệm thu; source mới không biến ca FAIL này thành phim đạt.
+
+Source follow-up thêm danh sách SVG hiện được renderer hỗ trợ vào prompt
+generation, diagnostic crop bằng projected envelope/viewport và lỗi câu
+nguồn có shotID/received/currentcue. Giữ nguyên predicate/tolerance/tag
+whitelist, câu nguồn, normalizer, identity, approved caches/locks và budget.
+Không áp palette/bối cảnh hoặc template máy móc. Fullbuild0b446e+7897a9PASS;
+kiểm độc lập source mới đang chạy trong scope riêng không gọi native/TTS.
+README bắt đầu bằng project trống và nội dung người dùng; ví dụ hơi nước
+chỉ còn là lựa chọn phụ. Bàn giao phiên bản: docs/GENERAL-TOOL-HANDOFF.md.
+
+
+<!-- DESIGN-DIAGNOSTICS-SOURCE-RELEASE-20261005 -->
+### Kiểm source độc lập đã bàn giao
+
+Release08:45:40UTC trước deadline08:48:31UTC:125/125 existing tests và
+5/5 supplemental tests PASS; whole-test typecheckPASS. Năm sourcehash và
+66existingtestfiles không đổi.23 observed processbirths đều terminal,
+không còn listener thuộc phiên test. Newtest source-protocol-diagnostics
+được bàn giao với SHA8E9C7FFCC017D65E4BAD6405ABFF16FC74F88458144EFA8AF53AB0D93A0D038A.
+
+SVG/source/crop negatives vẫn bị từ chối. Promptgeneration và matching
+repair có capability list; JSON rejected được gửi nguyên vẹn, receipt cũ
+không sửa. Accepted cache roundtrip giữ storyboard/artwork/scene bytes
+và không gọi model lại. Chưa chạy riêng renderer trước patch để so byte;
+không gọi đó là proof pre-patch parity. Native replay/film/broad suite NOTRUN.
+Raw harness/fixture failures và typecheckFAIL ban đầu được giữ trong
+C:/Users/Duongvh-pc/codex-test-evidence/source-protocol-20261005T083200Z/REPORT.md.
+
+Build0b446e+7897a9 đã qua trước test, source sau release không đổi. Đây là
+nghiệm thu source/protocol riêng, không biến native rainy case time-bound
+FAIL hoặc phim thư viện QCFAIL thành video đạt. Full product/matrix OPEN.

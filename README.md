@@ -38,16 +38,41 @@ ASR/alignment: tạo venv Python và cài `scripts/requirements.txt` hoặc `scr
 
 ## CLI
 
+Ví dụ chính là một project trống nhận **chủ đề hoặc câu chuyện của bạn**. Các
+lệnh dưới đây chọn English; đổi ngôn ngữ và provider/voice theo nội dung và
+dịch vụ bạn có. Cấu hình `models.storyboard` cho model thiết kế cảnh trong
+Studio hoặc project.yaml trước khi tạo video; model writer và director có thể khác nhau.
+
 ```powershell
-npm run cli -- new steam --example
-npm run cli -- configure projects/steam --input script --host stick-man --style story-cinematic --characters actors --tts windows-speech
-npm run cli -- make projects/steam
-npm run cli -- status projects/steam
-npm run cli -- resume projects/steam
+npm run cli -- new my-story
+npm run cli -- idea projects/my-story C:/input/my-story.txt
+npm run cli -- authoring projects/my-story --provider codex-cli --model default --kind auto --seconds 60 --timeout 900
+npm run cli -- configure projects/my-story --language en --input idea --host stick-man --style story-cinematic --characters actors --tts windows-speech
+npm run cli -- write-script projects/my-story
 ```
 
-Nhập script khác: `npm run cli -- script projects/steam C:/input/bai-ke.md`. Chọn `--host stick-man`, hoặc đưa input/host.md và chọn custom. Đổi `--input wav`/srt để chọn nguồn khác. WAV+SRT dùng mode wav. Approve custom: `npm run cli -- approve projects/steam host` sau khi xem previews/host-preview-sheet.png. Rebuild một shot: `npm run cli -- resume projects/steam --shot ch01.s001` (dùng ID thực từ storyboard).
+`write-script` cho phép xem lời kể trước TTS. Sau khi nguồn và model/giọng đã
+cấu hình, chạy tiếp tới video; có thể gọi `make` trực tiếp để tool tự tạo
+kịch bản và chạy toàn luồng.
 
+```powershell
+npm run cli -- make projects/my-story
+npm run cli -- status projects/my-story
+npm run cli -- resume projects/my-story
+```
+
+Nếu đã có lời kể hoàn chỉnh, dùng `npm run cli -- script projects/my-story C:/input/narration.md`;
+tool đọc nguyên văn thay vì gọi writer. Chọn `--input wav` hoặc `--input srt`
+để dùng nguồn audio/phụ đề; WAV+SRT dùng mode wav. TTS local/API được cấu hình
+theo [EXTERNAL-TTS.md](docs/EXTERNAL-TTS.md).
+
+Chọn `--host mini-robot` để đổi kiểu tạo hình, hoặc nhập input/host.md và chọn
+`--host custom`. Custom rig cần `npm run cli -- approve projects/my-story host`
+sau khi xem previews/host-preview-sheet.png. Rebuild một shot:
+`npm run cli -- resume projects/my-story --shot ch01.s001` (dùng ID thực từ storyboard).
+
+Bài máy hơi nước chỉ là ví dụ tùy chọn: `npm run cli -- new steam --example`.
+Lệnh đó không xác định chủ đề, vai diễn hoặc thiết kế cho project thông thường.
 ## Quy tắc
 
 - Script tạo TTS từng đoạn <=120 ký tự, giữ từ/thứ tự, đo duration thật, nghỉ 250 ms giữa đoạn văn. Một đoạn audio là một cue.

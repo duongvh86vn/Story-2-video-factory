@@ -116,7 +116,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
       (r.kind === 'source' || narration.segments.some(s => s.id === r.segmentId && fold(s.text).includes(fold(r.quote)))));
     if (!sourced(shot.sourceRefs)) throw new Error(`${shot.id}: changed/unverifiable narration sources`);
     if(intent){
-      validateSceneIntent(intent,narration,shot.sourceRefs,shot.narrationSegmentIds);
+      try{validateSceneIntent(intent,narration,shot.sourceRefs,shot.narrationSegmentIds);}catch(error){throw new Error(`${shot.id}: ${error instanceof Error?error.message:String(error)}`,{cause:error});}
       const cast=[...(actorScene?.primary?[actorScene.primary]:[]),...(actorScene?.supporting.map(actor=>actor.character)??[])];
       if(intent.participants.length!==cast.length||intent.participants.some(participant=>!cast.some(actor=>actor.id===participant.id&&actor.name===participant.name&&actor.role===participant.role&&actor.identity===participant.identity)))throw new Error(`${shot.id}: sceneIntent participants must match the actual sourced cast`);
     }

@@ -159,8 +159,15 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
     const binding=c.propBindings.find(b=>b.partId===part.id),motion=binding&&bounds.props[binding.propId];
     return motion??{left:part.x*width,right:part.x*width,top:part.y*height,bottom:part.y*height};
   };
-  const modelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
-    const b=movingBounds(part);return boundsInView({left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top-part.height*height*.6,bottom:b.bottom+part.height*height*.6});
+  const modelBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
+    const b=movingBounds(part);return {left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top-part.height*height*.6,bottom:b.bottom+part.height*height*.6};
+  };
+  const modelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>boundsInView(modelBounds(part));
+  const modelCropDiagnostic=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
+    const b=modelBounds(part),rounded=(value:number)=>Number(value.toFixed(3));
+    const projected=matrices.map((matrix,index)=>{const first=cameraPoint({x:b.left,y:b.top},matrix),last=cameraPoint({x:b.right,y:b.bottom},matrix);return {atMs:index?p.durationMs:0,left:rounded(first.x),right:rounded(last.x),top:rounded(first.y),bottom:rounded(last.y)};});
+    const allowed={left:rounded(width*CAMERA_VIEWPORT.left),right:rounded(width*CAMERA_VIEWPORT.right),top:rounded(height*CAMERA_VIEWPORT.top),bottom:rounded(height*CAMERA_VIEWPORT.bottom)};
+    return ` Projected model envelope in screen pixels: ${JSON.stringify(projected)}. Required viewport in screen pixels: ${JSON.stringify(allowed)}. Adjust camera/layout to fit every envelope endpoint; these diagnostic numbers are rounded, the validation bounds are unchanged.`;
   };
   const labelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
     if(!rendersModelLabel(shot,part.id))return;
@@ -180,7 +187,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
       for(const seat of p.supports??[])if(!boundsInView({left:seat.center.x-seat.width*.6-2,right:seat.center.x+seat.width*.6+2,top:seat.center.y-(seat.backHeight??0)-2,bottom:groundY+9}))fail(`seat ${seat.id} leaves the safe action region; preserve its support and ground in ensemble framing.`);
     }
     for(const part of shot.visualization?.parts??[]){
-      if(!modelInView(part))fail(`model ${part.id} is cropped during its motion; use a wider camera or replan its world layout.`);
+      if(!modelInView(part))fail(`model ${part.id} is cropped during its motion; use a wider camera or replan its world layout.${modelCropDiagnostic(part)}`);
       labelInView(part);
     }
   }else if(camera.focus==='face'){
@@ -190,7 +197,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
   }else if(camera.focus==='object'){
     if(c.actorScene?.primary!==null||c.actorScene.supporting.length)fail('object close must explicitly be a mechanism-only actor scene.');
     for(const part of shot.visualization?.parts??[]){
-      if(!modelInView(part))fail(`model ${part.id} is cropped in object focus.`);
+      if(!modelInView(part))fail(`model ${part.id} is cropped in object focus.${modelCropDiagnostic(part)}`);
       labelInView(part);
     }
   }else {

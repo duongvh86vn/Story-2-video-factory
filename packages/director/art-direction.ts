@@ -6,6 +6,8 @@ export const ARTWORK_RENDER_VERSION='passive-svg-2.2.6';
 /** Opt-in sourced model fragments; legacy artwork keeps its byte/cache contract. */
 export const MODEL_FOREGROUND_VERSION='sourced-model-foreground-1';
 const tags=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask']);
+/** Generation guidance mirrors the existing validator; callers cannot mutate its tag set. */
+export function supportedArtworkTags():string[]{return [...tags];}
 function decodeAttribute(value:string):string{
   return value.replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos);/gi,(_,entity:string)=>{
     if(entity.startsWith('#')){

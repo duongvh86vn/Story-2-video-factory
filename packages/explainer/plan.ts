@@ -62,7 +62,10 @@ export function validateSceneIntent(input:SceneIntent,narration:Narration,verifi
   };
   intent.sourceRefs.forEach(reference);
   const current=intent.sourceRefs.filter(ref=>ref.kind==='narration'&&segmentIds.includes(ref.segmentId!));
-  for(const key of ['action','objective','result'] as const)if(intent[key]&&!statement(intent[key]!,current))throw new Error(`sceneIntent.${key} must preserve a whole statement from its current narration cue, including negation`);
+  for(const key of ['action','objective','result'] as const)if(intent[key]&&!statement(intent[key]!,current)){
+    const cueEvidence=current.slice(0,8).map(ref=>{const text=narration.segments.find(cue=>cue.id===ref.segmentId)!.text;return {segmentId:ref.segmentId,text:text.slice(0,2000),truncated:text.length>2000};});
+    throw new Error(`sceneIntent.${key} must preserve a whole statement from its current narration cue, including negation. Received: ${JSON.stringify(intent[key])}. Current cue evidence: ${JSON.stringify(cueEvidence)}${current.length>8?`; ${current.length-8} additional referenced cues omitted from this diagnostic`:''}. Copy a complete current statement and retain its matching narration sourceRefs.`);
+  }
   if(new Set(intent.participants.map(p=>p.id)).size!==intent.participants.length)throw new Error('sceneIntent has duplicate participants');
   for(const participant of intent.participants){
     participant.sourceRefs.forEach(reference);
