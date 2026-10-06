@@ -1,5 +1,9 @@
 # Bàn giao test — ba luồng và diễn viên trong câu chuyện
 
+Checkpoint06/10: source đã có nhảy/rơi thật cho hai rig và resume/cache có provenance. Build core/Studio/Vite qua;306ca nguồn/creative/finite và82ca cache/order/checkpoint đã qua trong các phạm vi riêng. Preflight authentic tái dùng đủ7bước phân tích, chưa chứng minh resume native trên project gốc. Ca sinh nhật21/30 calls hoàn tất/0 pending, còn9; chưa storyboard/video/native vision. Giữ mọi FAIL/gap lịch sử; chất lượng phim và nghiệm thu toàn sản phẩm vẫn mở. [Phạm vi và việc tiếp](docs/validation/2026-10-06-actor-airborne-cache.md).
+
+Các checkpoint bên dưới giữ lịch sử và phạm vi source riêng; đoạn này thay trạng thái hiện hành của ca sinh nhật và motion batch mới.
+
 Hiện hành: tool tổng quát chủ đề/câu chuyện → kịch bản → phân vai → video; người que là diễn viên theo nội dung. Native thư viện có phim27.067s nhưng QC FAIL cảnh tĩnh6.733–12.067s. Lượt sửa thật tiếp theo cũng FAIL: model thêm target vào react, không có phim mới;28 call hoàn tất/0 pending, review và scene budget2/2. Sửa schema/prompt react và regex màu đã build/export schema; kiểm tra độc lập50/50 và11/11, whole-test typecheck qua. Đây là kiểm tra contract, chưa nghiệm thu phim mới. Identity/bố cục, xem/nghe toàn phim và matrix nhiều chủ đề/input/ngôn ngữ/backend vẫn mở. [Evidence và giới hạn](docs/validation/2026-10-04-general-story-followup.md).
 
 Các checkpoint bên dưới là lịch sử; trạng thái mới nhất ở đoạn đầu và evidence hiện hành.

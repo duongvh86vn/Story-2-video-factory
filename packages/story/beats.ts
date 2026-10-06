@@ -24,7 +24,7 @@ export async function planBeats(root: string, config: FactoryConfig, router: Mod
         endMs: i + 1 === result.beats.length ? chapter.endMs : segments.find(segment => segment.id === result.beats[i + 1]!.segmentIds[0])!.startMs,
         narrationText: segments.filter(segment => beat.segmentIds.includes(segment.id)).map(segment => segment.text).join('\n'),
       }));
-    });
+    },undefined,undefined,{reuseAccepted:true});
     beats.push(...batch);
     uniqueIds(beats, 'beat');
     await writeJson(path.join(root, 'work', 'planning', `beats-${chapter.id}.json`), batch);

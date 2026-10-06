@@ -41,6 +41,9 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     .map(a=>({...a,startMs:Math.max(0,a.startMs-shot.startMs),endMs:Math.min(p.durationMs,a.endMs-shot.startMs)}))};
   const supports=c.propBindings.length?c.propBindings.flatMap(binding=>{
     const part=v.parts.find(part=>part.id===binding.partId)!,prop=p.props.find(prop=>prop.id===binding.propId)!;
+    // A dropped object has no invented table underneath its held entry or floor landing.
+    // Authored scenery supplies any actual narrated support.
+    if(p.gestures.some(g=>g.propId===prop.id&&g.action==='drop'))return [];
     return [prop.origin,...(prop.destination?[prop.destination]:[])].map(center=>({x:center.x,y:center.y+part.height*height*.5,width:part.width*width*1.12}));
   }):undefined;
   const seats=sceneSeats(shot),result=performanceScene(p,profile,localActivity,background,supports,{items:seats,palette}),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s}`);
@@ -157,8 +160,8 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     if(file.path==='scene.js')return {...file,content:`${file.content}\n${calls.join('\n')}`};
     if(file.path==='style.css'&&background){const bounds=cameraEnvironmentBounds(c.camera,p.stage,p.durationMs);return {...file,content:`${file.content}\n${scope} .environment{left:${bounds.left}px;top:${bounds.top}px;width:${bounds.width}px;height:${bounds.height}px;}`};}
     return file;
-  }),notes:[`${ANIMATION_VERSION}; story-cinematic; illustration`, `Speech activity: ${activity.method}; no phoneme lip-sync.`]};
-  const geometry:HostGeometry={controllerVersion:ANIMATION_VERSION,profileHash:profile.profileHash,rigHash:rig.rigHash,shotId:shot.id,
+  }),notes:[`${p.compilerVersion}; story-cinematic; illustration`, `Speech activity: ${activity.method}; no phoneme lip-sync.`]};
+  const geometry:HostGeometry={controllerVersion:p.compilerVersion,profileHash:profile.profileHash,rigHash:rig.rigHash,shotId:shot.id,
     hostHeightRatio:rigMetrics(profile).height*p.scale/height,interactions:[]};
   const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity}]),
     ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,activity:{...activity,intervals:[]}}))];

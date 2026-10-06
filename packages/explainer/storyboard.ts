@@ -133,7 +133,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     const knownSegments = new Set(narration.segments.map(s => s.id));
     if (shot.narrationSegmentIds.some(id => !knownSegments.has(id))) throw new Error(`${shot.id}: unknown narration segment`);
     if(h.presence==='inset')throw new Error(`${shot.id}: inset presentation is not supported; use beside-model or absent`);
-    const performers=[{actions:h.actions,profile,presence:h.presence},...(shot.cinematic?.actorScene?.supporting??[]).map(actor=>({actions:actor.actions,profile:actorProfile(actor.character),presence:'beside-model'}))];
+    const performers=[{actions:h.actions,profile,presence:h.presence,performance:shot.cinematic?.performance},...(shot.cinematic?.actorScene?.supporting??[]).map(actor=>({actions:actor.actions,profile:actorProfile(actor.character),presence:'beside-model',performance:actor.performance}))];
     for(const performer of performers){const actionEnd:Record<RigHand,number>={left:shot.startMs,right:shot.startMs};
     for (const a of [...performer.actions].sort((a,b)=>a.startMs-b.startMs)) {
       if(!shot.cinematic&&a.hand==='left')throw new Error(`${shot.id}: left-hand actions require the cinematic renderer`);
@@ -150,7 +150,8 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
       for (const t of [a.target, a.secondTarget].filter(Boolean)) if (t!.modelId !== v.modelId || !ids.has(t!.partId)) throw new Error(`${shot.id}: missing gesture target`);
       if (['point', 'operate-model', 'walk-to-marker', 'compare'].includes(a.type) && !a.target) throw new Error(`${shot.id}: targeted action has no target`);
       if (a.type === 'compare' && (!a.secondTarget || a.target?.partId === a.secondTarget.partId)) throw new Error(`${shot.id}: compare requires two different targets`);
-      if (a.type === 'operate-model' && (a.contactMs === undefined || a.contactMs <= a.startMs || a.contactMs >= a.endMs)) throw new Error(`${shot.id}: operation requires a contact after approach`);
+      const entryDrop=performer.performance?.gestures.some(g=>g.action==='drop'&&g.startMs===0&&g.contactMs===0&&a.startMs===shot.startMs&&a.contactMs===shot.startMs&&g.endMs+shot.startMs===a.endMs&&rigHand(g)===rigHand(a));
+      if (a.type === 'operate-model' && (a.contactMs === undefined || a.contactMs < a.startMs || a.contactMs === a.startMs&&!entryDrop || a.contactMs >= a.endMs)) throw new Error(`${shot.id}: operation requires a contact after approach`);
     }}
     for (const e of v.events) {
       const moving=v.parts.find(p=>p.id===e.targetId)?.kind;

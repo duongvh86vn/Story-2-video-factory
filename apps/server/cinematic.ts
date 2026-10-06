@@ -2,7 +2,7 @@ import type { FactoryConfig } from '../../packages/core/config.js';
 import { ShotSchema, type Storyboard } from '../../packages/core/schemas.js';
 import { z } from 'zod';
 import { CinematicPlanSchema, DIRECTION_VERSION } from '../../packages/director/schemas.js';
-import { ANIMATION_VERSION, PerformancePlanSchema } from '../../packages/animation/schemas.js';
+import { isCurrentAnimation, PerformancePlanSchema } from '../../packages/animation/schemas.js';
 import { hash } from '../../packages/core/utils.js';
 import { ApiError } from './security.js';
 import { validateModelContinuity, CINEMATIC_CLIPS } from '../../packages/director/index.js';
@@ -17,7 +17,7 @@ const inspectionSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
 }))}).strict();
 export function inspectCinematicStoryboard(value:unknown,locks:Record<string,boolean>={}){
   const board=inspectionSchema.parse(value);
-  const obsolete=board.shots.filter(s=>s.cinematic&&(s.cinematic.producer!==DIRECTION_VERSION||s.cinematic.performance.compilerVersion!==ANIMATION_VERSION));
+  const obsolete=board.shots.filter(s=>s.cinematic&&(s.cinematic.producer!==DIRECTION_VERSION||!isCurrentAnimation(s.cinematic.performance.compilerVersion)));
   return {board,migration:{required:obsolete.length>0,shotIds:obsolete.map(s=>s.id),
     lockedShotIds:obsolete.filter(s=>locks.storyboard||locks.scenes||locks[s.id]||locks[`shot:${s.id}`]||locks[`scene:${s.id}`]||locks[`shots.${s.id}`]||s.locked).map(s=>s.id)}};
 }

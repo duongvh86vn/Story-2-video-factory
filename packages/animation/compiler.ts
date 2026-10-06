@@ -3,9 +3,10 @@ import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
 import { rigHand, type RigHand } from '../core/identifiers.js';
 import { rigMetrics } from './rig.js';
-import { ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
+import { AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy} from './support.js';
 import { selectedClips } from './library.js';
+import {sampleAirborne,sampleFallingObject} from './airborne.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t = clamp(n); return t * t * (3 - 2 * t); };
@@ -35,10 +36,10 @@ export function postureAt(plan:PerformancePlan,timeMs:number):BodyPosture {
   return Object.keys(seatWeights).length?{...value,seatWeights}:value;
 }
 const recoveryStart = (g:Gesture) => g.releaseMs ?? (g.action==='carry'?g.endMs:g.endMs-Math.min(220,(g.endMs-g.startMs)*.18));
-const attaches = (g:Gesture) => g.action==='pick-place'||g.action==='carry';
+const attaches = (g:Gesture) => g.action==='pick-place'||g.action==='carry'||g.action==='drop';
 const contacts = (g:Gesture) => g.action==='operate'||attaches(g);
 const CARRY_TRANSITION_MS=250;
-const enteringCarry=(g:Gesture)=>g.action==='carry'&&g.startMs===0&&g.contactMs===0;
+const enteringCarry=(g:Gesture)=>(g.action==='carry'||g.action==='drop')&&g.startMs===0&&g.contactMs===0;
 const gestureAt=(plan:PerformancePlan,t:number,hand:RigHand='right')=>plan.gestures.find(g=>rigHand(g)===hand&&t>=g.startMs&&(t<g.endMs||g.action==='carry'&&g.releaseMs===undefined&&t===plan.durationMs&&g.endMs===plan.durationMs));
 export interface Chain { joint: Point; end: Point; upper: number; lower: number; reachable: boolean; error: number }
 
@@ -71,10 +72,12 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   if(new Set(plan.gestures.map(g=>g.id)).size!==plan.gestures.length)throw new Error('Duplicate gesture identity across arm tracks');
   overlaps(plan.turns??[],'turn',plan.durationMs);
   overlaps(plan.postures??[],'body posture',plan.durationMs);
+  overlaps(plan.jumps??[],'jump',plan.durationMs);
+  if(plan.compilerVersion!==AIRBORNE_ANIMATION_VERSION&&(plan.jumps?.length||plan.gestures.some(g=>g.action==='drop'||g.landingMs!==undefined)))throw new Error('Jump/drop clips require animation2.2.14');
   if(plan.compilerVersion===LEGACY_ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires animation2.2.8 or newer');
-  if(![ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
-  if(![ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
-  if(![ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)&&plan.expressions.some(e=>(STORY_MOODS as readonly string[]).includes(e.mood)))throw new Error('Story emotions require animation2.2.11 or newer');
+  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
+  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
+  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)&&plan.expressions.some(e=>(STORY_MOODS as readonly string[]).includes(e.mood)))throw new Error('Story emotions require animation2.2.11 or newer');
   const supportIds=new Set((plan.supports??[]).map(s=>s.id));
   if(supportIds.size!==(plan.supports?.length??0))throw new Error('Duplicate seat support identity');
   const m=rigMetrics(profile),s=plan.scale;
@@ -119,6 +122,19 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
     if(speed>m.upperLeg*3)throw new Error('Walk window too short for the distance; shorten the path');
     rootX=walk.toX;
   }
+  for(const jump of plan.jumps??[]){
+    if(!(jump.startMs<jump.takeoffMs&&jump.takeoffMs<jump.landingMs&&jump.landingMs<jump.endMs)||jump.takeoffMs-jump.startMs<120||jump.landingMs-jump.takeoffMs<180||jump.endMs-jump.landingMs<160)throw new Error('Jump requires preparation, flight and landing clocks');
+    const compression=16*jump.height*Math.max(jump.takeoffMs-jump.startMs,jump.endMs-jump.landingMs)/(27*(jump.landingMs-jump.takeoffMs));
+    if(compression>m.upperLeg*.6)throw new Error('Jump preparation/landing compression exceeds supported knee flexion');
+    if(jump.height>m.upperLeg*.9)throw new Error('Jump height exceeds this standing rig clip; use a different supported motion');
+    const body=postureAt(plan,jump.startMs);
+    if(body.pelvisDropRatio!==0||body.leanDeg!==0||body.seatWeights||(plan.postures??[]).some(p=>p.startMs<jump.endMs&&p.endMs>jump.startMs))throw new Error('Jump requires standing posture throughout its clip');
+    if([...plan.walks,...(plan.turns??[])].some(p=>p.startMs<jump.endMs&&p.endMs>jump.startMs))throw new Error('Standing jump cannot overlap walking or turning');
+    if(plan.gestures.some(g=>['operate','pick-place'].includes(g.action)&&g.startMs<jump.endMs&&g.endMs>jump.startMs))throw new Error('Jump cannot overlap fixed-world contact/placement');
+    for(const g of plan.gestures.filter(g=>(g.action==='carry'||g.action==='drop')&&g.startMs<jump.endMs&&g.endMs>jump.startMs)){
+      if(jump.startMs<g.contactMs!+(enteringCarry(g)?0:CARRY_TRANSITION_MS)||g.action==='carry'&&g.releaseMs!==undefined&&jump.endMs>g.releaseMs-CARRY_TRANSITION_MS)throw new Error('Jump must follow established grip ownership and fit before carry lowering');
+    }
+  }
   const props=new Set(plan.props.map(p=>p.id));
   if(props.size!==plan.props.length)throw new Error('Duplicate prop identity');
   for(const hand of ['left','right'] as const)if(plan.props.filter(p=>p.attachedTo===`${hand}-hand`).length>1)throw new Error(`Only one prop can own the ${hand}-hand entry grip`);
@@ -127,18 +143,20 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   }
   const propPoints=new Map(plan.props.map(p=>[p.id,p.origin]));
   for(const g of chronological(plan.gestures)){
-    if(['point','inspect','operate','pick-place','carry'].includes(g.action)&&!g.target)throw new Error(`${g.id}: missing gesture target`);
+    if(['point','inspect','operate','pick-place','carry','drop'].includes(g.action)&&!g.target)throw new Error(`${g.id}: missing gesture target`);
     if(contacts(g) && (g.contactMs===undefined||g.contactMs<=g.startMs&&!enteringCarry(g)||g.contactMs>=g.endMs))throw new Error(`${g.id}: contact must follow approach`);
     if(attaches(g) && (!g.propId||!props.has(g.propId)))throw new Error(`${g.id}: attachment requires a known prop`);
     if(enteringCarry(g)&&plan.props.find(p=>p.id===g.propId)?.attachedTo!==`${rigHand(g)}-hand`)throw new Error(`${g.id}: entry carry requires a prop attached to the same hand`);
-    if(attaches(g)&&(g.action==='pick-place'||g.releaseMs!==undefined)&&(!g.destination||g.releaseMs===undefined||g.releaseMs<=g.contactMs!||g.releaseMs>=g.endMs))throw new Error(`${g.id}: released attachment requires destination and release`);
+    if(attaches(g)&&(g.action==='pick-place'||g.action==='drop'||g.releaseMs!==undefined)&&(!g.destination||g.releaseMs===undefined||g.releaseMs<=g.contactMs!||g.releaseMs>=g.endMs))throw new Error(`${g.id}: released attachment requires destination and release`);
     if(g.action==='carry'&&g.releaseMs===undefined&&(g.endMs!==plan.durationMs||g.destination))throw new Error(`${g.id}: unreleased carry must own the arm through the scene exit`);
     if(g.propId&&!props.has(g.propId))throw new Error(`${g.id}: unknown prop`);
     if(contacts(g)){
       const release=recoveryStart(g);
       if(release-g.contactMs!<80 || (g.action!=='carry'||g.releaseMs!==undefined)&&g.endMs-release<120)throw new Error(`${g.id}: contact schedule needs at least 80ms of hold and 120ms of recovery`);
     }
-    if(g.carryOffset&&g.action!=='carry')throw new Error(`${g.id}: carry offset requires carry ownership`);
+    if(g.carryOffset&&g.action!=='carry'&&g.action!=='drop')throw new Error(`${g.id}: carry offset requires carry ownership`);
+    if(g.landingMs!==undefined&&g.action!=='drop')throw new Error(g.id+': landingMs belongs only to drop');
+    if(g.action==='drop'&&(!g.carryOffset||g.landingMs===undefined||g.landingMs<=g.releaseMs!||g.landingMs>plan.durationMs||g.releaseMs!-g.contactMs!<(enteringCarry(g)?0:CARRY_TRANSITION_MS)+80))throw new Error(g.id+': drop needs owned grip, release, falling time and landing');
     if(g.action==='carry'&&(!g.carryOffset||recoveryStart(g)-g.contactMs!<(enteringCarry(g)?0:CARRY_TRANSITION_MS)+(g.releaseMs===undefined?0:CARRY_TRANSITION_MS)+80))throw new Error(`${g.id}: carry needs a lift/hold/lowering window and local grip offset`);
     if(attaches(g)){
       const prop=plan.props.find(p=>p.id===g.propId)!;
@@ -146,9 +164,10 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
       const grip={x:current.x+offset.x*plan.scale,y:current.y+offset.y*plan.scale};
       if(distance(grip,g.target!)>.01)throw new Error(`${g.id}: prop ${prop.id} grip anchor does not match pickup target`);
       if(g.destination)propPoints.set(prop.id,{x:g.destination.x-offset.x*plan.scale,y:g.destination.y-offset.y*plan.scale});
+      if(g.action==='drop'&&plan.gestures.some(next=>next.propId===g.propId&&next!==g&&next.contactMs!>=g.releaseMs!&&next.contactMs!<g.landingMs!))throw new Error(g.id+': cannot pick up a falling prop before landing');
     }
     for(const walk of plan.walks.filter(w=>w.startMs<g.endMs&&w.endMs>g.startMs)){
-      if(['operate','pick-place'].includes(g.action))throw new Error(`${g.id}: moving while attached requires a carry clip; not supported by this clip`);
+      if(['operate','pick-place','drop'].includes(g.action))throw new Error(`${g.id}: moving while attached requires a carry clip; not supported by this clip`);
       if(g.action==='carry'&&(walk.startMs<g.contactMs!+(enteringCarry(g)?0:CARRY_TRANSITION_MS)||walk.endMs>recoveryStart(g)-(g.releaseMs===undefined?0:CARRY_TRANSITION_MS)))throw new Error(`${g.id}: carry locomotion must fit after lift and before lowering window`);
     }
   }
@@ -161,7 +180,7 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
 }
 
 export interface FrameState {
-  timeMs:number; root:Point; feet:Record<'left'|'right',Point>; stance:Record<'left'|'right',boolean>;
+  timeMs:number; airborne?:{phase:string;bodyVelocityY:number}; root:Point; feet:Record<'left'|'right',Point>; stance:Record<'left'|'right',boolean>;
   bodyPosture:BodyPosture;
   seatContact?:{supportId:string;errorPx:number};
   hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
@@ -254,7 +273,7 @@ function blendExpression(a:ExpressionPose,b:ExpressionPose,weight:number):Expres
     frown:lerp(a.frown,b.frown,weight),browAngle:lerp(a.browAngle,b.browAngle,weight),eyeOpen:lerp(a.eyeOpen,b.eyeOpen,weight)};
 }
 function expressionAt(plan:PerformancePlan,time:number) {
-  if(![ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion)){
+  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion)){
     const legacy=moodAt(plan,time);return {...legacy,pose:moodPoses[legacy.mood]};
   }
   const ranges=expressionRanges(plan),index=ranges.findIndex(clip=>time>=clip.startMs&&time<clip.endMs),neutral=expressionPose('neutral');
@@ -275,6 +294,13 @@ function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,s
     if(time<contact)return mix(neutral,source,smooth((time-g.startMs)/(contact-g.startMs)));
     if(time<release)return mix(source,dest,smooth((time-contact)/(release-contact)));
     return mix(dest,neutral,smooth((time-release)/(g.endMs-release)));
+  }
+  if(g.action==='drop'){
+    const contact=g.contactMs!,release=g.releaseMs!;
+    if(time<contact)return mix(neutral,g.target!,smooth((time-g.startMs)/(contact-g.startMs)));
+    if(!enteringCarry(g)&&time<contact+CARRY_TRANSITION_MS)return mix(g.target!,carryAnchor,smooth((time-contact)/CARRY_TRANSITION_MS));
+    if(time<=release)return carryAnchor;
+    return mix(carryAnchor,neutral,smooth((time-release)/(g.endMs-release)));
   }
   if(g.action==='carry'){
     const contact=g.contactMs!,release=g.releaseMs,source=g.target!,dest=g.destination;
@@ -340,13 +366,16 @@ function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undef
 /** Pure random-access evaluation: no state accumulated from previous frames. */
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity):FrameState {
   const t=clamp(time,0,plan.durationMs),m=rigMetrics(profile),s=plan.scale,root=rootAt(plan,t),walk=gait(plan,profile,t),emotion=expressionAt(plan,t),pose=emotion.pose;
+  const jump=plan.jumps?.find(j=>t>=j.startMs&&t<=j.endMs),air=jump?sampleAirborne(jump,t,s):undefined;
+  if(air){for(const side of ['left','right'] as const){walk.feet[side].y+=air.feetOffsetY;walk.stance[side]=!air.airborne;}}
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
-  transforms['ground-shadow']=transform({x:root.x,y:root.y+4});
+  transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
   const orientation=orientationAt(plan,t);
   const bodyPosture=postureAt(plan,t);
   const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3;
   const supported=plan.supports?.length?seatedPlacement(plan,profile,t,root):undefined;
   const pelvis=supported?.pelvis??{x:root.x,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walk.activation*m.upperLeg*.23*s};
+  if(air)pelvis.y+=air.bodyOffsetY;
   // Preserve gait bounce outside seated transitions, including plans with a future seat.
   if(supported&&walk.activation)pelvis.y+=walk.activation*m.upperLeg*.23*s;
   transforms.pelvis=transform(pelvis);transforms.chest=transform(pelvis,lean,s*profile.appearance.bodyScale);
@@ -397,14 +426,24 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   // matrices seek deterministically and preserve the exact existing rig artwork.
   const frown=(pose.frown??0)*emotion.weight;
   face['mouth-smile']={opacity:Math.max(pose.smile,pose.frown??0)*emotion.weight,
-    ...([ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
+    ...([AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
   face['mouth-round']={opacity:pose.round*emotion.weight};
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
   for(const prop of plan.props){
     let point=prop.origin,attached=false;
     const offset=prop.gripOffset??{x:0,y:0};
     for(const g of chronological(plan.gestures).filter(g=>attaches(g)&&g.propId===prop.id)){
-      if(g.releaseMs!==undefined&&t>=g.releaseMs){point={x:g.destination!.x-offset.x*s,y:g.destination!.y-offset.y*s};attached=false;}
+      if(g.releaseMs!==undefined&&t>=g.releaseMs){
+        if(g.action==='drop'){
+          // Evaluate the actual hand without prop recursion; no assumed release anchor.
+          const bare={...plan,props:[]},release=samplePerformance(bare,profile,g.releaseMs,activity).hands[rigHand(g)];
+          const prior=samplePerformance(bare,profile,Math.max(0,g.releaseMs-1),activity).hands[rigHand(g)];
+          const releasePoint={x:release.x-offset.x*s,y:release.y-offset.y*s},destination={x:g.destination!.x-offset.x*s,y:g.destination!.y-offset.y*s};
+          point=sampleFallingObject({releaseMs:g.releaseMs,landingMs:g.landingMs!,release:releasePoint,destination,velocityY:(release.y-prior.y)*1000,velocityX:(release.x-prior.x)*1000},t);
+          if(point.x<0||point.x>plan.stage.width||point.y<0||point.y>plan.stage.groundY)throw new Error(g.id+': falling prop leaves the physical stage');
+        }else point={x:g.destination!.x-offset.x*s,y:g.destination!.y-offset.y*s};
+        attached=false;
+      }
       else if(t>=g.contactMs!){const hand=hands[rigHand(g)];point={x:hand.x-offset.x*s,y:hand.y-offset.y*s};attached=true;}
     }
     props[prop.id]={point,attached};transforms[`prop-${prop.id}`]=transform(point,0,s);
@@ -413,13 +452,13 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)){
     const shoulder=toWorld(m.shoulderOffset*(side==='left'?-1:1),m.shoulderY-m.pelvisY);
     const anchor=add(shoulder,rotate({x:(gesture.carryOffset?.x??(side==='left'?-50:50))*s,y:(gesture.carryOffset?.y??35)*s},lean));
-    const expected=gesture.action==='carry'?goal(gesture,hands[side],chinAt(side),anchor,t,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((t-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
+    const expected=(gesture.action==='carry'||gesture.action==='drop')?goal(gesture,hands[side],chinAt(side),anchor,t,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((t-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
     contactErrors[side]=distance(hands[side],expected);contactError=Math.max(contactError,contactErrors[side]);
     if(contactErrors[side]>1)throw new Error(`${gesture.id}: ${side} hand misses contact anchor at ${t}ms (${contactErrors[side].toFixed(2)}px)`);
   }
   }
   const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
-  return {timeMs:t,root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(pelvis,seat.center)}}:{})};
+  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(pelvis,seat.center)}}:{})};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
@@ -457,12 +496,14 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   validatePerformance(plan,profile);
   const times=new Set<number>([0,plan.durationMs]);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...plan.gestures,...plan.walks,...(plan.turns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
+  for(const clip of [...plan.gestures,...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
-  if([ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion))for(const clip of expressionRanges(plan)){
+  if([AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion))for(const clip of expressionRanges(plan)){
     const window=expressionBlendMs(clip);times.add(clip.startMs+window);times.add(clip.endMs-window);
   }
+  for(const jump of plan.jumps??[])for(const at of [jump.startMs,jump.takeoffMs,jump.landingMs,jump.endMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])for(const near of [at-.01,at,at+.01])times.add(near);
+  for(const g of plan.gestures.filter(g=>g.action==='drop')){times.add(g.landingMs!);times.add(g.landingMs!-.01);times.add(g.landingMs!+.01);}
   for(const clip of plan.postures??[])for(const at of [(clip.startMs+clip.endMs)/2,(clip.startMs+clip.endMs)/2-.01,(clip.startMs+clip.endMs)/2+.01])times.add(at);
   for(const g of plan.gestures)for(const at of [g.contactMs,g.releaseMs,recoveryStart(g)])if(at!==undefined){times.add(at);times.add(at-.01);times.add(at+.01);}
   for(const g of plan.gestures.filter(g=>g.action==='carry')){
@@ -474,7 +515,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   for(const cue of activity.intervals)for(const at of [cue.startMs,cue.endMs]){times.add(at);times.add(at-.01);}
   const samples=[...new Set([...times].filter(t=>t>=0&&t<=plan.durationMs).map(t=>Number(t.toFixed(4))))].sort((a,b)=>a-b).map(t=>samplePerformance(plan,profile,t,activity));
   const frames:FrameState[]=[samples[0]!];
-  const precise=plan.compilerVersion===ANIMATION_VERSION;
+  const precise=plan.compilerVersion===ANIMATION_VERSION||plan.compilerVersion===AIRBORNE_ANIMATION_VERSION;
   // Bone connectivity alone does not bound a curved brow/eye expression between
   // baked frames. Keep the face close to the same pure evaluator used by preview.
   const faceError=(a:FrameState,b:FrameState):number=>{
@@ -510,7 +551,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const [id,value] of Object.entries(f.transforms))if(!i||value!==frames[i-1]!.transforms[id])calls.push(`tl.${method}(${selector(id)},${JSON.stringify({attr:{transform:value},...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
     for(const [id,value] of Object.entries(f.face))if(!i||JSON.stringify(value)!==JSON.stringify(frames[i-1]!.face[id]))calls.push(`tl.${method}(${selector(id)},${JSON.stringify({...value,...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
   }
-  return {js:calls.join('\n'),frames,report:{compilerVersion:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
+  return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),

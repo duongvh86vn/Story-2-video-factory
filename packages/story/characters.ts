@@ -203,7 +203,7 @@ export async function buildCharacterBible(root: string, config: FactoryConfig, r
       }
     }
     return enforceCharacterLocks(withReferences, story, series.bible, existing, locks);
-  });
+  },undefined,undefined,{reuseAccepted:true});
   await writeJson(file, characters);
   await writeJson(path.join(root, 'work', 'characters.json'), characters);
   await writeJson(path.join(root, 'output', 'character-bible.json'), characters);

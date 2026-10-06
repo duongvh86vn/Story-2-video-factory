@@ -1,5 +1,7 @@
 # Bàn giao tool theo nội dung
 
+Checkpoint06/10: source đã có nhảy/rơi thật cho hai rig và resume/cache có provenance. Build core/Studio/Vite qua;306ca nguồn/creative/finite và82ca cache/order/checkpoint đã qua trong các phạm vi riêng. Preflight authentic tái dùng đủ7bước phân tích, chưa chứng minh resume native trên project gốc. Ca sinh nhật21/30 calls hoàn tất/0 pending, còn9; chưa storyboard/video/native vision. Giữ mọi FAIL/gap lịch sử; chất lượng phim và nghiệm thu toàn sản phẩm vẫn mở. [Phạm vi và việc tiếp](validation/2026-10-06-actor-airborne-cache.md).
+
 Mục tiêu sản phẩm là **chủ đề/câu chuyện → kịch bản → video**, với người que
 hoặc robot đóng vai trong câu chuyện. Nhà máy, máy hơi nước và ô tô là dữ liệu
 ví dụ. Một phim mẫu đẹp cũng không chứng minh mọi đầu vào đã được nghiệm thu.
@@ -29,7 +31,7 @@ Cảnh có thể chỉ có diễn viên hoặc môi trường; không cần tạ
 | Preview/resume | Giữ audio khi đổi hình; stale scene chặn preview/download; locks và lịch sử giữ nguyên | Phần hash gate không được coi là chứng minh an toàn với mọi coordinated tampering |
 | Renderer | HyperFrames/HTML/CSS/SVG/JavaScript theo clock cố định | Plugin Remotion đã tham khảo; Remotion chưa là backend chọn được |
 
-Source runtime của ca native mới nhất: `3718b2d9a5a7bd7a69c2792e970fbdb8abc78714`,
+Snapshot runtime của ca trạm xe buýt: `3718b2d9a5a7bd7a69c2792e970fbdb8abc78714`,
 branch `codex/stickman-acting-v22`, đã cập nhật repository người dùng chỉ định.
 Các commit tài liệu sau đó không đổi runtime. Checkpoint lỗi ban đầu
 `0ba63bb0e60b930bfceff766720f44f7b8bc43b4` vẫn được giữ trong báo cáo lịch sử.
@@ -65,7 +67,7 @@ gồm lỗi chân lệch nền. Xem/nghe toàn phim vẫn NOTRUN.
 
 Ca chủ đề sinh nhật/robot đã được duyệt và chạy: writer/audio qua, dừng trước
 render do source-review. [Bản sửa source và kiểm tiếp](validation/2026-10-05-birthday-garden-source.md)
-chưa có nghiệm thu video; budget11/30 vẫn giữ, native vision chưa tới.
+chưa có nghiệm thu video; resume15:48–16:04UTC FAIL,21/30 đã dùng/0 pending, còn9; native vision chưa tới.
 
 [Lần thất bại ban đầu](validation/2026-10-05-rainy-bus-stop-native.md) và
 [các lượt tiếp tục](validation/2026-10-05-rainy-bus-stop-continuation.md) là

@@ -21,11 +21,12 @@ function include(bounds:Bounds,point:Point,pad=0){
 export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
   const times=new Set<number>([0,p.durationMs]);
   for(let ms=0;ms<p.durationMs;ms+=1000/p.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...p.walks,...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
+  for(const clip of [...p.walks,...(p.jumps??[]),...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
+  for(const jump of p.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])times.add(at);
   for(const clip of p.postures??[])times.add((clip.startMs+clip.endMs)/2);
-  for(const g of p.gestures){if(g.contactMs!==undefined)times.add(g.contactMs);if(g.releaseMs!==undefined)times.add(g.releaseMs);
+  for(const g of p.gestures){if(g.contactMs!==undefined)times.add(g.contactMs);if(g.releaseMs!==undefined)times.add(g.releaseMs);if(g.landingMs!==undefined)times.add(g.landingMs);
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
   const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
@@ -191,7 +192,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
       labelInView(part);
     }
   }else if(camera.focus==='face'){
-    if(p.gestures.some(g=>['operate','pick-place','carry'].includes(g.action)))fail('face close would hide contact; use contact focus or medium.');
+    if(p.gestures.some(g=>['operate','pick-place','carry','drop'].includes(g.action)))fail('face close would hide contact; use contact focus or medium.');
     if(!p.expressions.some(e=>c.actorScene?e.mood!=='neutral':['curious','thinking','surprised','understanding'].includes(e.mood)))fail('face close requires an informative expression/reaction.');
     if(!boundsInView(bounds.head))fail('face close crops the face; move the anchor to the face, preserving subtitle clearance.');
   }else if(camera.focus==='object'){
@@ -201,7 +202,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
       labelInView(part);
     }
   }else {
-    const contacts=p.gestures.filter(g=>['operate','pick-place','carry'].includes(g.action)&&g.target&&g.contactMs!==undefined);
+    const contacts=p.gestures.filter(g=>['operate','pick-place','carry','drop'].includes(g.action)&&g.target&&g.contactMs!==undefined);
     if(!contacts.length)fail('contact close requires a validated contact action.');
     for(const g of p.gestures)if(g.target&&!inView(g.target,12*p.scale))fail(`${g.id} target/hand is cropped; contact close must show explanatory targets.`);
     const actions=new Map(cinematicActionGroups(shot.host?.actions??[],p,shot.startMs).flatMap(group=>group.gestures.map(g=>[g.id,group.action] as const)));

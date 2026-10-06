@@ -1,5 +1,9 @@
 # Trạng thái triển khai V2.2
 
+Checkpoint06/10: source đã có nhảy/rơi thật cho hai rig và resume/cache có provenance. Build core/Studio/Vite qua;306ca nguồn/creative/finite và82ca cache/order/checkpoint đã qua trong các phạm vi riêng. Preflight authentic tái dùng đủ7bước phân tích, chưa chứng minh resume native trên project gốc. Ca sinh nhật21/30 calls hoàn tất/0 pending, còn9; chưa storyboard/video/native vision. Giữ mọi FAIL/gap lịch sử; chất lượng phim và nghiệm thu toàn sản phẩm vẫn mở. [Phạm vi và việc tiếp](docs/validation/2026-10-06-actor-airborne-cache.md).
+
+Các checkpoint bên dưới giữ lịch sử và phạm vi source riêng; đoạn này thay trạng thái hiện hành của ca sinh nhật và motion batch mới.
+
 Hiện hành05/10: ca chủ đề sinh nhật đã tự viết lời kể và tạo audio tiếng Anh51,421s/12cues, nhưng dừng tại source-review, chưa có phim hoặc review ảnh thật. Source đã sửa lỗi nhận “pin” trong “dropping”, ngữ cảnh rig và hướng dẫn seed; build/typecheck qua, kiểm hồi quy và tiếp tục cùng project đang chờ. Ca trạm xe buýt có MP4/QC kỹ thuật PASS, nhưng đánh giá độc lập PARTIAL với lỗi chân lệch nền. [Bằng chứng mới](docs/validation/2026-10-05-birthday-garden-source.md). Toàn sản phẩm chưa nghiệm thu.
 
 Các đoạn tiếp theo là snapshot lịch sử, không thay trạng thái hiện hành ở trên.

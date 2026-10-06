@@ -30,12 +30,12 @@ export type ActingRepair=z.infer<typeof ActingRepairSchema>;
 /** Prompt capability information; every other performance field is immutable. */
 export const fixedMotionFields=[
   'version','compilerVersion','id','leadCharacterId','profileHash','kind','durationMs','fps',
-  'stage','root','scale','facing','walks','turns','entryPosture','props','supports',
+  'stage','root','scale','facing','walks','jumps','turns','entryPosture','props','supports',
 ] as const satisfies readonly (keyof PerformancePlan)[];
 
 function editableGesture(gesture:Gesture):boolean {
   return gesture.action==='react'&&gesture.target===undefined&&gesture.destination===undefined&&
-    gesture.propId===undefined&&gesture.contactMs===undefined&&gesture.releaseMs===undefined&&gesture.carryOffset===undefined;
+    gesture.propId===undefined&&gesture.contactMs===undefined&&gesture.releaseMs===undefined&&gesture.landingMs===undefined&&gesture.carryOffset===undefined;
 }
 /** Exact schema for a protected JSON entry; generation cannot rewrite contact data. */
 function exactJSONSchema(value:unknown):z.ZodTypeAny {
@@ -45,7 +45,7 @@ function exactJSONSchema(value:unknown):z.ZodTypeAny {
   if(value&&typeof value==='object')return z.object(Object.fromEntries(Object.entries(value).filter(([,v])=>v!==undefined).map(([k,v])=>[k,exactJSONSchema(v)]))).strict();
   throw new Error('Protected repair entry must be JSON data');
 }
-const NewReactionGestureSchema=GestureSchema.omit({target:true,destination:true,propId:true,contactMs:true,releaseMs:true,carryOffset:true}).extend({action:z.literal('react')}).strict();
+const NewReactionGestureSchema=GestureSchema.omit({target:true,destination:true,propId:true,contactMs:true,releaseMs:true,landingMs:true,carryOffset:true}).extend({action:z.literal('react')}).strict();
 function repairMotionSchemaFor(performance:PerformancePlan){
   const protectedGestures=PerformancePlanSchema.parse(performance).gestures.filter(g=>!editableGesture(g));
   const choices=[NewReactionGestureSchema,...protectedGestures.map(exactJSONSchema)];

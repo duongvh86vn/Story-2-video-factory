@@ -29,7 +29,7 @@ import { createExplanation, EXPLANATION_VERSION, explanationVocabularyRevision }
 import { ExplanationPlanSchema } from '../explainer/schemas.js';
 import { validateExplainerStoryboard, writeHostTimeline } from '../explainer/storyboard.js';
 import { narrateScript, resolveVoice, requireVoice, VoiceReportSchema } from '../voice/index.js';
-import { ANIMATION_VERSION } from '../animation/schemas.js';
+import { AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION } from '../animation/schemas.js';
 import { CINEMATIC_PLAN_FILES, CINEMATIC_EXPORT_FILES, DIRECTION_VERSION } from '../director/schemas.js';
 import { ARTWORK_RENDER_VERSION } from '../director/art-direction.js';
 import { requireFinalStoryDirection } from '../director/story-coverage.js';
@@ -54,7 +54,7 @@ function stageOutputs(state:ProjectState):Partial<Record<ProjectStatus,string[]>
     SCENES_READY:[...outputs.SCENES_READY!,'work/performance-report.json'],DONE:[...narrated.DONE,...CINEMATIC_EXPORT_FILES.map(n=>`output/${n}`)]};
 }
 export function redact(message:string,config:FactoryConfig):string { for (const role of [...Object.values(config.models),config.voice]) { const key=process.env[role.api_key_env]; if (key) message=message.split(key).join('[REDACTED]'); } return message.replace(/Bearer\s+[^\s"']+/gi,'Bearer [REDACTED]'); }
-async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string):Promise<{all:string;narration:string;priorVocabulary?:string}> {
+async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string):Promise<{all:string;narration:string;sourceRevisionParents:string[]}> {
   const mode=config.input.mode==='auto' ? await exists(safePath(root,config.input.idea)) ? 'idea' : await exists(safePath(root,config.input.script)) ? 'script' : await exists(safePath(root,config.input.narration)) ? 'wav' : 'srt' : config.input.mode;
   const autoPresence=config.input.mode==='auto'?await Promise.all([...(await exists(safePath(root,config.input.idea))?[config.input.idea]:[]),config.input.script,config.input.narration,config.input.subtitles].map(file=>exists(safePath(root,file)))):undefined;
   const relativeFiles=mode==='idea'?[config.input.idea]:mode==='script'?[config.input.script]:mode==='wav'?[config.input.narration,config.input.subtitles]:[config.input.subtitles];
@@ -69,9 +69,19 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
   const vocabularyRevision=config.content.mode==='narrated-explainer'&&await exists(path.join(root,'work/narration.json'))
     ?explanationVocabularyRevision(await readJson(path.join(root,'work/narration.json'),NarrationSchema)):undefined;
-  const allInput={version:4,authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic};
-  return {all:hash({...allInput,...(vocabularyRevision?{explanationVocabulary:vocabularyRevision}:{})}),
-    priorVocabulary:vocabularyRevision?hash(allInput):undefined,
+  const airborneRevision=config.content.mode==='narrated-explainer'&&config.presentation.character_mode==='actors'&&await exists(path.join(root,'work/narration.json'))
+    &&(await readJson(path.join(root,'work/narration.json'),NarrationSchema)).segments.some(cue=>/(?<!\p{L})(?:jump(?:s|ed|ing)?|leap(?:s|ed|ing)?|leapt|hop(?:s|ped|ping)?|drop(?:s|ped|ping)?|nhảy|thả rơi|đánh rơi)(?!\p{L})/iu.test(cue.text))?AIRBORNE_ANIMATION_VERSION:undefined;
+  const allInput={version:4,...(airborneRevision?{airborneRevision}:{}),authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic};
+  // Match only source revisions of these exact inputs. Content, voice, config,
+  // and narration identity still participate in every parent fingerprint.
+  const {airborneRevision:omittedAirborneRevision,...groundedInput}=allInput;
+  const vocabularyInput=vocabularyRevision?{explanationVocabulary:vocabularyRevision}:{};
+  const sourceRevisionParents=[
+    ...(vocabularyRevision?[hash(allInput)]:[]),
+    ...(airborneRevision?[hash({...groundedInput,...vocabularyInput}),
+      ...(vocabularyRevision?[hash(groundedInput)]:[])]:[])
+  ];
+  return {all:hash({...allInput,...vocabularyInput}),sourceRevisionParents,
     narration:hash({version:3,scriptParser:mode==='script'||mode==='idea'?SCRIPT_PARSER_VERSION:undefined,authoring,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {
@@ -203,9 +213,9 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     store=new ProductionStore(root); store.failInterruptedJobs();
     const hostHash=config.content.mode==='narrated-explainer'?await hostProfileFingerprint(root,config):'',fingerprints=await inputFingerprint(root,config,hostHash),fingerprint=fingerprints.all,assetHash=await assetFingerprint(root);
     if (options.force || (state.inputHash && state.inputHash!==fingerprint)) {
-      const vocabularyOnly=!options.force&&state.inputHash===fingerprints.priorVocabulary&&state.narrationInputHash===fingerprints.narration;
+      const sourceRevisionOnly=!options.force&&!!state.inputHash&&fingerprints.sourceRevisionParents.includes(state.inputHash)&&state.narrationInputHash===fingerprints.narration;
       state.state=!options.force&&state.narrationInputHash===fingerprints.narration&&stateIndex(state.state)>=stateIndex('TIMED')?'TIMED':'NEW';
-      if(!vocabularyOnly){state.reviewIteration=0;state.artifactHashes={};await writeJson(path.join(root,'work/scene-repair-budget.json'),{});}
+      if(!sourceRevisionOnly){state.reviewIteration=0;state.artifactHashes={};await writeJson(path.join(root,'work/scene-repair-budget.json'),{});}
       state.approvals.storyboard=false;if(!state.locked.characterBible)state.approvals.characters=false;
     }
     if(state.hostInputHash!==hostHash){state.approvals.host=false;state.approvals.hostHash='';}

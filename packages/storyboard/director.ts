@@ -18,7 +18,7 @@ import { explainerShot, validateExplainerStoryboard, writeHostTimeline } from '.
 import { cinematicSetting, directCinematicShot, validateCinematicShot, validateModelContinuity, writeCinematicPlans } from '../director/index.js';
 import { prepareCinematicEnvironments } from '../stage/index.js';
 import { DIRECTION_VERSION } from '../director/schemas.js';
-import { ANIMATION_VERSION } from '../animation/schemas.js';
+import { isCurrentAnimation } from '../animation/schemas.js';
 import { modelExitParts } from '../director/props.js';
 import { createCreativeStoryboard } from '../director/creative.js';
 import {seedActorStoryboard} from '../actors/model.js';
@@ -30,7 +30,7 @@ export async function readStoryboardForDirection(file:string,stateLocks:Record<s
   const shots=envelope.shots.map(shot=>{
     if(shot.cinematic){
       const version=z.object({producer:z.string(),performance:z.object({compilerVersion:z.string()}).passthrough()}).passthrough().parse(shot.cinematic);
-      if(version.producer!==DIRECTION_VERSION||version.performance.compilerVersion!==ANIMATION_VERSION){
+      if(version.producer!==DIRECTION_VERSION||!isCurrentAnimation(version.performance.compilerVersion)){
         if(!/^story-direction-2\.2\.\d+$/.test(version.producer)||!/^performance-2\.2\.\d+$/.test(version.performance.compilerVersion))throw new Error(`${shot.id}: unrecognized cinematic plan version`);
         if(stateLocks.storyboard||stateLocks.scenes||stateLocks[shot.id]||stateLocks[`shot:${shot.id}`]||stateLocks[`scene:${shot.id}`]||stateLocks[`shots.${shot.id}`]||shot.locked)throw new Error(`${shot.id}: locked cinematic plan version requires migration; unlock the shot or restore its compiler`);
         return {...shot,cinematic:undefined};

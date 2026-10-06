@@ -28,7 +28,7 @@ const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'c
 /** Story actors can transport sourced models with one completed carry/placement. */
 export const CINEMATIC_ACTION_CLIPS:Record<string,string[]>={
   idle:[],
-  'operate-model':['operate','pick-place','carry'],compare:['point','inspect'],point:['point','inspect'],
+  'operate-model':['operate','pick-place','carry','drop'],compare:['point','inspect'],point:['point','inspect'],
   think:['think'],summarize:['address-viewer'],explain:['address-viewer','lead-next'],
   greet:['address-viewer'],react:['react'],'walk-to-marker':['lead-next'],
 };
@@ -171,7 +171,7 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
   let facing=performance.facing!;
   // Turn within an existing non-contact window; the speech clock and action targets remain untouched.
   for(const g of performance.gestures){
-    if(['operate','pick-place','carry'].includes(g.action)||g.endMs-g.startMs<600)continue;
+    if(['operate','pick-place','carry','drop'].includes(g.action)||g.endMs-g.startMs<600)continue;
     const desired=g.action==='address-viewer'?'front':g.target&&g.target.x<exitX?'left':'right';
     const startMs=Math.max(moveMs,g.startMs),endMs=startMs+320;
     if(desired!==facing&&endMs<=g.endMs&&endMs<duration-140){performance.turns!.push({startMs,endMs,direction:desired});facing=desired;}
@@ -258,7 +258,7 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
     const roundedTarget=expected&&g.target&&Math.hypot(g.target.x-Math.round(expected.x*1000)/1000,g.target.y-Math.round(expected.y*1000)/1000)<=1e-6;
     if(Boolean(expected)!==Boolean(g.target)||expected&&g.target&&!exactTarget&&!roundedTarget)throw new Error(`${shot.id}: gesture ${g.id} points at the wrong world target for ${a.type}; expected ${expected?JSON.stringify(expected):'no gesture.target (omit it because this action has no object target; a walking destination belongs in performance.walks)'}, received ${g.target?JSON.stringify(g.target):'no gesture.target'}${target?`; object ${target.partId}, anchor ${target.anchor}`:''}`);
     if(!CINEMATIC_ACTION_CLIPS[a.type]?.includes(g.action))throw new Error(`${shot.id}: performance action contradicts host intent for ${g.id}; ${a.type} requires ${CINEMATIC_ACTION_CLIPS[a.type]?.join(' or ')}, received ${g.action}`);
-    if(['operate','pick-place','carry'].includes(g.action)!==(a.type==='operate-model')||g.contactMs!==(a.contactMs===undefined?undefined:a.contactMs-shot.startMs))throw new Error(`${shot.id}: contact/action mismatch for ${g.id}; intent ${a.type}, clip ${g.action}, expected shot-local contactMs ${a.contactMs===undefined?'omitted':a.contactMs-shot.startMs}, received ${g.contactMs??'omitted'}`);
+    if(['operate','pick-place','carry','drop'].includes(g.action)!==(a.type==='operate-model')||g.contactMs!==(a.contactMs===undefined?undefined:a.contactMs-shot.startMs))throw new Error(`${shot.id}: contact/action mismatch for ${g.id}; intent ${a.type}, clip ${g.action}, expected shot-local contactMs ${a.contactMs===undefined?'omitted':a.contactMs-shot.startMs}, received ${g.contactMs??'omitted'}`);
     }
   }
   if(consumed.size!==p.gestures.length)throw new Error(`${shot.id}: missing performance action`);

@@ -1,5 +1,9 @@
 # STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
+Checkpoint06/10: source đã có nhảy/rơi thật cho hai rig và resume/cache có provenance. Build core/Studio/Vite qua;306ca nguồn/creative/finite và82ca cache/order/checkpoint đã qua trong các phạm vi riêng. Preflight authentic tái dùng đủ7bước phân tích, chưa chứng minh resume native trên project gốc. Ca sinh nhật21/30 calls hoàn tất/0 pending, còn9; chưa storyboard/video/native vision. Giữ mọi FAIL/gap lịch sử; chất lượng phim và nghiệm thu toàn sản phẩm vẫn mở. [Phạm vi và việc tiếp](docs/validation/2026-10-06-actor-airborne-cache.md).
+
+Các checkpoint bên dưới giữ lịch sử và phạm vi source riêng; đoạn này thay trạng thái hiện hành của ca sinh nhật và motion batch mới.
+
 > Phạm vi hiện hành 05/10/2026: **tool tổng quát chủ đề/câu chuyện → kịch bản → video**, người que là diễn viên trong chính câu chuyện. Máy hơi nước và ô tô chỉ là ví dụ kiểm tra. Nhánh ý tưởng được bổ sung trước ba luồng narration nguyên văn; source mới đang nghiệm thu, không lấy video mẫu hoặc QC kỹ thuật làm bằng chứng sản phẩm đã hoàn thành. [Luồng và cách dùng](docs/GENERAL-STORY-TOOL.md).
 
 Contract: chủ đề/câu chuyện → writer → kịch bản → narration → phân vai → dàn cảnh → video; kịch bản hoàn chỉnh giữ lời nguyên văn, WAV/SRT giữ nguồn và clock tương ứng. Người que hoặc robot đóng vai trong câu chuyện; primary có thể vắng mặt, nhiều vai và cảnh đồ vật/môi trường được phép. Không áp quota người dẫn hoặc dùng máy móc làm thiết kế mặc định. Animation2.2.13/director2.2.31/explanation2.2.6 có tư thế, hai tay độc lập, ghế, biểu cảm và hành động có nguồn. EN/VI/JA/KO và adapter TTS local/API/command đã có, backend thực tế còn chờ kiểm chứng. Source/clock/contact/identity/security/voice/QC vẫn chặn final khi sai.

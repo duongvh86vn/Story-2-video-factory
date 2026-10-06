@@ -20,7 +20,7 @@ export async function planChapters(root: string, config: FactoryConfig, router: 
       startMs: i === 0 ? 0 : narration.segments.find(segment => segment.id === chapter.segmentIds[0])!.startMs,
       endMs: i + 1 === result.chapters.length ? narration.durationMs : narration.segments.find(segment => segment.id === result.chapters[i + 1]!.segmentIds[0])!.startMs,
     }));
-  });
+  },undefined,undefined,{reuseAccepted:true});
   await writeJson(path.join(root, 'work', 'chapters.json'), chapters);
   return chapters;
 }

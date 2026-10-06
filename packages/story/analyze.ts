@@ -60,7 +60,7 @@ export async function analyzeProject(projectRoot: string, config: FactoryConfig,
       facts: [...base.facts, ...result.facts.filter(fact => !base.facts.some(existing => existing.claim === fact.claim && existing.source === fact.source))],
       chronology: result.chronology, causalChain: result.causalChain, characters: [...characters.values()],
     });
-  });
+  },undefined,undefined,{reuseAccepted:true});
   await writeJson(path.join(projectRoot, 'work', 'story.json'), story);
   const characters = await buildCharacterBible(projectRoot, config, router, story, narration, series);
   const chapters = await planChapters(projectRoot, config, router, story, narration);

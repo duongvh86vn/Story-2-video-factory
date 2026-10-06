@@ -6,14 +6,17 @@ import { hash, writeJson } from '../core/utils.js';
 import type { ModelRequest } from '../models/adapter.js';
 import type { ModelRouter } from '../models/registry.js';
 import { redact } from '../render/process.js';
+import {planningCacheIdentity,reuseAcceptedPlanning} from './planning-cache.js';
 
 /** Router retries syntax/schema failures; this bounded loop repairs domain errors. */
 export async function planWithValidation<T, R>(
   root: string, config: FactoryConfig, router: ModelRouter, role: ModelRole,
   stage: string, request: ModelRequest, schema: ZodType<T, ZodTypeDef, any>,
-  normalize: (value: T) => R, binding?: unknown, initialRepair?: { previous: unknown; feedback: string },
+  normalize: (value: T) => R, binding?: unknown, initialRepair?: { previous: unknown; feedback: string }, options?:{reuseAccepted?:boolean},
 ): Promise<R> {
   if (!/^[a-zA-Z0-9_.-]+$/.test(stage)) throw new Error(`Invalid planning stage ${stage}`);
+  const cacheIdentity=planningCacheIdentity(config,role,request,schema,binding);
+  if(options?.reuseAccepted&&!initialRepair){const reused=await reuseAcceptedPlanning(root,config,role,stage,request,schema,normalize,binding);if(reused)return reused.result;}
   const dir = path.join(root, 'work', 'attempts', stage, randomUUID());
   let feedback = initialRepair?.feedback ?? '';
   let previous: unknown = initialRepair?.previous;
@@ -35,7 +38,7 @@ export async function planWithValidation<T, R>(
     previous = value;
     try {
       const result = normalize(value);
-      await persist(file, { attempt: attempt + 1, status: 'accepted', request: input, binding, response: value, result });
+      await persist(file, { attempt: attempt + 1, status: 'accepted', request: input, binding, cacheIdentity, baseRequestHash:hash(request), response: value, result });
       return result;
     } catch (error) {
       feedback = error instanceof Error ? error.message : String(error);

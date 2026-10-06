@@ -78,3 +78,10 @@ Own Studio was reloaded onto runtime ddfe672 at15:13:01UTC, port8850. HTTP
 verified. A mistaken default8787 launch was stopped by exact PID/birth
 before the corrected8850 launch; this operational correction is not a test.
 The general quality/input/language/backend acceptance remains OPEN.
+
+
+### Follow-up cùng project — trạng thái cập nhật06/10
+
+318 kiểm scoped của lexical/rig repair qua; resume thật với tài khoản hiện tại được người dùng cho phép đã thoát1 lúc16:04:10UTC. Giữ nguyên writer/audio/cues,21started21completed0pending, còn9 trong cap30/2/2. Source chặn last-flower→vase dù lời kể có tucked…into, và giữ high unsupported jump/drop. Không tới storyboard/render/vision.
+
+Physical placement mới giữ báo cáo116PASS4FAIL rồi145PASS4FAIL; không sửa assertions để thành PASS. Subject guard đã sửa, source tích hợp nhảy/drop/coverage/camera/version/cache partial analysis. [Bàn giao hiện hành](2026-10-06-actor-airborne-cache.md) ghi build thực và acceptance còn chờ. Các trạng thái PENDING11call ở trên là lịch sử, không phải số calls hiện tại.
