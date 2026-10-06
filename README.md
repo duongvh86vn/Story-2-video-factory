@@ -10,7 +10,7 @@ Studio có tab **Chủ đề / Câu chuyện**, model viết kịch bản, nút 
 
 [STORY-TO-VIDEO-FACTORY.md](STORY-TO-VIDEO-FACTORY.md) là bản đặc tả hợp nhất đã đồng bộ với file Downloads, dùng mô hình diễn viên trong câu chuyện. Bản này giữ toàn bộ contract narration, diễn viên và TTS bên ngoài; [audit hoàn thành](docs/validation/2026-10-03-completion-audit.md) liệt kê riêng bằng chứng đã có và yêu cầu còn mở.
 
-Checkpoint06/10: native sinh nhật28/28/0 đã dừng tại storyboard, chưa phim mới. Source-context/artwork handles đã triển khai và build/typecheck/schema; test sau sửa chờ model độc lập. [Bàn giao hiện hành](docs/GENERAL-TOOL-HANDOFF.md), [điểm chạm artwork](docs/ARTWORK-CONTACT-ANCHORS.md).
+Checkpoint06/10: source-context494PASS/0FAIL/2SKIP và corrected contact229PASS/0FAIL/1SKIP trên code443220f; custom-handle temporal/outbound và phim còn chờ. Ca sinh nhật gốc28/28/0, còn2/30calls, chưa video mới. Chủ dự án giao model test khác; [bàn giao để gửi model test](docs/NEXT-MODEL-TEST-HANDOFF.md), [phạm vi evidence](docs/validation/2026-10-06-sourced-world-contact.md).
 
 ## Bắt đầu
 

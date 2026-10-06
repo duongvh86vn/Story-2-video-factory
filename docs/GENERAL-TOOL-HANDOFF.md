@@ -1,6 +1,6 @@
 # Bàn giao tool câu chuyện/chủ đề → kịch bản → video
 
-**Bàn giao triển khai06/10/2026, test sau sửa còn chờ.** Base công bố trước bản sửa này: `1af19a6437b0714b74b41054c112ad0205160574`, nhánh `codex/stickman-acting-v22`. Main chưa merge. Nghiệm thu chất lượng phim và toàn sản phẩm còn mở.
+**Bàn giao06/10/2026 cho model test do chủ dự án chọn.** Code đã build/kiểm cục bộ: `443220f6a6fe5516647b9df707d79a5c50d0318f`, nhánh `codex/stickman-acting-v22`; main chưa merge. Source-context494/0/2 và corrected contact229/0/1 exit0; temporal/outbound/cache/browser/phim còn chờ. [Lệnh, fixture và ca còn thiếu](NEXT-MODEL-TEST-HANDOFF.md). Nghiệm thu chất lượng và toàn sản phẩm còn mở.
 
 ## Sản phẩm và cách dùng
 
@@ -15,7 +15,7 @@ Nhập nội dung, chọn người que hoặc mini-robot, ngôn ngữ/model/gi�
 
 WAV+SRT dùng mode WAV, giữ hai nguồn và kiểm alignment. `source.md` là tài liệu bổ trợ. MD và lời kể là dữ liệu, không cấp quyền thực thi hướng dẫn. Thiếu writer/TTS, mismatch, nguồn/identity/clock/contact sai phải chặn final; không lấy kết quả cũ làm thành phẩm của input vừa sửa.
 
-Studio8850 hiện chạy từ worktree `C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`. Checkout D:/github/Story-2-video-factory2.1 còn main cũ và thay đổi riêng, được giữ nguyên. Model test phải dùng đúng worktree/source SHA; chạy folder D cũ không chứng minh source mới.
+Studio8850 chưa reload sau code443220f, process hiện có khởi động trên build1af19a6 và chạy từ worktree `C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`. Checkout D:/github/Story-2-video-factory2.1 còn main cũ và thay đổi riêng, được giữ nguyên. Model test phải dùng đúng worktree/source SHA; chạy folder D cũ không chứng minh source mới.
 
 Hướng dẫn input/API/CLI: [GENERAL-STORY-TOOL.md](GENERAL-STORY-TOOL.md). Ngôn ngữ EN/VI/JA/KO và API TTS riêng/compatible/OmniVoice/command: [EXTERNAL-TTS.md](EXTERNAL-TTS.md). Đặc tả hợp nhất: [STORY-TO-VIDEO-FACTORY.md](../STORY-TO-VIDEO-FACTORY.md). Nguyên tắc tạo hình: [VIDEO-DESIGN-WORKFLOW.md](VIDEO-DESIGN-WORKFLOW.md).
 
@@ -41,7 +41,7 @@ Checkpoint trước: public resume dừng trước render ở 25/25/0, còn5. So
 
 Checkpoint đã đóng03:34UTC:28started/28completed/0pending, còn2. Ba responses mới13shot tới ending đều domain-rejected; candidate cuối còn2chair anchor mismatches,1unreachable pick và candle event bằng thời điểm contact. Không accepted storyboard/render/vision/video. Formal report/release/completion và fresh parent5b87bc xác nhận398source/423dist/169case exact,103protected/four old log prefixes exact,55known identities terminal. [Native closeout](validation/2026-10-06-native-ensemble-closeout.md).
 
-Baseline source-context sau đó tái hiện16genuine placement failures;478checks PASS/2SKIP và direct sourced-context controls qua. SAME tester hếtusage trước formal report; parent5f34c9 xác nhận33known resources terminal và source/case nguyên vẹn để triển khai. Bản sửa forwarding và custom artwork handles đã build/typecheck/schema; **GREEN/contact/browser/film mới cònNOTRUN**. [Handoff và raw evidence](validation/2026-10-06-sourced-world-contact.md), [contact contract](ARTWORK-CONTACT-ANCHORS.md).
+Baseline trước sửa có478PASS/16FAIL/2SKIP, cùng fixture bất biến sau sửa đã đạt494PASS/0FAIL/2SKIP. Corrected contact đạt229PASS/0FAIL/1SKIP, raw209/21/1 trước đó giữ nguyên. Sáu custom-handle GSAP/outbound assertions chưa đăng ký vì external ESM setup lỗi; specific cache parity/browser/film chưa kiểm. FormalPARTIAL report/release đã có nhưng tester completion và counter receipt thiếu sau usage failure/bare true writer warning. Parent958a32 fresh74known resources terminal,403/423/169 exact, original28/28/0remaining2; không thay tester attestation. Chủ dự án giao model khác. [Kết quả và raw](validation/2026-10-06-sourced-world-contact.md), [handoff mới](NEXT-MODEL-TEST-HANDOFF.md).
 
 ## Việc tiếp theo và điều kiện nghiệm thu
 
