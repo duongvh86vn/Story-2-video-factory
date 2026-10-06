@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "actor": "lila",
+      "view": "three-quarter-right",
+      "prompt": "Edit target is the supplied original warm-skin Lila close-up/full figure. Produce ONE isolated transparent HEAD-AND-HAIR asset for a layered animation puppet. Preserve the exact original head silhouette, proportions, slightly three-quarter right orientation, painted warm orange peach face gradient, dark brown messy side swept fringe, ears, irregular black ink outlines and the long tied ponytail on VIEWER LEFT. Keep the complete long rear hair and loose strands, NOT a shortened bob. Keep the original small curved nose. Do not redesign, make a generic circle, smooth the brush texture or lighten the colors.\nOnly two permitted edits:\n1. Remove everything except the complete head/hair: no neck shaft, chest, clothing, arms, hands, legs, feet, paper, leaf, page marks or cast shadow.\n2. Remove ONLY the black eyes, eyebrows and mouth strokes/opening, filling those tiny regions seamlessly with the surrounding original warm skin texture and light/shadow. The blank face is intentional: original-source eyes/brows/mouth will be separate animated layers. Keep the nose and the face contour. No dots, ghost facial features or new facial features.\nReconstruct only hair hidden by removed limbs/clothing, following the same existing strands; preserve all visible original detail. Transparent alpha all around every hair strand. No text, labels, grid, other heads or other pieces. Keep generous clear margin on all sides, do not crop the ponytail or hair tips.",
+      "tool": "image_gen",
+      "approved": false,
+      "scope": "isolated-blank-head-candidate",
+      "generatedOriginalPath": "C:\\Users\\Duongvh-pc\\.codex\\generated_images\\01a0f194-5a26-7743-b0e6-bdc3cca6d17f\\exec-7fa2a3a4-4470-4d57-93d9-ab756dce4d5b.png",
+      "output": "library/topics/prehistoric-life/rig-v1/lila-head-three-quarter-right.png"
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "prompt": "Edit target: the supplied original warm-skin Karo. Produce ONE isolated transparent HEAD asset for layered character animation. Keep the exact original spiky messy dark-brown hair, ears, broad textured beard and moustache, warm orange-peach face gradient, irregular black ink contours, head proportions and slightly three-quarter right orientation. Same actor identity and painted shading, not a generic vector face or different hairstyle.\nPermitted edits only:\n1. Remove every body part below the beard/head: no neck, chest, clothing, shoulders, arms, hands, legs, feet, paper, other figure, page marks or ground shadow. Preserve the complete beard silhouette and all hair spikes.\n2. Remove only the eyes, eyebrows, smile/mouth cavity and teeth. Seamlessly restore the original warm skin texture where eyes/brows were. At the former smile leave a small clean warm-skin oval window inside the beard, with no lip, mouth stroke, teeth, tongue or dark opening. Preserve the beard/moustache boundary outside that window; the source mouth will be a separate animated layer. Keep the original nose.\nNo redesign, flattened fill, bleached colors, extra highlights, labels, sheet, checkerboard or new features. Genuine alpha background with generous empty margin and no cropped hair/beard.",
+      "tool": "image_gen",
+      "approved": false,
+      "scope": "isolated-blank-head-candidate",
+      "generatedOriginalPath": "C:\\Users\\Duongvh-pc\\.codex\\generated_images\\01a0f194-5a26-7743-b0e6-bdc3cca6d17f\\exec-2d4d0d66-53cd-4071-a159-8426b4f012ab.png",
+      "output": "library/topics/prehistoric-life/rig-v1/karo-head-three-quarter-right.png"
+    },
+    {
+      "actor": "lila",
+      "view": "three-quarter-left",
+      "prompt": "The first reference is the primary Lila character identity. The second reference is the isolated blank head texture just prepared from her. Create ONE new head texture showing this SAME actor in a clear THREE-QUARTER LEFT view (nose points toward VIEWER LEFT), for a smooth partner-facing turn in an animated film.\nKeep the exact painterly style, warm orange-peach skin with subtle light and shadow, messy deep-brown long hair, side-swept fringe, tied low ponytail and irregular black ink. Rotate the actual head volume: visible near cheek/ear, far side compressed, nose at the correct left-facing position. The hair and ponytail belong to the same physical head/side as the source, so author their new perspective; do NOT just mirror the original canvas or make a new haircut. Preserve long hair, beard-free female face and identity.\nFace intentionally has NO eyes, eyebrows or mouth: leave warm blank skin with only the original-style small curved nose and face contour. Those features will be separate animated layers. Preserve the complete head/hair including the ponytail, no body/clothes/neck/limbs. Real transparent alpha background, generous clear margins, no text, other views, borders or sheet. No white face, bleached skin, flat vector fill, clothing additions or new accessories.",
+      "tool": "image_gen",
+      "approved": false,
+      "scope": "isolated-blank-head-candidate",
+      "generatedOriginalPath": "C:\\Users\\Duongvh-pc\\.codex\\generated_images\\01a0f194-5a26-7743-b0e6-bdc3cca6d17f\\exec-856af8e7-717b-42b7-aadc-c9f7a419ffe7.png",
+      "output": "library/topics/prehistoric-life/rig-v1/lila-head-three-quarter-left.png"
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "prompt": "The first reference is the primary warm-skin Karo identity. The second is his isolated blank three-quarter-right head. Create ONE head texture of THIS SAME ACTOR in a clear THREE-QUARTER LEFT view, nose pointing toward VIEWER LEFT, for partner-facing animation.\nKeep the exact source painted warm orange-peach skin gradient, dark brown spiky messy hair, broad shaggy full beard and moustache, irregular black ink outlines, face/head proportions and detailed textured shading. Rotate the actual head volume and hair/beard perspective; near cheek/ear visible, far side compressed, small source-style curved nose facing left. Do not just mirror the canvas or invent a new haircut or beard.\nBlank facial texture intentionally has NO eyes, eyebrows or mouth/teeth. Warm clean skin where eyes and brows go. Leave the same small clean warm-skin oval mouth window inside the beard for a separate original-source mouth layer, with no lip/mouth stroke, tongue, dark opening or teeth. Preserve surrounding beard and moustache edges and entire silhouette. Keep the nose. No body, neck, chest, costume or limbs.\nReal transparent alpha background, generous clear margins, complete hair spikes and beard tips, no paper, labels, text, panels or sheet. No white face, flattened vector fills, bleached skin, clothing additions or new accessories.",
+      "tool": "image_gen",
+      "approved": false,
+      "scope": "isolated-blank-head-candidate",
+      "generatedOriginalPath": "C:\\Users\\Duongvh-pc\\.codex\\generated_images\\01a0f194-5a26-7743-b0e6-bdc3cca6d17f\\exec-114a09a2-b840-4640-bfd3-715f56344e2f.png",
+      "output": "library/topics/prehistoric-life/rig-v1/karo-head-three-quarter-left.png"
+    }
+  ]
+}

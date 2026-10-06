@@ -31,6 +31,7 @@ export function actorVisualFingerprint(actor: ActorDefinition): string {
       badge: appearance.badge.toLowerCase(), headScale: appearance.headScale,
       bodyScale: appearance.bodyScale, strokeWidth: appearance.strokeWidth,
       characterVariant: appearance.characterVariant,
+      artworkVersion: appearance.artworkVersion,
     },
     costume,
   });

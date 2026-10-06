@@ -1,0 +1,55 @@
+{
+  "scope": "static-head-layer-only",
+  "appliesTo": "forest-face-motion-2 / forest-head-svg-2",
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.karo",
+        "type": "mouth_expression_and_compositing",
+        "severity": "medium",
+        "description": "In both angry views, Karo retains a pale, upward-curving tooth/mouth fragment inside a dark brown patch. This reads as a residual grin beneath the angry brows, rather than a coherent angry mouth, and the patch interrupts the surrounding painted beard texture.",
+        "repair": "Cleanly remove the happy-mouth interior and restore the underlying beard texture. Build the angry mouth as a complete replacement with a clearly tense or downturned contour, preserving the source mouth's warm lip edging and painted finish without leaving tooth fragments or a flat cover patch."
+      }
+    ],
+    "mode": "vision",
+    "warnings": []
+  },
+  "usage": {
+    "calls": 3,
+    "successes": 2,
+    "failures": 1,
+    "pendingCalls": 0,
+    "inputTokens": 6952,
+    "outputTokens": 1148,
+    "totalTokens": 8100,
+    "costUsd": 0,
+    "unknownUsageCalls": 1,
+    "byRole": {
+      "visual_review": {
+        "calls": 3,
+        "successes": 2,
+        "failures": 1,
+        "pendingCalls": 0,
+        "inputTokens": 6952,
+        "outputTokens": 1148,
+        "totalTokens": 8100,
+        "costUsd": 0,
+        "unknownUsageCalls": 1
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 3,
+        "successes": 2,
+        "failures": 1,
+        "pendingCalls": 0,
+        "inputTokens": 6952,
+        "outputTokens": 1148,
+        "totalTokens": 8100,
+        "costUsd": 0,
+        "unknownUsageCalls": 1
+      }
+    }
+  }
+}

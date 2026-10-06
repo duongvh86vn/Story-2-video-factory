@@ -32,6 +32,8 @@ import { repairCinematicArtwork, persistCinematicArtworkRepair, rejectCinematicA
 import { ARTWORK_RENDER_VERSION, ARTWORK_EASING_VERSION, ARTWORK_WORLD_BACKGROUND_VERSION, MODEL_FOREGROUND_VERSION, MODEL_CONTACT_ANCHOR_VERSION } from '../director/art-direction.js';
 import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
+import {referenceHeadAssets,readReferenceHeadAsset,referenceHeadDescription} from '../animation/forest-head-art.js';
+import {referenceBodyAssets,referenceBodyDescription} from '../animation/forest-body-art.js';
 export { validateSceneFiles, validateSceneScript, SCENE_CSP } from './security.js';
 async function cinematicBackground(root:string,shot:Shot):Promise<string|undefined>{
   const id=shot.cinematic?.environmentAssetId;if(!id)return undefined;
@@ -63,6 +65,13 @@ async function libraryRuntime():Promise<Buffer> { const require=createRequire(im
 async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManifest,config:FactoryConfig,publish=true):Promise<{refs:RecipeAsset[]; hashes:Record<string,string>}> {
   const selected=manifest.assets.filter(asset=>asset.shotIds.includes(shot.id) || shot.assetNeeds.some(need=>need.id===asset.id));
   const refs:RecipeAsset[]=[], hashes:Record<string,string>={};
+  const scene=shot.cinematic?.actorScene,actors=[...(scene?.primary?[scene.primary]:[]),...(scene?.supporting.map(actor=>actor.character)??[])];
+  const rigAssets=new Map(actors.flatMap(actor=>[...referenceHeadAssets(actor.appearance),...referenceBodyAssets(actor.appearance)]).map(asset=>[asset.path,asset]));
+  for(const asset of rigAssets.values()){
+    const bytes=readReferenceHeadAsset(asset);hashes[asset.path]=asset.sha256;
+    if(publish)await writeAtomic(await outputPath(root,path.relative(root,path.join(dir,asset.path))),bytes);
+    refs.push({id:'rig-'+asset.sha256,type:'image',path:asset.path});
+  }
   for(const need of shot.assetNeeds) if(need.required && !selected.some(asset=>asset.id===need.id && asset.status==='approved')) throw new Error(`${shot.id}: required asset ${need.id} unavailable`);
   for(const asset of selected) {
     if(asset.status!=='approved') continue;
@@ -87,7 +96,16 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
 async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characters:CharacterBible,assetHashes:Record<string,string>,gsap:Buffer):Promise<string> {
   const source=await exists(path.join(root,config.input.source)) ? await fs.readFile(await safeRealPath(root,config.input.source)) : Buffer.alloc(0);
   const activity=config.content.mode==='narrated-explainer'?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
-  return hash({shot,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?shot.cinematic.performance.compilerVersion:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,artworkEasingRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.keyframes.some(frame=>frame.ease!==undefined))?ARTWORK_EASING_VERSION:undefined,artworkWorldBackgroundRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.plane==='background'&&layer.coordinateSpace==='world')?ARTWORK_WORLD_BACKGROUND_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelContactAnchor:shot.cinematic?.artDirection?.models.some(model=>model.handleAnchor!==undefined)?MODEL_CONTACT_ANCHOR_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,sceneLabels:sceneLabelIdentity(shot,config),activity});
+  const actorScene=shot.cinematic?.actorScene,actors=[...(actorScene?.primary?[actorScene.primary]:[]),...(actorScene?.supporting.map(actor=>actor.character)??[])];
+  const referenceRig=Object.keys(assetHashes).some(file=>file.startsWith('assets/rigs/'))?{referenceHeadPack:referenceHeadDescription().fingerprint,
+    ...(actors.some(actor=>actor.appearance.artworkVersion==='forest-body-1')?{referenceBodyPack:referenceBodyDescription().fingerprint}:{})}:{};
+  return hash({shot,...referenceRig,source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?shot.cinematic.performance.compilerVersion:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,artworkEasingRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.keyframes.some(frame=>frame.ease!==undefined))?ARTWORK_EASING_VERSION:undefined,artworkWorldBackgroundRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.plane==='background'&&layer.coordinateSpace==='world')?ARTWORK_WORLD_BACKGROUND_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelContactAnchor:shot.cinematic?.artDirection?.models.some(model=>model.handleAnchor!==undefined)?MODEL_CONTACT_ANCHOR_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,sceneLabels:sceneLabelIdentity(shot,config),activity});
+}
+async function validStagedRigAssets(root:string,dir:string,hashes:Record<string,string>):Promise<boolean>{
+  for(const [file,expected] of Object.entries(hashes).filter(([file])=>file.startsWith('assets/rigs/'))){
+    try{if(hash(await fs.readFile(await safeRealPath(root,path.relative(root,path.join(dir,file)))))!==expected)return false;}catch{return false;}
+  }
+  return true;
 }
 /** Check every approved scene before staging assets, resetting state or rebuilding another shot. */
 export async function assertLockedSceneCompatibility(root:string,config:FactoryConfig,board:Storyboard,characters:CharacterBible,manifest:AssetManifest,state:Locks,shotIds?:string[]):Promise<void> {
@@ -102,6 +120,7 @@ export async function assertLockedSceneCompatibility(root:string,config:FactoryC
     if(!complete.every(Boolean))throw new Error(`Locked shot ${shot.id} has an incomplete scene; unlock or restore its approved scene`);
     const record=await exists(recordFile)?await readJson<SceneRecord>(recordFile):undefined;
     const staged=await stageAssets(root,dir,shot,manifest,config,false);
+    if(!await validStagedRigAssets(root,dir,staged.hashes))throw new Error(`${shot.id}: locked rig image changed or missing; restore the approved asset or explicitly unlock and rebuild.`);
     const expected=await inputIdentity(root,config,shot,characters,staged.hashes,gsap);
     if(!record?.validated||record.inputHash!==expected)throw new Error(`${shot.id}: locked scene input/renderer conflict; restore the approved inputs and renderer, or explicitly unlock and rebuild this shot. The approved scene has been retained.`);
   }
@@ -117,6 +136,7 @@ export async function outdatedSceneInputs(root:string,config:FactoryConfig,board
     if(!complete.every(Boolean)){outdated.push(shot.id);continue;}
     const record=await readJson<SceneRecord>(await safeRealPath(root,path.relative(root,recordFile))).catch(()=>undefined);
     const staged=await stageAssets(root,dir,shot,manifest,config,false);
+    if(!await validStagedRigAssets(root,dir,staged.hashes)){outdated.push(shot.id);continue;}
     const expected=await inputIdentity(root,config,shot,characters,staged.hashes,gsap);
     if(!record?.validated||record.inputHash!==expected){outdated.push(shot.id);continue;}
     const files:SceneFiles={files:await Promise.all(SCENE_FILENAMES.map(async name=>({path:name,content:await fs.readFile(await safeRealPath(root,path.relative(root,path.join(dir,name))),'utf8')}))),dependencies:[],notes:[]};

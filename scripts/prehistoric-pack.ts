@@ -4,6 +4,8 @@ import sharp from 'sharp';
 import {findRepoRoot} from '../packages/core/config.js';
 import {hash,writeJson,exists} from '../packages/core/utils.js';
 import {PREHISTORIC_TOPIC_VERSION,prehistoricReadiness,prehistoricReferences} from '../packages/topics/prehistoric-life.js';
+import {referenceHeadDescription} from '../packages/animation/forest-head-art.js';
+import {referenceBodyDescription} from '../packages/animation/forest-body-art.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -21,13 +23,22 @@ const rejected=[];
 for(const file of ['colors-day.png','colors-sunset.png','colors-night.png','lila-views.png','karo-views.png','lila-expressions.png','karo-expressions.png']) {
   if(await exists(path.join(dir,file)))rejected.push({...await describe(`library/topics/prehistoric-life/${file}`),status:'rejected-vector-v0.3',productionAllowed:false});
 }
+const headPack=referenceHeadDescription();
+const headCandidates=await Promise.all(Object.entries(headPack.assets).flatMap(([actor,views])=>Object.entries(views).map(async([view,asset])=>{
+  const measured=await describe(`library/topics/prehistoric-life/rig-v1/${asset.file}`);
+  if(measured.sha256!==asset.sha256||measured.width!==asset.width||measured.height!==asset.height||!measured.hasAlpha)throw new Error(`Head asset metadata changed: ${asset.file}`);
+  return {...measured,actor,view,approved:false,status:'candidate-layered-head'};
+})));
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
-  references,candidates,rejectedArtifacts:rejected,productionRig:null,
+  references,candidates:[...candidates,...headCandidates],rejectedArtifacts:rejected,productionRig:null,
+  headPack:{...headPack,prompts:'library/topics/prehistoric-life/rig-v1/head-prompts.json',codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts')))},
+  bodyPack:{...referenceBodyDescription(),codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-body-art.ts')))},
   restCalibration:{status:'candidate',method:'SVG masks on full cutouts',reconstructedOccludedParts:false,naturalMotion:false,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/reference-puppet.ts')))},
   staticReview:{file:'docs/topics/reviews/karo-atlas-static-review-v1.json',pass:false,scope:'static-artwork-only',appliesTo:'atlas assembly v1, not revised cutout-mask assembly'},
+  headStaticReview:{file:'docs/topics/reviews/head-layer-static-review-v2.json',pass:false,scope:'static-head-layer-only',appliesTo:'head workbench face v2 before body/hair integration',remainingIssue:'Karo angry mouth patch'},
   limitations:['AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.',
     'The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.',
-    'A whole head with baked facial features cannot provide production expressions or proper multi-view turning.',
+    'Layered heads currently support only two authored three-quarter views; continuous turns, rear/body views and other secondary layers remain pending.',
     'Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted.']});
-console.log(JSON.stringify({references:references.length,candidates:candidates.length,rejected:rejected.length,productionReady:false}));
+console.log(JSON.stringify({references:references.length,candidates:candidates.length+headCandidates.length,headCandidates:headCandidates.length,rejected:rejected.length,productionReady:false}));

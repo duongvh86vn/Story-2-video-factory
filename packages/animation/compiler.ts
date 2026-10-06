@@ -2,13 +2,15 @@ import type { HostProfile } from '../host/schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
 import { rigHand, type RigHand } from '../core/identifiers.js';
-import { rigMetrics } from './rig.js';
+import { rigMetrics,type RigMetrics } from './rig.js';
 import { AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy} from './support.js';
 import { selectedClips } from './library.js';
 import {sampleAirborne,sampleFallingObject} from './airborne.js';
 import {inkLimb,pathCoordinates} from './ink-limb.js';
 import {forestHeadContour} from './forest-tribe-art.js';
+import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription} from './forest-head-art.js';
+import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment} from './forest-body-art.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t = clamp(n); return t * t * (3 - 2 * t); };
@@ -67,6 +69,10 @@ function overlaps(items: Array<{startMs:number;endMs:number}>, label:string, dur
 }
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
   PerformancePlanSchema.parse(plan);
+  validateReferenceHead(profile,[plan.headView,...(plan.headTurns??[]).map(turn=>turn.direction)]);
+  if(usesReferenceBody(profile)&&plan.turns?.length)throw new Error('needs-body-view: source body v1 has a fixed authored torso; full body turns require side/rear artwork.');
+  if(usesReferenceBody(profile)&&[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(pose=>pose.pose==='seated'))throw new Error('needs-source-motion: asymmetric source feet require a new calibrated seated transition.');
+  if(usesReferenceHead(profile)&&plan.headTurns?.some(turn=>turn.endMs-turn.startMs<280))throw new Error('Reference head turn window must be at least 280ms.');
   if(plan.kind!==profile.kind || plan.leadCharacterId!==profile.id || plan.profileHash!==profile.profileHash) throw new Error('Performance identity/profile mismatch');
   if(Math.abs(plan.root.y-plan.stage.groundY)>1e-6) throw new Error('Performer root must use the ground anchor');
   for(const [name, items] of [['locomotion',plan.walks],['expression',plan.expressions],['gaze',plan.gazes]] as const) overlaps(items,name,plan.durationMs);
@@ -203,13 +209,13 @@ function walkSteps(plan:PerformancePlan,profile:HostProfile,walk:PerformancePlan
   const steps=Math.max(2,Math.ceil(Math.abs(walk.toX-walk.fromX)/stepLength)),span=(walk.endMs-walk.startMs)/steps;
   return Array.from({length:steps},(_,i)=>{
     const startMs=walk.startMs+i*span,endMs=i===steps-1?walk.endMs:walk.startMs+(i+1)*span,side=i%2?'right' as const:'left' as const;
-    const landing=(i>=steps-2?walk.toX:rootAt(plan,endMs).x)+(side==='left'?-m.stance:m.stance)*plan.scale;
+    const landing=(i>=steps-2?walk.toX:rootAt(plan,endMs).x)+(m.footOffsets?.[side]??(side==='left'?-m.stance:m.stance))*plan.scale;
     return {i,startMs,endMs,side,landing};
   });
 }
 function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
   const m=rigMetrics(profile), scale=plan.scale;
-  let feet={left:{x:plan.root.x-m.stance*scale,y:plan.root.y},right:{x:plan.root.x+m.stance*scale,y:plan.root.y}};
+  let feet={left:{x:plan.root.x+(m.footOffsets?.left??-m.stance)*scale,y:plan.root.y},right:{x:plan.root.x+(m.footOffsets?.right??m.stance)*scale,y:plan.root.y}};
   const stance={left:true,right:true};let activation=0,phase=0,direction=1;
   for(const walk of chronological(plan.walks)){
     if(timeMs<walk.startMs)break;
@@ -227,6 +233,21 @@ function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
     }
   }
   return {feet,stance,activation,phase,direction};
+}
+/** Lower the source pelvis only as far as the fixed limbs require. A generic
+ * fraction of its long hidden thigh would produce a deep crouch every step. */
+function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetrics,profile:HostProfile,scale:number):number {
+  if(!walk.activation)return 0;
+  let needed=0;
+  for(const side of ['left','right'] as const){
+    const hip=metrics.hips![side],bones=metrics.legs![side],foot=walk.feet[side];
+    const dx=foot.x-(root.x+hip.x*scale),length=(bones.upper+bones.lower)*scale-1e-6;
+    if(Math.abs(dx)>=length)throw new Error('needs-source-motion: stride exceeds source leg reach.');
+    const ankleY=foot.y-(metrics.footSoleOffset?.[side]??0)*profile.appearance.bodyScale*scale;
+    const minimumY=ankleY-hip.y*scale-Math.sqrt(length*length-dx*dx);
+    needed=Math.max(needed,minimumY-(root.y+metrics.pelvisY*scale));
+  }
+  return needed+walk.activation*(1.1+.5*Math.sin(walk.phase*Math.PI*2))*scale;
 }
 function moodAt(plan:PerformancePlan,time:number):{mood:Mood;weight:number} {
   const e=plan.expressions.find(e=>time>=e.startMs&&time<e.endMs);
@@ -390,42 +411,50 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
   const orientation=orientationAt(plan,t);
   const bodyPosture=postureAt(plan,t);
-  const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3;
+  const breath=usesReferenceBody(profile)?Math.sin((t+(profile.appearance.characterVariant==='karo'?1100:0))*Math.PI*2/4300)*.55*smooth(t/200)*smooth((plan.durationMs-t)/200):0;
+  const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath;
   const supported=plan.supports?.length?seatedPlacement(plan,profile,t,root):undefined;
-  const pelvis=supported?.pelvis??{x:root.x,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walk.activation*m.upperLeg*.23*s};
+  const walkDrop=usesReferenceBody(profile)?sourceWalkDrop(root,walk,m,profile,s):walk.activation*m.upperLeg*.23*s;
+  const pelvis=supported?.pelvis??{x:root.x,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walkDrop};
   if(air)pelvis.y+=air.bodyOffsetY;
   // Preserve gait bounce outside seated transitions, including plans with a future seat.
   if(supported&&walk.activation)pelvis.y+=walk.activation*m.upperLeg*.23*s;
   transforms.pelvis=transform(pelvis);transforms.chest=transform(pelvis,lean,s*profile.appearance.bodyScale);
   const toWorld=(x:number,y:number)=>add(pelvis,rotate({x:x*s,y:y*s},lean));
-  const headAngle=lean+pose.tilt*emotion.weight,headBottom=(profile.kind==='mini-robot'?42:40)*profile.appearance.headScale;
-  const torsoTop=(profile.kind==='mini-robot'?-94:-92)*profile.appearance.bodyScale;
-  const neckStart=toWorld(0,torsoTop);
-  const neckEnd=toWorld(0,Math.min(m.headY-m.pelvisY+headBottom,torsoTop-10*profile.appearance.bodyScale));
+  const headArtScale=profile.appearance.headScale*(m.headArtworkScale??1);
+  const headAngle=lean+pose.tilt*emotion.weight,headBottom=(usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*headArtScale;
+  const torsoTop=m.torsoTop??(profile.kind==='mini-robot'?-94:-92)*profile.appearance.bodyScale;
+  const neckStart=toWorld(m.neckX??0,torsoTop);
+  const neckEnd=toWorld(m.neckX??0,usesReferenceBody(profile)?torsoTop-2*profile.appearance.bodyScale:Math.min(m.headY-m.pelvisY+headBottom,torsoTop-10*profile.appearance.bodyScale));
   const head=add(neckEnd,rotate({x:0,y:-headBottom*s},headAngle));
   transforms.neck=`translate(${number(neckStart.x)} ${number(neckStart.y)}) rotate(${number(degrees(Math.atan2(neckEnd.y-neckStart.y,neckEnd.x-neckStart.x))-90)}) scale(${number(s)} ${number(distance(neckStart,neckEnd))})`;
-  transforms.head=transform(head,headAngle,s*profile.appearance.headScale);
+  transforms.head=transform(head,headAngle,s*headArtScale);
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
-  const chinAt=(side:RigHand)=>add(head,rotate({x:m.headRadius*.3*s*(side==='left'?-1:1),y:m.headRadius*.875*s},lean+pose.tilt*emotion.weight));
+  const chinAt=(side:RigHand)=>add(head,rotate({x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},lean+pose.tilt*emotion.weight));
   for(const [i,side] of (['left','right'] as const).entries()){
     // One continuous bend branch, including rest, walk entry and recovery.
-    const hip={x:pelvis.x+(i?1:-1)*m.hipOffset*s,y:pelvis.y},leg=solveChain(hip,walk.feet[side],m.upperLeg*s,m.lowerLeg*s,supported?.bend??1);
+    const sourceHip=m.hips?.[side],legLengths=m.legs?.[side]??{upper:m.upperLeg,lower:m.lowerLeg};
+    const hip={x:pelvis.x+(sourceHip?.x??(i?1:-1)*m.hipOffset)*s,y:pelvis.y+(sourceHip?.y??0)*s};
+    const ankle={x:walk.feet[side].x,y:walk.feet[side].y-(m.footSoleOffset?.[side]??0)*profile.appearance.bodyScale*s};
+    const leg=solveChain(hip,ankle,legLengths.upper*s,legLengths.lower*s,supported?.bend??1);
     if(leg.error>1)throw new Error(`${plan.id}: ${side} foot cannot reach ground at ${t}ms (${leg.error.toFixed(2)}px)`);
     transforms[`leg-${side}-upper`]=transform(hip,leg.upper,s);transforms[`leg-${side}-lower`]=transform(leg.joint,leg.lower,s);
-    if(drawn)paths[`ink-leg-${side}`]=inkLimb(hip,leg.joint,walk.feet[side]);
-    transforms[`foot-${side}`]=transform(walk.feet[side],0,s);
-    const shoulder=toWorld((i?1:-1)*m.shoulderOffset,m.shoulderY-m.pelvisY);
+    if(drawn)paths[`ink-leg-${side}`]=inkLimb(hip,leg.joint,ankle,usesReferenceBody(profile)?.28:.17);
+    transforms[`foot-${side}`]=transform(walk.feet[side],0,s*(usesReferenceBody(profile)?profile.appearance.bodyScale:1));
+    const sourceShoulder=m.shoulders?.[side];
+    const shoulder=toWorld(sourceShoulder?.x??(i?1:-1)*m.shoulderOffset,sourceShoulder?.y??m.shoulderY-m.pelvisY);
     const swing=Math.sin(walk.phase*Math.PI)*(i?-1:1)*25*walk.activation;
-    const neutral=add(shoulder,rotate({x:(i?12:-12)*s,y:(m.upperArm+m.lowerArm-8)*s},swing));
+    const rest=m.armRest?.[side],lengths=m.arms?.[side]??{upper:m.upperArm,lower:m.lowerArm};
+    const neutral=add(shoulder,rotate({x:(rest?.x??(i?12:-12))*s,y:(rest?.y??(m.upperArm+m.lowerArm-8))*s},swing));
     const gesture=gestureAt(plan,t,side),chin=chinAt(side);
     const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??(i?50:-50))*s,y:(gesture?.carryOffset?.y??35)*s},lean));
     const target=gesture?goal(gesture,neutral,chin,carryAnchor,t,s,shoulder):neutral;
-    const arm=armPose(shoulder,neutral,target,gesture,t,m.upperArm*s,m.lowerArm*s,side,
+    const arm=armPose(shoulder,neutral,target,gesture,t,lengths.upper*s,lengths.lower*s,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
     if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
     transforms[`arm-${side}-upper`]=transform(shoulder,arm.upper,s);transforms[`arm-${side}-lower`]=transform(arm.joint,arm.lower,s);
-    if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,arm.joint,arm.end);
-    transforms[`hand-${side}`]=transform(arm.end,0,s);hands[side]=arm.end;
+    if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,arm.joint,arm.end,usesReferenceBody(profile)?.28:.17);
+    transforms[`hand-${side}`]=transform(arm.end,m.handRestRotation?arm.lower-m.handRestRotation[side]:0,s*(usesReferenceBody(profile)?profile.appearance.bodyScale:1));hands[side]=arm.end;
   }
   const activeGestures={right:gestureAt(plan,t,'right'),left:gestureAt(plan,t,'left')};
   const activeGesture=activeGestures.right?.target?activeGestures.right:activeGestures.left??activeGestures.right,explicitGaze=plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
@@ -434,7 +463,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   let gaze={x:0,y:0};
   if(activeGesture?.target)gaze=mix(gaze,gazeOffset(activeGesture.target),gazeWeight(activeGesture));
   if(explicitGaze)gaze=mix(gaze,gazeOffset(explicitGaze.target),gazeWeight(explicitGaze));
-  if(drawn){
+  if(drawn&&!usesReferenceHead(profile)){
     const view=headViewAt(plan,t),look=explicitGaze??activeGesture;
     const yaw=plan.headView||plan.headTurns?.length?view.yaw:look?.target?lerp(orientation,clamp((look.target.x-head.x)/70,-.85,.85),gazeWeight(look)):orientation;
     face['head-front']={opacity:1-view.back};face['head-back-view']={opacity:view.back};
@@ -444,12 +473,12 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     paths['head-contour']=forestHeadContour(yaw);
     transforms['face-orientation']=transform({x:0,y:0});
   }
-  const blinkPhase=(t+800)%3500,blink=blinkPhase<140?Math.sin(Math.PI*blinkPhase/140):0;
+  const blinkPhase=(t+800+(usesReferenceBody(profile)&&profile.appearance.characterVariant==='karo'?520:0))%3500,blink=blinkPhase<140?Math.sin(Math.PI*blinkPhase/140):0;
   for(const [i,side] of (['left','right'] as const).entries()){
     face[`eye-${side}`]={x:gaze.x,y:gaze.y,scaleY:Math.max(.05,(1-blink)*lerp(1,pose.eyeOpen??1,emotion.weight))};
     face[`brow-${side}`]={y:pose.brow*emotion.weight,rotation:(i?-1:1)*(pose.browAngle??(emotion.mood==='concerned'?12:emotion.mood==='effort'?-12:0))*emotion.weight};
     face[`lid-${side}`]={opacity:pose.lid*emotion.weight};
-    if(drawn){const yaw=(face['head-face-plane']!.x??0)/12,far=i===0?Math.max(0,yaw):Math.max(0,-yaw),visible=1-smooth((far-.65)/.35);
+    if(drawn&&!usesReferenceHead(profile)){const yaw=(face['head-face-plane']!.x??0)/12,far=i===0?Math.max(0,yaw):Math.max(0,-yaw),visible=1-smooth((far-.65)/.35);
       face[`eye-${side}`]!.opacity=visible;face[`brow-${side}`]!.opacity=visible;face[`lid-${side}`]!.opacity=visible*pose.lid*emotion.weight;}
   }
   const speech=activity.intervals.find(a=>t>=a.startMs&&t<a.endMs);
@@ -460,6 +489,26 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   face['mouth-smile']={opacity:Math.max(pose.smile,pose.frown??0)*emotion.weight,
     ...([AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
   face['mouth-round']={opacity:pose.round*emotion.weight};
+  if(usesReferenceHead(profile)){
+    const look=explicitGaze??activeGesture;
+    const yaw=plan.headView||plan.headTurns?.length?headViewAt(plan,t).yaw:look?.target?look.target.x-head.x:orientation;
+    // Authored drawings are discrete views, not a continuous 3D rotation. Do
+    // not cross-fade two opaque heads or fabricate unsupported profile/back art.
+    const sourceFace=referenceFaceState({view:yaw<0?'three-quarter-left':'three-quarter-right',gaze,blink,
+      // Source eyebrows rotate about their own center in SVG's downward Y:
+      // angry inner ends move down, worried/sad inner ends move up.
+      browY:pose.brow*emotion.weight,browAngle:-(pose.browAngle??0)*emotion.weight,
+      eyeOpen:lerp(1,pose.eyeOpen??1,emotion.weight),smile:pose.smile*emotion.weight,
+      round:pose.round*emotion.weight,frown:(pose.frown??0)*emotion.weight,speechLevel:speech?.level??null});
+    for(const id of Object.keys(face))delete face[id];Object.assign(face,sourceFace);
+    if(usesReferenceBody(profile)&&profile.appearance.characterVariant==='lila'){
+      const lagT=Math.max(0,t-120),past=expressionAt(plan,lagT),pastBody=postureAt(plan,lagT);
+      const lagAngle=pastBody.leanDeg+past.pose.lean*past.weight+past.pose.tilt*past.weight;
+      const follow=Math.max(-5,Math.min(5,(lagAngle-headAngle)*.6+Math.sin(t*Math.PI*2/2800)*walk.activation*1.8));
+      for(const view of ['three-quarter-left','three-quarter-right'])face['hair-tail-'+view]={rotation:follow};
+    }
+    delete transforms['face-orientation'];
+  }
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
   for(const prop of plan.props){
     let point=prop.origin,attached=false;
@@ -482,7 +531,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   for(const side of ['left','right'] as const){const gesture=activeGestures[side];
   if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)){
-    const shoulder=toWorld(m.shoulderOffset*(side==='left'?-1:1),m.shoulderY-m.pelvisY);
+    const sourceShoulder=m.shoulders?.[side];
+    const shoulder=toWorld(sourceShoulder?.x??m.shoulderOffset*(side==='left'?-1:1),sourceShoulder?.y??m.shoulderY-m.pelvisY);
     const anchor=add(shoulder,rotate({x:(gesture.carryOffset?.x??(side==='left'?-50:50))*s,y:(gesture.carryOffset?.y??35)*s},lean));
     const expected=(gesture.action==='carry'||gesture.action==='drop')?goal(gesture,hands[side],chinAt(side),anchor,t,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((t-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
     contactErrors[side]=distance(hands[side],expected);contactError=Math.max(contactError,contactErrors[side]);
@@ -510,14 +560,17 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile):number 
     const at=(id:string)=>{const x=transformNumbers(a.transforms[id]!),y=transformNumbers(b.transforms[id]!);return x.map((n,i)=>lerp(n,y[i]!,progress));};
     const end=(values:number[],length:number)=>({x:values[0]!-Math.sin(rad(values[2]!))*length*values[3]!,y:values[1]!+Math.cos(rad(values[2]!))*length*values[3]!});
     const origin=(values:number[])=>({x:values[0]!,y:values[1]!});
-    for(const side of ['left','right']){
+    for(const side of ['left','right'] as const){
       for(const part of ['arm','leg']){
         const upper=at(`${part}-${side}-upper`),lower=at(`${part}-${side}-lower`),tip=at(`${part==='arm'?'hand':'foot'}-${side}`);
-        gap=Math.max(gap,distance(end(upper,part==='arm'?m.upperArm:m.upperLeg),origin(lower)),
-          distance(end(lower,part==='arm'?m.lowerArm:m.lowerLeg),origin(tip)));
+        const armLengths=m.arms?.[side]??{upper:m.upperArm,lower:m.lowerArm};
+        const legLengths=m.legs?.[side]??{upper:m.upperLeg,lower:m.lowerLeg};
+        const tipPoint=part==='leg'&&m.footSoleOffset?{x:tip[0]!,y:tip[1]!-m.footSoleOffset[side]*tip[3]!}:origin(tip);
+        gap=Math.max(gap,distance(end(upper,part==='arm'?armLengths.upper:legLengths.upper),origin(lower)),
+          distance(end(lower,part==='arm'?armLengths.lower:legLengths.lower),tipPoint));
       }
     }
-    const neck=at('neck'),head=at('head'),bottom=(profile.kind==='mini-robot'?42:40)*head[3]!;
+    const neck=at('neck'),head=at('head'),bottom=(usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*head[3]!;
     gap=Math.max(gap,distance({x:neck[0]!-Math.sin(rad(neck[2]!))*neck[4]!,y:neck[1]!+Math.cos(rad(neck[2]!))*neck[4]!},
       {x:head[0]!-Math.sin(rad(head[2]!))*bottom,y:head[1]!+Math.cos(rad(head[2]!))*bottom}));
   }
@@ -557,6 +610,9 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       for(const [id,from] of Object.entries(a.face)){
         // Audio activity is intentionally stepped at its own explicit boundaries.
         if(id==='mouth-talk')continue;
+        // Authored-view swaps and voice-gated mouth selection are discrete. Eye
+        // and brow interpolation is still checked against the pure evaluator.
+        if(usesReferenceHead(profile)&&(id.startsWith('head-view-')||id.startsWith('mouth-')))continue;
         const to=b.face[id]!,wanted=actual.face[id]!;
         for(const key of ['opacity','scaleX','scaleY','rotation','x','y'] as const){
           if(from[key]===undefined||to[key]===undefined||wanted[key]===undefined)continue;
@@ -589,13 +645,26 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     const at=i?(frames[i-1]!.timeMs/1000):0,interval=i?(f.timeMs-frames[i-1]!.timeMs)/1000:0,
       duration=precise?interval:Number(interval.toFixed(6)),position=precise?at:Number(at.toFixed(6)),method=i?'to':'set';
     for(const [id,value] of Object.entries(f.transforms))if(!i||value!==frames[i-1]!.transforms[id])calls.push(`tl.${method}(${selector(id)},${JSON.stringify({attr:{transform:value},...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
-    for(const [id,value] of Object.entries(f.paths??{}))if(!i||value!==frames[i-1]!.paths?.[id])calls.push(`tl.${method}(${selector(id)},${JSON.stringify({attr:{d:value,...(id.startsWith('ink-')?{'stroke-width':profile.appearance.strokeWidth*plan.scale}:{})},...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
-    for(const [id,value] of Object.entries(f.face))if(!i||JSON.stringify(value)!==JSON.stringify(frames[i-1]!.face[id]))calls.push(`tl.${method}(${selector(id)},${JSON.stringify({...value,...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
+    for(const [id,value] of Object.entries(f.paths??{}))if(!i||value!==frames[i-1]!.paths?.[id])calls.push(`tl.${method}(${selector(id)},${JSON.stringify({attr:{d:value,...(id.startsWith('ink-')?{'stroke-width':profile.appearance.strokeWidth*plan.scale*(usesReferenceBody(profile)?profile.appearance.bodyScale:1)}:{})},...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
+    for(const [id,value] of Object.entries(f.face))if(!i||JSON.stringify(value)!==JSON.stringify(frames[i-1]!.face[id])){
+      if(!usesReferenceHead(profile)){calls.push(`tl.${method}(${selector(id)},${JSON.stringify({...value,...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);continue;}
+      const voiceChange=i&&Object.keys(f.face).some(key=>key.startsWith('mouth-talk-')&&f.face[key]!.opacity!==frames[i-1]!.face[key]!.opacity);
+      const discrete=id.startsWith('head-view-')||id.startsWith('mouth-talk-')||id.startsWith('mouth-')&&voiceChange;
+      const attrs={...value.attr,...(value.x!==undefined||value.y!==undefined||value.rotation!==undefined||value.scaleX!==undefined||value.scaleY!==undefined?
+        {transform:`translate(${number(value.x??0)} ${number(value.y??0)}) rotate(${number(value.rotation??0)}) scale(${number(value.scaleX??1)} ${number(value.scaleY??1)})`}:{})};
+      // SVG matrices are local to the fixed feature anchor. GSAP's CSS transform
+      // origin/bounding-box inference cannot displace eyes or move the mouth.
+      calls.push(`tl.${discrete?'set':method}(${selector(id)},${JSON.stringify({...(Object.keys(attrs).length?{attr:attrs}:{}),...(value.opacity===undefined?{}:{opacity:value.opacity}),
+        ...(i&&!discrete?{duration,ease:'none'}:{immediateRender:!i})})},${discrete?f.timeMs/1000:position});`);
+    }
   }
   return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),
     ...(plan.supports?.length?{seatSupports:plan.supports,maxSeatContactErrorPx:Math.max(0,...frames.flatMap(f=>f.seatContact?[f.seatContact.errorPx]:[]))}:{}),
+    ...(usesReferenceHead(profile)?{headArtwork:{version:referenceHeadDescription().version,fingerprint:referenceHeadDescription().fingerprint,
+      availableViews:referenceHeadDescription().views,turnRendering:'discrete-authored-views',fullBodyReplacement:usesReferenceBody(profile)}}:{}),
+    ...(usesReferenceBody(profile)?{bodyArtwork:referenceBodyDescription()}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

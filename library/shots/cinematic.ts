@@ -18,6 +18,7 @@ import { rendersModelLabel,rendersModelControl } from '../../packages/director/a
 import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../packages/actors/model.js';
 import {buildRig} from '../../packages/host/rig.js';
 import {performanceSvg} from '../../packages/animation/rig.js';
+import {namespaceRigSvg} from '../../packages/animation/svg-namespace.js';
 import {compilePerformance} from '../../packages/animation/compiler.js';
 import {PROP_BINDING_VERSION} from '../../packages/director/props.js';
 import {sceneSeats,SEAT_SUPPORT_VERSION} from '../../packages/stage/seats.js';
@@ -59,7 +60,7 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     const compiled=compilePerformance(actor.performance,definition,local,prefix);
     actorReports.push({actorId:definition.id,profileHash:definition.profileHash,rigHash:buildRig(definition).rigHash,report:compiled.report});
     calls.push(compiled.js);
-    return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${performanceSvg(definition).replace(/id="([^"]+)"/g,(_,id:string)=>`id="${prefix}${id}"`).replace(/url\(#([^)]+)\)/g,(_,id:string)=>`url(#${prefix}${id})`)}</g>`;
+    return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}</g>`;
   }).join('');
   const propArt=new Map<string,string>(),foregroundModels:string[]=[];
   const foregroundParts=new Set(art?.models.filter(model=>model.foregroundSvg!==undefined).map(model=>model.partId));

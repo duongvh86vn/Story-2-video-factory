@@ -1,0 +1,43 @@
+{
+  "scope": "static-head-layer-only",
+  "code": "http",
+  "usage": {
+    "calls": 1,
+    "successes": 0,
+    "failures": 1,
+    "pendingCalls": 0,
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "totalTokens": 0,
+    "costUsd": 0,
+    "unknownUsageCalls": 1,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 0,
+        "failures": 1,
+        "pendingCalls": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0,
+        "costUsd": 0,
+        "unknownUsageCalls": 1
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 0,
+        "failures": 1,
+        "pendingCalls": 0,
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "totalTokens": 0,
+        "costUsd": 0,
+        "unknownUsageCalls": 1
+      }
+    }
+  },
+  "httpStatus": 401,
+  "configuration": "The previously configured D: .env file is currently missing; no new static vision verdict was obtained."
+}

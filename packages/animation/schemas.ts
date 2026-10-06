@@ -22,6 +22,7 @@ export const JumpSchema=z.object({...Interval,takeoffMs:Time,landingMs:Time,heig
 export const FacingSchema=z.enum(['front','left','right']);
 export const TurnSchema=z.object({...Interval,direction:FacingSchema}).strict();
 export const HeadViewSchema=z.enum(['front','three-quarter-left','three-quarter-right','left','right','back-left','back-right','back']);
+export type HeadView=z.infer<typeof HeadViewSchema>;
 export const HeadTurnSchema=z.object({...Interval,direction:HeadViewSchema}).strict();
 const PostureTarget = {
   pose:z.enum(['stand','crouch','lean','seated']),

@@ -1,9 +1,9 @@
 {
-  "version": "forest-tribe-0.4-reference",
+  "version": "forest-tribe-0.6-source-body",
   "productionReady": false,
-  "artwork": "reference-cutouts-pending",
+  "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
-  "layers": "candidate-atlases-pending",
+  "layers": "source-body-and-head-integrated-secondary-pending",
   "motionAcceptance": "pending",
   "primaryModel": "warm-skin-close-ups",
   "referencePolicy": "Supplemental detailed and white-face sheets do not replace or blend into the primary model.",
@@ -101,6 +101,50 @@
       "width": 1536,
       "height": 1024,
       "hasAlpha": true
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/lila-head-three-quarter-right.png",
+      "sha256": "176614c1b7371809f264543aa72a6907e599b123b2691d54c571ca7e2140dfaf",
+      "width": 1145,
+      "height": 1374,
+      "hasAlpha": true,
+      "actor": "lila",
+      "view": "three-quarter-right",
+      "approved": false,
+      "status": "candidate-layered-head"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/lila-head-three-quarter-left.png",
+      "sha256": "4646eec09d22a3d28480e9734ce33f070629a772ce272c8dc1c4d488c17a8e21",
+      "width": 1145,
+      "height": 1374,
+      "hasAlpha": true,
+      "actor": "lila",
+      "view": "three-quarter-left",
+      "approved": false,
+      "status": "candidate-layered-head"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/karo-head-three-quarter-right.png",
+      "sha256": "0957657e8518026009a9acade4679728a46e68cfa12a6c9390235826da155929",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "approved": false,
+      "status": "candidate-layered-head"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/karo-head-three-quarter-left.png",
+      "sha256": "ed17eff1446ff3f537073356ca3855c54bc6655fbd89a37be9f573069c722d3f",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "approved": false,
+      "status": "candidate-layered-head"
     }
   ],
   "rejectedArtifacts": [
@@ -169,6 +213,594 @@
     }
   ],
   "productionRig": null,
+  "headPack": {
+    "version": "forest-head-1",
+    "views": [
+      "three-quarter-left",
+      "three-quarter-right"
+    ],
+    "assets": {
+      "lila": {
+        "three-quarter-right": {
+          "file": "lila-head-three-quarter-right.png",
+          "sha256": "176614c1b7371809f264543aa72a6907e599b123b2691d54c571ca7e2140dfaf",
+          "width": 1145,
+          "height": 1374,
+          "anchor": {
+            "x": 754,
+            "y": 540
+          },
+          "scale": 0.15,
+          "eyes": [
+            {
+              "x": 651,
+              "y": 478
+            },
+            {
+              "x": 887,
+              "y": 466
+            }
+          ],
+          "brows": [
+            {
+              "x": 647,
+              "y": 414
+            },
+            {
+              "x": 885,
+              "y": 403
+            }
+          ],
+          "mouth": {
+            "x": 774,
+            "y": 666
+          },
+          "featureScale": 0.46
+        },
+        "three-quarter-left": {
+          "file": "lila-head-three-quarter-left.png",
+          "sha256": "4646eec09d22a3d28480e9734ce33f070629a772ce272c8dc1c4d488c17a8e21",
+          "width": 1145,
+          "height": 1374,
+          "anchor": {
+            "x": 423,
+            "y": 520
+          },
+          "scale": 0.15,
+          "eyes": [
+            {
+              "x": 314,
+              "y": 462
+            },
+            {
+              "x": 488,
+              "y": 465
+            }
+          ],
+          "brows": [
+            {
+              "x": 314,
+              "y": 401
+            },
+            {
+              "x": 487,
+              "y": 405
+            }
+          ],
+          "mouth": {
+            "x": 409,
+            "y": 646
+          },
+          "featureScale": 0.43
+        }
+      },
+      "karo": {
+        "three-quarter-right": {
+          "file": "karo-head-three-quarter-right.png",
+          "sha256": "0957657e8518026009a9acade4679728a46e68cfa12a6c9390235826da155929",
+          "width": 1312,
+          "height": 1199,
+          "anchor": {
+            "x": 755,
+            "y": 590
+          },
+          "scale": 0.135,
+          "eyes": [
+            {
+              "x": 614,
+              "y": 557
+            },
+            {
+              "x": 901,
+              "y": 536
+            }
+          ],
+          "brows": [
+            {
+              "x": 598,
+              "y": 462
+            },
+            {
+              "x": 900,
+              "y": 446
+            }
+          ],
+          "mouth": {
+            "x": 777,
+            "y": 826
+          },
+          "featureScale": 0.45
+        },
+        "three-quarter-left": {
+          "file": "karo-head-three-quarter-left.png",
+          "sha256": "ed17eff1446ff3f537073356ca3855c54bc6655fbd89a37be9f573069c722d3f",
+          "width": 1312,
+          "height": 1199,
+          "anchor": {
+            "x": 581,
+            "y": 577
+          },
+          "scale": 0.135,
+          "eyes": [
+            {
+              "x": 423,
+              "y": 540
+            },
+            {
+              "x": 656,
+              "y": 530
+            }
+          ],
+          "brows": [
+            {
+              "x": 423,
+              "y": 458
+            },
+            {
+              "x": 659,
+              "y": 448
+            }
+          ],
+          "mouth": {
+            "x": 492,
+            "y": 815
+          },
+          "featureScale": 0.41
+        }
+      }
+    },
+    "features": {
+      "lila": {
+        "file": "docs/topics/assets/reference-lila-full.png",
+        "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+        "width": 430,
+        "height": 766,
+        "eyes": [
+          {
+            "anchor": {
+              "x": 285,
+              "y": 158
+            },
+            "clip": "M274 142h23v33h-23Z"
+          },
+          {
+            "anchor": {
+              "x": 347,
+              "y": 150
+            },
+            "clip": "M336 134h23v32h-23Z"
+          }
+        ],
+        "brows": [
+          {
+            "anchor": {
+              "x": 276,
+              "y": 132
+            },
+            "clip": "M260 140L271 124L291 119L292 128L270 142Z"
+          },
+          {
+            "anchor": {
+              "x": 349,
+              "y": 120
+            },
+            "clip": "M333 107h34v23h-34Z"
+          }
+        ],
+        "mouth": {
+          "anchor": {
+            "x": 305,
+            "y": 201
+          },
+          "clip": "M266 189L279 184L286 195Q311 211 339 191L344 208L316 221L279 215Z"
+        }
+      },
+      "karo": {
+        "file": "docs/topics/assets/reference-karo-full.png",
+        "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+        "width": 377,
+        "height": 716,
+        "eyes": [
+          {
+            "anchor": {
+              "x": 216,
+              "y": 141
+            },
+            "clip": "M205 124h23v34h-23Z"
+          },
+          {
+            "anchor": {
+              "x": 282,
+              "y": 137
+            },
+            "clip": "M270 120h23v34h-23Z"
+          }
+        ],
+        "brows": [
+          {
+            "anchor": {
+              "x": 206,
+              "y": 113
+            },
+            "clip": "M187 123L188 111L204 103L228 102L227 112L210 118L195 129Z"
+          },
+          {
+            "anchor": {
+              "x": 281,
+              "y": 105
+            },
+            "clip": "M263 91h39v28h-39Z"
+          }
+        ],
+        "mouth": {
+          "anchor": {
+            "x": 245,
+            "y": 201
+          },
+          "clip": "M202 184Q244 173 291 183L287 211Q262 231 229 220L211 210Z"
+        }
+      }
+    },
+    "faceCompilerVersion": "forest-face-motion-3",
+    "rendererVersion": "forest-head-svg-4",
+    "facialCalibration": {
+      "eyeStretch": {
+        "x": 1.25,
+        "y": 1.4
+      },
+      "inkMatrix": "0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3 -3 -3 0 2.4",
+      "browResponse": 2.2,
+      "angryMouth": {
+        "file": "docs/topics/assets/reference-expressions.png",
+        "sha256": "fbc6c963252786216689c48a3c7fb09dd258eb6ae0d43b9d777d57587fb69094",
+        "width": 1026,
+        "height": 688,
+        "region": {
+          "anchor": {
+            "x": 657,
+            "y": 537
+          },
+          "clip": "M617 522Q655 516 697 522L696 543Q678 559 648 557L625 547Z"
+        }
+      }
+    },
+    "secondaryHair": {
+      "tails": {
+        "three-quarter-right": {
+          "pivot": {
+            "x": 335,
+            "y": 726
+          },
+          "clip": "M252 723Q338 735 432 779L546 846L604 1010L634 1374H0V860L190 749Z"
+        },
+        "three-quarter-left": {
+          "pivot": {
+            "x": 827,
+            "y": 741
+          },
+          "clip": "M704 747Q778 750 880 714L1001 778L1145 893V1374H602L588 1000L646 846Z"
+        }
+      },
+      "scope": "Lila ponytail mask; neck/fringe/back hair remain one painted layer"
+    },
+    "fingerprint": "ba4ef5b82383e1439a87effaf131e429c20337c34a99257221771bec90a7ed72",
+    "status": "candidate-head-layer-integration",
+    "productionReady": false,
+    "turnRendering": "discrete-authored-views",
+    "pending": [
+      "front/profile/back textures",
+      "full-body reference rig",
+      "separate fringe/ponytail secondary motion",
+      "continuous turn inbetweens",
+      "runtime motion acceptance"
+    ],
+    "prompts": "library/topics/prehistoric-life/rig-v1/head-prompts.json",
+    "codeHash": "4cefbf17eec20b14da47f1ccbf0498ea12e230f4b96039219c866e178ce85f34"
+  },
+  "bodyPack": {
+    "version": "forest-body-1",
+    "compilerVersion": "forest-source-body-motion-1",
+    "fingerprint": "2101c93d13c5a236710e90c484f827c7395c2c68735403308b7f509ab13ff852",
+    "sources": {
+      "lila": {
+        "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
+        "sha256": "ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e",
+        "width": 430,
+        "height": 766,
+        "unitScale": 0.4151436031331593,
+        "pelvis": {
+          "x": 235,
+          "y": 435
+        },
+        "groundY": 754,
+        "neck": {
+          "x": 263,
+          "y": 274
+        },
+        "headArtworkScale": 0.88,
+        "shoulders": {
+          "left": {
+            "x": 236,
+            "y": 276
+          },
+          "right": {
+            "x": 294,
+            "y": 294
+          }
+        },
+        "hips": {
+          "left": {
+            "x": 205,
+            "y": 440
+          },
+          "right": {
+            "x": 260,
+            "y": 440
+          }
+        },
+        "legs": {
+          "left": {
+            "upper": 209,
+            "lower": 82
+          },
+          "right": {
+            "upper": 202,
+            "lower": 81
+          }
+        },
+        "ankleY": {
+          "left": 719,
+          "right": 719
+        },
+        "hands": {
+          "left": {
+            "x": 113,
+            "y": 512
+          },
+          "right": {
+            "x": 376,
+            "y": 516
+          }
+        },
+        "feet": {
+          "left": {
+            "x": 135,
+            "y": 751
+          },
+          "right": {
+            "x": 283,
+            "y": 752
+          }
+        },
+        "arms": {
+          "left": {
+            "upper": 145,
+            "lower": 128
+          },
+          "right": {
+            "upper": 96,
+            "lower": 144
+          }
+        },
+        "handRestRotation": {
+          "left": 18.1,
+          "right": -16.4
+        },
+        "hem": "M136 250H330V480L326 480L321 480L316 527L311 564L306 561L301 576L296 574L291 563L286 567L281 574L276 562L271 574L266 586L261 592L256 571L251 555L246 557L241 534L236 529L231 539L226 552L221 571L216 557L211 562L206 573L201 590L196 588L191 565L186 568L181 558L176 566L171 573L166 564L161 567L156 572L151 480L146 480L141 480L136 480Z",
+        "hemOutlinePad": 0,
+        "parts": {
+          "clothing": {
+            "anchor": {
+              "x": 235,
+              "y": 435
+            },
+            "clip": "M244 263L276 263L301 324L307 414L330 601H136L150 500L182 415L208 337Z"
+          },
+          "hand-left": {
+            "anchor": {
+              "x": 113,
+              "y": 512
+            },
+            "clip": "M106 477H120L128 487Q148 502 140 524L126 542L104 544L89 531L85 511L94 490Z"
+          },
+          "hand-right": {
+            "anchor": {
+              "x": 376,
+              "y": 516
+            },
+            "clip": "M369 482H383L391 492Q408 507 400 531L387 544L368 546L351 532L348 511L360 490Z"
+          },
+          "foot-left": {
+            "anchor": {
+              "x": 135,
+              "y": 751
+            },
+            "clip": "M74 714h91v45h-91Z"
+          },
+          "foot-right": {
+            "anchor": {
+              "x": 283,
+              "y": 752
+            },
+            "clip": "M258 712h96v47h-96Z"
+          }
+        }
+      },
+      "karo": {
+        "file": "library/topics/prehistoric-life/karo-cutout-v1.png",
+        "sha256": "f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665",
+        "width": 377,
+        "height": 716,
+        "unitScale": 0.4441340782122905,
+        "pelvis": {
+          "x": 214,
+          "y": 428
+        },
+        "groundY": 706,
+        "neck": {
+          "x": 212,
+          "y": 279
+        },
+        "headArtworkScale": 0.8,
+        "shoulders": {
+          "left": {
+            "x": 169,
+            "y": 276
+          },
+          "right": {
+            "x": 269,
+            "y": 286
+          }
+        },
+        "hips": {
+          "left": {
+            "x": 190,
+            "y": 437
+          },
+          "right": {
+            "x": 245,
+            "y": 437
+          }
+        },
+        "legs": {
+          "left": {
+            "upper": 179,
+            "lower": 75
+          },
+          "right": {
+            "upper": 169,
+            "lower": 84
+          }
+        },
+        "ankleY": {
+          "left": 679,
+          "right": 680
+        },
+        "hands": {
+          "left": {
+            "x": 77,
+            "y": 493
+          },
+          "right": {
+            "x": 343,
+            "y": 493
+          }
+        },
+        "feet": {
+          "left": {
+            "x": 128,
+            "y": 702
+          },
+          "right": {
+            "x": 266,
+            "y": 698
+          }
+        },
+        "arms": {
+          "left": {
+            "upper": 112,
+            "lower": 132
+          },
+          "right": {
+            "upper": 88,
+            "lower": 136
+          }
+        },
+        "handRestRotation": {
+          "left": 14,
+          "right": -20.8
+        },
+        "hem": "M124 250H304V463L299 463L294 463L289 463L284 527L279 530L274 516L269 521L264 521L259 532L254 525L249 530L244 541L239 519L234 519L229 503L224 489L219 475L214 478L209 488L204 501L199 517L194 522L189 519L184 532L179 545L174 535L169 528L164 537L159 523L154 526L149 519L144 525L139 535L134 463L129 463L124 463Z",
+        "hemOutlinePad": 8,
+        "parts": {
+          "clothing": {
+            "anchor": {
+              "x": 214,
+              "y": 428
+            },
+            "clip": "M166 274L231 282L270 277L282 420L298 447L303 566H119L120 482L130 431L135 402L139 369L145 340L151 308Z"
+          },
+          "hand-left": {
+            "anchor": {
+              "x": 77,
+              "y": 493
+            },
+            "clip": "M69 464L83 464Q98 475 102 495L98 514Q83 527 58 516L55 501L59 483Z"
+          },
+          "hand-right": {
+            "anchor": {
+              "x": 343,
+              "y": 493
+            },
+            "clip": "M335 465L349 465Q366 477 371 497L366 516Q347 528 322 516L319 501L324 483Z"
+          },
+          "foot-left": {
+            "anchor": {
+              "x": 128,
+              "y": 702
+            },
+            "clip": "M76 674h96v42h-96Z"
+          },
+          "foot-right": {
+            "anchor": {
+              "x": 266,
+              "y": 698
+            },
+            "clip": "M250 672h91v42h-91Z"
+          }
+        }
+      }
+    },
+    "anatomicalMapping": {
+      "rig-left": "source-view anatomical right",
+      "rig-right": "source-view anatomical left"
+    },
+    "status": "candidate-source-body-integration",
+    "productionReady": false,
+    "visibleLimbs": {
+      "method": "two joined cubics through hidden IK joint",
+      "softness": 0.28,
+      "anatomicalGuarantee": false
+    },
+    "secondaryMotion": {
+      "breath": "bounded continuous body lean",
+      "blink": "actor-staggered",
+      "hair": "Lila ponytail source masks with 120ms follow; no simulated hair physics"
+    },
+    "footContact": {
+      "frameFeet": "sole anchors",
+      "inkEndpoint": "ankle",
+      "pelvisWalkDrop": "minimum fixed-leg reach plus small bob; not .23 of long thigh"
+    },
+    "pending": [
+      "rear/side body artwork",
+      "continuous head/body turn",
+      "remaining hair and clothing secondary motion",
+      "occluded clothing reconstruction",
+      "runtime anatomy and motion acceptance"
+    ],
+    "codeHash": "b08eb6bd0794dc60bedb277b58970513573aa5c1e7078a2b9f099407a7d55827"
+  },
   "restCalibration": {
     "status": "candidate",
     "method": "SVG masks on full cutouts",
@@ -182,10 +814,17 @@
     "scope": "static-artwork-only",
     "appliesTo": "atlas assembly v1, not revised cutout-mask assembly"
   },
+  "headStaticReview": {
+    "file": "docs/topics/reviews/head-layer-static-review-v2.json",
+    "pass": false,
+    "scope": "static-head-layer-only",
+    "appliesTo": "head workbench face v2 before body/hair integration",
+    "remainingIssue": "Karo angry mouth patch"
+  },
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
-    "A whole head with baked facial features cannot provide production expressions or proper multi-view turning.",
+    "Layered heads currently support only two authored three-quarter views; continuous turns, rear/body views and other secondary layers remain pending.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]
 }

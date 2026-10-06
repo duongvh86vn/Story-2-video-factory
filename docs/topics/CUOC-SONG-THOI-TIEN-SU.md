@@ -1,8 +1,8 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Phiên bản:** 0.3 · **Ngày:** 06/10/2026
+**Phiên bản:** 0.6 · **Ngày:** 07/10/2026
 
-**Trạng thái:** Đang triển khai; bộ SVG vẽ lại đã bị người dùng loại. Đang chuẩn bị tài sản từ ảnh gốc, chưa nghiệm thu rig, màu cảnh hoặc chuyển động.
+**Trạng thái:** Đang triển khai; bộ SVG vẽ lại đã bị người dùng loại. Đầu và thân từ tài sản bám ảnh tham chiếu đã vào renderer ở mức ứng viên; fidelity, màu cảnh và chuyển động còn chưa nghiệm thu.
 
 **Mục tiêu sử dụng:** Xây một bộ chủ đề đủ tốt để người dùng chỉ cần đưa câu chuyện vào; hệ thống chuyển thành video có hai diễn viên người que Lila và Karo đóng vai trong câu chuyện đó.
 
@@ -395,6 +395,8 @@ Launcher build trước khi chạy; `-SkipBuild` chỉ dùng khi đã build sour
 
 Launcher hỗ trợ `-EnvFile <đường-dẫn-.env>` và `-ProjectsRoot <thư-mục-project>`. API key để trong `.env`/biến môi trường, không ghi vào MD, ảnh hoặc Git. Cổng đang dùng sẽ báo rõ và không tự tắt server khác. Khi mở lại dữ liệu cũ, giữ đúng `ProjectsRoot`. Lệnh thấp hơn vẫn là `$env:STUDIO_PORT='8850'; npm run studio`; mặc định không đặt cổng là 8787.
 
+**Cập nhật cấu hình:** người dùng đã điền lại key; file `D:/github/Story-2-video-factory2.1/.env` đã được đọc và 9router đã trả review vision thật cho hai lượt head v1/v2. Lỗi 401 trước đó được giữ như lịch sử, không còn là điều kiện chặn hiện tại. Không đưa key vào MD, screenshot hoặc Git.
+
 Ở máy đang triển khai, source mới nằm trong worktree `C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`, nhánh `codex/prehistoric-life`; checkout `D:/github/Story-2-video-factory2.1` có sửa đổi riêng nên không được ghi đè để chạy source mới. Dữ liệu thử của server 8850 nằm trong `runtime/prehistoric-life/projects` của worktree.
 
 Lệnh cho đúng source/dữ liệu WIP trên máy này khi server đã dừng:
@@ -415,6 +417,35 @@ node --import tsx scripts/prehistoric-pack.ts
 ```
 
 Các PNG lớp nháp được tạo bằng công cụ **image_gen tích hợp**; prompt atlas được lưu tại `library/topics/prehistoric-life/parts-prompts-v1.json`. Việc đo alpha chỉ tạo metadata, không crop/ghi đè ảnh nguồn. Chưa đưa atlas vào sản xuất hoặc ghi `approved=true`.
+
+### Lớp đầu và thân được tích hợp ở phiên bản 0.6
+
+- Bốn PNG `library/topics/prehistoric-life/rig-v1/*-head-three-quarter-*.png` có alpha, tóc/râu và da ấm. Đây là tài sản phái sinh AI từ ảnh mẫu, chưa được chốt fidelity. Prompt thật ở `rig-v1/head-prompts.json`; manifest giữ SHA-256, kích thước, anchor và tỷ lệ từng hình.
+- Mắt/chân mày và nụ cười dùng mask SVG trên ảnh cận gốc. Các miệng nói/tròn/nhăn được ghép riêng; một số hình miệng là nét SVG mới, chưa có bộ biểu cảm đầy đủ từ ảnh. Nét mặt có parent anchor cố định, blink/rotation không kéo toàn bộ khuôn mặt.
+- `forest-head-1` dùng riêng cho calibration đầu; topic chọn `appearance.artworkVersion=forest-body-1` trong `performanceSvg()` và `samplePerformance()/compilePerformance()`. Thân không dùng `forest-tribe-art.ts` cũ khi bật version này. Mouth dựa trên speech activity đúng actor, không phải phoneme lip-sync.
+- Đã có đúng **hai góc đầu ba phần tư trái/phải**; chuyển hướng hiện là **thay artwork rời**, không crossfade hai đầu hoặc mirror cả canvas. Front/profile/back, frame trung gian và xoay toàn thân còn phải làm. Request góc chưa có bị chặn `needs-head-view`.
+- Scene dùng PNG local tại `assets/rigs/<sha256>.png`, có kiểm hash khi stage và resume; hình embedded chỉ phục vụ preview/asset SVG. Hai actor namespace cả ID, clip/filter và `use href`, tránh mượn lớp của nhau. Fingerprint pack/renderer/face compiler đi vào cache scene; thay logic đã phát hành phải tăng version.
+- Trang [lớp đầu và biểu cảm](http://127.0.0.1:8850/api/topics/prehistoric-life/heads) cho chọn mood và thời điểm. Ô miệng là giả lập activity để kiểm ráp, chưa có audio. Thời điểm 2770 ms minh họa chớp mắt. Đây là inspection tĩnh từ cùng evaluator, không phải một tập video.
+
+`packages/animation/forest-body-art.ts` giữ cutout nguyên byte, mask trang phục/bàn tay/bàn chân và metadata nguồn. Hông nằm tại thắt lưng; vai, độ dài hai tay, điểm nghỉ, hông/độ dài chân và bàn chân đo riêng. Xương ẩn dưới áo; mực hiện là hai cubic có chung tiếp tuyến, softness 0.28. Đầu/cổ dùng điểm gắn dưới cằm/râu; bàn tay xoay theo cẳng tay quanh điểm nắm. Các số đo vẫn là bản hiệu chỉnh, không phải chứng nhận giải phẫu.
+
+Biên gấu dùng metadata đọc màu từ cutout và mask SVG để loại phần chân cũ nằm trong vùng áo; không sửa pixel PNG. Lila có mask đuôi tóc với pivot, theo sau đầu 120 ms ở mức góc có giới hạn. Nhịp thở là nghiêng thân nhỏ; chớp mắt hai actor lệch nhau. Đây chưa phải mô phỏng vật lý tóc, chưa có đầy đủ lớp mái/râu/vạt áo hoặc chuyển trọng lượng.
+
+**Sửa viền trang phục Karo (07/10):** mask thân trước đây cắt vào nét đen ở mép áo; biên gấu đo theo phần màu nâu cũng làm mất viền quần. Đã nới biên thân theo ảnh nguồn và dùng luminance mask có dải giữ mực 8 đơn vị nguồn quanh gấu. Dải trắng của mask chỉ quyết định vùng hiện ảnh, không vẽ viền mới hoặc đổi màu PNG. Đã đối chiếu pose đứng và bước ở 440 ms trên server 8850; xem [ảnh đứng](reviews/karo-garment-outline-rest-v1.jpg) và [ảnh bước](reviews/karo-garment-outline-walk-v1.jpg). Viền đã hiện lại trong hai ảnh này; độ liền nét khi render toàn chu kỳ, với crop/scale và các động tác khác vẫn thuộc nghiệm thu runtime.
+
+`FrameState.feet` tiếp tục là điểm đế chân trên ground clock. IK/mực mới nối tại cổ chân, với offset đế–cổ chân riêng theo mask nguồn; không kéo nét chân qua bàn chân thành mũi thứ hai. Walk source dùng độ hạ hông tối thiểu do reach của cả hai chân quyết định và bob nhỏ, thay tỷ lệ `.23 * upperLeg` khiến đùi ẩn dài tạo dáng xổm. Chưa nghiệm thu dáng đi chỉ từ snapshot.
+
+Trang [rig toàn thân](http://127.0.0.1:8850/api/topics/prehistoric-life/body) có pose nghỉ/chỉ/suy nghĩ/cúi/bước và chọn thời điểm. Dùng chính evaluator của scene, không gọi model/TTS hoặc tạo tập. Calibration giữ opacity của xương ẩn; target chỉ tay được đánh dấu để đối chiếu hướng nhìn. Body v1 chặn quay thân và pose ngồi chưa hiệu chỉnh bằng `needs-body-view` / `needs-source-motion`; không giả bằng mirror/stretch.
+
+Review head v1 tìm 5 điểm cần sửa; đã chỉnh mắt, độ đậm nét cười và chân mày. Review v2 còn **miệng tức giận của Karo** chưa liền với texture râu, xem [head-layer-static-review-v2.json](reviews/head-layer-static-review-v2.json). Review này áp dụng ảnh đầu v2 trước tích hợp thân/tóc; không phải review toàn thân, chuyển động hoặc episode. Bộ chủ đề vẫn `productionReady=false`.
+
+Hai file test được chuẩn bị cho model test, **chưa chạy**. Bao gồm nguồn/hash, giới hạn góc, hướng chân mày, seek/miệng khi im lặng, nguồn thân/pose, xương ẩn, namespace và contract scene. Lệnh khi model test được giao chạy:
+
+```powershell
+node --experimental-test-module-mocks --import tsx --test tests/forest-head.test.ts tests/forest-body.test.ts
+```
+
+Trước khi gọi pipeline topic thật, vẫn phải hoàn thành góc/lớp thiếu, fidelity và các điều kiện readiness. Không gỡ guard chỉ để chạy kiểm ảnh/lớp đầu.
 
 Demo riêng cũ ở 8891 là tài liệu tham khảo triển khai và phản hồi; người dùng đã đánh giá chưa đạt. Không dùng server/demo đó thay cho nghiệm thu chủ đề mới. Khi chủ đề mới có server/launcher, phải bàn giao lệnh chạy và đường dẫn chính xác, tránh để người dùng đoán cổng.
 
@@ -443,7 +474,7 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-| Hạng mục | Trạng thái tại phiên bản 0.3 |
+| Hạng mục | Trạng thái tại phiên bản 0.6 |
 |---|---|
 | Chủ đề và hai model tham chiếu | Đã xác định từ yêu cầu/ảnh của người dùng |
 | MD và ảnh tham chiếu lưu bền vững | Đã lưu ảnh cận, expression, palette và hai bảng 6688×3760; có hash/metadata trong manifest |
@@ -455,6 +486,9 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 | Hai bản tách nền toàn thân | Ứng viên PNG alpha đã có; đã đối chiếu trên nền sáng, chưa phải rig/đã nghiệm thu |
 | Hai atlas tách lớp | Bản nháp từ imagegen; cần kiểm fidelity, đo vùng cắt/điểm gắn, tách thêm nét mặt và góc nhìn |
 | Ráp lớp pose nghỉ | Đã có bản hiệu chỉnh tĩnh bám hệ tọa độ nguồn và vùng cắt đo được; chưa đạt rig chuyển động |
+| Lớp đầu và face evaluator | Bốn texture, hai hướng mỗi actor đã vào renderer; glyph source, blink/brow/mouth theo activity, local PNG/hash/namespace/cache đã có code. Review v2 còn miệng tức giận Karo; chưa nghiệm thu runtime/fidelity |
+| Thân bám nguồn | Mask cutout, metrics riêng, hông tại belt, xương ẩn và mực cong đã vào compiler/renderer; preview pose đã có. Ngồi/quay thân còn chặn; chưa nghiệm thu |
+| Chuyển động phụ | Nhịp thở nhỏ, blink lệch và đuôi tóc Lila theo sau đã có code; mái/râu/vạt áo/chuyển trọng lượng còn chờ |
 | Model nhiều góc, expression, pose, rig từ ảnh | Đang chuẩn bị tài sản; chưa đủ bộ để sản xuất |
 | Mẫu màu ngày/chiều/đêm | Bản vector thử không đạt; cần dựng lại bằng model/artwork bám ảnh |
 | Motion/interaction đạt chuẩn mẫu | Chưa nghiệm thu; demo trước chưa được chấp nhận |

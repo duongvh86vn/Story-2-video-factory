@@ -1,0 +1,49 @@
+import {escapeHtml} from '../core/utils.js';
+import {ANIMATION_VERSION,type PerformancePlan,type Mood} from '../animation/schemas.js';
+import {performanceSvg,rigMetrics} from '../animation/rig.js';
+import {samplePerformance,validatePerformance} from '../animation/compiler.js';
+import {namespaceRigSvg} from '../animation/svg-namespace.js';
+import {referenceBodyDescription} from '../animation/forest-body-art.js';
+import {referenceImageUrl} from '../animation/forest-head-art.js';
+import {topicPreviewProfile} from './preview.js';
+export const BODY_ACTIONS=['rest','point','think','crouch','walk'] as const;
+export type BodyAction=typeof BODY_ACTIONS[number];
+/** Random-access pose inspection through the same evaluator as scenes. This
+ * page neither renders an episode nor establishes smooth-motion acceptance. */
+export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:number,mood:Mood):string {
+  const profile=topicPreviewProfile(actor),m=rigMetrics(profile),view=actor==='lila'?'three-quarter-right':'three-quarter-left';
+  const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'body-calibration-'+actor,leadCharacterId:actor,profileHash:profile.profileHash,
+    kind:'stick-man',durationMs:4000,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
+    headView:view,walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:4000,mood}]};
+  if(action==='point'){
+    delete plan.headView;
+    plan.gestures=[{id:'point-target',action:'point',hand:'right',startMs:300,endMs:3600,target:{x:210+m.shoulderOffset+68,y:410+m.shoulderY+16}}];
+  }
+  if(action==='think')plan.gestures=[{id:'think-source',action:'think',hand:'right',startMs:300,endMs:3600}];
+  if(action==='crouch')plan.postures=[{pose:'crouch',intensity:.6,startMs:300,endMs:1000},{pose:'stand',startMs:3000,endMs:3700}];
+  if(action==='walk'){delete plan.headView;plan.facing='right';plan.walks=[{startMs:300,endMs:3600,fromX:210,toX:265}];}
+  validatePerformance(plan,profile);
+  const frame=samplePerformance(plan,profile,timeMs,{method:'segment-draft',windowMs:20,intervals:[]});
+  let svg=performanceSvg(profile);
+  // Preserve opacity on hidden physical bones. Dropping it would draw straight
+  // bones over the clothing and falsely show a second set of visible limbs.
+  for(const [id,transform] of Object.entries(frame.transforms))svg=svg.replace(new RegExp('<g id="'+id+'"[^>]*>'),tag=>tag.replace(/\s+transform="[^"]*"/,'').replace('>',' transform="'+transform+'">'));
+  for(const [id,d] of Object.entries(frame.paths??{}))svg=svg.replace(new RegExp('<path id="'+id+'"[^>]*/>'),'<path id="'+id+'" d="'+d+'" stroke-width="'+(profile.appearance.strokeWidth*profile.appearance.bodyScale)+'"/>');
+  for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp('<g id="'+id+'"[^>]*>'),'<g id="'+id+'"'+(face.opacity===undefined?'':' opacity="'+face.opacity+'"')
+    +' transform="'+(face.attr?.transform??'translate('+(face.x??0)+' '+(face.y??0)+') rotate('+(face.rotation??0)+') scale('+(face.scaleX??1)+' '+(face.scaleY??1)+')')+'">');
+  const target=plan.gestures[0]?.target,marker=target?'<circle cx="'+target.x+'" cy="'+target.y+'" r="7" fill="none" stroke="#aa5928" stroke-width="1"/>':'';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="105 60 230 360" role="img" aria-label="'+actor+' '+action+' '+timeMs+'ms"><path d="M20 410H410" stroke="#bfa782" stroke-width="1"/>'+marker+namespaceRigSvg(svg,actor+'-calibration-')+'</svg>';
+}
+export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood):string {
+  const cards=(['lila','karo'] as const).map(actor=>'<section><h2>'+(actor==='lila'?'Lila':'Karo')+'</h2><div class="pair"><figure><img alt="Ảnh gốc '+actor+'" src="'
+    +referenceImageUrl('docs/topics/assets/reference-'+actor+'-full.png',actor==='lila'?'85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce':'7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2')+'"><figcaption>Ảnh gốc</figcaption></figure><figure>'+bodyCalibrationSvg(actor,action,timeMs,mood)
+    +'<figcaption>Rig từ cutout · '+escapeHtml(action)+' · '+timeMs+' ms</figcaption></figure></div></section>').join('');
+  return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rig toàn thân Lila &amp; Karo</title><style>'
+    +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair{grid-template-columns:1fr}img,svg{height:410px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
+    +'<p>Trang phục, bàn tay và bàn chân dùng mask trên cutout; đầu là hai góc artwork riêng. Hông đặt tại thắt lưng; từng tay có vai, độ dài và pose nghỉ riêng. Đã có nhịp thở nhẹ, chớp mắt lệch nhau và đuôi tóc Lila theo sau đầu. Đây là ảnh pose tại một thời điểm; chưa nghiệm thu độ mượt video. Quay thân, ngồi và lớp áo/tóc còn lại đang làm.</p>'
+    +'<form method="get"><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
+    +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="4000" step="20" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
+    +(['neutral','happy','thinking','angry'] as const).map(value=>'<option value="'+value+'"'+(mood===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><button>Xem pose</button></form>'
+    +cards+'<p><a href="/api/topics/prehistoric-life/heads">Lớp đầu</a> · <a href="/api/topics/prehistoric-life/body/manifest">Số đo / mask / trạng thái</a> · <a href="/api/topics/prehistoric-life/compare">Các ảnh mẫu</a></p></main></html>';
+}
+export const bodyWorkbenchManifest=referenceBodyDescription;

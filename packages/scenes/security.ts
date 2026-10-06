@@ -5,7 +5,7 @@ import { SceneFilesSchema } from '../core/schemas.js';
 export const SCENE_CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'";
 export const SCENE_FILENAMES = ['index.html','style.css','scene.js'] as const;
 const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','svgOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
-const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','script']);
+const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','image','use','filter','fecolormatrix','script']);
 
 function validTransform(value:string):boolean {
   const numeric='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
@@ -24,6 +24,12 @@ function validTransform(value:string):boolean {
   return count>0;
 }
 
+function validBakedCurve(value:string):boolean {
+  const numeric='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
+  const point=numeric+'\\s+'+numeric,cubic='C'+point+'\\s+'+point+'\\s+'+point;
+  return value.length<=4096&&new RegExp('^M'+point+'(?:\\s+'+cubic+'){2,9}$').test(value)
+    &&(value.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/g)??[]).every(number=>Number.isFinite(Number(number))&&Math.abs(Number(number))<=100000);
+}
 function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
   if (ts.isStringLiteral(node) || ts.isNumericLiteral(node) || [ts.SyntaxKind.TrueKeyword,ts.SyntaxKind.FalseKeyword,ts.SyntaxKind.NullKeyword].includes(node.kind)) return true;
   if (ts.isPrefixUnaryExpression(node) && [ts.SyntaxKind.MinusToken,ts.SyntaxKind.PlusToken].includes(node.operator)) return plainValue(node.operand);
@@ -31,8 +37,15 @@ function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
   if (ts.isObjectLiteralExpression(node)) return node.properties.every(property=>{
     if (!ts.isPropertyAssignment(property) || !(ts.isIdentifier(property.name)||ts.isStringLiteral(property.name))) return false;
     const key=property.name.text;
-    // Only baked SVG transforms are accepted. No href, style, events or arbitrary AttrPlugin fields.
-    if(key==='attr') return ts.isObjectLiteralExpression(property.initializer) && property.initializer.properties.length===1 && property.initializer.properties.every(p=>ts.isPropertyAssignment(p)&&(ts.isIdentifier(p.name)||ts.isStringLiteral(p.name))&&p.name.text==='transform'&&ts.isStringLiteral(p.initializer)&&validTransform(p.initializer.text));
+    // Literal transforms and finite baked cubic paths only. No resource/style/
+    // event mutation and no arbitrary AttrPlugin fields.
+    if(key==='attr') return ts.isObjectLiteralExpression(property.initializer) && property.initializer.properties.length>=1 && property.initializer.properties.length<=2 && property.initializer.properties.every(p=>{
+      if(!ts.isPropertyAssignment(p)||!(ts.isIdentifier(p.name)||ts.isStringLiteral(p.name)))return false;
+      const field=p.name.text,value=p.initializer;
+      if(field==='transform')return ts.isStringLiteral(value)&&validTransform(value.text);
+      if(field==='d')return ts.isStringLiteral(value)&&validBakedCurve(value.text);
+      return field==='stroke-width'&&ts.isNumericLiteral(value)&&Number(value.text)>0&&Number(value.text)<=200;
+    });
     if(key==='repeat'&&!(ts.isNumericLiteral(property.initializer)&&Number(property.initializer.text)===0)) return false;
     if(['duration','delay','each','amount'].includes(key)&&!(ts.isNumericLiteral(property.initializer)&&Number(property.initializer.text)>=0&&Number(property.initializer.text)<=3600)) return false;
     return !['__proto__','prototype','constructor'].includes(key) && (!keys || keys.has(key)) && plainValue(property.initializer,keys);
@@ -120,6 +133,11 @@ export function validateSceneFiles(input: SceneFiles, shot: Shot, maxBytes=50000
       if (['src','href','xlink:href','poster'].includes(key) && !allowed.has(value) && !/^#[a-z\w.-]+$/i.test(value)) errors.push(`Unapproved local resource: ${value}`);
       if (key==='srcset' || key==='ping') errors.push(`Forbidden HTML attribute: ${key}`);
       if (key==='style') errors.push(...validateCss(value));
+    }
+    if(tag==='use'&&!raw.startsWith('/')&&!/^#[a-z\w.-]+$/i.test(attributes.get('href')??attributes.get('xlink:href')??''))errors.push('SVG use must reference a local definition.');
+    if(tag==='fecolormatrix'&&!raw.startsWith('/')){
+      const values=(attributes.get('values')??'').trim().split(/\s+/).map(Number);
+      if(attributes.get('type')!=='matrix'||values.length!==20||!values.every(value=>Number.isFinite(value)&&Math.abs(value)<=10))errors.push('SVG color matrix must contain 20 bounded finite numbers.');
     }
     if (tag==='script' && !raw.startsWith('/')) {
       const src=attributes.get('src'); if (src && !['vendor/gsap.min.js','scene.js'].includes(src)) errors.push('Only local GSAP and scene.js script tags are permitted');else if (src) scripts.push(src);

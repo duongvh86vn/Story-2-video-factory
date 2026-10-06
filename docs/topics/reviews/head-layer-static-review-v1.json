@@ -1,0 +1,83 @@
+{
+  "scope": "static-head-layer-only",
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.lila",
+        "type": "feature_proportions",
+        "severity": "medium",
+        "description": "In both candidate views, Lila's eyes are small, nearly round dots rather than the prominent vertical black ovals in the warm-skin source. This changes the face's proportions and weakens expression readability.",
+        "repair": "Restore the source eye height and oval shape relative to the face, adjusting the far eye for the authored three-quarter view without shrinking both eyes to dots."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "feature_proportions",
+        "severity": "medium",
+        "description": "Karo's candidate eyes are substantially smaller relative to his exposed face than the tall oval eyes in the primary reference. The large hair and beard masses consequently overpower the facial features.",
+        "repair": "Scale the eye layers to match the source's eye-to-face proportions and retain their vertical oval silhouettes in both views."
+      },
+      {
+        "shotId": "character.lila",
+        "type": "source_mouth",
+        "severity": "medium",
+        "description": "Lila's happy mouth is a very fine, faint curve with weak corners, unlike the source's bold black smile and distinct raised corner. It reads less clearly than the surrounding painted outlines.",
+        "repair": "Use the source smile contour and corner treatment, preserving its relative stroke weight and contrast when scaling the head."
+      },
+      {
+        "shotId": "character.lila",
+        "type": "expression_readability",
+        "severity": "medium",
+        "description": "The angry state relies mostly on a downturned mouth; the eyebrows remain shallow, lifted-looking strokes rather than clearly lowering toward the nose. The resulting face reads more sad or worried than angry.",
+        "repair": "Angle the inner brow ends downward toward the nose and position them closer to the eyes, retaining Lila's source-style black strokes and keeping them clear of the hairline."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "mouth_beard_integration",
+        "severity": "medium",
+        "description": "In the angry state, Karo's mouth becomes a peach-colored capsule outlined in black on top of the beard. It lacks the source mouth's recessed dark opening and shaped surrounding lip area, making it read as an applied patch rather than a mouth within the beard.",
+        "repair": "Build the angry mouth from the source mouth's dark opening, warm lip surround, and beard overlap. Reshape those elements into a frown instead of placing a flat skin-colored capsule over the beard."
+      }
+    ],
+    "mode": "vision",
+    "warnings": []
+  },
+  "usage": {
+    "calls": 2,
+    "successes": 1,
+    "failures": 1,
+    "pendingCalls": 0,
+    "inputTokens": 3471,
+    "outputTokens": 756,
+    "totalTokens": 4227,
+    "costUsd": 0,
+    "unknownUsageCalls": 1,
+    "byRole": {
+      "visual_review": {
+        "calls": 2,
+        "successes": 1,
+        "failures": 1,
+        "pendingCalls": 0,
+        "inputTokens": 3471,
+        "outputTokens": 756,
+        "totalTokens": 4227,
+        "costUsd": 0,
+        "unknownUsageCalls": 1
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 2,
+        "successes": 1,
+        "failures": 1,
+        "pendingCalls": 0,
+        "inputTokens": 3471,
+        "outputTokens": 756,
+        "totalTokens": 4227,
+        "costUsd": 0,
+        "unknownUsageCalls": 1
+      }
+    }
+  },
+  "appliesTo": "head assembly v1 before eye/ink/brow/angry-mouth repair"
+}

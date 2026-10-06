@@ -9,3 +9,7 @@
 - `colors-*.png`, `*-views.png`, `*-expressions.png`, **`lila-profile.json` và `karo-profile.json`**: thử nghiệm vector bị loại; giữ làm hồ sơ, không load làm model chính.
 
 `packages/topics/reference-puppet.ts` ráp pose nghỉ bằng mask SVG từ cutout để giữ màu/chi tiết tốt hơn atlas. Các phần bị che khuất chưa tái dựng, mặt vẫn đóng sẵn và không có diễn xuất đa hướng. Xem `/api/topics/prehistoric-life/compare?variant=assembly`; không gọi bản này là rig hoàn thành hoặc video đạt.
+
+`rig-v1/` chứa bốn texture đầu alpha ba phần tư trái/phải và prompt thực tế. `forest-head-art.ts` ghép glyph từ ảnh cận, dùng parent anchor cố định; `/api/topics/prehistoric-life/heads` là calibration đầu. Topic chọn `forest-body-1`: `forest-body-art.ts` ghép áo/bàn tay/chân qua mask của cutout, dùng metrics theo ảnh và hông tại thắt lưng; xương ẩn, nét cong và bàn tay xoay theo cẳng tay. Xem `/api/topics/prehistoric-life/body`.
+
+Nhịp thở nhỏ, blink lệch và mask đuôi tóc Lila theo sau 120ms đã có code. Hai view vẫn đổi bằng thay hình; chưa có xoay đầu liên tục, side/rear body, ngồi hoặc đủ lớp áo/tóc. Review head v2 còn miệng tức giận Karo; không suy ra body/video đã đạt. Manifest giữ candidate/productionReady=false. Tests head/body đã chuẩn bị và typecheck, runtime giao model test chạy.
