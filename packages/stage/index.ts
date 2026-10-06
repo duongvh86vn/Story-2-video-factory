@@ -6,7 +6,7 @@ import { StoryboardSchema, type Storyboard } from '../core/schemas.js';
 import { exists, hash, safeRealPath, writeAtomic, writeJson } from '../core/utils.js';
 import { outputPath } from '../render/process.js';
 
-const CatalogSchema=z.object({version:z.literal(1),environments:z.array(z.object({id:z.string(),setting:z.enum(['workshop','road']),
+const CatalogSchema=z.object({version:z.literal(1),environments:z.array(z.object({id:z.string(),setting:z.enum(['workshop','road','forest','camp','cave','river']),
   file:z.string().regex(/^[a-z0-9-]+\.png$/),hash:z.string().regex(/^[a-f0-9]{64}$/),
   provenance:z.literal('generated-illustration'),status:z.literal('curated-illustration'),historicalEvidence:z.literal(false)}).strict())}).strict();
 export const STAGE_VERSION='environment-stage-2.2.0';

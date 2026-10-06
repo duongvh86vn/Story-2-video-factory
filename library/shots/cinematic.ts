@@ -46,7 +46,7 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     if(p.gestures.some(g=>g.propId===prop.id&&g.action==='drop'))return [];
     return [prop.origin,...(prop.destination?[prop.destination]:[])].map(center=>({x:center.x,y:center.y+part.height*height*.5,width:part.width*width*1.12}));
   }):undefined;
-  const seats=sceneSeats(shot),result=performanceScene(p,profile,localActivity,background,supports,{items:seats,palette}),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s}`);
+  const seats=sceneSeats(shot),result=performanceScene(p,profile,localActivity,background,supports,{items:seats,palette}),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s.replace(/#([a-zA-Z][\w.-]*)/g,(_,id:string)=>`[id=${JSON.stringify(id)}]`)}`);
   const decoration=c.setting==='road'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#A78C66"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#E8D6AF" stroke-width="5" stroke-dasharray="45 24"/>`
     :c.setting==='workshop'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#B79C72"/><path d="M${width*.6} ${height*.26}H${width*.9}V${height*.63}H${width*.6}Z" fill="#836D52" opacity=".3"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#876E4F" stroke-width="3"/>`
     :`<path d="M0 ${p.stage.groundY}H${width}" stroke="#A38B65" stroke-width="3"/>`;
@@ -56,9 +56,9 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     const definition=actorProfile(actor.character,profile),prefix=`actor-${actor.character.id}-`;
     const local=actorSpeech(activity,narration,actor.speakingSegmentIds,shot.startMs,shot.endMs);
     local.intervals=local.intervals.map(interval=>({...interval,startMs:interval.startMs-shot.startMs,endMs:interval.endMs-shot.startMs}));
-    const compiled=compilePerformance(actor.performance,definition,local);
+    const compiled=compilePerformance(actor.performance,definition,local,prefix);
     actorReports.push({actorId:definition.id,profileHash:definition.profileHash,rigHash:buildRig(definition).rigHash,report:compiled.report});
-    calls.push(compiled.js.replace(/#[a-zA-Z][\w.-]*/g,id=>`#${prefix}${id.slice(1)}`));
+    calls.push(compiled.js);
     return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${performanceSvg(definition).replace(/id="([^"]+)"/g,(_,id:string)=>`id="${prefix}${id}"`).replace(/url\(#([^)]+)\)/g,(_,id:string)=>`url(#${prefix}${id})`)}</g>`;
   }).join('');
   const propArt=new Map<string,string>(),foregroundModels:string[]=[];
@@ -152,7 +152,7 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
       const content=base.replace('</defs>',`<clipPath id="${clip}"><rect x="0" y="${top}" width="${width}" height="${bottom-top}"/></clipPath></defs>${art&&!background?`<rect width="${width}" height="${height}" fill="${palette.background}"/>`:''}<g data-stage-plane="background">${planes.background.html}</g><g clip-path="url(#${clip})"><g class="camera-rig" data-light-direction="upper-left" data-framing="${c.camera.framing}" data-focus="${c.camera.focus??'ensemble'}">${planes.worldBackground.html?`<g data-stage-plane="background" data-art-space="world">${planes.worldBackground.html}</g>`:''}`)
         .replace('<ellipse id="ground-shadow"',`<g data-stage-plane="midground">${!background&&!art?decoration:''}${planes.midground.html}${connections}${objects}</g><ellipse id="ground-shadow"`)
         .replace('</svg></div>',`${supporting}<g data-stage-plane="foreground">${foregroundModels.join('')}${foreground}</g></g></g><g data-stage-plane="overlay">${planes.overlay.html}</g>${title}</svg></div>`);
-      let authored=content;for(const [id,svg] of propArt)authored=authored.replace(new RegExp(`<g id="prop-${id}">[\\s\\S]*?</g>`),svg);
+      let authored=content;for(const [id,svg] of propArt)authored=authored.replace(new RegExp(`<g id="prop-${id.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}">[\\s\\S]*?</g>`),svg);
       if(c.actorScene?.primary===null)authored=authored.replace('<g id="performer"','<g opacity="0" id="performer"').replace('<ellipse id="ground-shadow"','<ellipse visibility="hidden" id="ground-shadow"');
       else if(c.actorScene?.primary)authored=authored.replace('<g id="performer"',`<g data-actor-id="${escapeHtml(c.actorScene.primary.id)}" id="performer"`);
       return {...file,content:authored};

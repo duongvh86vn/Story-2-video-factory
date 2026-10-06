@@ -43,7 +43,7 @@ export interface ProjectDetail extends ProjectSummary {
   downloads: DownloadInfo[];
   cinematicArtifacts: Record<string, CinematicArtifactStatus>;
   preview: { composition: string | null; draft: string | null; final: string | null; contactSheet: string | null; shots: Record<string, { composition: string | null; frames: string | null }> };
-  settings: { revision: string; language: string; contentMode: FactoryConfig['content']['mode']; input: FactoryConfig['input']; host: FactoryConfig['host']; voice: Omit<FactoryConfig['voice'],'command'|'command_args'>; automatic: boolean;
+  settings: { topic:FactoryConfig['topic']; topicReadiness?:{productionReady:boolean;artwork:string}; revision: string; language: string; contentMode: FactoryConfig['content']['mode']; input: FactoryConfig['input']; host: FactoryConfig['host']; voice: Omit<FactoryConfig['voice'],'command'|'command_args'>; automatic: boolean;
     presentation: FactoryConfig['presentation'];
     creativeModel:Omit<FactoryConfig['models']['storyboard'],'command'>;
     scriptModel:Omit<FactoryConfig['models']['planner'],'command'>; scriptGeneration:FactoryConfig['script_generation'];

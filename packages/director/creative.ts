@@ -30,6 +30,7 @@ import {validateCamera} from './camera.js';
 import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
 import {creativeActingBrief} from './acting-brief.js';
+import {applyTopicCast,topicContext,requireTopicProductionReady} from '../topics/prehistoric-life.js';
 
 /** The general shot contract also supports legacy video; creative production needs these fields. */
 export const CreativeStoryboardSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -50,12 +51,14 @@ export interface CreativeContext {story:Story;narration:Narration;beats:Beat[];c
 
 /** The source clock is authoritative; the seed's visual style and choreography are editable. */
 export async function createCreativeStoryboard(root:string,config:FactoryConfig,router:ModelRouter,context:CreativeContext,seed:Storyboard,locks:Shot[]):Promise<Storyboard>{
+  requireTopicProductionReady(config);
   const lockIds=new Set(locks.map(shot=>shot.id)),system=await loadPrompt('creative-director');
   const identity=creativeInputIdentity(context.narration,context.beats,context.profile,context.rig);
   const reportFile=path.join(root,'work/creative-direction-report.json');
   const normalize=(value:Storyboard,origin:'model'|'authored'):Storyboard=>{
     const unlocked=normalizeCreativeSourceRefs({shots:value.shots.filter(s=>!lockIds.has(s.id))},context.narration);
     const board=StoryboardSchema.parse({shots:[...unlocked.shots,...locks].sort((a,b)=>a.startMs-b.startMs)});
+    applyTopicCast({shots:board.shots.filter(s=>!lockIds.has(s.id))},config);
     if(board.shots.length>config.rendering.max_shots)throw new Error('Creative storyboard exceeds configured shot limit');
     const failures=new Set<string>();
     const check=(operation:()=>unknown)=>{try{operation();}catch(error){failures.add(error instanceof Error?error.message:String(error));}};
@@ -117,7 +120,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     return report(normalize(authored.storyboard,'authored'),'authored',hash(authored));
   }
   const requestContext={task:'creative-storyboard',story:{title:context.story.title,style:context.story.style,genre:context.story.genre,authoring:context.story.authoring},narration:{durationMs:context.narration.durationMs,segments:context.narration.segments,words:context.narration.words},
-    characterMode:config.presentation.character_mode,characters:context.characters.characters,
+    characterMode:config.presentation.character_mode,topic:topicContext(config),characters:context.characters.characters,
     beats:context.beats,host:context.profile,rig:{rigHash:context.rig.rigHash},seed:seed.shots,seedVisualAdvisories:castDesignAdvisories(seed),lockedShots:locks,...(context.lockedActors?.length?{lockedActors:context.lockedActors}:{}),
     dimensions:config.rendering.final,...(config.presentation.design_brief?{designBrief:config.presentation.design_brief}:{}),artworkCoordinates:'Layers use stage pixels. Models default to normalized-stretch: centered 100x100 is scaled independently into part width/height, including text. Use sourced stage-pixel labels or explicit projection=model-viewport with one complete valid SVG viewBox to preserve its authored aspect policy in the actual part viewport. Recheck geometry and contact if letterboxing changes the illustration. Keyframes use the local shot clock.',
     ...(context.narration.segments.some(cue=>/(?<!\p{L})(?:jump(?:s|ed|ing)?|leap(?:s|ed|ing)?|leapt|hop(?:s|ped|ping)?|drop(?:s|ped|ping)?|nhảy|thả rơi|đánh rơi)(?!\p{L})/iu.test(cue.text))?{animationCapabilities:ANIMATION_LIBRARY}:{}),
@@ -130,7 +133,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   }
   const inputHash=hash({identity,system,context:requestContext,models:config.models.storyboard,fallback:config.models.fallback,retry:config.retry.structured_output,schema:DIRECTION_VERSION});
   const binding={modelsHash:hash({primary:config.models.storyboard,fallback:config.models.fallback})};
-  if(router.isMock('storyboard'))return report(seed,'offline',inputHash);
+  if(router.isMock('storyboard')){if(config.topic.id)throw new Error('needs-art-direction: configure a real director through 9router for the reusable story topic; an offline seed is not a directed episode');return report(seed,'offline',inputHash);}
   const cacheFile=path.join(root,'work/creative-storyboard-cache.json');
   if(await exists(cacheFile)){
     const cached=await readJson<{inputHash:string;storyboard:unknown}>(cacheFile);

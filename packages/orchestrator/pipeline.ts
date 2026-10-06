@@ -41,6 +41,7 @@ import {actorDefinitions} from '../actors/locks.js';
 import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js';
 import { PROP_BINDING_VERSION } from '../director/props.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
+import {topicFingerprint,requireTopicProductionReady} from '../topics/prehistoric-life.js';
 
 export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; retryModelErrors?:boolean; sceneRepairAttempts?:number; onProgress?:(state:ProjectState)=>void; }
 const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
@@ -55,10 +56,10 @@ function stageOutputs(state:ProjectState):Partial<Record<ProjectStatus,string[]>
 }
 export function redact(message:string,config:FactoryConfig):string { for (const role of [...Object.values(config.models),config.voice]) { const key=process.env[role.api_key_env]; if (key) message=message.split(key).join('[REDACTED]'); } return message.replace(/Bearer\s+[^\s"']+/gi,'Bearer [REDACTED]'); }
 async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string):Promise<{all:string;narration:string;sourceRevisionParents:string[]}> {
-  const mode=config.input.mode==='auto' ? await exists(safePath(root,config.input.idea)) ? 'idea' : await exists(safePath(root,config.input.script)) ? 'script' : await exists(safePath(root,config.input.narration)) ? 'wav' : 'srt' : config.input.mode;
-  const autoPresence=config.input.mode==='auto'?await Promise.all([...(await exists(safePath(root,config.input.idea))?[config.input.idea]:[]),config.input.script,config.input.narration,config.input.subtitles].map(file=>exists(safePath(root,file)))):undefined;
-  const relativeFiles=mode==='idea'?[config.input.idea]:mode==='script'?[config.input.script]:mode==='wav'?[config.input.narration,config.input.subtitles]:[config.input.subtitles];
-  const authoring=mode==='idea'&&await exists(safePath(root,config.input.idea))?await scriptGenerationIdentity(root,config):undefined;
+  const mode=config.input.mode==='auto' ? await exists(safePath(root,config.input.story)) ? 'story' : await exists(safePath(root,config.input.idea)) ? 'idea' : await exists(safePath(root,config.input.script)) ? 'script' : await exists(safePath(root,config.input.narration)) ? 'wav' : 'srt' : config.input.mode;
+  const autoPresence=config.input.mode==='auto'?await Promise.all([config.input.story,...(await exists(safePath(root,config.input.idea))?[config.input.idea]:[]),config.input.script,config.input.narration,config.input.subtitles].map(file=>exists(safePath(root,file)))):undefined;
+  const relativeFiles=mode==='story'?[config.input.story]:mode==='idea'?[config.input.idea]:mode==='script'?[config.input.script]:mode==='wav'?[config.input.narration,config.input.subtitles]:[config.input.subtitles];
+  const authoring=['idea','story'].includes(mode)&&await exists(safePath(root,mode==='story'?config.input.story:config.input.idea))?await scriptGenerationIdentity(root,config):undefined;
   const digest=async(relative:string)=>await exists(safePath(root,relative))?hash(await fs.readFile(await safeRealPath(root,relative))):null;
   const inputContents=await Promise.all(relativeFiles.map(async file=>[file,await digest(file)]));
   const repo=await findRepoRoot(),seriesFiles=config.project.series?await walk(safePath(path.join(repo,'series'),config.project.series)):[];
@@ -70,8 +71,8 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
   const vocabularyRevision=config.content.mode==='narrated-explainer'&&await exists(path.join(root,'work/narration.json'))
     ?explanationVocabularyRevision(await readJson(path.join(root,'work/narration.json'),NarrationSchema)):undefined;
   const airborneRevision=config.content.mode==='narrated-explainer'&&config.presentation.character_mode==='actors'&&await exists(path.join(root,'work/narration.json'))
-    &&(await readJson(path.join(root,'work/narration.json'),NarrationSchema)).segments.some(cue=>/(?<!\p{L})(?:jump(?:s|ed|ing)?|leap(?:s|ed|ing)?|leapt|hop(?:s|ped|ping)?|drop(?:s|ped|ping)?|nhảy|thả rơi|đánh rơi)(?!\p{L})/iu.test(cue.text))?AIRBORNE_ANIMATION_VERSION:undefined;
-  const allInput={version:4,...(airborneRevision?{airborneRevision}:{}),authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic};
+    &&(await readJson(path.join(root,'work/narration.json'),NarrationSchema)).segments.some(cue=>/(?<!\p{L})(?:jump(?:s|ed|ing)?|leap(?:s|ed|ing)?|leapt|hop(?:s|ped|ping)?|drop(?:s|ped|ping)?|nháº£y|tháº£ rÆ¡i|Ä‘Ã¡nh rÆ¡i)(?!\p{L})/iu.test(cue.text))?AIRBORNE_ANIMATION_VERSION:undefined;
+  const allInput={version:4,...(config.topic.id?{topic:topicFingerprint(config)}:{}),...(airborneRevision?{airborneRevision}:{}),authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic};
   // Match only source revisions of these exact inputs. Content, voice, config,
   // and narration identity still participate in every parent fingerprint.
   const {airborneRevision:omittedAirborneRevision,...groundedInput}=allInput;
@@ -82,7 +83,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
       ...(vocabularyRevision?[hash(groundedInput)]:[])]:[])
   ];
   return {all:hash({...allInput,...vocabularyInput}),sourceRevisionParents,
-    narration:hash({version:3,scriptParser:mode==='script'||mode==='idea'?SCRIPT_PARSER_VERSION:undefined,authoring,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
+    narration:hash({version:3,scriptParser:mode==='script'||['idea','story'].includes(mode)?SCRIPT_PARSER_VERSION:undefined,authoring,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {
   const files=[...await walk(path.join(root,'input/assets')),...await walk(path.join(root,'assets'))];
@@ -93,8 +94,8 @@ async function artifactHashes(root:string,state:ProjectState):Promise<void> {
   for (const [stage,files] of Object.entries(stageOutputs(state))) if (stateIndex(stage as ProjectStatus)<=stateIndex(state.state)) for (const file of files) if (await exists(path.join(root,file))) state.artifactHashes[file]=hash(await fs.readFile(path.join(root,file)));
   if((state.specVersion??1)>=3&&stateIndex(state.state)>=stateIndex('INGESTED')){
     const input=await readJson<{mode:string}>(path.join(root,'work/input-document.json'));
-    const files=input.mode==='idea'?['script.json','generated-script.txt','script-generation.json']:input.mode==='script'?['script.json']:[];
-    for(const file of files){state.artifactHashes[`work/${file}`]=hash(await fs.readFile(path.join(root,'work',file)));if(input.mode==='idea'&&state.state==='DONE')state.artifactHashes[`output/${file}`]=hash(await fs.readFile(path.join(root,'output',file)));}
+    const files=['idea','story'].includes(input.mode)?['script.json','generated-script.txt','script-generation.json']:input.mode==='script'?['script.json']:[];
+    for(const file of files){state.artifactHashes[`work/${file}`]=hash(await fs.readFile(path.join(root,'work',file)));if(['idea','story'].includes(input.mode)&&state.state==='DONE')state.artifactHashes[`output/${file}`]=hash(await fs.readFile(path.join(root,'output',file)));}
   }
   if(stateIndex(state.state)>=stateIndex('ANALYZED')) for(const file of await walk(path.join(root,'assets/host'))) state.artifactHashes[path.relative(root,file).replace(/\\/g,'/')]=hash(await fs.readFile(file));
   if((state.specVersion??1)>=4&&stateIndex(state.state)>=stateIndex('STORYBOARDED'))for(const [file,expected] of Object.entries(await actorAssetHashes(root))){
@@ -126,9 +127,9 @@ async function reconcile(root:string,state:ProjectState):Promise<void> {
   }
   if((state.specVersion??1)>=3&&initial>=stateIndex('INGESTED')){
     const input=await readJson<{mode:string}>(path.join(root,'work/input-document.json')).catch(()=>undefined);
-    const files=input?.mode==='idea'?['script.json','generated-script.txt','script-generation.json']:input?.mode==='script'?['script.json']:[];
+    const files=['idea','story'].includes(input?.mode??'')?['script.json','generated-script.txt','script-generation.json']:input?.mode==='script'?['script.json']:[];
     for(const file of files){const relative=`work/${file}`;if(!await exists(path.join(root,relative))||state.artifactHashes[relative]&&hash(await fs.readFile(path.join(root,relative)))!==state.artifactHashes[relative])target=stateIndex('NEW');}
-    if(input?.mode==='idea'&&initial===stateIndex('DONE'))for(const file of files){const relative=`output/${file}`;if(!await exists(path.join(root,relative))||state.artifactHashes[relative]&&hash(await fs.readFile(path.join(root,relative)))!==state.artifactHashes[relative])target=Math.min(target,stateIndex('QC_PASSED'));}
+    if(['idea','story'].includes(input?.mode??'')&&initial===stateIndex('DONE'))for(const file of files){const relative=`output/${file}`;if(!await exists(path.join(root,relative))||state.artifactHashes[relative]&&hash(await fs.readFile(path.join(root,relative)))!==state.artifactHashes[relative])target=Math.min(target,stateIndex('QC_PASSED'));}
   }
   if((state.specVersion??1)>=4&&initial>=stateIndex('STORYBOARDED')){
     try{for(const [file,expected] of Object.entries(await actorAssetHashes(root))){
@@ -184,7 +185,7 @@ async function report(root:string,config:FactoryConfig,state:ProjectState,router
   const cast=actorDefinitions(storyboard);
   const hostSummary=host?`${cast.length?`Cast: ${cast.map(a=>`${a.name} (${a.id}; ${a.identity}; ${a.role})`).join('; ')}. Per-actor profiles and rigs: actor-cast.json; speech/action assignments: actor-timeline.json.\n\nSeed rig: ${host.profile.id}`:`Host: ${host.profile.id}`} v${host.profile.version}; rig ${host.rig.rigHash}.\n\nSynchronization: ${voice?.synchronization}; audio activity is not phoneme lip-sync.\n\nVoice: ${voice?.status}; source ${voice?.source}; provider ${voice?.provider??'input'}; voice ${voice?.voiceId??'default'}; hash ${voice?.audioHash??'none'}.\n\n`:'';
   const models=Object.entries(config.models).map(([role,m])=>`- ${role}: ${m.provider} / ${m.model}`).join('\n');
-  const text=`# Production Report\n\n## Input\nProject: ${state.name}\n\nNarration: ${narration.mode}, ${(narration.durationMs/1000).toFixed(3)} seconds\n\nAudio: ${voice?voice.status==='ready'?'Ready spoken narration':'Silent draft / voice blocked':narration.audioPath?'User narration present':'SRT-only; no voice track supplied'}\n\n${hostSummary}## Models\n${models}\n\n## Storyboard\n${storyboard.shots.length} shots\n\n## Assets\n${assets.assets.length} resolved assets; ${assets.assets.filter(a=>a.status==='missing').length} missing\n\n## Review and repairs\nReview mode: ${review.mode ?? 'unspecified'}\n\nReview iterations: ${state.reviewIteration}\n\nRemaining issues: ${review.issues.length}\n\n${review.warnings.map(w=>`- ${w}`).join('\n')}\n\n## Render\n${config.rendering.final.width}×${config.rendering.final.height} at ${config.rendering.final.fps} fps\n\nRenderer: HyperFrames 0.8.96; post-processing: FFmpeg\n\n## QC\n${qc.pass ? 'PASS':'FAIL'}\n\n${JSON.stringify(qc,null,2)}\n\n## Costs\n${JSON.stringify(costs,null,2)}\n\n## Provenance\nThe selected narration is authoritative; source.md is optional supplemental data. Diagrams are conceptual visualizations. QC PASS reports technical measurements; visual/content acceptance requires the stated review mode and external acceptance evidence.\n\n${assets.assets.filter(a=>a.sourceUrl).map(a=>`- ${a.id}: ${a.sourceUrl}; ${a.license ?? 'license unspecified'}; ${a.author ?? ''}`).join('\n')}\n\n${research?.sources.map(s=>`- Research reference: ${s.sourceUrl}`).join('\n') ?? ''}\n`;
+  const text=`# Production Report\n\n## Input\nProject: ${state.name}\n\nNarration: ${narration.mode}, ${(narration.durationMs/1000).toFixed(3)} seconds\n\nAudio: ${voice?voice.status==='ready'?'Ready spoken narration':'Silent draft / voice blocked':narration.audioPath?'User narration present':'SRT-only; no voice track supplied'}\n\n${hostSummary}## Models\n${models}\n\n## Storyboard\n${storyboard.shots.length} shots\n\n## Assets\n${assets.assets.length} resolved assets; ${assets.assets.filter(a=>a.status==='missing').length} missing\n\n## Review and repairs\nReview mode: ${review.mode ?? 'unspecified'}\n\nReview iterations: ${state.reviewIteration}\n\nRemaining issues: ${review.issues.length}\n\n${review.warnings.map(w=>`- ${w}`).join('\n')}\n\n## Render\n${config.rendering.final.width}Ã—${config.rendering.final.height} at ${config.rendering.final.fps} fps\n\nRenderer: HyperFrames 0.8.96; post-processing: FFmpeg\n\n## QC\n${qc.pass ? 'PASS':'FAIL'}\n\n${JSON.stringify(qc,null,2)}\n\n## Costs\n${JSON.stringify(costs,null,2)}\n\n## Provenance\nThe selected narration is authoritative; source.md is optional supplemental data. Diagrams are conceptual visualizations. QC PASS reports technical measurements; visual/content acceptance requires the stated review mode and external acceptance evidence.\n\n${assets.assets.filter(a=>a.sourceUrl).map(a=>`- ${a.id}: ${a.sourceUrl}; ${a.license ?? 'license unspecified'}; ${a.author ?? ''}`).join('\n')}\n\n${research?.sources.map(s=>`- Research reference: ${s.sourceUrl}`).join('\n') ?? ''}\n`;
   await writeAtomic(path.join(root,'output/production-report.md'),text);
 }
 export async function runPipeline(projectRoot:string,options:PipelineOptions={}):Promise<ProjectState> {
@@ -198,7 +199,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     // or reconciling cached artifact hashes.
     const {recoverCinematicArtworkTransactions}=await import('../director/artwork-repair.js');
     await recoverCinematicArtworkTransactions(root);
-    config=await loadConfig(root); const state=await loadState(root);
+    config=await loadConfig(root); requireTopicProductionReady(config); const state=await loadState(root);
     if(await exists(path.join(root,'work/storyboard.json'))){
       const raw=await readJson<{shots:Array<{locked?:boolean}>}>(path.join(root,'work/storyboard.json'));
       if(Object.values(state.locked).some(Boolean)||raw.shots.some(shot=>shot.locked)){
@@ -265,12 +266,12 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
         switch(next) {
           case 'INGESTED': {
             if(config.content.mode==='legacy'){await ingestProject(root,config,router);break;}
-            const mode=await prepareInput(root,config);if(mode==='idea')await generateScript(root,config,router);break;
+            const mode=await prepareInput(root,config);if(['idea','story'].includes(mode))await generateScript(root,config,router);break;
           }
           case 'TIMED': {
             if(config.content.mode==='narrated-explainer') {
-              const input=await readJson<{mode:'idea'|'script'|'wav'|'srt'}>(path.join(root,'work/input-document.json'));
-              if(input.mode==='script'||input.mode==='idea') {
+              const input=await readJson<{mode:'story'|'idea'|'script'|'wav'|'srt'}>(path.join(root,'work/input-document.json'));
+              if(input.mode==='script'||['idea','story'].includes(input.mode)) {
                 const script=await readJson(path.join(root,'work/script.json'),ScriptDocumentSchema),n=await narrateScript(root,config,script);
                 if(!n)throw new ApprovalRequired('voice',(await readJson(path.join(root,'work/voice-report.json'),VoiceReportSchema)).error);
                 await writeJson(path.join(root,'work/narration.json'),n);
@@ -356,7 +357,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             }
             break;
           }
-          case 'DONE': { const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(config.content.mode==='narrated-explainer'&&(await readJson<{mode:string}>(path.join(root,'work/input-document.json'))).mode==='idea')names.push('script.json','generated-script.txt','script-generation.json');if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name)); await report(root,config,state,router); break; }
+          case 'DONE': { const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(config.content.mode==='narrated-explainer'&&['idea','story'].includes((await readJson<{mode:string}>(path.join(root,'work/input-document.json'))).mode))names.push('script.json','generated-script.txt','script-generation.json');if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name)); await report(root,config,state,router); break; }
         }
         transition(state,next);if(next==='TIMED')state.inputHash=(await inputFingerprint(root,config,hostHash)).all;
         if(next==='STORYBOARDED'||next==='ASSETS_READY')state.assetInputHash=await assetFingerprint(root); await artifactHashes(root,state); await saveState(root,state); store.saveState(state); store.finishJob(job); options.onProgress?.(state);

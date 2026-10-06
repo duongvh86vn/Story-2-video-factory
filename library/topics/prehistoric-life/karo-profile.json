@@ -1,0 +1,39 @@
+{
+  "id": "karo",
+  "version": 1,
+  "kind": "stick-man",
+  "role": "story-actor",
+  "name": "Karo",
+  "description": "Forest Tribe forest-tribe-0.3 visual model; calibration only",
+  "appearance": {
+    "outline": "#2B1710",
+    "shell": "#F2C58D",
+    "screen": "#F2C58D",
+    "accent": "#AE6E31",
+    "badge": "#4B2917",
+    "headScale": 1.04,
+    "bodyScale": 1.08,
+    "strokeWidth": 4.2,
+    "characterVariant": "karo"
+  },
+  "actions": [
+    "idle",
+    "greet",
+    "explain",
+    "point",
+    "operate-model",
+    "compare",
+    "think",
+    "react",
+    "summarize",
+    "walk-to-marker"
+  ],
+  "immutable": [
+    "model silhouette",
+    "palette",
+    "costume"
+  ],
+  "profileHash": "e0ca09b220f6a08155c0792bbc91f42e4eb7d5d9081eecb0d1071f817bc0e717",
+  "compilerVersion": "host-svg-2.2.7",
+  "sourcePath": "docs/topics/CUOC-SONG-THOI-TIEN-SU.md"
+}

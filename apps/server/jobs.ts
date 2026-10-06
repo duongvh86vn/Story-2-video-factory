@@ -5,7 +5,7 @@ import type { ProjectStatus } from '../../packages/core/schemas.js';
 import { ApiError, redact } from './security.js';
 
 export interface Coordinator {
-  createProject(name: string, options?: { root?: string; example?: boolean }): Promise<string>;
+  createProject(name: string, options?: { root?: string; example?: boolean; topic?:'prehistoric-life' }): Promise<string>;
   getProjectStatus(projectRoot: string): Promise<unknown>;
   runPipeline(projectRoot: string, options?: { until?: ProjectStatus; force?: boolean; shotIds?: string[]; retryModelErrors?:boolean }): Promise<unknown>;
   approveProject(projectRoot: string, kind: 'storyboard' | 'characters' | 'host'): Promise<void>;

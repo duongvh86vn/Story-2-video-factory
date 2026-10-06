@@ -21,6 +21,8 @@ export const WalkSchema = z.object({ ...Interval, fromX: z.number().finite(), to
 export const JumpSchema=z.object({...Interval,takeoffMs:Time,landingMs:Time,height:z.number().finite().positive()}).strict();
 export const FacingSchema=z.enum(['front','left','right']);
 export const TurnSchema=z.object({...Interval,direction:FacingSchema}).strict();
+export const HeadViewSchema=z.enum(['front','three-quarter-left','three-quarter-right','left','right','back-left','back-right','back']);
+export const HeadTurnSchema=z.object({...Interval,direction:HeadViewSchema}).strict();
 const PostureTarget = {
   pose:z.enum(['stand','crouch','lean','seated']),
   intensity:z.number().finite().min(0).max(1).optional(),
@@ -45,6 +47,7 @@ export const PerformancePlanSchema = z.object({
   stage: z.object({ width: z.number().finite().positive(), height: z.number().finite().positive(), groundY: z.number().finite() }).strict(),
   root: PointSchema, scale: z.number().min(.25).max(4),
   facing:FacingSchema.optional(),turns:z.array(TurnSchema).optional(),
+  headView:HeadViewSchema.optional(),headTurns:z.array(HeadTurnSchema).max(40).optional(),
   entryPosture:PostureTargetSchema.optional(),postures:z.array(PostureSchema).optional(),
   supports:z.array(SeatSupportSchema).max(12).optional(),
   walks: z.array(WalkSchema), jumps:z.array(JumpSchema).max(16).optional(), gestures: z.array(GestureSchema),

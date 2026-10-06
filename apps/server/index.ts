@@ -31,6 +31,9 @@ import {bindActorShot} from '../../packages/actors/model.js';
 import {loadHost} from '../../packages/host/index.js';
 import {installedWindowsVoices} from '../../packages/voice/catalog.js';
 import {LANGUAGE_TAG,primaryLanguage} from '../../packages/core/languages.js';
+import {discoverNineRouter} from '../../packages/models/nine-router.js';
+import {prehistoricReadiness,prehistoricReferences} from '../../packages/topics/prehistoric-life.js';
+import {referencePuppetSvg} from '../../packages/topics/reference-puppet.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
 type Named = { name: string };
@@ -144,7 +147,7 @@ export async function buildServer(options: ServerOptions = {}) {
       cinematicArtifacts: await cinematicArtifactStatuses(root),
       cinematicMigration:migration,
       preview: { composition: scenesCurrent ? await available(['scenes/index.html']) : null, draft: framesCurrent ? await available(DOWNLOADS['draft.mp4']!) : null, final: !migration.required&&completed>=States.indexOf('FINAL_RENDERED')?await available(DOWNLOADS['final.mp4']!):null, contactSheet: framesCurrent ? await available([...DOWNLOADS['contact-sheet.jpg']!, ...DOWNLOADS['contact-sheet.png']!]) : null, shots: shotPreviews },
-      settings: {revision:hash(await fs.readFile(await boundPath(root,'project.yaml'))),language:config.project.language,contentMode:config.content.mode,input:config.input,host:config.host,
+      settings: {revision:hash(await fs.readFile(await boundPath(root,'project.yaml'))),language:config.project.language,contentMode:config.content.mode,topic:config.topic,...(config.topic.id?{topicReadiness:prehistoricReadiness}:{}),input:config.input,host:config.host,
         voice:((({command,command_args,...rest})=>rest)(config.voice)),automatic:config.workflow.automatic,presentation:config.presentation,format:config.rendering.final,
         creativeModel:((({command,...rest})=>rest)(config.models.storyboard)),
         scriptModel:((({command,...rest})=>rest)(config.models.planner)),scriptGeneration:config.script_generation,
@@ -159,12 +162,41 @@ export async function buildServer(options: ServerOptions = {}) {
     const projects = await Promise.all(names.map(summary));
     return { projects: projects.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)) };
   });
+  app.get('/api/9router',async()=>{await loadConfig(projectsRoot);try{return await discoverNineRouter();}catch{throw new ApiError(503,'9router unavailable or authentication failed. Configure MODEL_GATEWAY_KEY and start the local service.','ROUTER_UNAVAILABLE');}});
+  app.get('/api/topics',async()=>({topics:[{id:'prehistoric-life',name:'Cuộc sống thời tiền sử',cast:['Lila','Karo'],visualAcceptance:'pending',readiness:prehistoricReadiness,inputModes:['script','wav','story'],preview:'/api/topics/prehistoric-life/preview',compare:'/api/topics/prehistoric-life/compare'}]}));
+  app.get<{Params:{topic:string};Querystring:{light?:string}}>('/api/topics/:topic/preview',async(request,reply)=>{
+    z.literal('prehistoric-life').parse(request.params.topic);const light=z.enum(['day','sunset','night']).default('day').parse(request.query.light);
+    const images=await Promise.all(['lila','karo'].map(async id=>{const bytes=await fs.readFile(await boundPath(repo,`library/topics/prehistoric-life/${id}-cutout-v1.png`));return bytes.toString('base64');}));
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900"><rect width="1280" height="900" fill="#FFF7E5"/><text x="48" y="48" fill="#4A2A18" font-family="Arial" font-size="27">Lila &amp; Karo · reference extraction · rig pending</text>${images.map((data,i)=>`<image x="${i?665:70}" y="80" width="530" height="780" preserveAspectRatio="xMidYMid meet" href="data:image/png;base64,${data}"/>`).join('')}</svg>`;
+    return reply.type('image/svg+xml').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'").send(svg);
+  });
+  app.get<{Params:{id:string}}>('/api/topics/prehistoric-life/assembly/:id',async(request,reply)=>{
+    const id=z.enum(['lila','karo']).parse(request.params.id);
+    return reply.type('image/svg+xml').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'").send(await referencePuppetSvg(repo,id));
+  });
+  app.get<{Querystring:{variant?:string}}>('/api/topics/prehistoric-life/compare',async(request,reply)=>{
+    const variant=z.enum(['cutout','assembly']).default('cutout').parse(request.query.variant);
+    const rows=['lila','karo'].map(id=>`<section><h2>${id==='lila'?'Lila':'Karo'}</h2><div class="pair"><figure><img src="/api/topics/prehistoric-life/references/reference-${id}-full.png"><figcaption>Ảnh gốc người dùng</figcaption></figure><figure><img src="/api/topics/prehistoric-life/${variant==='assembly'?`assembly/${id}`:`assets/${id}-cutout-v1.png`}"><figcaption>${variant==='assembly'?'Ráp lớp theo tỷ lệ nguồn — nháp':'Bản tách nền đề xuất — chưa duyệt'}</figcaption></figure></div></section>`).join('');
+    const supplements=prehistoricReferences.filter(ref=>ref.role.startsWith('supplemental')).map((ref,i)=>`<figure><img class="sheet" src="/api/topics/prehistoric-life/references/${ref.file}" alt="Bảng tham chiếu bổ sung ${i+1}"><figcaption>${i?'00350 · người que, mặt trắng':'00349 · tay chân màu da, trang phục chi tiết'}</figcaption></figure>`).join('');
+    const parts=['lila','karo'].map(id=>`<figure><img class="parts" src="/api/topics/prehistoric-life/assets/${id}-parts-candidate-v1.png" alt="Lớp nháp ${id}"><figcaption>${id==='lila'?'Lila':'Karo'} · lớp nháp, cần chỉnh trước khi làm rig</figcaption></figure>`).join('');
+    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(`<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>So sánh tạo hình Lila &amp; Karo</title><style>body{font:16px system-ui;background:#ece5d6;color:#362215;margin:24px}main{max-width:1000px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:24px}figure{margin:0;text-align:center}img{max-width:100%;height:590px;object-fit:contain}.sheet{width:100%;height:auto}.parts{width:100%;height:auto;background:#fffdf7}figcaption{padding:12px}h2{margin:0 0 12px}a{color:#65461b}</style><main><h1>Đối chiếu ảnh gốc và bản tách nền</h1><p>SVG cũ bị loại. Các bản tách là ứng viên; chưa phải rig/chuyển động đã nghiệm thu. AI có thể vẽ lại một số nét nên cần kiểm bằng ảnh gốc.</p><p><a href="#supplemental">Hai bảng tham chiếu mới</a> · <a href="#parts">Các lớp nháp</a></p>${rows}<section id="supplemental"><h2>Hai bảng mẫu bổ sung</h2><p>Dùng góc nhìn, pose, đạo cụ, bối cảnh và màu để tham khảo. Tạo hình chính vẫn là hai ảnh cận có da ấm phía trên; không trộn mặt trắng, ủng, cổ áo lông và trang sức vào chúng. Tên Lila là tên làm việc; các sheet ghi Lira.</p>${supplements}</section><section id="parts"><h2>Lớp chuyển động — bản nháp</h2><p>Cần đo vùng cắt, điểm gắn và tỷ lệ; tiếp tục tách biểu cảm, góc quay và tóc/áo. Bản nháp này chưa được dùng sản xuất tập.</p><div class="pair">${parts}</div></section></main></html>`);
+  });
+  app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/references/:file',async(request,reply)=>{
+    const file=z.enum(['reference-lila-full.png','reference-karo-full.png','reference-expressions.png','reference-palette.png','reference-forest-tribe-detailed.png','reference-forest-tribe-stick.png']).parse(request.params.file);
+    return streamFile(request,reply,await boundPath(repo,`docs/topics/assets/${file}`));
+  });
+  app.get<{Params:{topic:string;file:string}}>('/api/topics/:topic/assets/:file',async(request,reply)=>{
+    z.literal('prehistoric-life').parse(request.params.topic);
+    const file=z.enum(['lila-cutout-v1.png','karo-cutout-v1.png','lila-parts-candidate-v1.png','karo-parts-candidate-v1.png','manifest.json','parts-prompts-v1.json']).parse(request.params.file);
+    return streamFile(request,reply,await boundPath(repo,`library/topics/prehistoric-life/${file}`));
+  });
   app.post('/api/projects', async (request, reply) => {
-    const body = z.object({ name: ProjectName, example: z.boolean().default(false), presentation: PresentationPatchSchema.optional() }).strict().parse(request.body);
+    const body = z.object({ name: ProjectName, example: z.boolean().default(false), topic: z.enum(['prehistoric-life']).optional(), presentation: PresentationPatchSchema.optional() }).strict().parse(request.body);
+    if(body.topic&&body.presentation?.mode==='diagram')throw new ApiError(422,'Prehistoric life uses story-cinematic actors.','TOPIC_PRESENTATION');
     const result = await jobs.mutate(body.name, async () => {
       await fs.mkdir(projectsRoot, { recursive: true });
       if ((await fs.lstat(projectsRoot)).isSymbolicLink()) throw new ApiError(403, 'Linked project folders are not supported.', 'LINK_FORBIDDEN');
-      const root = await (await coordinator()).createProject(body.name, { root: projectsRoot, example: body.example });
+      const root = await (await coordinator()).createProject(body.name, { root: projectsRoot, example: body.example,topic:body.topic });
       if (body.presentation) await updateSettings(root, { presentation: body.presentation });
       return summary(body.name);
     });
@@ -193,6 +225,16 @@ export async function buildServer(options: ServerOptions = {}) {
       try{validateIdea(body.text);}catch(error){throw new ApiError(422,error instanceof Error?error.message:'Invalid idea','INVALID_INPUT');}if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
       await updateSettings(root,{input:{mode:'idea',idea:relative as 'input/idea.txt'|'input/idea.md'}});
       return {...await readArtifact(root,`idea.${body.format}`),settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
+    });
+  });
+  app.put<{Params:Named}>('/api/projects/:name/story',async request=>{
+    const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']).default('txt'),revision:z.string().optional(),settingsRevision:z.string().optional()}).strict().parse(request.body);
+    return mutate(request.params.name,async(root,core)=>{
+      await checkRevision(await boundPath(root,'project.yaml'),body.settingsRevision);
+      const relative=`input/story.${body.format}`,file=await boundPath(root,relative,true);await checkRevision(await locate(root,[relative]),body.revision);
+      try{validateIdea(body.text);}catch(error){throw new ApiError(422,error instanceof Error?error.message:'Invalid story','INVALID_INPUT');}if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
+      await updateSettings(root,{input:{mode:'story',story:relative as 'input/story.txt'|'input/story.md'}});
+      return {...await readArtifact(root,`story.${body.format}`),settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
     });
   });
   app.get<{Params:Named &{kind:string}}>('/api/projects/:name/hosts/:kind/preview',async(request,reply)=>{
@@ -353,7 +395,8 @@ export async function buildServer(options: ServerOptions = {}) {
           const original = uploadFilename(part.filename), extension = path.extname(original).toLowerCase();
           const category = part.fieldname;
           let relative: string;
-          if(category==='idea'&&['.txt','.md'].includes(extension))relative=`input/idea${extension}`;
+          if(category==='story'&&['.txt','.md'].includes(extension))relative=`input/story${extension}`;
+          else if(category==='idea'&&['.txt','.md'].includes(extension))relative=`input/idea${extension}`;
           else if(category==='script'&&['.txt','.md'].includes(extension))relative=`input/script${extension}`;
           else if(category==='host'&&extension==='.md')relative='input/host.md';
           else if (category === 'source' && extension === '.md') relative = 'input/source.md';
@@ -370,11 +413,11 @@ export async function buildServer(options: ServerOptions = {}) {
           } });
           await pipeline(part.file, counter, createWriteStream(staged, { flags: 'wx' }));
           if (part.file.truncated || !size) throw new ApiError(413, 'File is empty or exceeds the upload limit.', 'TOO_LARGE');
-          if(category==='idea'||category==='script'||category==='host'){
+          if(category==='story'||category==='idea'||category==='script'||category==='host'){
             if(size>128*1024)throw new ApiError(413,'Script/host exceeds 128 KB.','TOO_LARGE');
             let text:string;try{text=new TextDecoder('utf-8',{fatal:true}).decode(await fs.readFile(staged));}catch{throw new ApiError(422,'Script/host must be UTF-8.','INVALID_INPUT');}
             if(category==='script')parseScript(text,relative);
-            if(category==='idea')try{validateIdea(text);}catch(error){throw new ApiError(422,error instanceof Error?error.message:'Invalid idea','INVALID_INPUT');}
+            if(category==='idea'||category==='story')try{validateIdea(text);}catch(error){throw new ApiError(422,error instanceof Error?error.message:'Invalid idea','INVALID_INPUT');}
           } else if (relative.endsWith('.srt')) {
             if (size > 2 * 1024 * 1024) throw new ApiError(413, 'Subtitles exceed 2 MB.', 'TOO_LARGE');
             srtSegments(await fs.readFile(staged, 'utf8'));
@@ -395,7 +438,7 @@ export async function buildServer(options: ServerOptions = {}) {
           pending.push({ staged, relative, original, size });
         }
         if (!pending.length) throw new ApiError(422, 'Choose at least one file.', 'EMPTY_UPLOAD');
-        const writingInputs=pending.filter(item=>/^input\/(?:idea|script)\.(?:txt|md)$/.test(item.relative));
+        const writingInputs=pending.filter(item=>/^input\/(?:story|idea|script)\.(?:txt|md)$/.test(item.relative));
         if(writingInputs.length>1)throw new ApiError(422,'Upload one idea or one complete script at a time; choose its input mode explicitly.','AMBIGUOUS_INPUT');
         await checkRevision(await boundPath(root,'project.yaml'),query.settingsRevision);
         // Validate all destinations before touching canonical inputs.
@@ -408,6 +451,8 @@ export async function buildServer(options: ServerOptions = {}) {
         }
         const script=pending.find(item=>/^input\/script\.(?:txt|md)$/.test(item.relative));
         if(script)await updateSettings(root,{input:{mode:'script',script:script.relative as 'input/script.txt'|'input/script.md'}});
+        const story=pending.find(item=>/^input\/story\.(?:txt|md)$/.test(item.relative));
+        if(story)await updateSettings(root,{input:{mode:'story',story:story.relative as 'input/story.txt'|'input/story.md'}});
         const idea=pending.find(item=>/^input\/idea\.(?:txt|md)$/.test(item.relative));
         if(idea)await updateSettings(root,{input:{mode:'idea',idea:idea.relative as 'input/idea.txt'|'input/idea.md'}});
         if(pending.some(item=>item.relative==='input/host.md'))await updateSettings(root,{host:'custom'});

@@ -1,0 +1,39 @@
+{
+  "id": "lila",
+  "version": 1,
+  "kind": "stick-man",
+  "role": "story-actor",
+  "name": "Lila",
+  "description": "Forest Tribe forest-tribe-0.3 visual model; calibration only",
+  "appearance": {
+    "outline": "#2B1710",
+    "shell": "#F2C58D",
+    "screen": "#F2C58D",
+    "accent": "#AE6E31",
+    "badge": "#4B2917",
+    "headScale": 1,
+    "bodyScale": 1,
+    "strokeWidth": 4.2,
+    "characterVariant": "lila"
+  },
+  "actions": [
+    "idle",
+    "greet",
+    "explain",
+    "point",
+    "operate-model",
+    "compare",
+    "think",
+    "react",
+    "summarize",
+    "walk-to-marker"
+  ],
+  "immutable": [
+    "model silhouette",
+    "palette",
+    "costume"
+  ],
+  "profileHash": "f3c5d784a586862d2c727136fad5f00a4f0cf34c7beb6d089cc779df2c139841",
+  "compilerVersion": "host-svg-2.2.7",
+  "sourcePath": "docs/topics/CUOC-SONG-THOI-TIEN-SU.md"
+}

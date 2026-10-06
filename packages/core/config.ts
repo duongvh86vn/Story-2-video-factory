@@ -43,7 +43,8 @@ export const ConfigSchema = z.object({
     require_meaningful_host_action_per_beat: z.boolean().default(true) }).strict().default({}),
   voice: VoiceSettingsSchema.default({}),
   voice_profiles: z.record(z.string().regex(LANGUAGE_TAG), VoiceSettingsSchema.partial()).default({}),
-  input: z.object({ mode: z.enum(['auto','idea','script','wav','srt']).default('auto'), idea: z.string().default('input/idea.txt'), script: z.string().default('input/script.txt'),
+  topic: z.object({ id: z.enum(['prehistoric-life']).nullable().default(null) }).strict().default({}),
+  input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']).default('auto'), story: z.string().default('input/story.txt'), idea: z.string().default('input/idea.txt'), script: z.string().default('input/script.txt'),
     source: z.string().default('input/source.md'), narration: z.string().default('input/narration.wav'), subtitles: z.string().default('input/narration.srt') }).strict().default({}),
   script_generation: z.object({ kind: z.enum(['auto','factual','fiction']).default('auto'),
     target_seconds: z.number().int().min(10).max(300).default(60), brief: z.string().max(6000).default('') }).strict().default({}),
@@ -65,7 +66,7 @@ export async function findRepoRoot(): Promise<string> { let p = REPO_ROOT; for (
 export function deepMerge(base: Record<string, unknown>, overrides: Record<string, unknown>): Record<string, unknown> { const result = { ...base }; for (const [k,v] of Object.entries(overrides)) result[k] = v && typeof v === 'object' && !Array.isArray(v) && result[k] && typeof result[k] === 'object' ? deepMerge(result[k] as Record<string,unknown>,v as Record<string,unknown>) : v; return result; }
 function interpolate(value: unknown): unknown { if (typeof value === 'string') return value.replace(/\$\{([A-Z_][A-Z0-9_]*)(?::-([^}]*))?\}/g, (_,key:string,fallback:string) => process.env[key] || fallback || ''); if (Array.isArray(value)) return value.map(interpolate); if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k,v]) => [k,interpolate(v)])); return value; }
 export async function loadConfig(projectRoot: string, projectOverrides: Record<string,unknown> = {}): Promise<FactoryConfig> {
-  const root = await findRepoRoot(); dotenv.config({ path: path.join(root,'.env'), quiet: true });
+  const root = await findRepoRoot(); dotenv.config({ path: process.env.STORY_FACTORY_ENV_FILE || path.join(root,'.env'), quiet: true });
   let data: Record<string,unknown> = { models: {} };
   for (const name of ['models','rendering','audio','workflow','voice']) { const file=path.join(root,'config',`${name}.yaml`); if (await exists(file)) data=deepMerge(data,YAML.parse(await fs.readFile(file,'utf8')) ?? {}); }
   const projectFile=path.join(projectRoot,'project.yaml'); const episode=deepMerge(await exists(projectFile) ? YAML.parse(await fs.readFile(projectFile,'utf8')) ?? {} : {}, projectOverrides);
@@ -83,7 +84,8 @@ export async function loadConfig(projectRoot: string, projectOverrides: Record<s
   if (data.models && typeof data.models==='object') { const roles=data.models as Record<string,unknown>; if (roles.reviewer) roles.visual_review=roles.reviewer; for (const [role,value] of Object.entries(roles)) if (typeof value==='string') roles[role]={ provider:'gateway',model:value }; }
   const config=ConfigSchema.parse(interpolate(data));
   config.voice=cleanVoiceSettings(config.voice);
-  if(config.content.mode==='legacy'&&config.input.mode==='idea')throw new Error('Idea authoring requires narrated-explainer content; select the modern story pipeline.');
+  if(config.content.mode==='legacy'&&['idea','story'].includes(config.input.mode))throw new Error('Story authoring requires narrated-explainer content; select the modern story pipeline.');
+  if(config.topic.id && (config.content.mode!=='narrated-explainer'||config.presentation.mode!=='story-cinematic'||config.presentation.character_mode!=='actors'))throw new Error('A story topic requires story-cinematic actors.');
   if(config.content.mode==='legacy'&&config.presentation.mode==='story-cinematic')
     throw new z.ZodError([{code:'custom',path:['presentation','mode'],message:'story-cinematic requires narrated-explainer content; choose diagram for the legacy renderer.'}]);
   if (config.rendering.final.width % 2 || config.rendering.final.height % 2) throw new Error('Video dimensions must be even for H.264');

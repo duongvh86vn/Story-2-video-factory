@@ -1,0 +1,191 @@
+{
+  "version": "forest-tribe-0.4-reference",
+  "productionReady": false,
+  "artwork": "reference-cutouts-pending",
+  "rejected": "vector-v0.3",
+  "layers": "candidate-atlases-pending",
+  "motionAcceptance": "pending",
+  "primaryModel": "warm-skin-close-ups",
+  "referencePolicy": "Supplemental detailed and white-face sheets do not replace or blend into the primary model.",
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "role": "primary-lila-design",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "width": 430,
+      "height": 766,
+      "hasAlpha": false
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "role": "primary-karo-design",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "width": 377,
+      "height": 716,
+      "hasAlpha": false
+    },
+    {
+      "file": "docs/topics/assets/reference-expressions.png",
+      "role": "primary-expressions",
+      "sha256": "fbc6c963252786216689c48a3c7fb09dd258eb6ae0d43b9d777d57587fb69094",
+      "width": 1026,
+      "height": 688,
+      "hasAlpha": false
+    },
+    {
+      "file": "docs/topics/assets/reference-palette.png",
+      "role": "primary-color-reference",
+      "sha256": "bef24980d1fea40180a20705793d3f7aebb0b6c8d8a80c342040e5a11d58a665",
+      "width": 803,
+      "height": 308,
+      "hasAlpha": false
+    },
+    {
+      "file": "docs/topics/assets/reference-forest-tribe-detailed.png",
+      "role": "supplemental-views-poses-world-detailed",
+      "sha256": "732efaceb02f186e3c5467b7bc61bd13309290a095ff305842bc59bdf4fc2dc2",
+      "width": 6688,
+      "height": 3760,
+      "hasAlpha": false
+    },
+    {
+      "file": "docs/topics/assets/reference-forest-tribe-stick.png",
+      "role": "supplemental-views-poses-world-stick",
+      "sha256": "6d867ea606ac35dd08c12caaaf38da01feb8340cb3899ffa0949eb2343473164",
+      "width": 6688,
+      "height": 3760,
+      "hasAlpha": false
+    }
+  ],
+  "candidates": [
+    {
+      "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
+      "kind": "full-body-cutout",
+      "status": "candidate",
+      "approved": false,
+      "source": "reference-lila-full.png",
+      "sha256": "ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e",
+      "width": 939,
+      "height": 1675,
+      "hasAlpha": true
+    },
+    {
+      "file": "library/topics/prehistoric-life/lila-parts-candidate-v1.png",
+      "kind": "puppet-parts-atlas",
+      "status": "candidate-needs-layout-and-fidelity-review",
+      "approved": false,
+      "source": "reference-lila-full.png",
+      "sha256": "1f53d8941b89f6653a98aacd23975d7bea8a5a64996fa24693884e174f35b2ee",
+      "width": 1222,
+      "height": 1287,
+      "hasAlpha": true
+    },
+    {
+      "file": "library/topics/prehistoric-life/karo-cutout-v1.png",
+      "kind": "full-body-cutout",
+      "status": "candidate",
+      "approved": false,
+      "source": "reference-karo-full.png",
+      "sha256": "f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665",
+      "width": 910,
+      "height": 1728,
+      "hasAlpha": true
+    },
+    {
+      "file": "library/topics/prehistoric-life/karo-parts-candidate-v1.png",
+      "kind": "puppet-parts-atlas",
+      "status": "needs-repair-static-vision-review",
+      "approved": false,
+      "source": "reference-karo-full.png",
+      "sha256": "9ad9fa7112dee1525ec3531a7505a199eab8b47d5c456bb7280cc9e50bab081a",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true
+    }
+  ],
+  "rejectedArtifacts": [
+    {
+      "file": "library/topics/prehistoric-life/colors-day.png",
+      "sha256": "af57d6ae0a2db3ca3d8540d9099136f4317e879557a15874b21d1253f94541a5",
+      "width": 1280,
+      "height": 720,
+      "hasAlpha": true,
+      "status": "rejected-vector-v0.3",
+      "productionAllowed": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/colors-sunset.png",
+      "sha256": "e6b4cfa6df4143343b44f27a8f6fe5e83811ec7bfbd94fed33cd7c2835686b2c",
+      "width": 1280,
+      "height": 720,
+      "hasAlpha": true,
+      "status": "rejected-vector-v0.3",
+      "productionAllowed": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/colors-night.png",
+      "sha256": "6ffea19b5794705f76df6fa71cb5677a8bc72310f1f5cb02188211b541a87953",
+      "width": 1280,
+      "height": 720,
+      "hasAlpha": true,
+      "status": "rejected-vector-v0.3",
+      "productionAllowed": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/lila-views.png",
+      "sha256": "6992b05d75d88458f892a23e4e5e9f6e3c0e3d61f821a9857fec75025951ce07",
+      "width": 1280,
+      "height": 900,
+      "hasAlpha": true,
+      "status": "rejected-vector-v0.3",
+      "productionAllowed": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/karo-views.png",
+      "sha256": "73135e2751ca53d899dc87ec20b874544feab6c938b75801b54dc016a9c0de87",
+      "width": 1280,
+      "height": 900,
+      "hasAlpha": true,
+      "status": "rejected-vector-v0.3",
+      "productionAllowed": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/lila-expressions.png",
+      "sha256": "aa8a37b3c3cea2ff759b7395ec1d3222cee69f37002c640ee3df6b601d88fa9a",
+      "width": 1280,
+      "height": 1800,
+      "hasAlpha": true,
+      "status": "rejected-vector-v0.3",
+      "productionAllowed": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/karo-expressions.png",
+      "sha256": "d7ea626ca7384c07890bbc52aa10f6144b71e2327f74790740cf443afb012408",
+      "width": 1280,
+      "height": 1800,
+      "hasAlpha": true,
+      "status": "rejected-vector-v0.3",
+      "productionAllowed": false
+    }
+  ],
+  "productionRig": null,
+  "restCalibration": {
+    "status": "candidate",
+    "method": "SVG masks on full cutouts",
+    "reconstructedOccludedParts": false,
+    "naturalMotion": false,
+    "codeHash": "f731d578c793515e0f71d4a521b49cd0060b01d64bd52e77ed15412aa429b45a"
+  },
+  "staticReview": {
+    "file": "docs/topics/reviews/karo-atlas-static-review-v1.json",
+    "pass": false,
+    "scope": "static-artwork-only",
+    "appliesTo": "atlas assembly v1, not revised cutout-mask assembly"
+  },
+  "limitations": [
+    "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
+    "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
+    "A whole head with baked facial features cannot provide production expressions or proper multi-view turning.",
+    "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
+  ]
+}

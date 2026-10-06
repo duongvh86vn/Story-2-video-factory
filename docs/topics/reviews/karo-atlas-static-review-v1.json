@@ -1,0 +1,84 @@
+{
+  "scope": "static-artwork-only",
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.karo",
+        "type": "color",
+        "severity": "medium",
+        "description": "The candidate's exposed chest and shorts appear brighter and more orange than the original's muted warm peach and earthy brown.",
+        "repair": "Match the original skin and hide colors, retaining its subdued brown shading and irregular painterly tonal variation."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "neckline",
+        "severity": "medium",
+        "description": "A narrow pale-edged strip appears along the candidate's exposed shoulder beneath the beard, creating an extra boundary absent from the original's continuous chest contour.",
+        "repair": "Remove the shoulder-edge seam and reconnect the exposed chest directly beneath the beard, preserving the original asymmetric hide neckline."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "costume_contour",
+        "severity": "medium",
+        "description": "The candidate's shorts are narrower and their central crotch opening rises higher; the ragged leg hems also end higher than in the original.",
+        "repair": "Restore the original shorts width, lower crotch split, and individual torn hem points while keeping two distinct leg openings."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "limb_contour",
+        "severity": "medium",
+        "description": "The candidate's image-right arm bows outward around the elbow and then descends almost vertically to the hand. The original follows a more direct sloping contour from shoulder to wrist.",
+        "repair": "Trace the original image-right arm curve and shoulder attachment, matching its outward slope and hand position."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "rest_pose",
+        "severity": "medium",
+        "description": "The candidate's feet are flatter and more horizontal, particularly the image-left foot; the image-right foot is also shorter and loses the original's broad outward projection.",
+        "repair": "Restore the original ankle-to-foot transitions, tilted image-left foot, and broad image-right toe silhouette without flattening the stance."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "Assessment is limited to the supplied static comparison image."
+    ]
+  },
+  "usage": {
+    "calls": 1,
+    "successes": 1,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 1125,
+    "outputTokens": 956,
+    "totalTokens": 2081,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 1125,
+        "outputTokens": 956,
+        "totalTokens": 2081,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 1125,
+        "outputTokens": 956,
+        "totalTokens": 2081,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

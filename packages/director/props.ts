@@ -4,7 +4,7 @@ import { hash } from '../core/utils.js';
 import { fold } from '../explainer/plan.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
-export const PROP_BINDING_VERSION='bound-model-motion-2.2.1';
+export const PROP_BINDING_VERSION='bound-model-motion-2.2.2';
 
 // JSON coordinates and normalized-to-stage multiplication may differ by a few
 // floating-point units. This is a serialization check, not a spatial tolerance.

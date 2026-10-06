@@ -95,12 +95,13 @@ export function hostPreviewSvg(profile: HostProfile): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1160" viewBox="0 0 1280 1160"><rect width="1280" height="1160" fill="#E8EEF1"/>${cells}</svg>`;
 }
 /** Cast previews use the same skeleton and pose evaluator as the rendered movie. */
-export function actorPoseSvg(profile:HostProfile,mood:Mood='neutral'):string{
+export function actorPoseSvg(profile:HostProfile,mood:Mood='neutral',headView?:PerformancePlan['headView']):string{
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'cast-preview',leadCharacterId:profile.id,profileHash:profile.profileHash,kind:profile.kind,
-    durationMs:1200,fps:30,stage:{width:320,height:420,groundY:380},root:{x:160,y:380},scale:.9,walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:1200,mood}]};
+    durationMs:1200,fps:30,stage:{width:320,height:420,groundY:380},root:{x:160,y:380},scale:.9,walks:[],gestures:[],props:[],gazes:[],headView,expressions:[{startMs:0,endMs:1200,mood}]};
   const frame=samplePerformance(plan,profile,600,{method:'segment-draft',windowMs:20,intervals:[]});
   let svg=performanceSvg(profile);
   for(const [id,transform] of Object.entries(frame.transforms))svg=svg.replace(`id="${id}"`,`id="${id}" transform="${transform}"`);
-  for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp(`<g id="${id}"[^>]*>`),`<g id="${id}"${face.opacity===undefined?'':` opacity="${face.opacity}"`} transform="${face.attr?.transform??`translate(${face.x??0} ${face.y??0}) rotate(${face.rotation??0}) scale(1 ${face.scaleY??1})`}">`);
+  for(const [id,d] of Object.entries(frame.paths??{}))svg=svg.replace(new RegExp(`<path id="${id}"[^>]*>`),`<path id="${id}" d="${d}" ${id.startsWith('ink-')?`stroke-width="${profile.appearance.strokeWidth*plan.scale}"`:`fill="${profile.appearance.shell}" stroke-width="2.5"`}/>`);
+  for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp(`<g id="${id}"[^>]*>`),`<g id="${id}"${face.opacity===undefined?'':` opacity="${face.opacity}"`} transform="${face.attr?.transform??`translate(${face.x??0} ${face.y??0}) rotate(${face.rotation??0}) scale(${face.scaleX??1} ${face.scaleY??1})`}">`);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 420">${svg}</svg>`;
 }

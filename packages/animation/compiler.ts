@@ -7,6 +7,8 @@ import { AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VER
 import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy} from './support.js';
 import { selectedClips } from './library.js';
 import {sampleAirborne,sampleFallingObject} from './airborne.js';
+import {inkLimb,pathCoordinates} from './ink-limb.js';
+import {forestHeadContour} from './forest-tribe-art.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t = clamp(n); return t * t * (3 - 2 * t); };
@@ -71,6 +73,8 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   for(const hand of ['left','right'] as const)overlaps(plan.gestures.filter(g=>rigHand(g)===hand),`${hand}-arm gesture`,plan.durationMs);
   if(new Set(plan.gestures.map(g=>g.id)).size!==plan.gestures.length)throw new Error('Duplicate gesture identity across arm tracks');
   overlaps(plan.turns??[],'turn',plan.durationMs);
+  overlaps(plan.headTurns??[],'head turn',plan.durationMs);
+  if((plan.headView||plan.headTurns?.length)&&!profile.appearance.characterVariant)throw new Error('Multiple head views require a Forest Tribe actor rig');
   overlaps(plan.postures??[],'body posture',plan.durationMs);
   overlaps(plan.jumps??[],'jump',plan.durationMs);
   if(plan.compilerVersion!==AIRBORNE_ANIMATION_VERSION&&(plan.jumps?.length||plan.gestures.some(g=>g.action==='drop'||g.landingMs!==undefined)))throw new Error('Jump/drop clips require animation2.2.14');
@@ -184,7 +188,7 @@ export interface FrameState {
   bodyPosture:BodyPosture;
   seatContact?:{supportId:string;errorPx:number};
   hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
-  transforms:Record<string,string>; face:Record<string,{opacity?:number;scaleY?:number;rotation?:number;x?:number;y?:number;attr?:{transform:string}}>;
+  transforms:Record<string,string>; paths?:Record<string,string>; face:Record<string,{opacity?:number;scaleX?:number;scaleY?:number;rotation?:number;x?:number;y?:number;attr?:{transform:string}}>;
   props:Record<string,{point:Point;attached:boolean}>;
 }
 const number = (n:number)=>String(Number(n.toFixed(4)));
@@ -236,6 +240,19 @@ function orientationAt(plan:PerformancePlan,time:number):number {
     const next=value[turn.direction];
     if(time<turn.endMs)return lerp(current,next,smooth((time-turn.startMs)/(turn.endMs-turn.startMs)));
     current=next;
+  }
+  return current;
+}
+function headViewAt(plan:PerformancePlan,time:number):{yaw:number;back:number} {
+  const views={front:{yaw:0,back:0},left:{yaw:-1,back:0},right:{yaw:1,back:0},
+    'three-quarter-left':{yaw:-.65,back:0},'three-quarter-right':{yaw:.65,back:0},
+    'back-left':{yaw:-.65,back:1},'back-right':{yaw:.65,back:1},back:{yaw:0,back:1}};
+  let current=views[plan.headView??plan.facing??'front'];
+  for(const turn of chronological(plan.headTurns??[])){
+    if(time<turn.startMs)break;
+    const next=views[turn.direction],w=smooth((time-turn.startMs)/(turn.endMs-turn.startMs));
+    current={yaw:lerp(current.yaw,next.yaw,w),back:lerp(current.back,next.back,w)};
+    if(time<turn.endMs)break;
   }
   return current;
 }
@@ -369,6 +386,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   const jump=plan.jumps?.find(j=>t>=j.startMs&&t<=j.endMs),air=jump?sampleAirborne(jump,t,s):undefined;
   if(air){for(const side of ['left','right'] as const){walk.feet[side].y+=air.feetOffsetY;walk.stance[side]=!air.airborne;}}
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
+  const paths:Record<string,string>={},drawn=!!profile.appearance.characterVariant;
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
   const orientation=orientationAt(plan,t);
   const bodyPosture=postureAt(plan,t);
@@ -394,6 +412,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const hip={x:pelvis.x+(i?1:-1)*m.hipOffset*s,y:pelvis.y},leg=solveChain(hip,walk.feet[side],m.upperLeg*s,m.lowerLeg*s,supported?.bend??1);
     if(leg.error>1)throw new Error(`${plan.id}: ${side} foot cannot reach ground at ${t}ms (${leg.error.toFixed(2)}px)`);
     transforms[`leg-${side}-upper`]=transform(hip,leg.upper,s);transforms[`leg-${side}-lower`]=transform(leg.joint,leg.lower,s);
+    if(drawn)paths[`ink-leg-${side}`]=inkLimb(hip,leg.joint,walk.feet[side]);
     transforms[`foot-${side}`]=transform(walk.feet[side],0,s);
     const shoulder=toWorld((i?1:-1)*m.shoulderOffset,m.shoulderY-m.pelvisY);
     const swing=Math.sin(walk.phase*Math.PI)*(i?-1:1)*25*walk.activation;
@@ -405,6 +424,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
     if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
     transforms[`arm-${side}-upper`]=transform(shoulder,arm.upper,s);transforms[`arm-${side}-lower`]=transform(arm.joint,arm.lower,s);
+    if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,arm.joint,arm.end);
     transforms[`hand-${side}`]=transform(arm.end,0,s);hands[side]=arm.end;
   }
   const activeGestures={right:gestureAt(plan,t,'right'),left:gestureAt(plan,t,'left')};
@@ -414,11 +434,23 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   let gaze={x:0,y:0};
   if(activeGesture?.target)gaze=mix(gaze,gazeOffset(activeGesture.target),gazeWeight(activeGesture));
   if(explicitGaze)gaze=mix(gaze,gazeOffset(explicitGaze.target),gazeWeight(explicitGaze));
+  if(drawn){
+    const view=headViewAt(plan,t),look=explicitGaze??activeGesture;
+    const yaw=plan.headView||plan.headTurns?.length?view.yaw:look?.target?lerp(orientation,clamp((look.target.x-head.x)/70,-.85,.85),gazeWeight(look)):orientation;
+    face['head-front']={opacity:1-view.back};face['head-back-view']={opacity:view.back};
+    face['head-face-plane']={x:yaw*12,scaleX:1-Math.abs(yaw)*.42};
+    face['head-fringe']={x:yaw*5,scaleX:1-Math.abs(yaw)*.1};
+    face['head-nose']={opacity:0};
+    paths['head-contour']=forestHeadContour(yaw);
+    transforms['face-orientation']=transform({x:0,y:0});
+  }
   const blinkPhase=(t+800)%3500,blink=blinkPhase<140?Math.sin(Math.PI*blinkPhase/140):0;
   for(const [i,side] of (['left','right'] as const).entries()){
     face[`eye-${side}`]={x:gaze.x,y:gaze.y,scaleY:Math.max(.05,(1-blink)*lerp(1,pose.eyeOpen??1,emotion.weight))};
     face[`brow-${side}`]={y:pose.brow*emotion.weight,rotation:(i?-1:1)*(pose.browAngle??(emotion.mood==='concerned'?12:emotion.mood==='effort'?-12:0))*emotion.weight};
     face[`lid-${side}`]={opacity:pose.lid*emotion.weight};
+    if(drawn){const yaw=(face['head-face-plane']!.x??0)/12,far=i===0?Math.max(0,yaw):Math.max(0,-yaw),visible=1-smooth((far-.65)/.35);
+      face[`eye-${side}`]!.opacity=visible;face[`brow-${side}`]!.opacity=visible;face[`lid-${side}`]!.opacity=visible*pose.lid*emotion.weight;}
   }
   const speech=activity.intervals.find(a=>t>=a.startMs&&t<a.endMs);
   face['mouth-talk']={opacity:speech?1:1-Math.max(pose.smile,pose.round,pose.frown??0)*emotion.weight,scaleY:speech?1+speech.level*2.3:.2};
@@ -458,7 +490,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   }
   const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
-  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(pelvis,seat.center)}}:{})};
+  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(pelvis,seat.center)}}:{})};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
@@ -492,11 +524,11 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile):number 
   return gap;
 }
 
-export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity) {
+export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,namespace='') {
   validatePerformance(plan,profile);
   const times=new Set<number>([0,plan.durationMs]);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...plan.gestures,...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
+  for(const clip of [...plan.gestures,...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
   if([AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion))for(const clip of expressionRanges(plan)){
@@ -526,7 +558,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
         // Audio activity is intentionally stepped at its own explicit boundaries.
         if(id==='mouth-talk')continue;
         const to=b.face[id]!,wanted=actual.face[id]!;
-        for(const key of ['opacity','scaleY','rotation','x','y'] as const){
+        for(const key of ['opacity','scaleX','scaleY','rotation','x','y'] as const){
           if(from[key]===undefined||to[key]===undefined||wanted[key]===undefined)continue;
           const limit=key==='rotation'||key==='x'||key==='y'?.02:.002;
           error=Math.max(error,Math.abs(lerp(from[key]!,to[key]!,progress)-wanted[key]!)/limit);
@@ -537,18 +569,27 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   };
   const refine=(a:FrameState,raw:FrameState,depth=0):FrameState[]=>{
     const b=unwrapFrame(raw,a),gap=interpolationGap(a,b,profile),face=precise?faceError(a,b):0;
-    if(gap<=.2&&face<=1)return [b];
+    let curveError=0;
+    if(a.paths)for(const progress of [.17,.5,.83]){
+      const actual=samplePerformance(plan,profile,lerp(a.timeMs,b.timeMs,progress),activity);
+      for(const [id,d] of Object.entries(a.paths)){
+        const from=pathCoordinates(d),to=pathCoordinates(b.paths![id]!),wanted=pathCoordinates(actual.paths![id]!);
+        curveError=Math.max(curveError,...from.map((n,i)=>Math.abs(lerp(n,to[i]!,progress)-wanted[i]!)));
+      }
+    }
+    if(gap<=.2&&face<=1&&curveError<=.2)return [b];
     const middle=Number(((a.timeMs+b.timeMs)/2).toFixed(4));
     if(depth>=12||middle<=a.timeMs||middle>=b.timeMs)throw new Error(`${plan.id}: needs-animation: interpolation cannot maintain bones/expression near ${middle}ms (${gap.toFixed(2)}px, face error ${face.toFixed(2)})`);
     const left=refine(a,samplePerformance(plan,profile,middle,activity),depth+1);
     return [...left,...refine(left.at(-1)!,raw,depth+1)];
   };
   for(const sample of samples.slice(1))frames.push(...refine(frames.at(-1)!,sample));
-  const calls:string[]=[],scope=`[data-composition-id="${plan.id}"]`,selector=(id:string)=>JSON.stringify(`${scope} #${id}`);
+  const calls:string[]=[],scope=`[data-composition-id="${plan.id}"]`,selector=(id:string)=>JSON.stringify(`${scope} [id=${JSON.stringify(namespace+id)}]`);
   for(const [i,f] of frames.entries()){
     const at=i?(frames[i-1]!.timeMs/1000):0,interval=i?(f.timeMs-frames[i-1]!.timeMs)/1000:0,
       duration=precise?interval:Number(interval.toFixed(6)),position=precise?at:Number(at.toFixed(6)),method=i?'to':'set';
     for(const [id,value] of Object.entries(f.transforms))if(!i||value!==frames[i-1]!.transforms[id])calls.push(`tl.${method}(${selector(id)},${JSON.stringify({attr:{transform:value},...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
+    for(const [id,value] of Object.entries(f.paths??{}))if(!i||value!==frames[i-1]!.paths?.[id])calls.push(`tl.${method}(${selector(id)},${JSON.stringify({attr:{d:value,...(id.startsWith('ink-')?{'stroke-width':profile.appearance.strokeWidth*plan.scale}:{})},...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
     for(const [id,value] of Object.entries(f.face))if(!i||JSON.stringify(value)!==JSON.stringify(frames[i-1]!.face[id]))calls.push(`tl.${method}(${selector(id)},${JSON.stringify({...value,...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);
   }
   return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,

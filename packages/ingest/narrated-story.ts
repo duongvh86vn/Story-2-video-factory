@@ -14,7 +14,7 @@ export async function narratedStory(root: string, config: FactoryConfig, narrati
   const document = await exists(path.join(root, config.input.source))
     ? parseMarkdownDocument(await fs.readFile(await safeRealPath(root, config.input.source), 'utf8'), config) : undefined;
   const story=storyFromNarration(config,narration,document);
-  if(await resolveInputMode(root,config)==='idea'){
+  if(['idea','story'].includes(await resolveInputMode(root,config))){
     const report=await readJson(path.join(root,'work/script-generation.json'),ScriptGenerationReportSchema);
     if(report.identity!==await scriptGenerationIdentity(root,config))throw new Error('Generated story belongs to different authoring inputs; regenerate the script before narration');
     story.title=report.title;story.genre=report.kind==='fiction'?'fiction':'nonfiction';

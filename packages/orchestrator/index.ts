@@ -8,14 +8,15 @@ import { exists, readJson, safePath, writeAtomic } from '../core/utils.js';
 import { loadState, saveState, stateIndex } from './state-machine.js';
 import { ProductionStore } from './store.js';
 import { reservation } from './reservation.js';
+import {topicModelDefaults} from '../models/nine-router.js';
 export { runPipeline, type PipelineOptions } from './pipeline.js';
 export { ApprovalRequired, loadState } from './state-machine.js';
 
-export async function createProject(name:string,options:{root?:string,example?:boolean}={}):Promise<string> {
+export async function createProject(name:string,options:{root?:string,example?:boolean,topic?:'prehistoric-life'}={}):Promise<string> {
   Id.parse(name); if(!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(name)) throw new Error('Project name must contain 1–64 letters, digits, underscores or hyphens'); const repo=await findRepoRoot(); const root=safePath(options.root ?? path.join(repo,'projects'),name);
   await fs.mkdir(path.dirname(root),{recursive:true}); await fs.mkdir(root,{recursive:false});
   for(const dir of ['input/assets/references','input/assets/images','input/assets/video','input/assets/music','input/assets/sfx','work','scenes','previews','output','logs']) await fs.mkdir(path.join(root,dir),{recursive:true});
-  await writeAtomic(path.join(root,'project.yaml'),YAML.stringify({project:{name,language:'vi'},content:{mode:'narrated-explainer'},input:{mode:'auto',script:'input/script.txt',source:'input/source.md',narration:'input/narration.wav',subtitles:'input/narration.srt'},host:{profile:'library/characters/STICK-MAN.md'},presentation:{mode:'story-cinematic',character_mode:'actors'},rendering:{draft:{fps:30}},style:{preset:'technical-clean'},workflow:{automatic:true,require_storyboard_approval:false},captions:{mode:'both'}}));
+  await writeAtomic(path.join(root,'project.yaml'),YAML.stringify({project:{name,language:'vi'},topic:{id:options.topic??null},content:{mode:'narrated-explainer'},input:{mode:options.topic?'story':'auto',story:'input/story.txt',script:'input/script.txt',source:'input/source.md',narration:'input/narration.wav',subtitles:'input/narration.srt'},host:{profile:'library/characters/STICK-MAN.md'},presentation:{mode:'story-cinematic',character_mode:'actors'},...(options.topic?{models:topicModelDefaults()}:{}),rendering:{draft:{fps:30},...(options.topic?{final:{fps:60}}:{})},style:{preset:'technical-clean'},workflow:{automatic:true,require_storyboard_approval:false,...(options.topic?{max_model_calls:30}: {})},captions:{mode:'both'}}));
   if(options.example) { await fs.cp(path.join(repo,'examples/steam-explainer/input'),path.join(root,'input'),{recursive:true}); }
   const state=await loadState(root); state.name=name; await saveState(root,state); return root;
 }

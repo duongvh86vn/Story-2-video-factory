@@ -21,7 +21,7 @@ export const projectUrl = (name: string) => `/api/projects/${encodeURIComponent(
 export const staticUrl = (name: string, relative: string) => `/project-static/${encodeURIComponent(name)}/${relative.split('/').map(encodeURIComponent).join('/')}`;
 export const api = {
   projects: () => request<{ projects: ProjectSummary[] }>('/api/projects'),
-  create: (name: string, example: boolean, mode: 'diagram' | 'story-cinematic') => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example, presentation: { mode } }) }),
+  create: (name: string, example: boolean, mode: 'diagram' | 'story-cinematic',topic?:'prehistoric-life') => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example, topic,presentation: { mode } }) }),
   project: (name: string) => request<ProjectDetail>(projectUrl(name)),
   run: (name: string, until: ProjectStatus, shotIds?: string[],retryModelErrors=false,sceneRepairAttempts?:number) => request<{ job: Job }>(`${projectUrl(name)}/run`, { method: 'POST', body: JSON.stringify({ until, ...(shotIds ? { shotIds } : {}),...(retryModelErrors?{retryModelErrors:true}:{}),...(sceneRepairAttempts===undefined?{}:{sceneRepairAttempts}) }) }),
   approve: (name: string, kind: 'storyboard' | 'characters' | 'host') => request<ProjectSummary>(`${projectUrl(name)}/approve`, { method: 'POST', body: JSON.stringify({ kind }) }),
@@ -36,6 +36,7 @@ export const api = {
   upload: (name: string, data: FormData,settingsRevision?:string) => request<{ files: UploadedAsset[];settingsRevision:string }>(`${projectUrl(name)}/upload${settingsRevision?`?settingsRevision=${encodeURIComponent(settingsRevision)}`:''}`, { method: 'POST', body: data }),
   settings: (name:string,data:unknown)=>request<ProjectDetail>(`${projectUrl(name)}/settings`,{method:'PATCH',body:JSON.stringify(data)}),
   script: (name:string,text:string,format:'txt'|'md',revision?:string,settingsRevision?:string)=>request<ArtifactDocument>(`${projectUrl(name)}/script`,{method:'PUT',body:JSON.stringify({text,format,revision,settingsRevision})}),
+  story: (name:string,text:string,format:'txt'|'md',revision?:string,settingsRevision?:string)=>request<ArtifactDocument>(`${projectUrl(name)}/story`,{method:'PUT',body:JSON.stringify({text,format,revision,settingsRevision})}),
   idea: (name:string,text:string,format:'txt'|'md',revision?:string,settingsRevision?:string)=>request<ArtifactDocument>(`${projectUrl(name)}/idea`,{method:'PUT',body:JSON.stringify({text,format,revision,settingsRevision})}),
   voices:()=>request<VoiceCatalog>('/api/voices'),
   voiceDefaults: (voice:unknown,language?:string)=>request<{saved:boolean}>(`/api/settings/voice${language?`?language=${encodeURIComponent(language)}`:''}`,{method:'PUT',body:JSON.stringify(voice)}),

@@ -34,6 +34,8 @@ export const ARTIFACTS: Record<string, ArtifactSpec> = {
   ...Object.fromEntries(CINEMATIC_EXPORT_FILES.map(name => [name, { paths: [`work/${name}`, `output/${name}`] }])),
   'script.txt': {paths:['input/script.txt'],editable:true,from:'NEW',text:true},
   'script.md': {paths:['input/script.md'],editable:true,from:'NEW',text:true},
+  'story.txt': {paths:['input/story.txt'],editable:true,from:'NEW',text:true},
+  'story.md': {paths:['input/story.md'],editable:true,from:'NEW',text:true},
   'idea.txt': {paths:['input/idea.txt'],editable:true,from:'NEW',text:true},
   'idea.md': {paths:['input/idea.md'],editable:true,from:'NEW',text:true},
   'generated-script.txt': {paths:['work/generated-script.txt','output/generated-script.txt'],text:true},
@@ -196,7 +198,7 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   const state = await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root, 'project-state.json');
   let data: unknown = spec.text ? z.string().min(1).max(2 * 1024 * 1024).parse(value) : spec.schema!.parse(value);
   if(name==='script.txt'||name==='script.md')parseScript(data as string,`input/${name}`);
-  if(name==='idea.txt'||name==='idea.md')validateIdea(data as string);
+  if(['story.txt','story.md','idea.txt','idea.md'].includes(name))validateIdea(data as string);
   if(name==='host.md'&&Buffer.byteLength(data as string,'utf8')>128*1024)throw new ApiError(413,'Host MD exceeds 128 KB','TOO_LARGE');
   if(['story.json','narration.json'].includes(name)&&(await loadConfig(root)).content.mode==='narrated-explainer')throw new ApiError(403,'Edit the script or input SRT; generated narration is immutable.','READ_ONLY');
   if (name === 'narration.json') validateNarrationTiming(data as Narration, await optionalArtifact<Narration>(root, name));
@@ -295,7 +297,7 @@ export async function cinematicArtifactStatuses(root: string): Promise<Record<st
 }
 export async function currentDownload(root:string,name:string):Promise<boolean>{
   if(['generated-script.txt','script-generation.json'].includes(name)){
-    const config=await loadConfig(root);if(await resolveInputMode(root,config).catch(()=>null)!=='idea')return false;
+    const config=await loadConfig(root);if(!['idea','story'].includes(await resolveInputMode(root,config).catch(()=>null)??''))return false;
     const report=await optionalArtifact<z.infer<typeof ScriptGenerationReportSchema>>(root,'script-generation.json');
     if(!report||report.identity!==await scriptGenerationIdentity(root,config))return false;
     const script=await locate(root,['work/generated-script.txt']),document=await locate(root,['work/script.json']);

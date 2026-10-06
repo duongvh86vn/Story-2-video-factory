@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "layouts": [
+    {
+      "id": "lila",
+      "file": "lila-parts-candidate-v1.png",
+      "sha256": "1f53d8941b89f6653a98aacd23975d7bea8a5a64996fa24693884e174f35b2ee",
+      "width": 1222,
+      "height": 1287,
+      "alphaThreshold": 160,
+      "padding": 8,
+      "status": "measurement-only-not-approved",
+      "components": [
+        {
+          "x": 32,
+          "y": 82,
+          "width": 599,
+          "height": 763,
+          "area": 236211
+        },
+        {
+          "x": 754,
+          "y": 116,
+          "width": 392,
+          "height": 696,
+          "area": 158495
+        },
+        {
+          "x": 82,
+          "y": 1019,
+          "width": 125,
+          "height": 160,
+          "area": 11019
+        },
+        {
+          "x": 384,
+          "y": 1020,
+          "width": 121,
+          "height": 159,
+          "area": 10733
+        },
+        {
+          "x": 986,
+          "y": 1086,
+          "width": 187,
+          "height": 97,
+          "area": 9115
+        },
+        {
+          "x": 680,
+          "y": 1085,
+          "width": 186,
+          "height": 95,
+          "area": 9053
+        }
+      ]
+    },
+    {
+      "id": "karo",
+      "file": "karo-parts-candidate-v1.png",
+      "sha256": "9ad9fa7112dee1525ec3531a7505a199eab8b47d5c456bb7280cc9e50bab081a",
+      "width": 1536,
+      "height": 1024,
+      "alphaThreshold": 160,
+      "padding": 8,
+      "status": "measurement-only-not-approved",
+      "components": [
+        {
+          "x": 94,
+          "y": 50,
+          "width": 603,
+          "height": 596,
+          "area": 238873
+        },
+        {
+          "x": 974,
+          "y": 83,
+          "width": 383,
+          "height": 584,
+          "area": 153728
+        },
+        {
+          "x": 157,
+          "y": 759,
+          "width": 181,
+          "height": 210,
+          "area": 22740
+        },
+        {
+          "x": 423,
+          "y": 759,
+          "width": 182,
+          "height": 212,
+          "area": 22507
+        },
+        {
+          "x": 1237,
+          "y": 851,
+          "width": 228,
+          "height": 114,
+          "area": 15371
+        },
+        {
+          "x": 875,
+          "y": 852,
+          "width": 224,
+          "height": 112,
+          "area": 15104
+        }
+      ]
+    }
+  ]
+}
