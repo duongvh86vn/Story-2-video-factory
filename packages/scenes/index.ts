@@ -296,7 +296,7 @@ export async function buildScenes(projectRoot:string,config:FactoryConfig,router
   for(const shot of storyboard.shots.filter(shot=>!options?.shotIds || options.shotIds.includes(shot.id))) await compileShot(projectRoot,config,router,shot,characters,assets,{force:options?.force,state});
   if(config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'){
     const shots=await Promise.all(storyboard.shots.map(async shot=>({shotId:shot.id,...await readJson<Record<string,unknown>>(path.join(projectRoot,`scenes/${shot.id}/performance-report.json`))})));
-    await writeJson(path.join(projectRoot,'work/performance-report.json'),{version:22,producer:ANIMATION_VERSION,storyboardHash:hash(storyboard),shots});
+    await writeJson(path.join(projectRoot,'work/performance-report.json'),{version:22,producer:ANIMATION_VERSION,storyboardHash:hash(StoryboardSchema.parse(storyboard)),shots});
   }
 }
 export async function repairScenes(projectRoot:string,config:FactoryConfig,router:ModelRouter,storyboard:Storyboard,characters:CharacterBible,assets:AssetManifest,issues:ReviewIssue[],options:{sceneRepairAttempts?:number}={}):Promise<void> {

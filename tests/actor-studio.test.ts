@@ -66,7 +66,10 @@ async function fixture(t:TestContext){
   for(const [name,data] of Object.entries({story,narration,'voiced-narration':narration,beats,chapters,'character-bible':characters,storyboard:board,timeline:{durationMs:narration.durationMs,segments:narration.segments,words:[]},'input-document':{mode:'srt'},'explanation-plan':explanation,'asset-manifest':manifest,'speech-activity':{method:'audio-rms',windowMs:20,intervals:[]},'voice-report':{version:2,status:'ready',source:'input',provider:null,voiceId:null,narrationHash:hash(narration),audioPath:narration.audioPath,audioHash:hash(wav),textPreserved:true,timingPreserved:true,inputAudioPreserved:true,synchronization:'audio-activity',cues:[],warnings:[]}}))await writeJson(path.join(root,'work',name+'.json'),data);
   await fs.writeFile(path.join(root,'work/storyboard.md'),'Actor studio fixture');await writeCinematicPlans(root,board);await writeHostTimeline(root,board,narration,profile,rig);
   await writeJson(path.join(root,'work/environment-provenance.json'),{version:22,environments:[]});
-  const state=await loadState(root);state.state='SCENES_READY';state.specVersion=4;state.approvals={storyboard:true,characters:true,host:true,hostHash:rig.rigHash};await saveState(root,state);
+  // The fixture owns a storyboard but no accepted scene bundle. Keep its
+  // checkpoint before SCENES_READY so public edits are not misclassified as
+  // a renderer migration from missing scene artifacts.
+  const state=await loadState(root);state.state='STORYBOARDED';state.specVersion=4;state.approvals={storyboard:true,characters:true,host:true,hostHash:rig.rigHash};await saveState(root,state);
   const app=await buildServer({projectsRoot,coordinator:core});t.after(()=>app.close());
   const url='/api/projects/fixture/artifacts/storyboard.json';
   const doc=async()=>{const r=await app.inject({url});assert.equal(r.statusCode,200,r.body);return r.json<{data:Storyboard;revision:string}>();};
@@ -79,7 +82,8 @@ async function lock(f:Awaited<ReturnType<typeof fixture>>,key:string){const stat
 const castFile=(root:string)=>path.join(root,'work/actor-cast.json');
 
 test('cast manifest binds real actor, preview, poses and profile files and resolving rig paths',async t=>{
-  const f=await fixture(t),cast=await readJson(castFile(f.root),ActorCastManifestSchema);assert.equal(cast.storyboardHash,hash(f.board));assert.equal(cast.actors.length,2);
+  const f=await fixture(t),cast=await readJson(castFile(f.root),ActorCastManifestSchema),persisted=await readJson(path.join(f.root,'work/storyboard.json'),StoryboardSchema);assert.equal(cast.storyboardHash,hash(persisted));assert.equal(cast.actors.length,2);
+  assert.equal((await readJson<{storyboardHash:string}>(path.join(f.root,'work/actor-timeline.json'))).storyboardHash,hash(persisted));
   const hashes=await actorAssetHashes(f.root);assert.equal(Object.keys(hashes).length,8);
   for(const a of cast.actors){
     assert.equal(a.lockKey,actorLockKey(a.character.id));assert.equal(a.rig.assetPath,a.assetPath);assert.equal(a.rig.posePath,a.posePath);

@@ -8,18 +8,17 @@ import { buildServer } from '../apps/server/index.js';
 import * as core from '../packages/orchestrator/index.js';
 import { loadState, saveState } from '../packages/orchestrator/state-machine.js';
 import { loadConfig } from '../packages/core/config.js';
-import { BeatSchema, StorySchema, type Storyboard } from '../packages/core/schemas.js';
-import { hash, runCommand, writeJson } from '../packages/core/utils.js';
+import { AssetManifestSchema, BeatSchema, StorySchema, StoryboardSchema, type AssetManifest, type Storyboard } from '../packages/core/schemas.js';
+import { hash, readJson, runCommand, writeJson } from '../packages/core/utils.js';
 import { compileHost } from '../packages/host/index.js';
-import { loadHost } from '../packages/host/index.js';
 import { ModelRouter } from '../packages/models/registry.js';
 import { groundedExplanation } from '../packages/explainer/plan.js';
 import { explainerShot } from '../packages/explainer/storyboard.js';
 import { directCinematicShot, writeCinematicPlans } from '../packages/director/index.js';
 import { temporary } from './support.js';
 import { cinematicReview } from '../apps/studio/src/cinematic.js';
-import { renderCinematic } from '../library/shots/cinematic.js';
-import { secureSceneFiles } from '../packages/scenes/security.js';
+import { buildScenes } from '../packages/scenes/index.js';
+import { HyperFramesEngine } from '../packages/render/hyperframes.js';
 import { planCamera } from '../packages/director/camera.js';
 import { DIRECTION_VERSION } from '../packages/director/schemas.js';
 
@@ -76,10 +75,30 @@ async function fixture(t: TestContext, method?: 'question') {
   await writeCinematicPlans(root, board);
   await writeJson(path.join(root, 'work/environment-provenance.json'), { version: 22, producer: 'environment-stage-2.2.0', environments: [] });
   await writeJson(path.join(root, 'work/performance-report.json'), { version: 22, producer: 'performance-fixture', storyboardHash: hash(board), shots: [] });
-  const state = await loadState(root); state.state = 'SCENES_READY'; state.approvals = { storyboard: true, characters: true, host: true, hostHash: rig.rigHash };
+  // This fixture writes plans/reports but no complete accepted scene bundle.
+  // Its canonical editing tests must start before SCENES_READY so the public
+  // migration guard only evaluates genuinely rendered checkpoints.
+  const state = await loadState(root); state.state = 'STORYBOARDED'; state.approvals = { storyboard: true, characters: true, host: true, hostHash: rig.rigHash };
   state.narrationInputHash = 'narration-clock'; await saveState(root, state);
   const app = await buildServer({ projectsRoot, coordinator: core }); t.after(() => app.close());
   return { root, app, board, profile };
+}
+async function acceptFixtureScenes(t: TestContext, root: string): Promise<Storyboard> {
+  const config = await loadConfig(root), board = StoryboardSchema.parse(await readJson(path.join(root, 'work/storyboard.json')));
+  const assets: AssetManifest = { assets: [] };
+  for (const shot of board.shots) for (const need of shot.assetNeeds) {
+    if (!need.localPath || assets.assets.some(asset => asset.id === need.id)) continue;
+    const bytes = await fs.readFile(path.join(root, need.localPath));
+    assets.assets.push({ id: need.id, type: need.type, path: need.localPath, source: 'code', status: 'approved', hash: hash(bytes), shotIds: [shot.id] });
+  }
+  await writeJson(path.join(root, 'work/asset-manifest.json'), AssetManifestSchema.parse(assets));
+  await writeJson(path.join(root, 'work/speech-activity.json'), { method: 'audio-rms', windowMs: 20, intervals: [] });
+  // The Studio/API contract only needs the production validator result here;
+  // scene HTML and its complete record still come from the real builder.
+  t.mock.method(HyperFramesEngine.prototype, 'validate', async () => ({ pass: true, errors: [], diagnostics: [] }));
+  await buildScenes(root, config, new ModelRouter(config, root), board, { characters: [] }, assets);
+  const state = await loadState(root); state.state = 'SCENES_READY'; state.specVersion = 4; await saveState(root, state);
+  return board;
 }
 async function edit(app: Awaited<ReturnType<typeof buildServer>>, change: (board: Storyboard) => void) {
   const url = '/api/projects/fixture/artifacts/storyboard.json', doc = (await app.inject({ url })).json();
@@ -124,6 +143,7 @@ test('project creation and API settings share a strict presentation mode', async
 // Defect: production reports are absent from status/downloads or allow direct writes.
 test('derived cinematic artifacts are visible, read-only and downloadable with honest freshness', async t => {
   const { root, app } = await fixture(t);
+  await acceptFixtureScenes(t, root);
   const detail = (await app.inject({ url: '/api/projects/fixture' })).json();
   const status = await core.getProjectStatus(root) as { artifacts: Record<string, unknown> };
   for (const name of derived) {
@@ -293,10 +313,7 @@ test('CLI rejects an empty explicitly supplied presentation mode', async t => {
 
 // Regression: the API must serve the production scene through the safe bridge and reject raw scene edits.
 test('Studio preview uses production files and the sandboxed bridge; stale clips are hidden', async t => {
-  const { root, app, board } = await fixture(t), config = await loadConfig(root), { profile, rig } = await loadHost(root), shot = board.shots[0]!;
-  const files = secureSceneFiles(renderCinematic(shot, profile, rig, { method:'audio-rms', windowMs:20, intervals:[] }, config).files);
-  const dir = path.join(root, `scenes/${shot.id}`); await fs.mkdir(dir, { recursive:true });
-  for (const file of files.files) await fs.writeFile(path.join(dir,file.path),file.content);
+  const { root, app } = await fixture(t), board = await acceptFixtureScenes(t, root), shot = board.shots[0]!;
   await fs.writeFile(path.join(root,'work/draft.mp4'),'existing draft');
   const detail = (await app.inject({url:'/api/projects/fixture'})).json(), composition = detail.preview.shots[shot.id].composition;
   assert.equal(composition, '/project-static/fixture/scenes/shot1/index.html');

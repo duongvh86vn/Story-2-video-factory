@@ -262,3 +262,7 @@ regressions and original-case resume NOTRUN after helper parse failure and
 actual account usage limit. Native vision/video NOTRUN.11call history and16
 protectedcasefiles unchanged; no parent test/provider substitution.
 [Scope](docs/validation/2026-10-05-birthday-garden-source.md).
+
+## Test follow-up — 2026-10-06
+
+Full suite: 1,477 pass / 0 fail / 8 skip. Focused regressions after storyboard-hash fixes: 76/76; three baseline/browser checks: 6/6; production build and both typechecks pass. Five optional checks still need historical external artifacts. This is code and browser-fixture evidence, not full-video story/acting acceptance. See [test follow-up and evidence scope](docs/validation/2026-10-06-test-followup.md).

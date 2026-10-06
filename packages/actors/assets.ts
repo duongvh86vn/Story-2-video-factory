@@ -2,7 +2,7 @@ import {promises as fs} from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import {z} from 'zod';
-import type {Storyboard} from '../core/schemas.js';
+import {StoryboardSchema,type Storyboard} from '../core/schemas.js';
 import {exists,hash,readJson,safePath,safeRealPath,writeAtomic,writeJson} from '../core/utils.js';
 import {HostProfileSchema,HostRigSchema} from '../host/schemas.js';
 import {actorPoseSvg,buildRig,hostPreviewSvg} from '../host/rig.js';
@@ -17,8 +17,12 @@ export const ActorCastManifestSchema=z.object({version:z.literal(1),storyboardHa
   assetHash:z.string(),previewHash:z.string(),poseHash:z.string(),profileFileHash:z.string(),
 }))});
 export async function writeActorAssets(root:string,board:Storyboard):Promise<void>{
+  // The resolver hashes the schema-normalized storyboard it reads from disk.
+  // Hash the same canonical contract here so omitted Zod defaults cannot make
+  // a freshly written cast manifest look stale on the next resume.
+  const canonical=StoryboardSchema.parse(board);
   const actors=[];
-  for(const character of actorDefinitions(board)){
+  for(const character of actorDefinitions(canonical)){
     const profile=actorProfile(character),directory=`assets/actors/${character.id}/${profile.profileHash}`;
     const assetPath=`${directory}/actor.svg`,previewPath=`${directory}/preview.png`,posePath=`${directory}/poses.json`,profilePath=`${directory}/profile.json`;
     await fs.mkdir(safePath(root,directory),{recursive:true});await safeRealPath(root,directory);
@@ -29,7 +33,7 @@ export async function writeActorAssets(root:string,board:Storyboard):Promise<voi
     const digest=async(relative:string)=>hash(await fs.readFile(await safeRealPath(root,relative)));
     actors.push({character,profile,rig,lockKey:actorLockKey(character.id),assetPath,previewPath,posePath,profilePath,assetHash:await digest(assetPath),previewHash:await digest(previewPath),poseHash:await digest(posePath),profileFileHash:await digest(profilePath)});
   }
-  await writeJson(path.join(root,'work/actor-cast.json'),{version:1,storyboardHash:hash(board),actors,provenance:'stylized story illustration'});
+  await writeJson(path.join(root,'work/actor-cast.json'),{version:1,storyboardHash:hash(canonical),actors,provenance:'stylized story illustration'});
 }
 export async function actorAssetHashes(root:string):Promise<Record<string,string>>{
   const file=path.join(root,'work/actor-cast.json');if(!await exists(file))return {};

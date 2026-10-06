@@ -1,6 +1,6 @@
 import path from 'node:path';
 import type { FactoryConfig } from '../core/config.js';
-import { ShotSchema, type Beat, type Shot, type Storyboard } from '../core/schemas.js';
+import { ShotSchema, StoryboardSchema, type Beat, type Shot, type Storyboard } from '../core/schemas.js';
 import { exists, hash, readJson, writeJson,writeAtomic } from '../core/utils.js';
 import {rigHand} from '../core/identifiers.js';
 import {cinematicActionGroups} from './actions.js';
@@ -276,14 +276,14 @@ export function validateModelContinuity(previous:Shot|undefined,next:Shot):void{
 }
 
 export async function writeCinematicPlans(root:string,board:Storyboard):Promise<void> {
-  const shots=board.shots.filter(s=>s.cinematic);
+  const canonical=StoryboardSchema.parse(board),shots=canonical.shots.filter(s=>s.cinematic);
   {
-    await writeActorAssets(root,board);
-    await writeJson(path.join(root,'work/actor-timeline.json'),{version:1,storyboardHash:hash(board),shots:shots.map(s=>({shotId:s.id,startMs:s.startMs,endMs:s.endMs,scene:s.cinematic!.actorScene}))});
+    await writeActorAssets(root,canonical);
+    await writeJson(path.join(root,'work/actor-timeline.json'),{version:1,storyboardHash:hash(canonical),shots:shots.map(s=>({shotId:s.id,startMs:s.startMs,endMs:s.endMs,scene:s.cinematic!.actorScene}))});
   }
   const reportFile=path.join(root,'work/creative-direction-report.json'),previous=await exists(reportFile)?await readJson<Record<string,unknown>>(reportFile):{};
   const origins=[...new Set(shots.map(s=>s.cinematic!.artDirection?.origin??'offline'))];
-  await writeJson(reportFile,{...previous,version:22,producer:DIRECTION_VERSION,storyboardHash:hash(board),
+  await writeJson(reportFile,{...previous,version:22,producer:DIRECTION_VERSION,storyboardHash:hash(canonical),
     origin:origins.length===1?origins[0]:'mixed',shots:shots.map(s=>({shotId:s.id,origin:s.cinematic!.artDirection?.origin??'offline',brief:s.cinematic!.artDirection?.brief??null})),
     warning:'Creative origin describes the design source. Technical QC does not constitute visual acceptance.'});
   for(const [file,value] of Object.entries({
@@ -291,6 +291,6 @@ export async function writeCinematicPlans(root:string,board:Storyboard):Promise<
     'stage-plan.json':shots.map(s=>({shotId:s.id,...s.cinematic!.performance.stage,setting:s.cinematic!.setting,environmentAssetId:s.cinematic!.environmentAssetId,artDirection:s.cinematic!.artDirection,provenance:'illustration',parts:s.visualization!.parts,models:s.cinematic!.models,relations:s.visualization!.relations})),
     'performance-plan.json':shots.map(s=>s.cinematic!.performance),
     'camera-plan.json':shots.map(s=>({shotId:s.id,...s.cinematic!.camera})),
-  }))await writeJson(path.join(root,'work',file),{version:22,producer:DIRECTION_VERSION,storyboardHash:hash(board),shots:value});
-  await writeJson(path.join(root,'work/animation-library.json'),{...ANIMATION_LIBRARY,storyboardHash:hash(board)});
+  }))await writeJson(path.join(root,'work',file),{version:22,producer:DIRECTION_VERSION,storyboardHash:hash(canonical),shots:value});
+  await writeJson(path.join(root,'work/animation-library.json'),{...ANIMATION_LIBRARY,storyboardHash:hash(canonical)});
 }

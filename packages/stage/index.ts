@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
 import { findRepoRoot } from '../core/config.js';
-import type { Storyboard } from '../core/schemas.js';
+import { StoryboardSchema, type Storyboard } from '../core/schemas.js';
 import { exists, hash, safeRealPath, writeAtomic, writeJson } from '../core/utils.js';
 import { outputPath } from '../render/process.js';
 
@@ -50,5 +50,5 @@ export async function prepareCinematicEnvironments(root:string,board:Storyboard,
     if(!previous)shot.assetNeeds.push(request);
     used.set(spec.id,{...spec,path:relative});
   }
-  await writeJson(path.join(root,'work/environment-provenance.json'),{version:22,producer:STAGE_VERSION,storyboardHash:hash(board),catalogHash:hash(await fs.readFile(catalogFile)),environments:[...used.values()]});
+  await writeJson(path.join(root,'work/environment-provenance.json'),{version:22,producer:STAGE_VERSION,storyboardHash:hash(StoryboardSchema.parse(board)),catalogHash:hash(await fs.readFile(catalogFile)),environments:[...used.values()]});
 }
