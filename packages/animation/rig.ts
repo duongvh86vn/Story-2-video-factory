@@ -43,8 +43,12 @@ export function performanceSvg(profile: HostProfile,imageMode:'embedded'|'scene'
     : `<path d="M0 0V-92"/>${profile.role==='story-actor'?'':`<g id="neck-scarf"><path d="M-10 -92H10L20 -69L6 -73L0 -88Z" stroke-width="3" fill="${a.accent}"/></g>`}`);
   const head = usesReferenceHead(profile)?forestHeadSvg(profile,imageMode):art?.head??(robot ? `<g id="antenna"><path d="M0 -42V-59"/><circle cy="-63" r="5" fill="${a.accent}"/></g><rect x="-50" y="-42" width="100" height="84" rx="23" fill="${a.shell}"/><rect x="-40" y="-28" width="80" height="55" rx="12" fill="${a.screen}" stroke="none"/>`
     : `<circle r="40" fill="${a.shell}"/>`);
-  const inkPaths=drawn?(['left','right'] as const).map(side=>`<path id="ink-leg-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/><path id="ink-arm-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/>`).join(''):'';
+  const ink=(part:'leg'|'arm')=>(['left','right'] as const).map(side=>`<path id="ink-${part}-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/>`).join('');
+  const inkPaths=drawn?(body?ink('leg'):(['left','right'] as const).map(side=>`<path id="ink-leg-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/><path id="ink-arm-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/>`).join('')):'';
+  const neck=`<g id="neck"${body?' opacity="0"':''}><path d="M0 0V1" vector-effect="non-scaling-stroke"/></g>`;
   return `<g id="performer" data-profile-hash="${profile.profileHash}" fill="none" stroke="${a.outline}" stroke-width="${a.strokeWidth}" stroke-linecap="round" stroke-linejoin="round">`
-    + `${body?.defs??''}${inkPaths}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g><g id="chest">${torso}${costume('chest')}</g><g id="neck"><path d="M0 0V1" vector-effect="non-scaling-stroke"/></g>${limbs}`
+    + `${body?.defs??''}${inkPaths}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g>`
+    + (body?`<g id="garment-left">${body.garments.left}</g><g id="garment-right">${body.garments.right}</g>`:'')
+    + `${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?'':neck}${body?ink('arm'):''}${limbs}`
     + `<g id="head">${head}${costume('head')}${drawn?'':`<g id="face-orientation">${faceLayers(0, -4, 18, robot ? a.accent : a.outline, robot ? a.screen : a.shell, 15)}</g>`}</g></g>`;
 }

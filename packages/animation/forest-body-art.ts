@@ -6,7 +6,12 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-1';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-2';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-2';
+const garments={
+  lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
+  karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
+} as const;
 /** Measured source units, not generic stick proportions. The working cutouts
  * remain candidates. Masks never rewrite the bitmap or reconstruct occlusion. */
 const bodies={
@@ -19,30 +24,30 @@ const bodies={
     arms:{left:{upper:145,lower:128},right:{upper:96,lower:144}},handRestRotation:{left:18.1,right:-16.4},
     hem:'M136 250H330V480L326 480L321 480L316 527L311 564L306 561L301 576L296 574L291 563L286 567L281 574L276 562L271 574L266 586L261 592L256 571L251 555L246 557L241 534L236 529L231 539L226 552L221 571L216 557L211 562L206 573L201 590L196 588L191 565L186 568L181 558L176 566L171 573L166 564L161 567L156 572L151 480L146 480L141 480L136 480Z',
     hemOutlinePad:0,
-    parts:{clothing:{anchor:{x:235,y:435},clip:'M244 263L276 263L301 324L307 414L330 601H136L150 500L182 415L208 337Z'},
+    parts:{neck:{anchor:{x:263,y:274},clip:rect(242,236,43,58)},clothing:{anchor:{x:235,y:435},clip:'M244 263L276 263L301 324L307 414L330 601H136L150 500L182 415L208 337Z'},
       'hand-left':{anchor:{x:113,y:512},clip:'M106 477H120L128 487Q148 502 140 524L126 542L104 544L89 531L85 511L94 490Z'},
       'hand-right':{anchor:{x:376,y:516},clip:'M369 482H383L391 492Q408 507 400 531L387 544L368 546L351 532L348 511L360 490Z'},
       'foot-left':{anchor:{x:135,y:751},clip:rect(74,714,91,45)},'foot-right':{anchor:{x:283,y:752},clip:rect(258,712,96,47)}},
   },
   karo:{file:'library/topics/prehistoric-life/karo-cutout-v1.png',sha256:'f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665',width:377,height:716,unitScale:318/716,
     pelvis:{x:214,y:428},groundY:706,neck:{x:212,y:279},headArtworkScale:.8,
-    shoulders:{left:{x:169,y:276},right:{x:269,y:286}},
+    shoulders:{left:{x:169,y:252},right:{x:269,y:286}},
     hips:{left:{x:190,y:437},right:{x:245,y:437}},
     legs:{left:{upper:179,lower:75},right:{upper:169,lower:84}},ankleY:{left:679,right:680},
     hands:{left:{x:77,y:493},right:{x:343,y:493}},feet:{left:{x:128,y:702},right:{x:266,y:698}},
-    arms:{left:{upper:112,lower:132},right:{upper:88,lower:136}},handRestRotation:{left:14.0,right:-20.8},
+    arms:{left:{upper:131,lower:131},right:{upper:88,lower:136}},handRestRotation:{left:14.0,right:-20.8},
     hem:'M124 250H304V463L299 463L294 463L289 463L284 527L279 530L274 516L269 521L264 521L259 532L254 525L249 530L244 541L239 519L234 519L229 503L224 489L219 475L214 478L209 488L204 501L199 517L194 522L189 519L184 532L179 545L174 535L169 528L164 537L159 523L154 526L149 519L144 525L139 535L134 463L129 463L124 463Z',
     // Color-derived hem coordinates lie inside the original black ink. Keep
     // that ink in a narrow mask band without reintroducing the old legs.
     hemOutlinePad:8,
-    parts:{clothing:{anchor:{x:214,y:428},clip:'M166 274L231 282L270 277L282 420L298 447L303 566H119L120 482L130 431L135 402L139 369L145 340L151 308Z'},
+    parts:{neck:{anchor:{x:212,y:279},clip:rect(185,250,53,51)},clothing:{anchor:{x:214,y:428},clip:'M158 250L228 273L270 277L282 420L298 447L303 566H119L120 482L130 431L135 402L139 369L145 340L151 308Z'},
       'hand-left':{anchor:{x:77,y:493},clip:'M69 464L83 464Q98 475 102 495L98 514Q83 527 58 516L55 501L59 483Z'},
       'hand-right':{anchor:{x:343,y:493},clip:'M335 465L349 465Q366 477 371 497L366 516Q347 528 322 516L319 501L324 483Z'},
       'foot-left':{anchor:{x:128,y:702},clip:rect(76,674,96,42)},'foot-right':{anchor:{x:266,y:698},clip:rect(250,672,91,42)}},
   },
 } as const;
 export function usesReferenceBody(profile:HostProfile):boolean {return profile.appearance.artworkVersion===FOREST_BODY_VERSION;}
-export function referenceBodyMetrics(profile:HostProfile){
+export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body variant missing.');
   const source=bodies[actor],u=source.unitScale,b=profile.appearance.bodyScale,k=u*b;
   const relative=(p:Point)=>({x:(p.x-source.pelvis.x)*k,y:(p.y-source.pelvis.y)*k});
@@ -85,17 +90,26 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   // A clipPath ignores the stroke. Use a bounded luminance mask to retain the
   // painted garment outline around the measured color contour instead.
   const hemMask='<mask id="forest-body-hem" maskUnits="userSpaceOnUse" x="0" y="0" width="'+source.width+'" height="'+source.height+'"><path d="'+source.hem+'" fill="white" stroke="white" stroke-width="'+(source.hemOutlinePad*2)+'" stroke-linejoin="round"/></mask>';
-  const defs='<defs><image id="'+imageId+'" width="'+source.width+'" height="'+source.height+'" href="'+referenceImageUrl(source.file,source.sha256,mode)+'"/>'+clips+hemMask+'</defs>';
-  const part=(id:keyof typeof source.parts)=>{
-    const region:Part=source.parts[id];return '<g stroke="none" fill="none" transform="scale('+source.unitScale+')"><g transform="translate('+(-region.anchor.x)+' '+(-region.anchor.y)+')" clip-path="url(#forest-body-'+id+')">'+(id==='clothing'?'<g mask="url(#forest-body-hem)">':'')+'<use href="#'+imageId+'"/>'+(id==='clothing'?'</g>':'')+'</g></g>';
+  const garmentDefs=(['upper','left','right'] as const).map(layer=>'<clipPath id="forest-garment-'+layer+'" clipPathUnits="userSpaceOnUse"><path d="'+garments[actor][layer]+'"/></clipPath>').join('');
+  const defs='<defs><image id="'+imageId+'" width="'+source.width+'" height="'+source.height+'" href="'+referenceImageUrl(source.file,source.sha256,mode)+'"/>'+clips+hemMask+garmentDefs+'</defs>';
+  const part=(id:keyof typeof source.parts,layer?:'upper'|'left'|'right')=>{
+    const region:Part=source.parts[id],anchor=layer&&layer!=='upper'?source.hips[layer]:region.anchor;
+    return '<g stroke="none" fill="none" transform="scale('+source.unitScale+')"><g transform="translate('+(-anchor.x)+' '+(-anchor.y)+')" clip-path="url(#forest-body-'+id+')">'
+      +(id==='clothing'?'<g mask="url(#forest-body-hem)">':'')+(layer?'<g clip-path="url(#forest-garment-'+layer+')">':'')+'<use href="#'+imageId+'"/>'+(layer?'</g>':'')+(id==='clothing'?'</g>':'')+'</g></g>';
   };
-  return {defs,torso:part('clothing'),hands:{left:part('hand-left'),right:part('hand-right')},feet:{left:part('foot-left'),right:part('foot-right')}};
+  return {defs,neck:part('neck'),torso:part('clothing','upper'),garments:{left:part('clothing','left'),right:part('clothing','right')},
+    hands:{left:part('hand-left'),right:part('hand-right')},feet:{left:part('foot-left'),right:part('foot-right')}};
 }
+export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,bodies}),sources:bodies,
+  rendererVersion:FOREST_BODY_RENDER_VERSION,
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments}),sources:bodies,garmentLayers:garments,
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through hidden IK joint',softness:.28,anatomicalGuarantee:false},
-  secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered',hair:'Lila ponytail source masks with 120ms follow; no simulated hair physics'},
+  secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered',hair:'Lila ponytail source masks with 120ms follow; no simulated hair physics',
+    clothing:'source upper body / two hip-attached lower panels; 100ms thigh follow, no fabric simulation'},
+  headAttachment:{neck:'original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone'},
   footContact:{frameFeet:'sole anchors',inkEndpoint:'ankle',pelvisWalkDrop:'minimum fixed-leg reach plus small bob; not .23 of long thigh'},
-  pending:['rear/side body artwork','continuous head/body turn','remaining hair and clothing secondary motion','occluded clothing reconstruction','runtime anatomy and motion acceptance']};}
+  seatedMotion:{method:'asymmetric source chains, sole/ankle offsets, staggered foot preparation, one continuous knee branch',minimumTransitionMs:1500,productionAcceptance:false},
+  pending:['rear/side body artwork','continuous head/body turn','remaining fringe/beard secondary motion','occluded clothing reconstruction','garment fold and seated motion acceptance','runtime anatomy and motion acceptance']};}

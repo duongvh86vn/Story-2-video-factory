@@ -6,15 +6,16 @@ import {namespaceRigSvg} from '../animation/svg-namespace.js';
 import {referenceBodyDescription} from '../animation/forest-body-art.js';
 import {referenceImageUrl} from '../animation/forest-head-art.js';
 import {topicPreviewProfile} from './preview.js';
-export const BODY_ACTIONS=['rest','point','think','crouch','walk','head-turn'] as const;
+export const BODY_ACTIONS=['rest','point','think','crouch','walk','head-turn','sit-right','sit-left'] as const;
 export type BodyAction=typeof BODY_ACTIONS[number];
 /** Random-access pose inspection through the same evaluator as scenes. This
  * page neither renders an episode nor establishes smooth-motion acceptance. */
 export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:number,mood:Mood):string {
   const profile=topicPreviewProfile(actor),m=rigMetrics(profile),view=actor==='lila'?'three-quarter-right':'three-quarter-left';
+  const sitting=action==='sit-left'||action==='sit-right',durationMs=sitting?5000:4000;
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'body-calibration-'+actor,leadCharacterId:actor,profileHash:profile.profileHash,
-    kind:'stick-man',durationMs:4000,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
-    headView:view,walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:4000,mood}]};
+    kind:'stick-man',durationMs,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
+    headView:view,walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:durationMs,mood}]};
   if(action==='point'){
     delete plan.headView;
     plan.gestures=[{id:'point-target',action:'point',hand:'right',startMs:300,endMs:3600,target:{x:210+m.shoulderOffset+68,y:410+m.shoulderY+16}}];
@@ -23,6 +24,14 @@ export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:
   if(action==='crouch')plan.postures=[{pose:'crouch',intensity:.6,startMs:300,endMs:1000},{pose:'stand',startMs:3000,endMs:3700}];
   if(action==='walk'){delete plan.headView;plan.facing='right';plan.walks=[{startMs:300,endMs:3600,fromX:210,toX:265}];}
   if(action==='head-turn')plan.headTurns=[{startMs:300,endMs:1500,direction:actor==='lila'?'three-quarter-left':'three-quarter-right'}];
+  if(sitting){
+    const direction=action==='sit-left'?-1:1;
+    plan.facing=direction===1?'right':'left';plan.headView=direction===1?'three-quarter-right':'three-quarter-left';
+    plan.supports=[{id:'calibration-log',kind:'seat',facing:plan.facing,width:64,center:{
+      x:plan.root.x-direction*(m.legs!.left.upper+m.legs!.right.upper)/2,
+      y:plan.root.y-(m.legs!.left.lower+m.legs!.right.lower)/2-(m.footSoleOffset!.left+m.footSoleOffset!.right)*profile.appearance.bodyScale/2-(m.hips!.left.y+m.hips!.right.y)/2}}];
+    plan.postures=[{pose:'seated',supportId:'calibration-log',startMs:300,endMs:1800},{pose:'stand',startMs:3000,endMs:4500}];
+  }
   validatePerformance(plan,profile);
   const frame=samplePerformance(plan,profile,timeMs,{method:'segment-draft',windowMs:20,intervals:[]});
   let svg=performanceSvg(profile);
@@ -33,7 +42,8 @@ export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:
   for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp('<g id="'+id+'"[^>]*>'),'<g id="'+id+'"'+(face.opacity===undefined?'':' opacity="'+face.opacity+'"')
     +' transform="'+(face.attr?.transform??'translate('+(face.x??0)+' '+(face.y??0)+') rotate('+(face.rotation??0)+') scale('+(face.scaleX??1)+' '+(face.scaleY??1)+')')+'">');
   const target=plan.gestures[0]?.target,marker=target?'<circle cx="'+target.x+'" cy="'+target.y+'" r="7" fill="none" stroke="#aa5928" stroke-width="1"/>':'';
-  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="105 60 230 360" role="img" aria-label="'+actor+' '+action+' '+timeMs+'ms"><path d="M20 410H410" stroke="#bfa782" stroke-width="1"/>'+marker+namespaceRigSvg(svg,actor+'-calibration-')+'</svg>';
+  const seat=plan.supports?.[0],log=seat?'<g fill="#9b5e2f" stroke="#372011" stroke-width="2"><rect x="'+(seat.center.x-seat.width/2)+'" y="'+seat.center.y+'" width="'+seat.width+'" height="'+(plan.stage.groundY-seat.center.y)+'" rx="12"/><path d="M'+(seat.center.x-23)+' '+(seat.center.y+10)+'q24 7 46 0m-46 18q23 -6 46 0" fill="none" stroke="#754323"/></g>':'';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+(sitting?'20 60 390 360':'105 60 230 360')+'" role="img" aria-label="'+actor+' '+action+' '+timeMs+'ms"><path d="M20 410H410" stroke="#bfa782" stroke-width="1"/>'+log+marker+namespaceRigSvg(svg,actor+'-calibration-')+'</svg>';
 }
 export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood):string {
   const cards=(['lila','karo'] as const).map(actor=>'<section><h2>'+(actor==='lila'?'Lila':'Karo')+'</h2><div class="pair"><figure><img alt="Ảnh gốc '+actor+'" src="'
@@ -41,9 +51,9 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood):string 
     +'<figcaption>Rig từ cutout · '+escapeHtml(action)+' · '+timeMs+' ms</figcaption></figure></div></section>').join('');
   return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rig toàn thân Lila &amp; Karo</title><style>'
     +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair{grid-template-columns:1fr}img,svg{height:410px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
-    +'<p>Trang phục, bàn tay và bàn chân dùng mask trên cutout; đầu có ba góc artwork riêng. Động tác head-turn đi qua góc trước tại 900 ms, vẫn là ba hình rời. Hông đặt tại thắt lưng; từng tay có vai, độ dài và pose nghỉ riêng. Đã có nhịp thở nhẹ, chớp mắt lệch nhau và đuôi tóc Lila theo sau đầu. Đây là ảnh pose tại một thời điểm; chưa nghiệm thu độ mượt video. Quay thân, ngồi và lớp áo/tóc còn lại đang làm.</p>'
+    +'<p>Trang phục, bàn tay và bàn chân giữ texture/nét nguồn. Vạt dưới gắn theo từng hông, theo đùi trễ 100 ms; đuôi tóc Lila theo đầu. Sit-left/right: hai bước thu chân, chuyển hông lên khúc gỗ (1800 ms), giữ, đứng lên rồi mở lại chân (4500 ms). Chân có độ dài riêng và sole/ankle riêng. Head-turn đi qua góc trước tại 900 ms, vẫn là ba hình rời. Đây là ảnh pose tại một thời điểm; nếp áo, tiếp xúc và độ mượt chưa nghiệm thu video. Góc thân nghiêng/lưng và các lớp tóc/râu còn lại đang làm.</p>'
     +'<form method="get"><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
-    +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="4000" step="20" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
+    +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="'+(action.startsWith('sit-')?5000:4000)+'" step="20" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
     +(['neutral','happy','thinking','angry'] as const).map(value=>'<option value="'+value+'"'+(mood===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><button>Xem pose</button></form>'
     +cards+'<p><a href="/api/topics/prehistoric-life/heads">Lớp đầu</a> · <a href="/api/topics/prehistoric-life/body/manifest">Số đo / mask / trạng thái</a> · <a href="/api/topics/prehistoric-life/compare">Các ảnh mẫu</a></p></main></html>';
 }

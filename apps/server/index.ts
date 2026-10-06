@@ -185,7 +185,7 @@ export async function buildServer(options: ServerOptions = {}) {
   app.get('/api/topics/prehistoric-life/heads/manifest',async()=>headWorkbenchManifest());
   app.get<{Querystring:{action?:string;timeMs?:string;mood?:string}}>('/api/topics/prehistoric-life/body',async(request,reply)=>{
     const action=z.enum(BODY_ACTIONS).parse(request.query.action??'rest');
-    const timeMs=z.coerce.number().int().min(0).max(4000).parse(request.query.timeMs??600);
+    const timeMs=z.coerce.number().int().min(0).max(action.startsWith('sit-')?5000:4000).parse(request.query.timeMs??600);
     const mood=z.enum(['neutral','happy','thinking','angry']).parse(request.query.mood??'happy');
     return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood));
   });

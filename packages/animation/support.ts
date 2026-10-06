@@ -1,5 +1,6 @@
 import type {HostProfile} from '../host/schemas.js';
 import {rigMetrics} from './rig.js';
+import {usesReferenceBody} from './forest-body-art.js';
 import type {PerformancePlan,Point,PostureTarget,SeatSupport} from './schemas.js';
 
 const smooth=(n:number)=>{const t=Math.max(0,Math.min(1,n));return t*t*(3-2*t);};
@@ -46,6 +47,45 @@ export function seatedPlacement(plan:PerformancePlan,profile:HostProfile,timeMs:
     return {pelvis:mix(value.pelvis,next.pelvis,smooth(progress)),bend:value.bend};
   }
   return value;
+}
+type Feet=Record<'left'|'right',Point>;
+/** Source actors take two small planted-to-planted steps before sitting, and
+ * widen their stance after rising. Both asynchronous feet and the pelvis are
+ * evaluated from absolute time. A single knee pole is retained for the whole
+ * source plan; asymmetric chains cannot share the old straight-leg waypoint. */
+export function sourceSupportMotion(plan:PerformancePlan,profile:HostProfile,timeMs:number,root:Point,groundFeet:Feet){
+  if(!usesReferenceBody(profile))throw new Error('Source support motion requires the source body rig.');
+  const m=rigMetrics(profile),s=plan.scale,bend=plan.facing==='left'?-1:1;
+  const target=(pose:PostureTarget)=>{
+    if(pose.pose==='seated'){
+      const seat=seatFor(plan,pose);
+      return {pose:pose.pose,pelvis:{...seat.center},feet:{
+        left:{x:root.x+m.hips!.left.x*s,y:root.y},right:{x:root.x+m.hips!.right.x*s,y:root.y}}};
+    }
+    const drop=(pose.pose==='crouch'?.42:pose.pose==='lean'?.04:0)*(pose.intensity??1);
+    return {pose:pose.pose,pelvis:{x:root.x,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*drop*s},feet:groundFeet};
+  };
+  let value=target(plan.entryPosture??{pose:'stand'});
+  for(const clip of [...(plan.postures??[])].sort((a,b)=>a.startMs-b.startMs)){
+    if(timeMs<clip.startMs)break;
+    const next=target(clip),p=Math.max(0,Math.min(1,(timeMs-clip.startMs)/(clip.endMs-clip.startMs)));
+    if(p===1){value=next;continue;}
+    const entering=value.pose!=='seated'&&next.pose==='seated',leaving=value.pose==='seated'&&next.pose!=='seated';
+    const bodyProgress=entering?smooth((p-.38)/.62):leaving?smooth(p/.62):smooth(p);
+    const step=(side:'left'|'right')=>{
+      if(!entering&&!leaving)return {point:mix(value.feet[side],next.feet[side],smooth(p)),planted:true};
+      const start=entering?(side==='left'?.04:.21):(side==='left'?.62:.81),end=entering?(side==='left'?.21:.38):(side==='left'?.81:1);
+      const phase=Math.max(0,Math.min(1,(p-start)/(end-start))),point=mix(value.feet[side],next.feet[side],smooth(phase));
+      point.y-=Math.sin(Math.PI*phase)*7*s;
+      return {point,planted:phase===0||phase===1};
+    };
+    const left=step('left'),right=step('right');
+    // Anticipation bends toward the planted feet; it settles to the held pose.
+    const leanOffset=(entering?Math.sin(Math.PI*Math.max(0,Math.min(1,p/.75))):leaving?Math.sin(Math.PI*Math.max(0,Math.min(1,p/.62))):0)*bend*7;
+    return {pelvis:mix(value.pelvis,next.pelvis,bodyProgress),bend,feet:{left:left.point,right:right.point},
+      stance:{left:left.planted,right:right.planted},ownsFeet:entering||leaving||value.pose==='seated',leanOffset};
+  }
+  return {pelvis:value.pelvis,bend,feet:value.feet,stance:{left:true,right:true},ownsFeet:value.pose==='seated',leanOffset:0};
 }
 /** Reserve the seat throughout approach/sit and stand recovery, not only contact. */
 export function seatOccupancy(plan:PerformancePlan):Array<{supportId:string;startMs:number;endMs:number}>{

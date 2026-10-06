@@ -1,0 +1,81 @@
+{
+  "scope": "static-source-body-seated-poses-only",
+  "appliesTo": "forest-source-body-motion-2 / forest-source-body-svg-2",
+  "bodyPackFingerprint": "05cd75798526b696bb91ccb604fcd21cc8a59a548a25d5a13ed71dbfa1b0328f",
+  "codeHashes": {
+    "compiler.ts": "5d5a1085956f22ebd5b095f09a2ecbf40d94023126abd9b1c1e406d9e23fed85",
+    "rig.ts": "a8037cb555000bf04b6da80c5e7547cc1a59e4f08c458923c7c19a5acee3e46f",
+    "support.ts": "c3a92811be57c2dbff71506fa440c669e104528dedc3e517ea570c3f7a652ba1",
+    "body-geometry.ts": "a3be2e87fd34d0641268378d2f54457719759bd82ff820909f297eae2da4b4ac"
+  },
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.karo",
+        "type": "shoulder_attachment",
+        "severity": "medium",
+        "description": "The exposed shoulder-side arm ends in a rounded black cap beside the neck rather than joining its outline cleanly. A narrow background-colored separation is visible beneath the beard, most clearly in the rightward seated and restored standing poses.",
+        "repair": "Extend the shoulder attachment beneath the neck/torso cutout and adjust masking so the arm root meets the body without a background slit or exposed endpoint."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "seated_clothing_silhouette",
+        "severity": "medium",
+        "description": "In both held seated poses, the lower garment reads as stacked, projecting cutout flaps: a narrow upper flap extends toward the knees while a separate ragged strip crosses the seat front. The resulting stepped outline does not form a clear, continuous hip-to-thigh clothing volume.",
+        "repair": "Adjust panel placement and overlap masks to produce one continuous seated garment silhouette from belt through hip to lap. Preserve the source shading and ragged hem, but remove doubled edges and isolated projecting flap tips."
+      },
+      {
+        "shotId": "character.lila",
+        "type": "seated_clothing_silhouette",
+        "severity": "medium",
+        "description": "In the held seated poses, the skirt panels project across the lap as angular, overlapping wedges, with a conspicuous pointed lower edge above the seat. The hem reads as layered flat pieces rather than a coherent drape over the seated thighs.",
+        "repair": "Reshape or mask the panel overlap around the hip and lap so the outer contour follows the seated thigh volume, retaining the original ragged hem without the prominent wedge-shaped overlap."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "Warm skin, hair, beard and brown garment identity remain recognizable relative to the references; the visible soles meet the drawn ground line in these samples.",
+      "Torso side/rear artwork and fold reconstruction remain pending. These stills do not establish their completeness or validate continuous turns.",
+      "This review covers only the displayed static poses, not motion smoothness, anatomical continuity between frames or production readiness."
+    ]
+  },
+  "productionAcceptance": false,
+  "usage": {
+    "calls": 2,
+    "successes": 2,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 21359,
+    "outputTokens": 1256,
+    "totalTokens": 22615,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 21359,
+        "outputTokens": 1256,
+        "totalTokens": 22615,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 21359,
+        "outputTokens": 1256,
+        "totalTokens": 22615,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

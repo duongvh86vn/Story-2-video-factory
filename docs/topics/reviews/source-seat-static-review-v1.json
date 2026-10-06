@@ -1,0 +1,67 @@
+{
+  "scope": "static-source-body-seated-poses-only",
+  "appliesTo": "forest-source-body-motion-2 / forest-source-body-svg-2",
+  "bodyPackFingerprint": "e15538d1129e6f80e530638129bec9fd991ecd3851403f999637fc945dacc624",
+  "codeHashes": {
+    "compiler.ts": "31f853f349d6928bb2def9e24df18f773d905995bd25ef64e35099efe8315136",
+    "rig.ts": "79b8cc97cd225cc787f5011ed0699d9310d46af8206c54df601159ac94a26cb5",
+    "support.ts": "37fcbc8028ffdd7c5dd9bfe984cac913baeb409cd5963f2f374906dd50fe61c2",
+    "body-geometry.ts": "a3be2e87fd34d0641268378d2f54457719759bd82ff820909f297eae2da4b4ac"
+  },
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.karo",
+        "type": "neck_attachment",
+        "severity": "medium",
+        "description": "A background-colored gap separates the beard/head from the neck and upper torso, especially clearly in the 1200 ms transition and 4800 ms standing pose. The exposed shoulder endpoints make the head read as detached rather than connected as in the reference.",
+        "repair": "Extend the source-colored neck beneath the beard and overlap the head, neck, and torso masks. Close the background slit without filling the intentional ragged neckline, then verify the attachment in both held seated poses and the two other supplied poses."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "The seated garment panels retain recognizable source coloring and ragged edges, but their compressed, overlapping lap silhouette remains an artistic limitation; natural fabric drape and fold reconstruction are not certified.",
+      "Torso side/rear drawings and continuous turns remain outside this review.",
+      "These stills do not establish motion smoothness, continuous anatomical attachment, or production readiness."
+    ]
+  },
+  "productionAcceptance": false,
+  "usage": {
+    "calls": 1,
+    "successes": 1,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 10673,
+    "outputTokens": 526,
+    "totalTokens": 11199,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 10673,
+        "outputTokens": 526,
+        "totalTokens": 11199,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 10673,
+        "outputTokens": 526,
+        "totalTokens": 11199,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.7-head-inbetween",
+  "version": "forest-tribe-0.8-source-seated",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -621,8 +621,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-1",
-    "fingerprint": "2101c93d13c5a236710e90c484f827c7395c2c68735403308b7f509ab13ff852",
+    "compilerVersion": "forest-source-body-motion-2",
+    "rendererVersion": "forest-source-body-svg-2",
+    "fingerprint": "59006aab91b691ccb6699cb0008126f1c6f4da3c1d9e6e5cce63d8d806a9ac0e",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -711,6 +712,13 @@
         "hem": "M136 250H330V480L326 480L321 480L316 527L311 564L306 561L301 576L296 574L291 563L286 567L281 574L276 562L271 574L266 586L261 592L256 571L251 555L246 557L241 534L236 529L231 539L226 552L221 571L216 557L211 562L206 573L201 590L196 588L191 565L186 568L181 558L176 566L171 573L166 564L161 567L156 572L151 480L146 480L141 480L136 480Z",
         "hemOutlinePad": 0,
         "parts": {
+          "neck": {
+            "anchor": {
+              "x": 263,
+              "y": 274
+            },
+            "clip": "M242 236h43v58h-43Z"
+          },
           "clothing": {
             "anchor": {
               "x": 235,
@@ -767,7 +775,7 @@
         "shoulders": {
           "left": {
             "x": 169,
-            "y": 276
+            "y": 252
           },
           "right": {
             "x": 269,
@@ -820,8 +828,8 @@
         },
         "arms": {
           "left": {
-            "upper": 112,
-            "lower": 132
+            "upper": 131,
+            "lower": 131
           },
           "right": {
             "upper": 88,
@@ -835,12 +843,19 @@
         "hem": "M124 250H304V463L299 463L294 463L289 463L284 527L279 530L274 516L269 521L264 521L259 532L254 525L249 530L244 541L239 519L234 519L229 503L224 489L219 475L214 478L209 488L204 501L199 517L194 522L189 519L184 532L179 545L174 535L169 528L164 537L159 523L154 526L149 519L144 525L139 535L134 463L129 463L124 463Z",
         "hemOutlinePad": 8,
         "parts": {
+          "neck": {
+            "anchor": {
+              "x": 212,
+              "y": 279
+            },
+            "clip": "M185 250h53v51h-53Z"
+          },
           "clothing": {
             "anchor": {
               "x": 214,
               "y": 428
             },
-            "clip": "M166 274L231 282L270 277L282 420L298 447L303 566H119L120 482L130 431L135 402L139 369L145 340L151 308Z"
+            "clip": "M158 250L228 273L270 277L282 420L298 447L303 566H119L120 482L130 431L135 402L139 369L145 340L151 308Z"
           },
           "hand-left": {
             "anchor": {
@@ -873,6 +888,22 @@
         }
       }
     },
+    "garmentLayers": {
+      "lila": {
+        "upper": "M100 240h250v225h-250Z",
+        "left": "M100 455H235L241 540L235 620H100Z",
+        "right": "M235 455H350V620H235L241 540Z",
+        "follow": 0.8,
+        "maxRotation": 78
+      },
+      "karo": {
+        "upper": "M100 240h230v219h-230Z",
+        "left": "M100 450H215L223 482L214 570H100Z",
+        "right": "M215 450H330V570H214L223 482Z",
+        "follow": 1,
+        "maxRotation": 90
+      }
+    },
     "anatomicalMapping": {
       "rig-left": "source-view anatomical right",
       "rig-right": "source-view anatomical left"
@@ -887,21 +918,31 @@
     "secondaryMotion": {
       "breath": "bounded continuous body lean",
       "blink": "actor-staggered",
-      "hair": "Lila ponytail source masks with 120ms follow; no simulated hair physics"
+      "hair": "Lila ponytail source masks with 120ms follow; no simulated hair physics",
+      "clothing": "source upper body / two hip-attached lower panels; 100ms thigh follow, no fabric simulation"
+    },
+    "headAttachment": {
+      "neck": "original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone"
     },
     "footContact": {
       "frameFeet": "sole anchors",
       "inkEndpoint": "ankle",
       "pelvisWalkDrop": "minimum fixed-leg reach plus small bob; not .23 of long thigh"
     },
+    "seatedMotion": {
+      "method": "asymmetric source chains, sole/ankle offsets, staggered foot preparation, one continuous knee branch",
+      "minimumTransitionMs": 1500,
+      "productionAcceptance": false
+    },
     "pending": [
       "rear/side body artwork",
       "continuous head/body turn",
-      "remaining hair and clothing secondary motion",
+      "remaining fringe/beard secondary motion",
       "occluded clothing reconstruction",
+      "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "29bcb3896baa2f7232d83283bfb21269135fcacb83ec506652406b9eddd1e07b"
+    "codeHash": "753f12fcb4ca5de629d700580a20f95caa495852a480bf671d05abf312c427db"
   },
   "restCalibration": {
     "status": "candidate",
@@ -930,10 +971,23 @@
       "docs/topics/reviews/front-head-static-review-v1.json"
     ]
   },
+  "bodyStaticReview": {
+    "file": "docs/topics/reviews/source-seat-static-review-v2.json",
+    "pass": false,
+    "scope": "static-source-body-seated-poses-only",
+    "appliesTo": "forest-source-body-motion-2 / forest-source-body-svg-2",
+    "fingerprintMatches": false,
+    "productionAcceptance": false,
+    "history": [
+      "docs/topics/reviews/source-seat-static-review-v1.json"
+    ],
+    "currentRepair": "Warm source neck layer and Karo shoulder repair; latest self-inspection source-seat-right-v3.jpg is not a model PASS. Seated garment drape still needs new authored folds."
+  },
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
     "Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.",
+    "Seated source motion and hip-attached garment panels are candidates. Static source-seat reviews failed; shoulder repair and especially authored clothing folds remain unaccepted.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]
 }
