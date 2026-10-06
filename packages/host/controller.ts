@@ -1,6 +1,7 @@
 import type { Shot } from '../core/schemas.js';
 import type { HostProfile, HostRig } from './schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
+import { ModelHandleAnchorSchema } from '../director/art-direction-schemas.js';
 
 export const HOST_CONTROLLER_VERSION = 'host-controller-2.1.1';
 const radians = (n: number) => n * Math.PI / 180;
@@ -20,6 +21,11 @@ export function solveArm(dx: number, dy: number): { upper: number; lower: number
 }
 export function partAnchor(shot: Shot, partId: string, kind: 'center' | 'handle' | 'label', width: number, height: number): Anchor {
   const p = shot.visualization?.parts.find(p => p.id === partId); if (!p) throw new Error(`${shot.id}: unknown anchor part ${partId}`);
+  const declared = kind === 'handle' ? shot.cinematic?.artDirection?.models.find(model => model.partId === partId)?.handleAnchor : undefined;
+  if (declared !== undefined) {
+    const anchor = ModelHandleAnchorSchema.parse(declared);
+    return { x: width * (p.x + (anchor.x - .5) * p.width), y: height * (p.y + (anchor.y - .5) * p.height) };
+  }
   return { x: width * (p.x + (kind === 'handle' ? -p.width * .35 : 0)), y: height * (p.y + (kind === 'label' ? -p.height / 2 - .025 : 0)) };
 }
 export function hostController(shot: Shot, profile: HostProfile, rig: HostRig, width: number, height: number, activity: SpeechActivity): { js: string; pointers: string; geometry: HostGeometry } {

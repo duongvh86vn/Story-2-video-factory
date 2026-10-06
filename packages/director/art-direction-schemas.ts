@@ -6,6 +6,8 @@ import { SourceRefSchema } from '../explainer/schemas.js';
 const Color=z.string().regex(/^#[0-9a-fA-F]{6}$/);
 /** Finite, non-overshooting incoming-segment curves; no provider-supplied code. */
 export const ArtEasingSchema=z.enum(['none','sine.in','sine.out','sine.inOut']);
+/** Fractions of the rendered part viewport, including its SVG aspect-policy padding. */
+export const ModelHandleAnchorSchema=z.object({x:z.number().finite().min(0).max(1),y:z.number().finite().min(0).max(1)}).strict();
 export const ArtKeyframeSchema=z.object({atMs:z.number().finite().nonnegative(),x:z.number().finite(),y:z.number().finite(),
   scale:z.number().finite().positive(),rotation:z.number().finite(),opacity:z.number().min(0).max(1),ease:ArtEasingSchema.optional()}).strict();
 export const ArtDirectionSchema=z.object({
@@ -18,6 +20,7 @@ export const ArtDirectionSchema=z.object({
   models:z.array(z.object({partId:Id,svg:z.string().min(1).max(150000),foregroundSvg:z.string().min(1).max(150000).optional(),sourceRefs:z.array(SourceRefSchema).min(1),
     projection:z.enum(['normalized-stretch','model-viewport']).optional(),
     labelMode:z.enum(['renderer','artwork','none']).optional(),motionOrigin:z.object({x:z.number().finite(),y:z.number().finite()}).strict().optional(),
+    handleAnchor:ModelHandleAnchorSchema.optional().describe('Optional handle point within the rendered part viewport: (0,0) top-left, (1,1) bottom-right. Account for SVG aspect-policy padding; this is not SVG viewBox or stage coordinates. Keep the gesture/grip at the same resolved point.'),
     controlMode:z.enum(['renderer','none']).optional(),
   }).strict()).max(40),
 }).strict();

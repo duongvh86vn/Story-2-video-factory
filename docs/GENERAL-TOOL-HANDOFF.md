@@ -1,170 +1,60 @@
-# Bàn giao tool theo nội dung
+# Bàn giao tool câu chuyện/chủ đề → kịch bản → video
 
-Checkpoint06/10: lần public resume trên project sinh nhật gốc đã tái dùng đủ7bước phân tích và nhận explanation mới; storyboard còn thiếu diễn xuất/ownership/camera nên dừng trước render. Journal25/25/0, còn5/30calls, review0/2; chưa video hoặc native image review. Source mới sửa phép kiểm shared world khi nhân vật chính di chuyển đồ vật trong cảnh nhiều diễn viên, gom đầy đủ lỗi diễn xuất và cung cấp rig/cue/clock/ownership cho bộ dựng cảnh. Build/typecheck và149ca kiểm độc lập source/protocol qua; chưa nghiệm thu phim. Các306/82PASS trước có phạm vi riêng; giữ mọi FAIL/gap lịch sử, nghiệm thu chất lượng và toàn tool vẫn mở. [Phạm vi và việc tiếp](validation/2026-10-06-actor-airborne-cache.md).
+**Bàn giao triển khai06/10/2026, test sau sửa còn chờ.** Base công bố trước bản sửa này: `1af19a6437b0714b74b41054c112ad0205160574`, nhánh `codex/stickman-acting-v22`. Main chưa merge. Nghiệm thu chất lượng phim và toàn sản phẩm còn mở.
 
-Mục tiêu sản phẩm là **chủ đề/câu chuyện → kịch bản → video**, với người que
-hoặc robot đóng vai trong câu chuyện. Nhà máy, máy hơi nước và ô tô là dữ liệu
-ví dụ. Một phim mẫu đẹp cũng không chứng minh mọi đầu vào đã được nghiệm thu.
+## Sản phẩm và cách dùng
 
-## Luồng sử dụng hiện hành
+Nhập nội dung, chọn người que hoặc mini-robot, ngôn ngữ/model/giọng, rồi **Tạo video**. Nội dung quyết định cast, bối cảnh, đồ vật, hành động, nét mặt, góc máy và nhịp cảnh. Nhân vật là diễn viên tham gia câu chuyện. Giọng kể có thể ngoài hình; cảnh đồ vật/môi trường không cần người dẫn. Máy hơi nước và ô tô là ví dụ hồi quy, không phải template cho mọi video.
 
-1. Tạo project trống, mở **Nội dung, diễn viên và giọng kể**.
-2. Chọn **Chủ đề / Câu chuyện** nếu cần viết lời kể, hoặc **Kịch bản** nếu đã có
-   lời kể hoàn chỉnh. WAV và SRT là hai nguồn narration khác được giữ riêng.
-3. Chọn ngôn ngữ, kiểu tạo hình người que/robot, model viết/thiết kế và giọng.
-4. Bấm **Tạo video**. Có thể xem/sửa kịch bản trước TTS khi dùng nhánh chủ đề.
-
-Nội dung quyết định các vai, hành động, biểu cảm, đồ vật, môi trường và camera.
-Cảnh có thể chỉ có diễn viên hoặc môi trường; không cần tạo đối tượng máy móc
-để có target. Giọng ngoài hình không bắt diễn viên nói toàn bộ lời kể.
-
-## Đã triển khai và phần cần nghiệm thu
-
-| Phần | Đã có trong source | Giới hạn bằng chứng hiện tại |
+| Nội dung đầu vào | Chế độ | Hành vi |
 |---|---|---|
-| Chủ đề/câu chuyện | Writer riêng; kịch bản có nguồn, cache và editor | Truyện thư viện có writer/TTS/phim thật nhưng phim bị QC chặn; chưa đạt chất lượng |
-| Kịch bản hoàn chỉnh | Đọc nguyên văn, clock từ audio thực | Ca trạm xe buýt đã xuất MP4 27,933 giây / DONE / QC kỹ thuật PASS; chất lượng diễn xuất và hình ảnh còn mở |
-| WAV/SRT/WAV+SRT | Nguồn và clock riêng, kiểm mismatch/fit/voice | Không suy ra toàn bộ matrix video từ các kiểm tra audio hoặc protocol; alignment cần backend |
-| Diễn viên | Cast theo nguồn, identity, hai tay, tư thế, gaze, 16 biểu cảm | Test rig/clock không chứng minh đạo diễn và hình ảnh tự sinh tốt |
-| Thiết kế | Artwork/camera/set theo truyện, cảnh không có đồ vật, foreground cùng đối tượng | Cần xem phim thực để đánh giá silhouette, tương tác, biểu cảm, bố cục và nhịp kể |
-| Giọng | EN/VI/JA/KO; Windows, HTTP, compatible, OmniVoice, command | Windows EN và bridge local có audio thật; live backend người dùng/OmniVoice/JA/KO chưa được xác nhận |
-| Preview/resume | Giữ audio khi đổi hình; stale scene chặn preview/download; locks và lịch sử giữ nguyên | Phần hash gate không được coi là chứng minh an toàn với mọi coordinated tampering |
-| Renderer | HyperFrames/HTML/CSS/SVG/JavaScript theo clock cố định | Plugin Remotion đã tham khảo; Remotion chưa là backend chọn được |
+| Ý tưởng/chủ đề/câu chuyện chưa thành lời kể | `idea` | Writer tạo lời kể, sau đó TTS và dựng phim |
+| Lời kể hoàn chỉnh | `script` | Đọc nguyên văn, tạo clock từ audio thực |
+| Audio thu sẵn | `wav` | Giữ giọng/audio; ASR tạo lời và timestamp |
+| SRT có clock | `srt` | Giữ text/timestamp; TTS từng cue, fit hoặc báo lỗi |
 
-Snapshot runtime của ca trạm xe buýt: `3718b2d9a5a7bd7a69c2792e970fbdb8abc78714`,
-branch `codex/stickman-acting-v22`, đã cập nhật repository người dùng chỉ định.
-Các commit tài liệu sau đó không đổi runtime. Checkpoint lỗi ban đầu
-`0ba63bb0e60b930bfceff766720f44f7b8bc43b4` vẫn được giữ trong báo cáo lịch sử.
-Build/typecheck và các kiểm tra nguồn/cache có bằng chứng độc lập riêng.
-Không gọi các kết quả đó là nghiệm thu chất lượng video.
+WAV+SRT dùng mode WAV, giữ hai nguồn và kiểm alignment. `source.md` là tài liệu bổ trợ. MD và lời kể là dữ liệu, không cấp quyền thực thi hướng dẫn. Thiếu writer/TTS, mismatch, nguồn/identity/clock/contact sai phải chặn final; không lấy kết quả cũ làm thành phẩm của input vừa sửa.
 
-## Ca kiểm chứng hiện hành: video đã xuất, chất lượng còn mở
+Studio8850 hiện chạy từ worktree `C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`. Checkout D:/github/Story-2-video-factory2.1 còn main cũ và thay đổi riêng, được giữ nguyên. Model test phải dùng đúng worktree/source SHA; chạy folder D cũ không chứng minh source mới.
 
-Lời kể tiếng Anh gồm Maya chờ xe trong mưa, Noah đến trú mưa, họ nhận thấy
-và mỉm cười với nhau. Đây là kịch bản đầu vào để pipeline tự phân vai và dựng
-hình, không phải storyboard hoặc artwork viết tay để giả thành kết quả tự sinh.
+Hướng dẫn input/API/CLI: [GENERAL-STORY-TOOL.md](GENERAL-STORY-TOOL.md). Ngôn ngữ EN/VI/JA/KO và API TTS riêng/compatible/OmniVoice/command: [EXTERNAL-TTS.md](EXTERNAL-TTS.md). Đặc tả hợp nhất: [STORY-TO-VIDEO-FACTORY.md](../STORY-TO-VIDEO-FACTORY.md). Nguyên tắc tạo hình: [VIDEO-DESIGN-WORKFLOW.md](VIDEO-DESIGN-WORKFLOW.md).
 
-Người dùng đã cho phép một lần chạy thực bằng model test độc lập: truyền
-kịch bản tới tài khoản đang đăng nhập, Windows Speech và render/QC; giới hạn
-30 lượt gọi model và 2 vòng review. Lượt launch trước bị approval review từ
-chối và không thực thi; receipt cũ giữ nguyên. Báo cáo ghi rõ điểm dừng và phần NOTRUN.
+## Bằng chứng hiện hành và giới hạn
 
-## Điều kiện kết luận hoàn thành
+| Phần | Đã có bằng chứng | Chưa được suy ra |
+|---|---|---|
+| Narration/inputs | Có source và các kiểm contract/cache/clock/failure riêng; Windows EN đã tạo audio thật | Toàn matrix WAV/SRT/WAV+SRT hiện hành và live giọng VI/JA/KO |
+| Writer/director | Birthday idea đã tạo script/audio, tái dùng 7 accepted planning receipts, explanation được chấp nhận | Storyboard đạt và phim tự sinh có chất lượng |
+| Rig/acting | Hai tay, khớp, contact, seated support, carry/jump/drop; các scoped source/geometry/protocol audits | Diễn xuất mượt/readable trong toàn phim do model dựng |
+| Thiết kế | Cast/world/artwork/camera theo truyện; không bắt người dẫn, chủ đề máy móc, palette hay quota góc máy | Thẩm mỹ/nhịp kể/tương tác được xác nhận qua xem/nghe toàn phim |
+| Source mới | Context forwarding, artwork handleAnchor, guidance/diagnostics đã build/typecheck/schema; baseline trước sửa478PASS/16FAIL/2SKIP | Post-patch runtime/contact/legacy/cache/lock/film chưa kiểm;149scoped PASS chỉ thuộc base trước |
+| Ca mưa trạm xe buýt | Có MP4/DONE/QC kỹ thuật trong phạm vi báo cáo | Chất lượng hình/acting; audit chỉ đọc đã thấy lỗi chân lệch nền; full watch/listen và native vision chưa xác nhận |
+| Runtime/GitHub | Studio reload operational HTTP200, 68 project names/state hashes giữ nguyên; source SHA đã push nhánh | Main đã merge hoặc toàn sản phẩm release-ready |
 
-Cần phim tự sinh đạt nội dung và chất lượng với chuyện đời thường, hư cấu,
-lịch sử và kiến thức tự nhiên; kiểm các nguồn narration, hai kiểu tạo hình,
-ngôn ngữ/provider khả dụng, sửa nội dung/giọng/cast và resume. Xem/nghe toàn
-phim là nghiệm thu riêng. Phim QC FAIL, fixture authored, ảnh chụp hoặc trạng
-thái DONE kỹ thuật không thay thế các điều kiện này.
+Renderer hiện là HyperFrames/HTML/CSS/SVG/JavaScript theo clock cố định. Remotion đã được tham khảo nhưng chưa là backend có thể chọn. Native still-image review không chứng minh độ mượt hoặc audio sync; xem/nghe toàn phim là phép kiểm riêng.
 
-Báo cáo hiện hành: [public resume trạm xe buýt](validation/2026-10-05-rainy-native-resume.md).
-Lần resume thông thường cùng project đã thoát0 và tạo video/QC PASS, không
-phát sinh lời gọi model mới. Journal giữ13 started/12 completed/1 pending cũ;
-review và scene repair đã dùng2/2. Chưa xem/nghe toàn phim hoặc review vision
-thật; báo cáo formal của lượt resume cũ không được ghi đúng hạn. Đánh giá chỉ đọc
-mới đã release và có [kết quả PARTIAL](validation/2026-10-05-rainy-readonly-acceptance.md),
-gồm lỗi chân lệch nền. Xem/nghe toàn phim vẫn NOTRUN.
+## Ca sinh nhật đã đóng lần native này
 
-Ca chủ đề sinh nhật/robot đã được duyệt và chạy: writer/audio qua, dừng trước
-render do source-review. [Bản sửa source và kiểm tiếp](validation/2026-10-05-birthday-garden-source.md)
-chưa có nghiệm thu video; resume15:48–16:04UTC FAIL,21/30 đã dùng/0 pending, còn9; native vision chưa tới.
+Ca gốc: Riley và Sam chuẩn bị sinh nhật trong vườn, English, mini-robot, Windows Zira, audio 51.421 giây/12 cue. Người dùng đã cho phép cùng ca và review ảnh thật bằng tài khoản hiện tại, tổng 30 model calls/2 review/2 scene repair. Không reset, clone hoặc đổi tài khoản để vượt giới hạn.
 
-[Lần thất bại ban đầu](validation/2026-10-05-rainy-bus-stop-native.md) và
-[các lượt tiếp tục](validation/2026-10-05-rainy-bus-stop-continuation.md) là
-lịch sử riêng, không phải trạng thái hiện tại của video. Không chạy thêm
-resume, đặt lại budget hoặc nhân bản ca này để vượt giới hạn.
+Checkpoint trước: public resume dừng trước render ở 25/25/0, còn5. Source sau đó sửa shared-world validation cho ensemble, tổng hợp đầy đủ acting diagnostics và đưa rig/clock/ownership/source windows vào generation guidance. Phép kiểm vật lý/nguồn được giữ.
 
-## Dùng đúng phiên bản
+Checkpoint đã đóng03:34UTC:28started/28completed/0pending, còn2. Ba responses mới13shot tới ending đều domain-rejected; candidate cuối còn2chair anchor mismatches,1unreachable pick và candle event bằng thời điểm contact. Không accepted storyboard/render/vision/video. Formal report/release/completion và fresh parent5b87bc xác nhận398source/423dist/169case exact,103protected/four old log prefixes exact,55known identities terminal. [Native closeout](validation/2026-10-06-native-ensemble-closeout.md).
 
-Studio tại http://127.0.0.1:8850/ đang chạy từ worktree
-`C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`.
-Source được cập nhật GitHub ở nhánh `codex/stickman-acting-v22`; main chưa
-được merge. Thư mục D:/github/Story-2-video-factory2.1 còn main cũ và thay
-đổi local riêng, được giữ nguyên. Model test phải dùng đúng worktree/branch
-và báo sourceSHA; không chạy npm từ folder cũ rồi suy ra kết quả bản mới.
+Baseline source-context sau đó tái hiện16genuine placement failures;478checks PASS/2SKIP và direct sourced-context controls qua. SAME tester hếtusage trước formal report; parent5f34c9 xác nhận33known resources terminal và source/case nguyên vẹn để triển khai. Bản sửa forwarding và custom artwork handles đã build/typecheck/schema; **GREEN/contact/browser/film mới cònNOTRUN**. [Handoff và raw evidence](validation/2026-10-06-sourced-world-contact.md), [contact contract](ARTWORK-CONTACT-ANCHORS.md).
 
-Source sửa diagnostic/guidance sau nativeFAIL đã build; independent source
-checks riêng đã PASS (xem release bên dưới). Native resume mới nhất đã chạy
-trên source3718; những ghi chú FAIL/PENDING ở các checkpoint bên dưới có
-phạm vi và thời điểm riêng.
+## Việc tiếp theo và điều kiện nghiệm thu
 
+Hoàn thiện tracer tự sinh xuyên writer/narration/cast/storyboard/assets/scenes/draft/actual review/final/QC; sau đó mở rộng theo cùng pipeline cho đời thường, hư cấu, lịch sử và kiến thức tự nhiên. Kiểm hai rig, các nguồn narration, EN/VI/JA/KO và provider thực sự khả dụng, sửa nội dung/giọng/cast, resume/rebuild/locks và export. Factual cần kiểm nguồn; citation của narration không tự chứng minh lịch sử/khoa học đúng.
 
-<!-- NATIVE-WATCHDOG-INTERPRETATION-20261005 -->
-### Giới hạn của lần kiểm chứng bị ngắt
+Parent triển khai và kiểm build/typecheck. Model độc lập chạy runtime/unit/provider/TTS/render/browser/media/vision. Mọi kết quả cần source SHA, input/config/budget, command/exit, raw failures, artifact provenance và giới hạn cụ thể. Không dùng ảnh tĩnh, fixture authored, provider success hoặc DONE kỹ thuật để chứng nhận phim model tự đạo diễn.
 
-Đọc supervisor gốc xác nhận stopAt là min(launch +25 phút, cutoff khởi tạo
-job −45 giây). Cutoff là08:14:06UTC, nên watchdog đặt08:13:21UTC; deadline
-kết phiên là08:21:06UTC. Như vậy job đang chạy bị dừng sớm7phút45giây so
-với deadline. Lượt ba không có response và không thể chấm là domain reject
-hoặc timeout900s của provider. Hai domain rejection đầu vẫn là lỗi thực.
+## Lịch sử được giữ riêng
 
-Kiểm chứng tiếp phải phân biệt cutoff không bắt đầu job mới với deadline
-dành cho job đang chạy và thời gian cleanup. Không sửa supervisor/receipt
-hoặc journal cũ để viết lại kết quả; không có relaunch trong lượt này.
-Source guidance/diagnostic mới chưa chứng minh có phim đạt chất lượng.
+- [Source/general tool và các giới hạn](validation/2026-10-04-general-story-tool.md), [follow-up](validation/2026-10-04-general-story-followup.md).
+- [Film/input/voice thực](validation/2026-10-04-real-film-and-input-results.md), [external/local TTS](validation/2026-10-04-external-local-tts.md).
+- [Native rainy lần đầu](validation/2026-10-05-rainy-bus-stop-native.md), [continuation](validation/2026-10-05-rainy-bus-stop-continuation.md), [resume](validation/2026-10-05-rainy-native-resume.md), [audit chất lượng chỉ đọc](validation/2026-10-05-rainy-readonly-acceptance.md).
+- [Birthday source/history](validation/2026-10-05-birthday-garden-source.md), [airborne/cache/native checkpoints](validation/2026-10-06-actor-airborne-cache.md).
+- [Đối chiếu khoảng cách chất lượng](validation/2026-10-05-current-quality-gap.md), [cast/foreground depth](validation/2026-10-05-cast-and-model-depth.md).
 
-
-<!-- DESIGN-DIAGNOSTICS-SOURCE-RELEASE-20261005 -->
-### Kiểm source độc lập đã bàn giao
-
-Release08:45:40UTC trước deadline08:48:31UTC:125/125 existing tests và
-5/5 supplemental tests PASS; whole-test typecheckPASS. Năm sourcehash và
-66existingtestfiles không đổi.23 observed processbirths đều terminal,
-không còn listener thuộc phiên test. Newtest source-protocol-diagnostics
-được bàn giao với SHA8E9C7FFCC017D65E4BAD6405ABFF16FC74F88458144EFA8AF53AB0D93A0D038A.
-
-SVG/source/crop negatives vẫn bị từ chối. Promptgeneration và matching
-repair có capability list; JSON rejected được gửi nguyên vẹn, receipt cũ
-không sửa. Accepted cache roundtrip giữ storyboard/artwork/scene bytes
-và không gọi model lại. Chưa chạy riêng renderer trước patch để so byte;
-không gọi đó là proof pre-patch parity. Native replay/film/broad suite NOTRUN.
-Raw harness/fixture failures và typecheckFAIL ban đầu được giữ trong
-C:/Users/Duongvh-pc/codex-test-evidence/source-protocol-20261005T083200Z/REPORT.md.
-
-Build0b446e+7897a9 đã qua trước test, source sau release không đổi. Đây là
-nghiệm thu source/protocol riêng, không biến native rainy case time-bound
-FAIL hoặc phim thư viện QCFAIL thành video đạt. Full product/matrix OPEN.
-
-
-<!-- STORY-DESIGN-GUIDANCE-FOLLOWUP-20261005 -->
-### Dàn cảnh và tạo hình theo nội dung: bản sửa tiếp
-
-Director nhận brief thiết kế phim ở đầu generation prompt và danh sách actor/shot
-locks thực sự đã duyệt. Preview/immutable của rig nền không khóa mọi vai thành
-một mascot giống nhau. Tạo hình, costume, góc máy, chiều sâu và nhịp diễn chọn
-theo câu chuyện; không áp palette, chủ đề, tỉ lệ actor, quota góc máy hay mẫu
-layout cố định. Lời kể, nguồn, identity và lock đã duyệt vẫn giữ nguyên.
-
-Guidance chỉ dùng khi sinh/sửa thiết kế; cache đã chấp nhận không bị redesign
-tự động. Đây chưa là bằng chứng chất lượng hình mới. Build/typecheck đã qua;
-kiểm runtime/lock/cache/director và video mới vẫn PENDING do tester hết hạn mức.
-[Ca đã chạy và bộ kiểm tiếp](docs/validation/2026-10-05-rainy-bus-stop-continuation.md).
-
-
-<!-- CODEX-IMAGE-REVIEW-20261005 -->
-### Review ảnh tùy chọn qua Codex CLI
-
-Role visual_review với provider=codex-cli và vision=true có thể gửi contact/
-action/reference sheets bằng --image. Request được gắn hash đúng bytes/MIME;
-giới hạn64ảnh/20MiB mỗi ảnh/128MiB tổng. Workspace vẫn read-only, tool disabled;
-không tự đổi model/account/configuration hoặc xóa budget. Review dùng identity
-của từng vai đã duyệt, không khóa mọi diễn viên vào mascot của rig nền.
-
-Bản vá đã build/typecheck; test độc lập và native vision mới PENDING. Phim trạm
-xe buýt đã render trước đó vẫn QC FAIL. Ảnh tĩnh chưa chứng minh chuyển động
-mượt hoặc audio sync. [Cấu hình, giới hạn và bộ kiểm tiếp](CODEX-IMAGE-REVIEW.md).
-
-## Đối chiếu chất lượng hiện tại
-
-[Audit thiết kế05/10](validation/2026-10-05-current-quality-gap.md) đối chiếu
-board thực với video tham khảo người dùng. Bước tiếp là kiểm thiết kế tự sinh
-mới và toàn phim khi model test có hạn mức, không phải giảm QC, sửa tay một
-phim demo hoặc ép mọi câu chuyện theo cùng bố cục.
-
-### Runtime handoff15:14UTC
-
-Studio8850 now runs source ddfe672 with68projects preserved. Independent source
-regressions and birthday resume have not run: helper parse failure occurred
-before execution, then the tester hit actual usage limit. Source candidate is
-built and on GitHub; runtime effect/video/native image review remains unverified.
-[Precise result](validation/2026-10-05-birthday-garden-source.md).
+Các ghi chú PENDING/FAIL/PASS trong báo cáo lịch sử thuộc đúng source và thời điểm được ghi. Không ghi lại lịch sử cũ thành PASS, không cộng các scoped executions thành tổng nghiệm thu sản phẩm.

@@ -69,3 +69,7 @@ Theo [review phim thực tế 03/10](docs/validation/2026-10-03-film-quality.md)
 Model test độc lập kiểm tra ba luồng/gates, phân vai có nguồn, tạo hình khác nhau giữa vai, identity từng vai, cảnh cơ cấu không cần presenter, voiceover không làm miệng tất cả nhân vật nói, continuity/cut, cache/resume/locks và final thực tế.
 
 Chất lượng cần xem video: có diễn biến, hành động và cảm xúc rõ, nguyên lý trực quan, chiều sâu và nhịp phù hợp. Build, test và QC kỹ thuật không thay tiêu chí này.
+
+## Điểm chạm artwork — triển khai06/10, test sau sửa còn chờ
+
+artDirection.models[].handleAnchor:{x,y} chọn handle trong rendered part viewport, finite0–1. Shared partAnchor đổi sang stage pixels cho target/controller/rendered control; center/label và absent-field legacy giữ nguyên. Custom point không chứng minh pixel-hit hoặc tự theo mesh SVG. Props vẫn giữ center/gripOffset/performer scale, một owner, nguồn/reach/bone/contact/clock; contactRequired event phải sau contact và nằm trong cửa sổ action. Opt-in marker chỉ stale visual scenes chọn field, không narration. Source/build/typecheck/schema đã có; independent schema/contact/source/cache/lock/seek/browser/film cònNOTRUN. [Contract](docs/ARTWORK-CONTACT-ANCHORS.md), [bàn giao kiểm tra](docs/validation/2026-10-06-sourced-world-contact.md).

@@ -954,6 +954,22 @@
                               "maxLength": 96,
                               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                             },
+                            "movement": {
+                              "type": "string",
+                              "enum": [
+                                "walk",
+                                "jump"
+                              ]
+                            },
+                            "operation": {
+                              "type": "string",
+                              "enum": [
+                                "contact",
+                                "pick-place",
+                                "carry",
+                                "drop"
+                              ]
+                            },
                             "kind": {
                               "type": "string",
                               "enum": [
@@ -1391,6 +1407,27 @@
                               ],
                               "additionalProperties": false
                             },
+                            "handleAnchor": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                "y": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Optional handle point within the rendered part viewport: (0,0) top-left, (1,1) bottom-right. Account for SVG aspect-policy padding; this is not SVG viewBox or stage coordinates. Keep the gesture/grip at the same resolved point."
+                            },
                             "controlMode": {
                               "type": "string",
                               "enum": [
@@ -1774,6 +1811,7 @@
                                 "compilerVersion": {
                                   "type": "string",
                                   "enum": [
+                                    "performance-2.2.14",
                                     "performance-2.2.13",
                                     "performance-2.2.12",
                                     "performance-2.2.11",
@@ -2059,6 +2097,43 @@
                                     "additionalProperties": false
                                   }
                                 },
+                                "jumps": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "startMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "endMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "takeoffMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "landingMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "height": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "startMs",
+                                      "endMs",
+                                      "takeoffMs",
+                                      "landingMs",
+                                      "height"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "maxItems": 16
+                                },
                                 "gestures": {
                                   "type": "array",
                                   "items": {
@@ -2087,6 +2162,7 @@
                                           "operate",
                                           "pick-place",
                                           "carry",
+                                          "drop",
                                           "react",
                                           "lead-next"
                                         ]
@@ -2147,6 +2223,10 @@
                                         "minimum": 0
                                       },
                                       "releaseMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "landingMs": {
                                         "type": "integer",
                                         "minimum": 0
                                       },
@@ -2617,6 +2697,22 @@
                               "maxLength": 96,
                               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                             },
+                            "movement": {
+                              "type": "string",
+                              "enum": [
+                                "walk",
+                                "jump"
+                              ]
+                            },
+                            "operation": {
+                              "type": "string",
+                              "enum": [
+                                "contact",
+                                "pick-place",
+                                "carry",
+                                "drop"
+                              ]
+                            },
                             "kind": {
                               "type": "string",
                               "enum": [
@@ -3000,6 +3096,7 @@
                       "compilerVersion": {
                         "type": "string",
                         "enum": [
+                          "performance-2.2.14",
                           "performance-2.2.13",
                           "performance-2.2.12",
                           "performance-2.2.11",
@@ -3285,6 +3382,43 @@
                           "additionalProperties": false
                         }
                       },
+                      "jumps": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "takeoffMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "landingMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "height": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "startMs",
+                            "endMs",
+                            "takeoffMs",
+                            "landingMs",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "maxItems": 16
+                      },
                       "gestures": {
                         "type": "array",
                         "items": {
@@ -3313,6 +3447,7 @@
                                 "operate",
                                 "pick-place",
                                 "carry",
+                                "drop",
                                 "react",
                                 "lead-next"
                               ]
@@ -3373,6 +3508,10 @@
                               "minimum": 0
                             },
                             "releaseMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "landingMs": {
                               "type": "integer",
                               "minimum": 0
                             },

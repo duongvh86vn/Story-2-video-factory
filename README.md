@@ -1,14 +1,16 @@
 # Story-to-Video Factory — diễn viên trong câu chuyện
 
-> Contract hiện hành ngày 04/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Nhánh chủ đề/câu chuyện tạo kịch bản trước ba luồng nguyên văn. Director2.2.31/animation2.2.13 đang nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
+> Contract hiện hành ngày 04/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Nhánh chủ đề/câu chuyện tạo kịch bản trước ba luồng nguyên văn. Director2.2.31/animation2.2.14 đang nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
 Nhập **chủ đề/câu chuyện → tạo kịch bản → phân vai → dựng video**. Người que hoặc robot là diễn viên trong nội dung: đời thường, hư cấu, văn hóa, lịch sử, khoa học hay giải thích. Máy hơi nước và ô tô chỉ là ví dụ kiểm tra. Kịch bản hoàn chỉnh, WAV và SRT vẫn có nhánh đọc nguyên văn; voiceover độc lập diễn viên.
 
 Studio có tab **Chủ đề / Câu chuyện**, model viết kịch bản, nút **Chỉ tạo kịch bản để xem trước** và **Tạo video**. Có thể đưa kịch bản AI sang tab Kịch bản để sửa và dùng nguyên văn. [Hướng dẫn luồng tổng quát](docs/GENERAL-STORY-TOOL.md). Source mới đang kiểm tra độc lập; video mẫu đã dựng không chứng nhận tool tổng quát hay chất lượng mục tiêu đã đạt.
 
-**Director2.2.31/animation2.2.13 đang nghiệm thu.** Dự án mới mặc định trống, story-cinematic, character_mode=actors và người que. Ví dụ máy hơi nước là lựa chọn riêng, không chọn sẵn. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
+**Director2.2.31/animation2.2.14 đang nghiệm thu.** Dự án mới mặc định trống, story-cinematic, character_mode=actors và người que. Ví dụ máy hơi nước là lựa chọn riêng, không chọn sẵn. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
 
 [STORY-TO-VIDEO-FACTORY.md](STORY-TO-VIDEO-FACTORY.md) là bản đặc tả hợp nhất đã đồng bộ với file Downloads, dùng mô hình diễn viên trong câu chuyện. Bản này giữ toàn bộ contract narration, diễn viên và TTS bên ngoài; [audit hoàn thành](docs/validation/2026-10-03-completion-audit.md) liệt kê riêng bằng chứng đã có và yêu cầu còn mở.
+
+Checkpoint06/10: native sinh nhật28/28/0 đã dừng tại storyboard, chưa phim mới. Source-context/artwork handles đã triển khai và build/typecheck/schema; test sau sửa chờ model độc lập. [Bàn giao hiện hành](docs/GENERAL-TOOL-HANDOFF.md), [điểm chạm artwork](docs/ARTWORK-CONTACT-ANCHORS.md).
 
 ## Bắt đầu
 

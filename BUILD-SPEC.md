@@ -655,3 +655,7 @@ narration/audio, actor/shot locks và source/contact/QC gates vẫn giữ nguyê
 Source/build đã triển khai; nghiệm thu runtime mới PENDING model test. Phim trạm
 xe buýt cũ còn QC FAIL; khác hệ tọa độ không chứng minh đã sửa freeze hay video
 đã đạt kỳ vọng. [Contract và bộ kiểm](docs/ARTWORK-WORLD-SPACE.md).
+
+## Điểm chạm artwork — triển khai06/10, test sau sửa còn chờ
+
+artDirection.models[].handleAnchor:{x,y} chọn handle trong rendered part viewport, finite0–1. Shared partAnchor đổi sang stage pixels cho target/controller/rendered control; center/label và absent-field legacy giữ nguyên. Custom point không chứng minh pixel-hit hoặc tự theo mesh SVG. Props vẫn giữ center/gripOffset/performer scale, một owner, nguồn/reach/bone/contact/clock; contactRequired event phải sau contact và nằm trong cửa sổ action. Opt-in marker chỉ stale visual scenes chọn field, không narration. Source/build/typecheck/schema đã có; independent schema/contact/source/cache/lock/seek/browser/film cònNOTRUN. [Contract](docs/ARTWORK-CONTACT-ANCHORS.md), [bàn giao kiểm tra](docs/validation/2026-10-06-sourced-world-contact.md).

@@ -89,6 +89,8 @@ Prop chuyển động bind với đúng model có nguồn, một chủ tay và m
 
 Continuous giữ cast, exit/entry, hướng, scale, posture, seat và world state. Cut cho phép đổi tình huống/vị trí/bối cảnh. Một entry drop đã cầm có nguồn được phép theo contract riêng; không suy ra handoff/carry xuyên cut. Moved model exit là state chung của cảnh, không bị rewind khi kiểm diễn viên phụ.
 
+Artwork có thể khai báo điểm chạm riêng bằng artDirection.models[].handleAnchor:{x,y}, finite0–1 theo viewport part. partAnchor dùng cùng điểm cho action/gesture/controller/rendered control; center/label và fallback legacy giữ nguyên. SVG aspect padding phải được tính vào thiết kế. Binding giữ origin là tâm vật, gripOffset đúng scale; không stretch tay. EventcontactRequired bắt đầu strict sau contact và action phải bao phủ hết event. Field mới đã triển khai/build, runtime/visual verification còn chờ; [contract và giới hạn](docs/ARTWORK-CONTACT-ANCHORS.md).
+
 Voiceover không làm mọi diễn viên mấp máy miệng. Chỉ vai có speakingSegmentIds tương ứng dùng speech activity của audio. Đồng bộ miệng theo speech activity không được gọi là phoneme lip-sync.
 
 ## 6. Pipeline, Studio và khả năng sửa
@@ -144,8 +146,8 @@ Hướng dẫn thao tác và triển khai: [GENERAL-STORY-TOOL.md](docs/GENERAL-
 
 ## 10. Trạng thái và nghiệm thu
 
-Ca sinh nhật gốc đã tự viết lời kể tiếng Anh, tạo audio51.421s/12cues, public resume tái dùng7bước phân tích và nhận explanation10beats. Ba storyboard response còn lỗi diễn xuất/ownership/camera và phép kiểm shared-world, nên dừng trước render. Journal25started/25completed/0pending,5/30calls còn lại; review0/2. Chưa có video, native image review hoặc full watch/listen của ca này.
+Ca sinh nhật gốc giữ lời kể/audio51.421s/12cues và7accepted analysis receipts; native continuation đã đóngFAIL tại storyboard,28started/28completed/0pending,2/30calls còn lại,review0/2. Candidate cuối còn chair anchor/reach/contact-clock errors; chưa render/video/native image review/full watch-listen. [Formal native và parent closeout](docs/validation/2026-10-06-native-ensemble-closeout.md).
 
-Bản sửa shared-world/đầy đủ acting feedback/generation rig-clock guidance đã build/typecheck; 149ca source/protocol độc lập đã qua; đây chưa là nghiệm thu model/phim. Kết quả306source/creative và82cache trước có phạm vi riêng. Mọi FAIL/procedural gap giữ trong [TEST-RESULTS.md](TEST-RESULTS.md) và [validation history](docs/validation/2026-10-06-actor-airborne-cache.md), không được chuyển thành PASS hoặc nghiệm thu V2.2.
+Bản shared-world/đầy đủ acting feedback/generation rig-clock guidance trước có149scoped independentPASS. Baseline sau đó có478PASS/16FAIL/2SKIP;16FAIL là valid named-placement positives do composed validator mất sceneIntent. Source mới forwarding context + custom artwork contact/diagnostics đã build/typecheck/schema; independent post-patch runtime/visual tests cònNOTRUN vì tester usage limit. [Bản sửa và handoff](docs/validation/2026-10-06-sourced-world-contact.md). Không lấy149PASS của source trước làm chứng cứ cho patch mới hoặc phim. Kết quả306source/creative và82cache trước có phạm vi riêng. Mọi FAIL/procedural gap giữ trong [TEST-RESULTS.md](TEST-RESULTS.md) và [validation history](docs/validation/2026-10-06-actor-airborne-cache.md), không được chuyển thành PASS hoặc nghiệm thu V2.2.
 
 Nghiệm thu còn mở: idea/script thuần không WAV/SRT; WAV giữ lời; SRT giữ cue/clock; WAV+SRT mismatch; thiếu/lỗi TTS/fit không final; cả hai rig trong hư cấu/đời thường/lịch sử/kiến thức tự nhiên; EN/VI/JA/KO và backend TTS thật khi có cấu hình; sửa nội dung/giọng/cast, cache/resume/lock/rebuild; media/subtitle/QC và xem/nghe toàn phim. Build, fixture authored, stub, rule review hoặc một video ví dụ không đóng toàn matrix.

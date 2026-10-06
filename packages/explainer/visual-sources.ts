@@ -30,10 +30,13 @@ export function validateAuthoredVisualSources(shot:Shot,canonical:ExplanationBea
     // Persistent subject refs may span earlier cues; a new moving occurrence needs its own evidence.
     return {from:e.targetId,to:e.relationTo!,kind:'transfer' as const,sourceRefs:e.sourceRefs.filter(ref=>ref.kind==='narration'&&ref.segmentId===cue.id)};
   });
-  validateExplanation({version:2,hostId,contentIssues:[],beats:[{beatId:id,explanationGoal:shot.explanationGoal!,
+  // Named subjects remain subject to the same source/name/role checks as the original beat.
+  // Share this context with timed transfers as well as the persistent world relations.
+  const composedBeat:ExplanationBeat={beatId:id,explanationGoal:shot.explanationGoal!,
     narrationSegmentIds:shot.narrationSegmentIds!,sourceRefs:shot.sourceRefs!,entities:v.parts,relations:v.relations,
-    visualMethod:v.type,hostIntent:shot.cinematic!.motivation.slice(0,500)}]},story,narration,[beat],hostId);
-  for(const relation of timedTransfers)validateExplanation({version:2,hostId,contentIssues:[],beats:[{beatId:id,explanationGoal:shot.explanationGoal!,
-    narrationSegmentIds:shot.narrationSegmentIds!,sourceRefs:shot.sourceRefs!,entities:v.parts,relations:[relation],
-    visualMethod:v.type,hostIntent:shot.cinematic!.motivation.slice(0,500)}]},story,narration,[beat],hostId);
+    visualMethod:v.type,hostIntent:shot.cinematic!.motivation.slice(0,500),
+    ...(shot.cinematic?.sceneIntent?{sceneIntent:shot.cinematic.sceneIntent}:{})};
+  validateExplanation({version:2,hostId,contentIssues:[],beats:[composedBeat]},story,narration,[beat],hostId);
+  for(const relation of timedTransfers)validateExplanation({version:2,hostId,contentIssues:[],
+    beats:[{...composedBeat,relations:[relation]}]},story,narration,[beat],hostId);
 }

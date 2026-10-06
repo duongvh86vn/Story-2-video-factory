@@ -421,6 +421,22 @@
                           "maxLength": 96,
                           "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                         },
+                        "movement": {
+                          "type": "string",
+                          "enum": [
+                            "walk",
+                            "jump"
+                          ]
+                        },
+                        "operation": {
+                          "type": "string",
+                          "enum": [
+                            "contact",
+                            "pick-place",
+                            "carry",
+                            "drop"
+                          ]
+                        },
                         "kind": {
                           "type": "string",
                           "enum": [

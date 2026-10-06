@@ -9,6 +9,8 @@ export const ARTWORK_EASING_VERSION='typed-art-easing-1';
 export const ARTWORK_WORLD_BACKGROUND_VERSION='world-background-1';
 /** Opt-in sourced model fragments; legacy artwork keeps its byte/cache contract. */
 export const MODEL_FOREGROUND_VERSION='sourced-model-foreground-1';
+/** Only shots declaring an artwork handle acquire this geometry/cache identity. */
+export const MODEL_CONTACT_ANCHOR_VERSION='sourced-model-contact-anchor-1';
 const tags=new Set(['svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask']);
 /** Generation guidance mirrors the existing validator; callers cannot mutate its tag set. */
 export function supportedArtworkTags():string[]{return [...tags];}

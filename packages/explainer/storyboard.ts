@@ -178,7 +178,11 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
           const actions=performer.actions.filter(a=>a.type==='operate-model'&&a.target?.partId===(e.contactPartId??e.targetId)&&a.contactMs!==undefined&&a.contactMs<e.startMs&&a.endMs>=e.endMs);
           return e.contactHands?e.contactHands.every(hand=>actions.some(a=>rigHand(a)===hand)):actions.length>0;
         });
-        if(!contacted)throw new Error(`${shot.id}: model reacts before actor contact${e.contactActorId||e.contactHands?`; required ${e.contactActorId??'one present actor'}, ${e.contactHands?.join('+')??'any hand'}`:''}`);
+        if(!contacted){
+          const candidates=eligible.flatMap(performer=>performer.actions.filter(a=>a.type==='operate-model'&&a.target?.partId===(e.contactPartId??e.targetId))
+            .map(a=>({actorId:performer.profile.id,hand:rigHand(a),startMs:a.startMs,contactMs:a.contactMs,endMs:a.endMs})));
+          throw new Error(`${shot.id}: model reacts before actor contact${e.contactActorId||e.contactHands?`; required ${e.contactActorId??'one present actor'}, ${e.contactHands?.join('+')??'any hand'}`:''}; ${JSON.stringify({event:e.type,targetId:e.targetId,contactPartId:e.contactPartId??e.targetId,eventStartMs:e.startMs,eventEndMs:e.endMs,requirement:'contactMs < eventStartMs and action.endMs >= eventEndMs (global milliseconds)',candidates})}`);
+        }
       }
     }
     if (h.presence === 'absent') absent += shot.endMs - shot.startMs; else absent = 0;
