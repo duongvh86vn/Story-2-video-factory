@@ -204,6 +204,11 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
 }
 
 export function validateCinematicShot(shot:Shot,profile:HostProfile,config:FactoryConfig):void {
+  validateCinematicActorShot(shot,profile,config,true);
+}
+
+/** Shared model exits belong to the scene; supporting actors do not rewind the primary prop motion. */
+function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:FactoryConfig,validateWorld:boolean):void {
   if(shot.cinematic?.actorScene?.primary)profile=actorProfile(shot.cinematic.actorScene.primary,profile);
   const c=CinematicPlanSchema.parse(shot.cinematic),p=c.performance;
   validateArtDirection(shot);
@@ -216,7 +221,7 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
   if(hash(c.models)!==hash(stageModels(shot)))throw new Error(`${shot.id}: cinematic model variant lacks its source evidence`);
   if(hash(c.continuity.entry)!==hash(p.root)||Math.abs(c.continuity.exit.x-(p.walks.at(-1)?.toX??p.root.x))>.01)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
   validatePropBindings(shot);
-  if(hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
+  if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
   const exitFacing=[...(p.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??p.facing??'front';
   if(c.continuity.facing!==exitFacing)throw new Error(`${shot.id}: cinematic facing disagrees with turn exit`);
   if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
@@ -227,10 +232,10 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
   if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile);
   for(const actor of c.actorScene?.supporting??[]){
     const actorDefinition=actorProfile(actor.character,profile);
-    validateCinematicShot({...shot,host:{...shot.host!,id:actorDefinition.id,rigHash:shot.host!.rigHash,actions:actor.actions},
+    validateCinematicActorShot({...shot,host:{...shot.host!,id:actorDefinition.id,rigHash:shot.host!.rigHash,actions:actor.actions},
       cinematic:{...c,leadCharacterId:actorDefinition.id,performance:actor.performance,propBindings:[],
         continuity:{...c.continuity,entry:actor.performance.root,exit:{x:actor.performance.walks.at(-1)?.toX??actor.performance.root.x,y:actor.performance.stage.groundY},facing:actor.performance.turns?.at(-1)?.direction??actor.performance.facing??'front'},
-        actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config);
+        actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config,false);
   }
   const consumed=new Set<string>();
   const actions=shot.host?.actions??[];

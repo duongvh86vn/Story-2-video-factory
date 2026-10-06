@@ -7,16 +7,20 @@ import {isWholeSourceStatement} from '../explainer/plan.js';
 import {ApprovalRequired} from '../orchestrator/state-machine.js';
 
 type Acting=NonNullable<SceneIntent['acting']>[number];
-function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],speakingSegmentIds:string[],shot:Shot,beat:Beat,narration:Narration):boolean{
-  const kind=expected.kind;
-  if(kind==='hold')return true; // Presence is the intended performance; no artificial activity quota.
-  const windows=expected.sourceRefs.flatMap(ref=>{
+export function actingSourceWindows(expected:Acting,beat:Beat,narration:Narration,interval:Pick<Shot,'startMs'|'endMs'>=beat){
+  return expected.sourceRefs.flatMap(ref=>{
     if(ref.kind!=='narration'||!isWholeSourceStatement(expected.statement,ref.quote))return [];
     const cue=narration.segments.find(cue=>cue.id===ref.segmentId&&cue.text.normalize('NFC').includes(ref.quote.normalize('NFC')));
     if(!cue||!isWholeSourceStatement(expected.statement,cue.text))return [];
-    const startMs=Math.max(cue.startMs,beat.startMs,shot.startMs),endMs=Math.min(cue.endMs,beat.endMs,shot.endMs);
+    const startMs=Math.max(cue.startMs,beat.startMs,interval.startMs),endMs=Math.min(cue.endMs,beat.endMs,interval.endMs);
     return endMs>startMs?[{id:cue.id,startMs,endMs}]:[];
   });
+}
+
+function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],speakingSegmentIds:string[],shot:Shot,beat:Beat,narration:Narration):boolean{
+  const kind=expected.kind;
+  if(kind==='hold')return true; // Presence is the intended performance; no artificial activity quota.
+  const windows=actingSourceWindows(expected,beat,narration,shot);
   const overlaps=(clip:{startMs:number;endMs:number})=>windows.some(window=>shot.startMs+clip.startMs<window.endMs&&shot.startMs+clip.endMs>window.startMs);
   if(kind==='locomotion'&&expected.movement==='jump')return (p.jumps??[]).some(clip=>windows.some(window=>shot.startMs+clip.takeoffMs>=window.startMs&&shot.startMs+clip.landingMs<=window.endMs));
   if(kind==='locomotion')return p.walks.some(clip=>overlaps(clip)&&Math.abs(clip.toX-clip.fromX)>.01);
@@ -46,6 +50,7 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
 
 /** Beat-level coverage permits cutaways and regrouping without dropping the accepted story actors. */
 export function validateStoryActingCoverage(board:Storyboard,beats:Beat[],narration:Narration):void{
+  const failures:string[]=[];
   for(const beat of beats){
     const intent=beat.sceneIntent;if(!intent?.participants.length)continue;
     const scenes=board.shots.filter(shot=>shot.beatIds.includes(beat.id)&&shot.startMs<beat.endMs&&shot.endMs>beat.startMs);
@@ -57,12 +62,13 @@ export function validateStoryActingCoverage(board:Storyboard,beats:Beat[],narrat
         if(cast.primary&&same(cast.primary)&&shot.host?.presence!=='absent')performances.push({shot,performance:c.performance,actions:shot.host?.actions??[],speakingSegmentIds:cast.speakingSegmentIds});
         for(const actor of cast.supporting)if(same(actor.character))performances.push({shot,performance:actor.performance,actions:actor.actions,speakingSegmentIds:actor.speakingSegmentIds});
       }
-      if(!performances.length)throw new Error(`${beat.id}: needs-layout: missing story actor ${participant.name}; cutaways cannot replace the entire accepted actor situation`);
+      if(!performances.length){failures.push(`${beat.id}: needs-layout: missing story actor ${participant.name}; cutaways cannot replace the entire accepted actor situation`);continue;}
       for(const expected of intent.acting?.filter(acting=>acting.participantId===participant.id)??[])
         if(!performances.some(({shot,performance,actions,speakingSegmentIds})=>hasPerformance(expected,performance,actions,speakingSegmentIds,shot,beat,narration)))
-          throw new Error(`${beat.id}: needs-motion: ${participant.name} has no ${expected.kind} performance for its sourced statement; preserve narration and repair the actual acting`);
+          failures.push(`${beat.id}: needs-motion: ${participant.name} has no ${expected.kind} performance for its sourced statement; preserve narration and repair the actual acting. Required evidence: ${JSON.stringify({participantId:participant.id,statement:expected.statement,movement:expected.movement,operation:expected.operation,targetIds:expected.targetIds??[],sourceWindows:actingSourceWindows(expected,beat,narration),clock:"sourceWindows and actor actions are narration-global; performance clips are shot-local"})}`);
     }
   }
+  if(failures.length)throw new Error(failures.join("\n"));
 }
 
 /** Drafts may use an editable seed; final actors require accepted semantic planning and artwork. */

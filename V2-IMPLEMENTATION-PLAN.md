@@ -1,6 +1,6 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
-Checkpoint06/10: source đã có nhảy/rơi thật cho hai rig và resume/cache có provenance. Build core/Studio/Vite qua;306ca nguồn/creative/finite và82ca cache/order/checkpoint đã qua trong các phạm vi riêng. Preflight authentic tái dùng đủ7bước phân tích, chưa chứng minh resume native trên project gốc. Ca sinh nhật21/30 calls hoàn tất/0 pending, còn9; chưa storyboard/video/native vision. Giữ mọi FAIL/gap lịch sử; chất lượng phim và nghiệm thu toàn sản phẩm vẫn mở. [Phạm vi và việc tiếp](docs/validation/2026-10-06-actor-airborne-cache.md).
+Checkpoint06/10: lần public resume trên project sinh nhật gốc đã tái dùng đủ7bước phân tích và nhận explanation mới; storyboard còn thiếu diễn xuất/ownership/camera nên dừng trước render. Journal25/25/0, còn5/30calls, review0/2; chưa video hoặc native image review. Source mới sửa phép kiểm shared world khi nhân vật chính di chuyển đồ vật trong cảnh nhiều diễn viên, gom đầy đủ lỗi diễn xuất và cung cấp rig/cue/clock/ownership cho bộ dựng cảnh. Build/typecheck và149ca kiểm độc lập source/protocol qua; chưa nghiệm thu phim. Các306/82PASS trước có phạm vi riêng; giữ mọi FAIL/gap lịch sử, nghiệm thu chất lượng và toàn tool vẫn mở. [Phạm vi và việc tiếp](docs/validation/2026-10-06-actor-airborne-cache.md).
 
 Các checkpoint bên dưới giữ lịch sử và phạm vi source riêng; đoạn này thay trạng thái hiện hành của ca sinh nhật và motion batch mới.
 

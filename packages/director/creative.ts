@@ -29,6 +29,7 @@ import type {ActorDefinition} from '../actors/schemas.js';
 import {validateCamera} from './camera.js';
 import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
+import {creativeActingBrief} from './acting-brief.js';
 
 /** The general shot contract also supports legacy video; creative production needs these fields. */
 export const CreativeStoryboardSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -160,6 +161,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   // Accepted designs retain their cache/approval identity and are not redesigned.
   const designBrief=config.presentation.character_mode==='actors'?{
     task:'Design a film of this story, including its cast, world, readable acting and shot composition.',
+    productionContract:creativeActingBrief(context.beats,context.narration,context.profile,context.lockedActors),
     selectedRig:{kind:context.profile.kind,profileId:context.profile.id,rule:'Use this selected performer family for the story cast, with freely designed role-specific illustrative appearances. Historical or fictional people are portrayed by actors using this rig; preserve identity facts and explicit approvals.'},
     approvalAuthority:{actorIds:[...new Set([...(context.lockedActors??[]),...actorDefinitions({shots:locks})].map(actor=>actor.id))],shotIds:[...lockIds],
       rule:'Preserve these explicit actor and shot locks. An empty list means there are no approved locks of that kind. The seed host immutable fields and preview describe the base rig, not approved appearances for every story role. Narrated name, role and identity evidence remain immutable for all actors.'},
