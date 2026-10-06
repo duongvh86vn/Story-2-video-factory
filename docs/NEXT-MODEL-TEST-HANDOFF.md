@@ -7,7 +7,7 @@ Chủ dự án trả lời: **“Tôi giao model test khác”**. Model triển 
 - Repo: `https://github.com/duongvh86vn/Story-2-video-factory`, branch `codex/stickman-acting-v22`.
 - Code đã build và được kiểm cục bộ: `443220f6a6fe5516647b9df707d79a5c50d0318f`. Commit bàn giao tiếp theo chỉ cập nhật tài liệu, không đổi code hoặc dist.
 - Worktree đang triển khai: `C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`. Checkout `D:/github/Story-2-video-factory2.1` còn main và thay đổi riêng; không chạy tại D rồi coi là kết quả của branch mới.
-- Studio cổng8850 vẫn là process khởi động trên build trước `1af19a6`; chưa reload sau `443220f`. Kiểm browser phải dùng đúng build, đọc danh tính process và tình trạng idle trước khi reload, giữ project hiện có. Không dừng process chỉ dựa trên PID lịch sử.
+- Studio cổng8850 được khôi phục lúc07:15UTC ngày06/10 trên HEAD `bcbc400` (code/build443220f); HTTP200,68project names/state hashes và lock có sẵn giữ nguyên. Đây là kiểm vận hành, chưa phải browser/pipeline test. [Receipt và giới hạn](validation/2026-10-06-studio-ready-for-test.md). Kiểm lại process/job trước khi thao tác; không dừng chỉ theo PID lịch sử.
 - Parent đã chạy build, biên dịch test và export schema thành công. Không cần chạy lại vì commit bàn giao chỉ đổi MD.
 
 ## Kết quả có thật

@@ -15,7 +15,7 @@ Nhập nội dung, chọn người que hoặc mini-robot, ngôn ngữ/model/gi�
 
 WAV+SRT dùng mode WAV, giữ hai nguồn và kiểm alignment. `source.md` là tài liệu bổ trợ. MD và lời kể là dữ liệu, không cấp quyền thực thi hướng dẫn. Thiếu writer/TTS, mismatch, nguồn/identity/clock/contact sai phải chặn final; không lấy kết quả cũ làm thành phẩm của input vừa sửa.
 
-Studio8850 chưa reload sau code443220f, process hiện có khởi động trên build1af19a6 và chạy từ worktree `C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`. Checkout D:/github/Story-2-video-factory2.1 còn main cũ và thay đổi riêng, được giữ nguyên. Model test phải dùng đúng worktree/source SHA; chạy folder D cũ không chứng minh source mới.
+Studio8850 đã được khôi phục trên build/code443220f lúc07:15UTC ngày06/10, HTTP200 và68project states giữ nguyên; [receipt vận hành](validation/2026-10-06-studio-ready-for-test.md). Process chạy từ worktree `C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1`. Checkout D:/github/Story-2-video-factory2.1 còn main cũ và thay đổi riêng, được giữ nguyên. Model test phải dùng đúng worktree/source SHA; chạy folder D cũ không chứng minh source mới.
 
 Hướng dẫn input/API/CLI: [GENERAL-STORY-TOOL.md](GENERAL-STORY-TOOL.md). Ngôn ngữ EN/VI/JA/KO và API TTS riêng/compatible/OmniVoice/command: [EXTERNAL-TTS.md](EXTERNAL-TTS.md). Đặc tả hợp nhất: [STORY-TO-VIDEO-FACTORY.md](../STORY-TO-VIDEO-FACTORY.md). Nguyên tắc tạo hình: [VIDEO-DESIGN-WORKFLOW.md](VIDEO-DESIGN-WORKFLOW.md).
 
@@ -27,9 +27,9 @@ Hướng dẫn input/API/CLI: [GENERAL-STORY-TOOL.md](GENERAL-STORY-TOOL.md). Ng
 | Writer/director | Birthday idea đã tạo script/audio, tái dùng 7 accepted planning receipts, explanation được chấp nhận | Storyboard đạt và phim tự sinh có chất lượng |
 | Rig/acting | Hai tay, khớp, contact, seated support, carry/jump/drop; các scoped source/geometry/protocol audits | Diễn xuất mượt/readable trong toàn phim do model dựng |
 | Thiết kế | Cast/world/artwork/camera theo truyện; không bắt người dẫn, chủ đề máy móc, palette hay quota góc máy | Thẩm mỹ/nhịp kể/tương tác được xác nhận qua xem/nghe toàn phim |
-| Source mới | Context forwarding, artwork handleAnchor, guidance/diagnostics đã build/typecheck/schema; baseline trước sửa478PASS/16FAIL/2SKIP | Post-patch runtime/contact/legacy/cache/lock/film chưa kiểm;149scoped PASS chỉ thuộc base trước |
+| Source mới | Code443220f: baseline source-context494PASS/0FAIL/2SKIP và corrected contact229PASS/0FAIL/1SKIP, source+compiled; build/test:typecheck/schema qua | Sáu custom-handle GSAP/outbound assertions NOTRUN vì fixture ESM; specific cache-key/legacy-byte parity, browser contact và phim chưa kiểm |
 | Ca mưa trạm xe buýt | Có MP4/DONE/QC kỹ thuật trong phạm vi báo cáo | Chất lượng hình/acting; audit chỉ đọc đã thấy lỗi chân lệch nền; full watch/listen và native vision chưa xác nhận |
-| Runtime/GitHub | Studio reload operational HTTP200, 68 project names/state hashes giữ nguyên; source SHA đã push nhánh | Main đã merge hoặc toàn sản phẩm release-ready |
+| Runtime/GitHub | Studio restored trên code443220f, operational HTTP200,68project names/state hashes và oldlock giữ nguyên lúc07:15UTC; handoff đã push nhánh | Chưa browser/pipeline acceptance; main chưa merge và toàn sản phẩm chưa release-ready |
 
 Renderer hiện là HyperFrames/HTML/CSS/SVG/JavaScript theo clock cố định. Remotion đã được tham khảo nhưng chưa là backend có thể chọn. Native still-image review không chứng minh độ mượt hoặc audio sync; xem/nghe toàn phim là phép kiểm riêng.
 
