@@ -24,6 +24,9 @@ for(const file of ['colors-day.png','colors-sunset.png','colors-night.png','lila
   if(await exists(path.join(dir,file)))rejected.push({...await describe(`library/topics/prehistoric-life/${file}`),status:'rejected-vector-v0.3',productionAllowed:false});
 }
 const headPack=referenceHeadDescription();
+const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
+const headReview=await fs.readFile(path.join(repo,headReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;headPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
+const headReviewCurrent=headReview?.headPackFingerprint===headPack.fingerprint;
 const headCandidates=await Promise.all(Object.entries(headPack.assets).flatMap(([actor,views])=>Object.entries(views).map(async([view,asset])=>{
   const measured=await describe(`library/topics/prehistoric-life/rig-v1/${asset.file}`);
   if(measured.sha256!==asset.sha256||measured.width!==asset.width||measured.height!==asset.height||!measured.hasAlpha)throw new Error(`Head asset metadata changed: ${asset.file}`);
@@ -32,13 +35,14 @@ const headCandidates=await Promise.all(Object.entries(headPack.assets).flatMap((
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
   references,candidates:[...candidates,...headCandidates],rejectedArtifacts:rejected,productionRig:null,
-  headPack:{...headPack,prompts:'library/topics/prehistoric-life/rig-v1/head-prompts.json',codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts')))},
+  headPack:{...headPack,prompts:['library/topics/prehistoric-life/rig-v1/head-prompts.json','library/topics/prehistoric-life/rig-v1/front-prompts.json'],codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts')))},
   bodyPack:{...referenceBodyDescription(),codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-body-art.ts')))},
   restCalibration:{status:'candidate',method:'SVG masks on full cutouts',reconstructedOccludedParts:false,naturalMotion:false,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/reference-puppet.ts')))},
   staticReview:{file:'docs/topics/reviews/karo-atlas-static-review-v1.json',pass:false,scope:'static-artwork-only',appliesTo:'atlas assembly v1, not revised cutout-mask assembly'},
-  headStaticReview:{file:'docs/topics/reviews/head-layer-static-review-v2.json',pass:false,scope:'static-head-layer-only',appliesTo:'head workbench face v2 before body/hair integration',remainingIssue:'Karo angry mouth patch'},
+  headStaticReview:{file:headReviewFile,pass:headReviewCurrent&&headReview?.result.pass===true,scope:'static-three-view-head-layer-only',appliesTo:headReview?.appliesTo,
+    fingerprintMatches:headReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/head-layer-static-review-v2.json','docs/topics/reviews/head-layer-static-review-v3.json','docs/topics/reviews/head-layer-static-review-v4.json','docs/topics/reviews/front-head-static-review-v1.json']},
   limitations:['AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.',
     'The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.',
-    'Layered heads currently support only two authored three-quarter views; continuous turns, rear/body views and other secondary layers remain pending.',
+    'Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.',
     'Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted.']});
 console.log(JSON.stringify({references:references.length,candidates:candidates.length+headCandidates.length,headCandidates:headCandidates.length,rejected:rejected.length,productionReady:false}));

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "actor": "karo",
+      "view": "front",
+      "prompt": "Use case: identity-preserve. Asset type: reusable transparent head artwork for a 2D story actor rig. Image 1 is the edit target: Karo's existing authored three-quarter-right neutral head texture. Create ONE corresponding FRONT-facing head (zero yaw) of the SAME Karo, not a new character and not a mirror. Preserve the hand-painted warm saturated orange skin, dark messy brown hair, black flowing ink outlines, rounded messy beard, moustache, ears and the exact visual family and proportions. Keep the complete hair/beard silhouette inside the image with transparent margins and genuine transparent background. No neck, torso, clothes, props, labels, tiles or extra head. The eye and eyebrow areas must remain plain painted skin because code adds those features as separate rig layers; keep the small simple drawn nose centered. Retain a SMALL warm skin aperture within the beard at the mouth position, with no teeth, tongue, smile line or mouth interior: separate rig layers supply the mouth. Make this a clean coherent front view usable between the existing left and right authored views. Do not flatten painted shading, make pale/white skin, enlarge the beard, add realistic skin detail, or change the hair color.",
+      "tool": "image_gen",
+      "approved": false,
+      "scope": "front-inbetween-head-candidate",
+      "referencedImage": "library/topics/prehistoric-life/rig-v1/karo-head-three-quarter-right.png",
+      "generatedOriginalPath": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-0e24993a-e308-439b-beb7-12156f5eb16c.png",
+      "output": "library/topics/prehistoric-life/rig-v1/karo-head-front.png"
+    },
+    {
+      "actor": "lila",
+      "view": "front",
+      "prompt": "Use case: identity-preserve. Asset type: reusable transparent front head artwork for a 2D story actor rig. Image 1 is the edit target: Lila's current authored three-quarter-right head texture. Create ONE FRONT-facing (zero yaw) neutral head-and-hair texture of the SAME Lila as an intermediate view for turning between the authored left and right views. Preserve the hand-painted rich warm orange-peach skin, dark messy brown side-swept fringe, irregular black flowing ink, complete LONG hair and tied low ponytail, existing subtle warm shadows, face/head proportions and the exact visual family. This is a newly drawn front perspective, NOT a mirror or generic round white face. Keep the ponytail on the same physical side of her head as the source (viewer-left in the front view); show its natural attachment behind the near ear and keep all long strands within the image. The face intentionally has NO eyes, eyebrows or mouth: code adds original-source facial features separately. Keep only the original-style small curved nose, centered for the front view, and a warm painted blank face. No beard. No neck, body, clothes, jewelry, leaf, props, text, panels or extra head. Genuine transparent background and generous empty margins on every side; no cropped wisps or ponytail, no bleached colors, no flat vector fills, no hairstyle redesign. Make the face and hair clear as a single front-view rig texture.",
+      "tool": "image_gen",
+      "approved": false,
+      "scope": "front-inbetween-head-candidate",
+      "referencedImage": "library/topics/prehistoric-life/rig-v1/lila-head-three-quarter-right.png",
+      "generatedOriginalPath": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-0cc25ce6-8dd4-47fc-ab6d-874364d12543.png",
+      "output": "library/topics/prehistoric-life/rig-v1/lila-head-front.png"
+    }
+  ]
+}

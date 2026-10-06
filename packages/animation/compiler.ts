@@ -9,7 +9,7 @@ import { selectedClips } from './library.js';
 import {sampleAirborne,sampleFallingObject} from './airborne.js';
 import {inkLimb,pathCoordinates} from './ink-limb.js';
 import {forestHeadContour} from './forest-tribe-art.js';
-import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription} from './forest-head-art.js';
+import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription,referenceHeadViewForYaw,FOREST_HEAD_VIEWS} from './forest-head-art.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment} from './forest-body-art.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
@@ -491,10 +491,10 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   face['mouth-round']={opacity:pose.round*emotion.weight};
   if(usesReferenceHead(profile)){
     const look=explicitGaze??activeGesture;
-    const yaw=plan.headView||plan.headTurns?.length?headViewAt(plan,t).yaw:look?.target?look.target.x-head.x:orientation;
+    const yaw=plan.headView||plan.headTurns?.length?headViewAt(plan,t).yaw:look?.target?clamp((look.target.x-head.x)/70,-1,1):orientation;
     // Authored drawings are discrete views, not a continuous 3D rotation. Do
     // not cross-fade two opaque heads or fabricate unsupported profile/back art.
-    const sourceFace=referenceFaceState({view:yaw<0?'three-quarter-left':'three-quarter-right',gaze,blink,
+    const sourceFace=referenceFaceState({view:referenceHeadViewForYaw(yaw),gaze,blink,
       // Source eyebrows rotate about their own center in SVG's downward Y:
       // angry inner ends move down, worried/sad inner ends move up.
       browY:pose.brow*emotion.weight,browAngle:-(pose.browAngle??0)*emotion.weight,
@@ -505,7 +505,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       const lagT=Math.max(0,t-120),past=expressionAt(plan,lagT),pastBody=postureAt(plan,lagT);
       const lagAngle=pastBody.leanDeg+past.pose.lean*past.weight+past.pose.tilt*past.weight;
       const follow=Math.max(-5,Math.min(5,(lagAngle-headAngle)*.6+Math.sin(t*Math.PI*2/2800)*walk.activation*1.8));
-      for(const view of ['three-quarter-left','three-quarter-right'])face['hair-tail-'+view]={rotation:follow};
+      for(const view of FOREST_HEAD_VIEWS)face['hair-tail-'+view]={rotation:follow};
     }
     delete transforms['face-orientation'];
   }
@@ -664,7 +664,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),
     ...(plan.supports?.length?{seatSupports:plan.supports,maxSeatContactErrorPx:Math.max(0,...frames.flatMap(f=>f.seatContact?[f.seatContact.errorPx]:[]))}:{}),
     ...(usesReferenceHead(profile)?{headArtwork:{version:referenceHeadDescription().version,fingerprint:referenceHeadDescription().fingerprint,
-      availableViews:referenceHeadDescription().views,turnRendering:'discrete-authored-views',fullBodyReplacement:usesReferenceBody(profile)}}:{}),
+      availableViews:referenceHeadDescription().views,turnRendering:referenceHeadDescription().turnRendering,fullBodyReplacement:usesReferenceBody(profile)}}:{}),
     ...(usesReferenceBody(profile)?{bodyArtwork:referenceBodyDescription()}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

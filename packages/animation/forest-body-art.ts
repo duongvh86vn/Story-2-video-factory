@@ -1,7 +1,7 @@
 import type {HostProfile} from '../host/schemas.js';
 import type {RigHand} from '../core/identifiers.js';
 import {hash} from '../core/utils.js';
-import {referenceImageUrl} from './forest-head-art.js';
+import {referenceImageUrl,type ReferenceHeadView} from './forest-head-art.js';
 type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
@@ -69,9 +69,9 @@ export function referenceBodyMetrics(profile:HostProfile){
 }
 /** The attachment is under the actual authored chin/beard, off center from
  * the face anchor. A view swap is discrete; it is not a continuous head turn. */
-export function referenceBodyHeadAttachment(profile:HostProfile,view:'three-quarter-left'|'three-quarter-right'):Point {
+export function referenceBodyHeadAttachment(profile:HostProfile,view:ReferenceHeadView):Point {
   const lila=profile.appearance.characterVariant==='lila';
-  return {x:(view==='three-quarter-left'?1:-1)*(lila?14:10),y:lila?32:72};
+  return {x:view==='front'?0:(view==='three-quarter-left'?1:-1)*(lila?14:10),y:lila?32:72};
 }
 export function referenceBodyAssets(appearance:HostProfile['appearance']){
   if(appearance.artworkVersion!==FOREST_BODY_VERSION)return [];

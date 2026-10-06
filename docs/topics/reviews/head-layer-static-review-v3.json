@@ -1,0 +1,66 @@
+{
+  "scope": "static-head-layer-only",
+  "appliesTo": "forest-face-motion-4 / forest-head-svg-5",
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.lila",
+        "type": "mouth_compositing",
+        "severity": "medium",
+        "description": "In image 4, the open mouth reaches across the lower face outline into the dark hair beneath the chin in both views. Its angular lower edge merges with the hair, so the mouth does not read as fully contained within the face.",
+        "repair": "Reshape and reposition the open mouth to retain a visible skin margin above the chin. Clip the mouth layer to the facial skin region and preserve the painted face/hair boundary."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "facial_mask_residue",
+        "severity": "low",
+        "description": "In images 3 and 4, small isolated dark specks are visible on the skin near the inner eyebrow/upper nose area in both views. They are separate from the intended eyebrow and eye contours.",
+        "repair": "Clean the expression-mask edges in these areas and restore the underlying warm painted skin, without removing intentional eyebrow strokes."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "Within the supplied static views, Karo's repaired angry mouth has no visible residual white tooth/grin fragment or flat beard-colored replacement patch. It reads as a complete tense, downturned opening, with the warm skin and painted beard identity retained.",
+      "Karo's mouth remains visibly tense in the supplied mock-speech still; this does not establish consistency across other speech poses or over time.",
+      "Assessment is limited to the visible static head layers. Video/runtime behavior, body assembly, and wider product readiness are explicitly excluded."
+    ]
+  },
+  "usage": {
+    "calls": 1,
+    "successes": 1,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 6847,
+    "outputTokens": 467,
+    "totalTokens": 7314,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 6847,
+        "outputTokens": 467,
+        "totalTokens": 7314,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 6847,
+        "outputTokens": 467,
+        "totalTokens": 7314,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

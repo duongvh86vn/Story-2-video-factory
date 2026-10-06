@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.6-source-body",
+  "version": "forest-tribe-0.7-head-inbetween",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -103,6 +103,17 @@
       "hasAlpha": true
     },
     {
+      "file": "library/topics/prehistoric-life/rig-v1/lila-head-front.png",
+      "sha256": "fef6dafeb68cdccecdb59970a42f007bed10193953b12a3789e4dfe8d1767ba1",
+      "width": 1145,
+      "height": 1374,
+      "hasAlpha": true,
+      "actor": "lila",
+      "view": "front",
+      "approved": false,
+      "status": "candidate-layered-head"
+    },
+    {
       "file": "library/topics/prehistoric-life/rig-v1/lila-head-three-quarter-right.png",
       "sha256": "176614c1b7371809f264543aa72a6907e599b123b2691d54c571ca7e2140dfaf",
       "width": 1145,
@@ -121,6 +132,17 @@
       "hasAlpha": true,
       "actor": "lila",
       "view": "three-quarter-left",
+      "approved": false,
+      "status": "candidate-layered-head"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/karo-head-front.png",
+      "sha256": "38ebacdbf4e05c846c72de300caec6b332d00b5c12db9cfcc6ffc24c83f993bf",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "actor": "karo",
+      "view": "front",
       "approved": false,
       "status": "candidate-layered-head"
     },
@@ -217,10 +239,48 @@
     "version": "forest-head-1",
     "views": [
       "three-quarter-left",
+      "front",
       "three-quarter-right"
     ],
     "assets": {
       "lila": {
+        "front": {
+          "file": "lila-head-front.png",
+          "sha256": "fef6dafeb68cdccecdb59970a42f007bed10193953b12a3789e4dfe8d1767ba1",
+          "width": 1145,
+          "height": 1374,
+          "anchor": {
+            "x": 665,
+            "y": 585
+          },
+          "scale": 0.15,
+          "eyes": [
+            {
+              "x": 549,
+              "y": 551
+            },
+            {
+              "x": 751,
+              "y": 551
+            }
+          ],
+          "brows": [
+            {
+              "x": 543,
+              "y": 486
+            },
+            {
+              "x": 756,
+              "y": 486
+            }
+          ],
+          "mouth": {
+            "x": 654,
+            "y": 700
+          },
+          "mouthSkin": "M444 560H864V692L834 738L804 759L774 772L744 783L714 791L684 797L654 799L624 797L594 791L564 783L534 772L504 757L474 735L444 638Z",
+          "featureScale": 0.45
+        },
         "three-quarter-right": {
           "file": "lila-head-three-quarter-right.png",
           "sha256": "176614c1b7371809f264543aa72a6907e599b123b2691d54c571ca7e2140dfaf",
@@ -253,8 +313,9 @@
           ],
           "mouth": {
             "x": 774,
-            "y": 666
+            "y": 646
           },
+          "mouthSkin": "M564 570H924V624L894 659L864 683L834 702L804 716L774 726L744 733L714 738L684 740L654 739L624 735L594 728L564 717Z",
           "featureScale": 0.46
         },
         "three-quarter-left": {
@@ -289,12 +350,49 @@
           ],
           "mouth": {
             "x": 409,
-            "y": 646
+            "y": 626
           },
+          "mouthSkin": "M259 535H619V659L589 678L559 695L529 704L499 709L469 714L439 718L409 720L379 715L349 702L319 683L289 655L259 609Z",
           "featureScale": 0.43
         }
       },
       "karo": {
+        "front": {
+          "file": "karo-head-front.png",
+          "sha256": "38ebacdbf4e05c846c72de300caec6b332d00b5c12db9cfcc6ffc24c83f993bf",
+          "width": 1312,
+          "height": 1199,
+          "anchor": {
+            "x": 665,
+            "y": 598
+          },
+          "scale": 0.135,
+          "eyes": [
+            {
+              "x": 530,
+              "y": 554
+            },
+            {
+              "x": 799,
+              "y": 554
+            }
+          ],
+          "brows": [
+            {
+              "x": 526,
+              "y": 467
+            },
+            {
+              "x": 805,
+              "y": 467
+            }
+          ],
+          "mouth": {
+            "x": 675,
+            "y": 835
+          },
+          "featureScale": 0.45
+        },
         "three-quarter-right": {
           "file": "karo-head-three-quarter-right.png",
           "sha256": "0957657e8518026009a9acade4679728a46e68cfa12a6c9390235826da155929",
@@ -404,7 +502,7 @@
               "x": 349,
               "y": 120
             },
-            "clip": "M333 107h34v23h-34Z"
+            "clip": "M334 122L337 116L343 112H350L358 117L365 124L364 130L356 128L351 122L341 124Z"
           }
         ],
         "mouth": {
@@ -442,14 +540,14 @@
               "x": 206,
               "y": 113
             },
-            "clip": "M187 123L188 111L204 103L228 102L227 112L210 118L195 129Z"
+            "clip": "M189 125L195 116L208 107L218 103L225 105L227 112L213 120L202 126L195 130H189Z"
           },
           {
             "anchor": {
               "x": 281,
               "y": 105
             },
-            "clip": "M263 91h39v28h-39Z"
+            "clip": "M267 110L271 104L278 99H286L293 103L301 112V119L290 118L283 110L274 112Z"
           }
         ],
         "mouth": {
@@ -461,8 +559,8 @@
         }
       }
     },
-    "faceCompilerVersion": "forest-face-motion-3",
-    "rendererVersion": "forest-head-svg-4",
+    "faceCompilerVersion": "forest-face-motion-7",
+    "rendererVersion": "forest-head-svg-8",
     "facialCalibration": {
       "eyeStretch": {
         "x": 1.25,
@@ -470,22 +568,22 @@
       },
       "inkMatrix": "0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3 -3 -3 0 2.4",
       "browResponse": 2.2,
-      "angryMouth": {
-        "file": "docs/topics/assets/reference-expressions.png",
-        "sha256": "fbc6c963252786216689c48a3c7fb09dd258eb6ae0d43b9d777d57587fb69094",
-        "width": 1026,
-        "height": 688,
-        "region": {
-          "anchor": {
-            "x": 657,
-            "y": 537
-          },
-          "clip": "M617 522Q655 516 697 522L696 543Q678 559 648 557L625 547Z"
-        }
-      }
+      "tenseMouth": {
+        "karo": "M-18 3Q-2 -8 17 1L12 10Q-1 2 -13 12Q-17 9 -18 3Z",
+        "lowerLip": "M-12 12Q-1 5 11 10",
+        "lila": "M-10 1Q0 -6 10 1L8 7Q0 3 -8 7Z"
+      },
+      "speechShapes": "relaxed, tense for frown, rounded for surprise/fear; audio activity only"
     },
     "secondaryHair": {
       "tails": {
+        "front": {
+          "pivot": {
+            "x": 335,
+            "y": 759
+          },
+          "clip": "M250 745Q330 752 422 822L544 925L595 1060L495 1374H0V864L177 803Z"
+        },
         "three-quarter-right": {
           "pivot": {
             "x": 335,
@@ -503,19 +601,23 @@
       },
       "scope": "Lila ponytail mask; neck/fringe/back hair remain one painted layer"
     },
-    "fingerprint": "ba4ef5b82383e1439a87effaf131e429c20337c34a99257221771bec90a7ed72",
+    "fingerprint": "3ba6fc853bae30b1514788e912d6c099441c2e4c73ade570893343e1f03c4e1a",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
-    "turnRendering": "discrete-authored-views",
+    "turnRendering": "stepped-authored-views-with-front",
     "pending": [
-      "front/profile/back textures",
-      "full-body reference rig",
-      "separate fringe/ponytail secondary motion",
-      "continuous turn inbetweens",
+      "profile/back textures",
+      "front-view motion acceptance",
+      "full-body views and seated rig",
+      "separate fringe/beard/clothing secondary motion",
+      "additional turn inbetweens",
       "runtime motion acceptance"
     ],
-    "prompts": "library/topics/prehistoric-life/rig-v1/head-prompts.json",
-    "codeHash": "4cefbf17eec20b14da47f1ccbf0498ea12e230f4b96039219c866e178ce85f34"
+    "prompts": [
+      "library/topics/prehistoric-life/rig-v1/head-prompts.json",
+      "library/topics/prehistoric-life/rig-v1/front-prompts.json"
+    ],
+    "codeHash": "b066d473cd8c5b7f4bd7dbbf1f72f881353a0a0f35d49a0088810fb6585b6723"
   },
   "bodyPack": {
     "version": "forest-body-1",
@@ -799,7 +901,7 @@
       "occluded clothing reconstruction",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "b08eb6bd0794dc60bedb277b58970513573aa5c1e7078a2b9f099407a7d55827"
+    "codeHash": "29bcb3896baa2f7232d83283bfb21269135fcacb83ec506652406b9eddd1e07b"
   },
   "restCalibration": {
     "status": "candidate",
@@ -815,16 +917,23 @@
     "appliesTo": "atlas assembly v1, not revised cutout-mask assembly"
   },
   "headStaticReview": {
-    "file": "docs/topics/reviews/head-layer-static-review-v2.json",
-    "pass": false,
-    "scope": "static-head-layer-only",
-    "appliesTo": "head workbench face v2 before body/hair integration",
-    "remainingIssue": "Karo angry mouth patch"
+    "file": "docs/topics/reviews/front-head-static-review-v2.json",
+    "pass": true,
+    "scope": "static-three-view-head-layer-only",
+    "appliesTo": "forest-face-motion-7 / forest-head-svg-8",
+    "fingerprintMatches": true,
+    "productionAcceptance": false,
+    "history": [
+      "docs/topics/reviews/head-layer-static-review-v2.json",
+      "docs/topics/reviews/head-layer-static-review-v3.json",
+      "docs/topics/reviews/head-layer-static-review-v4.json",
+      "docs/topics/reviews/front-head-static-review-v1.json"
+    ]
   },
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
-    "Layered heads currently support only two authored three-quarter views; continuous turns, rear/body views and other secondary layers remain pending.",
+    "Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]
 }

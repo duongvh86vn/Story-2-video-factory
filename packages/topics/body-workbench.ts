@@ -6,7 +6,7 @@ import {namespaceRigSvg} from '../animation/svg-namespace.js';
 import {referenceBodyDescription} from '../animation/forest-body-art.js';
 import {referenceImageUrl} from '../animation/forest-head-art.js';
 import {topicPreviewProfile} from './preview.js';
-export const BODY_ACTIONS=['rest','point','think','crouch','walk'] as const;
+export const BODY_ACTIONS=['rest','point','think','crouch','walk','head-turn'] as const;
 export type BodyAction=typeof BODY_ACTIONS[number];
 /** Random-access pose inspection through the same evaluator as scenes. This
  * page neither renders an episode nor establishes smooth-motion acceptance. */
@@ -22,6 +22,7 @@ export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:
   if(action==='think')plan.gestures=[{id:'think-source',action:'think',hand:'right',startMs:300,endMs:3600}];
   if(action==='crouch')plan.postures=[{pose:'crouch',intensity:.6,startMs:300,endMs:1000},{pose:'stand',startMs:3000,endMs:3700}];
   if(action==='walk'){delete plan.headView;plan.facing='right';plan.walks=[{startMs:300,endMs:3600,fromX:210,toX:265}];}
+  if(action==='head-turn')plan.headTurns=[{startMs:300,endMs:1500,direction:actor==='lila'?'three-quarter-left':'three-quarter-right'}];
   validatePerformance(plan,profile);
   const frame=samplePerformance(plan,profile,timeMs,{method:'segment-draft',windowMs:20,intervals:[]});
   let svg=performanceSvg(profile);
@@ -40,7 +41,7 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood):string 
     +'<figcaption>Rig từ cutout · '+escapeHtml(action)+' · '+timeMs+' ms</figcaption></figure></div></section>').join('');
   return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rig toàn thân Lila &amp; Karo</title><style>'
     +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair{grid-template-columns:1fr}img,svg{height:410px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
-    +'<p>Trang phục, bàn tay và bàn chân dùng mask trên cutout; đầu là hai góc artwork riêng. Hông đặt tại thắt lưng; từng tay có vai, độ dài và pose nghỉ riêng. Đã có nhịp thở nhẹ, chớp mắt lệch nhau và đuôi tóc Lila theo sau đầu. Đây là ảnh pose tại một thời điểm; chưa nghiệm thu độ mượt video. Quay thân, ngồi và lớp áo/tóc còn lại đang làm.</p>'
+    +'<p>Trang phục, bàn tay và bàn chân dùng mask trên cutout; đầu có ba góc artwork riêng. Động tác head-turn đi qua góc trước tại 900 ms, vẫn là ba hình rời. Hông đặt tại thắt lưng; từng tay có vai, độ dài và pose nghỉ riêng. Đã có nhịp thở nhẹ, chớp mắt lệch nhau và đuôi tóc Lila theo sau đầu. Đây là ảnh pose tại một thời điểm; chưa nghiệm thu độ mượt video. Quay thân, ngồi và lớp áo/tóc còn lại đang làm.</p>'
     +'<form method="get"><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
     +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="4000" step="20" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
     +(['neutral','happy','thinking','angry'] as const).map(value=>'<option value="'+value+'"'+(mood===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><button>Xem pose</button></form>'

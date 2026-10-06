@@ -1,0 +1,50 @@
+{
+  "scope": "static-three-view-head-layer-only",
+  "appliesTo": "forest-face-motion-6 / forest-head-svg-7",
+  "headPackFingerprint": "85fad46ac7ccde4e67d0218d1571087cbb35b223989de643ae59a07cd8c06121",
+  "result": {
+    "pass": true,
+    "issues": [],
+    "mode": "vision",
+    "warnings": [
+      "PASS applies only to the static head layers visible in the supplied images; it does not establish motion, video, full-body acceptance, or wider readiness."
+    ]
+  },
+  "usage": {
+    "calls": 1,
+    "successes": 1,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 5102,
+    "outputTokens": 211,
+    "totalTokens": 5313,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 5102,
+        "outputTokens": 211,
+        "totalTokens": 5313,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 5102,
+        "outputTokens": 211,
+        "totalTokens": 5313,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

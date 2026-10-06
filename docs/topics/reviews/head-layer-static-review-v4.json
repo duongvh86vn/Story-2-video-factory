@@ -1,0 +1,52 @@
+{
+  "scope": "static-head-layer-only",
+  "appliesTo": "forest-face-motion-5 / forest-head-svg-6",
+  "result": {
+    "pass": true,
+    "issues": [],
+    "mode": "vision",
+    "warnings": [
+      "PASS applies only to the supplied static head-layer images and the two shown authored three-quarter views; wider readiness is explicitly excluded.",
+      "Karo's angry mouths show no visible residual white tooth/grin fragment or flat beard-colored repair patch. The dark mouth opening and warm lip contours form a complete downturned expression while preserving the surrounding painted beard texture and warm skin identity.",
+      "The supplied angry mock-speech pose retains tense mouth corners and angry brows in both views. This establishes only the appearance of the pictured pose, not tension throughout a speech sequence.",
+      "No concrete additional facial artifact or compositing seam is apparent at the supplied image scale."
+    ]
+  },
+  "usage": {
+    "calls": 2,
+    "successes": 2,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 13694,
+    "outputTokens": 687,
+    "totalTokens": 14381,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 13694,
+        "outputTokens": 687,
+        "totalTokens": 14381,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 13694,
+        "outputTokens": 687,
+        "totalTokens": 14381,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}
