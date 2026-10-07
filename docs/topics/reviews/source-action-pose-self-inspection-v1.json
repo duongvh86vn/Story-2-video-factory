@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "date": "2026-10-07",
+  "scope": "developer-static-pose-inspection-only",
+  "pass": null,
+  "modelReview": null,
+  "productionAcceptance": false,
+  "runtimeTestsRun": false,
+  "fixtureToolExecuted": false,
+  "videoRendered": false,
+  "ttsAsrCalled": false,
+  "build": "PASS",
+  "testTypecheck": "PASS",
+  "bodyPackFingerprint": "828180300ce3b84d4d5f60070b96112093b7663b9146b2c7f9daf88b6a8b5084",
+  "bodyCompiler": "forest-source-body-motion-9",
+  "profiles": {
+    "lila": "9ba1f820b4da1a65cd043fcb90428a55a75370e18d9e8cf041b65f761fa57ab6",
+    "karo": "b768e365e6eb4f5e22a67c5224721c27fef106c5e8100d06411c1658863f8b9c"
+  },
+  "codeHashes": {
+    "packages/animation/compiler.ts": "6720134ca409d4e54b55a3d136e92221029045ad09c5add2a6c2353dd277c25c",
+    "packages/animation/schemas.ts": "c6203116a82d40997696cd76f5f76c6e168b8780a63a95fad5fe09dc5970ced6",
+    "packages/animation/running.ts": "8c605dc2b6dc62889028582aa89deed1c1dc0fbc96051405e4410d52f8ab8534",
+    "packages/animation/spear.ts": "293c41ace392056e76081e77c5b80a4e4e75d0e68086b109d4ea8da05edf9122",
+    "packages/animation/rig.ts": "7a9ad7f40d2804d087b881deba80028604ef787232bcd173cc04b1500854e2c6",
+    "packages/animation/scene.ts": "c1c76c79464e6ceed02dc92878374bea4d1bb5d0b5be3d94f5c32e37dc07b327",
+    "packages/animation/forest-body-art.ts": "94625683120827b23937db340f4c0bfaee32b96934f3f1cc3481c539fe305524",
+    "packages/topics/body-workbench.ts": "cde55f37b57c1220f4321edf82a9fefd841a6685a38393413567db3d71120e09"
+  },
+  "files": [
+    {
+      "file": "docs/topics/reviews/karo-run-flight-v2.png",
+      "action": "run",
+      "timeMs": 665,
+      "mood": "happy",
+      "sha256": "2a4dddd77811299a92213f0312819a8227d06ee31dd64a0e95b4c53073792c40",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=run&timeMs=665&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-run-left-flight-v1.png",
+      "action": "run-left",
+      "timeMs": 1115,
+      "mood": "happy",
+      "sha256": "b790621ffb6ffbd28437aa820ffb78b8e7f805883a29fa81f8dc247120f67dd1",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=run-left&timeMs=1115&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-jump-apex-v2.png",
+      "action": "jump",
+      "timeMs": 1175,
+      "mood": "happy",
+      "sha256": "1705f10fa832cacabffc46b06ea2476a2b92b8612182b555362600a61a0ca9fc",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=jump&timeMs=1175&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-hunt-stalk-v1.png",
+      "action": "hunt-stalk",
+      "timeMs": 3200,
+      "mood": "happy",
+      "sha256": "6483293b7746decb2ffb2f4495d30d1a1c7107dd9c22123ec1848c1da03c9590",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=hunt-stalk&timeMs=3200&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-spear-hold-v1.png",
+      "action": "spear-hold",
+      "timeMs": 1500,
+      "mood": "happy",
+      "sha256": "1f3bd88b7863b8a047437cba736de629cd28b1981dd830a32b3a19d58ac25b84",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-hold&timeMs=1500&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-spear-thrust-contact-v2.png",
+      "action": "spear-thrust",
+      "timeMs": 1800,
+      "mood": "happy",
+      "sha256": "08ab50a00f580225d594235494aff05af4f4c6f95c78fb79df42afdf18f54d5a",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1800&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-hunt-aim-v2.png",
+      "action": "hunt-aim",
+      "timeMs": 1500,
+      "mood": "happy",
+      "sha256": "7697f012c3bd6e6cbc52ee80924647491f8d2676c48e269e8acef41847cbfba6",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=hunt-aim&timeMs=1500&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-hunt-chase-v1.png",
+      "action": "hunt-chase",
+      "timeMs": 1115,
+      "mood": "happy",
+      "sha256": "7c9a7d96bb98599573048534221575e094b2fb8fd6cf30dd05765e0b1ad0af6e",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=hunt-chase&timeMs=1115&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/source-spear-thrust-both-v1.png",
+      "action": "spear-thrust",
+      "timeMs": 1800,
+      "mood": "happy",
+      "sha256": "e5f80ecc33635924adcba7a584c228f0936b26120503d8474cb591a210f4d4c2",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1800&mood=happy"
+    }
+  ],
+  "observations": [
+    "Karo run arms were initially spread sideways; latest pose uses flexed forward/back drive with inferred elbow depth.",
+    "Jump apex adds foot tuck without a second whole-body lift.",
+    "Spear is visible across the tunic, below the hands; contact pose tip meets the calibration marker.",
+    "Original warm textures and garment outlines remain visible in inspected poses. Fidelity/anatomy are not independently accepted.",
+    "Workbench renders both actor cards; full-page spear contact screenshot was visually inspected for both. Other viewport screenshots focus on Karo."
+  ],
+  "pending": [
+    "continuous full-clock evaluator/bake/HyperFrames render and all prepared runtime tests",
+    "authored profile/three-quarter/rear torso, stance/toe/heel/weight/cloth/hair performance",
+    "continuous crouched stalking, pickup/throw/handoff and multi-view spear posing",
+    "sourced weapon/target bindings and animal rig/contact/reaction/camera in story scenes",
+    "three actual input-to-final narrated topic flows and final QC"
+  ]
+}

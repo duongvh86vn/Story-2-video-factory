@@ -1,5 +1,7 @@
 # Karo: sửa dáng chân và bộ pose chuyển động
 
+Bổ sung theo yêu cầu chạy/nhảy/đi săn/cầm–đâm giáo ở [POSES-CHAY-NHAY-SAN.md](POSES-CHAY-NHAY-SAN.md), mốc 0.14. Phần 0.13 dưới đây giữ làm lịch sử; build/typecheck không thay nghiệm thu video.
+
 Ngày 07/10/2026, chủ đề 0.13. Cả Karo và Lila vẫn là diễn viên trong câu chuyện. Tạo hình, màu, trang phục và lời kể đã chốt không đổi khi hiệu chỉnh chuyển động.
 
 ## Lỗi và phần đã sửa trong source

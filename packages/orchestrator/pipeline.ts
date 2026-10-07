@@ -29,7 +29,8 @@ import { createExplanation, EXPLANATION_VERSION, explanationVocabularyRevision }
 import { ExplanationPlanSchema } from '../explainer/schemas.js';
 import { validateExplainerStoryboard, writeHostTimeline } from '../explainer/storyboard.js';
 import { narrateScript, resolveVoice, requireVoice, VoiceReportSchema } from '../voice/index.js';
-import { AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION } from '../animation/schemas.js';
+import { HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION } from '../animation/schemas.js';
+import {mentionsRunning,mentionsAirborne} from '../animation/motion-vocabulary.js';
 import { CINEMATIC_PLAN_FILES, CINEMATIC_EXPORT_FILES, DIRECTION_VERSION } from '../director/schemas.js';
 import { ARTWORK_RENDER_VERSION } from '../director/art-direction.js';
 import { requireFinalStoryDirection } from '../director/story-coverage.js';
@@ -71,8 +72,10 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
   const vocabularyRevision=config.content.mode==='narrated-explainer'&&await exists(path.join(root,'work/narration.json'))
     ?explanationVocabularyRevision(await readJson(path.join(root,'work/narration.json'),NarrationSchema)):undefined;
   const airborneRevision=config.content.mode==='narrated-explainer'&&config.presentation.character_mode==='actors'&&await exists(path.join(root,'work/narration.json'))
-    &&(await readJson(path.join(root,'work/narration.json'),NarrationSchema)).segments.some(cue=>/(?<!\p{L})(?:jump(?:s|ed|ing)?|leap(?:s|ed|ing)?|leapt|hop(?:s|ped|ping)?|drop(?:s|ped|ping)?|nháº£y|tháº£ rÆ¡i|Ä‘Ã¡nh rÆ¡i)(?!\p{L})/iu.test(cue.text))?AIRBORNE_ANIMATION_VERSION:undefined;
-  const allInput={version:4,...(config.topic.id?{topic:topicFingerprint(config)}:{}),...(airborneRevision?{airborneRevision}:{}),authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic};
+    &&(await readJson(path.join(root,'work/narration.json'),NarrationSchema)).segments.some(cue=>mentionsAirborne(cue.text))?AIRBORNE_ANIMATION_VERSION:undefined;
+  const runRevision=config.content.mode==='narrated-explainer'&&config.presentation.character_mode==='actors'&&await exists(path.join(root,'work/narration.json'))
+    &&(await readJson(path.join(root,'work/narration.json'),NarrationSchema)).segments.some(cue=>mentionsRunning(cue.text))?HUNT_ANIMATION_VERSION:undefined;
+  const allInput={version:4,...(config.topic.id?{topic:topicFingerprint(config)}:{}),...(airborneRevision?{airborneRevision}:{}),...(runRevision?{runRevision}:{}),authoring,hostRigIdentityVersion:config.content.mode==='narrated-explainer'?HOST_RIG_IDENTITY_VERSION:undefined,explanationVersion:config.content.mode==='narrated-explainer'?EXPLANATION_VERSION:undefined,storyMetadataVersion:config.content.mode==='narrated-explainer'?NARRATED_STORY_VERSION:undefined,mediaTextVersion:MEDIA_TEXT_VERSION,config,inputContents,autoPresence,source:await digest(config.input.source),hostHash,series,cinematic};
   // Match only source revisions of these exact inputs. Content, voice, config,
   // and narration identity still participate in every parent fingerprint.
   const {airborneRevision:omittedAirborneRevision,...groundedInput}=allInput;

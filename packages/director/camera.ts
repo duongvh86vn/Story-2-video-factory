@@ -21,18 +21,22 @@ function include(bounds:Bounds,point:Point,pad=0){
 export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
   const times=new Set<number>([0,p.durationMs]);
   for(let ms=0;ms<p.durationMs;ms+=1000/p.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...p.walks,...(p.jumps??[]),...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
+  for(const clip of [...p.walks,...(p.jumps??[]),...(p.spears??[]),...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
   for(const jump of p.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])times.add(at);
   for(const clip of p.postures??[])times.add((clip.startMs+clip.endMs)/2);
+  for(const clip of p.spears??[])for(const at of [clip.readyMs,clip.contactMs,clip.recoverMs])if(at!==undefined)times.add(at);
   for(const g of p.gestures){if(g.contactMs!==undefined)times.add(g.contactMs);if(g.releaseMs!==undefined)times.add(g.releaseMs);if(g.landingMs!==undefined)times.add(g.landingMs);
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
   const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
   for(const time of times){
     const frame=samplePerformance(p,profile,time,{method:'segment-draft',windowMs:20,intervals:[]});
-    for(const [id,prop] of Object.entries(frame.props))include(props[id]??=emptyBounds(),prop.point);
+    for(const [id,prop] of Object.entries(frame.props)){
+      const bound=props[id]??=emptyBounds();include(bound,prop.point);
+      if(prop.tip){include(bound,prop.tip,6*p.scale);include(bound,{x:2*prop.point.x-prop.tip.x,y:2*prop.point.y-prop.tip.y},3*p.scale);}
+    }
     const match=/^translate\(([-\d.]+) ([-\d.]+)\) rotate\(([-\d.]+)\) scale\(([-\d.]+)\)$/.exec(frame.transforms.head!);
     if(!match)throw new Error('Camera cannot measure the production head transform.');
     const x=Number(match[1]),y=Number(match[2]),angle=Number(match[3])*Math.PI/180,scale=Number(match[4]),local=emptyBounds();

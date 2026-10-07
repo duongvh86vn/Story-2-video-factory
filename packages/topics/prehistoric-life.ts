@@ -5,7 +5,7 @@ import type { Storyboard } from '../core/schemas.js';
 import {FOREST_HEAD_VIEWS,referenceHeadDescription} from '../animation/forest-head-art.js';
 import {referenceBodyDescription,referenceBodyMetrics} from '../animation/forest-body-art.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.13-walk-pose-candidate';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.14-run-jump-spear-candidate';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -40,6 +40,7 @@ export function topicContext(config:FactoryConfig) {
       fields:'performance.headView and non-overlapping headTurns:{startMs,endMs,direction}; head controls, not full-body rotation. Head-only inspection uses three authored drawings. The forest-body-1 candidate uses one projected front raster through a 60-triangle illustrated cage, bounded to 32 degrees each way; explicit three-quarter-left/right head endpoints map to those bounded angles, with front at zero. Partner/object gaze eases toward a target when no explicit head track overrides it. Feature centers, neck and jaw containment move with the cage; glyph deformation is separately bounded for readability. Profile/rear views remain unsupported. This is a limited 2.5D candidate, not reconstructed 3D or accepted full-view motion.'},
     bodyMotion:{pack:referenceBodyDescription().fingerprint,compiler:referenceBodyDescription().compilerVersion,
       walk:referenceBodyDescription().walkMotion,
+      actions:referenceBodyDescription().actionMotion,
       rule:'Fixed authored torso; body turns remain unsupported. Source sitting/rising requires at least 1500ms. Sitting prepares each foot, plants both soles, then transfers the closed hip contact (below/behind the belt) to a physical seat. Rising transfers the body first, then restores the standing stance. The original per-side leg totals are preserved; knees were not drawn in the source, so thigh/shin split is inferred near 52/48. Do not use generic symmetric lengths or put the support at belt/ankle height. Explicit hand gestures override automatic hands resting on the lap. All plans use one opaque shared cloth surface with a pinned waist; independently rotating standing panels are hidden. Seat plans also use semantic UV correspondence for rest/seated/rising, with internal material/fold texture blending. Lower cloth follows each thigh with 100ms lag and a 22 degree clamp, fading into the seated pose; inverted triangles block evaluation. Karo seated artwork has two cuff openings and one moving SVG perimeter owns its exterior ink. Folds and all motion remain candidates without continuous video acceptance.',
       seatCalibration:(['lila','karo'] as const).map(id=>{
         const m=referenceBodyMetrics({appearance:topicAppearance(id)});

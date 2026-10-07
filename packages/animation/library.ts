@@ -1,11 +1,12 @@
-import { AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, Moods, type PerformancePlan } from './schemas.js';
+import { HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, Moods, type PerformancePlan } from './schemas.js';
 
 const rigs=['stick-man','mini-robot'] as const;
 const gestures=['address-viewer','point','inspect','think','operate','pick-place','carry','drop','react','lead-next'] as const;
 /** Only compiler-supported data clips are advertised. All clocks are local narration milliseconds. */
-export const ANIMATION_LIBRARY={version:22,producer:ANIMATION_VERSION,airborneProducer:AIRBORNE_ANIMATION_VERSION,rigs,
+export const ANIMATION_LIBRARY={version:22,producer:ANIMATION_VERSION,airborneProducer:AIRBORNE_ANIMATION_VERSION,huntProducer:HUNT_ANIMATION_VERSION,rigs,
   clips:[{id:'walk',tracks:['locomotion'],entry:'planted support feet',exit:'balanced planted feet',constraints:['speed <= upperLeg*3 per second','continuous root','source body: load, toe-off, passing, contact and settle poses; distance-dependent low lift; fixed stance sole','source front torso uses independent knee poles; a source seat plan retains its support-facing knee branch; profile walking still needs body views']},
-    {id:'jump',tracks:['airborne','body-posture','ground-shadow'],entry:'standing planted feet',exit:'absorbed landing and planted feet',constraints:['compiler performance-2.2.14','startMs < takeoffMs < landingMs < endMs','height in rig units <= upperLeg * 0.9','preparation >=120ms, flight >=180ms, landing >=160ms','no walking, turning, posture transition or fixed-world contact overlap','carry/drop grip established before preparation','shadow remains on ground']},
+    {id:'run',tracks:['locomotion','airborne','ground-shadow'],entry:'standing planted feet',exit:'settled planted feet',constraints:['compiler performance-2.2.15','walks[].gait=run','speed <= upperLeg*5 per second','support/compression/push/flight/contact phases; no run in place','alternating fixed world-space contacts, both feet released in flight','source front projection is a candidate; authored profile run cycle still pending']},
+    {id:'jump',tracks:['airborne','body-posture','ground-shadow'],entry:'standing planted feet',exit:'absorbed landing and planted feet',constraints:['compiler performance-2.2.14 or newer','startMs < takeoffMs < landingMs < endMs','height in rig units <= upperLeg * 0.9','preparation >=120ms, flight >=180ms, landing >=160ms','no walking, turning, posture transition or fixed-world contact overlap','carry/drop grip established before preparation','shadow remains on ground']},
     {id:'turn',tracks:['orientation'],entry:'current facing',exit:'front or three-quarter facing',constraints:['stationary','minimum 280ms','no contact overlap']},
     ...(['stand','crouch','lean'] as const).map(pose=>({id:`body.${pose}`,tracks:['body-posture'],entry:'current body pose',exit:'hold destination until the next posture transition',constraints:['planted feet','minimum 280ms transition','fixed bone lengths','return to stand before walking','intensity 0–1; body lean -25–25 degrees']})),
     {id:'body.seated',tracks:['body-posture','seat-support'],entry:'standing or supported seated pose',exit:'pelvis held on the rendered seat',constraints:['known physical seat support','minimum 700ms sit/stand transition; source body requires 1500ms including staggered foot preparation','feet planted in front of the seat','fixed thighs and shins; source chains use their individual hips, lengths and ankle offsets','stand before walking, turning or changing seats','generic knee pole changes through a straight-leg waypoint; source plan retains one knee branch']},
@@ -15,7 +16,7 @@ export const ANIMATION_LIBRARY={version:22,producer:ANIMATION_VERSION,airbornePr
     {id:'speech-activity',tracks:['talking-mouth'],entry:'audio activity',exit:'closed speech mouth during silence',constraints:['not phoneme lip-sync']}],
 } as const;
 export function selectedClips(plan:PerformancePlan):string[]{
-  return [...new Set([...(plan.walks.length?['walk']:[]),...(plan.jumps?.length?['jump']:[]),...((plan.turns?.length||plan.facing&&plan.facing!=='front')?['turn']:[]),
+  return [...new Set([...plan.walks.map(w=>w.gait==='run'?'run':'walk'),...(plan.jumps?.length?['jump']:[]),...(plan.spears??[]).map(s=>'spear.'+s.action),...((plan.turns?.length||plan.facing&&plan.facing!=='front')?['turn']:[]),
     ...(plan.entryPosture?[`body.${plan.entryPosture.pose}`]:[]),...(plan.postures??[]).map(p=>`body.${p.pose}`),
     ...plan.gestures.map(g=>g.action),...plan.expressions.map(e=>`mood.${e.mood}`),...(plan.gazes.length?['gaze']:[]),'speech-activity'])];
 }

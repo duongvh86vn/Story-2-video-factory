@@ -1,5 +1,5 @@
 import {escapeHtml} from '../core/utils.js';
-import {ANIMATION_VERSION,type PerformancePlan,type Mood} from '../animation/schemas.js';
+import {ANIMATION_VERSION,HUNT_ANIMATION_VERSION,type PerformancePlan,type Mood} from '../animation/schemas.js';
 import {performanceSvg,rigMetrics} from '../animation/rig.js';
 import {samplePerformance,validatePerformance} from '../animation/compiler.js';
 import {namespaceRigSvg} from '../animation/svg-namespace.js';
@@ -7,7 +7,10 @@ import {referenceBodyDescription} from '../animation/forest-body-art.js';
 import {referenceImageUrl} from '../animation/forest-head-art.js';
 import {topicPreviewProfile} from './preview.js';
 import {SOURCE_WALK_POSES} from '../animation/source-walk.js';
-export const BODY_ACTIONS=['rest','point','think','crouch','walk','walk-left','head-turn','sit-right','sit-left','sit-walk-right','sit-walk-left'] as const;
+import {RUN_POSES,runStepCount} from '../animation/running.js';
+import {spearSvg} from '../animation/spear.js';
+export const BODY_ACTIONS=['rest','point','think','crouch','walk','walk-left','run','run-left','jump','hunt-stalk','spear-hold','spear-thrust','hunt-aim','hunt-chase','head-turn','sit-right','sit-left','sit-walk-right','sit-walk-left'] as const;
+const HUNT_ACTIONS=['run','run-left','jump','hunt-stalk','spear-hold','spear-thrust','hunt-aim','hunt-chase'];
 export type BodyAction=typeof BODY_ACTIONS[number];
 export const bodyActionDuration=(action:BodyAction)=>action.startsWith('sit-walk-')?7200:action.startsWith('sit-')?5000:4000;
 /** Random-access pose inspection through the same evaluator as scenes. This
@@ -25,6 +28,35 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(action==='think')plan.gestures=[{id:'think-source',action:'think',hand:'right',startMs:300,endMs:3600}];
   if(action==='crouch')plan.postures=[{pose:'crouch',intensity:.6,startMs:300,endMs:1000},{pose:'stand',startMs:3000,endMs:3700}];
   if(action==='walk'||action==='walk-left'){delete plan.headView;plan.facing=action==='walk-left'?'left':'right';plan.walks=[{startMs:300,endMs:3600,fromX:210,toX:210+(action==='walk-left'?-55:55)}];}
+  if(HUNT_ACTIONS.includes(action))plan.compilerVersion=HUNT_ANIMATION_VERSION;
+  if(action==='run'||action==='run-left'||action==='hunt-chase'){
+    delete plan.headView;const direction=action==='run-left'?-1:1;
+    plan.facing=direction===1?'right':'left';plan.walks=[{startMs:300,endMs:2100,fromX:210,toX:210+direction*100,gait:'run'}];
+  }
+  if(action==='jump'){
+    delete plan.headView;plan.jumps=[{startMs:400,takeoffMs:850,landingMs:1500,endMs:2000,height:24,tuck:.28}];
+    plan.gestures=[{id:'jump-arm-response',action:'react',hand:'right',startMs:400,endMs:2000},{id:'jump-left-response',action:'react',hand:'left',startMs:400,endMs:2000}];
+  }
+  if(action==='hunt-stalk'){
+    delete plan.headView;plan.facing='right';
+    plan.postures=[{pose:'crouch',intensity:.28,leanDeg:8,startMs:300,endMs:800},{pose:'stand',startMs:1300,endMs:1600},
+      {pose:'crouch',intensity:.28,leanDeg:8,startMs:2800,endMs:3200},{pose:'stand',startMs:3500,endMs:3900}];
+    plan.walks=[{startMs:1700,endMs:2700,fromX:210,toX:228}];
+    plan.gazes=[{startMs:300,endMs:3900,target:{x:360,y:315}}];
+  }
+  if(action.startsWith('spear-')||action==='hunt-aim'||action==='hunt-chase'){
+    delete plan.headView;plan.facing='right';
+    // Local grip measured from the actual primary shoulder. The marker is a
+    // calibration target, never an invented narrated animal identity.
+    const shoulder=m.shoulders!.right,primary={x:plan.root.x+shoulder.x-12,y:plan.root.y+m.pelvisY+shoulder.y+58};
+    const aim={x:primary.x+(action==='spear-thrust'?78:90),y:primary.y};
+    const prop={id:'calibration-spear',origin:{...primary},attachedTo:'right-hand' as const,kind:'spear' as const,length:120,gripOffset:{x:0,y:0}};
+    plan.props=[prop];plan.spears=[{id:'calibration-grip',propId:prop.id,hand:'right',action:action==='spear-thrust'?'thrust':'hold',
+      startMs:0,endMs:durationMs,grip:{x:-12,y:58},aim,twoHands:true,secondaryOffset:-25,
+      ...(action==='spear-thrust'?{readyMs:1200,contactMs:1800,recoverMs:2200}:{})}];
+    if(action==='hunt-aim')plan.postures=[{pose:'crouch',intensity:.22,leanDeg:7,startMs:300,endMs:800},{pose:'stand',startMs:3000,endMs:3500}];
+    if(action==='hunt-chase')plan.spears[0]!.aim={x:410,y:primary.y};
+  }
   if(action==='head-turn')plan.headTurns=[{startMs:300,endMs:1500,direction:actor==='lila'?'three-quarter-left':'three-quarter-right'}];
   if(sitting){
     const direction=action.endsWith('-left')?-1:1;
@@ -35,13 +67,17 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
     plan.postures=[{pose:'seated',supportId:'calibration-log',startMs:300,endMs:1800},{pose:'stand',startMs:3000,endMs:4500}];
     if(action.startsWith('sit-walk-'))plan.walks=[{startMs:4600,endMs:6600,fromX:210,toX:210+direction*55}];
   }
+  if(plan.spears?.length){
+    const entry=samplePerformance(plan,profile,0,{method:'segment-draft',windowMs:20,intervals:[]});
+    for(const prop of plan.props)prop.origin=entry.props[prop.id]!.point;
+  }
   validatePerformance(plan,profile);
   return {profile,plan};
 }
 export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:number,mood:Mood):string {
   const {profile,plan}=bodyCalibrationPlan(actor,action,mood),sitting=action.startsWith('sit-');
   const frame=samplePerformance(plan,profile,timeMs,{method:'segment-draft',windowMs:20,intervals:[]});
-  let svg=performanceSvg(profile);
+  let svg=performanceSvg(profile,'embedded',plan.props.filter(p=>p.kind==='spear').map(spearSvg).join(''));
   // Preserve opacity on hidden physical bones. Dropping it would draw straight
   // bones over the clothing and falsely show a second set of visible limbs.
   for(const [id,transform] of Object.entries(frame.transforms))svg=svg.replace(new RegExp('<g id="'+id+'"[^>]*>'),tag=>tag.replace(/\s+transform="[^"]*"/,'').replace('>',' transform="'+transform+'">'));
@@ -49,11 +85,14 @@ export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:
     .replace('/>',(id.startsWith('ink-')?' stroke-width="'+(profile.appearance.strokeWidth*profile.appearance.bodyScale)+'"':'')+'/>'));
   for(const [id,face] of Object.entries(frame.face))svg=svg.replace(new RegExp('<g id="'+id+'"[^>]*>'),'<g id="'+id+'"'+(face.opacity===undefined?'':' opacity="'+face.opacity+'"')
     +' transform="'+(face.attr?.transform??'translate('+(face.x??0)+' '+(face.y??0)+') rotate('+(face.rotation??0)+') scale('+(face.scaleX??1)+' '+(face.scaleY??1)+')')+'">');
-  const target=plan.gestures[0]?.target,marker=target?'<circle cx="'+target.x+'" cy="'+target.y+'" r="7" fill="none" stroke="#aa5928" stroke-width="1"/>':'';
+  const target=plan.spears?.[0]?.aim??plan.gazes[0]?.target??plan.gestures[0]?.target,marker=target?'<circle cx="'+target.x+'" cy="'+target.y+'" r="7" fill="none" stroke="#aa5928" stroke-width="1"/>':'';
   const seat=plan.supports?.[0],log=seat?'<g fill="#9b5e2f" stroke="#372011" stroke-width="2"><rect x="'+(seat.center.x-seat.width/2)+'" y="'+seat.center.y+'" width="'+seat.width+'" height="'+(plan.stage.groundY-seat.center.y)+'" rx="12"/><path d="M'+(seat.center.x-23)+' '+(seat.center.y+10)+'q24 7 46 0m-46 18q23 -6 46 0" fill="none" stroke="#754323"/></g>':'';
-  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+(sitting?'20 60 390 360':'105 60 230 360')+'" role="img" aria-label="'+actor+' '+action+' '+timeMs+'ms"><path d="M20 410H410" stroke="#bfa782" stroke-width="1"/>'+log+marker+namespaceRigSvg(svg,actor+'-calibration-')+'</svg>';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'+(sitting||HUNT_ACTIONS.includes(action)?'0 35 430 405':'105 60 230 360')+'" role="img" aria-label="'+actor+' '+action+' '+timeMs+'ms"><path d="M20 410H410" stroke="#bfa782" stroke-width="1"/>'+log+marker+namespaceRigSvg(svg,actor+'-calibration-')+'</svg>';
 }
 export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood):string {
+  const run=action==='run'||action==='run-left'||action==='hunt-chase'?bodyCalibrationPlan('karo',action,mood).plan.walks[0]:undefined;
+  const actionPoses=action==='jump'?[{label:'Lấy đà',at:600},{label:'Rời đất',at:850},{label:'Đỉnh nhảy',at:1175},{label:'Tiếp đất',at:1500},{label:'Hấp thụ',at:1667}]:action==='spear-thrust'?[{label:'Giữ',at:0},{label:'Lấy đà',at:1200},{label:'Đưa giáo',at:1500},{label:'Chạm target',at:1800},{label:'Thu giáo',at:3000}]:run?RUN_POSES.map(p=>({label:p.id,at:Math.round(300+1800/runStepCount(run,rigMetrics(topicPreviewProfile('karo')),1)*p.phase)})):[];
+  const actionLinks=actionPoses.length?'<nav aria-label="Pose hành động">'+actionPoses.map(p=>'<a href="?action='+action+'&amp;timeMs='+p.at+'&amp;mood='+escapeHtml(mood)+'">'+escapeHtml(p.label)+' ('+p.at+' ms)</a>').join(' · ')+'</nav>':'';
   const poseLinks=action==='walk'||action==='walk-left'?'<nav aria-label="Pose bước đầu"><strong>Pose bước đầu: </strong>'+SOURCE_WALK_POSES.map(pose=>{
     const metrics=rigMetrics(topicPreviewProfile('karo')),steps=Math.max(2,Math.ceil(55/Math.max(8,metrics.upperLeg*.32))),at=Math.round(300+3300/steps*pose.phase);
     return '<a href="?action='+action+'&amp;timeMs='+at+'&amp;mood='+escapeHtml(mood)+'">'+escapeHtml(pose.label)+' ('+at+' ms)</a>';
@@ -65,9 +104,10 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood):string 
     +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair{grid-template-columns:1fr}img,svg{height:410px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
     +'<p>Trang phục, bàn tay và bàn chân giữ texture/nét nguồn. Luồng ngồi dùng các điểm UV tương ứng và một đường bao vải đục, liên tục từ đứng đến ngồi và đứng lại; chỉ texture/nếp bên trong chuyển giữa source và artwork bổ sung. Thân áo che đường cắt trên của vải. Vải dưới eo theo từng đùi với độ trễ 100 ms; eo được ghim và ảnh hưởng giảm dần khi ngồi. Karo dùng artwork hai miệng ống quần có viền đen riêng. Cả luồng đi thông thường cũng dùng bề mặt eo ghim; hai panel xoay riêng được ẩn để không mở khe ở eo. Tổng chiều dài chân được giữ, vị trí gối không có trong ảnh nên phân bổ đùi/cẳng chân gần 52/48. Điểm tựa mông nằm dưới/sau dây lưng, giữ trên support khi nghiêng thân. Sit-left/right: thu chân, ngồi 300–1800 ms, giữ, đứng 3000–4500 ms rồi mở chân. Sit-walk thêm bước 4600–6600 ms để kiểm vạt sau khi đứng. Head-turn hiện dùng một lớp đầu biến dạng liên tục trong góc giới hạn, chính diện ở 900 ms. Đây là bản thử; review trước sửa mắt chưa đạt. Đây là ảnh pose tĩnh; texture, anatomy và độ mượt chưa nghiệm thu video. Góc thân nghiêng/lưng và các lớp tóc/râu còn thiếu.</p>'
     +'<form method="get"><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
-    +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="'+bodyActionDuration(action)+'" step="20" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
+    +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="'+bodyActionDuration(action)+'" step="1" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
     +(['neutral','happy','thinking','angry'] as const).map(value=>'<option value="'+value+'"'+(mood===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><button>Xem pose</button></form>'
     +poseLinks+'<p>Walk v2: pose chuyển lực → rời đất → đưa chân qua → đặt chân → nhận lực. Bước ngắn nhấc thấp theo quãng chân thực, chân trụ cố định trên nền; hông dịch nhỏ về chân trụ. Gối front gập theo chiều sâu, giữ chiều dài xương trong XYZ; độ dài hiện trên ảnh ngắn lại do phép chiếu. Không vẽ toàn bộ độ gập sang bên thành chân vòng kiềng. Khi ngồi, mặt phẳng gập chuyển liên tục theo support. Tay đánh theo tốc độ. Đây là geometry suy luận và bước ngang của thân front, chưa có dáng đi profile, rig 3D đầy đủ hoặc nghiệm thu độ mượt.</p>'
+    +actionLinks+'<p>Run: nhịp trụ → nén → đẩy → bay → đặt chân. Jump: lấy đà, rời đất, tiếp đất và hấp thụ. Hunt-stalk: quan sát/cúi → trở về đứng → bước ngắn → cúi lại; chưa có bước đi khom liên tục. Spear-hold/thrust: hai tay giữ cùng cán, mũi tới vòng target ở contact, không phải ném giáo. Hunt-aim/chase: ngắm mục tiêu hoặc chạy giữ giáo. Vòng tròn chỉ là target hiệu chỉnh; chưa có con thú, va chạm với con thú hay một cảnh săn đã nghiệm thu. Bộ pose này dùng chung evaluator và công cụ fixture HTML/MP4.</p>'
     +cards+'<p><a href="/api/topics/prehistoric-life/heads">Lớp đầu</a> · <a href="/api/topics/prehistoric-life/body/manifest">Số đo / mask / trạng thái</a> · <a href="/api/topics/prehistoric-life/compare">Các ảnh mẫu</a></p></main></html>';
 }
 export const bodyWorkbenchManifest=referenceBodyDescription;

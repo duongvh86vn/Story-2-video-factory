@@ -23,7 +23,8 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
   const windows=actingSourceWindows(expected,beat,narration,shot);
   const overlaps=(clip:{startMs:number;endMs:number})=>windows.some(window=>shot.startMs+clip.startMs<window.endMs&&shot.startMs+clip.endMs>window.startMs);
   if(kind==='locomotion'&&expected.movement==='jump')return (p.jumps??[]).some(clip=>windows.some(window=>shot.startMs+clip.takeoffMs>=window.startMs&&shot.startMs+clip.landingMs<=window.endMs));
-  if(kind==='locomotion')return p.walks.some(clip=>overlaps(clip)&&Math.abs(clip.toX-clip.fromX)>.01);
+  if(kind==='locomotion')return p.walks.some(clip=>overlaps(clip)&&Math.abs(clip.toX-clip.fromX)>.01&&
+    (expected.movement==='run'?clip.gait==='run':expected.movement==='walk'?clip.gait!=='run':true));
   if(kind==='manipulation'&&expected.operation==='drop')return p.gestures.some(clip=>clip.action==='drop'&&clip.releaseMs!==undefined&&clip.landingMs!==undefined&&clip.propId&&p.props.some(prop=>prop.id===clip.propId)&&actions.some(action=>action.type==='operate-model'&&expected.targetIds?.includes(action.target?.partId??'')&&action.contactMs===shot.startMs+clip.contactMs!&&action.startMs===shot.startMs+clip.startMs&&action.endMs===shot.startMs+clip.endMs&&windows.some(window=>window.id===action.narrationAnchor&&shot.startMs+clip.releaseMs!>=window.startMs&&shot.startMs+clip.landingMs!<=window.endMs)));
   if(kind==='manipulation')return p.gestures.some(clip=>overlaps(clip)&&['operate','pick-place','carry'].includes(clip.action)&&clip.contactMs!==undefined&&
     shot.startMs+clip.contactMs>=beat.startMs&&shot.startMs+clip.contactMs<beat.endMs&&actions.some(action=>action.type==='operate-model'&&

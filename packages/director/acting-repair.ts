@@ -30,7 +30,7 @@ export type ActingRepair=z.infer<typeof ActingRepairSchema>;
 /** Prompt capability information; every other performance field is immutable. */
 export const fixedMotionFields=[
   'version','compilerVersion','id','leadCharacterId','profileHash','kind','durationMs','fps',
-  'stage','root','scale','facing','walks','jumps','turns','entryPosture','props','supports',
+  'stage','root','scale','facing','walks','jumps','spears','turns','entryPosture','props','supports',
 ] as const satisfies readonly (keyof PerformancePlan)[];
 
 function editableGesture(gesture:Gesture):boolean {

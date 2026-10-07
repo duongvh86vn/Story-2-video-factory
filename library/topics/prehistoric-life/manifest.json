@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.13-walk-pose-candidate",
+  "version": "forest-tribe-0.14-run-jump-spear-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -729,9 +729,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-8",
+    "compilerVersion": "forest-source-body-motion-9",
     "rendererVersion": "forest-source-body-svg-7",
-    "fingerprint": "d51528d6f42dc9bcb15383d9a9080d8550f19af280bb25be1c49abad4e0e7aa9",
+    "fingerprint": "828180300ce3b84d4d5f60070b96112093b7663b9146b2c7f9daf88b6a8b5084",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -1135,6 +1135,48 @@
       "prompts": "library/topics/prehistoric-life/rig-v1/seated-garment-prompts.json",
       "repairPrompt": "library/topics/prehistoric-life/rig-v1/karo-cuffs-v2-prompt.json"
     },
+    "actionMotion": {
+      "run": {
+        "version": "forest-run-contact-1",
+        "poses": [
+          {
+            "id": "support",
+            "phase": 0
+          },
+          {
+            "id": "compression",
+            "phase": 0.22
+          },
+          {
+            "id": "push",
+            "phase": 0.62
+          },
+          {
+            "id": "flight",
+            "phase": 0.81
+          },
+          {
+            "id": "contact",
+            "phase": 1
+          }
+        ],
+        "flight": "support ends at step phase 0.62 before opposite contact; timed body/sole lift, grounded shadow",
+        "feet": "alternating fixed world-space support anchors; quintic swing; final two placements settle standing stance",
+        "arms": "source elbow-flexed forward/back drive; source front projection infers elbow depth; no simultaneous side spreading",
+        "scope": "candidate front-body horizontal locomotion, not authored profile/rear running or accepted dynamics",
+        "productionReady": false
+      },
+      "spear": {
+        "version": "forest-spear-grips-1",
+        "grip": "primary shoulder-local rig units; second hand owns a point on the same shaft",
+        "ownership": "one entry-owned tool track covers the shot; no unsupported pickup, throw or cross-cut handoff",
+        "clocks": "windup → ready → extension → contact hold → recovery; quintic translation",
+        "target": "world-space aim; thrust tip reaches it only at contact, unreachable arms or out-of-stage shaft rejected",
+        "productionReady": false
+      },
+      "acceptance": "pending",
+      "hunting": "stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending"
+    },
     "anatomicalMapping": {
       "rig-left": "source-view anatomical right",
       "rig-right": "source-view anatomical left"
@@ -1303,8 +1345,19 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "06ab036617b5e728a0947d2219cbc60a87d59a67c0c2a730721d50ee9cb9299e",
-    "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07"
+    "codeHash": "94625683120827b23937db340f4c0bfaee32b96934f3f1cc3481c539fe305524",
+    "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
+    "runCodeHash": "8c605dc2b6dc62889028582aa89deed1c1dc0fbc96051405e4410d52f8ab8534",
+    "spearCodeHash": "293c41ace392056e76081e77c5b80a4e4e75d0e68086b109d4ea8da05edf9122",
+    "compilerCodeHash": "6720134ca409d4e54b55a3d136e92221029045ad09c5add2a6c2353dd277c25c",
+    "rigCodeHash": "7a9ad7f40d2804d087b881deba80028604ef787232bcd173cc04b1500854e2c6"
+  },
+  "actionPoseInspection": {
+    "file": "docs/topics/reviews/source-action-pose-self-inspection-v1.json",
+    "scope": "developer-static-pose-inspection-only",
+    "pass": null,
+    "productionAcceptance": false,
+    "currentRepair": "Run contact/flight and elbow drive; jump tuck; shared spear grips, clocks and tool between torso/hands. Stalk/aim/chase actor poses are candidates; authored body views, quarry rig, sourced bindings, animal response and continuous video acceptance remain pending."
   },
   "walkPoseInspection": {
     "file": "docs/topics/reviews/source-walk-pose-self-inspection-v1.json",

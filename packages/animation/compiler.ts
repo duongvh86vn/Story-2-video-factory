@@ -3,10 +3,12 @@ import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
 import { rigHand, type RigHand } from '../core/identifiers.js';
 import { rigMetrics,type RigMetrics } from './rig.js';
-import { AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
+import { HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy,sourceSupportMotion} from './support.js';
 import { selectedClips } from './library.js';
-import {sampleAirborne,sampleFallingObject} from './airborne.js';
+import {sampleAirborne,sampleFallingObject,type AirborneSample} from './airborne.js';
+import {runSchedule,sampleRunning,runStepCount,RUN_POSES} from './running.js';
+import {sampleSpear} from './spear.js';
 import {inkLimb,pathCoordinates} from './ink-limb.js';
 import {forestHeadContour} from './forest-tribe-art.js';
 import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription,referenceHeadViewForYaw,referenceHeadProjectionPaths,FOREST_HEAD_VIEWS} from './forest-head-art.js';
@@ -86,11 +88,13 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   if((plan.headView||plan.headTurns?.length)&&!profile.appearance.characterVariant)throw new Error('Multiple head views require a Forest Tribe actor rig');
   overlaps(plan.postures??[],'body posture',plan.durationMs);
   overlaps(plan.jumps??[],'jump',plan.durationMs);
-  if(plan.compilerVersion!==AIRBORNE_ANIMATION_VERSION&&(plan.jumps?.length||plan.gestures.some(g=>g.action==='drop'||g.landingMs!==undefined)))throw new Error('Jump/drop clips require animation2.2.14');
+  if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.jumps?.length||plan.gestures.some(g=>g.action==='drop'||g.landingMs!==undefined)))throw new Error('Jump/drop clips require animation2.2.14 or newer');
+  if(plan.compilerVersion!==HUNT_ANIMATION_VERSION&&(plan.walks.some(w=>w.gait==='run')||plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('Run/spear tracks require animation2.2.15');
+  if(plan.compilerVersion!==HUNT_ANIMATION_VERSION&&plan.jumps?.some(j=>j.tuck!==undefined))throw new Error('Authored jump tuck requires animation2.2.15');
   if(plan.compilerVersion===LEGACY_ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires animation2.2.8 or newer');
-  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
-  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
-  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)&&plan.expressions.some(e=>(STORY_MOODS as readonly string[]).includes(e.mood)))throw new Error('Story emotions require animation2.2.11 or newer');
+  if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
+  if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.supports?.length||[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated'||p.supportId)))throw new Error('Seat supports require animation2.2.10 or newer');
+  if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)&&plan.expressions.some(e=>(STORY_MOODS as readonly string[]).includes(e.mood)))throw new Error('Story emotions require animation2.2.11 or newer');
   const supportIds=new Set((plan.supports??[]).map(s=>s.id));
   if(supportIds.size!==(plan.supports?.length??0))throw new Error('Duplicate seat support identity');
   const m=rigMetrics(profile),s=plan.scale;
@@ -136,7 +140,9 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
     if(body.pelvisDropRatio!==0||body.leanDeg!==0||body.seatWeights||(plan.postures??[]).some(p=>p.startMs<walk.endMs&&p.endMs>walk.startMs))throw new Error('Walking requires a standing body posture; finish returning to stand before locomotion');
     if(Math.abs(walk.fromX-rootX)>.001)throw new Error('Walk entry position breaks continuity');
     const m=rigMetrics(profile), speed=Math.abs(walk.toX-walk.fromX)/plan.scale/((walk.endMs-walk.startMs)/1000);
-    if(speed>m.upperLeg*3)throw new Error('Walk window too short for the distance; shorten the path');
+    if(speed>m.upperLeg*(walk.gait==='run'?5:3))throw new Error('Locomotion window too short for the distance; shorten the path');
+    if(walk.gait==='run'&&Math.abs(walk.toX-walk.fromX)<.01)throw new Error('Running needs a nonzero path');
+    if(walk.gait==='run'&&(walk.endMs-walk.startMs)/runStepCount(walk,m,plan.scale)<240)throw new Error('Running contact cycle needs at least 240ms per step');
     rootX=walk.toX;
   }
   for(const jump of plan.jumps??[]){
@@ -154,9 +160,28 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   }
   const props=new Set(plan.props.map(p=>p.id));
   if(props.size!==plan.props.length)throw new Error('Duplicate prop identity');
+  const spearTracks=plan.spears??[];
+  if(new Set(spearTracks.map(c=>c.id)).size!==spearTracks.length)throw new Error('Duplicate spear track identity');
+  for(const track of spearTracks){
+    const prop=plan.props.find(p=>p.id===track.propId);
+    if(!prop||prop.kind!=='spear'||prop.attachedTo!==`${track.hand}-hand`)throw new Error(track.id+': spear requires an entry-owned spear prop in the primary hand');
+    if(track.startMs!==0||track.endMs!==plan.durationMs||spearTracks.filter(c=>c.propId===track.propId).length!==1)throw new Error(track.id+': one spear track must retain ownership through the entire shot');
+    if(prop.destination||Math.abs(prop.gripOffset?.y??0)>1e-6||Math.abs(prop.gripOffset?.x??0)>(prop.length??120)/2-22)throw new Error(track.id+': grip must lie on the wooden shaft, away from the stone point');
+    if((prop.gripOffset?.x??0)+track.secondaryOffset<-(prop.length??120)/2+5)throw new Error(track.id+': second hand lies beyond the shaft butt');
+    const owns=(side:RigHand)=>side===track.hand||track.twoHands;
+    if(plan.gestures.some(g=>owns(rigHand(g))))throw new Error(track.id+': spear-owned hand cannot also own a gesture');
+    if(spearTracks.some(other=>other!==track&&(owns(other.hand)||other.twoHands)))throw new Error(track.id+': overlapping spear hand ownership');
+    if(track.aim.x<0||track.aim.x>plan.stage.width||track.aim.y<0||track.aim.y>plan.stage.groundY)throw new Error(track.id+': aim must be on the stage');
+    if(track.action==='thrust'){
+      if(!(track.readyMs!==undefined&&track.contactMs!==undefined&&track.recoverMs!==undefined&&track.readyMs-track.startMs>=280&&track.contactMs-track.readyMs>=200&&track.recoverMs-track.contactMs>=80&&track.endMs-track.recoverMs>=280))throw new Error(track.id+': thrust needs ordered windup, extension, contact hold and recovery clocks');
+      if(plan.walks.some(w=>w.startMs<track.recoverMs!&&w.endMs>track.readyMs!)||plan.jumps?.some(j=>j.startMs<track.recoverMs!&&j.endMs>track.readyMs!))throw new Error(track.id+': settle locomotion before a fixed-target spear contact');
+      if(plan.postures?.some(p=>p.startMs<track.recoverMs!&&p.endMs>track.readyMs!))throw new Error(track.id+': settle body posture before the strike/contact hold');
+    }else if(track.readyMs!==undefined||track.contactMs!==undefined||track.recoverMs!==undefined)throw new Error(track.id+': hold has no strike clocks');
+  }
+  for(const prop of plan.props.filter(p=>p.kind==='spear'))if(!spearTracks.some(c=>c.propId===prop.id))throw new Error(prop.id+': spear prop has no shared grip track');
   for(const hand of ['left','right'] as const)if(plan.props.filter(p=>p.attachedTo===`${hand}-hand`).length>1)throw new Error(`Only one prop can own the ${hand}-hand entry grip`);
   for(const prop of plan.props.filter(p=>p.attachedTo)){
-    if(!plan.gestures.some(g=>enteringCarry(g)&&g.propId===prop.id&&`${rigHand(g)}-hand`===prop.attachedTo))throw new Error(`${prop.id}: attached entry prop requires matching hand carry ownership from time zero`);
+    if(!spearTracks.some(c=>c.propId===prop.id)&&!plan.gestures.some(g=>enteringCarry(g)&&g.propId===prop.id&&`${rigHand(g)}-hand`===prop.attachedTo))throw new Error(`${prop.id}: attached entry prop requires matching hand carry ownership from time zero`);
   }
   const propPoints=new Map(plan.props.map(p=>[p.id,p.origin]));
   for(const g of chronological(plan.gestures)){
@@ -191,8 +216,9 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   for(const prop of plan.props)overlaps(plan.gestures.filter(g=>attaches(g)&&g.propId===prop.id).map(g=>({startMs:g.contactMs!,endMs:g.releaseMs??g.endMs})),`prop ${prop.id} ownership`,plan.durationMs);
   for(const prop of plan.props.filter(p=>p.attachedTo)){
     const side=prop.attachedTo==='left-hand'?'left':'right';
-    const hand=samplePerformance(plan,profile,0,{method:'segment-draft',windowMs:20,intervals:[]}).hands[side],offset=prop.gripOffset??{x:0,y:0};
-    if(distance(hand,{x:prop.origin.x+offset.x*plan.scale,y:prop.origin.y+offset.y*plan.scale})>.01)throw new Error(`${prop.id}: entry grip anchor does not match the carried hand pose`);
+    const first=samplePerformance(plan,profile,0,{method:'segment-draft',windowMs:20,intervals:[]});
+    const hand=first.hands[side],offset=prop.gripOffset??{x:0,y:0};
+    if(prop.kind==='spear'?distance(first.props[prop.id]!.point,prop.origin)>.01:distance(hand,{x:prop.origin.x+offset.x*plan.scale,y:prop.origin.y+offset.y*plan.scale})>.01)throw new Error(`${prop.id}: entry grip anchor does not match the carried hand pose`);
   }
 }
 
@@ -201,9 +227,10 @@ export interface FrameState {
   bodyPosture:BodyPosture;
   seatContact?:{supportId:string;errorPx:number};
   legProjection?:Record<RigHand,{kneeDepth:number;upperRatio:number;lowerRatio:number}>;
+  armProjection?:Partial<Record<RigHand,{elbowDepth:number;upperRatio:number;lowerRatio:number}>>;
   hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
   transforms:Record<string,string>; paths?:Record<string,string>; face:Record<string,{opacity?:number;scaleX?:number;scaleY?:number;rotation?:number;x?:number;y?:number;attr?:{transform:string}}>;
-  props:Record<string,{point:Point;attached:boolean}>;
+  props:Record<string,{point:Point;attached:boolean;angle?:number;tip?:Point;phase?:string}>;
 }
 const number = (n:number)=>String(Number(n.toFixed(4)));
 function transform(p:Point,angle=0,scale=1):string {return `translate(${number(p.x)} ${number(p.y)}) rotate(${number(angle)}) scale(${number(scale)})`;}
@@ -214,7 +241,7 @@ function rootAt(plan:PerformancePlan,timeMs:number):Point {
 }
 function walkSteps(plan:PerformancePlan,profile:HostProfile,walk:PerformancePlan['walks'][number]){
   const m=rigMetrics(profile),stepLength=Math.max(8,m.upperLeg*.32)*plan.scale;
-  const steps=Math.max(2,Math.ceil(Math.abs(walk.toX-walk.fromX)/stepLength)),span=(walk.endMs-walk.startMs)/steps;
+  const steps=walk.gait==='run'?runStepCount(walk,m,plan.scale):Math.max(2,Math.ceil(Math.abs(walk.toX-walk.fromX)/stepLength)),span=(walk.endMs-walk.startMs)/steps;
   return Array.from({length:steps},(_,i)=>{
     const startMs=walk.startMs+i*span,endMs=i===steps-1?walk.endMs:walk.startMs+(i+1)*span,side=i%2?'right' as const:'left' as const;
     const landing=(i>=steps-2?walk.toX:rootAt(plan,endMs).x)+(m.footOffsets?.[side]??(side==='left'?-m.stance:m.stance))*plan.scale;
@@ -224,10 +251,20 @@ function walkSteps(plan:PerformancePlan,profile:HostProfile,walk:PerformancePlan
 function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
   const m=rigMetrics(profile), scale=plan.scale;
   let feet={left:{x:plan.root.x+(m.footOffsets?.left??-m.stance)*scale,y:plan.root.y},right:{x:plan.root.x+(m.footOffsets?.right??m.stance)*scale,y:plan.root.y}};
-  const stance={left:true,right:true};let activation=0,phase=0,direction=1,armSwing=25,supportShiftX=0;
+  const stance={left:true,right:true};let activation=0,phase=0,direction=1,armSwing=25,supportShiftX=0,runAir:AirborneSample|undefined,running=false;
   for(const walk of chronological(plan.walks)){
     if(timeMs<walk.startMs)break;
     direction=Math.sign(walk.toX-walk.fromX)||1;
+    if(walk.gait==='run'){
+      const schedule=runSchedule(walk,m,scale,feet,t=>rootAt(plan,t)),running=sampleRunning(schedule,timeMs,scale,m.upperLeg);
+      feet=running.feet;Object.assign(stance,running.stance);
+      if(timeMs<walk.endMs){
+        const transition=Math.min(180,(walk.endMs-walk.startMs)/4);
+        activation=smooth((timeMs-walk.startMs)/transition)*smooth((walk.endMs-timeMs)/transition);
+        phase=(timeMs-walk.startMs)/schedule.span;armSwing=30;runAir=running.air;
+      }
+      continue;
+    }
     for(const {i,startMs:start,endMs:end,side,landing} of walkSteps(plan,profile,walk)){
       if(timeMs<start)break;
       // Last two placements establish the final balanced stance, preserving shot-boundary continuity.
@@ -255,15 +292,16 @@ function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
       }
     }
   }
-  return {feet,stance,activation,phase,direction,armSwing,supportShiftX};
+  running=!!runAir;
+  return {feet,stance,activation,phase,direction,armSwing,supportShiftX,runAir,running};
 }
 /** Lower the source pelvis only as far as the fixed limbs require. A generic
  * fraction of its long hidden thigh would produce a deep crouch every step. */
-function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetrics,profile:HostProfile,scale:number,lean:number):number {
+function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetrics,profile:HostProfile,scale:number,lean:number,bodyOffsetY=0):number {
   if(!walk.activation)return 0;
   let needed=0;
   for(const side of ['left','right'] as const){
-    const base={x:root.x+walk.supportShiftX,y:root.y+metrics.pelvisY*scale},geometry=legGeometry(metrics,base,walk.feet[side],side,scale,profile.appearance.bodyScale,lean);
+    const base={x:root.x+walk.supportShiftX,y:root.y+metrics.pelvisY*scale+bodyOffsetY},geometry=legGeometry(metrics,base,walk.feet[side],side,scale,profile.appearance.bodyScale,lean);
     const dx=geometry.ankle.x-geometry.hip.x,length=geometry.bones.upper+geometry.bones.lower-1e-6;
     if(Math.abs(dx)>=length)throw new Error('needs-source-motion: stride exceeds source leg reach.');
     needed=Math.max(needed,geometry.ankle.y-Math.sqrt(length*length-dx*dx)-geometry.hip.y);
@@ -272,15 +310,19 @@ function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetri
 }
 function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
   const m=rigMetrics(profile),s=plan.scale,root=rootAt(plan,t),walk=gait(plan,profile,t),emotion=expressionAt(plan,t),pose=emotion.pose;
-  const jump=plan.jumps?.find(j=>t>=j.startMs&&t<=j.endMs),air=jump?sampleAirborne(jump,t,s):undefined;
-  if(air)for(const side of ['left','right'] as const){walk.feet[side].y+=air.feetOffsetY;walk.stance[side]=!air.airborne;}
+  const jump=plan.jumps?.find(j=>t>=j.startMs&&t<=j.endMs),air=jump?sampleAirborne(jump,t,s):walk.runAir;
+  if(air)for(const side of ['left','right'] as const){walk.feet[side].y+=air.feetOffsetY;walk.stance[side]=walk.runAir?walk.stance[side]&&!air.airborne:!air.airborne;}
+  if(jump?.tuck&&air?.airborne){
+    const p=clamp((t-jump.takeoffMs)/(jump.landingMs-jump.takeoffMs)),arch=64*p*p*p*(1-p)*(1-p)*(1-p);
+    for(const side of ['left','right'] as const)walk.feet[side].y-=m.upperLeg*jump.tuck*s*arch;
+  }
   const orientation=orientationAt(plan,t),bodyPosture=postureAt(plan,t),source=usesReferenceBody(profile);
   const breath=source?Math.sin((t+(profile.appearance.characterVariant==='karo'?1100:0))*Math.PI*2/4300)*.55*smooth(t/200)*smooth((plan.durationMs-t)/200):0;
   const sourceSupported=source&&plan.supports?.length?sourceSupportMotion(plan,profile,t,root,walk.feet):undefined;
   const supported=sourceSupported??(plan.supports?.length?seatedPlacement(plan,profile,t,root):undefined);
   if(sourceSupported?.ownsFeet&&!walk.activation){walk.feet=sourceSupported.feet;walk.stance=sourceSupported.stance;}
   const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath+(sourceSupported?.leanOffset??0);
-  const walkDrop=source?sourceWalkDrop(root,walk,m,profile,s,lean):walk.activation*m.upperLeg*.23*s;
+  const walkDrop=source?sourceWalkDrop(root,walk,m,profile,s,lean,air?.bodyOffsetY):walk.activation*m.upperLeg*.23*s;
   const pelvis=supported?.pelvis??{x:root.x+walk.supportShiftX,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walkDrop};
   if(sourceSupported){
     // A seated hip is below/behind the belt. Counter the body's lean around
@@ -356,7 +398,7 @@ function blendExpression(a:ExpressionPose,b:ExpressionPose,weight:number):Expres
     frown:lerp(a.frown,b.frown,weight),browAngle:lerp(a.browAngle,b.browAngle,weight),eyeOpen:lerp(a.eyeOpen,b.eyeOpen,weight)};
 }
 function expressionAt(plan:PerformancePlan,time:number) {
-  if(![AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion)){
+  if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion)){
     const legacy=moodAt(plan,time);return {...legacy,pose:moodPoses[legacy.mood]};
   }
   const ranges=expressionRanges(plan),index=ranges.findIndex(clip=>time>=clip.startMs&&time<clip.endMs),neutral=expressionPose('neutral');
@@ -452,10 +494,20 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
   const paths:Record<string,string>={},drawn=!!profile.appearance.characterVariant;
   const legProjection=usesReferenceBody(profile)?{} as NonNullable<FrameState['legProjection']>:undefined;
+  const armProjection={} as NonNullable<FrameState['armProjection']>;
+  const sourceRun=usesReferenceBody(profile)&&plan.walks.some(w=>w.gait==='run');
   const kneeProjection=(state:{kneeSeatWeight:number},geometry:ReturnType<typeof legGeometry>,chain:Chain)=>projectSourceKnee(geometry.hip,chain.end,chain.joint,geometry.bones.upper,geometry.bones.lower,state.kneeSeatWeight);
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
   transforms.pelvis=transform(pelvis);transforms.chest=transform(pelvis,lean,s*profile.appearance.bodyScale);
   const toWorld=(x:number,y:number)=>add(pelvis,rotate({x:x*s,y:y*s},lean));
+  const spearStates=(plan.spears??[]).map(track=>{
+    const point=m.shoulders?.[track.hand],shoulder=toWorld(point?.x??m.shoulderOffset*(track.hand==='left'?-1:1),point?.y??m.shoulderY-m.pelvisY);
+    const state=sampleSpear(track,plan.props.find(p=>p.id===track.propId)!,t,s,shoulder,lean);
+    if(track.action==='thrust'&&(state.extension<0||state.extension>m.upperArm*s*.6))throw new Error(track.id+': aim must require a forward strike within rig reach');
+    const half=(plan.props.find(p=>p.id===track.propId)!.length??120)*s/2,angle=state.angle*Math.PI/180;
+    for(const end of [-1,1]){const p={x:state.center.x+end*half*Math.cos(angle),y:state.center.y+end*half*Math.sin(angle)};if(p.x<0||p.x>plan.stage.width||p.y<0||p.y>plan.stage.groundY)throw new Error(track.id+': spear shaft leaves the physical stage');}
+    return {track,state};
+  });
   const headArtScale=profile.appearance.headScale*(m.headArtworkScale??1);
   const headAngle=lean+pose.tilt*emotion.weight,headBottom=(usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*headArtScale;
   const torsoTop=m.torsoTop??(profile.kind==='mini-robot'?-94:-92)*profile.appearance.bodyScale;
@@ -501,9 +553,13 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
     const sourceShoulder=m.shoulders?.[side];
     const shoulder=toWorld(sourceShoulder?.x??(i?1:-1)*m.shoulderOffset,sourceShoulder?.y??m.shoulderY-m.pelvisY);
-    const swing=Math.sin(walk.phase*Math.PI)*(i?-1:1)*walk.armSwing*walk.activation;
+    const swing=sourceRun?0:Math.sin(walk.phase*Math.PI)*(i?-1:1)*walk.armSwing*walk.activation;
     const rest=m.armRest?.[side],lengths=m.arms?.[side]??{upper:m.upperArm,lower:m.lowerArm};
     let neutral=add(shoulder,rotate({x:(rest?.x??(i?12:-12))*s,y:(rest?.y??(m.upperArm+m.lowerArm-8))*s},swing));
+    if(sourceRun&&walk.running){
+      const drive=Math.sin(walk.phase*Math.PI)*(i?-1:1),offset=rotate({x:walk.direction*(22+18*drive)*s,y:(60+8*drive)*s},lean);
+      neutral=mix(neutral,add(shoulder,offset),walk.activation);
+    }
     if(usesReferenceBody(profile)){
       const seatedWeight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0));
       // A listening actor rests its hands on its own lap instead of carrying
@@ -514,19 +570,32 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
     const gesture=gestureAt(plan,t,side),chin=chinAt(side);
     const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??(i?50:-50))*s,y:(gesture?.carryOffset?.y??35)*s},lean));
-    const target=gesture?goal(gesture,neutral,chin,carryAnchor,t,s,shoulder):neutral;
-    const arm=armPose(shoulder,neutral,target,gesture,t,lengths.upper*s,lengths.lower*s,side,
-      at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder),lapPole);
+    const spear=spearStates.find(c=>c.track.hand===side||c.track.twoHands);
+    const target=spear?(spear.track.hand===side?spear.state.primary:spear.state.secondary):gesture?goal(gesture,neutral,chin,carryAnchor,t,s,shoulder):neutral;
+    // Both elbows trail the aimed shaft instead of the near elbow opening
+    // upwards/outwards. Keep the branch fixed for the complete owned clip.
+    const runPole=sourceRun?((plan.walks.find(w=>w.gait==='run')!.toX>=plan.walks.find(w=>w.gait==='run')!.fromX)?-1:1):undefined;
+    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lengths.lower*s,spear.track.aim.x>=plan.root.x?-1:1):armPose(shoulder,neutral,target,gesture,t,lengths.upper*s,lengths.lower*s,side,
+      at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder),runPole??lapPole);
+    if(spear&&arm.error>.01)throw new Error(`${spear.track.id}: ${side} hand cannot reach spear grip at ${t}ms (${arm.error.toFixed(2)}px)`);
     if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
-    transforms[`arm-${side}-upper`]=transform(shoulder,arm.upper,s);transforms[`arm-${side}-lower`]=transform(arm.joint,arm.lower,s);
-    if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,arm.joint,arm.end,usesReferenceBody(profile)?.28:.17);
-    transforms[`hand-${side}`]=transform(arm.end,m.handRestRotation?arm.lower-m.handRestRotation[side]:0,s*(usesReferenceBody(profile)?profile.appearance.bodyScale:1));hands[side]=arm.end;
+    // The front source has no authored aiming profile. Infer depth instead of
+    // displaying the entire elbow flexion sideways as a hook over the tunic.
+    const projectedArm=(spear&&usesReferenceBody(profile)||sourceRun)?projectSourceKnee(shoulder,arm.end,arm.joint,lengths.upper*s,lengths.lower*s,.2):undefined;
+    if(projectedArm){
+      transforms[`arm-${side}-upper`]=`translate(${number(shoulder.x)} ${number(shoulder.y)}) rotate(${number(projectedArm.upper)}) scale(${number(s)} ${number(s*projectedArm.upperRatio)})`;
+      transforms[`arm-${side}-lower`]=`translate(${number(projectedArm.joint.x)} ${number(projectedArm.joint.y)}) rotate(${number(projectedArm.lower)}) scale(${number(s)} ${number(s*projectedArm.lowerRatio)})`;
+      armProjection[side]={elbowDepth:projectedArm.depth,upperRatio:projectedArm.upperRatio,lowerRatio:projectedArm.lowerRatio};
+    }else{transforms[`arm-${side}-upper`]=transform(shoulder,arm.upper,s);transforms[`arm-${side}-lower`]=transform(arm.joint,arm.lower,s);}
+    if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,projectedArm?.joint??arm.joint,arm.end,usesReferenceBody(profile)?.28:.17);
+    transforms[`hand-${side}`]=transform(arm.end,m.handRestRotation?(projectedArm?.lower??arm.lower)-m.handRestRotation[side]:0,s*(usesReferenceBody(profile)?profile.appearance.bodyScale:1));hands[side]=arm.end;
   }
   const activeGestures={right:gestureAt(plan,t,'right'),left:gestureAt(plan,t,'left')};
   const activeGesture=activeGestures.right?.target?activeGestures.right:activeGestures.left??activeGestures.right,explicitGaze=plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
   const gazeOffset=(target:Point)=>{const angle=Math.atan2(target.y-head.y,target.x-head.x);return {x:Math.cos(angle)*3,y:Math.sin(angle)*2};};
   const gazeWeight=(cue:{startMs:number;endMs:number})=>smooth((t-cue.startMs)/140)*smooth((cue.endMs-t)/140);
   let gaze={x:0,y:0};
+  if(spearStates[0])gaze=gazeOffset(spearStates[0].track.aim);
   if(activeGesture?.target)gaze=mix(gaze,gazeOffset(activeGesture.target),gazeWeight(activeGesture));
   if(explicitGaze)gaze=mix(gaze,gazeOffset(explicitGaze.target),gazeWeight(explicitGaze));
   if(drawn&&!usesReferenceHead(profile)){
@@ -553,13 +622,13 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   // matrices seek deterministically and preserve the exact existing rig artwork.
   const frown=(pose.frown??0)*emotion.weight;
   face['mouth-smile']={opacity:Math.max(pose.smile,pose.frown??0)*emotion.weight,
-    ...([AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
+    ...([HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION].includes(plan.compilerVersion)?{attr:{transform:`translate(0 ${number(36*frown)}) scale(1 ${number(1-2*frown)})`}}:{})};
   face['mouth-round']={opacity:pose.round*emotion.weight};
   if(usesReferenceHead(profile)){
     const look=explicitGaze??activeGesture;
     const bodyHead=usesReferenceBody(profile);
     const yaw=plan.headView||plan.headTurns?.length?headViewAt(plan,t).yaw:look?.target?
-      (bodyHead?lerp(orientation,clamp((look.target.x-head.x)/70,-1,1),gazeWeight(look)):clamp((look.target.x-head.x)/70,-1,1)):orientation;
+      (bodyHead?lerp(orientation,clamp((look.target.x-head.x)/70,-1,1),gazeWeight(look)):clamp((look.target.x-head.x)/70,-1,1)):spearStates[0]?clamp((spearStates[0].track.aim.x-head.x)/70,-.65,.65):orientation;
     let tailRotation=0;
     if(bodyHead&&profile.appearance.characterVariant==='lila'){
       const lagT=Math.max(0,t-120),past=expressionAt(plan,lagT),pastBody=postureAt(plan,lagT);
@@ -598,6 +667,14 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
   for(const prop of plan.props){
+    const spear=spearStates.find(c=>c.track.propId===prop.id);
+    if(spear){
+      const state=spear.state;
+      props[prop.id]={point:state.center,attached:true,angle:state.angle,tip:state.tip,phase:state.phase};
+      transforms[`prop-${prop.id}`]=transform(state.center,state.angle,s);
+      for(const side of ['left','right'] as const)if(side===spear.track.hand||spear.track.twoHands){contactErrors[side]=distance(hands[side],side===spear.track.hand?state.primary:state.secondary);contactError=Math.max(contactError,contactErrors[side]);}
+      continue;
+    }
     let point=prop.origin,attached=false;
     const offset=prop.gripOffset??{x:0,y:0};
     for(const g of chronological(plan.gestures).filter(g=>attaches(g)&&g.propId===prop.id)){
@@ -628,7 +705,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
   const seatOffset=m.seatContactOffset?rotate({x:-bend*m.seatContactOffset.x*s,y:m.seatContactOffset.y*s},lean):{x:0,y:0};
-  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
+  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),...(Object.keys(armProjection).length?{armProjection}:{}),hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
@@ -669,29 +746,35 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   validatePerformance(plan,profile);
   const times=new Set<number>([0,plan.durationMs]);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...plan.gestures,...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
+  for(const clip of [...plan.gestures,...(plan.spears??[]),...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
-  if([AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion))for(const clip of expressionRanges(plan)){
+  if([HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion))for(const clip of expressionRanges(plan)){
     const window=expressionBlendMs(clip);times.add(clip.startMs+window);times.add(clip.endMs-window);
   }
   for(const jump of plan.jumps??[])for(const at of [jump.startMs,jump.takeoffMs,jump.landingMs,jump.endMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])for(const near of [at-.01,at,at+.01])times.add(near);
   for(const g of plan.gestures.filter(g=>g.action==='drop')){times.add(g.landingMs!);times.add(g.landingMs!-.01);times.add(g.landingMs!+.01);}
   for(const clip of plan.postures??[])for(const at of [(clip.startMs+clip.endMs)/2,(clip.startMs+clip.endMs)/2-.01,(clip.startMs+clip.endMs)/2+.01])times.add(at);
   for(const g of plan.gestures)for(const at of [g.contactMs,g.releaseMs,recoveryStart(g)])if(at!==undefined){times.add(at);times.add(at-.01);times.add(at+.01);}
+  for(const g of plan.spears??[])for(const at of [g.readyMs,g.contactMs,g.recoverMs])if(at!==undefined)for(const near of [at-.01,at,at+.01])times.add(near);
   for(const g of plan.gestures.filter(g=>g.action==='carry')){
     if(!enteringCarry(g))times.add(g.contactMs!+CARRY_TRANSITION_MS);
     if(g.releaseMs!==undefined)times.add(g.releaseMs-CARRY_TRANSITION_MS);
   }
   for(const walk of plan.walks)for(const step of walkSteps(plan,profile,walk)){
     for(const at of [step.startMs,step.endMs])times.add(at);
-    if(usesReferenceBody(profile))for(const pose of SOURCE_WALK_POSES)times.add(step.startMs+(step.endMs-step.startMs)*pose.phase);
+    if(usesReferenceBody(profile)||walk.gait==='run')for(const pose of walk.gait==='run'?RUN_POSES:SOURCE_WALK_POSES)times.add(step.startMs+(step.endMs-step.startMs)*pose.phase);
+  }
+  for(const walk of plan.walks.filter(w=>w.gait==='run')){
+    const schedule=runSchedule(walk,rigMetrics(profile),plan.scale,gait(plan,profile,walk.startMs).feet,at=>rootAt(plan,at));
+    for(const track of schedule.tracks)for(const clip of track.clips)for(const at of [clip.start,clip.end])times.add(at);
+    for(const hop of schedule.hops)for(const at of [hop.startMs,hop.takeoffMs,hop.landingMs,hop.endMs])for(const near of [at-.01,at,at+.01])times.add(near);
   }
   // Audio RMS is a sampled signal: its boundaries are explicit, without blending across silence.
   for(const cue of activity.intervals)for(const at of [cue.startMs,cue.endMs]){times.add(at);times.add(at-.01);}
   const samples=[...new Set([...times].filter(t=>t>=0&&t<=plan.durationMs).map(t=>Number(t.toFixed(4))))].sort((a,b)=>a-b).map(t=>samplePerformance(plan,profile,t,activity));
   const frames:FrameState[]=[samples[0]!];
-  const precise=plan.compilerVersion===ANIMATION_VERSION||plan.compilerVersion===AIRBORNE_ANIMATION_VERSION;
+  const precise=plan.compilerVersion===HUNT_ANIMATION_VERSION||plan.compilerVersion===ANIMATION_VERSION||plan.compilerVersion===AIRBORNE_ANIMATION_VERSION;
   // Bone connectivity alone does not bound a curved brow/eye expression between
   // baked frames. Keep the face close to the same pure evaluator used by preview.
   const faceError=(a:FrameState,b:FrameState):number=>{
@@ -751,7 +834,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
         ...(i&&!discrete?{duration,ease:'none'}:{immediateRender:!i})})},${discrete?f.timeMs/1000:position});`);
     }
   }
-  return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
+  return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===HUNT_ANIMATION_VERSION?HUNT_ANIMATION_VERSION:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),
