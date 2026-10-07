@@ -20,6 +20,7 @@
     "test:cinematic-inputs": "tsx scripts/acceptance-v22.ts",
     "test:typecheck": "tsc -p tsconfig.tests.json",
     "cli": "tsx apps/cli/index.ts",
+    "art:tools": "tsx apps/cli/art-tools.ts",
     "build": "tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts",
     "build:core": "tsc -p tsconfig.json",
     "schemas": "tsx library/schemas/export.ts",

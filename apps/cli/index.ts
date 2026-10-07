@@ -21,8 +21,10 @@ import {motionWorkbench} from '../../packages/motion/workbench.js';
 import {loadSpriteMotionCatalog} from '../../packages/motion/catalog.js';
 import {importActorSpeech,listActorSpeech,loadActorSpeech} from '../../packages/motion/speech-import.js';
 import {boundPath,ensureIdle,ProjectName} from '../server/security.js';
+import {addMotionMeasureCommand} from './motion-measure-command.js';
 
 const cli=new Command().name('video-factory').description('Turn a topic/story, complete script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
+addMotionMeasureCommand(cli);
 cli.command('motion-import <project> <metadata>').description('Import a local sprite bundle as a candidate; requires a configured idle project')
   .requiredOption('--registration <file>','Explicit local actor/state/view/anchor/playback registration')
   .action(async(project:string,metadata:string,options:{registration:string})=>{
