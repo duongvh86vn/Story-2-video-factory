@@ -39,14 +39,18 @@ test('worksheet pages retain unscaled native coordinates and contain a fixed loc
   const pages=motionMeasureWorksheets(measureMotionPixels(new Uint8Array(64),{width:4,height:4},selected),{width:4,height:4});
   assert.equal(pages.length,2);assert.match(pages[0]!,/NOT registration\/anatomy\/motion approval/);
   assert.match(pages[0]!,/viewBox="0 0 4 4"/);assert.match(pages[0]!,/href="source.png"/);
-  assert.doesNotMatch(pages.join(''),/<script|foreignObject|https?:|onload=/i);
+  const markup=pages.join('');
+  assert.doesNotMatch(markup,/<script|foreignObject|\bon\w+\s*=|@import|url\s*\(/i);
+  const resources=Array.from(markup.matchAll(/\b(?:href|src)\s*=\s*["']([^"']*)["']/gi),match=>match[1]);
+  assert.equal(resources.length,17);assert.ok(resources.every(resource=>resource==='source.png'));
 });
 
 test('offline authoring output is immutable and preserves source bytes, while invalid/production output selections publish nothing',async t=>{
   const root=await temporary(t),bytes=await sharp({create:{width:4,height:4,channels:4,background:{r:10,g:20,b:30,alpha:.5}}}).png().toBuffer();
   const selected={...layout(),sheetHash:hash(bytes)};
   await fs.writeFile(path.join(root,'selected.png'),bytes);await fs.writeFile(path.join(root,'layout.json'),JSON.stringify(selected));
-  for(const output of ['assets/measurement','Assets/measurement','input/measurement','SCENES/measurement','../escape','a/../escape'])
+  for(const output of ['assets/measurement','Assets/measurement','input/measurement','SCENES/measurement','output/measurement','renders/measurement','artifacts/measurement',
+    'work/measurement','Work/measurement','previews/measurement','Previews/measurement','logs/measurement','LOGS/measurement','../escape','a/../escape'])
     await assert.rejects(writeMotionMeasurement(root,'selected.png','layout.json',output),/separate relative authoring/);
   await assert.rejects(fs.access(path.join(root,'assets')),{code:'ENOENT'});
   await fs.writeFile(path.join(root,'layout.json'),JSON.stringify({...selected,sheetHash:'b'.repeat(64)}));

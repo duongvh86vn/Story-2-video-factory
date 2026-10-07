@@ -74,7 +74,7 @@ export async function writeMotionMeasurement(rootInput:string,sheetRelative:stri
   const root=await motionSourceDirectory(path.join(path.resolve(rootInput),'.measurement-root'));
   // Narrow relative output components; never publish into production inputs/assets.
   if(!outputRelative||outputRelative.split('/').some(part=>!Id.safeParse(part).success)
-    ||['assets','input','scenes','output','renders','artifacts'].includes(outputRelative.split('/')[0]!.toLowerCase()))throw new Error('Measurement output requires a separate relative authoring directory');
+    ||['assets','input','scenes','output','renders','artifacts','work','previews','logs'].includes(outputRelative.split('/')[0]!.toLowerCase()))throw new Error('Measurement output requires a separate relative authoring directory');
   const [bytes,layoutBytes]=await Promise.all([motionRead(root,sheetRelative,MOTION_PNG_LIMIT),motionRead(root,layoutRelative,MOTION_JSON_LIMIT)]);
   const layout=MotionMeasureLayoutSchema.parse(JSON.parse(layoutBytes.toString('utf8'))),sheet=await motionPng(bytes);
   if(layout.sheetHash!==sheet.hash)throw new Error('Measurement selections belong to a different PNG version');
