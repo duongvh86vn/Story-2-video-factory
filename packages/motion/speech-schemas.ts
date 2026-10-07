@@ -16,6 +16,10 @@ export const ActorSpeechSchema=z.object({version:z.literal(ACTOR_SPEECH_VERSION)
 });
 export type ActorSpeech=z.infer<typeof ActorSpeechSchema>;
 
+// Every allowed suffix belongs to the same feature family, including compound
+// names and digits (eye_right_inner, brow_left_2). Never silently drop a point.
+const feature=(name:string,family:string)=>name===family||name.startsWith(family+'_');
+
 /** Metadata protection, not proof that the landmarks describe the true face. */
 export function bindActorSpeech(input:ActorMotion,speech:ActorSpeech){
   const motion=ActorMotionSchema.parse(input),variant=ActorSpeechSchema.parse(speech);
@@ -28,7 +32,7 @@ export function bindActorSpeech(input:ActorMotion,speech:ActorSpeech){
     const region=variant.regions[index]!,points=frame.landmarks;
     for(const name of ['face_left','face_right','face_top','face_bottom','mouth_center','nose'])
       if(!points[name])throw new Error(`needs-sprite-mouth-registration: frame ${index} is missing ${name}`);
-    const eyes=Object.entries(points).filter(([name])=>/^eye(?:_[a-z]+)?$/.test(name));
+    const registered=Object.entries(points),eyes=registered.filter(([name])=>feature(name,'eye'));
     if(!eyes.length)throw new Error(`needs-sprite-mouth-registration: frame ${index} needs a visible eye`);
     const left=points.face_left!.x,right=points.face_right!.x,top=points.face_top!.y,bottom=points.face_bottom!.y;
     if(!(left<right&&top<bottom)||region.x<left||region.y<top||region.x+region.w>right||region.y+region.h>bottom
@@ -36,7 +40,7 @@ export function bindActorSpeech(input:ActorMotion,speech:ActorSpeech){
       throw new Error(`Speech mouth region escapes the registered face/frame: ${index}`);
     const inside=(point:{x:number;y:number},pad=0)=>point.x>=region.x-pad&&point.x<region.x+region.w+pad&&point.y>=region.y-pad&&point.y<region.y+region.h+pad;
     if(!inside(points.mouth_center!))throw new Error(`Speech region does not contain mouth centre: ${index}`);
-    const protectedPoints=[points.nose!,...eyes.map(([,point])=>point),...Object.entries(points).filter(([name])=>/^brow(?:_[a-z]+)?$/.test(name)).map(([,point])=>point)];
+    const protectedPoints=registered.filter(([name])=>['eye','nose','brow','eyebrow'].some(family=>feature(name,family))).map(([,point])=>point);
     const pad=Math.max(1,Math.min(right-left,bottom-top)*.04);
     if(protectedPoints.some(point=>inside(point,pad)))throw new Error(`Speech mouth region intersects protected eye/nose/brow registration: ${index}`);
   }

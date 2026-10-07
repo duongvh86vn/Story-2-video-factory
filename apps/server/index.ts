@@ -49,7 +49,7 @@ import {loadSpriteMotionCatalog,saveSpriteMotionCatalog} from '../../packages/mo
 import {importActorSpeech,listActorSpeech,loadActorSpeech,actorSpeechSheetBytes} from '../../packages/motion/speech-import.js';
 import {MotionCatalogSaveSchema} from '../../packages/motion/catalog-schemas.js';
 
-export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
+export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; coordinatorLoader?: () => Promise<Coordinator>; logger?: boolean; }
 type Named = { name: string };
 const RunBody = z.object({ until: z.enum(States).default('DONE'), force: z.boolean().default(false), shotIds: z.array(SafeId).min(1).max(100).optional(),retryModelErrors:z.boolean().optional(),sceneRepairAttempts:z.number().int().min(0).max(3).optional() }).strict();
 const loopback = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
@@ -118,17 +118,18 @@ export async function buildServer(options: ServerOptions = {}) {
   const studioRoot = path.resolve(options.studioRoot ?? path.join(repo, 'dist/studio'));
   const app = Fastify({ logger: options.logger ?? false, bodyLimit: 2 * 1024 * 1024, requestTimeout: 120000 });
   const jobs = new ProjectJobs();
-  const coordinator = () => options.coordinator ? Promise.resolve(options.coordinator) : loadCoordinator();
+  const coordinator = () => options.coordinator ? Promise.resolve(options.coordinator) : (options.coordinatorLoader ?? loadCoordinator)();
   const rootFor = async (name: string) => {
     try { return await projectPath(projectsRoot, name); }
     catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') throw new ApiError(404, 'Project not found.', 'NOT_FOUND'); throw error; }
   };
-  const mutate = async <T>(name: string, action: (root: string, core: Coordinator) => Promise<T>) => jobs.mutate(name, async () => {
+  const mutateLocal = async <T>(name: string, action: (root: string) => Promise<T>) => jobs.mutate(name, async () => {
     const root = await rootFor(name);
     await safeLayout(root);
     await ensureIdle(root);
-    return action(root, await coordinator());
+    return action(root);
   });
+  const mutate = async <T>(name: string, action: (root: string, core: Coordinator) => Promise<T>) => mutateLocal(name, async root => action(root, await coordinator()));
 
   await app.register(multipart, { preservePath: true, limits: { fileSize: 128 * 1024 * 1024, files: 12, fields: 2, fieldSize: 200, parts: 14 }, throwFileSizeLimit: true });
   app.addHook('onRequest', async (request, reply) => {
@@ -172,7 +173,7 @@ export async function buildServer(options: ServerOptions = {}) {
   });
   app.post<{Params:Named}>('/api/projects/:name/motions/speech/import',async request=>{
     NoMotionQuery.parse(request.query);const body=SpeechImportBody.parse(request.body);
-    return mutate(request.params.name,async root=>{
+    return mutateLocal(request.params.name,async root=>{
       await boundPath(root,'project.yaml');await loadConfig(root);
       return importActorSpeech(root,await boundPath(root,body.sheet),await boundPath(root,body.registration));
     });

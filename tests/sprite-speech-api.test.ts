@@ -8,14 +8,25 @@ import type {Coordinator} from '../apps/server/jobs.js';
 import type {ActorSpeech} from '../packages/motion/speech-schemas.js';
 import {importedSpeechFixture} from './sprite-speech-support.js';
 
-async function fixture(t:TestContext){
+async function fixture(t:TestContext,injectCoordinator=true){
   const f=await importedSpeechFixture(t),name=path.basename(f.root);
   await fs.writeFile(path.join(f.root,'project.yaml'),`project:\n  name: ${name}\n`);
   const forbidden=async():Promise<never>=>{throw new Error('Unexpected production/model coordinator call');};
   const coordinator:Coordinator={createProject:forbidden,getProjectStatus:forbidden,runPipeline:forbidden,approveProject:forbidden,updateLocks:forbidden,invalidateProject:forbidden};
-  const app=await buildServer({projectsRoot:path.dirname(f.root),coordinator});t.after(()=>app.close());
-  return {...f,app,url:`/api/projects/${name}/motions/speech`,body:{sheet:'input/open.png',registration:'input/speech-registration.json'}};
+  let coordinatorLoads=0;
+  const app=await buildServer({projectsRoot:path.dirname(f.root),...(injectCoordinator?{coordinator}:{}),coordinatorLoader:async()=>{coordinatorLoads++;return forbidden();}});t.after(()=>app.close());
+  return {...f,app,coordinatorLoads:()=>coordinatorLoads,url:`/api/projects/${name}/motions/speech`,body:{sheet:'input/open.png',registration:'input/speech-registration.json'}};
 }
+
+test('speech import without an injected coordinator retains path/idle guards and never loads production',async t=>{
+  const f=await fixture(t,false);
+  assert.equal((await f.app.inject({method:'POST',url:f.url+'/import',payload:{...f.body,sheet:'../outside.png'}})).statusCode,400);
+  const imported=await f.app.inject({method:'POST',url:f.url+'/import',payload:f.body});assert.equal(imported.statusCode,200,imported.body);
+  assert.equal((await f.app.inject({url:f.url})).statusCode,200);
+  await fs.writeFile(path.join(f.root,'.factory.lock'),JSON.stringify({pid:process.pid}));
+  assert.equal((await f.app.inject({method:'POST',url:f.url+'/import',payload:f.body})).statusCode,409);
+  assert.equal(f.coordinatorLoads(),0);
+});
 test('speech API imports an exact candidate, lists it and serves verified original PNG without production',async t=>{
   const f=await fixture(t);assert.deepEqual((await f.app.inject({url:f.url})).json(),{variants:[]});
   const imported=await f.app.inject({method:'POST',url:f.url+'/import',payload:f.body});assert.equal(imported.statusCode,200,imported.body);

@@ -34,6 +34,19 @@ test('mouth region cannot cover eyes/nose, miss mouth centre or escape registere
   }
   await assert.rejects(fs.stat(path.join(f.root,'assets/motion-speech')),/ENOENT/);
 });
+
+test('compound and numbered facial landmarks cannot evade mouth-region protection',async t=>{
+  const f=await importedSpeechFixture(t),variant=await importActorSpeech(f.root,f.speechSheet,f.registrationFile);
+  for(const name of ['eye_right_inner','eye_left_2','brow_left_outer','brow_right_2','nose_tip','eyebrow_left']){
+    const motion={...f.motion,frames:f.motion.frames.map(frame=>({...frame,landmarks:{...frame.landmarks,[name]:{x:16,y:23}}}))};
+    assert.throws(()=>bindActorSpeech(motion,variant),/protected eye\/nose\/brow/);
+  }
+  const motion={...f.motion,frames:f.motion.frames.map(frame=>{
+    const {eye_left,eye_right,...rest}=frame.landmarks;
+    return {...frame,landmarks:{...rest,eye_right_inner:eye_right!,eye_left_2:eye_left!}};
+  })};
+  assert.doesNotThrow(()=>bindActorSpeech(motion,variant));
+});
 test('pixel or alpha changes outside the oral registration are rejected even when the pose looks similar',async t=>{
   const f=await importedSpeechFixture(t);
   for(const channel of [0,3]){
