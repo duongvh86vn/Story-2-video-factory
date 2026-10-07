@@ -1,6 +1,6 @@
-# Lila/Karo — artwork chuyển động đối thoại, ứng viên đầu tiên
+# Lila/Karo — artwork chuyển động đối thoại
 
-Mốc 07/10/2026. Đã tạo ba PNG bằng **built-in image_gen**, lưu nguyên bytes trong repo; không thay ảnh chuẩn hay asset production. Prompt thực dùng, source hash, parent edit, kích thước PNG và trạng thái nằm trong [inventory](../../library/topics/prehistoric-life/motion-studies/study-inventory.json). Các prompt được lưu riêng bên cạnh PNG để tái tạo qua image_gen; tool không báo model ID nên không gán tên model cho các lượt này.
+Mốc 07/10/2026. Đã tạo năm PNG bằng **built-in image_gen**, lưu nguyên bytes trong repo; không thay ảnh chuẩn hay asset production. Prompt thực dùng, source hash, parent edit, kích thước PNG và trạng thái nằm trong [inventory](../../library/topics/prehistoric-life/motion-studies/study-inventory.json). Các prompt được lưu riêng bên cạnh PNG để tái tạo qua image_gen; tool không báo model ID nên không gán tên model cho các lượt này. Mới nhất là Lila v3/Karo v2, vẫn cần sửa; xem [phép đo tĩnh](MOTION-ART-MEASUREMENT.md).
 
 ## Artwork đã tạo và giới hạn hiện tại
 
@@ -9,20 +9,34 @@ Mốc 07/10/2026. Đã tạo ba PNG bằng **built-in image_gen**, lưu nguyên 
 | Lila present-right v1 | 1254 × 1254, PNG có alpha | 16 vị trí nhìn thấy, một động tác nâng/đưa/hạ tay. Hướng nhìn còn gần chính diện; giữ để đối chiếu, chưa đăng ký |
 | Lila present-right v2 | 1254 × 1254, PNG có alpha | Sửa có tham chiếu v1 và ảnh chuẩn để đầu/ngực nhìn sang phải. Hướng nhìn rõ hơn; còn foot/stroke/scale drift, chưa đăng ký |
 | Karo present-left v1 | 1437 × 1095, PNG có alpha | Đầu/ngực nhìn sang trái để tương tác Lila, giữ áo và quần rách có viền. Còn foot/stroke/hem/scale drift, chưa đăng ký |
+| Lila present-right v3 | 1254 × 1254, PNG có alpha | Edit v2, yêu cầu giữ một master body qua cả sheet và chỉ đổi tay gần. Đã đo vùng alpha thủ công; còn limb/cloth/rest drift, chưa đăng ký |
+| Karo present-left v2 | 1437 × 1095, PNG có alpha | Edit v1 theo cùng nguyên tắc. Đã sửa vùng chọn hàng 3–4 theo dải trong suốt; còn tay và viền quần cần đối chiếu, chưa đăng ký |
 
 Yêu cầu trong prompt là 4 cột × 4 hàng, 16 in-betweens của một gesture 1.2s. **File thực không chia hết thành các ô bằng nhau.** Kích thước yêu cầu và thời lượng yêu cầu chưa là frame layout/timing đã đo. Không tự chia thành 512px, crop/re-encode PNG, hoặc nhập thẳng vào catalog từ prompt. `actualFrameLayout=null`, `actualTimingMs=null`, `registeredMotionId=null`, `approved=false`, `productionReady=false`.
 
-![Lila v2 — ứng viên nhìn sang phải](../../library/topics/prehistoric-life/motion-studies/lila-present-right-v2.png)
+![Lila v3 — ứng viên nhìn sang phải, chưa duyệt](../../library/topics/prehistoric-life/motion-studies/lila-present-right-v3.png)
 
-![Karo v1 — ứng viên nhìn sang trái](../../library/topics/prehistoric-life/motion-studies/karo-present-left-v1.png)
+![Karo v2 — ứng viên nhìn sang trái, chưa duyệt](../../library/topics/prehistoric-life/motion-studies/karo-present-left-v2.png)
 
 Nền PNG trong suốt cần được xem trên nền kem/sáng để thấy nét đen. Metadata `hasAlpha=true` chỉ xác nhận có kênh alpha, không chứng minh toàn nền đúng hoặc mọi frame không bị cắt. Chưa có browser playback/render/MP4 từ các ảnh này.
 
 ## Tư vấn ảnh qua 9router và quyết định
 
-Đã gọi **một lượt** `ag/gemini-3.8-flash` qua 9router local, task `motion`, với hai ảnh gốc trước rồi Lila v2/Karo v1. [Journal nguyên bản](reviews/motion-atlas-static-advice-v1.json) giữ prompt, thứ tự/hash ảnh, response, usage và scope `static-art-advice-only`; không execute text trong response. Đây là tư vấn tạo hình, không test pipeline hoặc production acceptance. Không có TTS/ASR/narration/render trong lượt này.
+Lượt đầu `ag/gemini-3.8-flash` qua 9router local, task `motion`, dùng hai ảnh gốc trước rồi Lila v2/Karo v1. [Journal v1](reviews/motion-atlas-static-advice-v1.json) giữ prompt, thứ tự/hash ảnh, response, usage và scope `static-art-advice-only`; không execute text trong response. Đây là tư vấn tạo hình, không test pipeline hoặc production acceptance. Không có TTS/ASR/narration/render trong lượt này.
 
 Gemini nêu nét tay mỏng ở peak extension (R2C3–R2C4), silhouette gấu áo/quần thay đổi, tỷ lệ đầu/thân giữa các hàng, vị trí chân/ground line và shoulder anchor trôi. Controller cũng thấy chân và kích thước pose chưa nhất quán. Giữ các ảnh là **candidate-needs-correction-unregistered**. Điểm 6 trong response không phải thang nghiệm thu; không dùng câu "generally faithful" để mở guard. Nhận xét từ sheet tĩnh không chứng minh độ mượt, continuity hay anatomy khi phát.
+
+Lượt thứ hai đã hoàn tất với Lila v3/Karo v2; [journal v2](reviews/motion-atlas-static-advice-v2.json), usage 7942 input / 992 output tokens. Gemini vẫn nêu tay dài/cung cong quá mức ở R2C3–R3C1, silhouette nghỉ đầu–cuối khác nhẹ và nét chia hai ống quần Karo chưa rõ. Đây là nhận xét cần đối chiếu ảnh, không phát hiện giải phẫu tự động hoặc chứng minh thiếu viền ở mọi pixel. Điểm 5 không chứng minh mức cải thiện. **Không áp dụng gợi ý “crisp angular elbow bends”**: người dùng yêu cầu nét chi mềm, không khớp `<`/`>` sắc. Giữ yêu cầu chiều dài chi ổn định, khuỷu cong tự nhiên, cổ tay không gãy và bàn tay mitten. Gesture phải có playback once/hold được author rõ; không biến thành loop chỉ vì Gemini đề xuất khớp đầu–cuối.
+
+Hai lần chuẩn bị gọi qua wrapper eval bị lỗi parseArgs trước khi gửi model; gọi trực tiếp CLI sau đó thành công. Không có hai lượt provider thất bại được ghi là review hoàn tất.
+
+## Phép đo đã thực hiện, chưa là đăng ký
+
+Source `8998b39`, fixes `7f7b28b` và `9cc8b63` thêm CLI offline `art:tools motion-measure`: đọc PNG nguyên bytes, layout thủ công gắn đúng SHA, đo alpha theo frame/region và xuất JSON/SVG tĩnh. Không detector grid/anatomy, không suy ra clock, điểm chân hoặc approval. [Contract, lệnh và kết quả](MOTION-ART-MEASUREMENT.md), [review source](reviews/motion-art-measurement-source-review-v1.md).
+
+Đã đo hai PNG thực ở ngưỡng 128. Lila occupancy cao 305–306 px; Karo 255–258 px. Sau chỉnh vùng chọn, không frame nào có pixel alpha ≥128 chạm mép ô. Ranh giới ban đầu của Karo cắt qua tóc hàng sau; sửa layout, không sửa/crop ảnh gốc. Báo cáo không biến bounds thành sole contact. Figure PNG là raster của worksheet SVG cho tài liệu, không asset thay thế hoặc render video. Worksheet v1 bị tràn các hàng PNG lân cận; v2 đã có native clip riêng và giữ v1 làm bằng chứng superseded.
+
+Người dùng xác nhận **không có API tạo chuyển động từ ảnh**. Tiếp tục với HTML5/SVG/GSAP và công cụ ảnh/tư vấn đang có. Thiếu dịch vụ video không làm tool đổi sang slideshow. Phải ổn định bản vẽ, điểm khớp và chiều dài chi trước khi dựng bộ diễn xuất đầy đủ; alpha/origin đúng chưa xử lý hết tạo hình.
 
 ## Sửa và đăng ký tiếp theo
 

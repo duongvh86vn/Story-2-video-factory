@@ -1,5 +1,18 @@
 # Bàn giao test sprite motion
 
+**Bổ sung hiện hành `8998b39` + fixes `7f7b28b`/`9cc8b63`:** 4 declarations trong `tests/sprite-motion-measure.test.ts` **NOT RUN**. Source mới có layout/hash/bounds/ROI-budget, fixed local paged SVG/native clips và immutable authoring output; source review sau sửa PASS trong phạm vi mới, fresh full build/test:typecheck/schema export exit 0. Controller đã đo hai PNG thật và raster tài liệu tĩnh, không chạy test callbacks/fixtures/assertions hoặc video pipeline. [Artifact và các giới hạn](MOTION-ART-MEASUREMENT.md), [findings/re-review](reviews/motion-art-measurement-source-review-v1.md). Lila v3/Karo v2 vẫn candidate-needs-correction-unregistered; không dùng report alpha, Gemini advice hoặc figure PNG để approve art hoặc final.
+
+Model được giao test chạy riêng bốn declaration sau, không cần API/model/TTS:
+
+```powershell
+Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1'
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/sprite-motion-measure.test.ts
+```
+
+Kiểm threshold/native/ROI frame-local, repeated positions, invalid size/budget/rect/hash trước publication, không đổi input/raw PNG, idempotence/conflict, denylist chín production dirs cả case Windows và path escape. SVG phải có clip unique/native bounds theo từng ô, cho phép namespace http nhưng resource chỉ source.png/local clip fragment; không có scripting/CSS external resource. Assertion này chưa chạy, không lấy build/typecheck làm PASS.
+
+Các `*-alpha-v1` là lịch sử superseded: Karo layout sai ranh giới, SVG chưa clip raw sheet ngoài ô. Dùng v2 để kiểm nguồn/bounds; kiểm static diagram tách khỏi browser/GSAP motion. Sau khi art/registration thật đủ, model test còn phải kiểm video/script/WAV/story, EN/VI/JA/KO, gait/length/foot/contact/gaze/speech/props/receipt/final; bốn declaration mới không thay các bước đó.
+
 Source import/compile/CLI/API đã triển khai theo [kế hoạch và bằng chứng source](SPRITE-MOTION-IMPLEMENTATION.md); code snapshot `3ee1801` đã qua build/typecheck. Runtime assertions, browser playback và video **chưa chạy**. Build/typecheck không thay các kiểm tra dưới đây. Model được người dùng giao test ghi commit chính xác và kết quả thực tế, không dùng TEST-RESULTS V1 để nghiệm thu.
 
 **Bổ sung hiện hành `5b283ad`:** importer nhận optional `anchors[]` đủ mọi playback position, frame-local và trong bounds; absent giữ shared anchor/legacy hash behavior. Ba ca mới trong `sprite-motion-import.test.ts` NOT RUN: repeated rect/world landmark khác anchor; complete/bounded atlas+strip; invalid registration không publish và thay anchor tạo immutable version. Existing corruption case thêm anchor tampering. Full build/test:typecheck/schema export exit 0, review source không có findings trong phạm vi mới. [Plan/review](reviews/sprite-frame-anchor-source-review-v1.md). Ba [atlas artwork](MOTION-ART-STUDIES.md) là candidate chưa đăng ký, không dùng làm fixture đã duyệt. Speech source đã nối canonical/Director/Studio ở mốc trước, [42 ca speech vẫn NOT RUN](SPRITE-SPEECH-TEST-HANDOFF.md).

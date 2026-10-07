@@ -4,6 +4,8 @@ Source mục tiêu: [đánh giá sprite-gen](SPRITE-GEN-ASSESSMENT.md), pin 2.38
 
 ## Tiến độ source — chưa nghiệm thu runtime
 
+**Mốc authoring hiện hành `8998b39` + fixes `7f7b28b`/`9cc8b63`:** công cụ đo alpha offline với native windows thủ công/hash-bound và worksheet clipped tĩnh đã có source. Lila v3/Karo v2 đã tạo, đo và có Gemini static advice; vẫn candidate chưa đăng ký/duyệt, không có motion clock tự suy ra. Người dùng không có API image-to-video; tiếp tục HTML5/SVG/GSAP/art workflow. [Artifact/lệnh/môi trường](MOTION-ART-MEASUREMENT.md), [review source sau ba fixes, phạm vi và giới hạn](reviews/motion-art-measurement-source-review-v1.md). Fresh full build/test:typecheck/schema export exit 0, **4 measurement declarations NOT RUN**; các declarations trước đó vẫn chưa chạy. Source này bổ trợ authoring, không mở final hoặc hoàn thành toàn tool ba input.
+
 | Phần | Trạng thái | Bằng chứng |
 |---|---|---|
 | Import atlas/strip, registration, hash và version bất biến | Đã triển khai, qua review source | `f0b4ae4`, `0d5eeff`; test khai báo trong `tests/sprite-motion-import.test.ts` |
