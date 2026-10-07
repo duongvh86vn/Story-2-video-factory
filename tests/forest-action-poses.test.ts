@@ -48,8 +48,10 @@ for(const actor of ['lila','karo'] as const){
       for(const side of ['left','right'] as const)assert.equal(f.feet[side].y,rest.feet[side].y);
     }
   });
-  test(`${actor}: spear grips stay on one rotated shaft, fixed XYZ arms reach it and only contact reaches the aim`,()=>{
-    const {plan,profile}=bodyCalibrationPlan(actor,'spear-thrust','happy'),track=plan.spears![0]!,prop=plan.props[0]!,m=rigMetrics(profile);
+  for(const action of ['spear-thrust','spear-thrust-left'] as const)test(`${actor}/${action}: spear grips stay on one rotated shaft, fixed XYZ arms reach it and only contact reaches the aim`,()=>{
+    const {plan,profile}=bodyCalibrationPlan(actor,action,'happy'),track=plan.spears![0]!,prop=plan.props[0]!,m=rigMetrics(profile);
+    assert.ok(Math.abs(prop.length!/m.height-1.2)<1e-8,'calibration spear must read as a full-length tool');
+    assert.equal(prop.gripOffset!.x,-prop.length!*.25,'both hands belong near the rear of the shaft');
     const hit=samplePerformance(plan,profile,track.contactMs!,silent),ready=samplePerformance(plan,profile,track.readyMs!,silent);
     assert.ok(length(hit.props[prop.id]!.tip!,track.aim)<.0001);
     assert.ok(length(ready.props[prop.id]!.tip!,track.aim)>5);
@@ -58,16 +60,33 @@ for(const actor of ['lila','karo'] as const){
       assert.equal(tool.attached,true);assert.ok(f.contactError<.001);
       const primary={x:tool.point.x+(prop.gripOffset?.x??0)*Math.cos(a),y:tool.point.y+(prop.gripOffset?.x??0)*Math.sin(a)};
       const secondary={x:primary.x+track.secondaryOffset*Math.cos(a),y:primary.y+track.secondaryOffset*Math.sin(a)};
-      assert.ok(length(f.hands.right,primary)<.001);assert.ok(length(f.hands.left,secondary)<.001);
+      assert.ok(length(f.hands[track.hand],primary)<.001);assert.ok(length(f.hands[track.hand==='left'?'right':'left'],secondary)<.001);
       for(const side of ['left','right'] as const){
         const u=values(f.transforms['arm-'+side+'-upper']!),l=values(f.transforms['arm-'+side+'-lower']!),depth=f.armProjection![side]!.elbowDepth;
         const shoulder={x:u[0]!,y:u[1]!},elbow={x:l[0]!,y:l[1]!},bones=m.arms![side];
+        assert.ok(Math.abs(bones.upper/(bones.upper+bones.lower)-.52)<1e-8,'an unmeasured source elbow must not recreate the old short upper arm');
+        assert.ok(elbow.y>shoulder.y,'held aiming elbow must stay below its shoulder, not curl above it');
         assert.ok(Math.abs(length(shoulder,elbow,depth)-bones.upper)<.002,'physical upper arm changed');
         assert.ok(Math.abs(length(elbow,f.hands[side],depth)-bones.lower)<.002,'physical forearm changed');
       }
     }
     const expected=samplePerformance(plan,profile,1500,silent);samplePerformance(plan,profile,3900,silent);
     assert.deepEqual(samplePerformance(plan,profile,1500,silent),expected);
+  });
+  test(`${actor}: aimed emotions keep planted soles and fixed leg lengths`,()=>{
+    for(const mood of ['neutral','happy','angry','thinking'] as const){
+      const {plan,profile}=bodyCalibrationPlan(actor,'spear-thrust',mood),m=rigMetrics(profile);
+      for(const time of [0,1200,1800,3000,4000]){
+        const frame=samplePerformance(plan,profile,time,silent);
+        assert.ok(frame.stance.left&&frame.stance.right);
+        for(const side of ['left','right'] as const){
+          const u=values(frame.transforms['leg-'+side+'-upper']!),l=values(frame.transforms['leg-'+side+'-lower']!),depth=frame.legProjection![side].kneeDepth,bones=m.legs![side];
+          const hip={x:u[0]!,y:u[1]!},knee={x:l[0]!,y:l[1]!},ankle={x:frame.feet[side].x,y:frame.feet[side].y-m.footSoleOffset![side]*profile.appearance.bodyScale};
+          assert.ok(Math.abs(length(hip,knee,depth)-bones.upper)<.002);
+          assert.ok(Math.abs(length(knee,ankle,depth)-bones.lower)<.002);
+        }
+      }
+    }
   });
 }
 test('new locomotion/tool clips reject old compiler versions, premature contacts and conflicting ownership',()=>{
@@ -82,6 +101,8 @@ test('new locomotion/tool clips reject old compiler versions, premature contacts
   assert.throws(()=>validatePerformance(miss,profile),/rig reach/);
   const missing=structuredClone(plan);delete missing.spears;
   assert.throws(()=>validatePerformance(missing,profile),/no shared grip track/);
+  const nonSpear=structuredClone(plan);nonSpear.props[0]!.kind='generic';
+  assert.throws(()=>validatePerformance(nonSpear,profile),/extended 600-unit shaft/);
 });
 test('workbench exposes distinct run/jump/hunting/tool actions without implying production acceptance',()=>{
   for(const action of ['run','run-left','jump','hunt-stalk','spear-hold','spear-thrust','hunt-aim','hunt-chase'] as const){

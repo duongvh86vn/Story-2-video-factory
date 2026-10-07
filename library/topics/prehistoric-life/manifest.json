@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.14-run-jump-spear-candidate",
+  "version": "forest-tribe-0.15-spear-anatomy-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -729,9 +729,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-9",
+    "compilerVersion": "forest-source-body-motion-10",
     "rendererVersion": "forest-source-body-svg-7",
-    "fingerprint": "828180300ce3b84d4d5f60070b96112093b7663b9146b2c7f9daf88b6a8b5084",
+    "fingerprint": "34cae29dc5c962f26427a0b0d373814588575edca065dcd1ac895f4f9371f1ee",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -1167,8 +1167,8 @@
         "productionReady": false
       },
       "spear": {
-        "version": "forest-spear-grips-1",
-        "grip": "primary shoulder-local rig units; second hand owns a point on the same shaft",
+        "version": "forest-spear-grips-2",
+        "grip": "primary shoulder-local rig units; second hand owns a point on the same shaft; rear-quarter grip permits a full-length hunting spear",
         "ownership": "one entry-owned tool track covers the shot; no unsupported pickup, throw or cross-cut handoff",
         "clocks": "windup → ready → extension → contact hold → recovery; quintic translation",
         "target": "world-space aim; thrust tip reaches it only at contact, unreachable arms or out-of-stage shaft rejected",
@@ -1196,6 +1196,7 @@
     },
     "inferredAnatomy": {
       "knees": "not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved",
+      "elbows": "not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; aimed spear uses 0.85 projection-plane weight to retain a readable down/back elbow",
       "seat": "closed hip contact below/behind belt, not the pelvis anchor itself"
     },
     "headAttachment": {
@@ -1345,19 +1346,23 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "94625683120827b23937db340f4c0bfaee32b96934f3f1cc3481c539fe305524",
+    "codeHash": "8f7f9b66126b794568b301e8f351188f4a506044e5fad721147ebe1efb5f72b8",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "8c605dc2b6dc62889028582aa89deed1c1dc0fbc96051405e4410d52f8ab8534",
-    "spearCodeHash": "293c41ace392056e76081e77c5b80a4e4e75d0e68086b109d4ea8da05edf9122",
-    "compilerCodeHash": "6720134ca409d4e54b55a3d136e92221029045ad09c5add2a6c2353dd277c25c",
+    "spearCodeHash": "1712e03b879b05e3f9b221768fbd19d31bc358d986c3e68106461bcc56c3d660",
+    "compilerCodeHash": "6468c01efad21537ba651331332ab8088308aab229960f8adc9268b893178ac9",
     "rigCodeHash": "7a9ad7f40d2804d087b881deba80028604ef787232bcd173cc04b1500854e2c6"
   },
   "actionPoseInspection": {
-    "file": "docs/topics/reviews/source-action-pose-self-inspection-v1.json",
+    "file": "docs/topics/reviews/source-spear-pose-self-inspection-v2.json",
     "scope": "developer-static-pose-inspection-only",
     "pass": null,
     "productionAcceptance": false,
-    "currentRepair": "Run contact/flight and elbow drive; jump tuck; shared spear grips, clocks and tool between torso/hands. Stalk/aim/chase actor poses are candidates; authored body views, quarry rig, sourced bindings, animal response and continuous video acceptance remain pending."
+    "supersedes": {
+      "file": "docs/topics/reviews/source-action-pose-self-inspection-v1.json",
+      "reason": "User rejected spear contact arm geometry and short shaft; earlier snapshots remain historical, not acceptance."
+    },
+    "currentRepair": "Per-side source arm totals retained, inferred 52/48 split and readable down/back elbows; full-length 1.2-height spear, rear-quarter primary grip, wider stage, left/right aim calibration. Run/jump/stalk source poses, authored body views, quarry rig, sourced bindings, animal response and continuous video acceptance remain pending."
   },
   "walkPoseInspection": {
     "file": "docs/topics/reviews/source-walk-pose-self-inspection-v1.json",

@@ -10,7 +10,7 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-9';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-10';
 export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-7';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
@@ -58,7 +58,13 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body variant missing.');
   const source=bodies[actor],u=source.unitScale,b=profile.appearance.bodyScale,k=u*b;
   const relative=(p:Point)=>({x:(p.x-source.pelvis.x)*k,y:(p.y-source.pelvis.y)*k});
-  const arms=Object.fromEntries((['left','right'] as const).map(side=>[side,{upper:source.arms[side].upper*k,lower:source.arms[side].lower*k}])) as Record<RigHand,{upper:number;lower:number}>;
+  // The source arms are uninterrupted ink, with no measured elbow landmark.
+  // Preserve each source shoulder-to-hand chain total; the previous arbitrary
+  // split (Karo 88/136) made its upper arm collapse during two-handed work.
+  const arms=Object.fromEntries((['left','right'] as const).map(side=>{
+    const total=(source.arms[side].upper+source.arms[side].lower)*k;
+    return [side,{upper:total*.52,lower:total*.48}];
+  })) as Record<RigHand,{upper:number;lower:number}>;
   const legs=Object.fromEntries((['left','right'] as const).map(side=>[side,{upper:source.legs[side].upper*k,lower:source.legs[side].lower*k}])) as Record<RigHand,{upper:number;lower:number}>;
   return {height:318*b,pelvisY:(source.pelvis.y-source.groundY)*k,
     // Slight flexion reserve for ground contact. Foot anchors are at the sole,
@@ -119,7 +125,9 @@ export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,c
   visibleLimbs:{method:'two joined cubics through the projected hidden IK joint; source knee depth preserves physical XYZ lengths',softness:.28,anatomicalGuarantee:false},
   secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered',hair:'Lila ponytail source masks with 120ms follow; no simulated hair physics',
     clothing:'all source body plans use one opaque shared cloth surface with a pinned waist and blended 100ms thigh follow below it, limited to 22 degrees; seat plans also use semantic UV correspondences through seated/rising, fading thigh follow into the seated pose; source/authored fold materials share that surface; legacy independently rotating panels are hidden to avoid opening a waist gap during ordinary walking; inverted triangles block evaluation; no fabric simulation or motion acceptance'},
-  inferredAnatomy:{knees:'not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved',seat:'closed hip contact below/behind belt, not the pelvis anchor itself'},
+  inferredAnatomy:{knees:'not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved',
+    elbows:'not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; aimed spear uses 0.85 projection-plane weight to retain a readable down/back elbow',
+    seat:'closed hip contact below/behind belt, not the pelvis anchor itself'},
   headAttachment:{neck:'original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone'},
   footContact:{frameFeet:'sole anchors',inkEndpoint:'ankle',pelvisWalkDrop:'minimum fixed-leg reach plus small bob; not .23 of long thigh'},
   walkMotion:sourceWalkDescription,

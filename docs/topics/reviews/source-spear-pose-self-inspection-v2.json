@@ -1,0 +1,113 @@
+{
+  "version": 2,
+  "date": "2026-10-07",
+  "scope": "developer-static-pose-inspection-only",
+  "pass": null,
+  "modelReview": null,
+  "productionAcceptance": false,
+  "supersedes": {
+    "file": "docs/topics/reviews/source-action-pose-self-inspection-v1.json",
+    "humanFeedback": "Rejected spear arm shape and short shaft; prior snapshots stay historical."
+  },
+  "runtimeTestsRun": false,
+  "fixtureToolExecuted": false,
+  "videoRendered": false,
+  "ttsAsrCalled": false,
+  "modelApiCalled": false,
+  "developerPoseDiagnostic": "One angry pose failed for Lila fixed-leg reach; diagnosed in the same static pose builder. Planted pelvis correction repaired the visible workbench request. No runtime/video acceptance.",
+  "build": "PASS",
+  "testTypecheck": "PASS",
+  "bodyPackFingerprint": "34cae29dc5c962f26427a0b0d373814588575edca065dcd1ac895f4f9371f1ee",
+  "bodyCompiler": "forest-source-body-motion-10",
+  "profiles": {
+    "lila": "c0471d6b5e144a67300ef90b577435460d0dbe5c25b80f369cf39b4b19ea10c1",
+    "karo": "af23db9ad63faf2008ed7a54d3012dff3e7c7c1ba8060fd366eae50b5b038790"
+  },
+  "codeHashes": {
+    "packages/animation/compiler.ts": "6468c01efad21537ba651331332ab8088308aab229960f8adc9268b893178ac9",
+    "packages/animation/schemas.ts": "134ae50fe47002de93204250bd729219af32d76b2e02eaa73e03cb4ebb2851bd",
+    "packages/animation/spear.ts": "1712e03b879b05e3f9b221768fbd19d31bc358d986c3e68106461bcc56c3d660",
+    "packages/animation/forest-body-art.ts": "8f7f9b66126b794568b301e8f351188f4a506044e5fad721147ebe1efb5f72b8",
+    "packages/topics/body-workbench.ts": "1a2fc23ba4ba5cf10e4c6f1b997724ae220cf34ee57267498bff4deff9a4de12",
+    "tests/forest-action-poses.test.ts": "86cdb2fdcc2a71f8224ea2c668ccbb21f7b40b69a3c8ecaa9a9f7446908625cc"
+  },
+  "files": [
+    {
+      "file": "docs/topics/reviews/karo-spear-thrust-contact-v3.png",
+      "action": "spear-thrust",
+      "timeMs": 1800,
+      "mood": "happy",
+      "sha256": "cfa8e3f84b6145edafa3138cba509b9ccd38325a9e619f1616ecb4399848ef89",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1800&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/source-spear-thrust-both-v2.png",
+      "action": "spear-thrust",
+      "timeMs": 1800,
+      "mood": "happy",
+      "sha256": "70ee2b138c96623c1622382a39237b964f9271da7879b720a15d88fd22239192",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1800&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-spear-thrust-left-contact-v3.png",
+      "action": "spear-thrust-left",
+      "timeMs": 1800,
+      "mood": "happy",
+      "sha256": "fe9b540de3fda145be687d67f785b34e4ef30a28531bdc0b3defe73a0a3f855d",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust-left&timeMs=1800&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/source-spear-thrust-left-both-v2.png",
+      "action": "spear-thrust-left",
+      "timeMs": 1800,
+      "mood": "happy",
+      "sha256": "cbe6033b262e7061a2bd3a5e147c3ef957479f9646938a7efcce474d0aaa1c1f",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust-left&timeMs=1800&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-spear-thrust-windup-v3.png",
+      "action": "spear-thrust",
+      "timeMs": 1200,
+      "mood": "happy",
+      "sha256": "37537e16d1869a15f0289dcab0a2661a0855eca00dd421cdfa37785ff039cc3c",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1200&mood=happy"
+    },
+    {
+      "file": "docs/topics/reviews/karo-spear-thrust-contact-angry-v3.png",
+      "action": "spear-thrust",
+      "timeMs": 1800,
+      "mood": "angry",
+      "sha256": "0c3e5a18accea1ad118ddc69f3411541dec313428320bd70f82a56d5f729f2af",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1800&mood=angry"
+    },
+    {
+      "file": "docs/topics/reviews/source-spear-thrust-angry-both-v2.png",
+      "action": "spear-thrust",
+      "timeMs": 1800,
+      "mood": "angry",
+      "sha256": "b54e0a243039b7d10c8ab77143e8e1286dc2686c64518da93d10d68981b3a6b7",
+      "capture": "original unmodified browser screenshot",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1800&mood=angry"
+    }
+  ],
+  "observations": [
+    "Per-side source arm total retained; unmeasured elbow uses inferred 52/48 split.",
+    "Spear elbow plane weight changed from .2 to .85 so upper arm reads down/back rather than a collapsed hook.",
+    "Workbench spear is 1.2 times rig height, primary grip at rear quarter, secondary 30 units behind, on one shared shaft clock.",
+    "Wider stage and pose column preserve tip and shaft; left/right aim retains original asymmetric clothes.",
+    "Planted pelvis now accounts for rotated hip reach; fixed leg lengths, soles and seat support constraints remain.",
+    "Developer inspected Karo viewport contact/windup/left contact and both actor cards in angry full-page. No independent visual or motion PASS."
+  ],
+  "pending": [
+    "all prepared runtime tests and full-clock evaluator/bake/HyperFrames render including source gait/seat regression",
+    "authored profile/three-quarter/rear torso, real weight transfer/lunge and front/back arm ordering",
+    "sourced weapon/target bindings, quarry rig/contact/reaction and camera in story scenes",
+    "three actual input-to-final narrated topic flows and final QC"
+  ]
+}

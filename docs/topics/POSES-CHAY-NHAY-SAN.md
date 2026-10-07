@@ -1,6 +1,18 @@
 # Lila/Karo: chạy, nhảy và diễn hành động săn
 
-Mốc 0.14, ngày 07/10/2026. Đây là bộ điều khiển chuyển động ứng viên cho đúng hai model da ấm, tóc nâu, áo một vai và nét tay/chân đen từ ảnh đã gửi. Không đổi thành người dẫn hoặc gán một câu chuyện săn cố định. Ba input vẫn là kịch bản nguyên văn, WAV giữ lời/clock giọng gốc, và câu chuyện → kịch bản trung thành → narration → video.
+Mốc hiện tại 0.15, ngày 07/10/2026; sửa tay/giáo sau góp ý của người dùng về 0.14. Đây là bộ điều khiển chuyển động ứng viên cho đúng hai model da ấm, tóc nâu, áo một vai và nét tay/chân đen từ ảnh đã gửi. Không đổi thành người dẫn hoặc gán một câu chuyện săn cố định. Ba input vẫn là kịch bản nguyên văn, WAV giữ lời/clock giọng gốc, và câu chuyện → kịch bản trung thành → narration → video.
+
+## Sửa pose đâm giáo 0.15
+
+Người dùng đã chỉ ra tay gập bất hợp lý và giáo quá ngắn ở ảnh 0.14. Không coi snapshot cũ là pose đã duyệt. Nguyên nhân trong source: ảnh không có điểm khuỷu nhưng chain đã chia thành bắp tay rất ngắn/cẳng tay dài; phép chiếu với plane weight 0.2 lại thu bắp tay sát vai. Bản sửa giữ **tổng chiều dài từng tay theo nguồn**, suy luận tỷ lệ bắp tay/cẳng tay 52/48 và dùng plane weight 0.85 cho giáo để đọc rõ khuỷu xuống/sau; run vẫn dùng phép chiếu front riêng. Đây là giải phẫu suy luận, chưa có artwork profile hoặc bằng chứng biomechanics.
+
+Workbench đổi giáo từ 120 lên `rigMetrics.height * 1.2` (381.6 đơn vị với bodyScale=1). Tay chính tại phần sau cán (`gripOffset.x=-length/4`), tay phụ lùi thêm 30 đơn vị; không chỉ kéo dài phần mũi. Grip từ vai là `(±24,50)`; đầu đâm dịch khoảng 30 đơn vị từ pose giữ, cùng clock lấy đà/đưa/giữ/thu. World rộng 820 thay vì 430 để không cắt cán hoặc mũi. Thêm `spear-hold-left` và `spear-thrust-left` với ownership tay đúng rig; không mirror áo một vai. Bố cục trang so sánh cho pose giáo nhiều chỗ hơn. Những số trên là preset hiệu chỉnh; câu chuyện sản xuất phải đặt target/reach theo layout thật.
+
+Schema cho phép chiều dài 50–600 chỉ với `kind=spear`; prop generic vẫn tối đa 200. Không nới reach, ownership, contact clock hoặc giới hạn scene 2 MB. Khi xem biểu cảm angry, Lila bị lỗi chân không tới nền do hông xoay nhưng chiều cao pelvis của người đứng chưa bù reach. Compiler nay hạ pelvis chỉ phần cần thiết sau khi xoay hông, giữ đế chân và chiều dài xương; seat vẫn dùng solver support riêng. Bản sửa này ảnh hưởng hình của những pose source khác, cần giao model test kiểm hồi quy đi/chạy/ngồi/nhảy/biểu cảm.
+
+Body compiler hiện `forest-source-body-motion-10`, spear geometry `forest-spear-grips-2`, topic `forest-tribe-0.15-spear-anatomy-candidate`. Fingerprint hình đã đổi; không tạo lại lời kể đã chốt.
+
+Ảnh developer mới: [lấy đà](reviews/karo-spear-thrust-windup-v3.png), [đâm phải](reviews/karo-spear-thrust-contact-v3.png), [đâm trái](reviews/karo-spear-thrust-left-contact-v3.png), [biểu cảm căng](reviews/karo-spear-thrust-contact-angry-v3.png), [cả hai actor](reviews/source-spear-thrust-angry-both-v2.png). Hash/phạm vi ở [inspection v2](reviews/source-spear-pose-self-inspection-v2.json). Chỉ inspection tĩnh và build/typecheck; chưa chạy runtime tests, fixture hoặc video, không có PASS chuyển động mới. Profile body, đổi trọng lượng/lunge thật, con thú và sourced story bindings vẫn còn thiếu.
 
 ## Các action đã thêm trong source
 
@@ -9,8 +21,8 @@ Mốc 0.14, ngày 07/10/2026. Đây là bộ điều khiển chuyển động �
 | `run`, `run-left` | Trụ → nén → đẩy → bay → đặt chân; root liên tục, chân trụ giữ tọa độ nền, tay gập đánh trước/sau; dừng về hai chân | Artwork thân nghiêng, stride/heel/toe, động lực và nghiệm thu chu kỳ |
 | `jump` | Lấy đà → bật → thu chân trong pha bay → tiếp đất → hấp thụ; tay cùng clock | Jump nhiều hướng, nhảy tiến/qua vật, toe roll và thứ tự lớp gần/xa |
 | `hunt-stalk` | Quan sát/cúi → đứng lại → bước ngắn → cúi/quan sát tiếp | Đi khom liên tục và chạm cây/bụi, dấu vết thật trong cảnh |
-| `spear-hold` | Hai tay giữ chung cán giáo bằng IK; giáo ở trên áo và dưới bàn tay | Pose giữ giáo dọc/ngang nhiều hướng, tiếp cận/nhặt/chuyền |
-| `spear-thrust` | Giữ → lấy đà → đưa giáo → chạm world target → giữ ngắn → thu giáo | Gắn target với entity con thú/vật và source/action contract trong storyboard |
+| `spear-hold`, `spear-hold-left` | Hai tay giữ chung cán dài bằng IK; giáo ở trên áo và dưới bàn tay | Pose giữ giáo dọc, tiếp cận/nhặt/chuyền, artwork thân theo hướng |
+| `spear-thrust`, `spear-thrust-left` | Giữ → lấy đà → đưa giáo → chạm world target → giữ ngắn → thu giáo; khuỷu rõ hơn | Gắn target với entity con thú/vật và source/action contract trong storyboard; lunge/chuyển trọng lượng thật |
 | `hunt-aim` | Cúi ngắm, nhìn target và giữ hai điểm trên cán | Bộ view ngắm nghiêng, gần/xa và phối hợp hai diễn viên |
 | `hunt-chase` | Chạy giữ giáo bằng cùng evaluator; mắt hướng mục tiêu | Rig con thú, vị trí/đường chạy/thời điểm phản ứng, cảnh rượt đuổi có nguồn |
 
@@ -27,13 +39,13 @@ Các dòng săn là **pose của diễn viên**, chưa phải cảnh săn thú h
 - `packages/animation/rig.ts`, `scene.ts`, `packages/topics/body-workbench.ts`: cùng rig, cùng lớp giáo trên torso/dưới tay, cùng `samplePerformance` và fixture; không có renderer pose riêng để che lỗi production evaluator.
 - Director/explainer biết `movement=run`; coverage yêu cầu `gait=run`, không lấy đi nhanh hoặc pan thay cho chạy. Hint EN/VI/JA/KO dùng chung `motion-vocabulary.ts`; hint chỉ mở capability/cache, không chứng minh hành động có nguồn. Bộ gesture giáo hiện chưa được quảng bá là production binding. Story action phải có full source statement, entity và contact/response trước khi mở production.
 
-Body compiler `forest-source-body-motion-9`. Fingerprint visual mới invalidates hình cũ; narrative contract vẫn `prehistoric-story-contract-1` để không tự viết lại lời kể đã chốt. `productionReady=false`, `productionRig=null` giữ nguyên.
+Body compiler hiện `forest-source-body-motion-10`. Fingerprint visual mới invalidates hình cũ; narrative contract vẫn `prehistoric-story-contract-1` để không tự viết lại lời kể đã chốt. `productionReady=false`, `productionRig=null` giữ nguyên.
 
 ## Preview và chứng cứ
 
 Mở [workbench](http://127.0.0.1:8850/api/topics/prehistoric-life/body?action=spear-thrust&timeMs=1800&mood=happy), chọn action và clock. Có link các mốc pose cho chạy/nhảy/đâm; input thời gian dùng bước 1 ms để nhập được 665/1175 ms. Mốc chạy trong link tính theo metrics Karo; actor khác cần clock theo lịch riêng.
 
-Ảnh developer tĩnh, không phải nghiệm thu chuyển động: [chạy phải](reviews/karo-run-flight-v2.png), [chạy trái](reviews/karo-run-left-flight-v1.png), [nhảy thu chân](reviews/karo-jump-apex-v2.png), [rình quan sát](reviews/karo-hunt-stalk-v1.png), [giữ giáo](reviews/karo-spear-hold-v1.png), [đâm chạm target](reviews/karo-spear-thrust-contact-v2.png), [ngắm giáo](reviews/karo-hunt-aim-v2.png), [chạy giữ giáo](reviews/karo-hunt-chase-v1.png). Hash/phạm vi ở `reviews/source-action-pose-self-inspection-v1.json`. Không có static/model PASS hoặc video PASS mới.
+Ảnh developer lịch sử **0.14**, không áp dụng cho anatomy mới và không phải nghiệm thu chuyển động: [chạy phải](reviews/karo-run-flight-v2.png), [chạy trái](reviews/karo-run-left-flight-v1.png), [nhảy thu chân](reviews/karo-jump-apex-v2.png), [rình quan sát](reviews/karo-hunt-stalk-v1.png), [giữ giáo](reviews/karo-spear-hold-v1.png), [đâm chạm target bị góp ý](reviews/karo-spear-thrust-contact-v2.png), [ngắm giáo](reviews/karo-hunt-aim-v2.png), [chạy giữ giáo](reviews/karo-hunt-chase-v1.png). Hash/phạm vi ở `reviews/source-action-pose-self-inspection-v1.json`. Các ảnh này giữ để đối chiếu, không ghi đè bằng bản sửa hoặc dùng để báo PASS.
 
 ## Công việc tiếp theo để săn thú thành một cảnh diễn thật
 
@@ -62,7 +74,7 @@ node --experimental-test-module-mocks --import tsx --test tests/forest-action-po
 
 # Fixture compiler → security allowlist/2MB → hash-check PNG gốc → HyperFrames validator → MP460fps:
 foreach ($actor in @('lila','karo')) {
-  foreach ($action in @('run','run-left','jump','hunt-stalk','spear-hold','spear-thrust','hunt-aim','hunt-chase')) {
+  foreach ($action in @('run','run-left','jump','hunt-stalk','spear-hold','spear-hold-left','spear-thrust','spear-thrust-left','hunt-aim','hunt-chase')) {
     node --import tsx scripts/forest-motion-fixture.ts --actor $actor --action $action --mood happy --render
     if ($LASTEXITCODE -ne 0) { throw "Fixture failed: $actor/$action" }
   }

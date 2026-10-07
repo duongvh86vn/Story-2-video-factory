@@ -295,10 +295,10 @@ function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
   running=!!runAir;
   return {feet,stance,activation,phase,direction,armSwing,supportShiftX,runAir,running};
 }
-/** Lower the source pelvis only as far as the fixed limbs require. A generic
- * fraction of its long hidden thigh would produce a deep crouch every step. */
+/** Lower the source pelvis only as far as the fixed limbs require, including
+ * a planted actor leaning into an expression. A generic fraction of its long
+ * hidden thigh would produce a deep crouch every step. */
 function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetrics,profile:HostProfile,scale:number,lean:number,bodyOffsetY=0):number {
-  if(!walk.activation)return 0;
   let needed=0;
   for(const side of ['left','right'] as const){
     const base={x:root.x+walk.supportShiftX,y:root.y+metrics.pelvisY*scale+bodyOffsetY},geometry=legGeometry(metrics,base,walk.feet[side],side,scale,profile.appearance.bodyScale,lean);
@@ -322,8 +322,12 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
   const supported=sourceSupported??(plan.supports?.length?seatedPlacement(plan,profile,t,root):undefined);
   if(sourceSupported?.ownsFeet&&!walk.activation){walk.feet=sourceSupported.feet;walk.stance=sourceSupported.stance;}
   const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath+(sourceSupported?.leanOffset??0);
-  const walkDrop=source?sourceWalkDrop(root,walk,m,profile,s,lean,air?.bodyOffsetY):walk.activation*m.upperLeg*.23*s;
-  const pelvis=supported?.pelvis??{x:root.x+walk.supportShiftX,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walkDrop};
+  const postureDrop=Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s;
+  // Seats have their own contact solver. For unsupported/planted poses, rotate
+  // the hips before measuring required leg reach; never lengthen a leg or relax
+  // the reach tolerance when a leaning emotion moves its hip away from a sole.
+  const walkDrop=source?(supported&&!walk.activation?0:sourceWalkDrop(root,walk,m,profile,s,lean,(air?.bodyOffsetY??0)+postureDrop)):walk.activation*m.upperLeg*.23*s;
+  const pelvis=supported?.pelvis??{x:root.x+walk.supportShiftX,y:root.y+m.pelvisY*s+postureDrop+walkDrop};
   if(sourceSupported){
     // A seated hip is below/behind the belt. Counter the body's lean around
     // this attachment so the contact stays on the support rather than orbiting.
@@ -579,9 +583,11 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder),runPole??lapPole);
     if(spear&&arm.error>.01)throw new Error(`${spear.track.id}: ${side} hand cannot reach spear grip at ${t}ms (${arm.error.toFixed(2)}px)`);
     if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
-    // The front source has no authored aiming profile. Infer depth instead of
-    // displaying the entire elbow flexion sideways as a hook over the tunic.
-    const projectedArm=(spear&&usesReferenceBody(profile)||sourceRun)?projectSourceKnee(shoulder,arm.end,arm.joint,lengths.upper*s,lengths.lower*s,.2):undefined;
+    // An aimed shaft is lateral to the torso: retain most of the down/back
+    // elbow bend on screen. The former .2 plane weight foreshortened the upper
+    // arm into a small hook next to the shoulder. Running keeps its front-plane
+    // inference; neither projection is an authored full-body profile.
+    const projectedArm=(spear&&usesReferenceBody(profile)||sourceRun)?projectSourceKnee(shoulder,arm.end,arm.joint,lengths.upper*s,lengths.lower*s,spear ? .85 : .2):undefined;
     if(projectedArm){
       transforms[`arm-${side}-upper`]=`translate(${number(shoulder.x)} ${number(shoulder.y)}) rotate(${number(projectedArm.upper)}) scale(${number(s)} ${number(s*projectedArm.upperRatio)})`;
       transforms[`arm-${side}-lower`]=`translate(${number(projectedArm.joint.x)} ${number(projectedArm.joint.y)}) rotate(${number(projectedArm.lower)}) scale(${number(s)} ${number(s*projectedArm.lowerRatio)})`;

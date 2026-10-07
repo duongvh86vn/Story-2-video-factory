@@ -59,7 +59,9 @@ export const PerformancePlanSchema = z.object({
   walks: z.array(WalkSchema), jumps:z.array(JumpSchema).max(16).optional(), gestures: z.array(GestureSchema),spears:z.array(SpearTrackSchema).max(8).optional(),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
   gazes: z.array(z.object({ ...Interval, target: PointSchema }).strict()),
-  props: z.array(z.object({ id: Id, origin: PointSchema, destination: PointSchema.optional(), gripOffset: PointSchema.optional(), attachedTo:z.enum(['left-hand','right-hand']).optional(),kind:z.enum(['generic','spear']).optional(),length:z.number().finite().min(50).max(200).optional() }).strict()),
+  props: z.array(z.object({ id: Id, origin: PointSchema, destination: PointSchema.optional(), gripOffset: PointSchema.optional(), attachedTo:z.enum(['left-hand','right-hand']).optional(),kind:z.enum(['generic','spear']).optional(),length:z.number().finite().min(50).max(600).optional() }).strict().superRefine((prop,ctx)=>{
+    if(prop.kind!=='spear'&&(prop.length??0)>200)ctx.addIssue({code:'custom',path:['length'],message:'Only a spear has the extended 600-unit shaft range.'});
+  })),
 }).strict();
 export type PerformancePlan = z.infer<typeof PerformancePlanSchema>;
 export type Gesture = z.infer<typeof GestureSchema>;
