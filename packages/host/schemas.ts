@@ -12,9 +12,10 @@ export const HostProfileSchema = z.object({
     strokeWidth: z.number().min(2).max(10),
     characterVariant: z.enum(['lila','karo']).optional(),
     artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
-    bodyView:z.enum(['three-quarter-right']).optional() }).strict().superRefine((a,ctx)=>{
+    bodyView:z.enum(['three-quarter-right']).optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
       if(a.artworkVersion==='forest-body-view-1'&&(!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Authored body candidate requires its actor and registered view'});
       if(a.bodyView&&a.artworkVersion!=='forest-body-view-1')ctx.addIssue({code:'custom',message:'bodyView requires the authored body candidate artwork version'});
+      if(a.sourceColour&&(a.artworkVersion!=='forest-body-1'||!a.characterVariant))ctx.addIssue({code:'custom',message:'Original source colour requires the source body and its actor; authored views are separate artwork'});
     }),
   costume: z.array(z.object({joint:z.enum(['head','chest','pelvis','hand-left','hand-right']),svg:z.string().min(1).max(24000)}).strict()).max(12).optional(),
   actions: z.array(z.enum(HostActions)).min(1), immutable: z.array(z.string()).min(1),

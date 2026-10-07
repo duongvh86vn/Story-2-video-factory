@@ -8,6 +8,7 @@ import {runningDescription} from './running.js';
 import {spearDescription} from './spear.js';
 import {sourceArmDescription} from './source-arm.js';
 import {sourceArmTrajectoryDescription} from './arm-trajectory.js';
+import {usesSourceColour,sourceColourAssets,sourceColourSvg,sourceColourDescription} from './source-colour-art.js';
 import {usesBodyView,bodyViewMetrics,bodyViewAsset,bodyViewClothingSvg,bodyViewDescription} from './body-view-art.js';
 import {lungeDescription} from './lunge.js';
 import {forestHandRegistration,forestHandMetrics,forestWristChainTotal,forestHandDescription} from './forest-hand.js';
@@ -16,7 +17,7 @@ type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
 export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-17';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-11';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-12';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -102,7 +103,7 @@ export function referenceBodyHeadAttachment(profile:HostProfile,view:ReferenceHe
 export function referenceBodyAssets(appearance:HostProfile['appearance']){
   if(appearance.artworkVersion!==FOREST_BODY_VERSION&&appearance.artworkVersion!=='forest-body-view-1')return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
-  const source=bodies[actor];return [{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'},...(usesBodyView({appearance})?[bodyViewAsset(appearance)]:seatedGarmentAssets(appearance))];
+  const source=bodies[actor];return [...(usesSourceColour(appearance)?sourceColourAssets(appearance):[{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'}]),...(usesBodyView({appearance})?[bodyViewAsset(appearance)]:seatedGarmentAssets(appearance))];
 }
 export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
@@ -113,7 +114,9 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   // painted garment outline around the measured color contour instead.
   const hemMask='<mask id="forest-body-hem" maskUnits="userSpaceOnUse" x="0" y="0" width="'+source.width+'" height="'+source.height+'"><path d="'+source.hem+'" fill="white" stroke="white" stroke-width="'+(source.hemOutlinePad*2)+'" stroke-linejoin="round"/></mask>';
   const garmentDefs=(['upper','left','right'] as const).map(layer=>'<clipPath id="forest-garment-'+layer+'" clipPathUnits="userSpaceOnUse"><path d="'+garments[actor][layer]+'"/></clipPath>').join('');
-  const defs='<defs><image id="'+imageId+'" width="'+source.width+'" height="'+source.height+'" href="'+referenceImageUrl(source.file,source.sha256,mode)+'"/>'+clips+hemMask+garmentDefs+'</defs>';
+  const colour=usesSourceColour(profile.appearance)?sourceColourSvg(actor,'forest-body-colour',(file,sha)=>referenceImageUrl(file,sha,mode)):undefined;
+  const sourceArt=colour?colour.defs+'<g id="'+imageId+'">'+colour.artwork+'</g>':'<image id="'+imageId+'" width="'+source.width+'" height="'+source.height+'" href="'+referenceImageUrl(source.file,source.sha256,mode)+'"/>';
+  const defs='<defs>'+sourceArt+clips+hemMask+garmentDefs+'</defs>';
   const part=(id:keyof typeof source.parts,layer?:'upper'|'left'|'right')=>{
     const region:Part=id.startsWith('hand-')?handPart(id.slice(5) as RigHand):source.parts[id],anchor=layer&&layer!=='upper'?source.hips[layer]:region.anchor;
     return '<g stroke="none" fill="none" transform="scale('+source.unitScale+')"><g transform="translate('+(-anchor.x)+' '+(-anchor.y)+')" clip-path="url(#forest-body-'+id+')">'
@@ -131,7 +134,7 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,armTrajectory:sourceArmTrajectoryDescription,hands:forestHandDescription,views:bodyViewDescription,lunge:lungeDescription}),sources:bodies,handRegistration:forestHandDescription,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,armTrajectory:sourceArmTrajectoryDescription,hands:forestHandDescription,views:bodyViewDescription,lunge:lungeDescription,colour:sourceColourDescription.fingerprint}),sources:bodies,sourceColour:sourceColourDescription,handRegistration:forestHandDescription,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
   actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,expressiveArms:sourceArmTrajectoryDescription,lunge:lungeDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,

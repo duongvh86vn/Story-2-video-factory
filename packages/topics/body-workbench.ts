@@ -7,6 +7,7 @@ import {samplePerformance,validatePerformance,bodyPoseAnchors} from '../animatio
 import {namespaceRigSvg} from '../animation/svg-namespace.js';
 import {referenceBodyDescription} from '../animation/forest-body-art.js';
 import {referenceImageUrl} from '../animation/forest-head-art.js';
+import {SOURCE_COLOUR_VERSION,sourceColourDescription} from '../animation/source-colour-art.js';
 import {topicPreviewProfile} from './preview.js';
 import {SOURCE_WALK_POSES} from '../animation/source-walk.js';
 import {RUN_POSES,runStepCount} from '../animation/running.js';
@@ -14,13 +15,17 @@ import {spearSvg} from '../animation/spear.js';
 export const BODY_ACTIONS=['rest','point','think','crouch','walk','walk-left','run','run-left','jump','hunt-stalk','spear-hold','spear-hold-left','spear-thrust','spear-thrust-left','spear-lunge','hunt-aim','hunt-chase','head-turn','sit-right','sit-left','sit-walk-right','sit-walk-left'] as const;
 export const BODY_WORKBENCH_VIEWS=['source','three-quarter-right'] as const;
 export type BodyWorkbenchView=typeof BODY_WORKBENCH_VIEWS[number];
+export const BODY_COLOUR_MODES=['cutout',SOURCE_COLOUR_VERSION] as const;
+export type BodyColourMode=typeof BODY_COLOUR_MODES[number];
 const HUNT_ACTIONS=['run','run-left','jump','hunt-stalk','spear-hold','spear-hold-left','spear-thrust','spear-thrust-left','hunt-aim','hunt-chase'];
 export type BodyAction=typeof BODY_ACTIONS[number];
 export const bodyActionDuration=(action:BodyAction)=>action.startsWith('sit-walk-')?7200:action.startsWith('sit-')?5000:4000;
 /** Random-access pose inspection through the same evaluator as scenes. This
  * page neither renders an episode nor establishes smooth-motion acceptance. */
-export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:Mood,gestureHand:'left'|'right'='right',view:BodyWorkbenchView='source') {
-  const source=topicPreviewProfile(actor),authored=view!=='source'||action==='spear-lunge';
+export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:Mood,gestureHand:'left'|'right'='right',view:BodyWorkbenchView='source',colour:BodyColourMode='cutout') {
+  const base=topicPreviewProfile(actor),authored=view!=='source'||action==='spear-lunge';
+  if(colour!== 'cutout'&&(colour!==SOURCE_COLOUR_VERSION||authored))throw new Error('needs-source-colour-profile: original RGB candidate is registered only for source orientation');
+  const source=colour==='cutout'?base:{...base,appearance:{...base.appearance,sourceColour:SOURCE_COLOUR_VERSION},profileHash:hash({source:base.profileHash,colour:sourceColourDescription.fingerprint})};
   const profile=authored?{...source,appearance:{...source.appearance,artworkVersion:BODY_VIEW_VERSION,bodyView:'three-quarter-right' as const},profileHash:hash({source:source.profileHash,registration:bodyViewDescription.fingerprint})}:source,m=rigMetrics(profile);
   const sitting=action.startsWith('sit-'),durationMs=bodyActionDuration(action);
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'body-calibration-'+actor,leadCharacterId:actor,profileHash:profile.profileHash,
@@ -109,8 +114,8 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   validatePerformance(plan,profile);
   return {profile,plan};
 }
-export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:number,mood:Mood,options:{hand?:'left'|'right';instance?:string;detail?:boolean;view?:BodyWorkbenchView}={}):string {
-  const {profile,plan}=bodyCalibrationPlan(actor,action,mood,options.hand,options.view);
+export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:number,mood:Mood,options:{hand?:'left'|'right';instance?:string;detail?:boolean;view?:BodyWorkbenchView;colour?:BodyColourMode}={}):string {
+  const {profile,plan}=bodyCalibrationPlan(actor,action,mood,options.hand,options.view,options.colour);
   const frame=samplePerformance(plan,profile,timeMs,{method:'segment-draft',windowMs:20,intervals:[]});
   let svg=performanceSvg(profile,'embedded',plan.props.filter(p=>p.kind==='spear').map(spearSvg).join(''));
   // Preserve opacity on hidden physical bones. Dropping it would draw straight
@@ -145,11 +150,11 @@ export function armAuditWorkbench(group:ArmAuditGroup,phase:ArmAuditPhase,mood:M
   }).join('')}</div></section>`).join('');
   return `<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rà soát hai tay — Lila/Karo</title><style>body{font:16px system-ui;background:#ece5d6;color:#362215;margin:24px}main{max-width:1100px;margin:auto}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;background:#fff7e5;border-radius:14px;padding:16px}svg{width:100%;height:260px}figcaption{font-size:14px}.blocked{border:2px solid #b45032}label{display:inline-block;margin:12px}a{color:#65461b}@media(max-width:700px){.pair{grid-template-columns:1fr}}</style><main><h1>Rà soát hai tay theo vai trò</h1><p>Mốc 0.20. Cuff/palm đã tách riêng theo nguồn; mitten theo tiếp tuyến cẳng tay. Cùng evaluator/rig với Studio; tư thế theo từng clock, không phải video nghiệm thu. Luôn giữ chiều dài xương, clock và contact; lỗi hình dáng bị chặn dù tay tới được target. Ứng viên 3/4 phải đã có đăng ký kỹ thuật và lunge; các góc khác, identity và motion còn chờ. Mặt happy giữ cutout nguồn; ảnh AI là study riêng.</p><form method="get"><label>Nhóm <select name="group">${ARM_AUDIT_GROUPS.map(g=>`<option${g===group?' selected':''}>${g}</option>`).join('')}</select></label><label>Giai đoạn <select name="phase">${['entry','pose','recover'].map(p=>`<option${p===phase?' selected':''}>${p}</option>`).join('')}</select></label><label>Biểu cảm <select name="mood">${['happy','angry','thinking','neutral'].map(m=>`<option${m===mood?' selected':''}>${m}</option>`).join('')}</select></label><button>Xem nhóm pose</button></form>${cards}<p><a href="/api/topics/prehistoric-life/body?action=hunt-aim&amp;timeMs=500&amp;mood=happy">Hiệu chỉnh clock riêng</a> · <a href="/api/topics/prehistoric-life/pose-art">Pose AI</a></p></main></html>`;
 }
-function workbenchPose(actor:'lila'|'karo',action:BodyAction,timeMs:number,mood:Mood,view:BodyWorkbenchView){
-  try{return bodyCalibrationSvg(actor,action,timeMs,mood,{view})+(action.startsWith('spear-')||action==='hunt-aim'||action==='hunt-chase'?'<div id="'+actor+'-detail-view"><p>Chi tiết cơ thể / tay '+actor+' — ứng viên (cắt phần cán xa)</p>'+bodyCalibrationSvg(actor,action,timeMs,mood,{view,detail:true,instance:actor+'-detail'})+'</div>':'');}
+function workbenchPose(actor:'lila'|'karo',action:BodyAction,timeMs:number,mood:Mood,view:BodyWorkbenchView,colour:BodyColourMode){
+  try{return bodyCalibrationSvg(actor,action,timeMs,mood,{view,colour})+(action.startsWith('spear-')||action==='hunt-aim'||action==='hunt-chase'?'<div id="'+actor+'-detail-view"><p>Chi tiết cơ thể / tay '+actor+' — ứng viên (cắt phần cán xa)</p>'+bodyCalibrationSvg(actor,action,timeMs,mood,{view,colour,detail:true,instance:actor+'-detail'})+'</div>':'');}
   catch(error){return '<p role="status">'+escapeHtml(error instanceof Error?error.message:'Pose unavailable')+'</p><p>Pose bị chặn. Không đổi xương, clock hay dùng góc front để che lỗi.</p>';}
 }
-export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:BodyWorkbenchView='source'):string {
+export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:BodyWorkbenchView='source',colour:BodyColourMode='cutout'):string {
   const run=action==='run'||action==='run-left'||action==='hunt-chase'?bodyCalibrationPlan('karo',action,mood).plan.walks[0]:undefined;
   const actionPoses=action==='jump'?[{label:'Lấy đà',at:600},{label:'Rời đất',at:850},{label:'Đỉnh nhảy',at:1175},{label:'Tiếp đất',at:1500},{label:'Hấp thụ',at:1667}]:action.startsWith('spear-thrust')||action==='spear-lunge'?[{label:'Giữ',at:0},{label:'Lấy đà',at:1200},{label:'Đưa giáo',at:1500},{label:'Chạm target',at:1800},{label:'Thu giáo',at:3000}]:run?RUN_POSES.map(p=>({label:p.id,at:Math.round(300+1800/runStepCount(run,rigMetrics(topicPreviewProfile('karo')),1)*p.phase)})):[];
   const actionLinks=actionPoses.length?'<nav aria-label="Pose hành động">'+actionPoses.map(p=>'<a href="?action='+action+'&amp;timeMs='+p.at+'&amp;mood='+escapeHtml(mood)+'&amp;view='+view+'">'+escapeHtml(p.label)+' ('+p.at+' ms)</a>').join(' · ')+'</nav>':'';
@@ -159,17 +164,18 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:Bod
   }).join(' · ')+'</nav>':'';
   const toolAction=action.startsWith('spear-')||action==='hunt-aim'||action==='hunt-chase';
   const cards=action==='head-turn'?'<section><h2>Góc đầu nhìn bạn diễn đang chờ artwork</h2><p>Đầu trên rig toàn thân đã trở về cutout đăng ký với cổ. Không dùng lại mesh yaw bị người dùng chê lệch mặt; các góc nhìn đúng identity còn phải dựng và review. Chọn động tác khác để xem body pose.</p></section>':(['lila','karo'] as const).map(actor=>'<section><h2>'+(actor==='lila'?'Lila':'Karo')+'</h2><div class="pair'+(toolAction?' tool-pair':'')+'"><figure><img alt="Ảnh gốc '+actor+'" src="'
-    +referenceImageUrl('docs/topics/assets/reference-'+actor+'-full.png',actor==='lila'?'85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce':'7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2')+'"><figcaption>Ảnh gốc</figcaption></figure><figure>'+workbenchPose(actor,action,timeMs,mood,view)
-    +'<figcaption>Rig từ cutout · '+escapeHtml(action)+' · '+timeMs+' ms</figcaption></figure></div></section>').join('');
+    +referenceImageUrl('docs/topics/assets/reference-'+actor+'-full.png',actor==='lila'?'85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce':'7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2')+'"><figcaption>Ảnh gốc</figcaption></figure><figure>'+workbenchPose(actor,action,timeMs,mood,view,colour)
+    +'<figcaption>Rig ứng viên · '+escapeHtml(colour)+' · '+escapeHtml(action)+' · '+timeMs+' ms</figcaption></figure></div></section>').join('');
   return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rig toàn thân Lila &amp; Karo</title><style>'
     +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}.tool-pair{grid-template-columns:minmax(130px,210px) minmax(0,1fr);align-items:center}.tool-pair img{height:350px}.tool-pair svg{height:440px}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair,.tool-pair{grid-template-columns:1fr}img,svg{height:410px}.tool-pair img{height:230px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
     +(view==='source'&&action!=='spear-lunge'?'<p>Thân nguồn: nét tay/chân liên tục qua khớp IK; tay think và mitten cùng lớp trước cằm. Preset front giữ hai grip giáo cách 100 × bodyScale. Đây là ứng viên pose tĩnh, chưa nghiệm thu chuyển động.</p>':'')
     +'<p><strong>Mốc 0.20:</strong> tách cuff/cổ tay khỏi palm/grip theo ảnh nguồn và mở mask mitten đầy đủ. Cẳng tay kết thúc ở cuff; bàn tay cứng nối theo tiếp tuyến cẳng tay, grip vẫn giữ đúng cán. Xương tay đã migrate theo landmark trước khi đánh giá target, chưa nghiệm thu tỷ lệ. 3/4 phải/lunge giữ lớp gần/xa, sole trụ và clock giáo. Mặt happy giữ nguyên; view mới chỉ hỗ trợ pose im lặng, áo còn rigid. Ba luồng input sản xuất vẫn chờ rig được duyệt. <a href="?action=spear-lunge&amp;view=three-quarter-right&amp;timeMs=1800&amp;mood=happy">Xem ứng viên lunge 3/4</a>.</p>'
-    +'<form method="get"><label>Góc thân<select name="view">'+BODY_WORKBENCH_VIEWS.map(v=>'<option value="'+v+'"'+(view===v?' selected':'')+'>'+v+'</option>').join('')+'</select></label><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
+    +'<p>Màu ảnh gốc dùng RGB nguyên bản và matte riêng, còn viền mảnh cần nghiệm thu. Lựa chọn này chỉ có cho thân source; view 3/4/lunge dùng artwork khác và sẽ bị chặn khi chọn màu gốc. Lớp mặt happy giữ nguyên; blink/mouth vẫn là overlay ứng viên. Đây là trang kiểm pose, không phát video.</p>'
+    +'<form method="get"><label>Màu nhân vật<select name="colour">'+BODY_COLOUR_MODES.map(value=>'<option value="'+value+'"'+(colour===value?' selected':'')+'>'+(value==='cutout'?'Cutout hiện có':'Màu ảnh gốc · ứng viên')+'</option>').join('')+'</select></label><label>Góc thân<select name="view">'+BODY_WORKBENCH_VIEWS.map(v=>'<option value="'+v+'"'+(view===v?' selected':'')+'>'+v+'</option>').join('')+'</select></label><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
     +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="'+bodyActionDuration(action)+'" step="1" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
     +(['neutral','happy','thinking','angry'] as const).map(value=>'<option value="'+value+'"'+(mood===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><button>Xem pose</button></form>'
-    +poseLinks+(view==='source'&&action!=='spear-lunge'?'<p>Walk dùng chân trụ trên nền và gối chiếu theo chiều sâu. Run/jump/seat là ứng viên hiệu chỉnh, chưa nghiệm thu video. <a href="/api/topics/prehistoric-life/arm-audit">Rà soát hai tay theo nhóm pose</a>.</p>':'')
-    +actionLinks+'<p>Vòng tròn là target hiệu chỉnh. Cán và hai grip dùng cùng frame, mũi giáo tới target ở contact. Đây không phải cảnh săn thú đã nghiệm thu.</p>'
+    +poseLinks.replaceAll('&amp;view='+view+'">','&amp;view='+view+'&amp;colour='+colour+'">')+(view==='source'&&action!=='spear-lunge'?'<p>Walk dùng chân trụ trên nền và gối chiếu theo chiều sâu. Run/jump/seat là ứng viên hiệu chỉnh, chưa nghiệm thu video. <a href="/api/topics/prehistoric-life/arm-audit">Rà soát hai tay theo nhóm pose</a>.</p>':'')
+    +actionLinks.replaceAll('&amp;view='+view+'">','&amp;view='+view+'&amp;colour='+colour+'">')+'<p>Vòng tròn là target hiệu chỉnh. Cán và hai grip dùng cùng frame, mũi giáo tới target ở contact. Đây không phải cảnh săn thú đã nghiệm thu.</p>'
     +(toolAction?'<p>Giáo dài 1,2 lần chiều cao rig. Các chain đã đăng ký giữ chiều dài trong shot; tỷ lệ 52/48 là suy luận. <a href="/api/topics/prehistoric-life/view-registration">Xem landmark cổ tay và mask góc 3/4</a>. Lunge cần chuẩn bị stance trước đầu shot; áo góc mới vẫn rigid, chưa có motion acceptance.</p>':'')
     +(toolAction?'<nav><a href="#lila-detail-view">Chi tiết tay Lila</a> · <a href="#karo-detail-view">Chi tiết tay Karo</a></nav>':'')+cards+'<p><a href="/api/topics/prehistoric-life/pose-art">Pose từ AI</a> · <a href="/api/topics/prehistoric-life/heads">Lớp đầu cũ để đối chiếu</a> · <a href="/api/topics/prehistoric-life/body/manifest">Số đo / mask / trạng thái</a> · <a href="/api/topics/prehistoric-life/compare">Các ảnh mẫu</a></p></main></html>';
 }

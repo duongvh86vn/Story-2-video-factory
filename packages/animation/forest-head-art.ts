@@ -7,12 +7,13 @@ import type {HeadView} from './schemas.js';
 import {hash} from '../core/utils.js';
 import {cutoutHeadSvg,cutoutHeadFaceState,cutoutHeadDescription,usesCutoutHead} from './forest-cutout-head.js';
 import {usesBodyView,registeredBodyView,bodyViewAsset} from './body-view-art.js';
+import {usesSourceColour,sourceColourAssets} from './source-colour-art.js';
 import {projectedHeadSvg,projectedSkinPolygon,headProjectionCalibration,headProjectionGlyphLimits,HEAD_PROJECTION_UV_OVERLAP,HEAD_PROJECTION_VERSION} from './forest-head-projection.js';
 
 export const FOREST_HEAD_VERSION='forest-head-1' as const;
 // Bump these when render/evaluation logic changes after a pack is released.
 export const FOREST_FACE_COMPILER_VERSION='forest-face-motion-10';
-export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-11';
+export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-12';
 export const FOREST_HEAD_VIEWS=['three-quarter-left','front','three-quarter-right'] as const;
 export type ReferenceHeadView=typeof FOREST_HEAD_VIEWS[number];
 type View=ReferenceHeadView;
@@ -190,6 +191,7 @@ export function referenceFaceState(input:ReferenceFaceInput):FrameState['face'] 
 }
 /** Fixed pack resources only. Stage original bytes and retain their hashes. */
 export function referenceHeadAssets(appearance:HostProfile['appearance']):Array<{file:string;sha256:string;path:string}> {
+  if(usesSourceColour(appearance))return sourceColourAssets(appearance);
   if(usesBodyView({appearance}))return [bodyViewAsset(appearance)];
   if(appearance.artworkVersion!==FOREST_HEAD_VERSION&&appearance.artworkVersion!=='forest-body-1')return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference head actor variant missing.');

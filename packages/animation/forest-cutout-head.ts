@@ -2,6 +2,7 @@ import type {HostProfile} from '../host/schemas.js';
 import type {FrameState} from './compiler.js';
 import {hash} from '../core/utils.js';
 import {usesBodyView,bodyViewHeadCalibration,bodyViewHeadSvg,bodyViewDescription} from './body-view-art.js';
+import {usesSourceColour,sourceColourSvg,sourceColourDescription} from './source-colour-art.js';
 
 type Actor='lila'|'karo';
 type Point={x:number;y:number};
@@ -18,7 +19,7 @@ export const cutoutHeadCalibration={
     clip:'M0 0H377V255L283 281L229 291L196 279L165 247H0Z',
     mouthCover:'M199 181Q245 166 293 181L288 216Q246 243 207 221Z'},
 } as const;
-export const CUTOUT_HEAD_VERSION='forest-cutout-head-1';
+export const CUTOUT_HEAD_VERSION='forest-cutout-head-2';
 export function usesCutoutHead(profile:HostProfile){return profile.appearance.artworkVersion==='forest-body-1'||usesBodyView(profile);}
 export function cutoutHeadRegistration(profile:HostProfile){return usesBodyView(profile)?bodyViewHeadCalibration(profile):cutoutHeadCalibration[profile.appearance.characterVariant!];}
 export function cutoutHeadChin(profile:HostProfile,side:'left'|'right'):Point {
@@ -26,8 +27,11 @@ export function cutoutHeadChin(profile:HostProfile,side:'left'|'right'):Point {
   return {x:(c.chin[side].x-c.neck.x)*c.scale,y:(c.chin[side].y-c.neck.y)*c.scale};
 }
 export function cutoutHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string):string {
+  const originalColour=usesSourceColour(profile.appearance);
   if(usesBodyView(profile))return bodyViewHeadSvg(profile,imageUrl);
-  const actor=profile.appearance.characterVariant!,c=cutoutHeadCalibration[actor],image=imageUrl(c.file,c.sha256);
+  const actor=profile.appearance.characterVariant!,c=cutoutHeadCalibration[actor];
+  const colour=originalColour?sourceColourSvg(actor,'source-head-colour',imageUrl):undefined;
+  const artwork=colour?colour.artwork:`<image width="${c.width}" height="${c.height}" href="${imageUrl(c.file,c.sha256)}"/>`;
   const local=(p:Point)=>`${(p.x-c.neck.x)*c.scale} ${(p.y-c.neck.y)*c.scale}`;
   const eyes=c.eyes.map((p,i)=>`<g transform="translate(${local(p)})"><g id="source-blink-${i}" opacity="0"><ellipse rx="${13*c.scale}" ry="${20*c.scale}" fill="#FFB36F"/><path d="M${-9*c.scale} 0Q0 ${4*c.scale} ${9*c.scale} 0" stroke="#080604" stroke-width="${3*c.scale}" stroke-linecap="round" fill="none"/></g></g>`).join('');
   const mouth=`<g id="source-mouth-cover" opacity="0" transform="scale(${c.scale}) translate(${-c.neck.x} ${-c.neck.y})"><path d="${c.mouthCover}" fill="${actor==='lila'?'#FFB36F':'#4A2815'}"/></g>`;
@@ -37,7 +41,7 @@ export function cutoutHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:stri
   const frown='<path d="M-12 3Q0 -6 12 3" fill="none" stroke="#080604" stroke-width="2" stroke-linecap="round"/>';
   const shapes=[['talk',talk],['talk-tense',round],['talk-round',round],['round',round],['frown',frown]]
     .map(([id,svg])=>`<g transform="translate(${local(c.mouth)})"><g id="mouth-${id}-front" opacity="0">${svg}</g></g>`).join('');
-  return `<g data-head-artwork="${CUTOUT_HEAD_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.clip}"/></clipPath></defs><g id="head-view-front"><g transform="scale(${c.scale}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#source-head-clip)"><image width="${c.width}" height="${c.height}" href="${image}"/></g>${eyes}${mouth}${shapes}</g></g>`;
+  return `<g data-head-artwork="${CUTOUT_HEAD_VERSION}" stroke="none"><defs>${colour?.defs??''}<clipPath id="source-head-clip"><path d="${c.clip}"/></clipPath></defs><g id="head-view-front"><g transform="scale(${c.scale}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#source-head-clip)">${artwork}</g>${eyes}${mouth}${shapes}</g></g>`;
 }
 export function cutoutHeadFaceState(input:{blink:number;round:number;frown:number;speechLevel:number|null}):FrameState['face'] {
   const speaking=input.speechLevel!==null,round=!speaking?Math.min(1,input.round*1.25):0,frown=!speaking?Math.min(1,input.frown*1.6):0;
@@ -49,7 +53,7 @@ export function cutoutHeadFaceState(input:{blink:number;round:number;frown:numbe
     'mouth-talk-round-front':{opacity:roundedSpeaking?1:0,scaleY:roundedSpeaking?.6+input.speechLevel!*.55:1},
     'mouth-round-front':{opacity:round*(1-frown)},'mouth-frown-front':{opacity:frown}};
 }
-export function cutoutHeadDescription(){return {version:CUTOUT_HEAD_VERSION,calibration:cutoutHeadCalibration,authoredViews:bodyViewDescription,fingerprint:hash({version:CUTOUT_HEAD_VERSION,cutoutHeadCalibration,views:bodyViewDescription.fingerprint}),
+export function cutoutHeadDescription(){return {version:CUTOUT_HEAD_VERSION,calibration:cutoutHeadCalibration,sourceColour:sourceColourDescription,authoredViews:bodyViewDescription,fingerprint:hash({version:CUTOUT_HEAD_VERSION,cutoutHeadCalibration,views:bodyViewDescription.fingerprint,colour:sourceColourDescription.fingerprint}),
   happy:'One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.',
   orientation:'fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending',
   expression:'source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync',
