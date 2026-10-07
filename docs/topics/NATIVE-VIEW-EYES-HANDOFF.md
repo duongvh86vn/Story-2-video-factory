@@ -2,6 +2,8 @@
 
 Mốc source0.32, 08/10/2026, tiếp nối `7add5d39002ada7d81300bc88c4b08cb0495f4c7` trên `codex/prehistoric-life`. Đây là lớp diễn xuất tiếp theo của tool; chưa là bộ biểu cảm đầy đủ, video đạt mẫu hoặc bản sản xuất được duyệt.
 
+Source/art checkpoint `e01bfdb112eab53344cd64a4bf83ea9f32e61131` đã push; local/remote SHA khớp. Full build, test:typecheck, schema export và whitespace exit0; hai lượt review source PASS. Mười callback mới chưa chạy. Không có kết quả runtime hoặc duyệt mỹ thuật ở checkpoint này.
+
 ## Artwork và màu
 
 ![Mắt native: ảnh nguồn, blink55%, khép, nhìn phía trước](reviews/native-view-eyes-art-v1.png)

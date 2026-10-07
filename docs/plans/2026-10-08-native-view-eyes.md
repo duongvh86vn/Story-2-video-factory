@@ -28,4 +28,4 @@
 
 - [x] Declare NOT RUN coverage for native bytes/ROI/resource binding/default gates, bounds/closed lid/random seeks, head-local gaze/source cut phase, compiler/refinement/report/namespace/security, silent/paired actor contexts/cache/repair binding, workbench/API/schema and unchanged production gates.
 - [x] Run build/typecheck/schema export/whitespace source checks only; obtain bounded read-only source review and keep findings/fixes. No runtime or subjective approval claims.
-- [ ] Publish only owned source/docs/art/measurement files to authorized branch. Record exact SHA/evidence, test/server commands, and full-product work still remaining.
+- [x] Publish only owned source/docs/art/measurement files to authorized branch. Record exact SHA/evidence, test/server commands, and full-product work still remaining. Source/art checkpoint `e01bfdb112eab53344cd64a4bf83ea9f32e61131` pushed to origin/codex/prehistoric-life; remote hash matched. All ten new callbacks remain NOT RUN; the full product goal is active.
