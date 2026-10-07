@@ -7,6 +7,7 @@ import {usesBodyView} from '../animation/body-view-art.js';
 import {hasBodyViewSpeech} from '../animation/body-view-mouth.js';
 import {hasBodyViewEyes} from '../animation/body-view-eyes.js';
 import {VIEW_ACTING_CLOCK_VERSION,normalizeViewGazes,validateViewActingClock,type ViewActingClock} from '../animation/view-acting-clock.js';
+import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 
 function performer(shot:Shot,actorId:string){
   const scene=shot.cinematic?.actorScene;if(!scene)return undefined;
@@ -31,7 +32,7 @@ export function actorViewActingClock(board:Storyboard,current:Shot,actorId:strin
     if(normalizeViewGazes(p.gazes).some(g=>g.endMs>p.durationMs))throw new Error('needs-view-acting-phase: gaze outside authored shot');
     const scene=s.cinematic!.actorScene!,cast=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(actor=>actor.character)].sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
     return {shotId:s.id,startMs:s.startMs,endMs:s.endMs,continuity:scene.continuity??'cut',
-      castHash:hash(cast.map(character=>ActorDefinitionSchema.parse(character))),geometryHash:hash({stage:p.stage,root:p.root,scale:p.scale,facing:p.facing??'front',headView:p.headView??null,kind:p.kind,profileHash:p.profileHash}),gazes:p.gazes};
+      castHash:hash(cast.map(character=>ActorDefinitionSchema.parse(character))),geometryHash:hash({stage:p.stage,root:p.root,scale:p.scale,facing:p.facing??'front',headView:p.headView??null,kind:p.kind,profileHash:p.profileHash}),gazes:p.gazes,gestures:p.gestures};
   };
   const entries=shots.map(entry);
   const linked=(i:number)=>{
@@ -46,6 +47,7 @@ export function actorViewActingClock(board:Storyboard,current:Shot,actorId:strin
   const run=entries.slice(first,last+1).map(e=>e!);
   const clock:ViewActingClock={version:VIEW_ACTING_CLOCK_VERSION,ownerId:actorId,startMs:current.startMs,endMs:current.endMs,
     runStartMs:run[0]!.startMs,runEndMs:run.at(-1)!.endMs,sourceIdentityHash:hash({version:VIEW_ACTING_CLOCK_VERSION,actorId,run}),
-    gazes:normalizeViewGazes(run.flatMap(e=>e.gazes.map(g=>({...g,startMs:g.startMs+e.startMs,endMs:g.endMs+e.startMs}))))};
+    gazes:normalizeViewGazes(run.flatMap(e=>e.gazes.map(g=>({...g,startMs:g.startMs+e.startMs,endMs:g.endMs+e.startMs})))),
+    gestures:collectViewSourceGestures(run,run[0]!.startMs,run.at(-1)!.endMs)};
   validateViewActingClock(currentActor.performance,clock);return clock;
 }

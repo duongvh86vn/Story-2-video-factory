@@ -9,7 +9,8 @@ const degrees = (n: number) => n * 180 / Math.PI;
 const clamp = (n: number, low: number, high: number) => Math.max(low, Math.min(high, n));
 export interface Anchor { x: number; y: number; }
 export interface HostGeometry { controllerVersion: string; profileHash: string; rigHash: string; shotId: string; hostHeightRatio: number;
-  interactions: Array<{ actorId?:string; handSide?:'left'|'right'; type: string; startMs: number; reachMs: number; endMs: number; partId: string; target: Anchor; hand: Anchor; errorPx: number; root: Anchor; gaze: Anchor; contactMs?: number }> }
+  interactions: Array<{ actorId?:string; handSide?:'left'|'right'; type: string; startMs: number; reachMs: number; endMs: number; partId: string; target: Anchor; hand: Anchor; errorPx: number; root: Anchor; gaze: Anchor; contactMs?: number;
+    sourceGesture?:{id:string;originalReachMs:number;originalRecoverMs:number;samplePhase:'approach'|'hold'|'recovery';contactVerified:false} }> }
 
 /** Two fixed-length bones. All calculations run at compile time, never in scene JS. */
 export function solveArm(dx: number, dy: number): { upper: number; lower: number; hand: Anchor; reachable: boolean } {

@@ -35,11 +35,18 @@ export const PostureTargetSchema=z.object(PostureTarget).strict();
 export const PostureSchema=z.object({...Interval,...PostureTarget}).strict();
 export const SeatSupportSchema=z.object({id:Id,kind:z.literal('seat'),center:PointSchema,width:z.number().finite().positive(),
   facing:z.enum(['left','right']),backHeight:z.number().finite().nonnegative().optional()}).strict();
+/** Original absolute motion window. It is not a narration or contact clock. */
+export const GestureSourceSpanSchema=z.object({...Interval,id:Id,reachMs:Time.optional(),recoverMs:Time.optional()}).strict().superRefine((span,ctx)=>{
+  const reach=span.reachMs??span.startMs+Math.min(600,(span.endMs-span.startMs)*.35),recover=span.recoverMs??Math.max(reach,span.endMs-Math.min(400,(span.endMs-span.startMs)*.25));
+  if(span.endMs<=span.startMs||reach<=span.startMs||recover<reach||recover>=span.endMs)ctx.addIssue({code:'custom',message:'Invalid source gesture approach/hold/recovery window'});
+});
+export type GestureSourceSpan=z.infer<typeof GestureSourceSpanSchema>;
 export const GestureSchema = z.object({ ...Interval, id: Id,
   action: z.enum(['address-viewer', 'point', 'inspect', 'think', 'operate', 'pick-place', 'carry', 'drop', 'react', 'lead-next']),
   target: PointSchema.optional(), destination: PointSchema.optional(),
   elbowPole:z.enum(['rest','reach']).optional(),
   hand:RigHandSchema.optional(),
+  sourceSpan:GestureSourceSpanSchema.optional(),
   propId: Id.optional(), contactMs: Time.optional(), releaseMs: Time.optional(), landingMs:Time.optional(), carryOffset: PointSchema.optional(),
 }).strict();
 export const SpearTrackSchema=z.object({...Interval,id:Id,propId:Id,hand:RigHandSchema,

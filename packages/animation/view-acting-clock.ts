@@ -2,8 +2,10 @@ import {z} from 'zod';
 import {Id} from '../core/identifiers.js';
 import {hash} from '../core/utils.js';
 import {PointSchema,type PerformancePlan} from './schemas.js';
+import {rigHand} from '../core/identifiers.js';
+import {VIEW_SOURCE_GESTURE_VERSION,ViewSourceGestureSchema,validateViewGesturePiece,validateViewSourceGestureTrack} from './view-source-gesture.js';
 
-export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-1' as const;
+export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-2' as const;
 export const VIEW_GAZE_RAMP_MS=140,VIEW_BREATH_RAMP_MS=200;
 const GazeSchema=z.object({startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),target:PointSchema}).strict();
 export type ViewGaze=z.infer<typeof GazeSchema>;
@@ -11,7 +13,7 @@ export type ViewGaze=z.infer<typeof GazeSchema>;
 export const ViewActingClockSchema=z.object({version:z.literal(VIEW_ACTING_CLOCK_VERSION),ownerId:Id,
   startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),
   runStartMs:z.number().int().nonnegative(),runEndMs:z.number().int().positive(),
-  sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),gazes:z.array(GazeSchema),
+  sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),gazes:z.array(GazeSchema),gestures:z.array(ViewSourceGestureSchema),
 }).strict().superRefine((c,ctx)=>{
   if(c.endMs<=c.startMs||c.runStartMs>c.startMs||c.runEndMs<c.endMs)ctx.addIssue({code:'custom',message:'Invalid continuous run/shot span'});
 });
@@ -38,6 +40,17 @@ export function validateViewActingClock(plan:PerformancePlan,clock:ViewActingClo
   if(clock.ownerId!==plan.leadCharacterId||clock.endMs-clock.startMs!==plan.durationMs)throw new Error('needs-view-acting-phase: actor or shot span mismatch');
   if(hash(normalized)!==hash(parsed.gazes)||normalized.some(g=>g.startMs<clock.runStartMs||g.endMs>clock.runEndMs))throw new Error('needs-view-acting-phase: source gaze is not a normalized run track');
   if(plan.gazes.some(g=>g.startMs<0||g.endMs>plan.durationMs)||hash(projectViewGazes(normalized,clock.startMs,clock.endMs))!==hash(normalizeViewGazes(plan.gazes)))throw new Error('needs-view-acting-phase: authored gaze differs from source projection');
+  validateViewSourceGestureTrack(parsed.gestures,clock.runStartMs,clock.runEndMs);
+  if(parsed.gestures.length&&(plan.props.length||plan.spears?.length||plan.lunge))throw new Error('needs-view-gesture-phase: source point/think run cannot own prop or spear geometry');
+  const pieces=plan.gestures.filter(g=>g.sourceSpan);
+  for(const g of pieces){const source=validateViewGesturePiece(g,clock.startMs,clock.endMs),expected=parsed.gestures.find(s=>s.id===source.id);
+    if(!expected||hash(expected)!==hash(source))throw new Error('needs-view-gesture-phase: source command differs from local declaration');
+  }
+  for(const source of parsed.gestures){
+    const start=Math.max(source.startMs,clock.startMs),end=Math.min(source.endMs,clock.endMs);if(end<=start)continue;
+    if(pieces.filter(g=>g.sourceSpan!.id===source.id).length!==1)throw new Error('needs-view-gesture-phase: missing/duplicate local source piece');
+    if(plan.gestures.some(g=>!g.sourceSpan&&rigHand(g)===source.hand&&g.startMs+clock.startMs<end&&g.endMs+clock.startMs>start))throw new Error('needs-view-gesture-phase: ordinary clip conflicts with the source-owned hand');
+  }
 }
 /** End frame of a camera cut may still be inside the same source cue. */
 export function sourceViewGazeAt(clock:ViewActingClock,localTimeMs:number):ViewGaze|undefined{
@@ -49,5 +62,8 @@ export function viewActingClockDescription(clock:ViewActingClock){
   return {version:clock.version,ownerId:clock.ownerId,offsetMs:clock.startMs,endMs:clock.endMs,
     runStartMs:clock.runStartMs,runEndMs:clock.runEndMs,sourceIdentityHash:clock.sourceIdentityHash,
     gazeTrackHash:hash(clock.gazes),gazeRampMs:VIEW_GAZE_RAMP_MS,breathRampMs:VIEW_BREATH_RAMP_MS,
+    gestureVersion:VIEW_SOURCE_GESTURE_VERSION,gestureTrackHash:hash(clock.gestures),gestureCount:clock.gestures.length,
+    gestureClock:'explicit source command/window; original quintic arm phase and entry branch',
+    sourceGestures:clock.gestures.map(g=>({id:g.id,hand:g.hand,action:g.action,startMs:g.startMs,endMs:g.endMs,reachMs:g.reachMs,recoverMs:g.recoverMs,target:g.target??null})),
     wholeBodyActionContinuous:false,opticalGazeVerified:false,approved:false};
 }

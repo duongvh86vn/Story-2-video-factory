@@ -1,0 +1,17 @@
+# Source-clock native hand gestures
+
+Previous implementation checkpoint: **progress** — native eye authoring and continuous attention/breath source published through `8cc3a033e6ccf2b8c3691b11c1a5513bc3c1d8de`; initial local/remote HEAD matched and tracked changes clean. No runtime or artistic acceptance was claimed. Full product objective remains unfinished.
+
+**Goal:** Preserve point/think arm trajectory, gesture-entry elbow/shoulder branch and painter slot across explicitly continuous native-view shots. This improves actual actor performance rather than substituting a fixed presenter or a machinery-only demo. Original PNGs, costume, colours, proportions and all final gates stay intact.
+
+**Contract:** Optional `gesture.sourceSpan` declares one source command ID and original absolute start/end, optional keypose reach/recover times. Local gesture/action clocks remain exact shot projections. A complete run must contain each declared piece, with one physical hand/action/target/pole/timing identity. Never infer command continuity from matching local IDs or nearby coordinates. Only registered native point/think without contact/props/locomotion use this candidate. Missing board/context, incompatible spans/coverage/hand/target/view/stage and altered repair bindings must fail.
+
+**Architecture:** Shared strict schema; pure source gesture collection/validation; view-acting-clock v2 retains breath/gaze and binds source gesture records. Compiler resolves local or owned original gestures with separate source time and entry-reference local time. Same fixed-length arm solver/curved ink/hand slots; no bitmap edits or hidden special preview solver. Canonical primary/supporting/interaction/cache/repair contexts keep the existing shared path. Gesture-driven gaze uses source timing; head turns and full body motion remain separate work.
+
+- [x] Author span/record/coverage/projection contracts and board collection; add source schema export and fingerprints.
+- [x] Propagate original gesture time/entry branch/hand/painter/gesture gaze through sample/compile/canonical paths and event refinement. Missing/incompatible clock must block.
+- [x] Declare 13 NOT RUN behavioral tests for windup/hold/recovery cuts, both hands/actors/views, random seek, independent normal clips, explicit gaps/cuts, missing/stale pieces/targets/hand, schema round-trip/cache/repair, canonical roles/resource limits and unchanged final gates. Include actual creative normalization and artwork repair/replay source boundaries.
+- [x] Build/typecheck/schema/whitespace only, bounded independent source/declaration review and retained findings. Initial HOLD twoP2, both fixed; follow-up source PASS. Controller must not execute callbacks/assertions/fixtures/evaluator/GSAP/browser/API/pipeline/audio/render/model acceptance.
+- [ ] Update topic/handoff MD and model-test environment/commands; publish only owned files to authorized branch and record exact SHA.
+
+Runtime/visual acceptance belongs to the user's model. productionReady=false/productionRig=null; source/identity/voice/target/sync gates remain. Preserve script verbatim, WAV original voice+clock, story→faithful script→video, SRT, EN primary/VI/JA/KO, external-local TTS and arbitrary stories performed by Lila/Karo. Still required: approved identity/full native expressions/neutral mouth, body/head turns, walk/run/jump/seating/cloth/hair/prop contact, rich environments and actual three-input videos.

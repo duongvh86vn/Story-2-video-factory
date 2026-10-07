@@ -10,6 +10,7 @@ import { performanceScene } from '../../packages/animation/scene.js';
 import { samplePerformance } from '../../packages/animation/compiler.js';
 import {actorViewActingClock} from '../../packages/actors/view-acting-clock.js';
 import type {ViewActingClock} from '../../packages/animation/view-acting-clock.js';
+import {viewSourceGestureDefinition} from '../../packages/animation/view-source-gesture.js';
 import { rigMetrics } from '../../packages/animation/rig.js';
 import { ANIMATION_VERSION } from '../../packages/animation/schemas.js';
 import { validateCinematicShot } from '../../packages/director/index.js';
@@ -194,10 +195,13 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
       activity:performerSpeech.get(actor.character.id)!.activity,sourceClock:performerSpeech.get(actor.character.id)!.sourceClock,actingClock:performerSpeech.get(actor.character.id)!.actingClock}))];
   for(const performer of performers)for(const {action:a,gestures} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs))if(a.target)for(const [index,g] of gestures.entries()){
     const target=index===1?a.secondTarget!:a.target;
-    const reach=g.contactMs??Math.min(g.endMs-1,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
+    const sourceGesture=g.sourceSpan?viewSourceGestureDefinition(g):undefined;
+    const reach=sourceGesture?Math.max(g.startMs,Math.min(g.endMs,sourceGesture.reachMs-shot.startMs)):g.contactMs??Math.min(g.endMs-1,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
     const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity,performer.sourceClock,performer.actingClock),anchor=g.target!,handSide=rigHand(g),hand=f.hands[handSide];
     geometry.interactions.push({actorId:performer.id,handSide,type:a.type,startMs:g.startMs+shot.startMs,reachMs:Math.round(reach)+shot.startMs,endMs:g.endMs+shot.startMs,partId:target.partId,
       target:anchor,hand,errorPx:Math.hypot(hand.x-anchor.x,hand.y-anchor.y),root:f.root,gaze:anchor,
+      ...(sourceGesture?{sourceGesture:{id:sourceGesture.id,originalReachMs:sourceGesture.reachMs,originalRecoverMs:sourceGesture.recoverMs,
+        samplePhase:reach+shot.startMs<sourceGesture.reachMs?'approach' as const:reach+shot.startMs>sourceGesture.recoverMs?'recovery' as const:'hold' as const,contactVerified:false as const}}:{}),
       ...(a.contactMs===undefined?{}:{contactMs:a.contactMs})});
   }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});

@@ -24,6 +24,7 @@ import { ShotHostSchema } from '../host/schemas.js';
 import { CinematicPlanSchema } from './schemas.js';
 import { canonicalExplanationEvidence, normalizeCreativeSourceRefs } from '../explainer/citations.js';
 import {bindActorShot,shotPerformer} from '../actors/model.js';
+import {actorRigResourcePaths} from '../actors/rig-resources.js';
 import {castDesignAdvisories} from '../actors/design.js';
 import {actorDefinitions,actorLockKey,assertActorLocks} from '../actors/locks.js';
 import type {ActorDefinition} from '../actors/schemas.js';
@@ -93,7 +94,9 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
         }
       }
       const prior=board.shots[i-1]?.cinematic;
-      if(prior&&c.actorScene?.continuity!=='cut'&&(prior.leadCharacterId!==c.leadCharacterId||hash(prior.continuity.exit)!==hash(c.continuity.entry)||prior.continuity.facing!==(c.performance.facing??'front')||prior.performance.scale!==c.performance.scale))failures.add(`${shot.id}: creative character position/facing/scale continuity changed at the cut`);
+      // Actor continuity is validated for the complete cast below. Primary is a
+      // camera/metadata role and may change without moving either actor.
+      if(prior&&!(prior.actorScene&&c.actorScene)&&c.actorScene?.continuity!=='cut'&&(prior.leadCharacterId!==c.leadCharacterId||hash(prior.continuity.exit)!==hash(c.continuity.entry)||prior.continuity.facing!==(c.performance.facing??'front')||prior.performance.scale!==c.performance.scale))failures.add(`${shot.id}: creative character position/facing/scale continuity changed at the cut`);
     }
     check(()=>validateStoryboard(board,context.narration,context.beats,context.characters));
     check(()=>validateExplainerStoryboard(board,context.narration,context.beats,context.profile,context.rig,config));
@@ -108,8 +111,9 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       let speech:Awaited<ReturnType<typeof loadSpriteSceneSpeech>>;
       try{motions=await loadSpriteSceneMotions(root,shot);speech=await loadSpriteSceneSpeech(root,shot,motions);}catch(error){failures.add(String(error));}
       check(()=>{
-        const rendered=renderCinematic(shot,context.profile,context.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,context.narration,motions,speech);
-        const errors=validateSceneFiles(secureSceneFiles(rendered.files),shot,config.workflow.max_scene_bytes,[...(motions?.values()??[]),...(speech?.values()??[])].map(asset=>`assets/${asset.sheet.hash}.png`),config.rendering.final);
+        const rendered=renderCinematic(shot,context.profile,context.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,context.narration,motions,speech,board);
+        const resources=[...actorRigResourcePaths(shot,context.profile),...[...(motions?.values()??[]),...(speech?.values()??[])].map(asset=>`assets/${asset.sheet.hash}.png`)];
+        const errors=validateSceneFiles(secureSceneFiles(rendered.files),shot,config.workflow.max_scene_bytes,resources,config.rendering.final);
         for(const error of errors)failures.add(`${shot.id}: creative artwork/security: ${error}`);
       });
     }
@@ -188,6 +192,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     acting:'Build preparation, change, response and recovery for the actual sourced situation using typed expressions, gaze, body posture, walking, standing jumps and hand gestures. Running requires performance.compilerVersion=performance-2.2.15 and walks[].gait=run, alternating support and a flight phase; a fast walk does not satisfy movement=run. New jumps or drop gestures require performance.compilerVersion=performance-2.2.14 or performance-2.2.15; retain performance-2.2.13 on grounded plans without those tracks. Jumps use startMs/takeoffMs/landingMs/endMs/height, with height in unscaled rig units. Both feet leave the floor in flight; no walk, turn, seated/posture transition or fixed contact can overlap. A drop gesture has propId, carryOffset, contactMs, releaseMs, landingMs and destination (landing grip); its prop.destination is the landing object center. The prop follows the actual held hand until release, then falls preserving horizontal and vertical hand momentum. The landing x equals release x plus measured horizontal velocity times fall duration; do not push a freely dropped prop sideways by inventing a landing x. Target still identifies the original grip. Use the same sourced entity and matching operate-model action/hand clocks, not a decorative duplicate. Match meaningful changes to the narration clock, preserve pauses with purpose, and make the decisive action readable. A moving caption, decorative blink or pan is not a substitute for the narrated actor action. Preserve source statements, contact, bone and capability constraints.',
     worldCoordinates:'Layer geometry uses stage pixels; distinguish depth from coordinate space. Background layers without coordinateSpace stay fixed in the frame for compatibility. Set coordinateSpace=world on a background layer for a floor, road, wall or scenery that should share the actors and objects camera. Its own local keyframes compose inside that camera, behind midground and actors. Use frame for intentionally fixed atmosphere/backdrops; overlay stays frame space. Midground and foreground already share the world camera; do not set coordinateSpace on those or on overlay. Align visual ground with the actual actor groundY and model anchors before projection, and inspect the projected camera move, clipping and subtitle safe area. This does not impose a palette, setting, floor or shot-size quota.',
     motionTiming:'Choose keyframe ease for the actual motion: none means constant rate, sine.in accelerates, sine.out settles, sine.inOut starts and settles. The optional ease belongs to the destination keyframe and affects only its incoming local-clock interval; missing ease keeps the previous smooth curve. Continuous environmental or causal motion should not be stretched into a barely changing full-shot drift. Use sourced geometry and deliberate local phases; preserve actor performance and contact. No loop, callback, wall-clock animation or automatic movement quota is implied.',
+    nativeSourceGesture:'For explicitly selected registered native body mouth/eyes only, point/think can declare gesture.sourceSpan with one command id and original absolute start/end, optional reachMs/recoverMs for the arm keypose. This is motion timing, never physical-contact proof or narration timing. In a declared continuous fixed-view run, copy the same span, hand/action/target/pole into every intersecting shot and clip local gesture/action start/end exactly to that shot. Omit local contactMs/releaseMs and prop/contact fields. Supply complete coverage; never infer continuity from similar local ids or coordinates. Keep cast/view/stage/root/scale/profile stable; use an explicit cut or separate complete command when they change. Do not attach sourceSpan to unsupported gestures/props/spears/locomotion. Preserve actual narration/audio clocks, actor identity and approval gates.',
     selfReview:'Before returning, inspect the planned key moments: can a viewer identify the roles, read the expression or operation, follow the causal action and locate the scene? Correct scale, staging or costume in the design if not. Return the complete canonical storyboard; design commentary belongs in artDirection.brief. Do not assert an approval or rendered quality result that did not occur.'
   }:undefined;
 

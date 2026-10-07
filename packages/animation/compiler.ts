@@ -21,6 +21,7 @@ import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,validateBo
 import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription} from './body-view-eyes.js';
 import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
+import {viewSourceGestureDefinition,sourceViewGestureAt} from './view-source-gesture.js';
 import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
@@ -84,6 +85,11 @@ function overlaps(items: Array<{startMs:number;endMs:number}>, label:string, dur
 }
 /** Applies equally to compiled plans and direct random-access inspection. */
 function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
+  if(plan.gestures.some(g=>g.sourceSpan)){
+    if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-gesture-phase: original gesture span needs a selected current native mouth/eyes candidate');
+    for(const g of plan.gestures.filter(g=>g.sourceSpan))viewSourceGestureDefinition(g);
+    if(plan.props.length||plan.spears?.length||plan.lunge)throw new Error('needs-view-gesture-phase: point/think source spans cannot own prop/spear geometry');
+  }
   if(hasBodyViewSpeech(profile)){
     registeredBodyViewMouth(profile);
     if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-voice-animation: registered mouth needs animation2.2.13/14/15');
@@ -573,8 +579,8 @@ function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undef
 }
 
 /** Deterministic gesture-entry body/arm reference. Never selected from the current target or prior frame. */
-function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture:Gesture,side:RigHand,actingClock?:ViewActingClock){
-  const {m,s,walk,pelvis,lean,pose,emotion,bodyPosture,bend}=bodyStateAt(plan,profile,gesture.startMs,actingClock);
+function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture:Gesture,side:RigHand,actingClock?:ViewActingClock,entryTimeMs=gesture.startMs){
+  const {m,s,walk,pelvis,lean,pose,emotion,bodyPosture,bend}=bodyStateAt(plan,profile,entryTimeMs,actingClock);
   const toWorld=(point:Point)=>add(pelvis,rotate({x:point.x*s,y:point.y*s},lean));
   const shoulder=toWorld(m.shoulders![side]),lengths=m.arms![side],lower=lengths.lower*s+(m.handAttachment?.[side].length??0)*s;
   const restPole=side==='right'?1:-1,sourceRun=plan.walks.some(w=>w.gait==='run'),rest=m.armRest![side];
@@ -616,6 +622,7 @@ function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gest
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity,sourceClock?:SpeechSourceClock,actingClock?:ViewActingClock):FrameState {
   if(plan.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
+  if(plan.gestures.some(g=>g.sourceSpan)&&!actingClock)throw new Error('needs-view-gesture-phase: source gesture requires its complete storyboard/run context');
   if(actingClock){
     if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile))throw new Error('needs-view-acting-phase: select a registered native mouth/eyes candidate');
     if(actingClock.ownerId!==profile.id)throw new Error('needs-view-acting-phase: actor profile mismatch');
@@ -626,6 +633,11 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(hasBodyViewEyes(profile)&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
   if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires explicit registered-mouth-v1 candidate');
   const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t,actingClock);
+  const resolvedGesture=(side:RigHand)=>{
+    const source=actingClock?sourceViewGestureAt(actingClock.gestures,t+actingClock.startMs,side):undefined,gesture=source??gestureAt(plan,t,side);
+    return {gesture,timeMs:source?t+actingClock!.startMs:t,entryTimeMs:source?source.startMs-actingClock!.startMs:gesture?.startMs??0};
+  };
+  const gestureStates={left:resolvedGesture('left'),right:resolvedGesture('right')};
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
   const wrists=m.handAttachment?{} as Record<RigHand,Point>:undefined;
   const paths:Record<string,string>={},drawn=!!profile.appearance.characterVariant;
@@ -714,10 +726,10 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       const lap={x:hip.x+bend*geometry.bones.upper*.55,y:hip.y+8*s};
       neutral=mix(neutral,lap,seatedWeight);
     }
-    const gesture=gestureAt(plan,t,side),chin=chinAt(side);
+    const {gesture,timeMs:gestureTime,entryTimeMs}=gestureStates[side],chin=chinAt(side);
     const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??(i?50:-50))*s,y:(gesture?.carryOffset?.y??35)*s},lean));
     const spear=spearStates.find(c=>c.track.hand===side||c.track.twoHands);
-    const target=spear?(spear.track.hand===side?spear.state.primary:spear.state.secondary):gesture?goal(gesture,neutral,chin,carryAnchor,t,s,shoulder):neutral;
+    const target=spear?(spear.track.hand===side?spear.state.primary:spear.state.secondary):gesture?goal(gesture,neutral,chin,carryAnchor,gestureTime,s,shoulder):neutral;
     // Role poles are authored once for the owned shot, not selected again by
     // per-frame target position. Grip geometry still has to open both elbows;
     // a pole flag cannot by itself repair crowding or invent a profile body.
@@ -726,8 +738,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
     const expressiveSource=usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion)&&gesture&&!contacts(gesture);
     const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:expressiveSource
-      ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,t,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock),authoredRun)
-      :armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lowerToGrip,side,
+      ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),authoredRun)
+      :armPose(shoulder,neutral,target,sourceGesture,gestureTime,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
     // Grip is a rigid continuation of the forearm, not a bone endpoint or a
     // second independently solved contact. This preserves the existing palm
@@ -764,16 +776,17 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const pair=spearArms[track.id]!,other=track.hand==='left'?'right':'left';
     spearGeometry[track.id]=sourceSpearPairShape(pair[track.hand]!,pair[other]!,state.angle);
   }
-  const activeGestures={right:gestureAt(plan,t,'right'),left:gestureAt(plan,t,'left')};
+  const activeGestures={right:gestureStates.right.gesture,left:gestureStates.left.gesture};
   const activeGesture=activeGestures.right?.target?activeGestures.right:activeGestures.left??activeGestures.right;
   const sourceGaze=actingClock&&hasBodyViewEyes(profile)?sourceViewGazeAt(actingClock,t):undefined;
   const explicitGaze=actingClock&&hasBodyViewEyes(profile)?sourceGaze:plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
   const gazeOffset=(target:Point)=>{const angle=Math.atan2(target.y-head.y,target.x-head.x);return {x:Math.cos(angle)*3,y:Math.sin(angle)*2};};
-  const gazeWeight=(cue:{startMs:number;endMs:number})=>smooth((t-cue.startMs)/140)*smooth((cue.endMs-t)/140);
+  const gazeWeight=(cue:{startMs:number;endMs:number},at=t)=>smooth((at-cue.startMs)/140)*smooth((cue.endMs-at)/140);
+  const activeGestureWeight=activeGesture?gazeWeight(activeGesture,gestureStates[rigHand(activeGesture)].timeMs):0;
   const explicitGazeWeight=(cue:{startMs:number;endMs:number})=>sourceGaze?smooth((t+actingClock!.startMs-cue.startMs)/VIEW_GAZE_RAMP_MS)*smooth((cue.endMs-t-actingClock!.startMs)/VIEW_GAZE_RAMP_MS):gazeWeight(cue);
   let gaze={x:0,y:0};
   if(spearStates[0])gaze=gazeOffset(spearStates[0].track.aim);
-  if(activeGesture?.target)gaze=mix(gaze,gazeOffset(activeGesture.target),gazeWeight(activeGesture));
+  if(activeGesture?.target)gaze=mix(gaze,gazeOffset(activeGesture.target),activeGestureWeight);
   if(explicitGaze)gaze=mix(gaze,gazeOffset(explicitGaze.target),explicitGazeWeight(explicitGaze));
   if(drawn&&!usesReferenceHead(profile)){
     const view=headViewAt(plan,t),look=explicitGaze??activeGesture;
@@ -828,7 +841,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
         return length?{x:local.x/length,y:local.y/length}:{x:0,y:0};};
       let look={x:0,y:0};
       if(spearStates[0])look=direction(spearStates[0].track.aim);
-      if(activeGesture?.target)look=mix(look,direction(activeGesture.target),gazeWeight(activeGesture));
+      if(activeGesture?.target)look=mix(look,direction(activeGesture.target),activeGestureWeight);
       if(explicitGaze){const to=direction(explicitGaze.target),forward=c.view==='three-quarter-left'?-1:1;
         if(to.x*forward<-.01)throw new Error('needs-view-gaze: target is behind the fixed native view; author a matching view/turn');
         look=mix(look,to,explicitGazeWeight(explicitGaze));
@@ -975,7 +988,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   for(const g of plan.gestures.filter(g=>g.action==='drop')){times.add(g.landingMs!);times.add(g.landingMs!-.01);times.add(g.landingMs!+.01);}
   for(const clip of plan.postures??[])for(const at of [(clip.startMs+clip.endMs)/2,(clip.startMs+clip.endMs)/2-.01,(clip.startMs+clip.endMs)/2+.01])times.add(at);
   for(const g of plan.gestures)for(const at of [g.contactMs,g.releaseMs,recoveryStart(g)])if(at!==undefined){times.add(at);times.add(at-.01);times.add(at+.01);}
-  if(usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion))for(const gesture of plan.gestures.filter(g=>!contacts(g))){
+  if(usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion))for(const gesture of plan.gestures.filter(g=>!contacts(g)&&!g.sourceSpan)){
     const window=articulatedGestureWindow(gesture);
     for(const at of [window.reachMs,window.recoverMs])for(const near of [at-.01,at,at+.01])times.add(near);
   }
@@ -1003,6 +1016,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const g of plan.gazes)for(const at of [g.startMs+140,g.endMs-140])times.add(at);
   }
   if(actingClock){
+    for(const g of actingClock.gestures)for(const at of [g.startMs,g.reachMs,g.recoverMs,g.endMs])for(const near of [at-.01,at,at+.01])times.add(near-actingClock.startMs);
     for(const g of actingClock.gazes)for(const at of [g.startMs,g.startMs+VIEW_GAZE_RAMP_MS,g.endMs-VIEW_GAZE_RAMP_MS,g.endMs])times.add(at-actingClock.startMs);
     for(const at of [actingClock.runStartMs,actingClock.runStartMs+VIEW_BREATH_RAMP_MS,actingClock.runEndMs-VIEW_BREATH_RAMP_MS,actingClock.runEndMs])times.add(at-actingClock.startMs);
   }

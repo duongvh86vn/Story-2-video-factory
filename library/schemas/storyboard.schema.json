@@ -2348,6 +2348,38 @@
                                           "right"
                                         ]
                                       },
+                                      "sourceSpan": {
+                                        "type": "object",
+                                        "properties": {
+                                          "startMs": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          },
+                                          "endMs": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          },
+                                          "id": {
+                                            "type": "string",
+                                            "maxLength": 96,
+                                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                          },
+                                          "reachMs": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          },
+                                          "recoverMs": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "startMs",
+                                          "endMs",
+                                          "id"
+                                        ],
+                                        "additionalProperties": false
+                                      },
                                       "propId": {
                                         "type": "string",
                                         "maxLength": 96,
@@ -4384,6 +4416,38 @@
                                 "left",
                                 "right"
                               ]
+                            },
+                            "sourceSpan": {
+                              "type": "object",
+                              "properties": {
+                                "startMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "endMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "reachMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "recoverMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": [
+                                "startMs",
+                                "endMs",
+                                "id"
+                              ],
+                              "additionalProperties": false
                             },
                             "propId": {
                               "type": "string",

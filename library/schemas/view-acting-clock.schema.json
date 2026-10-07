@@ -6,7 +6,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "const": "native-view-acting-clock-1"
+          "const": "native-view-acting-clock-2"
         },
         "ownerId": {
           "type": "string",
@@ -70,6 +70,82 @@
             ],
             "additionalProperties": false
           }
+        },
+        "gestures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "point",
+                  "think"
+                ]
+              },
+              "hand": {
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right"
+                ]
+              },
+              "target": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "additionalProperties": false
+              },
+              "elbowPole": {
+                "type": "string",
+                "enum": [
+                  "rest",
+                  "reach"
+                ]
+              },
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "reachMs": {
+                "type": "number",
+                "minimum": 0
+              },
+              "recoverMs": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "id",
+              "action",
+              "hand",
+              "startMs",
+              "endMs",
+              "reachMs",
+              "recoverMs"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [
@@ -80,7 +156,8 @@
         "runStartMs",
         "runEndMs",
         "sourceIdentityHash",
-        "gazes"
+        "gazes",
+        "gestures"
       ],
       "additionalProperties": false
     }

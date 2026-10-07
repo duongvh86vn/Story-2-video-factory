@@ -296,7 +296,7 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
       if(isLocked||router.isMock('storyboard'))break;
       let repairAttempt:string|undefined;
       try{
-        const repaired=await repairCinematicArtwork(root,config,router,pendingArtworkShot,errors);
+        const repaired=await repairCinematicArtwork(root,config,router,pendingArtworkShot,errors,phaseBoard);
         repairAttempt=repaired.attemptFile;
         const repairedMotions=await loadSpriteSceneMotions(root,repaired.shot),repairedSpeech=await loadSpriteSceneSpeech(root,repaired.shot,repairedMotions);
         const files=renderCinematic(repaired.shot,host!.profile,host!.rig,activity!,config,background,narrated,repairedMotions,repairedSpeech,await sourceSpeechBoard(root,repaired.shot,options.board)).files;

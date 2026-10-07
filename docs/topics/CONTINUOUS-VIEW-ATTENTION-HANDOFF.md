@@ -1,5 +1,7 @@
 # Lila/Karo — ánh nhìn và nhịp thở qua cắt cảnh
 
+Tài liệu này giữ evidence lịch sử 0.33. Source hiện hành 0.34 nâng context lên v2 và bổ sung original point/think command; [contract/test/server hiện hành](NATIVE-SOURCE-GESTURE-HANDOFF.md). Không dùng context v1 đã cache thay cho v2, không suy ra runtime/visual acceptance.
+
 Mốc source0.33, 08/10/2026; base `08712b172a1c5a00d73e7052a36ef1cb0dd54e4f`, branch `codex/prehistoric-life`. Không có API image-to-video vẫn tiếp tục dùng SVG/HTML5/GSAP. Đây là source candidate, chưa nghiệm thu chuyển động hoặc video.
 
 Source checks: full build, test:typecheck, schema export và whitespace exit0; bounded independent source/declaration review PASS. Source checkpoint `da07b1ed800f3767584492711d902a2c001db339` đã push, local/remote SHA khớp. Chín callback mới chưa chạy; không có runtime/visual approval ở mốc này.
