@@ -15,7 +15,7 @@ import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHead
 import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
-import {articulatedGestureWindow,articulatedPoseFromDirections,sampleArticulatedArm} from './arm-trajectory.js';
+import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
 import {usesBodyView,registeredBodyView} from './body-view-art.js';
 import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
@@ -551,12 +551,43 @@ function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undef
   return solveChain(shoulder,point,upper,lower,bend);
 }
 
-function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gesture,time:number,upper:number,lower:number,side:RigHand,entryChain?:Chain,entryPole?:number):Chain{
-  const restPole=side==='right'?1:-1,activePole=gesture.elbowPole==='reach'?-restPole:gesture.elbowPole==='rest'?restPole:entryPole??restPole;
-  const rest=entryChain??solveChain(shoulder,neutral,upper,lower,restPole),active=solveChain(shoulder,aim,upper,lower,activePole);
+/** Deterministic gesture-entry body/arm reference. Never selected from the current target or prior frame. */
+function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture:Gesture,side:RigHand){
+  const {m,s,walk,pelvis,lean,pose,emotion,bodyPosture,bend}=bodyStateAt(plan,profile,gesture.startMs);
+  const toWorld=(point:Point)=>add(pelvis,rotate({x:point.x*s,y:point.y*s},lean));
+  const shoulder=toWorld(m.shoulders![side]),lengths=m.arms![side],lower=lengths.lower*s+(m.handAttachment?.[side].length??0)*s;
+  const restPole=side==='right'?1:-1,sourceRun=plan.walks.some(w=>w.gait==='run'),rest=m.armRest![side];
+  const swing=walk.running&&sourceRun?0:Math.sin(walk.phase*Math.PI)*(side==='right'?-1:1)*walk.armSwing*walk.activation;
+  let neutral=add(shoulder,rotate({x:rest.x*s,y:rest.y*s},swing+lean)),runningChain:Chain|undefined;
+  if(sourceRun&&walk.running){
+    const drive=Math.sin(walk.phase*Math.PI)*(side==='right'?-1:1),upperAngle=90-walk.direction*35*drive,lowerAngle=upperAngle-walk.direction*(60+15*drive);
+    const base=solveChain({x:0,y:0},{x:rest.x*s,y:rest.y*s},lengths.upper*s,lower,restPole);
+    const blend=(from:number,to:number)=>from+(((to-from+180)%360+360)%360-180)*walk.activation;
+    const ua=blend(base.upper+90,upperAngle)+lean,la=blend(base.lower+90,lowerAngle)+lean;
+    const joint=add(shoulder,rotate({x:lengths.upper*s,y:0},ua)),end=add(joint,rotate({x:lower,y:0},la));
+    runningChain={joint,end,upper:ua-90,lower:la-90,reachable:true,error:0};neutral=end;
+  }
+  const seated=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0));
+  const hip=toWorld(m.hips![side]),lap={x:hip.x+bend*m.legs![side].upper*s*.55,y:hip.y+8*s};neutral=mix(neutral,lap,seated);
+  const entry=runningChain??solveChain(shoulder,neutral,lengths.upper*s,lower,restPole);
+  const entryPose=articulatedPoseFromDirections(entry.upper+90,entry.lower+90);
+  const pole=gesture.elbowPole==='reach'?-restPole:gesture.elbowPole==='rest'?restPole:Math.abs(entryPose.elbowDeg)<.0001?restPole:Math.sign(entryPose.elbowDeg);
+  const headScale=profile.appearance.headScale*(usesCutoutHead(profile)?profile.appearance.bodyScale:m.headArtworkScale??1);
+  const headBottom=(usesCutoutHead(profile)?0:referenceBodyHeadAttachment(profile,'three-quarter-right').y)*headScale;
+  const torsoTop=m.torsoTop??-92*profile.appearance.bodyScale;
+  const neck=toWorld({x:m.neckX??0,y:usesBodyView(profile)?torsoTop:torsoTop-2*profile.appearance.bodyScale});
+  const head=add(neck,rotate({x:0,y:-headBottom*s},lean+(usesBodyView(profile)?0:pose.tilt*emotion.weight)));
+  const chin=add(head,rotate(usesCutoutHead(profile)?{x:cutoutHeadChin(profile,side).x*s*headScale,y:cutoutHeadChin(profile,side).y*s*headScale}
+    :{x:m.headRadius*.3*s*(side==='left'?-1:1),y:headBottom*.85*s},lean+pose.tilt*emotion.weight));
+  const aim=expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lower),active=solveChain(shoulder,aim,lengths.upper*s,lower,pole);
+  if(entry.error>.001||active.error>.001)throw new Error('needs-arm-keypose: gesture-entry reference cannot reach its authored grip with fixed lengths');
+  return {pole,shoulder:articulatedArmReference(entryPose,articulatedPoseFromDirections(active.upper+90,active.lower+90))};
+}
+function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gesture,time:number,upper:number,lower:number,side:RigHand,reference:ReturnType<typeof expressiveArmReference>,currentRun?:Chain):Chain{
+  const rest= currentRun??solveChain(shoulder,neutral,upper,lower,side==='right'?1:-1),active=solveChain(shoulder,aim,upper,lower,reference.pole);
   if(rest.error>.001||active.error>.001)throw new Error('needs-arm-keypose: expressive source pose cannot reach its authored grip with fixed lengths');
   return sampleArticulatedArm(shoulder,upper,lower,articulatedPoseFromDirections(rest.upper+90,rest.lower+90),
-    articulatedPoseFromDirections(active.upper+90,active.lower+90),articulatedGestureWindow(gesture),time);
+    articulatedPoseFromDirections(active.upper+90,active.lower+90),articulatedGestureWindow(gesture),time,reference.shoulder);
 }
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
@@ -663,7 +694,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
     const expressiveSource=usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion)&&gesture&&!contacts(gesture);
     const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:expressiveSource
-      ?expressiveSourceArm(shoulder,neutral,expressiveAim(sourceGesture!,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),sourceGesture!,t,lengths.upper*s,lowerToGrip,side,authoredRun,authoredRun?walk.direction:undefined)
+      ?expressiveSourceArm(shoulder,neutral,expressiveAim(sourceGesture!,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),sourceGesture!,t,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,sourceGesture!,side),authoredRun)
       :armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
     // Grip is a rigid continuation of the forearm, not a bone endpoint or a

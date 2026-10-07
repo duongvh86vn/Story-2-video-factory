@@ -1,7 +1,7 @@
 // NOT RUN. These callbacks/fixtures are reserved for the delegated runtime model.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {articulatedGestureWindow,articulatedPoseFromDirections,sampleArticulatedArm} from '../packages/animation/arm-trajectory.js';
+import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from '../packages/animation/arm-trajectory.js';
 import {samplePerformance,solveChain} from '../packages/animation/compiler.js';
 import {bodyCalibrationPlan} from '../packages/topics/body-workbench.js';
 import {rigMetrics} from '../packages/animation/rig.js';
@@ -13,7 +13,7 @@ const silence={method:'segment-draft' as const,windowMs:20,intervals:[]};
 
 test('fixed forward lengths and grip endpoints survive shoulder crossing and signed elbow branch changes at random-access clocks',()=>{
   const start={x:10,y:20},rest={shoulderDeg:170,elbowDeg:55},active={shoulderDeg:-170,elbowDeg:-55};
-  const sample=(time:number)=>sampleArticulatedArm(start,60,45,rest,active,window,time);
+  const registration=articulatedArmReference(rest,active),sample=(time:number)=>sampleArticulatedArm(start,60,45,rest,active,window,time,registration);
   const before=JSON.stringify({start,rest,active,window}),reference=sample(1250);
   for(const at of [100,103,220,399,400,401,550,700,1250,1500,1700,1899,1900,1250,400,103]){
     const chain=sample(at);near(distance(start,chain.joint),60);near(distance(chain.joint,chain.end),45);
@@ -25,7 +25,8 @@ test('fixed forward lengths and grip endpoints survive shoulder crossing and sig
 });
 
 test('quintic entry and recovery are position/velocity/acceleration continuous for fixed keyposes without a separate 80ms transit',()=>{
-  const sample=(at:number)=>sampleArticulatedArm({x:0,y:0},60,45,{shoulderDeg:90,elbowDeg:-25},{shoulderDeg:20,elbowDeg:-70},window,at).end;
+  const rest={shoulderDeg:90,elbowDeg:-25},active={shoulderDeg:20,elbowDeg:-70},registration=articulatedArmReference(rest,active);
+  const sample=(at:number)=>sampleArticulatedArm({x:0,y:0},60,45,rest,active,window,at,registration).end;
   const h=.05;
   for(const at of [window.startMs,window.reachMs,window.recoverMs,window.endMs]){
     const before=sample(at-h),center=sample(at),after=sample(at+h);
@@ -42,10 +43,10 @@ test('directions retain signed flexion while degenerate windows and nonfinite/co
   assert.throws(()=>articulatedGestureWindow({startMs:200,endMs:200}),/invalid trajectory window/);
   assert.throws(()=>articulatedGestureWindow({startMs:100,endMs:500,contactMs:400,releaseMs:300}),/invalid trajectory window/);
   assert.throws(()=>articulatedGestureWindow({startMs:100,endMs:500,releaseMs:500}),/invalid trajectory window/);
-  assert.throws(()=>sampleArticulatedArm({x:0,y:0},0,45,{shoulderDeg:90,elbowDeg:0},{shoulderDeg:20,elbowDeg:-70},window,500),/invalid fixed bone/);
+  assert.throws(()=>sampleArticulatedArm({x:0,y:0},0,45,{shoulderDeg:90,elbowDeg:0},{shoulderDeg:20,elbowDeg:-70},window,500,{shoulderArcDeg:-70}),/invalid fixed bone/);
   assert.throws(()=>articulatedPoseFromDirections(NaN,0),/nonfinite/);
   assert.throws(()=>articulatedPoseFromDirections(0,180),/candidate pose range/);
-  assert.throws(()=>sampleArticulatedArm({x:1e12,y:0},60,45,{shoulderDeg:90,elbowDeg:0},{shoulderDeg:20,elbowDeg:-70},window,500),/authoring precision range/);
+  assert.throws(()=>sampleArticulatedArm({x:1e12,y:0},60,45,{shoulderDeg:90,elbowDeg:0},{shoulderDeg:20,elbowDeg:-70},window,500,{shoulderArcDeg:-70}),/authoring precision range/);
 });
 
 test('current source-body pointing keeps an authored reachable target through its pose hold and separate cuff/palm geometry',()=>{
@@ -80,4 +81,34 @@ test('legacy source pointing remains on its former IK/goal/pole path and contact
   assert.ok(distance(frame.hands.right,expected.end)<.001);
   const contact={...plan,gestures:[{id:'touch',action:'operate' as const,hand:'right' as const,startMs:300,endMs:3600,contactMs:900,target:plan.gestures[0]!.target!,elbowPole:'rest' as const}]};
   for(const at of [900,1100,1700])assert.ok(distance(samplePerformance(contact,profile,at,silence).hands.right,contact.gestures[0]!.target)<.001);
+});
+
+test('moving keyposes crossing the original antipode retain one registered shoulder arc; unsupported corridor changes reject explicitly',()=>{
+  const rest={shoulderDeg:90,elbowDeg:40},active={shoulderDeg:-90,elbowDeg:-40},registration=articulatedArmReference(rest,active);
+  const sample=(angle:number)=>sampleArticulatedArm({x:0,y:0},60,45,rest,{...active,shoulderDeg:angle},window,400,registration);
+  const before=sample(-90-.001),after=sample(-90+.001);
+  assert.ok(distance(before.joint,after.joint)<.01);assert.ok(distance(before.end,after.end)<.01);
+  assert.deepEqual(sample(-90-.001),before);assert.deepEqual(registration,{shoulderArcDeg:180});
+  assert.throws(()=>sampleArticulatedArm({x:0,y:0},60,45,{shoulderDeg:0,elbowDeg:0},{shoulderDeg:170,elbowDeg:30},window,400,{shoulderArcDeg:0}),/registered branch corridor/);
+});
+
+test('default expressive gestures retain their entry elbow branch across both run directions/hands and run exit during full pose ownership',()=>{
+  const numbers=(value:string)=>value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+  const flexion=(frame:ReturnType<typeof samplePerformance>,hand:'left'|'right')=>{
+    const upper=numbers(frame.transforms[`arm-${hand}-upper`]!)[2]!,lower=numbers(frame.transforms[`arm-${hand}-lower`]!)[2]!;
+    return Math.atan2(Math.sin((lower-upper)*Math.PI/180),Math.cos((lower-upper)*Math.PI/180))*180/Math.PI;
+  };
+  for(const actor of ['lila','karo'] as const)for(const direction of [-1,1])for(const hand of ['left','right'] as const){
+    const {plan,profile}=bodyCalibrationPlan(actor,direction===1?'run':'run-left','happy');
+    const gesture={id:'run-react',action:'react' as const,hand,startMs:900,endMs:3400};
+    const entry=samplePerformance(plan,profile,gesture.startMs,silence),expectedPole=Math.sign(flexion(entry,hand));
+    const modified={...plan,gestures:[gesture]};
+    for(const at of [1500,1700,2099.9,2100,2100.1,2300,2600])assert.equal(Math.sign(flexion(samplePerformance(modified,profile,at,silence),hand)),expectedPole);
+    const before=samplePerformance(modified,profile,2099.9,silence),after=samplePerformance(modified,profile,2100.1,silence);
+    for(const segment of ['upper','lower']){
+      const a=numbers(before.transforms[`arm-${hand}-${segment}`]!),b=numbers(after.transforms[`arm-${hand}-${segment}`]!);
+      assert.ok(distance({x:a[0]!,y:a[1]!},{x:b[0]!,y:b[1]!})<.1);
+    }
+    assert.ok(distance(before.wrists![hand],after.wrists![hand])<.1);
+  }
 });
