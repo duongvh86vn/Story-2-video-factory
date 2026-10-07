@@ -1,0 +1,104 @@
+{
+  "scope": "static-cuffs-and-seat-to-walk-poses-only",
+  "appliesTo": "forest-source-body-motion-5 / forest-source-body-svg-5",
+  "bodyPackFingerprint": "c5203ec84aba9dde9aaa9f3cb2f641fd770e12be4a9b5f6b15271a2837c181f6",
+  "codeHashes": {
+    "compiler.ts": "3e1377ac07f34702d891a052bce1d98c96589bad1db250651f1d6719ac18a69a",
+    "rig.ts": "1d65b163112db345894d73cdfc8982738a3ea86f22cd5c8c8861164ec39b97d2",
+    "support.ts": "55921b8ab31c3476383da43c46281465e16212cfbbf166d0b13a2c8633861266",
+    "forest-garment-art.ts": "6da6d0c90e958d35b12e95ac8db73c5fb6b013c11ad64ca0a19825b3055acb71",
+    "forest-body-art.ts": "3617fb99e64f7096b3b6c783ced3430b6138565119f6fadd3d038ec48d188578"
+  },
+  "evidence": [
+    {
+      "file": "docs/topics/reviews/source-cuffs-transition-left-v1.jpg",
+      "action": "sit-walk-left",
+      "timeMs": 1240,
+      "sha256": "0bd2842d243194de6b0c523fd29c269e6cb073c72f717dc2197e882da53f992d"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-transition-right-v1.jpg",
+      "action": "sit-walk-right",
+      "timeMs": 1240,
+      "sha256": "23a6a07ee6e3dceeca623c4cf44d05909d06e05e055fca66f95bb8ceffa38bd7"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-held-left-v1.jpg",
+      "action": "sit-walk-left",
+      "timeMs": 2200,
+      "sha256": "2ed4a30fdade66cf7de67bd7138e373f38400539a92ca91136666f40ec1d1e3d"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-held-right-v1.jpg",
+      "action": "sit-right",
+      "timeMs": 2200,
+      "sha256": "5ff8746ee1d113aef953f9b43b2bdce698f3d7480d0c104982905f2641779e3b"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-walk-left-v1.jpg",
+      "action": "sit-walk-left",
+      "timeMs": 5500,
+      "sha256": "05e2c6c851db362c5793dd46ea6ea9e769558bca829358492ca6a4af2e750740"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-walk-right-v1.jpg",
+      "action": "sit-walk-right",
+      "timeMs": 5500,
+      "sha256": "bc74e4f46a40daf3f5bd5b691909d771ad93e1870b7620b969550762b8f3b566"
+    }
+  ],
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "Karo_transition-left_1240ms",
+        "type": "garment_ink_and_hem_definition",
+        "severity": "medium",
+        "description": "Karo's transitional shorts have patchy, weakened black edging and overlapping ragged marks around the cuffs, rather than two cleanly delineated shorts openings. The lower fabric looks mottled and the cuff boundaries are less distinct than in the walking poses. The same defect is visible in transition-right at 1240ms.",
+        "repair": "Preserve a single continuous black exterior contour and one distinct ragged hem per shorts tube throughout these transitional poses. Remove overlapping or faded cuff marks while retaining the crotch separation and staggered near/far cuffs."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "All six supplied screenshots were inspected in order. This assessment is limited to the visible static poses at 1240ms, 2200ms and 5500ms; it does not establish motion smoothness, implementation correctness, anatomy at other times or full production acceptance."
+    ]
+  },
+  "productionAcceptance": false,
+  "usage": {
+    "calls": 1,
+    "successes": 1,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 16430,
+    "outputTokens": 477,
+    "totalTokens": 16907,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 16430,
+        "outputTokens": 477,
+        "totalTokens": 16907,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 16430,
+        "outputTokens": 477,
+        "totalTokens": 16907,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

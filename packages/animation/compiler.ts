@@ -12,7 +12,7 @@ import {forestHeadContour} from './forest-tribe-art.js';
 import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription,referenceHeadViewForYaw,FOREST_HEAD_VIEWS} from './forest-head-art.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
-import {seatedGarmentState,seatedGarmentMatrixError} from './forest-garment-art.js';
+import {seatedGarmentState,seatedGarmentMatrixError,type GarmentRestPose} from './forest-garment-art.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t = clamp(n); return t * t * (3 - 2 * t); };
@@ -448,6 +448,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   const chinAt=(side:RigHand)=>add(head,rotate({x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},lean+pose.tilt*emotion.weight));
   const garment=usesReferenceBody(profile)?referenceGarmentMotion(profile):undefined,lagged=garment?bodyStateAt(plan,profile,Math.max(0,t-garment.lagMs)):undefined;
   const thighAngles:number[]=[];
+  const restCloth={} as GarmentRestPose;
   // Both listening elbows point down/back from the shoulder before the hands
   // rest forward on the lap. Select the same pole from the plan's first frame
   // instead of switching a bent elbow halfway through sitting.
@@ -468,6 +469,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       const restLeg=solveChain(rest.hip,rest.ankle,rest.bones.upper,rest.bones.lower,bend);
       const angle=lean+clamp((lagLeg.upper-lagged.lean-restLeg.upper)*garment.follow,-garment.maxRotation,garment.maxRotation);
       transforms[`garment-${side}`]=transform(hip,angle,s*profile.appearance.bodyScale);
+      restCloth[side]={hip:{x:m.hips![side].x/profile.appearance.bodyScale,y:m.hips![side].y/profile.appearance.bodyScale},angle:angle-lean};
     }
     const sourceShoulder=m.shoulders?.[side];
     const shoulder=toWorld(sourceShoulder?.x??(i?1:-1)*m.shoulderOffset,sourceShoulder?.y??m.shoulderY-m.pelvisY);
@@ -552,10 +554,10 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const hasSeat=[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated');
     for(const side of ['left','right'] as const){
       transforms['garment-seated-'+side]=transform(pelvis,lean,s*profile.appearance.bodyScale);
-      const chosen=side===(bend===1?'right':'left'),surface=seatedGarmentState(profile,side,hasSeat&&chosen?folded:0);
+      const chosen=side===(bend===1?'right':'left'),surface=seatedGarmentState(profile,side,hasSeat&&chosen?folded:0,chosen?restCloth:undefined);
       Object.assign(face,surface.face);Object.assign(paths,surface.paths);
-      face['garment-fold-'+side]={opacity:hasSeat&&chosen?1:0};
-      face['garment-standing-'+side]={opacity:hasSeat?0:1};
+      face['garment-fold-'+side]={opacity:chosen?1:0};
+      face['garment-standing-'+side]={opacity:0};
     }
   }
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;

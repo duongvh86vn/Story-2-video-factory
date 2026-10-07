@@ -6,12 +6,12 @@ import {ANIMATION_VERSION,type PerformancePlan} from '../packages/animation/sche
 import {referenceBodyAssets,referenceBodyMetrics} from '../packages/animation/forest-body-art.js';
 import {referenceHeadAssets,readReferenceHeadAsset} from '../packages/animation/forest-head-art.js';
 import {samplePerformance,validatePerformance,compilePerformance} from '../packages/animation/compiler.js';
-import {bodyCalibrationSvg} from '../packages/topics/body-workbench.js';
+import {bodyCalibrationSvg,bodyActionDuration} from '../packages/topics/body-workbench.js';
 import {performanceScene} from '../packages/animation/scene.js';
 import {secureSceneFiles,validateSceneFiles} from '../packages/scenes/security.js';
 import {legGeometry} from '../packages/animation/body-geometry.js';
 import {rigMetrics} from '../packages/animation/rig.js';
-import garmentGeometry from '../library/topics/prehistoric-life/rig-v1/garment-correspondence-v1.json' with {type:'json'};
+import garmentGeometry from '../library/topics/prehistoric-life/rig-v1/garment-correspondence-v2.json' with {type:'json'};
 import {seatedGarmentState} from '../packages/animation/forest-garment-art.js';
 const silence={method:'segment-draft' as const,windowMs:20,intervals:[]};
 function fixture(actor:'lila'|'karo'){
@@ -116,7 +116,11 @@ test('cloth correspondences keep one opaque surface and do not invert triangles 
     }
     const svg=bodyCalibrationSvg(actor,'sit-'+facing as 'sit-left'|'sit-right',1240,'happy');
     assert.match(svg,/id="[^"]+-garment-fill-[^"]+"[^>]*fill="#[A-Fa-f0-9]{6}"[^>]*stroke="none"/);
-    assert.match(svg,/id="[^"]+-garment-edge-[^"]+"[^>]*stroke-width="1.1"/);
+    assert.match(svg,new RegExp('id="[^"]+-garment-edge-[^"]+"[^>]*stroke-width="'+(actor==='karo'?'2.2':'1.1')+'"'));
+    if(actor==='karo'){
+      assert.match(svg,/mask="url\(#karo-calibration-garment-texture-band-/);
+      assert.match(svg,/id="karo-calibration-garment-interior-[^"]+"[^>]*stroke-width="7"/);
+    }
     assert.ok(svg.indexOf('id="'+actor+'-calibration-garment-seated-'+facing+'"')<svg.indexOf('id="'+actor+'-calibration-chest"'));
   }
 });
@@ -131,6 +135,60 @@ test('source seat keeps the closed hip contact planted during explicit lean and 
       const pelvis=nums(f.transforms.pelvis!),seat=plan.supports![0]!;
       assert.ok(pelvis[1]!<seat.center.y-m.seatContactOffset!.y*.8);
     }
+  }
+});
+
+test('seat-plan cloth stays attached at the waist and follows the legs after standing, without seek accumulation',()=>{
+  const matrix=(value:string)=>value.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi)!.map(Number);
+  const mapped=(m:number[],p:{x:number;y:number})=>({x:m[0]!*p.x+m[2]!*p.y+m[4]!,y:m[1]!*p.x+m[3]!*p.y+m[5]!});
+  for(const actor of ['lila','karo'] as const)for(const facing of ['left','right'] as const){
+    const {profile,plan}=seatingFixture(actor,facing),direction=facing==='left'?-1:1,geometry=garmentGeometry.actors[actor];
+    plan.durationMs=7200;plan.walks=[{startMs:4600,endMs:6600,fromX:plan.root.x,toX:plan.root.x+direction*55}];
+    validatePerformance(plan,profile);
+    const before=samplePerformance(plan,profile,5500,silence);
+    for(const time of [6600,1240,7200,2200,4800])samplePerformance(plan,profile,time,silence);
+    assert.deepEqual(samplePerformance(plan,profile,5500,silence),before);
+    const resting=seatedGarmentState(profile,facing,0);let pinned=0,moved=0;
+    for(const [i,piece] of geometry.views[facing].pieces.entries()){
+      const id='garment-texture-'+facing+'-rest-'+i;
+      const actual=matrix(String(before.face[id]!.attr!.transform)),neutral=matrix(String(resting.face[id]!.attr!.transform));
+      const points=piece.rest.map(p=>mapped(actual,p)),[a,b,c]=points;
+      assert.ok((b!.x-a!.x)*(c!.y-a!.y)-(b!.y-a!.y)*(c!.x-a!.x)>0,'cloth must not invert during walking');
+      for(const p of piece.rest){
+        const at=mapped(actual,p),rest=mapped(neutral,p),gap=Math.hypot(at.x-rest.x,at.y-rest.y);
+        if((p.y-geometry.rest.anchor.y)*geometry.rest.scale<=12){assert.ok(gap<.001,'upper overlap must stay attached');pinned++;}
+        else if(gap>.1)moved++;
+      }
+    }
+    assert.ok(pinned>0 && moved>0,'walk must move the hem while preserving the waist');
+    const compiled=compilePerformance(plan,profile,silence);assert.ok(compiled.report.maxInterpolationGapPx<=.2);
+    const result=performanceScene(plan,profile,silence),resources=[...referenceHeadAssets(profile.appearance),...referenceBodyAssets(profile.appearance)].map(asset=>asset.path);
+    assert.deepEqual(validateSceneFiles(secureSceneFiles(result.files),{id:plan.id,startMs:0,endMs:plan.durationMs} as Parameters<typeof validateSceneFiles>[1],2000000,resources,plan.stage),[]);
+  }
+  assert.equal(bodyActionDuration('sit-walk-left'),7200);assert.equal(bodyActionDuration('sit-walk-right'),7200);
+  assert.equal(bodyActionDuration('sit-left'),5000);assert.equal(bodyActionDuration('walk'),4000);
+});
+
+test('large opposing thigh motion preserves the waist and a positive area margin instead of folding cloth',()=>{
+  const matrix=(value:string)=>value.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi)!.map(Number);
+  const mapped=(m:number[],p:{x:number;y:number})=>({x:m[0]!*p.x+m[2]!*p.y+m[4]!,y:m[1]!*p.x+m[3]!*p.y+m[5]!});
+  const area=(p:{x:number;y:number}[])=>{const [a,b,c]=p;return (b!.x-a!.x)*(c!.y-a!.y)-(b!.y-a!.y)*(c!.x-a!.x);};
+  for(const actor of ['lila','karo'] as const)for(const facing of ['left','right'] as const){
+    const {profile}=fixture(actor),m=rigMetrics(profile),geometry=garmentGeometry.actors[actor];
+    for(const sign of [-1,1])for(const phase of [0,.3,.7,1]){
+      const pose={left:{hip:{x:m.hips!.left.x/profile.appearance.bodyScale,y:m.hips!.left.y/profile.appearance.bodyScale},angle:sign*22},
+        right:{hip:{x:m.hips!.right.x/profile.appearance.bodyScale,y:m.hips!.right.y/profile.appearance.bodyScale},angle:-sign*22}};
+      const state=seatedGarmentState(profile,facing,phase,pose),neutral=seatedGarmentState(profile,facing,phase);
+      for(const [i,piece] of geometry.views[facing].pieces.entries()){
+        const id='garment-texture-'+facing+'-rest-'+i,positions=(source:typeof state)=>piece.rest.map(p=>mapped(matrix(String(source.face[id]!.attr!.transform)),p));
+        assert.ok(area(positions(state))>=area(positions(neutral))*.249,'preserve a signed-area margin under opposing steps');
+      }
+      if(phase===1)assert.deepEqual(state,neutral,'seated folds must not retain rest-thigh swing');
+    }
+    const {plan}=fixture(actor);plan.facing='right';delete plan.headView;plan.walks=[{startMs:300,endMs:3600,fromX:plan.root.x,toX:plan.root.x+55}];
+    const f=samplePerformance(plan,profile,800,silence);
+    assert.equal(f.face['garment-fold-right']!.opacity,1);
+    assert.equal(f.face['garment-standing-left']!.opacity,0);assert.equal(f.face['garment-standing-right']!.opacity,0);
   }
 });
 test('pose inspection preserves opacity on hidden bones and source hair namespaces',()=>{

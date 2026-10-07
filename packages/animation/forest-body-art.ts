@@ -7,8 +7,8 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-4';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-4';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-6';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-6';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -114,7 +114,7 @@ export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,c
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through hidden IK joint',softness:.28,anatomicalGuarantee:false},
   secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered',hair:'Lila ponytail source masks with 120ms follow; no simulated hair physics',
-    clothing:'source standing panels with 100ms thigh follow outside seat plans; seat plans use semantic UV correspondences and one opaque contour from standing through seated/rising; interior source/authored fold materials share that surface; seated rest has no independent panel swing yet; no fabric simulation or motion acceptance'},
+    clothing:'all source body plans use one opaque shared cloth surface with a pinned waist and blended 100ms thigh follow below it, limited to 22 degrees; seat plans also use semantic UV correspondences through seated/rising, fading thigh follow into the seated pose; source/authored fold materials share that surface; legacy independently rotating panels are hidden to avoid opening a waist gap during ordinary walking; inverted triangles block evaluation; no fabric simulation or motion acceptance'},
   inferredAnatomy:{knees:'not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved',seat:'closed hip contact below/behind belt, not the pelvis anchor itself'},
   headAttachment:{neck:'original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone'},
   footContact:{frameFeet:'sole anchors',inkEndpoint:'ankle',pelvisWalkDrop:'minimum fixed-leg reach plus small bob; not .23 of long thigh'},

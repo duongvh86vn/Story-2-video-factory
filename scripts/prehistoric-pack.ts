@@ -27,8 +27,8 @@ const headPack=referenceHeadDescription();
 const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
 const headReview=await fs.readFile(path.join(repo,headReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;headPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const headReviewCurrent=headReview?.headPackFingerprint===headPack.fingerprint;
-const bodyPack=referenceBodyDescription(),bodyReviewFile='docs/topics/reviews/source-fold-static-review-v2.json';
-const bodyReview=await fs.readFile(path.join(repo,bodyReviewFile),'utf8').then(text=>JSON.parse(text) as {appliesTo:string;bodyPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
+const bodyPack=referenceBodyDescription(),bodyReviewFile='docs/topics/reviews/source-waist-static-review-v1.json';
+const bodyReview=await fs.readFile(path.join(repo,bodyReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;bodyPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const bodyReviewCurrent=bodyReview?.bodyPackFingerprint===bodyPack.fingerprint;
 const headCandidates=await Promise.all(Object.entries(headPack.assets).flatMap(([actor,views])=>Object.entries(views).map(async([view,asset])=>{
   const measured=await describe(`library/topics/prehistoric-life/rig-v1/${asset.file}`);
@@ -49,12 +49,13 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   staticReview:{file:'docs/topics/reviews/karo-atlas-static-review-v1.json',pass:false,scope:'static-artwork-only',appliesTo:'atlas assembly v1, not revised cutout-mask assembly'},
   headStaticReview:{file:headReviewFile,pass:headReviewCurrent&&headReview?.result.pass===true,scope:'static-three-view-head-layer-only',appliesTo:headReview?.appliesTo,
     fingerprintMatches:headReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/head-layer-static-review-v2.json','docs/topics/reviews/head-layer-static-review-v3.json','docs/topics/reviews/head-layer-static-review-v4.json','docs/topics/reviews/front-head-static-review-v1.json']},
-  bodyStaticReview:{file:bodyReviewFile,pass:bodyReviewCurrent&&bodyReview?.result.pass===true,scope:'static-source-body-seated-poses-only',appliesTo:bodyReview?.appliesTo,
-    fingerprintMatches:bodyReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/source-seat-static-review-v1.json','docs/topics/reviews/source-seat-static-review-v2.json','docs/topics/reviews/source-fold-static-review-v1.json'],
-    currentRepair:'Shared semantic UV mesh and one opaque rest/seated contour replace exterior ghosting. Static review v2 still fails Karo seated shorts tube readability. Independent cloth swing inside seat plans, body views and continuous motion remain pending.'},
+  bodyStaticReview:{file:bodyReviewFile,pass:bodyReviewCurrent&&bodyReview?.result.pass===true,scope:bodyReview?.scope??'static-cuffs-and-seat-to-walk-poses-only',appliesTo:bodyReview?.appliesTo,
+    fingerprintMatches:bodyReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/source-seat-static-review-v1.json','docs/topics/reviews/source-seat-static-review-v2.json','docs/topics/reviews/source-fold-static-review-v1.json','docs/topics/reviews/source-fold-static-review-v2.json','docs/topics/reviews/source-cuffs-static-review-v1.json','docs/topics/reviews/source-cuffs-static-review-v2.json'],
+    latestSelfInspection:'docs/topics/reviews/source-waist-self-inspection-v2.json',
+    currentRepair:'Karo two-cuff artwork v2 and common opaque UV surface now cover ordinary walking as well as seated plans. Pinned waist and a quadratic 25% area governor prevent detachment/inversion. Cuffs review v2 passed six poses on version 5. Waist review v1 on version 6 failed duplicate perimeter ink at 800ms; texture exclusion widened from 1.5 to 3.5 units afterward, with developer static inspection only. No current static or continuous-video acceptance.'},
   limitations:['AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.',
     'The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.',
     'Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.',
-    'Seated source motion and authored lower clothing remain candidates. A shared UV/opaque contour addresses exterior ghosting in sampled static poses; Karo seated cuffs remain unclear. Independent seat-plan cloth swing, full body views and continuous motion remain unaccepted.',
+    'Source clothing remains a candidate. Six-pose cuffs PASS applies to version 5 only. Version 6 waist review failed duplicate Karo ink; the subsequent wider texture exclusion has developer static inspection only. Area governor is not physical cloth or anatomy validation. Full clock, body views and final video remain unaccepted.',
     'Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted.']});
 console.log(JSON.stringify({references:references.length,candidates:candidates.length+headCandidates.length+garmentCandidates.length,headCandidates:headCandidates.length,garmentCandidates:garmentCandidates.length,rejected:rejected.length,productionReady:false}));

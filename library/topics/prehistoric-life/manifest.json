@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.10-cloth-correspondence",
+  "version": "forest-tribe-0.11-cuffs-and-cloth-swing",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -179,8 +179,8 @@
       "status": "candidate-authored-seated-folds"
     },
     {
-      "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v1.png",
-      "sha256": "06e01182df8bb332ce95d5fc765a4e3b236d2d08c5565e8f00b133374377cd0e",
+      "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v2.png",
+      "sha256": "f6082a8c6c92dbeaf80b94c0ec9f985f2cf0ba2e4cf00f826d621d4f90db7e8d",
       "width": 1774,
       "height": 887,
       "hasAlpha": true,
@@ -641,9 +641,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-4",
-    "rendererVersion": "forest-source-body-svg-4",
-    "fingerprint": "0598fadf74e1be7f6e105dd7af85d13e5484af525db38e9be2d3f1e33a226af0",
+    "compilerVersion": "forest-source-body-motion-6",
+    "rendererVersion": "forest-source-body-svg-6",
+    "fingerprint": "b920f750daef3af4b091adbafe360664a0cd67d19634373587040f787d35f023",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -933,7 +933,7 @@
       }
     },
     "seatedGarments": {
-      "version": "forest-seated-garment-2-correspondence",
+      "version": "forest-seated-garment-3-cuffs-and-swing",
       "assets": {
         "lila": {
           "file": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
@@ -967,8 +967,8 @@
           }
         },
         "karo": {
-          "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v1.png",
-          "sha256": "06e01182df8bb332ce95d5fc765a4e3b236d2d08c5565e8f00b133374377cd0e",
+          "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v2.png",
+          "sha256": "f6082a8c6c92dbeaf80b94c0ec9f985f2cf0ba2e4cf00f826d621d4f90db7e8d",
           "width": 1774,
           "height": 887,
           "scale": 0.1,
@@ -1000,9 +1000,23 @@
       },
       "status": "candidate-authored-folds",
       "productionReady": false,
+      "karoPerimeterInk": {
+        "textureInsetBand": 3.5,
+        "contourStrokeWidth": 2.2,
+        "method": "one common SVG perimeter owns the black ink; raster perimeter texture is excluded by a moving mask, retaining interior colors and folds"
+      },
+      "restSwing": {
+        "lagMs": 100,
+        "maxAngleDeg": 22,
+        "waistPinY": 12,
+        "hemBlendHeight": 32,
+        "minimumNeutralAreaRatio": 0.25,
+        "method": "continuous blended thigh influences below a pinned waist; quadratic area governor limits shared displacement before drawing, fading into seated correspondence; inverted triangles still block evaluation",
+        "physicalSimulation": false
+      },
       "correspondence": {
-        "file": "library/topics/prehistoric-life/rig-v1/garment-correspondence-v1.json",
-        "fingerprint": "0d408d3fb78e1e673d030a6eb3d42869980c0ead8ca664e2ec8dfc78a5ca9548",
+        "file": "library/topics/prehistoric-life/rig-v1/garment-correspondence-v2.json",
+        "fingerprint": "567272de7b3aa3cadf3871ff199f47190d1cd54c948698570a0b0c3f6ca9b8f8",
         "cageVertices": 16,
         "outlineVertices": 50,
         "mappings": {
@@ -1019,18 +1033,19 @@
           "karo": {
             "left": {
               "triangles": 14,
-              "minimumTriangleArea": 0.8617257157863296
+              "minimumTriangleArea": 4.749999999999986
             },
             "right": {
               "triangles": 14,
-              "minimumTriangleArea": 0.23879254962453084
+              "minimumTriangleArea": 3.1448803590788983
             }
           }
         },
         "guarantee": "positive triangle area for undeformed rest/seated interpolation; not a physical cloth/anatomy or runtime acceptance guarantee"
       },
       "method": "common semantic UV triangles and one opaque interpolated SVG contour; source and authored seated materials share the same surface; no bitmap rewrite or fabric simulation",
-      "prompts": "library/topics/prehistoric-life/rig-v1/seated-garment-prompts.json"
+      "prompts": "library/topics/prehistoric-life/rig-v1/seated-garment-prompts.json",
+      "repairPrompt": "library/topics/prehistoric-life/rig-v1/karo-cuffs-v2-prompt.json"
     },
     "anatomicalMapping": {
       "rig-left": "source-view anatomical right",
@@ -1047,7 +1062,7 @@
       "breath": "bounded continuous body lean",
       "blink": "actor-staggered",
       "hair": "Lila ponytail source masks with 120ms follow; no simulated hair physics",
-      "clothing": "source standing panels with 100ms thigh follow outside seat plans; seat plans use semantic UV correspondences and one opaque contour from standing through seated/rising; interior source/authored fold materials share that surface; seated rest has no independent panel swing yet; no fabric simulation or motion acceptance"
+      "clothing": "all source body plans use one opaque shared cloth surface with a pinned waist and blended 100ms thigh follow below it, limited to 22 degrees; seat plans also use semantic UV correspondences through seated/rising, fading thigh follow into the seated pose; source/authored fold materials share that surface; legacy independently rotating panels are hidden to avoid opening a waist gap during ordinary walking; inverted triangles block evaluation; no fabric simulation or motion acceptance"
     },
     "inferredAnatomy": {
       "knees": "not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved",
@@ -1074,7 +1089,7 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "a5047426d32391b2967d30288c2d811610396f18a31a58cdb0fc97f09fb825fa"
+    "codeHash": "8bda5a3327aab76251c7a9c12c3d774c223c54aa2f611c4657ab931a8ef33799"
   },
   "restCalibration": {
     "status": "candidate",
@@ -1104,24 +1119,28 @@
     ]
   },
   "bodyStaticReview": {
-    "file": "docs/topics/reviews/source-fold-static-review-v2.json",
+    "file": "docs/topics/reviews/source-waist-static-review-v1.json",
     "pass": false,
-    "scope": "static-source-body-seated-poses-only",
-    "appliesTo": "forest-source-body-motion-4 / forest-source-body-svg-4",
-    "fingerprintMatches": true,
+    "scope": "static-pinned-waist-and-area-governor-poses-only",
+    "appliesTo": "forest-source-body-motion-6 / forest-source-body-svg-6",
+    "fingerprintMatches": false,
     "productionAcceptance": false,
     "history": [
       "docs/topics/reviews/source-seat-static-review-v1.json",
       "docs/topics/reviews/source-seat-static-review-v2.json",
-      "docs/topics/reviews/source-fold-static-review-v1.json"
+      "docs/topics/reviews/source-fold-static-review-v1.json",
+      "docs/topics/reviews/source-fold-static-review-v2.json",
+      "docs/topics/reviews/source-cuffs-static-review-v1.json",
+      "docs/topics/reviews/source-cuffs-static-review-v2.json"
     ],
-    "currentRepair": "Shared semantic UV mesh and one opaque rest/seated contour replace exterior ghosting. Static review v2 still fails Karo seated shorts tube readability. Independent cloth swing inside seat plans, body views and continuous motion remain pending."
+    "latestSelfInspection": "docs/topics/reviews/source-waist-self-inspection-v2.json",
+    "currentRepair": "Karo two-cuff artwork v2 and common opaque UV surface now cover ordinary walking as well as seated plans. Pinned waist and a quadratic 25% area governor prevent detachment/inversion. Cuffs review v2 passed six poses on version 5. Waist review v1 on version 6 failed duplicate perimeter ink at 800ms; texture exclusion widened from 1.5 to 3.5 units afterward, with developer static inspection only. No current static or continuous-video acceptance."
   },
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
     "Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.",
-    "Seated source motion and authored lower clothing remain candidates. A shared UV/opaque contour addresses exterior ghosting in sampled static poses; Karo seated cuffs remain unclear. Independent seat-plan cloth swing, full body views and continuous motion remain unaccepted.",
+    "Source clothing remains a candidate. Six-pose cuffs PASS applies to version 5 only. Version 6 waist review failed duplicate Karo ink; the subsequent wider texture exclusion has developer static inspection only. Area governor is not physical cloth or anatomy validation. Full clock, body views and final video remain unaccepted.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]
 }

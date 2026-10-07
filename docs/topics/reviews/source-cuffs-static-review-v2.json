@@ -1,0 +1,97 @@
+{
+  "scope": "static-cuffs-and-seat-to-walk-poses-only",
+  "appliesTo": "forest-source-body-motion-5 / forest-source-body-svg-5",
+  "bodyPackFingerprint": "f2ec40ee2cdff09cf1b8874c5ead5a83d711343513b05be67e4ddded7d55c0ea",
+  "codeHashes": {
+    "compiler.ts": "3e1377ac07f34702d891a052bce1d98c96589bad1db250651f1d6719ac18a69a",
+    "rig.ts": "1d65b163112db345894d73cdfc8982738a3ea86f22cd5c8c8861164ec39b97d2",
+    "support.ts": "55921b8ab31c3476383da43c46281465e16212cfbbf166d0b13a2c8633861266",
+    "forest-garment-art.ts": "149f1ac9da07cf76c37432904072963c78287e943eb33285747b25e3fb0bf88b",
+    "forest-body-art.ts": "3617fb99e64f7096b3b6c783ced3430b6138565119f6fadd3d038ec48d188578"
+  },
+  "evidence": [
+    {
+      "file": "docs/topics/reviews/source-cuffs-transition-left-v2.jpg",
+      "action": "sit-walk-left",
+      "timeMs": 1240,
+      "sha256": "d402ab23ba4682f657f41a7f336803435dcf0a7fdd895de956b09d44e029f8cb"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-transition-right-v2.jpg",
+      "action": "sit-walk-right",
+      "timeMs": 1240,
+      "sha256": "226773073d01f73246a83c98d6544442093ae704aa544dbb6322c641a8874db9"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-held-left-v2.jpg",
+      "action": "sit-walk-left",
+      "timeMs": 2200,
+      "sha256": "b6d5a52c6df9097737fe285c926a88d5f8f2b3a6234aef25eb823eebfeb7c988"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-held-right-v2.jpg",
+      "action": "sit-walk-right",
+      "timeMs": 2200,
+      "sha256": "85c353ef95592250e59664a9174ef31502fa0fc159ab36224bb311d54b8eaa26"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-walk-left-v2.jpg",
+      "action": "sit-walk-left",
+      "timeMs": 5500,
+      "sha256": "552ebeaa6ecd6763806c6b7b06fd882f89fd8ec7fa82e8b7ca060fc8adb7a5e7"
+    },
+    {
+      "file": "docs/topics/reviews/source-cuffs-walk-right-v2.jpg",
+      "action": "sit-walk-right",
+      "timeMs": 5500,
+      "sha256": "c85da4a41e828f4be593ae4f31288f4dc5cd92c92ae5392052ea5f2dbb499c66"
+    }
+  ],
+  "result": {
+    "pass": true,
+    "issues": [],
+    "mode": "vision",
+    "warnings": [
+      "Reviewed all six supplied static comparisons in order: transition left/right at 1240ms, held seated left/right at 2200ms, and walking left/right at 5500ms. No clear actionable visible defect was found in these poses.",
+      "This PASS applies only to the six visible poses. It does not verify continuous motion, the intervening stand transition, implementation claims, anatomy at other times, physical cloth behavior, unshown body or head views, secondary motion, backgrounds, or final episode/input-flow acceptance."
+    ]
+  },
+  "productionAcceptance": false,
+  "usage": {
+    "calls": 2,
+    "successes": 2,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 32896,
+    "outputTokens": 741,
+    "totalTokens": 33637,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 32896,
+        "outputTokens": 741,
+        "totalTokens": 33637,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 32896,
+        "outputTokens": 741,
+        "totalTokens": 33637,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

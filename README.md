@@ -12,6 +12,8 @@ Studio có tab **Chủ đề / Câu chuyện**, model viết kịch bản, nút 
 
 Checkpoint06/10: source-context494PASS/0FAIL/2SKIP và corrected contact229PASS/0FAIL/1SKIP trên code443220f; custom-handle temporal/outbound và phim còn chờ. Ca sinh nhật gốc28/28/0, còn2/30calls, chưa video mới. Chủ dự án giao model test khác; [bàn giao để gửi model test](docs/NEXT-MODEL-TEST-HANDOFF.md), [phạm vi evidence](docs/validation/2026-10-06-sourced-world-contact.md).
 
+Chủ đề **Cuộc sống thời tiền sử 0.11** đang làm rig từ ảnh Lila/Karo da ấm: viền/hai gấu quần Karo và vạt theo đùi đã có bản sửa. Sáu pose tĩnh của bản body 5 đã PASS; bản body 6 sửa khe eo khi đi thường, thêm giới hạn biến dạng, review còn FAIL nét viền kép. Mask đã chỉnh tiếp, mới tự inspection; chưa PASS bản hiện hành hoặc video. Bộ góc thân, chuyển đầu, diễn xuất/cảnh và ba luồng tập còn chờ; `productionReady=false` chặn topic trước model/TTS. [Đặc tả và evidence](docs/topics/CUOC-SONG-THOI-TIEN-SU.md), [lệnh server/môi trường và việc giao model test](docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md).
+
 ## Bắt đầu
 
 Cần Node >=22.13, FFmpeg/FFprobe; WAV cần Python và ASR; WAV+SRT cần WhisperX/forced alignment. Script/SRT cần TTS hỗ trợ ngôn ngữ lời kể đã chọn. Không có TTS: script dừng trước timeline; SRT chỉ có nháp im lặng, không final.

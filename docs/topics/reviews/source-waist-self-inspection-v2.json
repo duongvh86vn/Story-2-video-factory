@@ -1,0 +1,31 @@
+{
+  "scope": "developer-static-pose-inspection-only",
+  "appliesTo": "forest-source-body-motion-6 / forest-source-body-svg-6",
+  "bodyPackFingerprint": "b920f750daef3af4b091adbafe360664a0cd67d19634373587040f787d35f023",
+  "codeHashes": {
+    "compiler.ts": "ac5a9956a25d71f79f71b3b1bace3254ca1603ce135b4ce65e51ab91f11774f3",
+    "forest-body-art.ts": "8bda5a3327aab76251c7a9c12c3d774c223c54aa2f611c4657ab931a8ef33799",
+    "forest-garment-art.ts": "16e3f64df6359a08fbfc66b6f0efbad001cd7005cefa181108d21a177696701f"
+  },
+  "evidence": [
+    {
+      "file": "docs/topics/reviews/source-waist-walk-800-v2.jpg",
+      "sha256": "cdd881ea8baa736c74e7e5577c328426497724c10e4c14ae14a7412fa85844b7",
+      "action": "walk",
+      "timeMs": 800,
+      "mood": "happy"
+    }
+  ],
+  "change": "After the limited waist review failed doubled Karo ink, widen the native SVG texture-exclusion inset from 1.5 to 3.5 units; keep the opaque common contour, color fill and interior source texture.",
+  "modelReview": null,
+  "pass": null,
+  "productionAcceptance": false,
+  "runtimeTestsRun": false,
+  "remaining": [
+    "independent review of the widened mask and full clock",
+    "both actors, directions and video crops/scales",
+    "continuous motion/anatomy and cloth fit",
+    "source/seat/walk scene contract and size",
+    "complete topic rig/world/acting and three input flows"
+  ]
+}
