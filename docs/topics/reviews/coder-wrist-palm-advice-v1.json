@@ -1,0 +1,136 @@
+{
+  "model": "cx/gpt-6.1-sol",
+  "focus": "wrist",
+  "prompt": "Review actual source and attached static frames for this user-reported arm defect, NOT runtime tests. Preserve the original warm Lila/Karo face/hair/clothes and black stick limbs/mitten hands. User requires softly drawn strokes, not hard zigzag hinges. Characters are actors in arbitrary sourced stories, not presenters. Images show source identity, bad hunt-aim/think frames, and the user spear reference. Diagnose BOTH HANDS across rest, point, think, walk, run, jump, crouch, seated, holding/aiming/thrusting/chasing with spear. Evaluate primary/secondary grip spacing relative to asymmetric source shoulders, bend polarity per arm role, front-vs-depth foreshortening, hidden face-contact hand caused by SVG z-order, severe flexion, wrist orientation, and smooth entry/recovery. Do not declare an elbow invalid simply because it is high: user reference has a raised rear elbow. Source torso is front artwork; cannot fake profile by flipping costume. Propose concrete TypeScript changes with numeric examples from the supplied source lengths, stable branch/pose trajectories, and constraints that reject unconvincing shapes even when the wrist is mathematically reachable. Do not reduce bone lengths or relax contact tolerances to hide the defect. Differentiate a useful temporary frontal pose from pending true authored body/head views and whole-body lunge. Return JSON with rootCauses, fixes, checks, limitations. Do not claim video/motion pass. FOCUS on 0.20 wrist/palm migration, not the old anchor. forest-hand.ts measures cuff and palm on virtual source canvases. Physical old upper/lower totals formerly ended in a hand lobe; migration subtracts independently measured cuff-to-old-anchor span and appends constant cuff-to-palm hand segment. 52/48 remains inferred. FrameState.hands and hand-* transforms retain PALM/GRIP contact origins, while wrists and ink/lower-bone endpoints are distinct. solveChain uses lower+hand length, reconstructs wrist along the same tangent and rotates intact mitten about its palm so its measured cuff joins ink. Contact targets are not moved, tolerances not loosened. Evaluate numeric/scale consistency, interpolationGap wristOffset mapping, updated test assumptions, bitmap clips, stable pole transitions, and remaining art/anatomy problems. Explicitly distinguish legitimate endpoint migration from shrinking bones per target. Attached after screenshots show current 0.20; the underlying PNG stays unchanged. Return specific actionable source issues; do not certify pose/video.",
+  "source": [
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "94c56a1e610297a39a9a4b95a825e58118aa374beb2e7488fc64102f3f39c928",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 936
+        }
+      ],
+      "excerptSha256": "e9699a5a83e7d838403015eb2a34fbc267bf6966b25bab48115a62a9f318fe53"
+    },
+    {
+      "file": "packages/animation/forest-body-art.ts",
+      "sha256": "90e6128e7e466cb4a1d4aa89259535994fab605de0edb4af45892bac24692e62",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 149
+        }
+      ],
+      "excerptSha256": "e0091dae8a116b56212372527100b97ecb25bee271d6fccf25490809a3f46078"
+    },
+    {
+      "file": "packages/animation/forest-hand.ts",
+      "sha256": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 47
+        }
+      ],
+      "excerptSha256": "ef9271bc205f76c297aac64d2995a702d8e706a0d813cd2428d4f1fdd15af5bd"
+    },
+    {
+      "file": "packages/animation/source-arm.ts",
+      "sha256": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 40
+        }
+      ],
+      "excerptSha256": "1029926f3cbe6db45daf0f9f803ee13255e69a13afc881b47d9c46620a75cba6"
+    },
+    {
+      "file": "packages/animation/forest-cutout-head.ts",
+      "sha256": "0b5e68bbef25aa4a851cbf76e2fda5d491d4b44f945dd78d48f864dba6c0e249",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 57
+        }
+      ],
+      "excerptSha256": "c1e57d02d4d46fb0616f2b8898c41722aef21a4fe1ee9194cba0b7867d6883a1"
+    },
+    {
+      "file": "packages/animation/spear.ts",
+      "sha256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 38
+        }
+      ],
+      "excerptSha256": "e4183df46c875f808253927d950942ccf15fef6eb8c575c242b68a53044008ed"
+    },
+    {
+      "file": "packages/animation/schemas.ts",
+      "sha256": "d224b258d2ba78f45ddd80b37d613649c361ab9b1a7cae170eb12acc57dd5597",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 79
+        }
+      ],
+      "excerptSha256": "6260b35bcad5fcd58882fd44ea15ffe8d70e119d97f38f18abb839d9367c5da8"
+    },
+    {
+      "file": "packages/topics/body-workbench.ts",
+      "sha256": "109ce4174ac73552c137a35226e4d324ae03d3c6a37df456624086e9f2cef6e8",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 174
+        }
+      ],
+      "excerptSha256": "51c8d4f54905c9a06d77ee253faadc418378a6eaa5612f34adf6a69608f9677d"
+    },
+    {
+      "file": "packages/animation/rig.ts",
+      "sha256": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 67
+        }
+      ],
+      "excerptSha256": "5542dc7d68a58034f80efda2ecc561e1d79f92e5a7c9bc9c1f9fc714188d99c6"
+    }
+  ],
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-registration-v2.png",
+      "sha256": "4f86f29063d2550f11772107d52d89fe70101da25b5b2391ca631d8d33254149"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-lila-contact-v2.png",
+      "sha256": "57b2f789834ad34679176a1ed4d6551224e55159b87e96714521c1331ce9b910"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-karo-contact-v2.png",
+      "sha256": "05e69a79aaa5df86f631c0c429b933b992435531c55ea437c7eabb070ec93d6c"
+    }
+  ],
+  "response": "{\n  \"rootCauses\": [\n    {\n      \"id\": \"endpoint-migration\",\n      \"finding\": \"The 0.20 wrist/palm separation is a legitimate, target-independent registration migration—not per-target bone shrinking.\",\n      \"source\": \"forest-hand.ts; forest-body-art.ts referenceBodyMetrics; compiler.ts arm evaluation\",\n      \"detail\": \"The old chains ended at a mitten lobe. The code subtracts the independently measured cuff-to-old-anchor distance, splits the resulting shoulder-to-cuff total 52/48, and appends a constant cuff-to-palm segment. solveChain then solves upper plus lower-to-grip, reconstructs the physical wrist along that tangent, and rotates the intact mitten about its palm. FrameState.hands correctly remains a contact anchor. The inferred elbow split is still an artistic/anatomical assumption, however.\",\n      \"numericExamplesAtBodyScale1PlanScale1\": {\n        \"lilaLeft\": {\n          \"legacyTotalSourceUnits\": 273,\n          \"removedOldAnchorSpan\": 38.21,\n          \"physicalUpperPx\": 50.68,\n          \"physicalLowerPx\": 46.79,\n          \"cuffToPalmPx\": 11.33,\n          \"maximumShoulderToPalmPx\": 108.8\n        },\n        \"lilaRight\": {\n          \"legacyTotalSourceUnits\": 240,\n          \"removedOldAnchorSpan\": 42.11,\n          \"physicalUpperPx\": 42.72,\n          \"physicalLowerPx\": 39.43,\n          \"cuffToPalmPx\": 11.28,\n          \"maximumShoulderToPalmPx\": 93.43\n        },\n        \"karoLeft\": {\n          \"legacyTotalSourceUnits\": 262,\n          \"removedOldAnchorSpan\": 40,\n          \"physicalUpperPx\": 51.27,\n          \"physicalLowerPx\": 47.33,\n          \"cuffToPalmPx\": 12,\n          \"maximumShoulderToPalmPx\": 110.6\n        },\n        \"karoRight\": {\n          \"legacyTotalSourceUnits\": 224,\n          \"removedOldAnchorSpan\": 43.74,\n          \"physicalUpperPx\": 41.63,\n          \"physicalLowerPx\": 38.43,\n          \"cuffToPalmPx\": 13.07,\n          \"maximumShoulderToPalmPx\": 93.13\n        }\n      }\n    },\n    {\n      \"id\": \"asymmetric-shoulders-and-grips\",\n      \"finding\": \"Symmetric grip presets and common pole defaults do not account for the source shoulder asymmetry or different arm lengths.\",\n      \"detail\": \"Lila's rig-right shoulder is about 24.08 px right and 7.47 px below rig-left; Karo's is 44.41 px right and 15.10 px below. The old -20 secondary-offset default crowds the hands and is incompatible with the current pair guard: its minimum span is approximately 49.29 px for Lila and 48.04 px for Karo. The workbench's -100 × bodyScale span addresses crowding, but is a calibration preset, not a general story-pose solution. Reversing direction exchanges which asymmetric arm supports or drives the shaft.\"\n    },\n    {\n      \"id\": \"branch-and-trajectory\",\n      \"finding\": \"Gesture poles still switch through a short extension detour; spear fallback polarity is selected from a world-coordinate comparison rather than explicitly authored roles.\",\n      \"source\": \"compiler.ts armPose and spearPole\",\n      \"detail\": \"armPose can straighten and return within at most 80 ms. The branch change is position-continuous near extension but can have sharp joint-angle behavior there. Extension changes the palm trajectory during entry/recovery, so the actual hand does not simply follow goal(). spearPole uses aim.x >= plan.root.x, which can change as a chasing actor crosses a target. Explicit workbench poles avoid that particular fallback but do not establish stability for arbitrary plans.\"\n    },\n    {\n      \"id\": \"reachable-is-not-convincing\",\n      \"finding\": \"Current guards reject some folded shapes, but leave important roles and silhouette failures uncovered.\",\n      \"source\": \"source-arm.ts\",\n      \"detail\": \"Flexion limits exist for point, chin, run and spear roles, but not rest, walk, lap or react. Jump responses become react; crouch remains rest unless a gesture owns the hand. A connected, full-length planar chain can still make a hook, cross the torso, hide its wrist under the other hand, or leave a visually flat shoulder-to-elbow shelf. The Karo contact close-up shows a raised rear arm with a rounded elbow but a long nearly horizontal upper-arm shelf; that needs silhouette review, not rejection merely because the elbow is high.\"\n    },\n    {\n      \"id\": \"painter-order\",\n      \"finding\": \"The previous face-contact occlusion is addressed structurally, but the foreground-slot transition is still discrete in the evaluator and continuous in the compiler.\",\n      \"source\": \"rig.ts foreground/back slots; compiler.ts face slot assignment and compilePerformance\",\n      \"detail\": \"The same hand and ink definitions are referenced above the head for think, which is the right way to expose the chin-contact mitten without moving its contact origin. However, slot opacities change exactly at gesture start/end and compilePerformance does not classify these IDs as discrete. Refinement may struggle around the discontinuity, and tweening can show both painter slots during a boundary. Promoting the entire arm also risks drawing a shoulder stroke over hair or face.\"\n    },\n    {\n      \"id\": \"bitmap-and-wrist-shape\",\n      \"finding\": \"The enlarged masks preserve more mitten silhouette, but also retain a short original arm stalk above the registered cuff.\",\n      \"detail\": \"Image 3 shows both measured cuff/palm landmarks and the stalk above each cuff. The rectangular clips start 6–7 source units above the cuffs. That overlap can hide a seam, but its rotated flat cutoff and original stalk direction can become visible against the generated ink. The new palm origin must not be mistaken for the bitmap boundary or physical wrist. Images 4–5 show contact candidates, but do not independently establish subpixel cuff alignment.\"\n    },\n    {\n      \"id\": \"front-versus-depth\",\n      \"finding\": \"A frontal planar candidate and a true authored depth pose remain different deliverables.\",\n      \"detail\": \"The source torso cannot become a profile torso by mirroring clothing. The contact screenshots retain recognizable warm faces, hair and clothing, but their registered three-quarter candidates and rigid garments are not evidence of accepted body rotation or whole-body lunge mechanics. Keeping projected ratios near one is useful for an honest frontal study; it does not supply missing depth anatomy.\"\n    }\n  ],\n  \"fixes\": [\n    {\n      \"id\": \"centralize-wrist-contract\",\n      \"files\": [\n        \"packages/animation/forest-hand.ts\",\n        \"packages/animation/compiler.ts\"\n      ],\n      \"proposal\": \"Introduce shared helpers for palm-to-cuff mapping and rigid hand orientation; use them in samplePerformance, interpolationGap and source tests.\",\n      \"typescript\": \"function cuffFromPalm(palm: Point, angleDeg: number, handScale: number, attachment: RigMetrics['handAttachment'][RigHand]): Point { return add(palm, rotate({ x: attachment.wristOffset.x * handScale, y: attachment.wristOffset.y * handScale }, angleDeg)); }\",\n      \"constraints\": [\n        \"Keep physical arm metrics and attachment.length scaled by unitScale × bodyScale; apply plan.scale once.\",\n        \"Keep wristOffset scaled by unitScale only; the hand transform supplies plan.scale × bodyScale.\",\n        \"Retain handAngle = lowerAngle + 90 - attachment.angleDeg.\",\n        \"Require transformed measured cuff to equal FrameState.wrists and the lower-bone endpoint; do not compare the lower bone to FrameState.hands.\"\n      ],\n      \"numericExample\": \"For Lila rig-left, the source cuff-to-palm vector is (-4,27), angle approximately 98.43 degrees. At bodyScale 1.2 and plan.scale 0.75, the hand segment is approximately 10.20 px, not 12.24 px; bodyScale must not be applied twice.\"\n    },\n    {\n      \"id\": \"separate-arm-projection\",\n      \"files\": [\n        \"packages/animation/compiler.ts\"\n      ],\n      \"proposal\": \"Replace the projectSourceKnee call for frontal arms with an explicit planar arm result using arm.joint, physical wrist, arm.upper, arm.lower and ratios of one. Keep any future depth-arm projection in a separately named authored-view implementation.\",\n      \"reason\": \"The supplied projectSourceKnee implementation is unavailable. If it changes the elbow or lower tangent even at weight one, the physical wrist reconstructed before projection can disagree with the bitmap cuff reconstructed from projectedArm.lower. Do not rotate the mitten to a projected tangent while leaving its physical cuff on a different tangent.\"\n    },\n    {\n      \"id\": \"author-role-poles-and-entry\",\n      \"files\": [\n        \"packages/animation/compiler.ts\",\n        \"packages/animation/schemas.ts\"\n      ],\n      \"proposal\": \"Require explicit primary/secondary poles for source two-hand spear tracks. Select them once from both shoulders, shaft direction and the intended support/drive roles during authoring; never recalculate from aim.x versus root.x.\",\n      \"trajectory\": \"Prefer a same-branch shoulder-space trajectory with authored upper-angle and flexion key poses. Use quintic easing and unwrapped angles through approach, hold and recovery. If a branch change is genuinely required, author an extension waypoint outside contact ownership and expose its clock explicitly rather than inserting an automatic 80 ms detour.\",\n      \"numericExample\": \"Start with 280–400 ms approach/recovery windows and inspect intermediate poses at 25%, 50% and 75%. These are authoring examples, not motion acceptance thresholds. Locked palm contacts remain unchanged.\"\n    },\n    {\n      \"id\": \"fit-both-grips-before-contact\",\n      \"files\": [\n        \"packages/animation/spear.ts\",\n        \"packages/topics/body-workbench.ts\",\n        \"packages/animation/schemas.ts\"\n      ],\n      \"proposal\": \"Remove the misleading -20 default or require an explicitly authored secondaryOffset. Add a preflight authoring function that evaluates both asymmetric shoulders and fixed hand segments across windup, extension, contact and recovery before committing a pose.\",\n      \"numericExample\": \"The current frontal +65, +60 primary offset and -100 span should be treated as a starting candidate. At zero lean for rightward Karo, the secondary palm is approximately 9.41 px right and 75.10 px below its own left shoulder, not simply (-35,60). Leftward Karo puts the secondary palm approximately 9.41 px left and 44.90 px below the right shoulder. The two directions therefore require distinct review.\",\n      \"constraints\": [\n        \"Keep shaft contact points exact after authoring.\",\n        \"Evaluate grip spacing using palms and flexion using physical wrists.\",\n        \"Preserve the rear-elbow-behind-own-shoulder shaft-axis check; allow a raised rear elbow.\",\n        \"Check shaft crossing angle through each mitten and available solid-palm coverage, not just anchor coincidence.\",\n        \"Complete secondary shaft-bound validation with the same exclusion from the stone point used for the primary grip.\"\n      ]\n    },\n    {\n      \"id\": \"extend-shape-guards\",\n      \"files\": [\n        \"packages/animation/source-arm.ts\",\n        \"packages/animation/compiler.ts\"\n      ],\n      \"proposal\": \"Add explicit airborne, crouch and holding roles instead of routing them through rest/react. Define reviewable limits for every role and add silhouette diagnostics.\",\n      \"typescript\": \"type ArmShapeIssue = 'excess-flexion' | 'torso-crossing' | 'hand-crowding' | 'cuff-gap' | 'shaft-palm-coverage' | 'unsupported-depth';\",\n      \"constraints\": [\n        \"Retain current fixed-length checks and existing 110/145/120/125/135-degree limits unless intentionally re-authored and reviewed.\",\n        \"Add torso/hair intersection checks with explicit allowed occlusion regions for chin and lap contact.\",\n        \"Check separation of non-contacting hands and crossings of the two arm strokes.\",\n        \"Apply projected-collapse rejection only with correctly registered depth geometry; never shorten bones to make a planar fold look better.\",\n        \"Reject a pose with an actionable needs-arm-pose diagnostic rather than moving locked contacts or widening tolerances.\"\n      ]\n    },\n    {\n      \"id\": \"preserve-soft-ink\",\n      \"files\": [\n        \"packages/animation/ink-limb.js\",\n        \"packages/animation/rig.ts\"\n      ],\n      \"proposal\": \"Retain rounded caps/joins and the two-cubic ink approach, but explicitly constrain the wrist-end cubic tangent to the physical forearm/cuff direction. Bound handle excursions in severe flexion and reject loops or cusps.\",\n      \"detail\": \"Softness 0.28 and round joins do not alone guarantee a soft, plausible silhouette. Do not replace the strokes with straight zigzag bones. Keep bone validation separate from visible cubic arc length; smoothing must not disguise a rejected joint configuration.\"\n    },\n    {\n      \"id\": \"fix-painter-boundaries\",\n      \"files\": [\n        \"packages/animation/compiler.ts\",\n        \"packages/animation/rig.ts\"\n      ],\n      \"proposal\": \"Treat hand-*-front-slot, hand-*-back-slot and matching ink slot changes as discrete timeline sets. Exclude their discontinuities from continuous face interpolation refinement and include exact boundary samples.\",\n      \"detail\": \"Keep exactly one physical definition and one visible painter slot per arm/hand. If whole-arm promotion crosses hair, use an authored occlusion mask or split the visible stroke into registered near/far portions without altering the physical chain. Do not add an offset foreground clone.\"\n    },\n    {\n      \"id\": \"trim-overlap-and-rebuild-evidence\",\n      \"files\": [\n        \"packages/animation/forest-hand.ts\",\n        \"packages/animation/forest-body-art.ts\"\n      ],\n      \"proposal\": \"Replace broad rectangular hand clips with silhouette-aware masks that retain the mitten and a controlled cuff overlap, excluding neighboring garment pixels. Inspect the overlap at rotated contacts and at source rest.\",\n      \"detail\": \"Keep the PNG unchanged. Document that source.width/source.height are virtual SVG canvases, not native high-resolution PNG dimensions. Ensure registration fingerprints invalidate old profiles, plans and rendered evidence; do not reuse 0.19 expectations.\"\n    }\n  ],\n  \"checks\": {\n    \"basis\": \"Source inspection and the five attached static images only; no runtime tests were performed.\",\n    \"updatedSourceAssertions\": [\n      \"Assert each migrated physical total equals legacyTotal minus the independently measured old-anchor span, before any target is evaluated.\",\n      \"Assert physical upper/lower distances remain constant and cuff-to-palm distance equals attachment.length × plan.scale.\",\n      \"Assert hand transform origins equal palms, not wrists.\",\n      \"Assert interpolationGap maps the interpolated palm through the rotated wristOffset before comparing it with the lower-bone endpoint. The supplied mapping is scale-consistent for uniform hand scale.\",\n      \"Add a separate interpolation contact check against the shared spear frame; bone connectivity alone does not bound interpolated palm-to-shaft or tip-to-target error.\",\n      \"Keep the existing 0.20 px interpolation-gap limit, 0.01 px spear reach check and existing ordinary-contact tolerances unchanged.\"\n    ],\n    \"poseCoverage\": {\n      \"rest\": \"Inspect both asymmetric chains, cuff seams and mitten rotations against images 1–2; the migrated rest targets are palms, not the former lobes.\",\n      \"point\": \"Inspect each hand independently, including entry/recovery and the inactive hand. The workbench target uses 75% of the wrist-chain total; confirm its resulting palm trajectory and flexion rather than assuming the percentage is anatomically correct.\",\n      \"think\": \"Inspect both chin registrations and visible foreground contact. Lila currently assigns both hands the same source chin point (335,230); independently review the cross-body rig-left reach rather than assuming bilateral contact symmetry.\",\n      \"walk\": \"Inspect opposite arm swing, same-branch continuity, cuffs and recovery in both travel directions.\",\n      \"run\": \"Inspect both authored angular chains and transitions back to rest. Keeping a running elbow low is a clip-specific design, not a universal anatomy rule.\",\n      \"jump\": \"Inspect both react trajectories through preparation, takeoff, apex, landing and recovery; add airborne-specific shape guards.\",\n      \"crouch\": \"Inspect both shoulder-relative resting palms and thigh/garment clearance as the pelvis drops.\",\n      \"seated\": \"Inspect both lap palms through sit/stand transfer; current lap targets inherit asymmetric leg geometry and have no explicit lap flexion limit.\",\n      \"holdingAimingThrusting\": \"Inspect both role poles, palm spacing, cuff alignment, shaft occlusion and severe flexion at every authored phase, including both directions.\",\n      \"chasingWithSpear\": \"Inspect both spear-owned arms while shoulders lean and translate. The spear overrides run-arm swing; preserve ownership and stable poles, but review this as a distinct carried-tool acting pose.\"\n    },\n    \"staticFrameFindings\": [\n      \"Image 3 supports distinct measured cuff/palm landmarks and visibly shows why clip overlap needs attention.\",\n      \"Images 4–5 show 0.20 contact candidates, not the original defective hunt-aim/think sequence or continuous entry/recovery.\",\n      \"The Karo close-up retains a raised rear elbow and soft stroke, but its shoulder shelf, rigid wrist/mitten grasp and whole-body support still need artistic review.\",\n      \"A blocked unsupported head view is an intentional limitation, not a failed substitute pose or evidence that other poses are visually accepted.\"\n    ]\n  },\n  \"limitations\": [\n    \"The attached imageOrder contains source identities, wrist registration and contact candidates. The reported bad hunt-aim/think frames and separate user spear reference are not present among these five attachments, so their exact silhouettes cannot be compared here.\",\n    \"Implementations for ink-limb, projectSourceKnee, body-view registration, lunge and the regression tests were not supplied. Their behavior cannot be certified from their call sites.\",\n    \"The unchanged cutout PNG preserves its own pixels, but that is not proof of exact identity to the original reference artwork. Preserve the warm Lila/Karo faces, hair, clothing, black stick limbs and mitten silhouettes while reviewing extraction and masks.\",\n    \"A useful temporary frontal spear pose should remain explicitly frontal and planar. True authored body/head views require identity-reviewed art, registered depth, correct near/far occlusion and clothing behavior; flipping the costume is not a replacement.\",\n    \"The three-quarter lunge screenshots are static candidates. A convincing whole-body strike additionally needs reviewed foot support, weight transfer, pelvis/chest action, shoulder drive, garment response and recovery.\",\n    \"Rigid forearm-aligned mittens solve cuff connectivity but not articulated grasp or nonzero wrist flexion. Those require additional authored hand registration or artwork, not arbitrary shaft-driven rotations.\",\n    \"Characters should act toward story partners, objects and goals. Workbench presets and address-viewer schema options must not become automatic presenter behavior in arbitrary sourced stories.\",\n    \"No pose certification, runtime pass, video pass or continuous-motion acceptance is claimed.\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 52626,
+    "outputTokens": 4363
+  },
+  "scope": "static-source-and-art-advice-only",
+  "productionAcceptance": false,
+  "createdAt": "2026-10-07T08:26:51.141Z"
+}

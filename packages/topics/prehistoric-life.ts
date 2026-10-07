@@ -5,7 +5,7 @@ import type { Storyboard } from '../core/schemas.js';
 import {FOREST_HEAD_VIEWS,referenceHeadDescription} from '../animation/forest-head-art.js';
 import {referenceBodyDescription,referenceBodyMetrics} from '../animation/forest-body-art.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.19-view-registration-and-lunge-candidate';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.20-wrist-palm-registration-candidate';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

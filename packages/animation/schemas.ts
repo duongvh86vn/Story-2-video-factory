@@ -44,7 +44,7 @@ export const GestureSchema = z.object({ ...Interval, id: Id,
 }).strict();
 export const SpearTrackSchema=z.object({...Interval,id:Id,propId:Id,hand:RigHandSchema,
   action:z.enum(['hold','thrust']),grip:PointSchema,aim:PointSchema,
-  twoHands:z.boolean().default(true),secondaryOffset:z.number().finite().min(-200).max(-10).default(-20),
+  twoHands:z.boolean().default(true),secondaryOffset:z.number().finite().min(-200).max(-10),
   elbowPoles:z.object({primary:z.union([z.literal(-1),z.literal(1)]),secondary:z.union([z.literal(-1),z.literal(1)])}).strict().optional(),
   readyMs:Time.optional(),contactMs:Time.optional(),recoverMs:Time.optional()}).strict();
 export const LungeSchema=z.object({version:z.literal('forest-planted-lunge-1'),spearId:Id,

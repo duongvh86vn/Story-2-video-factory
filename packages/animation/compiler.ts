@@ -186,6 +186,8 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
     if(track.startMs!==0||track.endMs!==plan.durationMs||spearTracks.filter(c=>c.propId===track.propId).length!==1)throw new Error(track.id+': one spear track must retain ownership through the entire shot');
     if(prop.destination||Math.abs(prop.gripOffset?.y??0)>1e-6||Math.abs(prop.gripOffset?.x??0)>(prop.length??120)/2-22)throw new Error(track.id+': grip must lie on the wooden shaft, away from the stone point');
     if((prop.gripOffset?.x??0)+track.secondaryOffset<-(prop.length??120)/2+5)throw new Error(track.id+': second hand lies beyond the shaft butt');
+    if(track.twoHands&&(prop.gripOffset?.x??0)+track.secondaryOffset>(prop.length??120)/2-22)throw new Error(track.id+': second hand must remain on wood away from the stone point');
+    if(usesReferenceBody(profile)&&!track.elbowPoles)throw new Error(track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
     const owns=(side:RigHand)=>side===track.hand||track.twoHands;
     if(plan.gestures.some(g=>owns(rigHand(g))))throw new Error(track.id+': spear-owned hand cannot also own a gesture');
     if(spearTracks.some(other=>other!==track&&(owns(other.hand)||other.twoHands)))throw new Error(track.id+': overlapping spear hand ownership');
@@ -248,6 +250,8 @@ export interface FrameState {
   armProjection?:Partial<Record<RigHand,{elbowDepth:number;upperRatio:number;lowerRatio:number}>>;
   armGeometry?:Partial<Record<RigHand,ReturnType<typeof sourceArmShape>>>;
   spearGeometry?:Record<string,ReturnType<typeof sourceSpearPairShape>>;
+  /** Physical lower-arm endpoints. hands retain palm/grip contact semantics. */
+  wrists?:Record<RigHand,Point>;
   hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
   transforms:Record<string,string>; paths?:Record<string,string>; face:Record<string,{opacity?:number;scaleX?:number;scaleY?:number;rotation?:number;x?:number;y?:number;attr?:{transform:string}}>;
   props:Record<string,{point:Point;attached:boolean;angle?:number;tip?:Point;phase?:string}>;
@@ -544,6 +548,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(usesBodyView(profile)&&activity.intervals.length)throw new Error('needs-view-voice-animation: authored-view speech overlays are not registered');
   const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t);
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
+  const wrists=m.handAttachment?{} as Record<RigHand,Point>:undefined;
   const paths:Record<string,string>={},drawn=!!profile.appearance.characterVariant;
   const legProjection=usesReferenceBody(profile)?{} as NonNullable<FrameState['legProjection']>:undefined;
   const armProjection={} as NonNullable<FrameState['armProjection']>;
@@ -606,6 +611,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const shoulder=toWorld(sourceShoulder?.x??(i?1:-1)*m.shoulderOffset,sourceShoulder?.y??m.shoulderY-m.pelvisY);
     const swing=walk.running&&sourceRun?0:Math.sin(walk.phase*Math.PI)*(i?-1:1)*walk.armSwing*walk.activation;
     const rest=m.armRest?.[side],lengths=m.arms?.[side]??{upper:m.upperArm,lower:m.lowerArm};
+    const handAttachment=m.handAttachment?.[side],handLength=(handAttachment?.length??0)*s,lowerToGrip=lengths.lower*s+handLength;
     let neutral=add(shoulder,rotate({x:(rest?.x??(i?12:-12))*s,y:(rest?.y??(m.upperArm+m.lowerArm-8))*s},swing+(usesReferenceBody(profile)?lean:0)));
     let authoredRun:Chain|undefined;
     if(sourceRun&&walk.running){
@@ -615,10 +621,10 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       // in torso coordinates; the recovery wrist passes low beside the hip.
       const drive=Math.sin(walk.phase*Math.PI)*(i?-1:1),upperAngle=90-walk.direction*35*drive;
       const lowerAngle=upperAngle-walk.direction*(60+15*drive);
-      const restChain=solveChain({x:0,y:0},{x:rest!.x*s,y:rest!.y*s},lengths.upper*s,lengths.lower*s,i?1:-1);
+      const restChain=solveChain({x:0,y:0},{x:rest!.x*s,y:rest!.y*s},lengths.upper*s,lowerToGrip,i?1:-1);
       const blendAngle=(from:number,to:number)=>from+(((to-from+180)%360+360)%360-180)*walk.activation;
       const ua=blendAngle(restChain.upper+90,upperAngle)+lean,la=blendAngle(restChain.lower+90,lowerAngle)+lean;
-      const joint=add(shoulder,rotate({x:lengths.upper*s,y:0},ua)),end=add(joint,rotate({x:lengths.lower*s,y:0},la));
+      const joint=add(shoulder,rotate({x:lengths.upper*s,y:0},ua)),end=add(joint,rotate({x:lowerToGrip,y:0},la));
       authoredRun={joint,end,upper:ua-90,lower:la-90,reachable:true,error:0};neutral=end;
     }
     if(usesReferenceBody(profile)){
@@ -638,29 +644,37 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     // a pole flag cannot by itself repair crowding or invent a profile body.
     const sourceGesture=usesReferenceBody(profile)&&gesture?.action==='think'&&!gesture.elbowPole?{...gesture,elbowPole:'rest' as const}:gesture;
     const spearPole=spear?.track.elbowPoles?.[side===spear?.track.hand?'primary':'secondary']??(spear&&spear.track.aim.x>=plan.root.x?-1:1);
-    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lengths.lower*s,spearPole):authoredRun&&!gesture?authoredRun:armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lengths.lower*s,side,
+    if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
+    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
+    // Grip is a rigid continuation of the forearm, not a bone endpoint or a
+    // second independently solved contact. This preserves the existing palm
+    // contract while making ink/bones stop at the measured source cuff.
+    const wrist=handAttachment?mix(arm.joint,arm.end,lengths.lower*s/lowerToGrip):arm.end;
     if(spear&&arm.error>.01)throw new Error(`${spear.track.id}: ${side} hand cannot reach spear grip at ${t}ms (${arm.error.toFixed(2)}px)`);
     if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
     // Frontal candidates use the full planar arm, with no knee-style depth
     // shortening to disguise a folded elbow. Authored depth/profile arms are
     // still pending; the shape guard rejects an unconvincing reachable chain.
-    const projectedArm=(spear&&usesReferenceBody(profile)||authoredRun)?projectSourceKnee(shoulder,arm.end,arm.joint,lengths.upper*s,lengths.lower*s,1):undefined;
+    const projectedArm=(spear&&usesReferenceBody(profile)||authoredRun)?{
+      joint:arm.joint,depth:0,upperRatio:1,lowerRatio:1,upper:arm.upper,lower:arm.lower,
+    }:undefined;
     if(projectedArm){
       transforms[`arm-${side}-upper`]=`translate(${number(shoulder.x)} ${number(shoulder.y)}) rotate(${number(projectedArm.upper)}) scale(${number(s)} ${number(s*projectedArm.upperRatio)})`;
       transforms[`arm-${side}-lower`]=`translate(${number(projectedArm.joint.x)} ${number(projectedArm.joint.y)}) rotate(${number(projectedArm.lower)}) scale(${number(s)} ${number(s*projectedArm.lowerRatio)})`;
       armProjection[side]={elbowDepth:projectedArm.depth,upperRatio:projectedArm.upperRatio,lowerRatio:projectedArm.lowerRatio};
     }else{transforms[`arm-${side}-upper`]=transform(shoulder,arm.upper,s);transforms[`arm-${side}-lower`]=transform(arm.joint,arm.lower,s);}
-    if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,projectedArm?.joint??arm.joint,arm.end,usesReferenceBody(profile)?.28:.17);
+    if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,projectedArm?.joint??arm.joint,wrist,usesReferenceBody(profile)?.28:.17);
     const forearmAngle=m.handRestRotation?(projectedArm?.lower??arm.lower)-m.handRestRotation[side]:0;
-    const handAngle=spear&&usesReferenceBody(profile)?spear.state.angle+(side==='left'?90:-90):forearmAngle;
+    const handAngle=handAttachment?(projectedArm?.lower??arm.lower)+90-handAttachment.angleDeg:forearmAngle;
     transforms[`hand-${side}`]=transform(arm.end,handAngle,s*(usesReferenceBody(profile)?profile.appearance.bodyScale:1));hands[side]=arm.end;
+    if(wrists)wrists[side]=wrist;
     if(usesReferenceBody(profile)){
       const seatedWeight=Object.values(bodyPosture.seatWeights??{}).reduce((sum,w)=>sum+w,0);
       const role:SourceArmRole=spear?(side===spear.track.hand?'spear-front':'spear-rear'):gesture?.action==='think'?'chin':gesture?.action==='point'?'point':gesture?'react':walk.running?'run':seatedWeight>.01?'lap':walk.activation>.01?'walk':'rest';
-      armGeometry[side]=sourceArmShape(role,shoulder,projectedArm?.joint??arm.joint,arm.end,lengths.upper*s,lengths.lower*s,projectedArm?.depth??0);
+      armGeometry[side]=sourceArmShape(role,shoulder,projectedArm?.joint??arm.joint,wrist,lengths.upper*s,lengths.lower*s,projectedArm?.depth??0);
       if(spear){
-        (spearArms[spear.track.id]??={})[side]={shoulder,elbow:projectedArm?.joint??arm.joint,wrist:arm.end,upper:lengths.upper*s,lower:lengths.lower*s};
+        (spearArms[spear.track.id]??={})[side]={shoulder,elbow:projectedArm?.joint??arm.joint,wrist,grip:arm.end,upper:lengths.upper*s,lower:lengths.lower*s};
       }
     }
   }
@@ -783,7 +797,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
   const seatOffset=m.seatContactOffset?rotate({x:-bend*m.seatContactOffset.x*s,y:m.seatContactOffset.y*s},lean):{x:0,y:0};
-  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),...(Object.keys(armProjection).length?{armProjection}:{}),...(Object.keys(armGeometry).length?{armGeometry}:{}),...(Object.keys(spearGeometry).length?{spearGeometry}:{}),hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
+  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),...(Object.keys(armProjection).length?{armProjection}:{}),...(Object.keys(armGeometry).length?{armGeometry}:{}),...(Object.keys(spearGeometry).length?{spearGeometry}:{}),hands,...(wrists?{wrists}:{}),transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
@@ -797,7 +811,7 @@ function unwrapFrame(frame:FrameState,previous:FrameState):FrameState {
   }
   return {...frame,transforms};
 }
-function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile):number {
+function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile,plan:PerformancePlan):number {
   const m=rigMetrics(profile);let gap=0;
   for(const progress of [.17,.5,.83]){
     const at=(id:string)=>{const x=transformNumbers(a.transforms[id]!),y=transformNumbers(b.transforms[id]!);return x.map((n,i)=>lerp(n,y[i]!,progress));};
@@ -808,9 +822,26 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile):number 
         const upper=at(`${part}-${side}-upper`),lower=at(`${part}-${side}-lower`),tip=at(`${part==='arm'?'hand':'foot'}-${side}`);
         const armLengths=m.arms?.[side]??{upper:m.upperArm,lower:m.lowerArm};
         const legLengths=m.legs?.[side]??{upper:m.upperLeg,lower:m.lowerLeg};
-        const tipPoint=part==='leg'&&m.footSoleOffset?{x:tip[0]!,y:tip[1]!-m.footSoleOffset[side]*tip[3]!}:origin(tip);
+        const attachment=part==='arm'?m.handAttachment?.[side]:undefined;
+        const offset=attachment?rotate({x:attachment.wristOffset.x*tip[3]!,y:attachment.wristOffset.y*tip[3]!},tip[2]!):undefined;
+        const tipPoint=offset?add(origin(tip),offset):part==='leg'&&m.footSoleOffset?{x:tip[0]!,y:tip[1]!-m.footSoleOffset[side]*tip[3]!}:origin(tip);
         gap=Math.max(gap,distance(end(upper,part==='arm'?armLengths.upper:legLengths.upper),origin(lower)),
           distance(end(lower,part==='arm'?armLengths.lower:legLengths.lower),tipPoint));
+      }
+    }
+    // Palm origins and the shaft frame are tweened separately. Connected bones
+    // alone cannot bound grip slip during a changing shaft angle. Reconstruct
+    // the actual interpolated wood contact and refine using the same gap limit.
+    for(const track of plan.spears??[]){
+      const prop=plan.props.find(p=>p.id===track.propId)!,tool=at(`prop-${prop.id}`),center=origin(tool);
+      for(const side of ['left','right'] as const)if(side===track.hand||track.twoHands){
+        const localX=(prop.gripOffset?.x??0)+(side===track.hand?0:track.secondaryOffset);
+        const grip=add(center,rotate({x:localX*tool[3]!,y:0},tool[2]!));
+        gap=Math.max(gap,distance(grip,origin(at(`hand-${side}`))));
+      }
+      if(a.props[prop.id]!.phase==='contact'&&b.props[prop.id]!.phase==='contact'){
+        const tip=add(center,rotate({x:(prop.length??120)/2*tool[3]!,y:0},tool[2]!));
+        gap=Math.max(gap,distance(tip,track.aim));
       }
     }
     const neck=at('neck'),head=at('head'),bottom=(usesCutoutHead(profile)?0:usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*head[3]!;
@@ -819,6 +850,10 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile):number 
   }
   return gap;
 }
+
+// Painter ownership changes at authored gesture boundaries, not as a fade
+// between duplicate appearances of the same physical arm or hand.
+const isPainterSlot=(id:string)=>/^(?:hand|ink-arm)-(?:left|right)-(?:front|back)-slot$/.test(id);
 
 export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,namespace='') {
   validatePerformance(plan,profile);
@@ -863,7 +898,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
         // Audio activity is intentionally stepped at its own explicit boundaries.
-        if(id==='mouth-talk')continue;
+        if(id==='mouth-talk'||isPainterSlot(id))continue;
         // Authored-view swaps and voice-gated mouth selection are discrete. Eye
         // and brow interpolation is still checked against the pure evaluator.
         if(usesReferenceHead(profile)&&(id.startsWith('head-view-')||id.startsWith('mouth-')))continue;
@@ -878,7 +913,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     return error;
   };
   const refine=(a:FrameState,raw:FrameState,depth=0):FrameState[]=>{
-    const b=unwrapFrame(raw,a),gap=interpolationGap(a,b,profile),face=precise?faceError(a,b):0;
+    const b=unwrapFrame(raw,a),gap=interpolationGap(a,b,profile,plan),face=precise?faceError(a,b):0;
     let curveError=0;
     if(a.paths)for(const progress of [.17,.5,.83]){
       const actual=samplePerformance(plan,profile,lerp(a.timeMs,b.timeMs,progress),activity);
@@ -903,7 +938,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const [id,value] of Object.entries(f.face))if(!i||JSON.stringify(value)!==JSON.stringify(frames[i-1]!.face[id])){
       if(!usesReferenceHead(profile)){calls.push(`tl.${method}(${selector(id)},${JSON.stringify({...value,...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);continue;}
       const voiceChange=i&&Object.keys(f.face).some(key=>key.startsWith('mouth-talk-')&&f.face[key]!.opacity!==frames[i-1]!.face[key]!.opacity);
-      const discrete=id.startsWith('head-view-')||id.startsWith('mouth-talk-')||id.startsWith('mouth-')&&voiceChange;
+      const discrete=isPainterSlot(id)||id.startsWith('head-view-')||id.startsWith('mouth-talk-')||id.startsWith('mouth-')&&voiceChange;
       const attrs={...value.attr,...(value.x!==undefined||value.y!==undefined||value.rotation!==undefined||value.scaleX!==undefined||value.scaleY!==undefined?
         {transform:`translate(${number(value.x??0)} ${number(value.y??0)}) rotate(${number(value.rotation??0)}) scale(${number(value.scaleX??1)} ${number(value.scaleY??1)})`}:{})};
       // SVG matrices are local to the fixed feature anchor. GSAP's CSS transform
@@ -915,7 +950,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===HUNT_ANIMATION_VERSION?HUNT_ANIMATION_VERSION:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
-    maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),
+    maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile,plan))),interpolationGapLimitPx:.2,interpolationIncludes:['bones/cuff','spear palms/shared shaft','tip during contact hold'],selectedClips:selectedClips(plan),
     ...(plan.supports?.length?{seatSupports:plan.supports,maxSeatContactErrorPx:Math.max(0,...frames.flatMap(f=>f.seatContact?[f.seatContact.errorPx]:[]))}:{}),
     ...(usesReferenceHead(profile)?{headArtwork:{version:referenceHeadDescription().version,fingerprint:referenceHeadDescription().fingerprint,
       availableViews:usesBodyView(profile)?[registeredBodyView(profile).view]:usesCutoutHead(profile)?['source-orientation']:referenceHeadDescription().views,turnRendering:usesBodyView(profile)?'fixed-authored-body-view-candidate':usesCutoutHead(profile)?'registered-cutout-source-orientation':'stepped-authored-views-with-front',fullBodyReplacement:usesReferenceBody(profile),productionAcceptance:false}}:{}),

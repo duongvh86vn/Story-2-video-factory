@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.19-view-registration-and-lunge-candidate",
+  "version": "forest-tribe-0.20-wrist-palm-registration-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -961,9 +961,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-15",
-    "rendererVersion": "forest-source-body-svg-10",
-    "fingerprint": "5abfee47945abc136f877906c16471d003839dce6feac7ff4b474b0296827403",
+    "compilerVersion": "forest-source-body-motion-16",
+    "rendererVersion": "forest-source-body-svg-11",
+    "fingerprint": "b1abb567cc0ab72e93790853c0e00a4e494da48093286850676c23de03d5b975",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -1235,6 +1235,65 @@
           }
         }
       }
+    },
+    "handRegistration": {
+      "version": "forest-wrist-palm-1",
+      "landmarks": {
+        "lila": {
+          "left": {
+            "wrist": {
+              "x": 117,
+              "y": 474
+            },
+            "grip": {
+              "x": 113,
+              "y": 501
+            },
+            "clip": "M82 468H141V548H82Z"
+          },
+          "right": {
+            "wrist": {
+              "x": 373,
+              "y": 474
+            },
+            "grip": {
+              "x": 376,
+              "y": 501
+            },
+            "clip": "M344 467H409V549H344Z"
+          }
+        },
+        "karo": {
+          "left": {
+            "wrist": {
+              "x": 77,
+              "y": 453
+            },
+            "grip": {
+              "x": 76,
+              "y": 480
+            },
+            "clip": "M49 447H105V522H49Z"
+          },
+          "right": {
+            "wrist": {
+              "x": 335,
+              "y": 450
+            },
+            "grip": {
+              "x": 340,
+              "y": 479
+            },
+            "clip": "M314 444H375V522H314Z"
+          }
+        }
+      },
+      "coordinates": "virtual source SVG canvas: Lila 430x766, Karo 377x716; cuff/palm candidates measured against immutable high-resolution cutouts",
+      "contract": "FrameState.hands and hand-* transform origins remain palm/grip contacts; FrameState.wrists is the actual lower-arm endpoint. Hidden upper/lower bones and visible ink end at wrist, not palm.",
+      "migration": "subtract old cuff-to-old-hand-anchor span from old shoulder-to-hand total, then infer upper/lower 52/48; append measured cuff-to-palm segment. Changes source profiles/renderer fingerprints; do not reuse 0.19 evidence or cached plans.",
+      "rotation": "one rigid source mitten follows the forearm tangent; no shaft +/-90deg hand kink, no independent palm translation",
+      "grasp": "solid source mitten occludes owned shaft at registered palm; articulated thumb/fingers and nonzero wrist flexion remain pending",
+      "productionReady": false
     },
     "garmentLayers": {
       "lila": {
@@ -1541,7 +1600,7 @@
         "productionReady": false
       },
       "arms": {
-        "version": "forest-arm-role-shape-2",
+        "version": "forest-arm-role-shape-3",
         "limits": {
           "point": 110,
           "chin": 145,
@@ -1549,6 +1608,7 @@
           "spear-front": 125,
           "spear-rear": 135
         },
+        "handEndpoints": "physical upper/lower chain ends at registered cuff; grip span uses distinct palm points; hand transform is rigid with the forearm tangent",
         "shapes": "fixed XYZ lengths; reject excessive role-specific flexion and projected segments below 0.7 of the original; smooth C1 ink is not anatomy acceptance",
         "roles": "active clip and current posture only; future run/seat must not change idle arms",
         "layer": "chin-contact ink and mitten share explicit foreground slots, each with one physical definition; inactive arms/hands keep normal layers",
@@ -1588,7 +1648,7 @@
     },
     "inferredAnatomy": {
       "knees": "not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved",
-      "elbows": "not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; frontal spear/run use full planar lengths with role-specific flexion guards; authored depth arms remain pending",
+      "elbows": "not visible in source; upper/forearm ratio 52/48 inferred after independent cuff/palm registration migration; new physical wrist chains and cuff-to-grip segments remain constant in every pose; frontal spear/run use full planar lengths with role-specific flexion guards; authored depth arms remain pending",
       "seat": "closed hip contact below/behind belt, not the pelvis anchor itself"
     },
     "headAttachment": {
@@ -1881,17 +1941,18 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "018d02fe0a513703751c975426a7cad58631d87f7cd0bf956d27f6424502a37f",
+    "codeHash": "90e6128e7e466cb4a1d4aa89259535994fab605de0edb4af45892bac24692e62",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
-    "armShapeCodeHash": "73318e3d89b87185c989c6c2e580196c3b6539d305c41bd318a45f272df40dd3",
-    "compilerCodeHash": "8c8214c3fa5ea07af1366225d1197bba66cf79842eb510b00116b41e7ec7dd66",
-    "rigCodeHash": "1587400a30ee59a9698657170f71881f674624289b2e1335f3c1b0dd2a4046ec",
+    "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
+    "compilerCodeHash": "89439ef357d8d785d0b111fc17860d4b113454676a3cddde51cd8c3d9f91708c",
+    "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
     "cameraCodeHash": "999d4649ae717202c21d27b3f000e4ace6f6b81e9f08a707bbee2853681a34b7",
     "viewCodeHash": "7c909df374eaf2db2b37f4af80b8fc5b64681b9efd7f10471d091537405ce552",
     "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
-    "lungeCodeHash": "3d54c801e6a7143b61eb660e7670ab9c5ecd84d575cd852e6db4b8ba0f2afe24"
+    "lungeCodeHash": "3d54c801e6a7143b61eb660e7670ab9c5ecd84d575cd852e6db4b8ba0f2afe24",
+    "handCodeHash": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1"
   },
   "poseArtwork": {
     "scope": "static-artwork-only",
@@ -2468,7 +2529,7 @@
     ]
   },
   "actionPoseInspection": {
-    "file": "docs/topics/reviews/source-view-lunge-self-inspection-v1.json",
+    "file": "docs/topics/reviews/source-wrist-self-inspection-v1.json",
     "scope": "developer-static-pose-inspection-only",
     "pass": null,
     "productionAcceptance": false,
@@ -2476,9 +2537,9 @@
       "file": "docs/topics/reviews/source-spear-pose-self-inspection-v2.json",
       "reason": "User rejected other arms and face distortion after 0.15. Earlier snapshots and AI artwork remain studies, not acceptance."
     },
-    "currentRepair": "0.19 registers two right 3/4 engineering candidates with source bones and near/far arm layers. A fixed entry-owned planted lunge shares spear clocks, with 170 actor-scaled grip span and intact happy face; new garment contour preserves ink. Five static clock poses for both actors are developer inspection only. Wrist/palm/grasp, readable joints, cloth/hair motion, other views, stance preparation and story integration remain pending. The 138-card audit belongs to historical 0.18, not current-motion acceptance.",
+    "currentRepair": "0.20 registers separate source cuff/palm candidates, migrates fixed arm endpoints independently of targets, keeps palm contact semantics and rotates immutable mittens by the forearm tangent. Developer frontal presets have reach reserve after migration; source poles/shaft offsets are explicit, think painter slots are discrete, interpolation checks cuffs and spear contacts. Static DOM inspection covers 144 actor-clock cards: 138 SVG, six unsupported head-turns. Real grasp, readable joint silhouettes, cloth/hair motion, other views, stance preparation and story integration remain pending; no motion/video acceptance.",
     "sourceAdvice": {
-      "completedCalls": 8,
+      "completedCalls": 9,
       "scope": "static-source-and-art-advice-only",
       "reports": [
         "docs/topics/reviews/gemini-arm-source-advice-v1.json",
@@ -2488,9 +2549,10 @@
         "docs/topics/reviews/gemini-spear-pair-advice-v1.json",
         "docs/topics/reviews/coder-spear-pair-advice-v1.json",
         "docs/topics/reviews/gemini-view-lunge-advice-v1.json",
-        "docs/topics/reviews/coder-view-lunge-advice-v1.json"
+        "docs/topics/reviews/coder-view-lunge-advice-v1.json",
+        "docs/topics/reviews/coder-wrist-palm-advice-v1.json"
       ],
-      "assessment": "docs/topics/VIEW-LUNGE-IMPLEMENTATION.md",
+      "assessment": "docs/topics/WRIST-PALM-IMPLEMENTATION.md",
       "pass": null,
       "productionAcceptance": false
     },

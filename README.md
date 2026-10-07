@@ -1,6 +1,6 @@
 # Story-to-Video Factory — diễn viên trong câu chuyện
 
-Chủ đề tiền sử 0.19: đã đăng ký ứng viên 3/4 phải và phối hợp thân/chân/giáo thành lunge trên evaluator chung. Mask mới giữ viền áo, xương/sole/clock giữ nguyên; wrist–palm/grasp, joint silhouette, cloth/secondary motion và runtime vẫn thiếu. Hai lượt review ảnh thật qua 9router không chứng nhận anatomy/video. `productionReady=false`; ba input vẫn giữ contract, chưa nghiệm thu sản phẩm. [Chi tiết và lệnh chạy](docs/topics/VIEW-LUNGE-IMPLEMENTATION.md).
+Chủ đề tiền sử 0.20: tách cuff/cổ tay khỏi palm/grip, migrate chain theo landmark nguồn, giữ contact và nối mitten theo cẳng tay. Sửa preset frontal hết reach, khai báo pole/offset rõ và painter slot discrete; bổ sung kiểm shaft khi nội suy. DOM tĩnh có 144 ô: 138 SVG, sáu head-turn bị chặn. Không chứng minh video mượt; grasp, pose/secondary motion và runtime còn thiếu. `productionReady=false`. [Source, evidence và lệnh server/test](docs/topics/WRIST-PALM-IMPLEMENTATION.md).
 
 > Contract hiện hành ngày 04/10/2026: [STORY-ACTOR-DIRECTION.md](STORY-ACTOR-DIRECTION.md). Người que là diễn viên đóng vai trong câu chuyện; bỏ yêu cầu một người dẫn cố định, quota xuất hiện và kích thước bắt buộc. Nhánh chủ đề/câu chuyện tạo kịch bản trước ba luồng nguyên văn. Director2.2.31/animation2.2.14 đang nghiệm thu; evidence presenter cũ không chứng minh chế độ mới đạt.
 
@@ -10,7 +10,7 @@ Studio có tab **Chủ đề / Câu chuyện**, model viết kịch bản, nút 
 
 **Director2.2.31/animation2.2.14 đang nghiệm thu.** Dự án mới mặc định trống, story-cinematic, character_mode=actors và người que. Ví dụ máy hơi nước là lựa chọn riêng, không chọn sẵn. Dự án cũ giữ chế độ tương thích; chuyển sang actors cần replan hình. Đọc [đặc tả diễn viên](STORY-ACTOR-DIRECTION.md), [kế hoạch](V2-IMPLEMENTATION-PLAN.md) và [trạng thái](IMPLEMENTATION-STATUS.md). Build và QC không chứng minh chất lượng video.
 
-[STORY-TO-VIDEO-FACTORY.md](STORY-TO-VIDEO-FACTORY.md) là bản đặc tả hợp nhất đã đồng bộ với file Downloads, dùng mô hình diễn viên trong câu chuyện. Bản này giữ toàn bộ contract narration, diễn viên và TTS bên ngoài; [audit hoàn thành](docs/validation/2026-10-03-completion-audit.md) liệt kê riêng bằng chứng đã có và yêu cầu còn mở.
+[STORY-TO-VIDEO-FACTORY.md](STORY-TO-VIDEO-FACTORY.md) là bản đặc tả hợp nhất hiện hành trong worktree, dùng mô hình diễn viên trong câu chuyện. Bản này giữ toàn bộ contract narration, diễn viên và TTS bên ngoài; [audit hoàn thành](docs/validation/2026-10-03-completion-audit.md) liệt kê riêng bằng chứng đã có và yêu cầu còn mở.
 
 Checkpoint06/10: source-context494PASS/0FAIL/2SKIP và corrected contact229PASS/0FAIL/1SKIP trên code443220f; custom-handle temporal/outbound và phim còn chờ. Ca sinh nhật gốc28/28/0, còn2/30calls, chưa video mới. Chủ dự án giao model test khác; [bàn giao để gửi model test](docs/NEXT-MODEL-TEST-HANDOFF.md), [phạm vi evidence](docs/validation/2026-10-06-sourced-world-contact.md).
 

@@ -1,0 +1,263 @@
+{
+  "version": "forest-tribe-0.20-wrist-palm-registration-candidate",
+  "scope": "developer-static-authoring-and-build-evidence-only",
+  "productionReady": false,
+  "productionRig": null,
+  "pass": null,
+  "createdAt": "2026-10-07T08:39:50.652Z",
+  "bodyPack": {
+    "fingerprint": "b1abb567cc0ab72e93790853c0e00a4e494da48093286850676c23de03d5b975",
+    "compilerVersion": "forest-source-body-motion-16",
+    "rendererVersion": "forest-source-body-svg-11",
+    "handRegistration": "forest-wrist-palm-1"
+  },
+  "sourceHashScope": "Final source files at report creation. Audit/contact screenshots precede only the compilePerformance interpolation/contact refinement addition; sampled evaluator and artwork are unchanged by that addition. Do not claim a runtime or compiled-video rerun.",
+  "source": [
+    {
+      "file": "packages/animation/forest-hand.ts",
+      "sha256": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1"
+    },
+    {
+      "file": "packages/animation/forest-body-art.ts",
+      "sha256": "90e6128e7e466cb4a1d4aa89259535994fab605de0edb4af45892bac24692e62"
+    },
+    {
+      "file": "packages/animation/rig.ts",
+      "sha256": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b"
+    },
+    {
+      "file": "packages/animation/source-arm.ts",
+      "sha256": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c"
+    },
+    {
+      "file": "packages/animation/schemas.ts",
+      "sha256": "3fd12dbef84e5a02e6071706a3a1cbef66cd545faee0ee0ee78c51530d864ce2"
+    },
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "89439ef357d8d785d0b111fc17860d4b113454676a3cddde51cd8c3d9f91708c"
+    },
+    {
+      "file": "packages/topics/prehistoric-life.ts",
+      "sha256": "3a68a488bf2186eb8c80c33e800d4dd852144da2a197c18c2e0e2db8915a5287"
+    },
+    {
+      "file": "packages/topics/body-workbench.ts",
+      "sha256": "de84deafe102cea120ec574c1d42507d17a3b7c70faa848cf392b3972f323ecc"
+    },
+    {
+      "file": "packages/topics/view-registration-workbench.ts",
+      "sha256": "4ce3ce69ac150f4c82e98b33b57b2b896bcdbf27a832ff12a088671478bd56c8"
+    },
+    {
+      "file": "tests/forest-hand.test.ts",
+      "sha256": "753e88e11c786627891f830bae4fe19fe45240ce732aa3d044fb657233d79f4d"
+    },
+    {
+      "file": "tests/forest-action-poses.test.ts",
+      "sha256": "6f16ff3062cee356c96aef0ffe005cbdf97ed669c6105fb735f2dcb24fbfa190"
+    },
+    {
+      "file": "scripts/prehistoric-arm-review.ts",
+      "sha256": "e9b9beac03d812380083c918bff75b0e959e0a99a7546e0ca3589313f0a0418f"
+    },
+    {
+      "file": "scripts/prehistoric-pack.ts",
+      "sha256": "f2d2ac63b98913b2218e9144d1b3c858c380ebac68849a2b682ae5fc158d124d"
+    }
+  ],
+  "images": [
+    {
+      "file": "docs/topics/reviews/source-wrist-karo-contact-v2.png",
+      "sha256": "05e69a79aaa5df86f631c0c429b933b992435531c55ea437c7eabb070ec93d6c"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-lila-contact-v2.png",
+      "sha256": "57b2f789834ad34679176a1ed4d6551224e55159b87e96714521c1331ce9b910"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-registration-v2.png",
+      "sha256": "4f86f29063d2550f11772107d52d89fe70101da25b5b2391ca631d8d33254149"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-karo-hunt-aim-v1.png",
+      "sha256": "b222f70605b92bf9c99bc84373c86ff48a26fbd4ac03324598f5f0a3127ae095"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-spear-entry-v2.png",
+      "sha256": "95f972f127c7cd07bfc693051c33c5d2fed81f32a1a8736f0bcf0282b1da8aca"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-spear-pose-v2.png",
+      "sha256": "4024a55ca9650e79031c1adc15057c0a5a56b5a9325ecf0f39b21d8e48f00de0"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-spear-recover-v2.png",
+      "sha256": "bb930583b82ffd4a2572f29d6dfcb5e0edc993fd774fed31c85445a79749c572"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-gestures-entry-v2.png",
+      "sha256": "25cb708742c409116b43386b3b1dfebedd9a7f54cc716c076714895238659556"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-gestures-pose-v2.png",
+      "sha256": "e4eceeaacc09bd5965920d3ac44e5b77bfb2a8d8f06bf423f7b6f367f6149936"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-gestures-recover-v2.png",
+      "sha256": "cb36c5634be52b2a8398fb0cbde0751e2fdc75013a9ccad45b0bbdb76a51498f"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-locomotion-entry-v2.png",
+      "sha256": "ea7f679de5643bab783c0b938f80a13231753bff61648518ffc4e4df4cace9db"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-locomotion-pose-v2.png",
+      "sha256": "1a6e1e729ff754258a0098794fddbb4c7ec9522ad97d982165ce8ba7029a585a"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-locomotion-recover-v2.png",
+      "sha256": "5ac989dfbfacafbc4780fbce4b1e6587879ac4824c631012ba20213599cc53e2"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-seated-entry-v2.png",
+      "sha256": "f23ccee48f3c6b578b28a601df1454787e797597b81072c9f1386bae6f64081a"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-seated-pose-v2.png",
+      "sha256": "a9ebfedb4945d3671c4ed37e260ba6b6cfaed6c4deb394292e13b0c9296b27a7"
+    },
+    {
+      "file": "docs/topics/reviews/source-wrist-audit-seated-recover-v2.png",
+      "sha256": "34dcc7398c07e49425f4756da1fd77c424d4089e471475c139e280e033cd6794"
+    }
+  ],
+  "audit": {
+    "domFile": "docs/topics/reviews/source-wrist-audit-dom-v1.json",
+    "domSha256": "7d7d80adea270b6b838dfeff678c17c3d26bdd2211b7132cf9b0fa254a208f6d",
+    "pages": 12,
+    "actorClockCards": 144,
+    "renderedCards": 138,
+    "blockedCards": 6,
+    "blocked": [
+      "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+      "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+      "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+      "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+      "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+      "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+    ],
+    "clocks": "three labeled phases per action; exact time is in each DOM action/card",
+    "mood": "happy",
+    "allTimes": false,
+    "allScales": false,
+    "initialFinding": [
+      {
+        "phase": "pose",
+        "blocked": [
+          "lilacalibration-grip: right hand cannot reach spear grip at 1800ms (0.86px)Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+          "karocalibration-grip: right hand cannot reach spear grip at 1800ms (1.12px)Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+        ]
+      }
+    ],
+    "finalUnexpectedBlocked": [],
+    "visualScope": "selected source hunt-aim, Lila/Karo contact and source cuff landmarks; saved full-group screenshots are not certification of every silhouette"
+  },
+  "advice": {
+    "file": "docs/topics/reviews/coder-wrist-palm-advice-v1.json",
+    "sha256": "326fac51fdd724c00c43d1f269e48b0f1048034320ac704e2d3b4f06a97b4bbb",
+    "model": "cx/gpt-6.1-sol",
+    "scope": "static-source-and-art-advice-only",
+    "productionAcceptance": false,
+    "sourceMatchesFinal": false,
+    "sourceBindings": [
+      {
+        "file": "packages/animation/compiler.ts",
+        "reviewSha256": "94c56a1e610297a39a9a4b95a825e58118aa374beb2e7488fc64102f3f39c928",
+        "finalSha256": "89439ef357d8d785d0b111fc17860d4b113454676a3cddde51cd8c3d9f91708c"
+      },
+      {
+        "file": "packages/animation/forest-body-art.ts",
+        "reviewSha256": "90e6128e7e466cb4a1d4aa89259535994fab605de0edb4af45892bac24692e62",
+        "finalSha256": "90e6128e7e466cb4a1d4aa89259535994fab605de0edb4af45892bac24692e62"
+      },
+      {
+        "file": "packages/animation/forest-hand.ts",
+        "reviewSha256": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1",
+        "finalSha256": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1"
+      },
+      {
+        "file": "packages/animation/source-arm.ts",
+        "reviewSha256": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
+        "finalSha256": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c"
+      },
+      {
+        "file": "packages/animation/forest-cutout-head.ts",
+        "reviewSha256": "0b5e68bbef25aa4a851cbf76e2fda5d491d4b44f945dd78d48f864dba6c0e249",
+        "finalSha256": "0b5e68bbef25aa4a851cbf76e2fda5d491d4b44f945dd78d48f864dba6c0e249"
+      },
+      {
+        "file": "packages/animation/spear.ts",
+        "reviewSha256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
+        "finalSha256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0"
+      },
+      {
+        "file": "packages/animation/schemas.ts",
+        "reviewSha256": "d224b258d2ba78f45ddd80b37d613649c361ab9b1a7cae170eb12acc57dd5597",
+        "finalSha256": "3fd12dbef84e5a02e6071706a3a1cbef66cd545faee0ee0ee78c51530d864ce2"
+      },
+      {
+        "file": "packages/topics/body-workbench.ts",
+        "reviewSha256": "109ce4174ac73552c137a35226e4d324ae03d3c6a37df456624086e9f2cef6e8",
+        "finalSha256": "de84deafe102cea120ec574c1d42507d17a3b7c70faa848cf392b3972f323ecc"
+      },
+      {
+        "file": "packages/animation/rig.ts",
+        "reviewSha256": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
+        "finalSha256": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "scope": "declaration typecheck, no runtime assertions"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "scope": "existing art inventory, not runtime test"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "notRun": [
+    "npm test",
+    "forest-motion-fixture export or --render",
+    "MP4 export",
+    "TTS/ASR",
+    "story pipeline acceptance",
+    "all-clock/GSAP/runtime assertions"
+  ],
+  "pending": [
+    "independent runtime checks",
+    "source/neutral migrated anatomy review",
+    "cuff mask overlap and real grasp",
+    "all role clearance and deliberate trajectory",
+    "authored other body/head views and expressions",
+    "hair/beard/cloth secondary motion",
+    "story acting integration and three complete video input flows"
+  ],
+  "handoff": "docs/topics/WRIST-PALM-IMPLEMENTATION.md"
+}

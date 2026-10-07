@@ -1,0 +1,1542 @@
+{
+  "scope": "developer-static-DOM-observation",
+  "productionAcceptance": false,
+  "initialFinding": [
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "spear-hold · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 91.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -44.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 81.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -37.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-hold-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 71.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 101.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -40.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 74.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 113.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -38.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 90.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 44.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -45.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 81.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 43.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -38.7 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 74.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 100.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -40.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 77.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 113.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -39.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-lunge · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 85.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 45.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 170.0 / tối thiểu 49.3; khuỷu sau theo trục cán -50.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 81.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 44.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 183.6 / tối thiểu 51.9; khuỷu sau theo trục cán -55.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-aim · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 87.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -44.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 77.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -36.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-chase · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 47.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -37.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 22.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -21.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "spear",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=entry&mood=happy"
+    },
+    {
+      "blocked": [
+        "lilacalibration-grip: right hand cannot reach spear grip at 1800ms (0.86px)Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karocalibration-grip: right hand cannot reach spear grip at 1800ms (1.12px)Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": [
+        {
+          "action": "spear-hold · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 91.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -44.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 84.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -37.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-hold-left · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 71.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 101.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -40.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 74.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 110.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -38.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust · 1800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "svg": 0
+            },
+            {
+              "actor": "karo",
+              "svg": 0
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust-left · 1800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 60.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 103.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -38.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 64.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 108.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -34.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-lunge · 1800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 57.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 21.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 170.0 / tối thiểu 49.3; khuỷu sau theo trục cán -48.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 53.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 20.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 183.6 / tối thiểu 51.9; khuỷu sau theo trục cán -53.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-aim · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 78.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -43.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 71.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -35.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-chase · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 57.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -39.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 43.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -29.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "spear",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=pose&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "spear-hold · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 94.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -45.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 82.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -37.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-hold-left · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 71.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 98.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -40.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 74.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 112.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -38.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust · 3000 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 95.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 20.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -43.9 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 83.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 19.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -35.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust-left · 3000 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 65.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 100.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -39.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 68.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 110.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -35.9 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-lunge · 3000 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 75.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 14.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 170.0 / tối thiểu 49.3; khuỷu sau theo trục cán -50.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 71.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 11.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 183.6 / tối thiểu 51.9; khuỷu sau theo trục cán -55.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-aim · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 94.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -45.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 82.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -37.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-chase · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 95.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -45.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 83.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 36.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -37.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "spear",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=recover&mood=happy"
+    }
+  ],
+  "current": [
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "spear-hold · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 93.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -46.7 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 85.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-hold-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 80.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 103.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -41.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 82.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 117.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 91.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 58.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -47.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 85.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 57.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -42.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 83.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 101.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -41.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 85.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 117.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -42.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-lunge · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 85.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 45.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 170.0 / tối thiểu 49.3; khuỷu sau theo trục cán -50.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 81.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 44.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 183.6 / tối thiểu 51.9; khuỷu sau theo trục cán -55.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-aim · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 89.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -46.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 81.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -40.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-chase · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 52.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -40.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 34.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -29.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "spear",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=entry&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "spear-hold · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 92.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -46.7 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 88.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-hold-left · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 80.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 103.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -41.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 82.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 114.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust · 1800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 96.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 35.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -45.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 88.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 34.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -37.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust-left · 1800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 70.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 106.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -40.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 74.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 113.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -37.9 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-lunge · 1800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 57.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 21.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 170.0 / tối thiểu 49.3; khuỷu sau theo trục cán -48.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 53.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 20.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 183.6 / tối thiểu 51.9; khuỷu sau theo trục cán -53.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-aim · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 81.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -45.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 76.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -39.7 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-chase · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 61.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -42.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 51.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -34.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "spear",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=pose&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "spear-hold · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 95.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -47.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 86.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-hold-left · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 80.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 100.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -41.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 82.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 116.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust · 3000 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 97.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 43.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -46.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 87.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 43.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -39.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-thrust-left · 3000 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 74.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-rear · gập 102.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -40.7 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 77.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-rear · gập 115.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -39.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "spear-lunge · 3000 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 75.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 14.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 170.0 / tối thiểu 49.3; khuỷu sau theo trục cán -50.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 71.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 11.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 183.6 / tối thiểu 51.9; khuỷu sau theo trục cán -55.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-aim · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 95.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -47.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 86.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-chase · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 96.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: spear-front · gập 53.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxGrip 100.0 / tối thiểu 49.3; khuỷu sau theo trục cán -47.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 87.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: spear-front · gập 53.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxGrip 108.0 / tối thiểu 51.9; khuỷu sau theo trục cán -41.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "spear",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=recover&mood=happy"
+    },
+    {
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": [
+        {
+          "action": "rest · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "point · rig-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 88.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 92.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "point · rig-right · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: point · gập 92.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: point · gập 96.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "think · rig-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 106.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 93.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "think · rig-right · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: chin · gập 113.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: chin · gập 108.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "crouch · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "head-turn · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "svg": 0
+            },
+            {
+              "actor": "karo",
+              "svg": 0
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "gestures",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=gestures&phase=entry&mood=happy"
+    },
+    {
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": [
+        {
+          "action": "rest · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "point · rig-left · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 92.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 95.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "point · rig-right · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: point · gập 95.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: point · gập 96.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "think · rig-left · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 130.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 114.0° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "think · rig-right · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: chin · gập 140.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: chin · gập 132.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "crouch · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "head-turn · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "svg": 0
+            },
+            {
+              "actor": "karo",
+              "svg": 0
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "gestures",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=gestures&phase=pose&mood=happy"
+    },
+    {
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": [
+        {
+          "action": "rest · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "point · rig-left · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 77.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 80.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "point · rig-right · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: point · gập 78.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: point · gập 82.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "think · rig-left · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 84.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 74.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "think · rig-right · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: chin · gập 89.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: chin · gập 85.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "crouch · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "head-turn · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "svg": 0
+            },
+            {
+              "actor": "karo",
+              "svg": 0
+            }
+          ]
+        }
+      ],
+      "figures": 14,
+      "group": "gestures",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=gestures&phase=recover&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "walk · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: walk · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: walk · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "walk-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: walk · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: walk · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "run · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: run · gập 45.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: run · gập 45.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "run-left · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: run · gập 45.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: run · gập 45.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "jump · 600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 98.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: react · gập 113.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 107.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: react · gập 116.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-stalk · 500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 12,
+      "group": "locomotion",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=locomotion&phase=entry&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "walk · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: walk · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: walk · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "walk-left · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: walk · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: walk · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "run · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: run · gập 54.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: run · gập 54.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "run-left · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: run · gập 54.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: run · gập 54.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "jump · 1175 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 87.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: react · gập 95.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 109.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: react · gập 105.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-stalk · 1600 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 12,
+      "group": "locomotion",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=locomotion&phase=pose&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "walk · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: walk · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: walk · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "walk-left · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: walk · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: walk · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "run · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "run-left · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "jump · 1667 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 87.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: react · gập 95.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 110.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: react · gập 104.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "hunt-stalk · 3500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 12,
+      "group": "locomotion",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=locomotion&phase=recover&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "sit-right · 800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 62.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 47.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 53.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 44.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-left · 800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 44.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 60.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 41.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 56.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-walk-right · 800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 62.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 47.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 53.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 44.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-walk-left · 800 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 44.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 60.1° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 41.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 56.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 8,
+      "group": "seated",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=seated&phase=entry&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "sit-right · 2200 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 89.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 83.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 56.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 70.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-left · 2200 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 71.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 56.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 70.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 50.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-walk-right · 2200 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 89.4° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 83.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 56.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 70.5° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-walk-left · 2200 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 71.6° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: lap · gập 56.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 70.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: lap · gập 50.3° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 8,
+      "group": "seated",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=seated&phase=pose&mood=happy"
+    },
+    {
+      "blocked": [],
+      "cards": [
+        {
+          "action": "sit-right · 4500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-left · 4500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-walk-right · 4500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        },
+        {
+          "action": "sit-walk-left · 4500 ms",
+          "actors": [
+            {
+              "actor": "lila",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 23.9° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxright: rest · gập 16.8° · tỷ lệ nét 1.00/1.00 · cuff→grip 11.3pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            },
+            {
+              "actor": "karo",
+              "notes": "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 17.2° · tỷ lệ nét 1.00/1.00 · cuff→grip 13.0pxright: rest · gập 22.7° · tỷ lệ nét 1.00/1.00 · cuff→grip 14.1pxPose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+              "svg": 2
+            }
+          ]
+        }
+      ],
+      "figures": 8,
+      "group": "seated",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=seated&phase=recover&mood=happy"
+    }
+  ]
+}

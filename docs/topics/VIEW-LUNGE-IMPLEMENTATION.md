@@ -1,5 +1,7 @@
 # Lila/Karo 0.19 — đăng ký góc thân và lunge
 
+**Hiện hành 0.20:** cuff/palm tách riêng theo ảnh nguồn; chain migrate độc lập target, contact vẫn ở palm, mitten theo tiếp tuyến cẳng tay. Preset frontal đã re-author, slot think discrete và shaft interpolation có kiểm riêng. Grasp/anatomy/motion/video chưa nghiệm thu, `productionReady=false`; ba input và diễn viên trong truyện giữ nguyên. [Chi tiết, bằng chứng và lệnh bàn giao](WRIST-PALM-IMPLEMENTATION.md). Các đoạn 0.19 trở về trước dưới đây là lịch sử.
+
 Ngày 07/10/2026. Source ứng viên, `productionReady=false`, `productionRig=null`. Chưa nghiệm thu video; phần runtime giao model test khác. Giữ sản phẩm tổng quát: **kịch bản nguyên văn / WAV giữ giọng và clock / câu chuyện → kịch bản trung thành → video**. Người que là diễn viên trong truyện; giáo và săn chỉ là bộ hành động.
 
 ## Đã triển khai

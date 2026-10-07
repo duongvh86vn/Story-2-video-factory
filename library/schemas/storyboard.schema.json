@@ -2441,8 +2441,7 @@
                                       "secondaryOffset": {
                                         "type": "number",
                                         "minimum": -200,
-                                        "maximum": -10,
-                                        "default": -20
+                                        "maximum": -10
                                       },
                                       "elbowPoles": {
                                         "type": "object",
@@ -2489,7 +2488,8 @@
                                       "hand",
                                       "action",
                                       "grip",
-                                      "aim"
+                                      "aim",
+                                      "secondaryOffset"
                                     ],
                                     "additionalProperties": false
                                   },
@@ -4042,8 +4042,7 @@
                             "secondaryOffset": {
                               "type": "number",
                               "minimum": -200,
-                              "maximum": -10,
-                              "default": -20
+                              "maximum": -10
                             },
                             "elbowPoles": {
                               "type": "object",
@@ -4090,7 +4089,8 @@
                             "hand",
                             "action",
                             "grip",
-                            "aim"
+                            "aim",
+                            "secondaryOffset"
                           ],
                           "additionalProperties": false
                         },

@@ -9,12 +9,13 @@ import {spearDescription} from './spear.js';
 import {sourceArmDescription} from './source-arm.js';
 import {usesBodyView,bodyViewMetrics,bodyViewAsset,bodyViewClothingSvg,bodyViewDescription} from './body-view-art.js';
 import {lungeDescription} from './lunge.js';
+import {forestHandRegistration,forestHandMetrics,forestWristChainTotal,forestHandDescription} from './forest-hand.js';
 type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-15';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-10';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-16';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-11';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -61,11 +62,11 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body variant missing.');
   const source=bodies[actor],u=source.unitScale,b=profile.appearance.bodyScale,k=u*b;
   const relative=(p:Point)=>({x:(p.x-source.pelvis.x)*k,y:(p.y-source.pelvis.y)*k});
-  // The source arms are uninterrupted ink, with no measured elbow landmark.
-  // Preserve each source shoulder-to-hand chain total; the previous arbitrary
-  // split (Karo 88/136) made its upper arm collapse during two-handed work.
+  // Old chains ended in a hand lobe. Register a separate cuff-to-palm segment
+  // from immutable source pixels, before evaluating any pose or target.
+  const handArt=forestHandRegistration[actor];
   const arms=Object.fromEntries((['left','right'] as const).map(side=>{
-    const total=(source.arms[side].upper+source.arms[side].lower)*k;
+    const total=forestWristChainTotal(source.arms[side].upper+source.arms[side].lower,source.hands[side],handArt[side].wrist)*k;
     return [side,{upper:total*.52,lower:total*.48}];
   })) as Record<RigHand,{upper:number;lower:number}>;
   const legs=Object.fromEntries((['left','right'] as const).map(side=>[side,{upper:source.legs[side].upper*k,lower:source.legs[side].lower*k}])) as Record<RigHand,{upper:number;lower:number}>;
@@ -80,10 +81,11 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
     torsoTop:relative(source.neck).y,neckX:relative(source.neck).x,
     shoulders:{left:relative(source.shoulders.left),right:relative(source.shoulders.right)},arms,
     handRestRotation:{...source.handRestRotation},
+    handAttachment:forestHandMetrics(actor,u,b),
     hips:{left:relative(source.hips.left),right:relative(source.hips.right)},legs,
     seatContactOffset:{x:source.seatContact.x*b,y:source.seatContact.y*b},
-    armRest:{left:{x:(source.hands.left.x-source.shoulders.left.x)*k,y:(source.hands.left.y-source.shoulders.left.y)*k},
-      right:{x:(source.hands.right.x-source.shoulders.right.x)*k,y:(source.hands.right.y-source.shoulders.right.y)*k}},
+    armRest:{left:{x:(handArt.left.grip.x-source.shoulders.left.x)*k,y:(handArt.left.grip.y-source.shoulders.left.y)*k},
+      right:{x:(handArt.right.grip.x-source.shoulders.right.x)*k,y:(handArt.right.grip.y-source.shoulders.right.y)*k}},
     footOffsets:{left:(source.feet.left.x-source.pelvis.x)*k,right:(source.feet.right.x-source.pelvis.x)*k},
     footSoleOffset:{left:(source.feet.left.y-source.ankleY.left)*u,right:(source.feet.right.y-source.ankleY.right)*u},
     strokeWidth:16*u,
@@ -104,14 +106,15 @@ export function referenceBodyAssets(appearance:HostProfile['appearance']){
 export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
   const source=bodies[actor],imageId='forest-body-source';
-  const clips=Object.entries(source.parts).map(([id,part])=>'<clipPath id="forest-body-'+id+'" clipPathUnits="userSpaceOnUse"><path d="'+part.clip+'"/></clipPath>').join('');
+  const handPart=(side:RigHand)=>({anchor:forestHandRegistration[actor][side].grip,clip:forestHandRegistration[actor][side].clip});
+  const clips=Object.entries(source.parts).map(([id,part])=>'<clipPath id="forest-body-'+id+'" clipPathUnits="userSpaceOnUse"><path d="'+(id.startsWith('hand-')?handPart(id.slice(5) as RigHand).clip:part.clip)+'"/></clipPath>').join('');
   // A clipPath ignores the stroke. Use a bounded luminance mask to retain the
   // painted garment outline around the measured color contour instead.
   const hemMask='<mask id="forest-body-hem" maskUnits="userSpaceOnUse" x="0" y="0" width="'+source.width+'" height="'+source.height+'"><path d="'+source.hem+'" fill="white" stroke="white" stroke-width="'+(source.hemOutlinePad*2)+'" stroke-linejoin="round"/></mask>';
   const garmentDefs=(['upper','left','right'] as const).map(layer=>'<clipPath id="forest-garment-'+layer+'" clipPathUnits="userSpaceOnUse"><path d="'+garments[actor][layer]+'"/></clipPath>').join('');
   const defs='<defs><image id="'+imageId+'" width="'+source.width+'" height="'+source.height+'" href="'+referenceImageUrl(source.file,source.sha256,mode)+'"/>'+clips+hemMask+garmentDefs+'</defs>';
   const part=(id:keyof typeof source.parts,layer?:'upper'|'left'|'right')=>{
-    const region:Part=source.parts[id],anchor=layer&&layer!=='upper'?source.hips[layer]:region.anchor;
+    const region:Part=id.startsWith('hand-')?handPart(id.slice(5) as RigHand):source.parts[id],anchor=layer&&layer!=='upper'?source.hips[layer]:region.anchor;
     return '<g stroke="none" fill="none" transform="scale('+source.unitScale+')"><g transform="translate('+(-anchor.x)+' '+(-anchor.y)+')" clip-path="url(#forest-body-'+id+')">'
       +(id==='clothing'?'<g mask="url(#forest-body-hem)">':'')+(layer?'<g clip-path="url(#forest-garment-'+layer+')">':'')+'<use href="#'+imageId+'"/>'+(layer?'</g>':'')+(id==='clothing'?'</g>':'')+'</g></g>';
   };
@@ -127,7 +130,7 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,views:bodyViewDescription,lunge:lungeDescription}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,hands:forestHandDescription,views:bodyViewDescription,lunge:lungeDescription}),sources:bodies,handRegistration:forestHandDescription,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
   actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,lunge:lungeDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
@@ -135,7 +138,7 @@ export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,c
   secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered provisional source overlays',hair:'registered cutout follows the head rigidly; independent ponytail/fringe follow pending',
     clothing:'all source body plans use one opaque shared cloth surface with a pinned waist and blended 100ms thigh follow below it, limited to 22 degrees; seat plans also use semantic UV correspondences through seated/rising, fading thigh follow into the seated pose; source/authored fold materials share that surface; legacy independently rotating panels are hidden to avoid opening a waist gap during ordinary walking; inverted triangles block evaluation; no fabric simulation or motion acceptance'},
   inferredAnatomy:{knees:'not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved',
-    elbows:'not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; frontal spear/run use full planar lengths with role-specific flexion guards; authored depth arms remain pending',
+    elbows:'not visible in source; upper/forearm ratio 52/48 inferred after independent cuff/palm registration migration; new physical wrist chains and cuff-to-grip segments remain constant in every pose; frontal spear/run use full planar lengths with role-specific flexion guards; authored depth arms remain pending',
     seat:'closed hip contact below/behind belt, not the pelvis anchor itself'},
   headAttachment:{neck:'original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone'},
   footContact:{frameFeet:'sole anchors',inkEndpoint:'ankle',pelvisWalkDrop:'minimum fixed-leg reach plus small bob; not .23 of long thigh'},

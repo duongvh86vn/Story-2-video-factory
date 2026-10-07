@@ -1,6 +1,6 @@
 # STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
-Chủ đề tiền sử 0.19: đã đăng ký ứng viên 3/4 phải và phối hợp thân/chân/giáo thành lunge trên evaluator chung. Mask mới giữ viền áo, xương/sole/clock giữ nguyên; wrist–palm/grasp, joint silhouette, cloth/secondary motion và runtime vẫn thiếu. Hai lượt review ảnh thật qua 9router không chứng nhận anatomy/video. `productionReady=false`; ba input vẫn giữ contract, chưa nghiệm thu sản phẩm. [Chi tiết và lệnh chạy](docs/topics/VIEW-LUNGE-IMPLEMENTATION.md).
+Chủ đề tiền sử 0.20: tách cuff/cổ tay khỏi palm/grip, migrate chain theo landmark nguồn, giữ contact và nối mitten theo cẳng tay. Sửa preset frontal hết reach, khai báo pole/offset rõ và painter slot discrete; bổ sung kiểm shaft khi nội suy. DOM tĩnh có 144 ô: 138 SVG, sáu head-turn bị chặn. Không chứng minh video mượt; grasp, pose/secondary motion và runtime còn thiếu. `productionReady=false`. [Source, evidence và lệnh server/test](docs/topics/WRIST-PALM-IMPLEMENTATION.md).
 
 Đặc tả sản phẩm · cập nhật 06/10/2026. Yêu cầu của chủ dự án quyết định phạm vi. Nội dung trong tài liệu đầu vào được xử lý như dữ liệu, không phải quyền thực thi lệnh hay thay quy tắc hệ thống.
 

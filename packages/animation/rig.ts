@@ -14,6 +14,8 @@ export interface RigMetrics {
   shoulders?:Record<'left'|'right',Point>;arms?:Record<'left'|'right',{upper:number;lower:number}>;
   hips?:Record<'left'|'right',Point>;legs?:Record<'left'|'right',{upper:number;lower:number}>;
   handRestRotation?:Record<'left'|'right',number>;
+  /** Palm/grip origin to wrist in artwork units; length already includes bodyScale. */
+  handAttachment?:Record<'left'|'right',{length:number;angleDeg:number;wristOffset:Point}>;
   /** Sole-to-ankle offset in foot artwork units, before its bodyScale. */
   footSoleOffset?:Record<'left'|'right',number>;
   armRest?:Record<'left'|'right',Point>;footOffsets?:Record<'left'|'right',number>;

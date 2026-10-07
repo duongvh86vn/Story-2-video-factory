@@ -76,7 +76,7 @@ for(const actor of ['lila','karo'] as const)for(const action of ['run','run-left
         const shoulder={x:u[0]!,y:u[1]!},elbow={x:l[0]!,y:l[1]!},depth=f.armProjection?.[side]?.elbowDepth??0,bones=m.arms![side];
         assert.ok(elbow.y>shoulder.y,'a running recovery elbow must not snap upward beside the head');
         assert.ok(Math.abs(length(shoulder,elbow,depth)-bones.upper)<.002,'running upper arm changed length');
-        assert.ok(Math.abs(length(elbow,f.hands[side],depth)-bones.lower)<.002,'running forearm changed length');
+        assert.ok(Math.abs(length(elbow,f.wrists![side],depth)-bones.lower)<.002,'running forearm changed length');
       }
       assert.ok(Object.values(f.transforms).every(s=>!s.includes('NaN')));
       prior=f;
@@ -126,7 +126,7 @@ for(const actor of ['lila','karo'] as const){
         // No universal below-shoulder rule: the user reference legitimately
         // raises its drive elbow. Pair silhouette and exact bones are checked.
         assert.ok(Math.abs(length(shoulder,elbow,depth)-bones.upper)<.002,'physical upper arm changed');
-        assert.ok(Math.abs(length(elbow,f.hands[side],depth)-bones.lower)<.002,'physical forearm changed');
+        assert.ok(Math.abs(length(elbow,f.wrists![side],depth)-bones.lower)<.002,'physical forearm changed');
       }
     }
     const expected=samplePerformance(plan,profile,1500,silent);samplePerformance(plan,profile,3900,silent);
