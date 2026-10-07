@@ -50,6 +50,8 @@ API/CLI có đọc thư viện verified; Studio có form chọn khả năng và 
 
 ## Global Constraints
 
+**Speech foundation source:** `a6b62fa` có importer/loader/list mouth PNG theo exact native version và optional player rest/open trên cue/audio clock; fix `59af28e` qua focused source review hai Important. Source CLI/API đã có; [plan](../plans/2026-10-07-sprite-speech.md), [24 ca NOT RUN](SPRITE-SPEECH-TEST-HANDOFF.md), [review có phạm vi](reviews/sprite-speech-source-review-v1.md). Chưa nối Stage/Shot/canonical/Director/Studio, chưa tạo/duyệt art và vẫn chặn sourced dialogue/final như trước. Không suy diễn mốc low-level này thành pipeline thoại hoàn thành.
+
 - Tool vẫn ba input: kịch bản / WAV / câu chuyện → kịch bản. Lila/Karo là diễn viên; không giới hạn nội dung vào demo săn.
 - Không sửa PNG nguồn hoặc tự duyệt ảnh AI. Mọi motion import là candidate, productionReady=false. Hash ảnh tham chiếu là provenance, chưa chứng minh identity hoặc chất lượng.
 - Không mirror áo/tóc để giả view; registration phải chỉ rõ view, anchor và playback semantics. Không mặc định cú đâm lặp theo loop flag nguồn.

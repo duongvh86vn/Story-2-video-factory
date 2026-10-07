@@ -4,6 +4,23 @@ Ngày khảo sát: 07/10/2026. Phạm vi: đọc source và tài liệu; chưa c
 
 Tiến độ triển khai sau khảo sát được ghi riêng trong [cầu nối sprite motion](SPRITE-MOTION-IMPLEMENTATION.md) và [bàn giao test](SPRITE-MOTION-TEST-HANDOFF.md). Đánh giá dưới đây giải thích khả năng upstream; nghiệm thu runtime/art/video vẫn đang chờ.
 
+## Kiểm tra lại upstream 2.39.0
+
+Đã đọc lại repo tại [`ece1ac8b4827d5d8075592471aef5152c371cda9`](https://github.com/aldegad/sprite-gen/tree/ece1ac8b4827d5d8075592471aef5152c371cda9), package 2.39.0. Mốc 2.38.0 bên dưới vẫn là bản khảo sát và pin thiết kế ban đầu; không tự nâng dependency hoặc coi bản mới đã chạy trên Windows.
+
+Theo [changelog 2.39.0](https://github.com/aldegad/sprite-gen/blob/ece1ac8b4827d5d8075592471aef5152c371cda9/CHANGELOG.md), nhánh video bổ sung kiểm đề xuất nội suy để tránh nhòe/mất viền, truy nguồn frame, so sánh bản sửa với bản đang dùng và xem vùng chuyển động phụ ở mọi frame. Những phép đo này có ích với phản hồi mất viền áo Karo, nhưng không tự sửa anatomy hay chứng nhận dáng đi. Exit 0 của công cụ so sánh cũng có thể là `unknown`, không phải được duyệt.
+
+Đề xuất áp dụng cho bộ chủ đề hiện tại:
+
+1. Giữ ảnh chuẩn và màu gốc; chuẩn bị view riêng cho hai phía, không mirror áo một vai/tóc buộc lệch.
+2. Làm các asset đi, chạy, nhảy, nghe/nói/phản ứng; động tác cầm/đâm giáo cần đăng ký cả hai tay, cán và mũi giáo. Thử full-body action cho thao tác phức tạp.
+3. Duyệt cả clip và từng frame, gồm mặt, viền áo, độ dài chi, chân trụ, grip và điểm nối chu kỳ. [QA upstream](https://github.com/aldegad/sprite-gen/blob/ece1ac8b4827d5d8075592471aef5152c371cda9/docs/qa-motion.md) cũng yêu cầu kiểm khớp humanoid từng frame.
+4. Import asset đã đăng ký vào clock chung của Factory; Director chọn diễn xuất theo câu chuyện. Speech, hai diễn viên tương tác, TTS và ba input vẫn là trách nhiệm của Factory.
+
+Source generation hiện có adapter Codex/Grok/OpenAI; xAI/OpenAI dùng endpoint cố định, chưa có adapter Gemini/9router trong source đã đọc. Nối 9router phải dựa vào API ảnh/video thực tế, không suy ra từ một chat model. [Provider docs](https://github.com/aldegad/sprite-gen/blob/ece1ac8b4827d5d8075592471aef5152c371cda9/docs/gen.md), [xAI transport](https://github.com/aldegad/sprite-gen/blob/ece1ac8b4827d5d8075592471aef5152c371cda9/sprite_gen/gen/xai.py).
+
+Chỉ clone và đọc source trong thư mục nghiên cứu local; không chạy code upstream, cài dependency, gọi generation hoặc test runtime. Chưa có bằng chứng Lila/Karo chuyển động đẹp hơn nhờ repo này. Cầu nối Factory đã có source import/player/canonical/catalog và nền tảng speech; tích hợp thoại đầy đủ, artwork được duyệt, props/handoff và video hoàn chỉnh còn phải làm.
+
 ## Kết luận và bản source
 
 **Có ích, đặc biệt để tạo thư viện pose và chuỗi động tác từ ảnh mẫu.** Đề xuất thử nhánh asset chuyển động bên cạnh rig hiện tại. Không có bằng chứng để nói đã hết lỗi tay/chân hoặc đạt chất lượng video mẫu.
