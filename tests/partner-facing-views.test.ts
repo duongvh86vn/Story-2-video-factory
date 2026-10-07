@@ -153,7 +153,9 @@ test('topic metadata describes registered candidates while preserving the produc
 test('fixed-view think grips follow the native chin transformed by the actual rendered head',()=>{
   for(const actor of actors)for(const view of REGISTERED_BODY_VIEWS)for(const hand of ['left','right'] as const)for(const scale of [.85,1]){
     const {profile,plan}=bodyCalibrationPlan(actor,'think','happy',hand,view);plan.scale=scale;
-    for(const at of [800,1600,2600]){
+    // The 300ms gesture entry has a 600ms approach. Compare only the hold;
+    // an approaching hand must not be mistaken for misplaced chin contact.
+    for(const at of [1000,1600,2600]){
       const frame=samplePerformance(plan,profile,at,silence),matrix=frame.transforms.head!;
       const values=matrix.match(/^translate\(([-\d.]+) ([-\d.]+)\) rotate\(([-\d.]+)\) scale\(([-\d.]+)\)$/);
       assert.ok(values,'head transform must expose the actual scene attachment');
