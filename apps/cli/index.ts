@@ -16,8 +16,35 @@ import { parseScript, validateIdea, resolveInputMode } from '../../packages/inge
 import { writeAtomic } from '../../packages/core/utils.js';
 import { installedWindowsVoices,matchingWindowsVoices } from '../../packages/voice/catalog.js';
 import { NARRATION_LANGUAGES,LANGUAGE_TAG,primaryLanguage } from '../../packages/core/languages.js';
+import {importActorMotion,listActorMotions,loadActorMotion} from '../../packages/motion/import.js';
+import {motionWorkbench} from '../../packages/motion/workbench.js';
+import {buildServer} from '../server/index.js';
+import {boundPath,ensureIdle,ProjectName} from '../server/security.js';
 
 const cli=new Command().name('video-factory').description('Turn a topic/story, complete script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
+cli.command('motion-import <project> <metadata>').description('Import a local sprite bundle as a candidate; requires a configured idle project')
+  .requiredOption('--registration <file>','Explicit local actor/state/view/anchor/playback registration')
+  .action(async(project:string,metadata:string,options:{registration:string})=>{
+    const root=path.resolve(project);
+    await boundPath(root,'project.yaml');await loadConfig(root);await ensureIdle(root);
+    const metadataFile=path.isAbsolute(metadata)?metadata:await boundPath(root,metadata);
+    const registrationFile=path.isAbsolute(options.registration)?options.registration:await boundPath(root,options.registration);
+    console.log(JSON.stringify(await importActorMotion(root,metadataFile,registrationFile),null,2));
+  });
+cli.command('motion-list <project>').description('List verified candidate motion descriptors as JSON')
+  .action(async(project:string)=>console.log(JSON.stringify(await listActorMotions(path.resolve(project)),null,2)));
+cli.command('motion-preview <project> <id> <fingerprint>').description('Serve a local candidate workbench; does not render video')
+  .option('--port <port>','Local workbench port','8850')
+  .action(async(project:string,id:string,fingerprint:string,options:{port:string})=>{
+    const root=path.resolve(project),name=ProjectName.parse(path.basename(root));
+    const port=z.coerce.number().int().min(1).max(65535).parse(options.port);
+    // Verify descriptor and preflight the compiler before starting the server or printing a URL.
+    motionWorkbench(await loadActorMotion(root,id,fingerprint));
+    const app=await buildServer({projectsRoot:path.dirname(root)});
+    try {await app.listen({host:'127.0.0.1',port});}catch(error){await app.close();throw error;}
+    console.log(`http://127.0.0.1:${port}/api/projects/${encodeURIComponent(name)}/motions/${encodeURIComponent(id)}/${fingerprint}/preview`);
+    for(const signal of ['SIGINT','SIGTERM'] as const)process.once(signal,()=>{void app.close();});
+  });
 cli.command('configure <project>')
   .option('--language <code>','Narration language: en, vi, ja, ko or locale (e.g. en-US)').option('--input <mode>','story, script, wav (legacy: idea, srt, auto)')
   .option('--host <kind>','mini-robot, stick-man or custom actor rig').option('--style <mode>','diagram or story-cinematic; keeps valid narration/audio')

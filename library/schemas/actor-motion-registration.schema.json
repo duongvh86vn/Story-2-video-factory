@@ -1,0 +1,140 @@
+{
+  "$ref": "#/definitions/actor-motion-registration",
+  "definitions": {
+    "actor-motion-registration": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "actor-motion-registration-1"
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "actorId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "state": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "back",
+            "left",
+            "right",
+            "three-quarter-left",
+            "three-quarter-right",
+            "back-three-quarter-left",
+            "back-three-quarter-right"
+          ]
+        },
+        "referenceHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "playback": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "once",
+                "loop"
+              ]
+            },
+            "end": {
+              "type": "string",
+              "enum": [
+                "hold",
+                "first",
+                "hide"
+              ]
+            }
+          },
+          "required": [
+            "mode",
+            "end"
+          ],
+          "additionalProperties": false
+        },
+        "anchor": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "x",
+            "y"
+          ],
+          "additionalProperties": false
+        },
+        "requiredLandmarks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,31}$"
+          },
+          "maxItems": 32,
+          "default": []
+        },
+        "landmarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "maxItems": 512
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "maxItems": 20,
+          "default": []
+        }
+      },
+      "required": [
+        "version",
+        "id",
+        "actorId",
+        "state",
+        "view",
+        "referenceHash",
+        "playback",
+        "anchor"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -3,6 +3,7 @@ import multipart from '@fastify/multipart';
 import { promises as fs, createReadStream, createWriteStream } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 import { randomUUID } from 'node:crypto';
 import { Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
@@ -40,11 +41,37 @@ import {viewRegistrationWorkbench} from '../../packages/topics/view-registration
 import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
 import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
 import {Moods} from '../../packages/animation/schemas.js';
+import {importActorMotion,listActorMotions,loadActorMotion} from '../../packages/motion/import.js';
+import {MotionHash} from '../../packages/motion/schemas.js';
+import {Id} from '../../packages/core/identifiers.js';
+import {motionWorkbench} from '../../packages/motion/workbench.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
 type Named = { name: string };
 const RunBody = z.object({ until: z.enum(States).default('DONE'), force: z.boolean().default(false), shotIds: z.array(SafeId).min(1).max(100).optional(),retryModelErrors:z.boolean().optional(),sceneRepairAttempts:z.number().int().min(0).max(3).optional() }).strict();
 const loopback = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
+const MotionImportBody=z.object({metadata:z.string().min(1).max(240),registration:z.string().min(1).max(240)}).strict();
+const NoMotionQuery=z.object({}).strict();
+
+/** Re-read and verify the exact bytes sent, never re-open an unverified stream. */
+async function motionSheetBytes(root:string,relative:string,expectedHash:string):Promise<Buffer> {
+  const file=await boundPath(root,relative),handle=await fs.open(file,'r'),limit=16*1024*1024;
+  try {
+    const before=await handle.stat();
+    if(!before.isFile()||before.size>limit)throw new ApiError(413,'Motion sheet exceeds size limit.','MOTION_SHEET_LIMIT');
+    const buffer=Buffer.alloc(Math.min(before.size+1,limit+1));
+    let offset=0;
+    while(offset<buffer.length) {
+      const {bytesRead}=await handle.read(buffer,offset,buffer.length-offset,null);
+      if(!bytesRead)break;
+      offset+=bytesRead;
+    }
+    const after=await handle.stat(),bytes=buffer.subarray(0,offset);
+    if(offset>limit||after.size!==before.size||offset!==before.size||hash(bytes)!==expectedHash)
+      throw new ApiError(409,'Motion sheet integrity mismatch.','MOTION_SHEET_INTEGRITY');
+    return bytes;
+  } finally {await handle.close();}
+}
 
 function clean(value: unknown): unknown {
   if (typeof value === 'string') return redact(value);
@@ -121,6 +148,42 @@ export async function buildServer(options: ServerOptions = {}) {
     // Do not print raw model/config errors, payloads or filesystem paths.
     request.log.warn({ status, code: error instanceof ApiError ? error.code : 'REQUEST_FAILED' }, 'Studio request failed');
     return reply.code(status).send({ error: { code: error instanceof ApiError ? error.code : 'REQUEST_FAILED', message } });
+  });
+
+  app.get('/api/motions/runtime/gsap.min.js',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);
+    const file=createRequire(import.meta.url).resolve('gsap/dist/gsap.min.js');
+    return reply.type('text/javascript; charset=utf-8').send(await fs.readFile(file));
+  });
+  app.get<{Params:Named}>('/api/projects/:name/motions',async request=>{
+    NoMotionQuery.parse(request.query);
+    return {motions:await listActorMotions(await rootFor(request.params.name))};
+  });
+  app.post<{Params:Named}>('/api/projects/:name/motions/import',async request=>{
+    const body=MotionImportBody.parse(request.body);
+    return mutate(request.params.name,async root=>{
+      await boundPath(root,'project.yaml');await loadConfig(root);
+      const metadata=await boundPath(root,body.metadata),registration=await boundPath(root,body.registration);
+      return importActorMotion(root,metadata,registration);
+    });
+  });
+  type MotionParams=Named & {id:string;fingerprint:string};
+  const candidate=async(params:MotionParams)=>{
+    const root=await rootFor(params.name);
+    return {root,motion:await loadActorMotion(root,Id.parse(params.id),MotionHash.parse(params.fingerprint))};
+  };
+  app.get<{Params:MotionParams}>('/api/projects/:name/motions/:id/:fingerprint/preview',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);
+    const {motion}=await candidate(request.params),preview=motionWorkbench(motion);
+    return reply.type('text/html; charset=utf-8')
+      .header('Content-Security-Policy',"default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self'; object-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'")
+      .send(preview.html);
+  });
+  app.get<{Params:MotionParams}>('/api/projects/:name/motions/:id/:fingerprint/sheet',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);
+    const {root,motion}=await candidate(request.params);
+    const bytes=await motionSheetBytes(root,motion.sheet.path,motion.sheet.hash);
+    return reply.type('image/png').header('Content-Length',bytes.length).send(bytes);
   });
 
   const summary = async (name: string): Promise<ProjectSummary> => {
