@@ -4,6 +4,10 @@ Source mục tiêu: [đánh giá sprite-gen](SPRITE-GEN-ASSESSMENT.md), pin 2.38
 
 ## Tiến độ source — chưa nghiệm thu runtime
 
+**Source arms `e609097`, fixes `718b53c`/`31297be` (08/10/2026):** current source-body expressive gestures dùng góc khớp/FK fixed lengths thay pole transit80ms. Default lấy dấu gập chain thật ở entry, kể cả think khi chạy, giữ xuyên run exit; explicit rest/reach qua zero flexion. Cung vai được đăng ký từ entry, có canonical180° tie và corridor±90°; vượt phạm vi chặn thay vì đổi cung giữa chừng. Aim scale theo source reach. Contact/carry/drop/spear và generic/legacy giữ solver. Bodycompiler17/trajectory descriptor v3 và cache cả source/body-view families có fingerprint mới. [Source/commands/limits và9NOTRUN](SOURCE-ARM-TRAJECTORIES.md), [ba P2 và source PASS sau sửa](reviews/source-arm-trajectory-review-v1.md). Không approve artwork/runtime/speech/native motion; model test còn phải kiểm actual acting/clearance và pipeline video.
+
+**Authoring giữ RGB gốc:** hai [SVG master tĩnh và ảnh so sánh](SOURCE-RGB-MASTERS.md) nhúng nguyên màu ảnh cận gốc, dùng cutout AI chỉ làm matte. Viền nền/cắt tóc-áo-biên tay chân vẫn cần căn lại; chưa layer registration/rig/view/mouth/pose/timeline/approval. Không thay asset sản xuất hoặc mở final từ các mẫu này. Người dùng không có API chuyển động từ ảnh; SVG/HTML5/GSAP và công cụ ảnh hiện có vẫn là đường triển khai.
+
 **Mốc authoring hiện hành `8998b39` + fixes `7f7b28b`/`9cc8b63`:** công cụ đo alpha offline với native windows thủ công/hash-bound và worksheet clipped tĩnh đã có source. Lila v3/Karo v2 đã tạo, đo và có Gemini static advice; vẫn candidate chưa đăng ký/duyệt, không có motion clock tự suy ra. Người dùng không có API image-to-video; tiếp tục HTML5/SVG/GSAP/art workflow. [Artifact/lệnh/môi trường](MOTION-ART-MEASUREMENT.md), [review source sau ba fixes, phạm vi và giới hạn](reviews/motion-art-measurement-source-review-v1.md). Fresh full build/test:typecheck/schema export exit 0, **4 measurement declarations NOT RUN**; các declarations trước đó vẫn chưa chạy. Source này bổ trợ authoring, không mở final hoặc hoàn thành toàn tool ba input.
 
 | Phần | Trạng thái | Bằng chứng |

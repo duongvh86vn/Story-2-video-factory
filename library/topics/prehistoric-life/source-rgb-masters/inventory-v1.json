@@ -1,0 +1,70 @@
+{
+  "version": "source-rgb-master-study-1",
+  "entries": [
+    {
+      "actorId": "lila",
+      "view": "source-front",
+      "rgb": {
+        "path": "docs/topics/assets/reference-lila-full.png",
+        "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+        "width": 430,
+        "height": 766
+      },
+      "alpha": {
+        "path": "library/topics/prehistoric-life/lila-cutout-v1.png",
+        "sha256": "ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e",
+        "width": 939,
+        "height": 1675,
+        "mapping": "uniform canvas mapping to original source units; existing AI matte alignment unapproved"
+      },
+      "master": {
+        "path": "library/topics/prehistoric-life/source-rgb-masters/lila-source-rgb-master-v1.svg",
+        "sha256": "6fdcfc6f53cd23bd61810c7de7df30250ea9c8dbf0df13d39eee98113bb8960a"
+      },
+      "comparison": {
+        "path": "docs/topics/reviews/source-rgb-lila-v1.png",
+        "sha256": "9d2ca07e1c97aefd0506d0449854bb14eb45bdeea74e0cf244628964bd4211ac"
+      },
+      "status": "candidate-needs-matte-alignment-and-layer-registration",
+      "productionReady": false,
+      "approved": false,
+      "registeredRigId": null
+    },
+    {
+      "actorId": "karo",
+      "view": "source-front",
+      "rgb": {
+        "path": "docs/topics/assets/reference-karo-full.png",
+        "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+        "width": 377,
+        "height": 716
+      },
+      "alpha": {
+        "path": "library/topics/prehistoric-life/karo-cutout-v1.png",
+        "sha256": "f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665",
+        "width": 910,
+        "height": 1728,
+        "mapping": "uniform canvas mapping to original source units; existing AI matte alignment unapproved"
+      },
+      "master": {
+        "path": "library/topics/prehistoric-life/source-rgb-masters/karo-source-rgb-master-v1.svg",
+        "sha256": "68cd5a738aa7a9f2740b9236059eca64e4cb56d2be68e707fb899e4c22223371"
+      },
+      "comparison": {
+        "path": "docs/topics/reviews/source-rgb-karo-v1.png",
+        "sha256": "6448bd3e9358fd4b0d1015a430d225daa6f534b73589e4c00c68fe6a5ff0ce3c"
+      },
+      "status": "candidate-needs-matte-alignment-and-layer-registration",
+      "productionReady": false,
+      "approved": false,
+      "registeredRigId": null
+    }
+  ],
+  "scope": "static-source-colour-master-authoring",
+  "limitations": [
+    "Original RGB bytes are not repainted; displayed pixels are still affected by matte/clipping and SVG sampling.",
+    "AI matte may clip original hair/clothes/hand/foot outlines; no automatic identity/silhouette acceptance.",
+    "Full source orientation only; no joint/head/garment layers, view/gaze/expressions/mouth/timeline/rig imported.",
+    "No body evaluator, tests, GSAP, browser, audio, production render or video acceptance used."
+  ]
+}

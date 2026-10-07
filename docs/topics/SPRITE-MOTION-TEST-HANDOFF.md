@@ -1,5 +1,9 @@
 # Bàn giao test sprite motion
 
+**Bổ sung source arms `e609097`, fixes `718b53c`/`31297be` (08/10/2026):** current source-body expressive gestures dùng fixed-length FK/angle quintic thay pole transit80ms. Pole/nhánh vai lấy từ entry thực, giữ qua run exit; implicit think không bị ép rest pole, explicit rest/reach vẫn có nghĩa. Canonical180° tie/corridor±90° chặn shoulder path vượt phạm vi; default aim theo reach. Contact/generic/legacy giữ solver. Bodycompiler17/descriptor v3 và quarter-view cache identity đổi; không đổi PNG/voice/native clock. Chín trajectory declarations **NOT RUN** và hướng dẫn Studio port riêng ở [SOURCE-ARM-TRAJECTORIES.md](SOURCE-ARM-TRAJECTORIES.md), [findings/source PASS sau ba P2](reviews/source-arm-trajectory-review-v1.md). Không có video mới đã kiểm ở mốc này; build/typecheck/schema không là motion acceptance.
+
+Hai [mẫu giữ RGB gốc](SOURCE-RGB-MASTERS.md) mới là SVG authoring tĩnh, chưa nối rig hoặc được duyệt. Model test không tự chọn chúng làm asset chuẩn. Cần căn matte/biên, lớp và anchor trước; ảnh so sánh màu không thay test chuyển động hoặc ba luồng video.
+
 **Bổ sung hiện hành `8998b39` + fixes `7f7b28b`/`9cc8b63`:** 4 declarations trong `tests/sprite-motion-measure.test.ts` **NOT RUN**. Source mới có layout/hash/bounds/ROI-budget, fixed local paged SVG/native clips và immutable authoring output; source review sau sửa PASS trong phạm vi mới, fresh full build/test:typecheck/schema export exit 0. Controller đã đo hai PNG thật và raster tài liệu tĩnh, không chạy test callbacks/fixtures/assertions hoặc video pipeline. [Artifact và các giới hạn](MOTION-ART-MEASUREMENT.md), [findings/re-review](reviews/motion-art-measurement-source-review-v1.md). Lila v3/Karo v2 vẫn candidate-needs-correction-unregistered; không dùng report alpha, Gemini advice hoặc figure PNG để approve art hoặc final.
 
 Model được giao test chạy riêng bốn declaration sau, không cần API/model/TTS:
