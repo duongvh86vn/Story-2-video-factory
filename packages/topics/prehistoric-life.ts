@@ -17,7 +17,7 @@ export const prehistoricReferences=[
 ] as const;
 /** Prevent model/TTS calls while the rejected production rig is being replaced. */
 export function requireTopicProductionReady(config:FactoryConfig):void {
-  if(config.topic.id&&!prehistoricReadiness.productionReady)throw new Error('needs-art-direction: Cuộc sống thời tiền sử đang chuẩn bị rig từ ảnh gốc. Bộ SVG cũ đã bị loại; bản tách nền/lớp mới chưa đủ góc, biểu cảm và chuyển động để sản xuất tập. Xem /api/topics/prehistoric-life/compare.');
+  if(config.topic.id&&!prehistoricReadiness.productionReady)throw new Error('needs-art-direction: Bộ diễn viên Cuộc sống thời tiền sử từ ảnh gốc chưa đủ góc nhìn, biểu cảm và chuyển động được nghiệm thu để sản xuất tập. Xem /api/topics/prehistoric-life/compare.');
 }
 /** Visual asset revisions must not rewrite a previously accepted narration. */
 export function topicNarrativeContext(config:FactoryConfig) {

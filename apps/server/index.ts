@@ -167,9 +167,15 @@ export async function buildServer(options: ServerOptions = {}) {
   });
   app.put<{Params:Named}>('/api/projects/:name/motions/catalog',async request=>{
     NoMotionQuery.parse(request.query);const body=MotionCatalogSaveSchema.parse(request.body);
-    return mutate(request.params.name,async root=>{
+    return mutate(request.params.name,async (root,core)=>{
       await boundPath(root,'project.yaml');await loadConfig(root);
-      try{return await saveSpriteMotionCatalog(root,body.catalog,body.revision);}
+      try{
+        const saved=await saveSpriteMotionCatalog(root,body.catalog,body.revision);
+        // Retain narration/locks but stop advertising the old visual delivery
+        // immediately, rather than waiting for the next production run.
+        if(saved.revision!==body.revision)await core.invalidateProject(root,'TIMED');
+        return saved;
+      }
       catch(error){if(error instanceof Error&&error.message.startsWith('REVISION_CONFLICT:'))throw new ApiError(409,'The movement library changed. Reload before saving.','REVISION_CONFLICT');throw error;}
     });
   });
