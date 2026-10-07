@@ -81,6 +81,27 @@
           ],
           "additionalProperties": false
         },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 512
+        },
         "requiredLandmarks": {
           "type": "array",
           "items": {

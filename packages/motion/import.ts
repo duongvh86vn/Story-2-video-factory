@@ -57,13 +57,14 @@ export function normalizeSpriteMotion(metadata:unknown, sheet:{width:number;heig
     }
   }
   if(reg.landmarks && reg.landmarks.length!==rects.length)throw new Error('Registration landmarks must cover every playback position');
+  if(reg.anchors && reg.anchors.length!==rects.length)throw new Error('Registration anchors must cover every playback position');
   const upstream=reg.landmarks===undefined && sourcePoints!==undefined
     ? z.array(z.record(z.tuple([z.number().finite(),z.number().finite()]))).length(rects.length).parse(sourcePoints):undefined;
   const frames=rects.map((rect,i)=>{
     const landmarks=reg.landmarks?.[i] ?? Object.fromEntries(Object.entries(upstream?.[i]??{})
       .map(([name,p])=>[name,MotionPoint.parse({x:p[0]-rect.x,y:p[1]-rect.y})]));
     for(const name of reg.requiredLandmarks)if(!Object.hasOwn(landmarks,name))throw new Error(`Missing required landmark ${name} at frame ${i}`);
-    return {rect,durationMs:durations[i]!,anchor:reg.anchor,landmarks};
+    return {rect,durationMs:durations[i]!,anchor:reg.anchors?.[i]??reg.anchor,landmarks};
   });
   const motion=ActorMotionSchema.parse({version:ACTOR_MOTION_VERSION,id:reg.id,actorId:reg.actorId,state:reg.state,view:reg.view,
     fingerprint:'0'.repeat(64),source:{kind,metadataHash,sheetHash:sheet.hash,registrationHash:hash(canonical(reg)),referenceHash:reg.referenceHash,loop},

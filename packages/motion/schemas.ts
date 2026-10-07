@@ -16,6 +16,9 @@ export const MotionRegistrationSchema=z.object({
   playback:z.object({mode:z.enum(['once','loop']),end:z.enum(['hold','first','hide'])}).strict(),
   /** Source-frame pixels; required, never inferred from empty canvas margins. */
   anchor:MotionPoint,
+  /** Optional explicit anchor for every playback position, in its frame pixels.
+   * When absent, the shared anchor retains the existing registration contract. */
+  anchors:z.array(MotionPoint).min(1).max(512).optional(),
   requiredLandmarks:z.array(LandmarkName).max(32).default([]),
   /** Optional per-play-position registration, overriding declared source landmarks. */
   landmarks:z.array(z.record(LandmarkName,MotionPoint)).max(512).optional(),

@@ -8,6 +8,7 @@ import sharp from 'sharp';
 import {hash} from '../packages/core/utils.js';
 import {MotionRegistrationSchema, type MotionRegistration} from '../packages/motion/schemas.js';
 import {importActorMotion,listActorMotions,loadActorMotion,normalizeSpriteMotion} from '../packages/motion/import.js';
+import {motionLandmarkAt} from '../packages/motion/player.js';
 
 const digest='a'.repeat(64);
 const registration=():MotionRegistration=>({version:'actor-motion-registration-1',id:'lila-walk',actorId:'lila',state:'walk',view:'left',
@@ -37,6 +38,26 @@ test('registration landmarks override atlas coordinates per position and must be
   const reg=registration();reg.landmarks=[{hand:{x:0,y:0}},{hand:{x:1,y:1}},{hand:{x:2,y:2}}];
   assert.deepEqual(normalize(atlas(),reg).frames.map(f=>f.landmarks.hand),reg.landmarks.map(f=>f.hand));
   reg.landmarks.pop();assert.throws(()=>normalize(atlas(),reg),/every playback position/);
+});
+
+test('per-position anchors keep repeated atlas positions and world landmarks distinct without changing source rectangles',()=>{
+  const reg=registration();reg.anchors=[{x:1,y:4},{x:2,y:3},{x:3,y:2}];
+  const motion=normalize(atlas(),reg),clip={id:'anchor-check',compositionId:'shot-anchor',startMs:0,endMs:420,rate:1,placement:{x:100,y:200,scale:1,rotation:0}};
+  assert.deepEqual(motion.frames.map(frame=>frame.anchor),reg.anchors);
+  assert.deepEqual(motion.frames.map(frame=>frame.rect),atlas().frame_layout.rows.walk);
+  assert.deepEqual([0,100,350].map(time=>motionLandmarkAt(motion,clip,'hand',time)),[{x:100,y:198},{x:101,y:198},{x:99,y:201}]);
+  const unchanged=normalize();assert.deepEqual(unchanged.frames.map(frame=>frame.anchor),[{x:2,y:4},{x:2,y:4},{x:2,y:4}]);
+  assert.equal(Object.hasOwn(MotionRegistrationSchema.parse(registration()),'anchors'),false);
+  assert.notEqual(motion.fingerprint,unchanged.fingerprint);assert.notEqual(motion.source.registrationHash,unchanged.source.registrationHash);
+});
+
+test('per-position anchors require complete bounded explicit registration for atlas and strip',()=>{
+  for(const anchors of [[],[{x:1,y:2}],Array.from({length:4},()=>({x:1,y:2})),[{x:1,y:2},{x:5,y:2},{x:1,y:2}],
+    [{x:1,y:2},{x:1,y:-1},{x:1,y:2}],[{x:1,y:2},{x:NaN,y:2},{x:1,y:2}]])assert.throws(()=>normalize(atlas(),{...registration(),anchors}));
+  assert.throws(()=>MotionRegistrationSchema.parse({...registration(),anchors:Array.from({length:513},()=>({x:1,y:2}))}));
+  const reg=registration();reg.requiredLandmarks=[];reg.anchors=[{x:0,y:4},{x:4,y:0}];
+  assert.deepEqual(normalize({frames:2,w:4,h:4,delay_ms:90,loop:false},reg).frames.map(frame=>frame.anchor),reg.anchors);
+  reg.anchors.pop();assert.throws(()=>normalize({frames:2,w:4,h:4,delay_ms:90,loop:false},reg),/every playback position/);
 });
 test('fingerprint is deterministic under JSON key reordering and binds registration notes and reference provenance',()=>{
   const first=normalize(),reg=registration();
@@ -127,6 +148,20 @@ test('immutable imports preserve raw bytes, hashes and repeat descriptors; sourc
   assert.equal((await listActorMotions(b.root)).length,2);
   await assert.rejects(fs.access(path.join(b.root,'asset-manifest.json')));
 });
+
+test('per-position anchor edits create immutable versions while invalid registration publishes no assets',async t=>{
+  const b=await bundle(t),reg=registration();reg.anchors=[{x:1,y:4},{x:2,y:3},{x:3,y:2}];
+  await fs.writeFile(b.registrationFile,JSON.stringify({...reg,anchors:reg.anchors.slice(0,2)}));
+  await assert.rejects(importActorMotion(b.root,b.metadataFile,b.registrationFile),/every playback position/);
+  await assert.rejects(fs.access(path.join(b.root,'assets')),{code:'ENOENT'});
+  await fs.writeFile(b.registrationFile,JSON.stringify(reg));
+  const first=await importActorMotion(b.root,b.metadataFile,b.registrationFile),firstManifest=path.join(b.root,path.dirname(first.sheet.path),'manifest.json'),bytes=await fs.readFile(firstManifest);
+  assert.deepEqual(first.frames.map(frame=>frame.anchor),reg.anchors);assert.deepEqual(await fs.readFile(path.join(b.root,first.sheet.path)),b.bytes);
+  reg.anchors[1]!.x=3;await fs.writeFile(b.registrationFile,JSON.stringify(reg));
+  const second=await importActorMotion(b.root,b.metadataFile,b.registrationFile);
+  assert.notEqual(second.fingerprint,first.fingerprint);assert.deepEqual(await fs.readFile(firstManifest),bytes);
+  assert.deepEqual(await loadActorMotion(b.root,first.id,first.fingerprint),first);
+});
 test('strip IO resolves the sibling PNG without using metadata path hints',async t=>{
   const b=await bundle(t,true);
   const motion=await importActorMotion(b.root,b.metadataFile,b.registrationFile);
@@ -144,6 +179,7 @@ test('load rejects descriptor corruption, source provenance edits and wrong shee
   const manifest=path.join(b.root,path.dirname(motion.sheet.path),'manifest.json');
   const edits=[
     (m:typeof motion)=>{m.frames[0]!.durationMs++;},
+    (m:typeof motion)=>{m.frames[1]!.anchor.y--;},
     (m:typeof motion)=>{m.source.metadataHash='b'.repeat(64);},
     (m:typeof motion)=>{m.source.registrationHash='b'.repeat(64);},
     (m:typeof motion)=>{m.source.referenceHash='b'.repeat(64);},
