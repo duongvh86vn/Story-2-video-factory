@@ -13,7 +13,7 @@ Hilbert `01a11712-4d23-7202-800c-1918d2b3d2ba` returned **bounded PASS, no actio
 - Full build exit0: core+Studio types+Vite32 modules/529ms, Studio JS174.76kB/gzip52.46kB. This is not scene size, playback or compile benchmark.
 - Fresh full build and test:typecheck after topic0.33/ASCII cast sorting also exit0; Vite32 modules/550ms, unchanged Studio bundle. No production source changed after these final checks.
 - Schema export exit0; new view-acting-clock context schema, persisted Activity/Performance unchanged.
-- Whitespace check exit0. Owned-file publication SHA pending final review.
+- Working/staged whitespace checks exit0. Owned19-file source checkpoint `da07b1ed800f3767584492711d902a2c001db339` committed/pushed; remote SHA matched and tracked/index changes were clean. Unrelated untracked files were not staged. This publication record update is documentation only.
 - No new PNG, sampled animation frame, runtime/API/model/TTS/ASR/audio/MP4 or artistic approval. Original PNG bytes unchanged; static eye figures0.32 remain historical document artwork.
 - One multi-file patch initially failed preflight on the compiler constant name; no partial mutation occurred. Corrected FOREST_BODY_COMPILER_VERSION and reapplied. This was authoring, not a runtime test failure.
 - Completed reviewer was closed after retaining its bounded PASS and all earlier findings. No callbacks were run for this review.

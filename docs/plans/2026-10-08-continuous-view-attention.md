@@ -10,6 +10,6 @@
 - [x] Integrate native breath, gaze, refinement/source events/report, canonical primary/supporting paths and cache/repair source binding; preserve gesture reference/recursive sampling context.
 - [x] Declare behavioral NOT RUN cases: exact-cut gaze/breath/seek, gaps/cuts/target/view/stage mismatch, hostile/stale context, ownership/actor switches, compiler grid/matrix bounds, canonical paired path/cache/repair and production gates.
 - [x] Build/typecheck only, obtain bounded independent source/declaration review, retain actual findings and fixes. Runtime callbacks/GSAP/browser/API/pipeline/audio/render/MP4 belong to the user's model.
-- [ ] Update topic MD/handoff with environment, commands, limitations and exact publication SHA; push owned files to authorized branch.
+- [x] Update topic MD/handoff with environment, commands, limitations and exact publication SHA; push owned files to authorized branch. Source checkpoint `da07b1ed800f3767584492711d902a2c001db339` committed/pushed, remote hash matched. Nine new callbacks remain NOT RUN and the full product goal remains active.
 
 Full goal remains active: script verbatim/WAV original voice+clock/story→faithful script→video; EN primary/VI/JA/KO/external-local TTS; Lila/Karo are actors in arbitrary user stories. Still pending native identity/all expressions/neutral mouth, turns, walk/run/jump/seating/cloth/hair/prop contacts, rich environments and runtime/visual acceptance of all input paths. productionReady=false/productionRig=null/final source/identity/voice/target/sync gates remain.

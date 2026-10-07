@@ -2,7 +2,7 @@
 
 Mốc source0.33, 08/10/2026; base `08712b172a1c5a00d73e7052a36ef1cb0dd54e4f`, branch `codex/prehistoric-life`. Không có API image-to-video vẫn tiếp tục dùng SVG/HTML5/GSAP. Đây là source candidate, chưa nghiệm thu chuyển động hoặc video.
 
-Source checks: full build, test:typecheck, schema export và whitespace exit0; bounded independent source/declaration review PASS. Chín callback mới chưa chạy. Publication SHA sẽ được ghi sau commit/push; không có runtime/visual approval ở mốc này.
+Source checks: full build, test:typecheck, schema export và whitespace exit0; bounded independent source/declaration review PASS. Source checkpoint `da07b1ed800f3767584492711d902a2c001db339` đã push, local/remote SHA khớp. Chín callback mới chưa chạy; không có runtime/visual approval ở mốc này.
 
 ## Thay đổi
 
