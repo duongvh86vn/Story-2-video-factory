@@ -151,6 +151,10 @@ test('canonical cinematic primary and supporting mouths select independent nativ
   c.performance=definitions[0]!.plan;c.actorScene=ActorSceneSchema.parse({primary:definitions[0]!.character,speakingSegmentIds:['lila-line'],supporting:[{character:definitions[1]!.character,performance:definitions[1]!.plan,actions:[],speakingSegmentIds:['karo-line']}]});
   c.camera={...c.camera,focus:'ensemble',framing:'wide',movement:'locked',startScale:1,endScale:1,anchor:{x:640,y:360}};
   bindActorShot(s,f.profile,f.rig);
+  c.continuity={...c.continuity,entry:{...c.performance.root},exit:{...c.performance.root},facing:c.performance.facing??'front',carriedProps:[]};
+  s.camera={...s.camera,shotSize:c.camera.framing,movement:c.camera.movement};
+  s.host!.actions=[{type:'idle',startMs:s.startMs,endMs:s.endMs}];
+  c.actorScene!.supporting[0]!.actions=[{type:'idle',startMs:s.startMs,endMs:s.endMs}];
   const signal:SpeechActivity={method:'audio-rms',audioHash:'original-paired-audio',windowMs:20,intervals:[{startMs:1000,endMs:2700,level:.6},{startMs:3200,endMs:5900,level:.8}]};
   const rendered=renderCinematic(s,f.profile,f.rig,signal,f.config,undefined,n),html=rendered.files.files.find(x=>x.path==='index.html')!.content;
   assert.match(html,/data-body-view="three-quarter-right"/);assert.match(html,/data-body-view="three-quarter-left"/);
