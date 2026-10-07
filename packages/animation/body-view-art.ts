@@ -1,9 +1,12 @@
 import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {bodyViewClothingContours} from './body-view-contours.js';
+import {bodyViewLeftRegistration} from './body-view-left-registration.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-1';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-2';
+export const REGISTERED_BODY_VIEWS=['three-quarter-right','three-quarter-left'] as const;
+export type RegisteredBodyView=typeof REGISTERED_BODY_VIEWS[number];
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These two
  * engineering candidates use uniform head/body transforms. Their physical
@@ -29,11 +32,22 @@ export const bodyViewRegistration={
     headClip:'M0 0H910V558L642 558L601 619L548 635L501 625L457 635L409 617L363 579H0Z',
     headBounds:{left:287,right:710,top:95,bottom:635},chin:{left:{x:622,y:538},right:{x:378,y:551}}},
 } as const;
+/** Retain bodyViewRegistration[actor] as the existing right-view API. New
+ * callers select explicit native artwork; neither view reflects the other. */
+export const bodyViewRegistrations={
+  lila:{'three-quarter-right':bodyViewRegistration.lila,'three-quarter-left':bodyViewLeftRegistration.lila},
+  karo:{'three-quarter-right':bodyViewRegistration.karo,'three-quarter-left':bodyViewLeftRegistration.karo},
+} as const;
 export function usesBodyView(profile:Pick<HostProfile,'appearance'>){return profile.appearance.artworkVersion===BODY_VIEW_VERSION;}
 export function registeredBodyView(profile:Pick<HostProfile,'appearance'>){
-  const actor=profile.appearance.characterVariant;
-  if(!actor||profile.appearance.bodyView!=='three-quarter-right')throw new Error('needs-body-registration: this authored body angle has no registered candidate');
-  return bodyViewRegistration[actor];
+  const actor=profile.appearance.characterVariant,view=profile.appearance.bodyView;
+  if(!actor||!view||!REGISTERED_BODY_VIEWS.includes(view))throw new Error('needs-body-registration: this authored body angle has no registered candidate');
+  return bodyViewRegistrations[actor][view];
+}
+export function bodyViewFacing(profile:Pick<HostProfile,'appearance'>){return registeredBodyView(profile).view==='three-quarter-left'?'left':'right';}
+/** A planted lunge has only been authored for the right-facing candidate. */
+export function validateBodyViewLunge(profile:Pick<HostProfile,'appearance'>){
+  if(!usesBodyView(profile)||registeredBodyView(profile).view!=='three-quarter-right')throw new Error('needs-lunge-pose: left-facing/native source stance is not registered; choose an authored right-facing lunge');
 }
 export function bodyViewMetrics(profile:Pick<HostProfile,'appearance'>){
   const c=registeredBodyView(profile),b=profile.appearance.bodyScale,k=c.bodyScale*b;
@@ -60,7 +74,7 @@ export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sh
     torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})" mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>`};
 }
 export const bodyViewDescription={version:BODY_VIEW_REGISTRATION_VERSION,artworkVersion:BODY_VIEW_VERSION,
-  sources:bodyViewRegistration,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistration}),
+  sources:bodyViewRegistrations,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations}),
   status:'developer-landmark-and-layer-candidate',productionReady:false,approved:false,
-  method:'fixed authored 3/4 right head/body with independent uniform source registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp',
+  method:'fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp',
   limitations:['identity/proportion/mask review','only happy silent fixed-view poses','rigid garment; no walking/seating/cloth follow for this view','no continuous body/head turn','no motion acceptance']};

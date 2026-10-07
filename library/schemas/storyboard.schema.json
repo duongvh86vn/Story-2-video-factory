@@ -1587,7 +1587,8 @@
                                   "bodyView": {
                                     "type": "string",
                                     "enum": [
-                                      "three-quarter-right"
+                                      "three-quarter-right",
+                                      "three-quarter-left"
                                     ]
                                   },
                                   "sourceColour": {
@@ -1795,7 +1796,8 @@
                                     "bodyView": {
                                       "type": "string",
                                       "enum": [
-                                        "three-quarter-right"
+                                        "three-quarter-right",
+                                        "three-quarter-left"
                                       ]
                                     },
                                     "sourceColour": {

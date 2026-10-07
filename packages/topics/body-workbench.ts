@@ -1,6 +1,6 @@
 import {escapeHtml} from '../core/utils.js';
 import {hash} from '../core/utils.js';
-import {BODY_VIEW_VERSION,bodyViewDescription} from '../animation/body-view-art.js';
+import {BODY_VIEW_VERSION,REGISTERED_BODY_VIEWS,bodyViewDescription} from '../animation/body-view-art.js';
 import {ANIMATION_VERSION,HUNT_ANIMATION_VERSION,type PerformancePlan,type Mood} from '../animation/schemas.js';
 import {performanceSvg,rigMetrics} from '../animation/rig.js';
 import {samplePerformance,validatePerformance,bodyPoseAnchors} from '../animation/compiler.js';
@@ -13,7 +13,7 @@ import {SOURCE_WALK_POSES} from '../animation/source-walk.js';
 import {RUN_POSES,runStepCount} from '../animation/running.js';
 import {spearSvg} from '../animation/spear.js';
 export const BODY_ACTIONS=['rest','point','think','crouch','walk','walk-left','run','run-left','jump','hunt-stalk','spear-hold','spear-hold-left','spear-thrust','spear-thrust-left','spear-lunge','hunt-aim','hunt-chase','head-turn','sit-right','sit-left','sit-walk-right','sit-walk-left'] as const;
-export const BODY_WORKBENCH_VIEWS=['source','three-quarter-right'] as const;
+export const BODY_WORKBENCH_VIEWS=['source',...REGISTERED_BODY_VIEWS] as const;
 export type BodyWorkbenchView=typeof BODY_WORKBENCH_VIEWS[number];
 export const BODY_COLOUR_MODES=['cutout',SOURCE_COLOUR_VERSION] as const;
 export type BodyColourMode=typeof BODY_COLOUR_MODES[number];
@@ -24,14 +24,23 @@ export const bodyActionDuration=(action:BodyAction)=>action.startsWith('sit-walk
  * page neither renders an episode nor establishes smooth-motion acceptance. */
 export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:Mood,gestureHand:'left'|'right'='right',view:BodyWorkbenchView='source',colour:BodyColourMode='cutout') {
   const base=topicPreviewProfile(actor),authored=view!=='source'||action==='spear-lunge';
+  if(action==='spear-lunge'&&view==='three-quarter-left')throw new Error('needs-lunge-pose: left-facing planted lunge has not been authored');
   if(colour!== 'cutout'&&(colour!==SOURCE_COLOUR_VERSION||authored))throw new Error('needs-source-colour-profile: original RGB candidate is registered only for source orientation');
+  if(authored){
+    if(mood!=='happy')throw new Error('needs-view-expression: authored-view candidate has only its intact happy face');
+    const fixed=['rest','point','think'];
+    const rightTools=['spear-hold','spear-thrust','spear-lunge','hunt-aim'];
+    if(view==='three-quarter-left'&&(action.startsWith('spear-')||action==='hunt-aim'||action==='hunt-chase'))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
+    if(!fixed.includes(action)&&!rightTools.includes(action))throw new Error('needs-view-motion: this fixed view has no authored locomotion/seated/turn candidate');
+  }
   const source=colour==='cutout'?base:{...base,appearance:{...base.appearance,sourceColour:SOURCE_COLOUR_VERSION},profileHash:hash({source:base.profileHash,colour:sourceColourDescription.fingerprint})};
-  const profile=authored?{...source,appearance:{...source.appearance,artworkVersion:BODY_VIEW_VERSION,bodyView:'three-quarter-right' as const},profileHash:hash({source:source.profileHash,registration:bodyViewDescription.fingerprint})}:source,m=rigMetrics(profile);
+  const selectedView=view==='source'?'three-quarter-right':view;
+  const profile=authored?{...source,appearance:{...source.appearance,artworkVersion:BODY_VIEW_VERSION,bodyView:selectedView},profileHash:hash({source:source.profileHash,view:selectedView,registration:bodyViewDescription.fingerprint})}:source,m=rigMetrics(profile);
   const sitting=action.startsWith('sit-'),durationMs=bodyActionDuration(action);
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'body-calibration-'+actor,leadCharacterId:actor,profileHash:profile.profileHash,
     kind:'stick-man',durationMs,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
     walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:durationMs,mood}]};
-  if(authored)plan.headView='three-quarter-right';
+  if(authored){plan.headView=selectedView;plan.facing=selectedView==='three-quarter-left'?'left':'right';}
   if(action==='point'){
     if(!authored)delete plan.headView;
     const shoulder=m.shoulders![gestureHand];
@@ -169,7 +178,7 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:Bod
   return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rig toàn thân Lila &amp; Karo</title><style>'
     +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}.tool-pair{grid-template-columns:minmax(130px,210px) minmax(0,1fr);align-items:center}.tool-pair img{height:350px}.tool-pair svg{height:440px}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair,.tool-pair{grid-template-columns:1fr}img,svg{height:410px}.tool-pair img{height:230px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
     +(view==='source'&&action!=='spear-lunge'?'<p>Thân nguồn: nét tay/chân liên tục qua khớp IK; tay think và mitten cùng lớp trước cằm. Preset front giữ hai grip giáo cách 100 × bodyScale. Đây là ứng viên pose tĩnh, chưa nghiệm thu chuyển động.</p>':'')
-    +'<p><strong>Mốc 0.20:</strong> tách cuff/cổ tay khỏi palm/grip theo ảnh nguồn và mở mask mitten đầy đủ. Cẳng tay kết thúc ở cuff; bàn tay cứng nối theo tiếp tuyến cẳng tay, grip vẫn giữ đúng cán. Xương tay đã migrate theo landmark trước khi đánh giá target, chưa nghiệm thu tỷ lệ. 3/4 phải/lunge giữ lớp gần/xa, sole trụ và clock giáo. Mặt happy giữ nguyên; view mới chỉ hỗ trợ pose im lặng, áo còn rigid. Ba luồng input sản xuất vẫn chờ rig được duyệt. <a href="?action=spear-lunge&amp;view=three-quarter-right&amp;timeMs=1800&amp;mood=happy">Xem ứng viên lunge 3/4</a>.</p>'
+    +'<p><strong>Mốc 0.20:</strong> tách cuff/cổ tay khỏi palm/grip theo ảnh nguồn và mở mask mitten đầy đủ. Cẳng tay kết thúc ở cuff; bàn tay cứng nối theo tiếp tuyến cẳng tay, grip vẫn giữ đúng cán. Xương tay đã migrate theo landmark trước khi đánh giá target, chưa nghiệm thu tỷ lệ. 3/4 trái/phải giữ lớp tay gần/xa theo artwork độc lập; lunge và grip giáo mới có ứng viên phải. Mặt happy giữ nguyên; view mới chỉ hỗ trợ pose im lặng, áo còn rigid. Ba luồng input sản xuất vẫn chờ rig được duyệt. <a href="?action=spear-lunge&amp;view=three-quarter-right&amp;timeMs=1800&amp;mood=happy">Xem ứng viên lunge 3/4</a>.</p>'
     +'<p>Màu ảnh gốc dùng RGB nguyên bản và matte riêng, còn viền mảnh cần nghiệm thu. Lựa chọn này chỉ có cho thân source; view 3/4/lunge dùng artwork khác và sẽ bị chặn khi chọn màu gốc. Lớp mặt happy giữ nguyên; blink/mouth vẫn là overlay ứng viên. Đây là trang kiểm pose, không phát video.</p>'
     +'<form method="get"><label>Màu nhân vật<select name="colour">'+BODY_COLOUR_MODES.map(value=>'<option value="'+value+'"'+(colour===value?' selected':'')+'>'+(value==='cutout'?'Cutout hiện có':'Màu ảnh gốc · ứng viên')+'</option>').join('')+'</select></label><label>Góc thân<select name="view">'+BODY_WORKBENCH_VIEWS.map(v=>'<option value="'+v+'"'+(view===v?' selected':'')+'>'+v+'</option>').join('')+'</select></label><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
     +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="'+bodyActionDuration(action)+'" step="1" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'

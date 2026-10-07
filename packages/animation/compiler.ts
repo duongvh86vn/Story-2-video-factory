@@ -16,7 +16,7 @@ import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
-import {usesBodyView,registeredBodyView} from './body-view-art.js';
+import {usesBodyView,registeredBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
@@ -78,6 +78,16 @@ function overlaps(items: Array<{startMs:number;endMs:number}>, label:string, dur
     end=item.endMs;
   }
 }
+/** Applies equally to compiled plans and direct random-access inspection. */
+function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
+  if(!usesBodyView(profile))return;
+  if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
+  if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending');
+  if(plan.expressions.some(e=>e.mood!=='happy'))throw new Error('needs-view-expression: authored-view candidate has only its intact happy face');
+  if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
+  if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'))throw new Error('needs-view-motion: this authored view has only point/chin and right-view spear candidates');
+  if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
+}
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
   PerformancePlanSchema.parse(plan);
   validateReferenceHead(profile,[plan.headView,...(plan.headTurns??[]).map(turn=>turn.direction)]);
@@ -95,13 +105,8 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   overlaps(plan.jumps??[],'jump',plan.durationMs);
   if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.jumps?.length||plan.gestures.some(g=>g.action==='drop'||g.landingMs!==undefined)))throw new Error('Jump/drop clips require animation2.2.14 or newer');
   if(plan.compilerVersion!==HUNT_ANIMATION_VERSION&&(plan.walks.some(w=>w.gait==='run')||plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('Run/spear tracks require animation2.2.15');
-  if(usesBodyView(profile)){
-    if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
-    if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending');
-    if(plan.expressions.some(e=>e.mood!=='happy'))throw new Error('needs-view-expression: authored-view candidate has only its intact happy face');
-    if(plan.facing!==undefined&&plan.facing!=='right')throw new Error('needs-body-registration: fixed right-facing artwork cannot portray the opposite body direction');
-    if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'))throw new Error('needs-view-motion: this authored view has only point/chin and spear candidates');
-  }
+  if(plan.lunge)validateBodyViewLunge(profile);
+  validateFixedBodyView(plan,profile);
   if(plan.lunge){
     const strike=plan.spears?.find(s=>s.id===plan.lunge!.spearId);
     if(!usesBodyView(profile)||plan.compilerVersion!==HUNT_ANIMATION_VERSION||plan.spears?.length!==1||!strike||strike.action!=='thrust'||!strike.twoHands||!strike.elbowPoles||strike.startMs!==0||strike.endMs!==plan.durationMs)throw new Error('needs-lunge-pose: fixed authored-view stance must own one two-hand thrust with fixed elbow poles for the entire shot');
@@ -592,6 +597,8 @@ function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gest
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity):FrameState {
+  if(plan.lunge)validateBodyViewLunge(profile);
+  validateFixedBodyView(plan,profile);
   if(usesBodyView(profile)&&activity.intervals.length)throw new Error('needs-view-voice-animation: authored-view speech overlays are not registered');
   const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t);
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
@@ -632,7 +639,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   for(const [i,side] of (['left','right'] as const).entries()){
     // One continuous bend branch, including rest, walk entry and recovery.
     const geometry=legGeometry(m,pelvis,walk.feet[side],side,s,profile.appearance.bodyScale,lean),{hip,ankle}=geometry;
-    const pole=plan.lunge?.kneePoles[side]??(usesBodyView(profile)?1:usesReferenceBody(profile)?sourceKneePole(plan,side,bend):bend);
+    const pole=plan.lunge?.kneePoles[side]??(usesBodyView(profile)?bodyViewFacing(profile)==='left'?-1:1:usesReferenceBody(profile)?sourceKneePole(plan,side,bend):bend);
     const leg=solveChain(hip,ankle,geometry.bones.upper,geometry.bones.lower,pole);
     const projected=legProjection?kneeProjection({kneeSeatWeight},geometry,leg):undefined;
     thighAngles.push(projected?.upper??leg.upper);
