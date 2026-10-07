@@ -49,3 +49,7 @@ Chuẩn bị tests source/renderer/loader/final gate: opt-in legacy compatibilit
 ## Product work còn tiếp tục
 
 Chọn motion từ catalog được duyệt trong director/Studio; quản lý receipt acceptance và export; tạo art Lila/Karo chuyển động đủ views/poses/expression; mouth/voice và props thật; visual/runtime test ba input đến video và QC. Không thu hẹp mục tiêu thành renderer draft khi các phần đó chưa đạt.
+
+## Source checkpoint
+
+Tasks 1–2 đã có source tại `5e396a7`; Task 3 có 13 test declarations ban đầu và ba regression declarations tại `d1fb7e4`, chưa thực chạy. Fresh build/test:typecheck/schema export/diff check exit 0. Review ban đầu HOLD với ba Important về allowlist sheet, pooled hand ownership và contact camera bỏ qua object/label; đã sửa tại `d1fb7e4` và `36e2172`, gồm residual relationTo response endpoint. Final focused source review PASS, no residual Important/Critical in scope. [Accumulator](../topics/reviews/canonical-sprite-source-review-v1.md) giữ findings và disposition; [handoff](../topics/SPRITE-STORY-TEST-HANDOFF.md) giữ lệnh/phạm vi runtime chưa chạy. Push source milestone và nghiệm thu sản phẩm là hai trạng thái riêng.

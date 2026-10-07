@@ -34,6 +34,14 @@ Minor preflight đã được xử lý trong mốc actor composition dưới đ�
 
 Đây là actor fragment có ràng buộc câu chuyện, chưa nối vào renderer canonical hoặc chọn asset từ pipeline. Giữ `productionReady=false`, `speechSync=none`; sourced dialogue bị chặn `needs-sprite-speech`. Source `3a403a8`, fix `8b4b930`: build/test:typecheck/schema export exit 0; [review độc lập](reviews/sprite-story-source-review-v1.md) xác nhận source gate sau sửa ba Important và hai Minor. Chuẩn bị 20 ca test mới; runtime/video acceptance **NOT RUN**.
 
+## Renderer canonical — source tại `5e396a7`
+
+Opt-in `cinematic.spriteStage` đã có branch scene đầy đủ với world art planes, đối tượng, camera và actor PNG nguyên dữ liệu; shot không chọn field này giữ renderer cũ. Loader kiểm immutable descriptor/sheet; staging, source comparison và input identity dùng cùng context. Scene geometry tagged `sprite-actors` và camera report nói rõ chỉ kiểm bounds/landmarks tại các clock được lấy mẫu. Clip phải khai `sourcedAction` để được tính coverage; registered motion state phải khớp declaration, nhưng declaration không chứng minh animation đúng nguồn.
+
+Candidate final bị chặn ở engine, pipeline, QC và download. Speech, skeletal props và cross-shot continuous handoff chưa có trong branch mới nên báo blocker rõ. Async domain normalization được await trước receipt/hash/cache acceptance. Ban đầu có 11 test canonical scene và 2 test async normalization; thêm ba ca regression sau review, tổng 14 + 2, **chưa chạy callback/assertion**. Fix `d1fb7e4`, `36e2172` giải quyết resource allowlist, same-actor hands và contact object/label/response endpoint framing. Fresh build, test:typecheck, schema export và diff check qua; [review source độc lập](reviews/canonical-sprite-source-review-v1.md) PASS trong phạm vi mốc code, không phải nghiệm thu sản phẩm. [Plan](../plans/2026-10-07-canonical-sprite-scenes.md), [lệnh bàn giao](SPRITE-STORY-TEST-HANDOFF.md).
+
+Catalog/Studio chọn asset, receipt art/motion acceptance, source artwork đủ diễn xuất, speech/props/continuous contact và video ba input đến final vẫn là công việc sản phẩm còn thiếu. Không dùng mốc renderer này để công bố tool hoàn thành hoặc Lila/Karo đạt mẫu.
+
 ## Global Constraints
 
 - Tool vẫn ba input: kịch bản / WAV / câu chuyện → kịch bản. Lila/Karo là diễn viên; không giới hạn nội dung vào demo săn.
