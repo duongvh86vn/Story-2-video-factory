@@ -2,6 +2,8 @@
 
 Base `616aac5171420ed15602f89d4500a2bb8fe635ed`, 08/10/2026; current source0.31/body compiler21/mouth protocol2. Scope: new render-local clock/projection/windowing, whole-cue ownership union, compiler endpoint/refinement, canonical primary/supporting/report paths, cache/source-comparison/locks and repair acceptance. Native artwork/source PNGs and persisted ActivitySchema unchanged. Full product goal remains active; productionfalse/rig null.
 
+Published source `d8ce672d3fdbc8470ffc6779d4d8b92b847ade35`, 21 owned files; remote SHA matched. Unrelated untracked studies/evidence and the user's D:/ working copy were not staged or changed.
+
 ## Findings retained
 
 Reviewer Hilbert `01a11712-4d23-7202-800c-1918d2b3d2ba`, read-only source, no callbacks/evaluator/browser/API/model/audio/video. Prior0.30 reviews/resolved findings remain in their historical [record](fixed-view-speech-source-review-v1.md).
@@ -16,8 +18,8 @@ Final focused source re-review returned **PASS — all three P2s resolved at sou
 
 - Core build exit0 before the publication binding addition; not claimed as final verification.
 - First `test:typecheck` exit1: optional mouth opacity and rig/sprite union actor report narrowing in new declarations. Corrected explicit known mouth values and report discrimination; subsequent typechecks exit0. No assertions ran.
-- Schema export exit0: new `speech-source-clock.schema.json`; persisted `speech-activity.schema.json` unchanged. Schema is shape documentation; dynamic ordered intervals/projection/owner/span guards remain runtime authority.
+- Schema export exit0 before and after final narration import/fixture fixes: new `speech-source-clock.schema.json`; persisted `speech-activity.schema.json` unchanged. Schema is shape documentation; dynamic ordered intervals/projection/owner/span guards remain runtime authority.
 - Full build exit0 after publication guard/14 declarations; Node TypeScript core, Studio typecheck and Vite bundle (32 modules). Follow-up full build and test:typecheck after narration/fixture fixes and topic0.31: both exit0. Vite32 modules,563ms, JS174.53kB/gzip52.43kB; this is the Studio bundle, not scene code-size/playback performance.
-- `git diff --check` exit0 before final document/source publication; CRLF-to-LF informational warnings only. Repeat at final publication.
+- `git diff --check` and staged whitespace check exit0 before source commit; CRLF-to-LF informational warnings only. Document publication checks repeated separately; no source/runtime changes.
 
 **14 new callbacks NOT RUN** in `tests/source-speech-phase.test.ts`. Other legacy/fixed-view suites remain at their previous recorded status. Controller/reviewer did not run tests, render/play a body frame, browser/GSAP, pipeline, voice, API or MP4. Resource/namespace/halo/seek/cut/speaker regression declarations are authored evidence of coverage intent, not proof of runtime behavior. Hash/context cannot prove waveform ownership or lip-sync. Full test commands/environment/server/remaining product scope: [handoff](../SOURCE-SPEECH-PHASE-HANDOFF.md).

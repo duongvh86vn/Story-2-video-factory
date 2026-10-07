@@ -2,6 +2,8 @@
 
 Mốc source 0.31, 08/10/2026, tiếp nối `616aac5171420ed15602f89d4500a2bb8fe635ed` trên `codex/prehistoric-life`. Đây là phần triển khai tiếp của tool, chưa là nghiệm thu diễn xuất hoặc video. Người dùng không có API image-to-video; vẫn dùng SVG/HTML5/GSAP.
 
+Source/fixtures/docs đã push tại `d8ce672d3fdbc8470ffc6779d4d8b92b847ade35`; local/remote SHA đối chiếu trùng. Full build/test:typecheck/schema export/whitespace exit0; source re-review PASS sau ba P2 đã sửa, 14 callbacks vẫn NOT RUN. Bản ghi publication là bổ sung tài liệu, không có lượt test/render/video mới.
+
 ## Thay đổi và phạm vi
 
 Trước đây renderer cắt activity vào từng shot rồi mới tính attack/release và nội suy sample centers. Câu đang nói qua điểm cắt có thể bị khép/mở miệng lại và đổi aperture dù audio tiếp tục. Source mới giữ timestamp của activity đã giao cho diễn viên và cộng shot offset khi lấy hình miệng. Không thay audio, lời kể, phụ đề hoặc clock nguồn.

@@ -41,8 +41,10 @@ Characters are actors in arbitrary supplied stories. Preserve all words/order, W
 - [x] Carry the board through build/repair generation, source comparison and performance report publication. Use the same board/overridden current shot for all representations, no separate preview-only behavior.
 - [x] Declare NOT RUN integration checks for whole-vs-split source mouth state, exact cut endpoint, speaker handoff and silence, canonical paired scene/report/resource/namespace, neighbor cue ownership/narration edits/cache/locks. Preserve old silent-candidate and legacy behavior cases.
 - [x] Run build/core, test:typecheck, schemas and whitespace checks; expected exit0 supports source/types only. Delegate command: node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/source-speech-phase.test.ts tests/fixed-view-speech.test.ts; record actual NOT RUN/PASS/FAIL by that model.
-- [ ] Obtain bounded read-only source review, retain findings/fixes, publish explicit owned files to authorized branch. Record source limitations, test commands and server8851 startup.
+- [x] Obtain bounded read-only source review, retain findings/fixes, publish explicit owned files to authorized branch. Record source limitations, test commands and server8851 startup.
 
 ## Decisions and completion limits
 
 Recommended render-local context avoids widening persisted audio input and requires exact projection rather than trusting a flag. Full board is necessary to know neighboring cue owners; unknown owner cannot be inferred. Schema/context validates provenance consistency, not waveform authenticity or artistic acceptance. Cross-shot whole-body/head/cloth/expression continuity and native artwork/three-input video acceptance remain required under the full objective after this feature.
+
+**Execution record:** source foundation `d8ce672d3fdbc8470ffc6779d4d8b92b847ade35` pushed/remote matched. Final full build, test:typecheck, schema export and whitespace checks exit0; source review PASS after three retained P2 fixes. All14 new callbacks NOT RUN; checked boxes mean authoring/source implementation and checks, not runtime/art/product acceptance. [Handoff](../topics/SOURCE-SPEECH-PHASE-HANDOFF.md), [review/fixes](../topics/reviews/source-speech-phase-source-review-v1.md). Full goal remains active.
