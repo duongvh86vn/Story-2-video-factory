@@ -66,7 +66,7 @@ Xuất stage schema để model/test dùng cùng contract. Bàn giao lệnh test
 
 ## Status
 
-Tasks 1–2 đã có source tại `3a403a8`. Controller chạy `npm run build` và `npm run test:typecheck`: exit 0 sau sửa type alias `MotionPoint`; `npm run schemas`: exit 0; diff check không báo lỗi. Runtime **NOT RUN**. Source review độc lập đang chờ; chưa mở production topic hoặc claim đạt video mẫu.
+Tasks 1–2 đã có source tại `3a403a8`, fix review tại `8b4b930`. Trên source fix, controller chạy `npm run build`, `npm run test:typecheck`, `npm run schemas`: exit 0; diff check không báo lỗi. Review độc lập xác nhận source milestone ready sau sửa ba Important và hai Minor; [accumulator](../topics/reviews/sprite-story-source-review-v1.md) giữ đầy đủ finding/ruling. Runtime **NOT RUN**; chưa mở production topic hoặc claim đạt video mẫu.
 
 Các điểm tích hợp tiếp đã xác định từ source hiện có:
 

@@ -26,11 +26,13 @@ Kiểm chứng source của controller trên code snapshot `3ee1801` ngày 07/10
 
 Minor được giữ cho bước sau: biểu thức đếm/phát event trong player còn dày, nên tách và đặt tên biến khi nối actorScene. Review từng task và toàn mốc chưa thấy lỗi hành vi ở phần này; quyết định hoãn refactor đến bước tích hợp actorScene, giữ các test ranh giới đã chuẩn bị. Đây là source candidate được bàn giao để model khác test; merge sản phẩm/nghiệm thu video vẫn chờ runtime và art evidence.
 
+Minor preflight đã được xử lý trong mốc actor composition dưới đây bằng helper `visualEdges`; regression player vẫn chờ thực chạy.
+
 ## Bước tiếp theo — actor composition source
 
 Đã bổ sung stage contract/compositor nhiều actor, root keyframes, clip visibility, contact tại điểm có registration và adapter gắn fragment với Shot/cast/source refs. Clock được chuyển thành helper chung; event preflight của player được tách thành `visualEdges`. Xem [plan](../plans/2026-10-07-sprite-story-composition.md) và [bàn giao test](SPRITE-STORY-TEST-HANDOFF.md).
 
-Đây là actor fragment có ràng buộc câu chuyện, chưa nối vào renderer canonical hoặc chọn asset từ pipeline. Giữ `productionReady=false`, `speechSync=none`; sourced dialogue bị chặn `needs-sprite-speech`. Không có runtime/video acceptance mới. Build/typecheck và review source của mốc này sẽ được ghi sau khi có kết quả thật.
+Đây là actor fragment có ràng buộc câu chuyện, chưa nối vào renderer canonical hoặc chọn asset từ pipeline. Giữ `productionReady=false`, `speechSync=none`; sourced dialogue bị chặn `needs-sprite-speech`. Source `3a403a8`, fix `8b4b930`: build/test:typecheck/schema export exit 0; [review độc lập](reviews/sprite-story-source-review-v1.md) xác nhận source gate sau sửa ba Important và hai Minor. Chuẩn bị 20 ca test mới; runtime/video acceptance **NOT RUN**.
 
 ## Global Constraints
 
