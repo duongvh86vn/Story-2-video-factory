@@ -694,7 +694,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
     const expressiveSource=usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion)&&gesture&&!contacts(gesture);
     const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:expressiveSource
-      ?expressiveSourceArm(shoulder,neutral,expressiveAim(sourceGesture!,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),sourceGesture!,t,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,sourceGesture!,side),authoredRun)
+      ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,t,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side),authoredRun)
       :armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
     // Grip is a rigid continuation of the forearm, not a bone endpoint or a

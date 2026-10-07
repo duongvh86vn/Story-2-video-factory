@@ -112,3 +112,25 @@ test('default expressive gestures retain their entry elbow branch across both ru
     assert.ok(distance(before.wrists![hand],after.wrists![hand])<.1);
   }
 });
+
+test('implicit running think retains the entry branch while authored rest/reach overrides remain explicit',()=>{
+  const numbers=(value:string)=>value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+  const flexion=(frame:ReturnType<typeof samplePerformance>)=>{
+    const upper=numbers(frame.transforms['arm-right-upper']!)[2]!,lower=numbers(frame.transforms['arm-right-lower']!)[2]!;
+    return Math.atan2(Math.sin((lower-upper)*Math.PI/180),Math.cos((lower-upper)*Math.PI/180))*180/Math.PI;
+  };
+  for(const actor of ['lila','karo'] as const){
+    const {plan,profile}=bodyCalibrationPlan(actor,'run','happy');
+    const gesture={id:'run-think',action:'think' as const,hand:'right' as const,startMs:900,endMs:3400};
+    const entry=samplePerformance(plan,profile,gesture.startMs,silence),entryPole=Math.sign(flexion(entry));
+    assert.equal(entryPole,-1,'rightward running entry is the branch implicit think must retain');
+    for(const elbowPole of [undefined,'rest','reach'] as const){
+      const modified={...plan,gestures:[{...gesture,...(elbowPole===undefined?{}:{elbowPole})}]};
+      const first=samplePerformance(modified,profile,gesture.startMs,silence);
+      assert.ok(distance(first.hands.right,entry.hands.right)<.001);
+      near(flexion(first),flexion(entry),.001);
+      const expected:number=elbowPole==='rest'?1:elbowPole==='reach'?-1:entryPole;
+      for(const at of [1500,1700,2099.9,2100,2100.1,2300,2600])assert.equal(Math.sign(flexion(samplePerformance(modified,profile,at,silence))),expected);
+    }
+  }
+});

@@ -55,8 +55,8 @@ export function sampleArticulatedArm(start:Point,upper:number,lower:number,rest:
   finite([joint.x,joint.y,end.x,end.y],'arm coordinates overflow');
   return {joint,end,upper:shoulder-90,lower:shoulder+elbow-90,reachable:true,error:0};
 }
-export const sourceArmTrajectoryDescription={version:'forest-arm-angle-trajectory-2',productionReady:false,
+export const sourceArmTrajectoryDescription={version:'forest-arm-angle-trajectory-3',productionReady:false,
   scope:'current source-body expressive gestures only; contact/carry/drop/spear and legacy/generic arms retain their solvers',
   interpolation:'fixed-length forward kinematics; gesture-entry registered shoulder branch with 90deg drift corridor and signed elbow angle; quintic entry/exit in original clip',
-  defaults:'keep anatomical rest pole unless explicit reach pole; approach up to 600ms/35%, recovery up to 400ms/25%; default reactions scale from each arm reach',
+  defaults:'keep actual gesture-entry elbow branch, including running, unless rest/reach pole is explicitly authored; approach up to 600ms/35%, recovery up to 400ms/25%; default reactions scale from each arm reach',
   limitations:['Candidate pose constraints, not anatomy or motion acceptance.','Moving body keyposes need full runtime/clearance/velocity review.','No source bitmap, speech, mouth, narration or native sprite timing is altered.']};
