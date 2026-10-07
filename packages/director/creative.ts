@@ -144,7 +144,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     generationSystem=generationSystem.replace('locomotion needs an actual nonzero walk;',
       'locomotion needs the actual clip matching its movement subtype: movement=jump requires a timed performance.jumps flight/landing; movement=run requires a nonzero walks path with gait=run under compiler performance-2.2.15; movement=walk requires gait=walk or omitted; an omitted movement requires a nonzero locomotion path;');
   }
-  const inputHash=hash({identity,system,context:requestContext,models:config.models.storyboard,fallback:config.models.fallback,retry:config.retry.structured_output,schema:DIRECTION_VERSION});
+  const inputHash=hash({identity,system:generationSystem,context:requestContext,models:config.models.storyboard,fallback:config.models.fallback,retry:config.retry.structured_output,schema:DIRECTION_VERSION});
   const binding={modelsHash:hash({primary:config.models.storyboard,fallback:config.models.fallback})};
   if(router.isMock('storyboard')){if(config.topic.id||renderer==='sprite')throw new Error('needs-art-direction: configure a real director or authored direction; an offline seed is not a directed image-motion episode');return report(seed,'offline',inputHash);}
   const cacheFile=path.join(root,'work/creative-storyboard-cache.json');

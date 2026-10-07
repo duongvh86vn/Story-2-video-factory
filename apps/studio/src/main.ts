@@ -309,8 +309,9 @@ async function motionLibraryDialog():Promise<void>{
   const p=project!;
   const [catalog,result]=await Promise.all([api.motionCatalog(p.name),api.motions(p.name)]);
   if(project?.name!==p.name)return;
+  const markup=motionLibraryMarkup(p.name,catalog,result.motions,locale);
   librarySnapshot={name:p.name,catalog,motions:result.motions};
-  modal.innerHTML=motionLibraryMarkup(p.name,catalog,result.motions,locale);modal.showModal();
+  modal.innerHTML=markup;modal.showModal();
 }
 async function saveMotionLibrary(form:HTMLFormElement):Promise<void>{
   const snapshot=librarySnapshot;if(!snapshot||project?.name!==snapshot.name)throw new Error(v('Dự án đã đổi; mở lại thư viện.','Project changed; reopen the library.'));

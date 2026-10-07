@@ -129,3 +129,11 @@ test('catalog snapshot participates in accepted planning reuse while narration c
   const changed=structuredClone(f.catalog);changed.entries[0]!.label='Waiting in forest';const second=await saveSpriteMotionCatalog(f.root,changed,first.revision);
   assert.equal((await plan(second.snapshotHash)).value,2);assert.equal(calls,2);assert.equal(hash(narration),narrationHash);
 });
+
+test('library UI refuses an incomplete version listing instead of silently deleting unseen annotations',async t=>{
+  const f=await fixture(t),snapshot=await saveSpriteMotionCatalog(f.root,f.catalog,null);
+  assert.throws(()=>motionLibraryMarkup('fixture',snapshot,[],'en'),/changed while opening/);
+  assert.throws(()=>motionLibraryMarkup('fixture',snapshot,[{...f.motion,fingerprint:'b'.repeat(64)}],'en'),/changed while opening/);
+  assert.doesNotThrow(()=>motionLibraryMarkup('fixture',snapshot,[f.motion],'en'));
+  assert.deepEqual(snapshot.document,f.catalog);
+});
