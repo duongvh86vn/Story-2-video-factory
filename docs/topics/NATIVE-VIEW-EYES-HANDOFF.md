@@ -4,6 +4,8 @@ Mốc source0.32, 08/10/2026, tiếp nối `7add5d39002ada7d81300bc88c4b08cb0495
 
 Source/art checkpoint `e01bfdb112eab53344cd64a4bf83ea9f32e61131` đã push; local/remote SHA khớp. Full build, test:typecheck, schema export và whitespace exit0; hai lượt review source PASS. Mười callback mới chưa chạy. Không có kết quả runtime hoặc duyệt mỹ thuật ở checkpoint này.
 
+Đây là record0.32. Mốc0.33 bổ sung run clock cho explicit gaze/nhịp thở khi board khai báo continuous; xem [handoff hiện hành](CONTINUOUS-VIEW-ATTENTION-HANDOFF.md). Workbench local và các giới hạn/artwork acceptance của record này vẫn giữ.
+
 ## Artwork và màu
 
 ![Mắt native: ảnh nguồn, blink55%, khép, nhìn phía trước](reviews/native-view-eyes-art-v1.png)

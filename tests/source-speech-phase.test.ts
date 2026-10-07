@@ -36,10 +36,14 @@ const definition=(actor:'lila'|'karo',cueId:string):ActorDefinition=>{
   const cue=n.segments.find(s=>s.id===cueId)!,{profile}=candidate(actor,5000);
   return ActorDefinitionSchema.parse({id:actor,name:actor,role:'illustration',kind:'stick-man',identity:'illustrative',sourceRefs:[{kind:'narration',segmentId:cue.id,quote:cue.text}],appearance:profile.appearance});
 };
-// Minimal source-ownership fixture only. It is not a scene/actor/story validation fixture.
+// Source-ownership/clock fixture only. Matching native performance spans are
+// supplied for cache/repair attention binding; this is not a whole scene/story fixture.
 const declaredShot=(id:string,startMs:number,endMs:number,primary:'lila'|'karo',primaryIds:string[],supportIds:string[]=[]):Shot=>{
   const other=primary==='lila'?'karo':'lila';
-  return {id,startMs,endMs,narrationSegmentIds:[...new Set([...primaryIds,...supportIds])],cinematic:{actorScene:{primary:definition(primary,n.segments[0]!.id),speakingSegmentIds:primaryIds,supporting:[{character:definition(other,n.segments[1]!.id),speakingSegmentIds:supportIds}]}}} as Shot;
+  const characters=[definition(primary,n.segments[0]!.id),definition(other,n.segments[1]!.id)],plans=characters.map(character=>{
+    const p=candidate(character.id as 'lila'|'karo',endMs-startMs).plan;p.id=id;p.profileHash=actorProfile(character).profileHash;return p;
+  });
+  return {id,startMs,endMs,narrationSegmentIds:[...new Set([...primaryIds,...supportIds])],cinematic:{performance:plans[0],actorScene:{primary:characters[0],speakingSegmentIds:primaryIds,continuity:'cut',supporting:[{character:characters[1],performance:plans[1],speakingSegmentIds:supportIds}]}}} as Shot;
 };
 const clockFor=(a:SpeechActivity,startMs:number,endMs:number):SpeechSourceClock=>({version:SPEECH_SOURCE_CLOCK_VERSION,ownerId:'lila',scope:'narration',cueIds:[],startMs,endMs,sourceActivityHash:hash(a),activity:windowSpeechActivity(a,startMs,endMs)});
 const mouthState=(frame:ReturnType<typeof samplePerformance>)=>({paths:Object.fromEntries(Object.entries(frame.paths??{}).filter(([id])=>id.startsWith('view-mouth-'))),opacity:frame.face['view-mouth-layer']!.opacity!});

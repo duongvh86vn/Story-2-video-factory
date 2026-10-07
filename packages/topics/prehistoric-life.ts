@@ -6,7 +6,7 @@ import {FOREST_HEAD_VIEWS,referenceHeadDescription} from '../animation/forest-he
 import {referenceBodyDescription,referenceBodyMetrics} from '../animation/forest-body-art.js';
 import {bodyViewDescription} from '../animation/body-view-art.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.32-native-view-eyes-candidate';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.33-continuous-view-attention-candidate';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

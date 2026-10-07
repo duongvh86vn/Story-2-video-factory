@@ -8,6 +8,8 @@ import { partAnchor, type HostGeometry } from '../../packages/host/controller.js
 import type { SpeechActivity } from '../../packages/voice/schemas.js';
 import { performanceScene } from '../../packages/animation/scene.js';
 import { samplePerformance } from '../../packages/animation/compiler.js';
+import {actorViewActingClock} from '../../packages/actors/view-acting-clock.js';
+import type {ViewActingClock} from '../../packages/animation/view-acting-clock.js';
 import { rigMetrics } from '../../packages/animation/rig.js';
 import { ANIMATION_VERSION } from '../../packages/animation/schemas.js';
 import { validateCinematicShot } from '../../packages/director/index.js';
@@ -55,7 +57,8 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     }else {validateSpeechActivityTrack(activity);primaryClock={version:SPEECH_SOURCE_CLOCK_VERSION,ownerId:profile.id,scope:'narration',cueIds:[],startMs:shot.startMs,endMs:shot.endMs,
       sourceActivityHash:hash(activity),activity:windowSpeechActivity(activity,shot.startMs,shot.endMs)};}
   }
-  const performerSpeech=new Map<string,{activity:SpeechActivity;sourceClock?:SpeechSourceClock}>([[profile.id,{activity:localActivity,sourceClock:primaryClock}]]);
+  const primaryActingClock=board?actorViewActingClock(board,shot,profile.id):undefined;
+  const performerSpeech=new Map<string,{activity:SpeechActivity;sourceClock?:SpeechSourceClock;actingClock?:ViewActingClock}>([[profile.id,{activity:localActivity,sourceClock:primaryClock,actingClock:primaryActingClock}]]);
   const supports=c.propBindings.length?c.propBindings.flatMap(binding=>{
     const part=v.parts.find(part=>part.id===binding.partId)!,prop=p.props.find(prop=>prop.id===binding.propId)!;
     // A dropped object has no invented table underneath its held entry or floor landing.
@@ -63,7 +66,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     if(p.gestures.some(g=>g.propId===prop.id&&g.action==='drop'))return [];
     return [prop.origin,...(prop.destination?[prop.destination]:[])].map(center=>({x:center.x,y:center.y+part.height*height*.5,width:part.width*width*1.12}));
   }):undefined;
-  const seats=sceneSeats(shot),result=performanceScene(p,profile,localActivity,background,supports,{items:seats,palette},primaryClock),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s.replace(/#([a-zA-Z][\w.-]*)/g,(_,id:string)=>`[id=${JSON.stringify(id)}]`)}`);
+  const seats=sceneSeats(shot),result=performanceScene(p,profile,localActivity,background,supports,{items:seats,palette},primaryClock,primaryActingClock),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s.replace(/#([a-zA-Z][\w.-]*)/g,(_,id:string)=>`[id=${JSON.stringify(id)}]`)}`);
   const decoration=c.setting==='road'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#A78C66"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#E8D6AF" stroke-width="5" stroke-dasharray="45 24"/>`
     :c.setting==='workshop'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#B79C72"/><path d="M${width*.6} ${height*.26}H${width*.9}V${height*.63}H${width*.6}Z" fill="#836D52" opacity=".3"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#876E4F" stroke-width="3"/>`
     :`<path d="M0 ${p.stage.groundY}H${width}" stroke="#A38B65" stroke-width="3"/>`;
@@ -77,8 +80,9 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     if(hasBodyViewSpeech(definition)||hasBodyViewEyes(definition)){const projected=actorShotSpeech(activity,narration,definition.id,actor.speakingSegmentIds,shot.startMs,shot.endMs,owners?.get(definition.id)??(owners?[]:undefined));
       local=projected.activity;sourceClock=projected.sourceClock;
     }
-    performerSpeech.set(definition.id,{activity:local,sourceClock});
-    const compiled=compilePerformance(actor.performance,definition,local,prefix,sourceClock);
+    const actingClock=board?actorViewActingClock(board,shot,definition.id):undefined;
+    performerSpeech.set(definition.id,{activity:local,sourceClock,actingClock});
+    const compiled=compilePerformance(actor.performance,definition,local,prefix,sourceClock,actingClock);
     actorReports.push({actorId:definition.id,profileHash:definition.profileHash,rigHash:buildRig(definition).rigHash,report:compiled.report});
     calls.push(compiled.js);
     return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}</g>`;
@@ -185,13 +189,13 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   }),notes:[`${p.compilerVersion}; story-cinematic; illustration`, `Speech activity: ${activity.method}; no phoneme lip-sync.`]};
   const geometry:HostGeometry={controllerVersion:p.compilerVersion,profileHash:profile.profileHash,rigHash:rig.rigHash,shotId:shot.id,
     hostHeightRatio:rigMetrics(profile).height*p.scale/height,interactions:[]};
-  const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity,sourceClock:primaryClock}]),
+  const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity,sourceClock:primaryClock,actingClock:primaryActingClock}]),
     ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,
-      activity:performerSpeech.get(actor.character.id)!.activity,sourceClock:performerSpeech.get(actor.character.id)!.sourceClock}))];
+      activity:performerSpeech.get(actor.character.id)!.activity,sourceClock:performerSpeech.get(actor.character.id)!.sourceClock,actingClock:performerSpeech.get(actor.character.id)!.actingClock}))];
   for(const performer of performers)for(const {action:a,gestures} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs))if(a.target)for(const [index,g] of gestures.entries()){
     const target=index===1?a.secondTarget!:a.target;
     const reach=g.contactMs??Math.min(g.endMs-1,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
-    const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity,performer.sourceClock),anchor=g.target!,handSide=rigHand(g),hand=f.hands[handSide];
+    const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity,performer.sourceClock,performer.actingClock),anchor=g.target!,handSide=rigHand(g),hand=f.hands[handSide];
     geometry.interactions.push({actorId:performer.id,handSide,type:a.type,startMs:g.startMs+shot.startMs,reachMs:Math.round(reach)+shot.startMs,endMs:g.endMs+shot.startMs,partId:target.partId,
       target:anchor,hand,errorPx:Math.hypot(hand.x-anchor.x,hand.y-anchor.y),root:f.root,gaze:anchor,
       ...(a.contactMs===undefined?{}:{contactMs:a.contactMs})});
