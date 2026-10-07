@@ -12,13 +12,14 @@ function validTransform(value:string):boolean {
   const argumentsPattern=new RegExp(`^${numeric}(?:(?:\\s*,\\s*|\\s+)${numeric})*$`);
   let rest=value.trim(),count=0;
   while(rest){
-    const operation=/^(translate|rotate|scale)\(([^()]*)\)/.exec(rest);
+    const operation=/^(translate|rotate|scale|matrix)\(([^()]*)\)/.exec(rest);
     if(!operation)return false;
     const body=operation[2]!.trim();
     if(!argumentsPattern.test(body))return false;
     const numbers=body.split(/[\s,]+/).map(Number);
-    const arities=operation[1]==='rotate'?[1,3]:[1,2];
+    const arities=operation[1]==='matrix'?[6]:operation[1]==='rotate'?[1,3]:[1,2];
     if(!arities.includes(numbers.length)||!numbers.every(Number.isFinite))return false;
+    if(operation[1]==='matrix'&&numbers.some(n=>Math.abs(n)>100000))return false;
     rest=rest.slice(operation[0].length).trim();count++;
   }
   return count>0;
@@ -27,7 +28,8 @@ function validTransform(value:string):boolean {
 function validBakedCurve(value:string):boolean {
   const numeric='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
   const point=numeric+'\\s+'+numeric,cubic='C'+point+'\\s+'+point+'\\s+'+point;
-  return value.length<=4096&&new RegExp('^M'+point+'(?:\\s+'+cubic+'){2,9}$').test(value)
+  const curve=new RegExp('^M'+point+'(?:\\s+'+cubic+'){2,9}$'),polygon=new RegExp('^M'+point+'(?:L'+point+'){2,95}Z$');
+  return value.length<=4096&&(curve.test(value)||polygon.test(value))
     &&(value.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/g)??[]).every(number=>Number.isFinite(Number(number))&&Math.abs(Number(number))<=100000);
 }
 function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
@@ -37,7 +39,7 @@ function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
   if (ts.isObjectLiteralExpression(node)) return node.properties.every(property=>{
     if (!ts.isPropertyAssignment(property) || !(ts.isIdentifier(property.name)||ts.isStringLiteral(property.name))) return false;
     const key=property.name.text;
-    // Literal transforms and finite baked cubic paths only. No resource/style/
+    // Literal transforms and finite baked cubic/closed polygon paths. No resource/style/
     // event mutation and no arbitrary AttrPlugin fields.
     if(key==='attr') return ts.isObjectLiteralExpression(property.initializer) && property.initializer.properties.length>=1 && property.initializer.properties.length<=2 && property.initializer.properties.every(p=>{
       if(!ts.isPropertyAssignment(p)||!(ts.isIdentifier(p.name)||ts.isStringLiteral(p.name)))return false;

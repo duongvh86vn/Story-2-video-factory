@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.11-cuffs-and-cloth-swing",
+  "version": "forest-tribe-0.12-projected-head-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -579,8 +579,8 @@
         }
       }
     },
-    "faceCompilerVersion": "forest-face-motion-7",
-    "rendererVersion": "forest-head-svg-8",
+    "faceCompilerVersion": "forest-face-motion-8",
+    "rendererVersion": "forest-head-svg-9",
     "facialCalibration": {
       "eyeStretch": {
         "x": 1.25,
@@ -621,29 +621,117 @@
       },
       "scope": "Lila ponytail mask; neck/fringe/back hair remain one painted layer"
     },
-    "fingerprint": "3ba6fc853bae30b1514788e912d6c099441c2e4c73ade570893343e1f03c4e1a",
+    "projection": {
+      "version": "forest-head-projection-2-glyph-floor",
+      "calibration": {
+        "maxYawDeg": 32,
+        "lila": {
+          "columns": [
+            0,
+            250,
+            445,
+            665,
+            880,
+            1145
+          ],
+          "rows": [
+            0,
+            330,
+            486,
+            585,
+            798.3333333333334,
+            1030,
+            1374
+          ],
+          "faceRadius": 36,
+          "frontDepth": 18,
+          "hairDepth": -6,
+          "nose": {
+            "x": -1,
+            "y": 9,
+            "depth": 4
+          },
+          "neckY": 32,
+          "faceTop": -27,
+          "faceBottom": 32
+        },
+        "karo": {
+          "columns": [
+            0,
+            280,
+            400,
+            665,
+            980,
+            1312
+          ],
+          "rows": [
+            0,
+            340,
+            467,
+            598,
+            835,
+            1131.3333333333333,
+            1199
+          ],
+          "faceRadius": 44,
+          "frontDepth": 20,
+          "hairDepth": -5,
+          "nose": {
+            "x": 5,
+            "y": 9,
+            "depth": 5
+          },
+          "neckY": 72,
+          "faceTop": -32,
+          "faceBottom": 71
+        }
+      },
+      "glyphLimits": {
+        "eye": {
+          "minScaleX": 0.78,
+          "maxScaleX": 1.12,
+          "shearWeight": 0
+        },
+        "brow": {
+          "minScaleX": 0.75,
+          "maxScaleX": 1.15,
+          "shearWeight": 0.25
+        },
+        "mouth": {
+          "minScaleX": 0.8,
+          "maxScaleX": 1.15,
+          "shearWeight": 0.35
+        }
+      },
+      "uvOverlapPixels": 3.5,
+      "scope": "forest-body-1 only; front head raster on a shared 60-triangle surface; feature centers, jaw mask and ponytail follow the actual triangle mapping on the absolute clock; small glyph stretch/shear is bounded for readability",
+      "notReconstructed3D": true,
+      "maxYawDeg": 32
+    },
+    "fingerprint": "36605ee2b5cb825621fb4ec4c02826a3993a993a56e27b1648102c0c70cf89e3",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
-    "turnRendering": "stepped-authored-views-with-front",
+    "turnRendering": "continuous-front-projection-for-body; stepped-authored-views-for-head-only",
     "pending": [
       "profile/back textures",
-      "front-view motion acceptance",
-      "full-body views and seated rig",
+      "projected front-head fidelity and continuous motion acceptance",
+      "full-body views and seated rig acceptance",
       "separate fringe/beard/clothing secondary motion",
-      "additional turn inbetweens",
+      "authored turns beyond the bounded projection",
       "runtime motion acceptance"
     ],
     "prompts": [
       "library/topics/prehistoric-life/rig-v1/head-prompts.json",
       "library/topics/prehistoric-life/rig-v1/front-prompts.json"
     ],
-    "codeHash": "b066d473cd8c5b7f4bd7dbbf1f72f881353a0a0f35d49a0088810fb6585b6723"
+    "codeHash": "6e6ad092f78a38176bbab2cbd1b87c79871c8abbcfdc812380230a99dd621e0c",
+    "projectionCodeHash": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22"
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-6",
-    "rendererVersion": "forest-source-body-svg-6",
-    "fingerprint": "b920f750daef3af4b091adbafe360664a0cd67d19634373587040f787d35f023",
+    "compilerVersion": "forest-source-body-motion-7",
+    "rendererVersion": "forest-source-body-svg-7",
+    "fingerprint": "eaba3b2443af449c11532e03f8c57ea1c033744e5711fbb88cba0c6487ac9e62",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -1081,15 +1169,102 @@
       "minimumTransitionMs": 1500,
       "productionAcceptance": false
     },
+    "headMotion": {
+      "version": "forest-head-projection-2-glyph-floor",
+      "calibration": {
+        "maxYawDeg": 32,
+        "lila": {
+          "columns": [
+            0,
+            250,
+            445,
+            665,
+            880,
+            1145
+          ],
+          "rows": [
+            0,
+            330,
+            486,
+            585,
+            798.3333333333334,
+            1030,
+            1374
+          ],
+          "faceRadius": 36,
+          "frontDepth": 18,
+          "hairDepth": -6,
+          "nose": {
+            "x": -1,
+            "y": 9,
+            "depth": 4
+          },
+          "neckY": 32,
+          "faceTop": -27,
+          "faceBottom": 32
+        },
+        "karo": {
+          "columns": [
+            0,
+            280,
+            400,
+            665,
+            980,
+            1312
+          ],
+          "rows": [
+            0,
+            340,
+            467,
+            598,
+            835,
+            1131.3333333333333,
+            1199
+          ],
+          "faceRadius": 44,
+          "frontDepth": 20,
+          "hairDepth": -5,
+          "nose": {
+            "x": 5,
+            "y": 9,
+            "depth": 5
+          },
+          "neckY": 72,
+          "faceTop": -32,
+          "faceBottom": 71
+        }
+      },
+      "glyphLimits": {
+        "eye": {
+          "minScaleX": 0.78,
+          "maxScaleX": 1.12,
+          "shearWeight": 0
+        },
+        "brow": {
+          "minScaleX": 0.75,
+          "maxScaleX": 1.15,
+          "shearWeight": 0.25
+        },
+        "mouth": {
+          "minScaleX": 0.8,
+          "maxScaleX": 1.15,
+          "shearWeight": 0.35
+        }
+      },
+      "uvOverlapPixels": 3.5,
+      "scope": "forest-body-1 only; front head raster on a shared 60-triangle surface; feature centers, jaw mask and ponytail follow the actual triangle mapping on the absolute clock; small glyph stretch/shear is bounded for readability",
+      "notReconstructed3D": true,
+      "maxYawDeg": 32
+    },
     "pending": [
       "rear/side body artwork",
-      "continuous head/body turn",
+      "projected head fidelity and continuous motion acceptance; body turns",
       "remaining fringe/beard secondary motion",
       "occluded clothing reconstruction",
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "8bda5a3327aab76251c7a9c12c3d774c223c54aa2f611c4657ab931a8ef33799"
+    "codeHash": "88c2f8f339c9e3ecd96659ef3e5ec67aea640cf54b997daec7f99f27bda1f646"
   },
   "restCalibration": {
     "status": "candidate",
@@ -1106,10 +1281,10 @@
   },
   "headStaticReview": {
     "file": "docs/topics/reviews/front-head-static-review-v2.json",
-    "pass": true,
+    "pass": false,
     "scope": "static-three-view-head-layer-only",
     "appliesTo": "forest-face-motion-7 / forest-head-svg-8",
-    "fingerprintMatches": true,
+    "fingerprintMatches": false,
     "productionAcceptance": false,
     "history": [
       "docs/topics/reviews/head-layer-static-review-v2.json",
@@ -1117,6 +1292,16 @@
       "docs/topics/reviews/head-layer-static-review-v4.json",
       "docs/topics/reviews/front-head-static-review-v1.json"
     ]
+  },
+  "headProjectionStaticReview": {
+    "file": "docs/topics/reviews/source-head-projection-static-review-v1.json",
+    "pass": false,
+    "scope": "static-five-pose-projected-head-candidate-only",
+    "appliesTo": "forest-face-motion-8 / forest-head-svg-9; forest-source-body-motion-7",
+    "fingerprintMatches": false,
+    "productionAcceptance": false,
+    "latestSelfInspection": "docs/topics/reviews/source-head-projection-self-inspection-v2.json",
+    "currentRepair": "Five-pose review on the 98-triangle candidate failed a compressed Lila far eye at 0ms and a small Karo neutral mouth at 0ms. Subsequent 60-triangle cage follows actual barycentric material mapping, pins the neck at a cage row, and bounds eye/brow/mouth deformation. Eye horizontal scale floor 0.78 with zero shear. New revision has developer static inspection only; mouth/emotion onset and full animation remain pending."
   },
   "bodyStaticReview": {
     "file": "docs/topics/reviews/source-waist-static-review-v1.json",
@@ -1139,7 +1324,7 @@
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
-    "Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.",
+    "Head-only inspection retains three authored drawings. Body candidates have a continuous but limited front-raster 2.5D projection through a 60-triangle cage, with readability bounds. The five-pose review failed before the latest repair; current fidelity, full clock, profile/rear/body views and other secondary layers remain unaccepted.",
     "Source clothing remains a candidate. Six-pose cuffs PASS applies to version 5 only. Version 6 waist review failed duplicate Karo ink; the subsequent wider texture exclusion has developer static inspection only. Area governor is not physical cloth or anatomy validation. Full clock, body views and final video remain unaccepted.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]

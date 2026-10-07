@@ -27,6 +27,9 @@ const headPack=referenceHeadDescription();
 const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
 const headReview=await fs.readFile(path.join(repo,headReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;headPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const headReviewCurrent=headReview?.headPackFingerprint===headPack.fingerprint;
+const projectionReviewFile='docs/topics/reviews/source-head-projection-static-review-v1.json';
+const projectionReview=await fs.readFile(path.join(repo,projectionReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;headPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
+const projectionReviewCurrent=projectionReview?.headPackFingerprint===headPack.fingerprint;
 const bodyPack=referenceBodyDescription(),bodyReviewFile='docs/topics/reviews/source-waist-static-review-v1.json';
 const bodyReview=await fs.readFile(path.join(repo,bodyReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;bodyPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const bodyReviewCurrent=bodyReview?.bodyPackFingerprint===bodyPack.fingerprint;
@@ -43,19 +46,21 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
   references,candidates:[...candidates,...headCandidates,...garmentCandidates],rejectedArtifacts:rejected,productionRig:null,
-  headPack:{...headPack,prompts:['library/topics/prehistoric-life/rig-v1/head-prompts.json','library/topics/prehistoric-life/rig-v1/front-prompts.json'],codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts')))},
+  headPack:{...headPack,prompts:['library/topics/prehistoric-life/rig-v1/head-prompts.json','library/topics/prehistoric-life/rig-v1/front-prompts.json'],codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts'))),projectionCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-projection.ts')))},
   bodyPack:{...bodyPack,codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-body-art.ts')))},
   restCalibration:{status:'candidate',method:'SVG masks on full cutouts',reconstructedOccludedParts:false,naturalMotion:false,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/reference-puppet.ts')))},
   staticReview:{file:'docs/topics/reviews/karo-atlas-static-review-v1.json',pass:false,scope:'static-artwork-only',appliesTo:'atlas assembly v1, not revised cutout-mask assembly'},
   headStaticReview:{file:headReviewFile,pass:headReviewCurrent&&headReview?.result.pass===true,scope:'static-three-view-head-layer-only',appliesTo:headReview?.appliesTo,
     fingerprintMatches:headReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/head-layer-static-review-v2.json','docs/topics/reviews/head-layer-static-review-v3.json','docs/topics/reviews/head-layer-static-review-v4.json','docs/topics/reviews/front-head-static-review-v1.json']},
+  headProjectionStaticReview:{file:projectionReviewFile,pass:projectionReviewCurrent&&projectionReview?.result.pass===true,scope:projectionReview?.scope,appliesTo:projectionReview?.appliesTo,fingerprintMatches:projectionReviewCurrent,productionAcceptance:false,
+    latestSelfInspection:'docs/topics/reviews/source-head-projection-self-inspection-v2.json',currentRepair:'Five-pose review on the 98-triangle candidate failed a compressed Lila far eye at 0ms and a small Karo neutral mouth at 0ms. Subsequent 60-triangle cage follows actual barycentric material mapping, pins the neck at a cage row, and bounds eye/brow/mouth deformation. Eye horizontal scale floor 0.78 with zero shear. New revision has developer static inspection only; mouth/emotion onset and full animation remain pending.'},
   bodyStaticReview:{file:bodyReviewFile,pass:bodyReviewCurrent&&bodyReview?.result.pass===true,scope:bodyReview?.scope??'static-cuffs-and-seat-to-walk-poses-only',appliesTo:bodyReview?.appliesTo,
     fingerprintMatches:bodyReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/source-seat-static-review-v1.json','docs/topics/reviews/source-seat-static-review-v2.json','docs/topics/reviews/source-fold-static-review-v1.json','docs/topics/reviews/source-fold-static-review-v2.json','docs/topics/reviews/source-cuffs-static-review-v1.json','docs/topics/reviews/source-cuffs-static-review-v2.json'],
     latestSelfInspection:'docs/topics/reviews/source-waist-self-inspection-v2.json',
     currentRepair:'Karo two-cuff artwork v2 and common opaque UV surface now cover ordinary walking as well as seated plans. Pinned waist and a quadratic 25% area governor prevent detachment/inversion. Cuffs review v2 passed six poses on version 5. Waist review v1 on version 6 failed duplicate perimeter ink at 800ms; texture exclusion widened from 1.5 to 3.5 units afterward, with developer static inspection only. No current static or continuous-video acceptance.'},
   limitations:['AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.',
     'The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.',
-    'Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.',
+    'Head-only inspection retains three authored drawings. Body candidates have a continuous but limited front-raster 2.5D projection through a 60-triangle cage, with readability bounds. The five-pose review failed before the latest repair; current fidelity, full clock, profile/rear/body views and other secondary layers remain unaccepted.',
     'Source clothing remains a candidate. Six-pose cuffs PASS applies to version 5 only. Version 6 waist review failed duplicate Karo ink; the subsequent wider texture exclusion has developer static inspection only. Area governor is not physical cloth or anatomy validation. Full clock, body views and final video remain unaccepted.',
     'Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted.']});
 console.log(JSON.stringify({references:references.length,candidates:candidates.length+headCandidates.length+garmentCandidates.length,headCandidates:headCandidates.length,garmentCandidates:garmentCandidates.length,rejected:rejected.length,productionReady:false}));

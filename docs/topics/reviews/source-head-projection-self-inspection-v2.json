@@ -1,0 +1,53 @@
+{
+  "scope": "developer-static-inspection-only",
+  "appliesTo": "forest-head-projection-2-glyph-floor",
+  "headPackFingerprint": "36605ee2b5cb825621fb4ec4c02826a3993a993a56e27b1648102c0c70cf89e3",
+  "bodyPackFingerprint": "eaba3b2443af449c11532e03f8c57ea1c033744e5711fbb88cba0c6487ac9e62",
+  "codeHashes": {
+    "packages/animation/forest-head-projection.ts": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22",
+    "packages/animation/forest-head-art.ts": "6e6ad092f78a38176bbab2cbd1b87c79871c8abbcfdc812380230a99dd621e0c",
+    "packages/animation/forest-body-art.ts": "88c2f8f339c9e3ecd96659ef3e5ec67aea640cf54b997daec7f99f27bda1f646",
+    "packages/animation/forest-garment-art.ts": "16e3f64df6359a08fbfc66b6f0efbad001cd7005cefa181108d21a177696701f",
+    "packages/animation/compiler.ts": "9324949045ae21a0f66b0afa1e1b3f9519f7c465cbc525f0011bc6d9061bd82f",
+    "packages/topics/body-workbench.ts": "6db2770ac23d29348ef89fae406886e22ffe517942cb2670f5c17bd87897b64d",
+    "packages/scenes/security.ts": "17fa97222f6b6dff4f5cbf40fe7fc1ca02ed2fba5b8126b8a049b5df879f804f"
+  },
+  "evidence": [
+    {
+      "file": "docs/topics/reviews/source-head-projection-start-0-v2.png",
+      "sha256": "9fd5257189c92f31712220de361ae41fba2c933757ecb1040529e9145930501d"
+    },
+    {
+      "file": "docs/topics/reviews/source-head-projection-end-1800-v2.png",
+      "sha256": "178f8fe934aafd99a0a287576faa3a1aa71b3d019ec4fa66ee9f75a3af86f316"
+    },
+    {
+      "file": "docs/topics/reviews/source-head-projection-walk-800-v2.png",
+      "sha256": "13d478b75c8e4b1b1c74b39d636eb534b908248c61c5652b0f50270aa4e48b2e"
+    },
+    {
+      "file": "docs/topics/reviews/karo-outline-projected-walk-800-v2.png",
+      "sha256": "b3902d26c11590fc112fcaf6d5920044dd8fd7b559a0ccca8525447d675abf65"
+    }
+  ],
+  "pass": null,
+  "modelReview": null,
+  "runtimeTestsRun": false,
+  "productionAcceptance": false,
+  "previousReview": "docs/topics/reviews/source-head-projection-static-review-v1.json",
+  "observations": [
+    "Lila far eye appears as one readable oval at 0ms after the scale floor and zero shear. This is a developer observation, not independent PASS.",
+    "Two endpoint head snapshots and ordinary walk 800ms were inspected; material, glyph centers and jaw containment now use a 60-triangle shared cage. No continuous video or seek/bake comparison was run.",
+    "Karo mouth at 0ms remains the neutral mouth during the start of the neutral-to-happy expression blend. The review flagged a small opening; no acceptance of that mouth or all emotional onsets is claimed.",
+    "Karo garment keeps the common dark exterior contour and waist attachment in the saved walk frame. The old duplicate-ink review remains historical/stale; the full cycle and video crop are not accepted."
+  ],
+  "remaining": [
+    "current independent head/clothing fidelity review",
+    "continuous head motion/seek, gaze entry and exit",
+    "scene byte and matrix/polygon runtime validation for both actors",
+    "mouth/emotion onset readability",
+    "profile/back body and head views",
+    "hair/beard occlusion and world layers",
+    "three complete input video flows"
+  ]
+}

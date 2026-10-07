@@ -1,6 +1,6 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Phiên bản:** 0.11 · **Ngày:** 07/10/2026
+**Phiên bản:** 0.12 · **Ngày:** 07/10/2026
 
 **Trạng thái:** Đang triển khai; bộ SVG vẽ lại đã bị người dùng loại. Đầu và thân từ tài sản bám ảnh tham chiếu đã vào renderer ở mức ứng viên; fidelity, màu cảnh và chuyển động còn chưa nghiệm thu.
 
@@ -418,12 +418,12 @@ node --import tsx scripts/prehistoric-pack.ts
 
 Các PNG lớp nháp được tạo bằng công cụ **image_gen tích hợp**; prompt atlas được lưu tại `library/topics/prehistoric-life/parts-prompts-v1.json`. Việc đo alpha chỉ tạo metadata, không crop/ghi đè ảnh nguồn. Chưa đưa atlas vào sản xuất hoặc ghi `approved=true`.
 
-### Lớp đầu và thân được tích hợp đến phiên bản 0.11
+### Lớp đầu và thân được tích hợp đến phiên bản 0.12
 
 - Sáu PNG `library/topics/prehistoric-life/rig-v1/*-head-*.png` có alpha, tóc/râu và da ấm: chính diện và ba phần tư trái/phải cho mỗi actor. Đây là tài sản phái sinh từ image_gen tích hợp; prompt thật và đường dẫn PNG được lưu ở `rig-v1/head-prompts.json` và `rig-v1/front-prompts.json`. Manifest giữ SHA-256, kích thước, anchor và tỷ lệ từng hình. PASS ảnh tĩnh chưa phải người dùng chốt tạo hình hoặc nghiệm thu video.
 - Mắt/chân mày và nụ cười dùng mask SVG trên ảnh cận gốc. Các miệng nói/tròn/nhăn được ghép riêng; một số hình miệng là nét SVG mới, chưa có bộ biểu cảm đầy đủ từ ảnh. Nét mặt có parent anchor cố định, blink/rotation không kéo toàn bộ khuôn mặt.
 - `forest-head-1` dùng riêng cho calibration đầu; topic chọn `appearance.artworkVersion=forest-body-1` trong `performanceSvg()` và `samplePerformance()/compilePerformance()`. Thân không dùng `forest-tribe-art.ts` cũ khi bật version này. Mouth dựa trên speech activity đúng actor, không phải phoneme lip-sync.
-- Đã có **ba góc đầu: ba phần tư trái, chính diện, ba phần tư phải**. Lượt quay giữa hai bên đi qua artwork chính diện theo yaw; chưa phải xoay đầu liên tục. Không crossfade hai đầu hoặc mirror cả canvas. Nghiêng/lưng, thêm frame trung gian và xoay toàn thân còn phải làm. Request góc chưa có bị chặn `needs-head-view`.
+- Head-only giữ **ba artwork: ba phần tư trái, chính diện, ba phần tư phải** để đối chiếu. Body 0.12 có candidate một texture front biến dạng liên tục trong ±32°, mô tả/evidence ở mốc 0.12 bên dưới. Không crossfade hai đầu hoặc mirror canvas; fidelity/motion chưa đạt review cuối. Góc profile/lưng và xoay toàn thân còn phải làm; request góc chưa có vẫn chặn `needs-head-view`.
 - Scene dùng PNG local tại `assets/rigs/<sha256>.png`, có kiểm hash khi stage và resume; hình embedded chỉ phục vụ preview/asset SVG. Hai actor namespace cả ID, clip/filter và `use href`, tránh mượn lớp của nhau. Fingerprint pack/renderer/face compiler đi vào cache scene; thay logic đã phát hành phải tăng version.
 - Trang [lớp đầu và biểu cảm](http://127.0.0.1:8850/api/topics/prehistoric-life/heads) cho chọn mood và thời điểm. Ô miệng là giả lập activity để kiểm ráp, chưa có audio. Thời điểm 2770 ms minh họa chớp mắt. Đây là inspection tĩnh từ cùng evaluator, không phải một tập video.
 
@@ -475,20 +475,28 @@ Trong seat plan, eo/vùng áo chồng được ghim; phần vải dưới theo r
 
 Preview thêm `sit-walk-left/right`: chu kỳ 7200 ms, ngồi như cũ, đứng 3000–4500 ms rồi đi 4600–6600 ms. Form và API dùng `bodyActionDuration()` chung. Model test cần kiểm toàn chu kỳ, seek đảo/ngẫu nhiên, viền/gấu khi thu nhỏ theo crop/scale video, contact và scene limit 2 MB. `forest-body.test.ts` đã chuẩn bị ca waist attachment, hem follow, không tích lũy khi seek và scene contract; **chưa chạy**. Build/typecheck pass ở mốc 0.11; không tạo episode/MP4, TTS/ASR hoặc chạy runtime tests ở đợt chỉnh hình này.
 
-**Bản tiếp trong 0.11 hiện hành — `forest-source-body-motion-6 / forest-source-body-svg-6`:** inspection đúng `walk 800 ms` phát hiện hai panel nguồn xoay riêng mở khe ở eo Karo. Nay mọi source plan dùng bề mặt chung có eo ghim; ẩn panel cũ, giữ source texture ở rest và chỉ dùng artwork ngồi khi cần. Khi mở rộng sang bước đi, Lila 800 ms ban đầu bị guard chặn vì tam giác lật. Đã thêm bộ giới hạn hình học: diện tích tam giác là hàm bậc hai theo mức displacement, lấy nghiệm ngưỡng đầu tiên để giảm ảnh hưởng đùi sao cho giữ ít nhất 25% diện tích trung tính. Cùng một hệ số áp vào UV và outline, thuần theo clock; guard lật vẫn còn. Đây là giới hạn hình học ứng viên, không chứng minh anatomy/cloth physics hoặc độ mượt.
+**Bản tiếp trong 0.11 (mốc body 6) — `forest-source-body-motion-6 / forest-source-body-svg-6`:** inspection đúng `walk 800 ms` phát hiện hai panel nguồn xoay riêng mở khe ở eo Karo. Nay mọi source plan dùng bề mặt chung có eo ghim; ẩn panel cũ, giữ source texture ở rest và chỉ dùng artwork ngồi khi cần. Khi mở rộng sang bước đi, Lila 800 ms ban đầu bị guard chặn vì tam giác lật. Đã thêm bộ giới hạn hình học: diện tích tam giác là hàm bậc hai theo mức displacement, lấy nghiệm ngưỡng đầu tiên để giảm ảnh hưởng đùi sao cho giữ ít nhất 25% diện tích trung tính. Cùng một hệ số áp vào UV và outline, thuần theo clock; guard lật vẫn còn. Đây là giới hạn hình học ứng viên, không chứng minh anatomy/cloth physics hoặc độ mượt.
 
 Journal mới `source-waist-governor-review-v1` giới hạn **1**, đã dùng 1/1; không tăng/reset các journal trước. [Review waist v1](reviews/source-waist-static-review-v1.json) **FAIL medium**: Karo 800 ms còn nét viền bên trong song song viền ngoài. Review không thấy khe nền dưới belt/shorts rời hay crotch crack ở bốn pose gửi (rest 0, walk 800/3200, chuyển ngồi phải 1240); Lila còn một váy liền, màu ấm và điểm gắn tay/cổ giữ được ở ảnh. Sau review đã nới dải loại texture từ 1.5 lên **3.5 đơn vị** trong mép, vẫn dùng contour 2.2 đơn vị; [ảnh sửa 800 ms](reviews/source-waist-walk-800-v2.jpg) và [metadata tự inspection](reviews/source-waist-self-inspection-v2.json) **chưa được model review hoặc test video lại**. Cuffs v2 PASS chỉ thuộc bản 5; không dùng nó để ghi PASS cho bản 6 hiện hành. Manifest giữ FAIL/stale fingerprint và `productionReady=false`.
 
 Ca bàn giao thêm: opposing thigh ±22° ở cả hai hướng/nhiều phase phải giữ waist và margin diện tích; scene đi thường phải ẩn panel cũ, không còn khe eo, không đổi hai ống thành váy. Kiểm lại toàn clock, cả hai hướng, nét gấu/màu source sau dải mask rộng hơn, support/contact và scene byte limit. Không coi vài snapshot hay giới hạn tam giác là nghiệm thu.
 
+**Mốc 0.12 — candidate chuyển đầu liên tục giới hạn:** body dùng `forest-source-body-motion-7 / forest-source-body-svg-7`, face `forest-face-motion-8 / forest-head-svg-9`. `forest-head-projection.ts` giữ nguyên byte PNG front đã có, lấy texture qua cage SVG; không ghép hai mặt hoặc mirror đầu. Yaw trong [-1,1] tương ứng ±32°; hai endpoint ba phần tư của head track được chuẩn hóa vào khoảng đó, front ở 0. Cage hiện 60 tam giác, có hàng đi qua điểm cổ 32/72 đơn vị của Lila/Karo. Mũi và tóc nằm trong material; tâm mắt/chân mày/miệng, mask jaw và pivot đuôi tóc lấy đúng nội suy barycentric của tam giác đang vẽ. Glyph nhỏ có giới hạn scale/shear để đọc được (mắt scale X ≥0.78, shear 0); không gọi đây là đầu 3D tái dựng hoặc góc profile/back hoàn chỉnh. Gaze không có head track dùng easing 140ms thay vì đổi hình ngay. Đuôi tóc giữ độ trễ 120ms/góc ±5°. Compiler kiểm sai số ma trận tại UV vertices và điểm glyph khi nội suy, cùng giới hạn 0.2px; hai actor vẫn namespace độc lập.
+
+Journal `source-head-projection-review-v1` giới hạn **1**, dùng 1/1, không reset journal trước. [Review projection v1](reviews/source-head-projection-static-review-v1.json) **FAIL** trên năm snapshot 0/600/900/1200/1800ms của bản cage 98 tam giác: mắt xa Lila 0ms bị ép thành cụm nét; miệng Karo 0ms nhỏ hơn mẫu. Mốc 0ms đang ở đầu blend biểu cảm trung tính→vui, khác các pose sau; chi tiết đó chưa phải lời giải cho chất lượng miệng. Sau review, cage giảm 60 tam giác để bớt số control/timeline, landmarks đổi sang mapping của tam giác thật và thêm giới hạn glyph. [Self-inspection v2](reviews/source-head-projection-self-inspection-v2.json) là inspection tĩnh bản sửa, **không có PASS mới hoặc test video**. Review head cũ PASS chỉ thuộc ba artwork riêng, không áp cho projection. Body/head fingerprint đã đổi; manifest giữ review FAIL/stale và production guard.
+
+**Sửa contract xuất scene:** kiểm tra source phát hiện evaluator vải đã phát `matrix(a b c d e f)` và polygon đường bao nhưng validator JS chỉ nhận translate/rotate/scale và cubic mở. Nay contract nhận matrix literal đúng 6 số hữu hạn (trị tuyệt đối ≤100000) và polygon `M...L...Z` đóng 3–96 đỉnh, tối đa 4096 ký tự, tọa độ hữu hạn ≤100000. Giữ cấm sửa href, external use, function/loop, event và resource ngoài allowlist; không tăng limit scene 2 MB. Ca bảo vệ trong `tests/forest-head-projection.test.ts` chuẩn bị cho model test, chưa chạy. Cần kiểm riêng nhiều actor, cảnh dài, matrix/tween, mask jaw và byte limit; build/typecheck không chứng minh scene runtime đạt.
+
+Phạm vi còn thiếu: fidelity mọi góc (đặc biệt mắt sát tóc/miệng trung tính→vui), profile/rear và body view thật, occlusion tóc/râu, toàn chu kỳ chuyển đầu/ngồi/đi, nét/màu vải ở crop video, cảnh/diễn và ba input. Không mở guard từ các snapshot.
+
 Review head v1/v2 là lịch sử lỗi. Đã bỏ vùng miệng “Angry” còn răng cười trong sheet: giữ texture râu/da hiện có và dùng contour miệng căng/cong xuống, không ghép mảng râu khác màu. Miệng nói có ba nhóm: bình thường, căng khi buồn/giận và tròn khi ngạc nhiên/lo sợ. Karo dùng khoang miệng rộng với viền môi ấm, tránh O nhỏ trông như mắt trong râu. Speech activity điều khiển độ mở; actor im lặng không bật miệng nói. Lila có vùng clip da mặt đã đo, điểm gắn miệng cao hơn và độ mở có giới hạn để không chạm tóc dưới cằm. Mask chân mày cả hai actor được thu theo nét thực, tránh lấy mảnh tóc vào glyph.
 
 Review v3 xác nhận lỗi cười/râu Karo đã hết nhưng tìm thêm lỗi miệng Lila và chấm thừa chân mày; sau sửa, [head-layer-static-review-v4.json](reviews/head-layer-static-review-v4.json) PASS cho hai góc cũ. Review ba góc v1 đã PASS; sau bổ sung miệng tròn, [front-head-static-review-v2.json](reviews/front-head-static-review-v2.json) cũng PASS cho ảnh vui, giận/nói và lo sợ/nói giả lập, gắn fingerprint đúng pack `forest-face-motion-7 / forest-head-svg-8`. Xem [ba góc vui](reviews/front-heads-happy-v2.jpg), [giận/nói](reviews/front-heads-angry-voice-v2.jpg) và [lo sợ/nói](reviews/front-heads-afraid-voice-v2.jpg). Những kết quả này chỉ áp dụng ảnh đầu đã cung cấp, không chứng minh body, toàn chu kỳ chuyển động hoặc episode. Bộ chủ đề vẫn `productionReady=false`.
 
-Hai file test được chuẩn bị cho model test, **chưa chạy**. Bao gồm nguồn/hash, giới hạn góc, hướng chân mày, seek/miệng khi im lặng, giữ miệng căng/tròn khi nói với cảm xúc buồn/giận/ngạc nhiên/lo sợ, góc trước tại giữa lượt quay, nguồn thân/pose, xương ẩn, namespace và contract scene. Lệnh khi model test được giao chạy:
+Ba file test head/body/projection được chuẩn bị cho model test, **chưa chạy**. Bao gồm nguồn/hash, giới hạn góc, hướng chân mày, seek/miệng khi im lặng, giữ miệng căng/tròn khi nói với cảm xúc buồn/giận/ngạc nhiên/lo sợ, góc trước tại giữa lượt quay, nguồn thân/pose, xương ẩn, namespace và contract scene. Lệnh khi model test được giao chạy:
 
 ```powershell
-node --experimental-test-module-mocks --import tsx --test tests/forest-head.test.ts tests/forest-body.test.ts
+node --experimental-test-module-mocks --import tsx --test tests/forest-head.test.ts tests/forest-body.test.ts tests/forest-head-projection.test.ts
 ```
 
 Trước khi gọi pipeline topic thật, vẫn phải hoàn thành góc/lớp thiếu, fidelity và các điều kiện readiness. Không gỡ guard chỉ để chạy kiểm ảnh/lớp đầu.
@@ -520,7 +528,7 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-| Hạng mục | Trạng thái tại phiên bản 0.11 |
+| Hạng mục | Trạng thái tại phiên bản 0.12 |
 |---|---|
 | Chủ đề và hai model tham chiếu | Đã xác định từ yêu cầu/ảnh của người dùng |
 | MD và ảnh tham chiếu lưu bền vững | Đã lưu ảnh cận, expression, palette và hai bảng 6688×3760; có hash/metadata trong manifest |
@@ -532,7 +540,7 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 | Hai bản tách nền toàn thân | Ứng viên PNG alpha đã có; đã đối chiếu trên nền sáng, chưa phải rig/đã nghiệm thu |
 | Hai atlas tách lớp | Bản nháp từ imagegen; cần kiểm fidelity, đo vùng cắt/điểm gắn, tách thêm nét mặt và góc nhìn |
 | Ráp lớp pose nghỉ | Đã có bản hiệu chỉnh tĩnh bám hệ tọa độ nguồn và vùng cắt đo được; chưa đạt rig chuyển động |
-| Lớp đầu và face evaluator | Sáu texture, ba hướng mỗi actor đã vào renderer; miệng căng/tròn giữ cảm xúc khi nói, miệng Lila nằm trong vùng da mặt, mask chân mày đã sửa. Review ảnh tĩnh của ba góc PASS; chưa nghiệm thu runtime hoặc chuyển đầu mượt |
+| Lớp đầu và face evaluator | Head-only giữ sáu texture/ba hướng; body 7 có front projection liên tục giới hạn, jaw/glyph/hair cùng cage/clock. Review năm pose đầu FAIL; bản glyph floor/cage 60 mới chỉ tự inspection. PASS cũ không áp cho projection; chưa nghiệm thu runtime |
 | Thân bám nguồn | Mask cutout, cổ da, xương ẩn/mực cong; chiều dài chân riêng giữ nguyên, split gối gần 52/48 là suy luận. Có bước ngồi/đứng và điểm tựa mông dưới/sau belt; quay thân và motion còn thiếu |
 | Chuyển động phụ | Nhịp thở nhỏ, blink lệch, đuôi tóc và panel trang phục theo sau đã có code; mái/râu/nếp vải và chất lượng chuyển trọng lượng còn chờ |
 | Nếp quần/váy ngồi | Karo atlas v2 có hai gấu; mọi source plan dùng UV/contour đục, eo ghim/vạt theo đùi và bộ giới hạn diện tích. Dải texture Karo nới 3.5 đơn vị sau FAIL nét kép; chưa review bản cuối hoặc nghiệm thu toàn clock |

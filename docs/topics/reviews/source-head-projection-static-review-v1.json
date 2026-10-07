@@ -1,0 +1,104 @@
+{
+  "scope": "static-five-pose-projected-head-candidate-only",
+  "appliesTo": "forest-face-motion-8 / forest-head-svg-9; forest-source-body-motion-7",
+  "headPackFingerprint": "080d2058bcd691fef7a379c5c895f801660c792dde861a60ff66242d61f3993a",
+  "bodyPackFingerprint": "ddc38f7cd473005cd17135216e842d46a84915366437204bf9e8d5f8b04cdd18",
+  "codeHashes": {
+    "compiler.ts": "9324949045ae21a0f66b0afa1e1b3f9519f7c465cbc525f0011bc6d9061bd82f",
+    "forest-head-art.ts": "c121cf4643070a51f1e230679868d84eac5e9cddd5269876b88e1b2dadc294c8",
+    "forest-head-projection.ts": "8de5ca0d7cfc756db017e05ce30cd4c68d3f76acd74a69bec2914203474321a6",
+    "forest-body-art.ts": "edb744c71b54dc3a841c23efb695905308e0ccbca66e33b3baa860ec1207557d",
+    "forest-garment-art.ts": "16e3f64df6359a08fbfc66b6f0efbad001cd7005cefa181108d21a177696701f"
+  },
+  "evidence": [
+    {
+      "file": "docs/topics/reviews/source-head-projection-start-0-v1.png",
+      "timeMs": 0,
+      "sha256": "4dca9ad703ffd347679119bd8d8836178c3f474b1b7cc2c456d9eb0065d5c76b"
+    },
+    {
+      "file": "docs/topics/reviews/source-head-projection-before-600-v1.png",
+      "timeMs": 600,
+      "sha256": "ece502911a09150b4df5a21b0689fbfdb5a22fb3faaab296ed72d3fb7b749fe2"
+    },
+    {
+      "file": "docs/topics/reviews/source-head-projection-middle-900-v1.png",
+      "timeMs": 900,
+      "sha256": "a39683e6e98693a85130a43eabe705009e6b836269379ffc2cd354b7dd0e1672"
+    },
+    {
+      "file": "docs/topics/reviews/source-head-projection-after-1200-v1.png",
+      "timeMs": 1200,
+      "sha256": "1379f95f8bf805918ae17317f24cd4a280f69c1a026c0708074811fc0f744afe"
+    },
+    {
+      "file": "docs/topics/reviews/source-head-projection-end-1800-v1.png",
+      "timeMs": 1800,
+      "sha256": "9d48331aedebbf9b59af60a2153382e1ea0b4ca090d6a451817ea4544579f5fb"
+    }
+  ],
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "Lila_0ms",
+        "type": "facial_glyph_distortion",
+        "severity": "medium",
+        "description": "Lila's screen-right eye is compressed into a narrow, irregular cluster of dark strokes beside the hair, rather than retaining the source's clean oval eye. The screen-left eye remains substantially larger and clearly formed.",
+        "repair": "Adjust the far-eye projection and its surrounding surface so the eye retains a single clean silhouette and adequate separation from the hair at this endpoint."
+      },
+      {
+        "shotId": "Karo_0ms",
+        "type": "mouth_shape_distortion",
+        "severity": "medium",
+        "description": "Karo's smile is flattened into a small horizontal oval in the beard, with the source's broad open mouth and white tooth band largely lost. The 600, 900, 1200 and 1800 ms samples retain a more recognizable open smile.",
+        "repair": "Preserve the mouth opening's height and tooth-band visibility in the endpoint projection, keeping the lip, teeth and beard boundaries distinct."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "Reviewed both actors in all five supplied static samples only; fine cracks and doubled ink are difficult to resolve at the displayed head size.",
+      "Continuous motion, seek/baked interpolation, performance/scene size, body turns, detailed hair/beard occlusion and the three video flows remain unverified.",
+      "The previous head-only three-view review does not approve this projection."
+    ]
+  },
+  "productionAcceptance": false,
+  "runtimeTestsRun": false,
+  "usage": {
+    "calls": 1,
+    "successes": 1,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 13694,
+    "outputTokens": 588,
+    "totalTokens": 14282,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 13694,
+        "outputTokens": 588,
+        "totalTokens": 14282,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 13694,
+        "outputTokens": 588,
+        "totalTokens": 14282,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

@@ -1,14 +1,14 @@
 import type {HostProfile} from '../host/schemas.js';
 import type {RigHand} from '../core/identifiers.js';
 import {hash} from '../core/utils.js';
-import {referenceImageUrl,type ReferenceHeadView} from './forest-head-art.js';
+import {referenceImageUrl,referenceHeadDescription,type ReferenceHeadView} from './forest-head-art.js';
 import {seatedGarmentAssets,seatedGarmentDescription,seatedGarmentSvg} from './forest-garment-art.js';
 type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-6';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-6';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-7';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-7';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -109,7 +109,7 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription()}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through hidden IK joint',softness:.28,anatomicalGuarantee:false},
@@ -119,4 +119,5 @@ export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,c
   headAttachment:{neck:'original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone'},
   footContact:{frameFeet:'sole anchors',inkEndpoint:'ankle',pelvisWalkDrop:'minimum fixed-leg reach plus small bob; not .23 of long thigh'},
   seatedMotion:{method:'asymmetric source chains, sole/ankle offsets, staggered foot preparation, one continuous knee branch',minimumTransitionMs:1500,productionAcceptance:false},
-  pending:['rear/side body artwork','continuous head/body turn','remaining fringe/beard secondary motion','occluded clothing reconstruction','garment fold and seated motion acceptance','runtime anatomy and motion acceptance']};}
+  headMotion:referenceHeadDescription().projection,
+  pending:['rear/side body artwork','projected head fidelity and continuous motion acceptance; body turns','remaining fringe/beard secondary motion','occluded clothing reconstruction','garment fold and seated motion acceptance','runtime anatomy and motion acceptance']};}

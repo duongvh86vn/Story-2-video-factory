@@ -9,7 +9,8 @@ import { selectedClips } from './library.js';
 import {sampleAirborne,sampleFallingObject} from './airborne.js';
 import {inkLimb,pathCoordinates} from './ink-limb.js';
 import {forestHeadContour} from './forest-tribe-art.js';
-import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription,referenceHeadViewForYaw,FOREST_HEAD_VIEWS} from './forest-head-art.js';
+import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription,referenceHeadViewForYaw,referenceHeadProjectionPaths,FOREST_HEAD_VIEWS} from './forest-head-art.js';
+import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
 import {seatedGarmentState,seatedGarmentMatrixError,type GarmentRestPose} from './forest-garment-art.js';
@@ -529,21 +530,29 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   face['mouth-round']={opacity:pose.round*emotion.weight};
   if(usesReferenceHead(profile)){
     const look=explicitGaze??activeGesture;
-    const yaw=plan.headView||plan.headTurns?.length?headViewAt(plan,t).yaw:look?.target?clamp((look.target.x-head.x)/70,-1,1):orientation;
-    // Authored drawings are discrete views, not a continuous 3D rotation. Do
-    // not cross-fade two opaque heads or fabricate unsupported profile/back art.
+    const bodyHead=usesReferenceBody(profile);
+    const yaw=plan.headView||plan.headTurns?.length?headViewAt(plan,t).yaw:look?.target?
+      (bodyHead?lerp(orientation,clamp((look.target.x-head.x)/70,-1,1),gazeWeight(look)):clamp((look.target.x-head.x)/70,-1,1)):orientation;
+    let tailRotation=0;
+    if(bodyHead&&profile.appearance.characterVariant==='lila'){
+      const lagT=Math.max(0,t-120),past=expressionAt(plan,lagT),pastBody=postureAt(plan,lagT);
+      const lagAngle=pastBody.leanDeg+past.pose.lean*past.weight+past.pose.tilt*past.weight;
+      tailRotation=Math.max(-5,Math.min(5,(lagAngle-headAngle)*.6+Math.sin(t*Math.PI*2/2800)*walk.activation*1.8));
+    }
+    // Body candidates project one front drawing through a bounded illustrated
+    // surface. Head-only inspection retains the authored discrete views. Neither
+    // path fabricates profile/rear art or cross-fades two opaque faces.
     const sourceFace=referenceFaceState({view:referenceHeadViewForYaw(yaw),gaze,blink,
       // Source eyebrows rotate about their own center in SVG's downward Y:
       // angry inner ends move down, worried/sad inner ends move up.
       browY:pose.brow*emotion.weight,browAngle:-(pose.browAngle??0)*emotion.weight,
       eyeOpen:lerp(1,pose.eyeOpen??1,emotion.weight),smile:pose.smile*emotion.weight,
-      round:pose.round*emotion.weight,frown:(pose.frown??0)*emotion.weight,speechLevel:speech?.level??null});
+      round:pose.round*emotion.weight,frown:(pose.frown??0)*emotion.weight,speechLevel:speech?.level??null,
+      ...(bodyHead?{projection:{actor:profile.appearance.characterVariant!,yaw:clamp(yaw/.65,-1,1),tailRotation}}:{})});
     for(const id of Object.keys(face))delete face[id];Object.assign(face,sourceFace);
+    if(bodyHead)Object.assign(paths,referenceHeadProjectionPaths(profile.appearance.characterVariant!,clamp(yaw/.65,-1,1)));
     if(usesReferenceBody(profile)&&profile.appearance.characterVariant==='lila'){
-      const lagT=Math.max(0,t-120),past=expressionAt(plan,lagT),pastBody=postureAt(plan,lagT);
-      const lagAngle=pastBody.leanDeg+past.pose.lean*past.weight+past.pose.tilt*past.weight;
-      const follow=Math.max(-5,Math.min(5,(lagAngle-headAngle)*.6+Math.sin(t*Math.PI*2/2800)*walk.activation*1.8));
-      for(const view of FOREST_HEAD_VIEWS)face['hair-tail-'+view]={rotation:follow};
+      for(const view of FOREST_HEAD_VIEWS)if(view!=='front')face['hair-tail-'+view]={rotation:tailRotation};
     }
     delete transforms['face-orientation'];
   }
@@ -660,6 +669,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const progress of [.17,.5,.83]){
       const actual=samplePerformance(plan,profile,lerp(a.timeMs,b.timeMs,progress),activity);
       if(usesReferenceBody(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
+      if(usesReferenceBody(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
         // Audio activity is intentionally stepped at its own explicit boundaries.
         if(id==='mouth-talk')continue;
@@ -717,7 +727,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),
     ...(plan.supports?.length?{seatSupports:plan.supports,maxSeatContactErrorPx:Math.max(0,...frames.flatMap(f=>f.seatContact?[f.seatContact.errorPx]:[]))}:{}),
     ...(usesReferenceHead(profile)?{headArtwork:{version:referenceHeadDescription().version,fingerprint:referenceHeadDescription().fingerprint,
-      availableViews:referenceHeadDescription().views,turnRendering:referenceHeadDescription().turnRendering,fullBodyReplacement:usesReferenceBody(profile)}}:{}),
+      availableViews:referenceHeadDescription().views,turnRendering:usesReferenceBody(profile)?'continuous-front-projection-32deg':'stepped-authored-views-with-front',fullBodyReplacement:usesReferenceBody(profile)}}:{}),
     ...(usesReferenceBody(profile)?{bodyArtwork:referenceBodyDescription()}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }
