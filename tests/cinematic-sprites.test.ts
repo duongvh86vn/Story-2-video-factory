@@ -139,6 +139,9 @@ test('contact close keeps manipulated object, response object and labels visible
   f.shot.visualization!.parts.push({...part,id:'response',x:.9});c.models=stageModels(f.shot);
   f.shot.visualization!.events=[{type:'highlight',targetId:'response',contactPartId:'basket',narrationAnchor:'s1',startMs:2500,endMs:2800,contactRequired:true,motion:'none',sourceRefs:[ref]}];
   assert.throws(()=>validateSpriteCamera(f.shot,f.motions),/crops response/);
+  f.shot.visualization!.relations=[{from:'basket',to:'response',kind:'transfer',sourceRefs:[ref]}];
+  f.shot.visualization!.events=[{type:'flow',targetId:'basket',relationTo:'response',narrationAnchor:'s1',startMs:2500,endMs:2800,contactRequired:true,motion:'none',sourceRefs:[ref]}];
+  assert.throws(()=>validateSpriteCamera(f.shot,f.motions),/crops response/);
 });
 
 test('sampler closure owns validated snapshots and cannot drift after callers mutate source',()=>{

@@ -56,7 +56,10 @@ export function validateSpriteCamera(shot:Shot,motions:ReadonlyMap<string,ActorM
   };
   const checkedActors=new Set<string>();
   const contactParts=new Set(plan.contacts.map(contact=>contact.targetId));
-  for(const event of shot.visualization?.events??[])if(event.contactRequired&&contactParts.has(event.contactPartId??event.targetId))contactParts.add(event.targetId);
+  for(const event of shot.visualization?.events??[])if(event.contactRequired&&contactParts.has(event.contactPartId??event.targetId)){
+    contactParts.add(event.targetId);
+    if(event.relationTo)contactParts.add(event.relationTo);
+  }
   const ratios:Record<string,{min:number;max:number}>=Object.create(null);
   for(const time of times){
     const matrix=spriteCameraMatrixAt(shot,time),actors=sample(time);
