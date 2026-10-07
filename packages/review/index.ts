@@ -14,14 +14,15 @@ import { loadHost } from '../host/index.js';
 import { validateExplainerStoryboard } from '../explainer/storyboard.js';
 import { BeatSchema, NarrationSchema } from '../core/schemas.js';
 import { z } from 'zod';
-import { VoiceReportSchema } from '../voice/index.js';
+import { VoiceReportSchema,ActivitySchema } from '../voice/index.js';
 import type { HostGeometry } from '../host/controller.js';
 import { validateCamera } from '../director/camera.js';
 import { rigMetrics } from '../animation/rig.js';
 import {actorProfile,shotPerformer} from '../actors/model.js';
 import {castDesignAdvisories} from '../actors/design.js';
 import {hostPreviewSvg} from '../host/rig.js';
-import {loadSpriteSceneMotions,spriteSceneSheetBytes} from '../motion/scene-source.js';
+import {loadSpriteSceneMotions,loadSpriteSceneSpeech,spriteSceneSheetBytes} from '../motion/scene-source.js';
+import {actorSpeechSheetBytes} from '../motion/speech-import.js';
 import {validateSpriteCamera} from '../motion/camera.js';
 import type {SpriteSceneGeometry} from '../motion/scene.js';
 import {renderCinematic} from '../../library/shots/cinematic.js';
@@ -155,6 +156,13 @@ export async function ruleReview(root:string,config:FactoryConfig,storyboard:Sto
         if(hash(await fs.readFile(await safeRealPath(root,`scenes/${shot.id}/${resource}`)))!==motion.sheet.hash)throw new Error('Staged sprite sheet changed before review');
         spritePaths.push(resource);
       }
+      const speech=await loadSpriteSceneSpeech(root,shot,motions);
+      for(const variant of speech?.values()??[]){
+        const resource=`assets/${variant.sheet.hash}.png`;
+        await actorSpeechSheetBytes(root,variant);
+        if(hash(await fs.readFile(await safeRealPath(root,`scenes/${shot.id}/${resource}`)))!==variant.sheet.hash)throw new Error('Staged sprite mouth artwork changed before review');
+        spritePaths.push(resource);
+      }
       const errors=validateSceneFiles({files,dependencies:[],notes:[]},shot,config.workflow.max_scene_bytes,[...approvedPaths,...spritePaths],config.rendering.final);
       for(const error of errors) issues.push(issue(shot,'scene-contract','high',error,'Repair the exact static validator error.'));
     } catch {issues.push(issue(shot,'scene-contract','high','Scene files are missing or unsafe.','Rebuild this scene.'));}
@@ -183,6 +191,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
   const cameraReports=new Map<string,ReturnType<typeof validateCamera>|ReturnType<typeof validateSpriteCamera>>();
   if(explainer&&host){
     const n=await readJson(path.join(projectRoot,'work/narration.json'),NarrationSchema),beats=await readJson(path.join(projectRoot,'work/beats.json'),z.array(BeatSchema));
+    const spriteActivity=storyboard.shots.some(shot=>shot.cinematic?.spriteStage?.actors.some(actor=>actor.clips.some(clip=>clip.speech)))?await readJson(path.join(projectRoot,'work/speech-activity.json'),ActivitySchema):undefined;
     try{validateExplainerStoryboard(storyboard,n,beats,host.profile,host.rig,config);}catch(error){issues.push(issue(storyboard.shots[0]!,'host-plan','high',String(error),'Edit the affected storyboard host/visualization plan.'));}
     for(const shot of storyboard.shots){
       const files={files:await Promise.all(['index.html','style.css','scene.js'].map(async name=>({path:name,content:await fs.readFile(await safeRealPath(projectRoot,`scenes/${shot.id}/${name}`),'utf8')}))),dependencies:[],notes:[]};
@@ -190,8 +199,8 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
       const geometry=await readJson<SceneGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`));
       const cinematic=config.presentation.mode==='story-cinematic'?shot.cinematic:undefined;
       if(cinematic?.spriteStage){
-        const motions=await loadSpriteSceneMotions(projectRoot,shot);
-        const expected=renderCinematic(shot,host.profile,host.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,n,motions).geometry;
+        const motions=await loadSpriteSceneMotions(projectRoot,shot),speech=await loadSpriteSceneSpeech(projectRoot,shot,motions);
+        const expected=renderCinematic(shot,host.profile,host.rig,spriteActivity??{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,n,motions,speech).geometry;
         if(!('kind' in geometry)||geometry.kind!=='sprite-actors'||hash(geometry)!==hash(expected))issues.push(issue(shot,'sprite-identity','high','Sprite geometry differs from its validated story/motion/contact plan.','Restore assets or rebuild the shot.'));
         cameraReports.set(shot.id,validateSpriteCamera(shot,motions!));warnings.push(`${shot.id}: candidate sprite art/motion/speech acceptance is pending; draft review cannot authorize final.`);
         continue;

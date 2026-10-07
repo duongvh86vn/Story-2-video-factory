@@ -11,6 +11,7 @@ import { NARRATION_LANGUAGES,primaryLanguage } from '../../../packages/core/lang
 import {motionLibraryMarkup,motionLibraryDocument} from './motion-library.js';
 import type {ActorMotion} from '../../../packages/motion/schemas.js';
 import type {SpriteMotionCatalogSnapshot} from '../../../packages/motion/catalog.js';
+import type {ActorSpeech} from '../../../packages/motion/speech-schemas.js';
 
 type Tab = 'inspector' | 'source' | 'narration' | 'storyboard' | 'scene' | 'characters' | 'reports' | 'logs';
 type Mode = 'composition' | 'draft' | 'final';
@@ -30,7 +31,7 @@ let setupMode:'story'|'script'|'wav'|'srt'='story',scriptRevision='new',scriptFo
 let setupSnapshot:Pick<ProjectDetail,'name'|'settings'>|null=null;
 let setupVoices:VoiceCatalog={windows:{status:'unavailable',voices:[]},profiles:{}};
 let actorSnapshot:{name:string;id:string;revision:string}|null=null;
-let librarySnapshot:{name:string;catalog:SpriteMotionCatalogSnapshot;motions:ActorMotion[]}|null=null;
+let librarySnapshot:{name:string;catalog:SpriteMotionCatalogSnapshot;motions:ActorMotion[];variants:ActorSpeech[]}|null=null;
 const v=(vi:string,en:string):string=>locale==='vi'?vi:en;
 const esc = (value: unknown): string => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 const fmt = (ms: number): string => `${Math.floor(ms / 60000).toString().padStart(2, '0')}:${(ms / 1000 % 60).toFixed(1).padStart(4, '0')}`;
@@ -307,16 +308,22 @@ async function setupDialog():Promise<void>{
 }
 async function motionLibraryDialog():Promise<void>{
   const p=project!;
-  const [catalog,result]=await Promise.all([api.motionCatalog(p.name),api.motions(p.name)]);
+  const [catalog,result,speech]=await Promise.all([api.motionCatalog(p.name),api.motions(p.name),api.speechVariants(p.name)]);
   if(project?.name!==p.name)return;
-  const markup=motionLibraryMarkup(p.name,catalog,result.motions,locale);
-  librarySnapshot={name:p.name,catalog,motions:result.motions};
+  const markup=motionLibraryMarkup(p.name,catalog,result.motions,locale,speech.variants);
+  librarySnapshot={name:p.name,catalog,motions:result.motions,variants:speech.variants};
   modal.innerHTML=markup;modal.showModal();
 }
 async function saveMotionLibrary(form:HTMLFormElement):Promise<void>{
   const snapshot=librarySnapshot;if(!snapshot||project?.name!==snapshot.name)throw new Error(v('Dự án đã đổi; mở lại thư viện.','Project changed; reopen the library.'));
-  const catalog=motionLibraryDocument(form,snapshot.motions);
+  const catalog=motionLibraryDocument(form,snapshot.motions,snapshot.variants);
   await api.saveMotionCatalog(snapshot.name,catalog,snapshot.catalog.revision);librarySnapshot=null;modal.close();
+}
+async function importSpeechArtwork(form:HTMLFormElement):Promise<void>{
+  const snapshot=librarySnapshot;if(!snapshot||project?.name!==snapshot.name)throw new Error(v('Dự án đã đổi; mở lại thư viện.','Project changed; reopen the library.'));
+  const data=new FormData(form);
+  await api.importSpeech(snapshot.name,String(data.get('sheet')??''),String(data.get('registration')??''));
+  if(project?.name===snapshot.name)await motionLibraryDialog();
 }
 async function saveSetup(form:HTMLFormElement,intent:'save'|'script'|'run'):Promise<void>{
   const p=setupSnapshot;
@@ -403,7 +410,8 @@ window.document.addEventListener('click',event=>{
 });
 window.document.addEventListener('submit',event=>{
   const form=event.target as HTMLFormElement;
-  if(!['create-form','upload-form','shot-form','setup-form','actor-form','motion-library-form'].includes(form.id))return;event.preventDefault();
+  if(!['create-form','upload-form','shot-form','setup-form','actor-form','motion-library-form','speech-import-form'].includes(form.id))return;event.preventDefault();
+  if(form.id==='speech-import-form'){void operation(()=>importSpeechArtwork(form),v('Đã nhập ảnh miệng ứng viên; chọn và lưu trong thư viện.','Candidate mouth artwork imported; select and save it in the library.'));return;}
   if(form.id==='motion-library-form'){void operation(()=>saveMotionLibrary(form),v('Đã lưu thư viện; tiếp tục để dựng lại phần hình.','Library saved; resume to rebuild visuals.'));return;}
   if(form.id==='actor-form'){void operation(()=>saveActor(form));return;}
   if(form.id==='setup-form'){const value=(event as SubmitEvent).submitter?.getAttribute('value');void operation(()=>saveSetup(form,value==='run'?'run':value==='script'?'script':'save'));return;}

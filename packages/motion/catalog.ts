@@ -6,10 +6,12 @@ import {loadActorMotion} from './import.js';
 import {SPRITE_CATALOG_VERSION,SpriteMotionCatalogSchema,type SpriteMotionCatalog,type MotionCapability} from './catalog-schemas.js';
 import type {ActorMotion} from './schemas.js';
 import {spriteMotionKey} from './stage.js';
+import {loadActorSpeech} from './speech-import.js';
+import {bindActorSpeech,type ActorSpeech} from './speech-schemas.js';
 
 export const SPRITE_CATALOG_INPUT='input/motion-catalog.json';
 const LIMIT=2*1024*1024;
-export function describeCatalogMotion(motion:ActorMotion,annotation:SpriteMotionCatalog['entries'][number]){
+export function describeCatalogMotion(motion:ActorMotion,annotation:SpriteMotionCatalog['entries'][number],speech?:ActorSpeech[]){
   const bounds={left:Infinity,right:-Infinity,top:Infinity,bottom:-Infinity};
   let common=Object.keys(motion.frames[0]!.landmarks);
   for(const frame of motion.frames){
@@ -19,7 +21,8 @@ export function describeCatalogMotion(motion:ActorMotion,annotation:SpriteMotion
   }
   return {...annotation,actorId:motion.actorId,state:motion.state,view:motion.view,referenceHash:motion.source.referenceHash,
     nativeDurationMs:motion.frames.reduce((sum,frame)=>sum+frame.durationMs,0),frameCount:motion.frames.length,playback:motion.playback,
-    frameBounds:bounds,commonLandmarks:common.sort(),productionReady:false as const,status:'candidate' as const};
+    frameBounds:bounds,commonLandmarks:common.sort(),productionReady:false as const,status:'candidate' as const,
+    ...(speech?.length?{mouthArtwork:speech.map(variant=>({variantId:variant.id,fingerprint:variant.fingerprint,sheetHash:variant.sheet.hash,mode:'binary-rest-open' as const,productionReady:false as const}))}:{})};
 }
 export interface SpriteMotionCatalogSnapshot {
   document:SpriteMotionCatalog;revision:string|null;snapshotHash:string;
@@ -38,7 +41,11 @@ async function catalogBytes(root:string):Promise<Buffer|null>{
 }
 async function snapshot(root:string,document:SpriteMotionCatalog,revision:string|null):Promise<SpriteMotionCatalogSnapshot>{
   const entries=[];
-  for(const annotation of document.entries)entries.push(describeCatalogMotion(await loadActorMotion(root,annotation.motionId,annotation.fingerprint),annotation));
+  for(const annotation of document.entries){
+    const motion=await loadActorMotion(root,annotation.motionId,annotation.fingerprint),speech:ActorSpeech[]=[];
+    for(const link of annotation.speechVariants??[]){const variant=await loadActorSpeech(root,link.variantId,link.fingerprint);bindActorSpeech(motion,variant);speech.push(variant);}
+    entries.push(describeCatalogMotion(motion,annotation,speech));
+  }
   return {document,revision,entries,snapshotHash:hash({producer:SPRITE_CATALOG_VERSION,document,entries})};
 }
 export async function readSpriteMotionCatalogDocument(root:string){
@@ -89,6 +96,8 @@ export function validateSpriteCatalogSelection(board:Storyboard,catalog:SpriteMo
     for(const actor of plan.actors)for(const clip of actor.clips){
       const entry=entries.get(spriteMotionKey(clip.motionId,clip.fingerprint)),action=clip.sourcedAction;
       if(!entry||entry.actorId!==actor.actorId)throw new Error(`${shot.id}: sprite clip is outside its actor's registered motion catalog`);
+      if(clip.speech&&!entry.speechVariants?.some(variant=>variant.variantId===clip.speech!.variantId&&variant.fingerprint===clip.speech!.fingerprint))
+        throw new Error(`${shot.id}: sprite mouth artwork is outside its exact native motion catalog`);
       if(!action||action.motionState!==entry.state||!entry.capabilities.some(capability=>matches(capability,action)))
         throw new Error(`${shot.id}: sprite clip lacks the registered source action capability`);
     }

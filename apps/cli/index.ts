@@ -19,7 +19,7 @@ import { NARRATION_LANGUAGES,LANGUAGE_TAG,primaryLanguage } from '../../packages
 import {importActorMotion,listActorMotions,loadActorMotion} from '../../packages/motion/import.js';
 import {motionWorkbench} from '../../packages/motion/workbench.js';
 import {loadSpriteMotionCatalog} from '../../packages/motion/catalog.js';
-import {importActorSpeech,listActorSpeech} from '../../packages/motion/speech-import.js';
+import {importActorSpeech,listActorSpeech,loadActorSpeech} from '../../packages/motion/speech-import.js';
 import {boundPath,ensureIdle,ProjectName} from '../server/security.js';
 
 const cli=new Command().name('video-factory').description('Turn a topic/story, complete script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
@@ -54,6 +54,14 @@ cli.command('motion-preview <project> <id> <fingerprint>').description('Validate
     // Verify descriptor and preflight the compiler before printing the existing Studio URL.
     motionWorkbench(await loadActorMotion(root,id,fingerprint));
     console.log(`http://127.0.0.1:${port}/api/projects/${encodeURIComponent(name)}/motions/${encodeURIComponent(id)}/${fingerprint}/preview`);
+  });
+cli.command('speech-preview <project> <id> <fingerprint>').description('Preflight candidate mouth artwork and print a diagnostic preview URL; no audio acceptance')
+  .option('--port <port>','Port of the running project Studio','8850')
+  .action(async(project:string,id:string,fingerprint:string,options:{port:string})=>{
+    const root=path.resolve(project),name=ProjectName.parse(path.basename(root)),port=z.coerce.number().int().min(1).max(65535).parse(options.port);
+    const variant=await loadActorSpeech(root,id,fingerprint);
+    motionWorkbench(await loadActorMotion(root,variant.motionId,variant.motionFingerprint),1,variant);
+    console.log(`http://127.0.0.1:${port}/api/projects/${encodeURIComponent(name)}/motions/speech/${encodeURIComponent(id)}/${fingerprint}/preview`);
   });
 cli.command('configure <project>')
   .option('--language <code>','Narration language: en, vi, ja, ko or locale (e.g. en-US)').option('--input <mode>','story, script, wav (legacy: idea, srt, auto)')

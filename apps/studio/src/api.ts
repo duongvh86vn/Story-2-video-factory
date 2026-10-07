@@ -5,6 +5,7 @@ import type {ActorDefinition} from '../../../packages/actors/schemas.js';
 import type {ActorMotion} from '../../../packages/motion/schemas.js';
 import type {SpriteMotionCatalogSnapshot} from '../../../packages/motion/catalog.js';
 import type {SpriteMotionCatalog} from '../../../packages/motion/catalog-schemas.js';
+import type {ActorSpeech} from '../../../packages/motion/speech-schemas.js';
 
 export class RequestError extends Error {
   constructor(message: string, public status: number, public code: string, public issues: Array<{ path: string; message: string }> = []) { super(message); }
@@ -25,6 +26,8 @@ export const staticUrl = (name: string, relative: string) => `/project-static/${
 export const api = {
   projects: () => request<{ projects: ProjectSummary[] }>('/api/projects'),
   motions:(name:string)=>request<{motions:ActorMotion[]}>(`${projectUrl(name)}/motions`),
+  speechVariants:(name:string)=>request<{variants:ActorSpeech[]}>(`${projectUrl(name)}/motions/speech`),
+  importSpeech:(name:string,sheet:string,registration:string)=>request<ActorSpeech>(`${projectUrl(name)}/motions/speech/import`,{method:'POST',body:JSON.stringify({sheet,registration})}),
   motionCatalog:(name:string)=>request<SpriteMotionCatalogSnapshot>(`${projectUrl(name)}/motions/catalog`),
   saveMotionCatalog:(name:string,catalog:SpriteMotionCatalog,revision:string|null)=>request<SpriteMotionCatalogSnapshot>(`${projectUrl(name)}/motions/catalog`,{method:'PUT',body:JSON.stringify({catalog,revision})}),
   create: (name: string, example: boolean, mode: 'diagram' | 'story-cinematic',topic?:'prehistoric-life') => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example, topic,presentation: { mode } }) }),

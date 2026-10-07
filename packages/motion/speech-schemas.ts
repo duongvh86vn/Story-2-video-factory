@@ -15,6 +15,7 @@ export const ActorSpeechSchema=z.object({version:z.literal(ACTOR_SPEECH_VERSION)
   if(variant.sheet.width*variant.sheet.height>64_000_000)ctx.addIssue({code:'custom',path:['sheet'],message:'Speech sheet exceeds 64 million pixels'});
 });
 export type ActorSpeech=z.infer<typeof ActorSpeechSchema>;
+export const spriteSpeechKey=(id:string,fingerprint:string)=>`${id}:${fingerprint}`;
 
 // Every allowed suffix belongs to the same feature family, including compound
 // names and digits (eye_right_inner, brow_left_2). Never silently drop a point.

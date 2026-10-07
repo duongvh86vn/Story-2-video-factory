@@ -50,3 +50,13 @@ test('speech sheet route cannot serve a corrupt or edited candidate by arbitrary
   await fs.writeFile(path.join(f.root,variant.sheet.path),'corrupt');assert.ok((await f.app.inject({url})).statusCode>=400);
   assert.ok((await f.app.inject({url:`${f.url}/${variant.id}/${'f'.repeat(64)}/sheet`})).statusCode>=400);
 });
+
+test('diagnostic mouth preview uses exact native/alternate sheets and never claims real audio synchronization',async t=>{
+  const f=await fixture(t),response=await f.app.inject({method:'POST',url:f.url+'/import',payload:f.body});assert.equal(response.statusCode,200);
+  const variant=response.json<ActorSpeech>(),url=`${f.url}/${variant.id}/${variant.fingerprint}`;
+  const preview=await f.app.inject({url:url+'/preview'});assert.equal(preview.statusCode,200,preview.body);
+  assert.match(preview.body,/Diagnostic rest\/open/);assert.match(preview.body,/No narration or audio/);assert.match(preview.body,/native-sheet/);
+  assert.equal((await f.app.inject({url:url+'/preview?audio=outside.wav'})).statusCode,422);
+  const native=await f.app.inject({url:url+'/native-sheet'});assert.equal(native.statusCode,200);assert.deepEqual(native.rawPayload,f.baseBytes);
+  await fs.writeFile(path.join(f.root,f.motion.sheet.path),'corrupt native');assert.ok((await f.app.inject({url:url+'/native-sheet'})).statusCode>=400);assert.ok((await f.app.inject({url:url+'/preview'})).statusCode>=400);
+});

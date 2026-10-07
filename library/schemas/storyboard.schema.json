@@ -3204,6 +3204,36 @@
                                       "motionState"
                                     ],
                                     "additionalProperties": false
+                                  },
+                                  "speech": {
+                                    "type": "object",
+                                    "properties": {
+                                      "variantId": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                      },
+                                      "fingerprint": {
+                                        "type": "string",
+                                        "pattern": "^[a-f0-9]{64}$"
+                                      },
+                                      "segmentIds": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "maxLength": 96,
+                                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                        },
+                                        "minItems": 1,
+                                        "maxItems": 128
+                                      }
+                                    },
+                                    "required": [
+                                      "variantId",
+                                      "fingerprint",
+                                      "segmentIds"
+                                    ],
+                                    "additionalProperties": false
                                   }
                                 },
                                 "required": [

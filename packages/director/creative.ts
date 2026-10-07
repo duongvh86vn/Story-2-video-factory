@@ -32,7 +32,7 @@ import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
 import {creativeActingBrief} from './acting-brief.js';
 import {applyTopicCast,topicContext,requireTopicProductionReady} from '../topics/prehistoric-life.js';
-import {loadSpriteSceneMotions} from '../motion/scene-source.js';
+import {loadSpriteSceneMotions,loadSpriteSceneSpeech} from '../motion/scene-source.js';
 import {loadSpriteMotionCatalog,validateSpriteCatalogSelection} from '../motion/catalog.js';
 
 /** The general shot contract also supports legacy video; creative production needs these fields. */
@@ -105,10 +105,11 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       // Camera diagnostics must survive a separate early artwork/rendering failure.
       if(!shot.cinematic?.spriteStage)check(()=>validateCamera(shot,shotPerformer(shot,context.profile,context.rig).profile));
       let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;
-      try{motions=await loadSpriteSceneMotions(root,shot);}catch(error){failures.add(String(error));}
+      let speech:Awaited<ReturnType<typeof loadSpriteSceneSpeech>>;
+      try{motions=await loadSpriteSceneMotions(root,shot);speech=await loadSpriteSceneSpeech(root,shot,motions);}catch(error){failures.add(String(error));}
       check(()=>{
-        const rendered=renderCinematic(shot,context.profile,context.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,context.narration,motions);
-        const errors=validateSceneFiles(secureSceneFiles(rendered.files),shot,config.workflow.max_scene_bytes,[...(motions?.values()??[])].map(motion=>`assets/${motion.sheet.hash}.png`),config.rendering.final);
+        const rendered=renderCinematic(shot,context.profile,context.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,context.narration,motions,speech);
+        const errors=validateSceneFiles(secureSceneFiles(rendered.files),shot,config.workflow.max_scene_bytes,[...(motions?.values()??[]),...(speech?.values()??[])].map(asset=>`assets/${asset.sheet.hash}.png`),config.rendering.final);
         for(const error of errors)failures.add(`${shot.id}: creative artwork/security: ${error}`);
       });
     }
@@ -132,7 +133,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   const requestContext={task:'creative-storyboard',story:{title:context.story.title,style:context.story.style,genre:context.story.genre,authoring:context.story.authoring},narration:{durationMs:context.narration.durationMs,segments:context.narration.segments,words:context.narration.words},
     characterMode:config.presentation.character_mode,topic:topicContext(config),characters:context.characters.characters,
     ...(catalog.revision!==null||renderer==='sprite'?{motionLibrary:{producer:'actor-motion-catalog-1',snapshotHash:catalog.snapshotHash,renderer:renderer??'authored',entries:catalog.entries,
-      rule:'Use only these exact actorId/motionId/fingerprint/state/view/capability versions for spriteStage. Preserve source action statements and target IDs. Capability metadata is candidate, not visual acceptance. Native once action must fit its full duration/rate; do not truncate or mirror. No baked speech, skeletal props or continuous handoff. Root and contact clock is shot-local; preserve narration-global cues. Explicit sprite selection requires spriteStage for actor shots, no rig fallback; object-only cutaways remain allowed. Bounds are frame rectangles, common landmarks are present in every native frame, not certified anatomy.'}}:{}),
+      rule:'Use only these exact actorId/motionId/fingerprint/state/view/capability versions for spriteStage. Preserve source action statements and target IDs. Capability metadata is candidate, not visual acceptance. Native once action must fit its full duration/rate; do not truncate or mirror. Speech requires clip.speech={variantId,fingerprint,segmentIds} from that motion entry speechVariants/mouthArtwork, plus the same original cue IDs in the owning actorScene speakingSegmentIds and clip narration sourceRefs. Each original cue has one actor owner; adjacent clips may share that owner/cue but must visibly cover its whole intersection with the shot. Body sourcedAction describes registered native movement, not a substitute for a speech binding. Mouth timing is built from original narration/activity by Factory, not supplied by the model. Missing mouth artwork is a blocker; never rewrite dialogue, draw face glyphs or fall back to a rig. No skeletal props or continuous handoff. Root and contact clock is shot-local; preserve narration-global cues. Explicit sprite selection requires spriteStage for actor shots, no rig fallback; object-only cutaways remain allowed. Bounds are frame rectangles, common landmarks are present in every native frame, not certified anatomy.'}}:{}),
     beats:context.beats,host:context.profile,rig:{rigHash:context.rig.rigHash},seed:seed.shots,seedVisualAdvisories:castDesignAdvisories(seed),lockedShots:locks,...(context.lockedActors?.length?{lockedActors:context.lockedActors}:{}),
     dimensions:config.rendering.final,...(config.presentation.design_brief?{designBrief:config.presentation.design_brief}:{}),artworkCoordinates:'Layers use stage pixels. Models default to normalized-stretch: centered 100x100 is scaled independently into part width/height, including text. Use sourced stage-pixel labels or explicit projection=model-viewport with one complete valid SVG viewBox to preserve its authored aspect policy in the actual part viewport. Recheck geometry and contact if letterboxing changes the illustration. Keyframes use the local shot clock.',
     ...(context.narration.segments.some(cue=>mentionsRunning(cue.text)||mentionsAirborne(cue.text))?{animationCapabilities:ANIMATION_LIBRARY}:{}),

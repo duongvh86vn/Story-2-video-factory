@@ -179,6 +179,7 @@ export function compileActorMotion(motion:ActorMotion,clip:SpriteClip,sheetUrl?:
     clipDurationMs:p.clip.endMs-p.clip.startMs,sourceLoop:p.motion.source.loop,playback:{...p.motion.playback},
     productionReady:false as const,speechSync:speech?.schedule.synchronization??'none' as const,
     ...(speech?{speech:{producer:'sprite-speech-clock-1' as const,variantId:speech.variant.id,fingerprint:speech.variant.fingerprint,
+      synchronization:speech.schedule.synchronization,
       nativeMotionId:p.motion.id,nativeFingerprint:p.motion.fingerprint,sheetHash:speech.variant.sheet.hash,
       scheduleHash:hash(speech.schedule),activityHash:speech.schedule.activityHash,narrationHash:speech.schedule.narrationHash,
       ...(speech.schedule.audioHash?{audioHash:speech.schedule.audioHash}:{}),segmentIds:speech.schedule.slot.segmentIds,

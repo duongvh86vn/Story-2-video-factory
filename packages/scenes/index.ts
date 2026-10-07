@@ -34,7 +34,8 @@ import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
 import {referenceHeadAssets,readReferenceHeadAsset,referenceHeadDescription} from '../animation/forest-head-art.js';
 import {referenceBodyAssets,referenceBodyDescription} from '../animation/forest-body-art.js';
-import {loadSpriteSceneMotions,spriteSceneSheetBytes} from '../motion/scene-source.js';
+import {loadSpriteSceneMotions,loadSpriteSceneSpeech,spriteSceneSheetBytes} from '../motion/scene-source.js';
+import {actorSpeechSheetBytes} from '../motion/speech-import.js';
 import {SPRITE_SCENE_VERSION} from '../motion/scene-validation.js';
 import {validateLoadedSpriteCatalog} from '../motion/catalog.js';
 export { validateSceneFiles, validateSceneScript, SCENE_CSP } from './security.js';
@@ -50,7 +51,8 @@ export async function validateExplainerSources(root:string,config:FactoryConfig,
   const actual=sourceHash(secureSceneFiles(files));
   if(shot.cinematic){
     if(config.presentation.mode!=='story-cinematic')return ['Cinematic scene requires story-cinematic presentation'];
-    return actual===sourceHash(secureSceneFiles(renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema),await loadSpriteSceneMotions(root,shot)).files))?[]:['Cinematic scene differs from its validated stage/performance/camera plan. Rebuild the shot.'];
+    const motions=await loadSpriteSceneMotions(root,shot),speech=await loadSpriteSceneSpeech(root,shot,motions);
+    return actual===sourceHash(secureSceneFiles(renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema),motions,speech).files))?[]:['Cinematic scene differs from its validated stage/performance/camera plan. Rebuild the shot.'];
   }
   for(const simple of [false,true])if(actual===sourceHash(secureSceneFiles(renderExplainer(shot,profile,rig,activity,style,d.width,d.height,simple,config.project.language).files)))return [];
   return ['Explainer scene differs from its validated host/model/action plan. Edit the storyboard plan and rebuild this shot.'];
@@ -75,6 +77,13 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
     hashes[relative]=motion.sheet.hash;hashes[`sprite-descriptor:${key}`]=hash(motion);spritePaths.add(relative);
     if(publish)await writeAtomic(await outputPath(root,path.relative(root,path.join(dir,relative))),bytes);
     refs.push({id:`sprite-${motion.fingerprint}`,type:'image',path:relative,characterId:motion.actorId});
+  }
+  const spriteSpeech=await loadSpriteSceneSpeech(root,shot,spriteMotions);
+  for(const [key,variant] of spriteSpeech??[]){
+    const relative=`assets/${variant.sheet.hash}.png`,bytes=await actorSpeechSheetBytes(root,variant);
+    hashes[relative]=variant.sheet.hash;hashes[`sprite-speech-descriptor:${key}`]=hash(variant);spritePaths.add(relative);
+    if(publish)await writeAtomic(await outputPath(root,path.relative(root,path.join(dir,relative))),bytes);
+    refs.push({id:`sprite-speech-${variant.fingerprint}`,type:'image',path:relative,characterId:variant.actorId});
   }
   const scene=shot.cinematic?.actorScene,actors=[...(scene?.primary?[scene.primary]:[]),...(scene?.supporting.map(actor=>actor.character)??[])];
   const rigAssets=new Map((shot.cinematic?.spriteStage?[]:actors).flatMap(actor=>[...referenceHeadAssets(actor.appearance),...referenceBodyAssets(actor.appearance)]).map(asset=>[asset.path,asset]));
@@ -110,10 +119,11 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
 async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characters:CharacterBible,assetHashes:Record<string,string>,gsap:Buffer):Promise<string> {
   const source=await exists(path.join(root,config.input.source)) ? await fs.readFile(await safeRealPath(root,config.input.source)) : Buffer.alloc(0);
   const activity=config.content.mode==='narrated-explainer'?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
+  const speechNarration=shot.cinematic?.spriteStage?.actors.some(actor=>actor.clips.some(clip=>clip.speech))?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
   const actorScene=shot.cinematic?.actorScene,actors=[...(actorScene?.primary?[actorScene.primary]:[]),...(actorScene?.supporting.map(actor=>actor.character)??[])];
   const referenceRig=Object.keys(assetHashes).some(file=>file.startsWith('assets/rigs/'))?{referenceHeadPack:referenceHeadDescription().fingerprint,
     ...(actors.some(actor=>actor.appearance.artworkVersion==='forest-body-1')?{referenceBodyPack:referenceBodyDescription().fingerprint}:{})}:{};
-  return hash({shot,...referenceRig,...(shot.cinematic?.spriteStage?{spriteSceneRenderer:SPRITE_SCENE_VERSION}:{}),source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?shot.cinematic.performance.compilerVersion:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,artworkEasingRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.keyframes.some(frame=>frame.ease!==undefined))?ARTWORK_EASING_VERSION:undefined,artworkWorldBackgroundRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.plane==='background'&&layer.coordinateSpace==='world')?ARTWORK_WORLD_BACKGROUND_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelContactAnchor:shot.cinematic?.artDirection?.models.some(model=>model.handleAnchor!==undefined)?MODEL_CONTACT_ANCHOR_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,sceneLabels:sceneLabelIdentity(shot,config),activity});
+  return hash({shot,...referenceRig,...(shot.cinematic?.spriteStage?{spriteSceneRenderer:SPRITE_SCENE_VERSION}:{}),...(speechNarration?{spriteSpeechNarration:hash(speechNarration)}:{}),source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?shot.cinematic.performance.compilerVersion:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,artworkEasingRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.keyframes.some(frame=>frame.ease!==undefined))?ARTWORK_EASING_VERSION:undefined,artworkWorldBackgroundRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.plane==='background'&&layer.coordinateSpace==='world')?ARTWORK_WORLD_BACKGROUND_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelContactAnchor:shot.cinematic?.artDirection?.models.some(model=>model.handleAnchor!==undefined)?MODEL_CONTACT_ANCHOR_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,sceneLabels:sceneLabelIdentity(shot,config),activity});
 }
 async function validStagedRigAssets(root:string,dir:string,hashes:Record<string,string>):Promise<boolean>{
   for(const [file,expected] of Object.entries(hashes).filter(([file])=>file.startsWith('assets/rigs/')||/^assets\/[a-f0-9]{64}\.png$/.test(file))){
@@ -196,7 +206,8 @@ async function hostGeometryPublication(root:string,config:FactoryConfig,shot:Sho
   const {profile,rig}=await loadHost(root),activity=await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema);
   const add=(name:string,value:unknown)=>pending.set(`scenes/${shot.id}/${name}`,JSON.stringify(value,null,2)+'\n');
   if(shot.cinematic){
-    const rendered=renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema),await loadSpriteSceneMotions(root,shot));
+    const motions=await loadSpriteSceneMotions(root,shot),speech=await loadSpriteSceneSpeech(root,shot,motions);
+    const rendered=renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema),motions,speech);
     add('host-geometry.json',rendered.geometry);
     add('performance-report.json','kind' in rendered.geometry?rendered.report:{...rendered.report,rigHash:rendered.geometry.rigHash});
   }else{
@@ -245,7 +256,8 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   const background=shot.cinematic?await cinematicBackground(root,shot):undefined;
   const narrated=shot.cinematic?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
   const spriteMotions=await loadSpriteSceneMotions(root,shot);
-  const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return shot.cinematic?renderCinematic(shot,host.profile,host.rig,activity,config,background,narrated,spriteMotions):renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified,config.project.language);};
+  const spriteSpeech=await loadSpriteSceneSpeech(root,shot,spriteMotions);
+  const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return shot.cinematic?renderCinematic(shot,host.profile,host.rig,activity,config,background,narrated,spriteMotions,spriteSpeech):renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified,config.project.language);};
   const reviewErrors=options.issues?.map(issue=>`${issue.type}: ${issue.description}\nRequested repair: ${issue.repair}`)??[];
   let candidate:SceneFiles|undefined, errors:string[]=reviewErrors;
   if(options.issues?.length && complete.every(Boolean) && !explainer) candidate=await readScene(dir);
@@ -275,7 +287,8 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
       try{
         const repaired=await repairCinematicArtwork(root,config,router,pendingArtworkShot,errors);
         repairAttempt=repaired.attemptFile;
-        const files=renderCinematic(repaired.shot,host!.profile,host!.rig,activity!,config,background,narrated,await loadSpriteSceneMotions(root,repaired.shot)).files;
+        const repairedMotions=await loadSpriteSceneMotions(root,repaired.shot),repairedSpeech=await loadSpriteSceneSpeech(root,repaired.shot,repairedMotions);
+        const files=renderCinematic(repaired.shot,host!.profile,host!.rig,activity!,config,background,narrated,repairedMotions,repairedSpeech).files;
         const checked=await validateCandidate(root,config,repaired.shot,dir,files,staged.refs);
         candidate=checked.files;errors=checked.errors;valid=!errors.length;
         if(valid){

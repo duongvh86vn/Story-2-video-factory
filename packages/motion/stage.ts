@@ -1,5 +1,9 @@
 import {ActorMotionSchema,type ActorMotion,type MotionPoint,type SpritePlacement,type SpriteClip} from './schemas.js';
-import {compileActorMotion,createActorMotionSampler,motionLandmarkAt} from './player.js';
+import {compileActorMotion,createActorMotionSampler,createActorSpeechSampler,motionLandmarkAt,type ActorSpeechPlayback} from './player.js';
+import type {Narration} from '../core/schemas.js';
+import type {SpeechActivity} from '../voice/schemas.js';
+import {bindActorSpeech,spriteSpeechKey,type ActorSpeech} from './speech-schemas.js';
+import {buildSpriteSpeechSchedule} from './speech-clock.js';
 import {spriteSeconds} from './clock.js';
 import {SpriteStageSchema,SPRITE_STAGE_VERSION,type SpriteStage,type SpriteStageClip} from './stage-schemas.js';
 
@@ -23,6 +27,21 @@ function prepare(planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>){
   return {plan,actors};
 }
 type PreparedStage=ReturnType<typeof prepare>;
+export interface SpriteStageSpeechContext {variants:ReadonlyMap<string,ActorSpeech>;narration:Narration;activity:SpeechActivity;shotStartMs:number;}
+function prepareSpeech(prepared:PreparedStage,context?:SpriteStageSpeechContext){
+  const speech=new Map<string,ActorSpeechPlayback>();
+  for(const actor of prepared.actors)for(const {clip,motion} of actor.clips){
+    if(!clip.speech)continue;
+    if(!context)throw new Error(`needs-sprite-speech-context: ${clip.id} requires original narration/activity and verified mouth artwork`);
+    const selected=context.variants.get(spriteSpeechKey(clip.speech.variantId,clip.speech.fingerprint));
+    if(!selected || selected.id!==clip.speech.variantId || selected.fingerprint!==clip.speech.fingerprint)
+      throw new Error(`needs-sprite-speech-artwork: missing exact variant for ${clip.id}`);
+    const {variant}=bindActorSpeech(motion,selected);
+    const schedule=buildSpriteSpeechSchedule(context.narration,context.activity,{shotStartMs:context.shotStartMs,startMs:clip.startMs,endMs:clip.endMs,segmentIds:clip.speech.segmentIds});
+    speech.set(clip.id,{variant,schedule});
+  }
+  return speech;
+}
 
 function rootAt(clip:SpriteStageClip,seconds:number):SpritePlacement {
   const keys=clip.root;
@@ -81,10 +100,22 @@ export function createSpriteStageSampler(plan:SpriteStage,motions:ReadonlyMap<st
   const prepared=prepare(plan,motions);
   return timeMs=>samplePrepared(prepared,timeMs);
 }
+/** Candidate mouth state and native geometry share the same scene clock. */
+export function createSpriteStageSpeechSampler(plan:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,context:SpriteStageSpeechContext){
+  const prepared=prepare(plan,motions),speech=prepareSpeech(prepared,context);
+  const samples=new Map(prepared.actors.flatMap(actor=>actor.clips.flatMap(({clip,motion,playbackClip})=>{
+    const binding=speech.get(clip.id);
+    return binding?[[clip.id,{sample:createActorSpeechSampler(motion,playbackClip,binding),variant:binding.variant}] as const]:[];
+  })));
+  return (timeMs:number)=>samplePrepared(prepared,timeMs).map(actor=>{
+    const binding=samples.get(actor.clipId);
+    return binding?{...actor,speech:{variantId:binding.variant.id,fingerprint:binding.variant.fingerprint,open:binding.sample(timeMs)==='open'}}:actor;
+  });
+}
 const rootTransform=(root:SpritePlacement)=>`translate(${root.x} ${root.y}) rotate(${root.rotation}) scale(${root.scale})`;
 
-export function compileSpriteStage(planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,targets:ReadonlyMap<string,MotionPoint>=new Map()){
-  const prepared=prepare(planInput,motions),{plan}=prepared;
+export function compileSpriteStage(planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,targets:ReadonlyMap<string,MotionPoint>=new Map(),speechContext?:SpriteStageSpeechContext){
+  const prepared=prepare(planInput,motions),{plan}=prepared,speech=prepareSpeech(prepared,speechContext);
   const contacts=plan.contacts.map(contact=>{
     const target=targets.get(contact.targetId);
     if(!target || !Number.isFinite(target.x) || !Number.isFinite(target.y))throw new Error(`Missing/invalid scene target: ${contact.targetId}`);
@@ -111,7 +142,7 @@ export function compileSpriteStage(planInput:SpriteStage,motions:ReadonlyMap<str
       // such as "slot-c" or "c-frame-0" cannot collide with generated node IDs.
       const ordinal=slotNumber++,playerId=`stage.motion.${ordinal}`;
       const slotId=`sprite-stage-slot-${ordinal}`,rootId=`sprite-stage-root-${ordinal}`,artworkId=`sprite-${playerId}`;
-      const compiled=compileActorMotion(motion,{...playbackClip,id:playerId}),start=spriteSeconds(clip.startMs),end=spriteSeconds(clip.endMs);
+      const compiled=compileActorMotion(motion,{...playbackClip,id:playerId},undefined,speech.get(clip.id)),start=spriteSeconds(clip.startMs),end=spriteSeconds(clip.endMs);
       const wrapperCalls=1+(start>0?1:0)+1,rootCalls=clip.root.length;
       eventCount+=compiled.report.eventCount+wrapperCalls+rootCalls;
       if(eventCount>MAX_STAGE_EVENTS)throw new Error(`Sprite stage exceeds ${MAX_STAGE_EVENTS} timeline calls`);
@@ -133,7 +164,7 @@ export function compileSpriteStage(planInput:SpriteStage,motions:ReadonlyMap<str
   }
   return {svg:actors.join(''),js:calls.join('\n'),report:{producer:SPRITE_STAGE_VERSION,compositionId:plan.id,durationMs:plan.durationMs,eventCount,
     actors:prepared.actors.map(actor=>({actorId:actor.actorId,clipIds:actor.clips.map(({clip})=>clip.id)})),clips:clipReports,contacts,
-    productionReady:false as const,speechSync:'none' as const,contactCoverage:'declared-points-only' as const,
+    productionReady:false as const,speechSync:(speech.size?speech.values().next().value!.schedule.synchronization:'none') as 'none'|'audio-activity'|'segment-draft',contactCoverage:'declared-points-only' as const,
     boundsKind:'source-frame-rectangle' as const,rootPrecision:'GSAP-AttrPlugin-4-decimals' as const,warnings:['Candidate actor fragment; scene camera, anatomy, identity, fluidity, foot support and speech remain unaccepted.','Caller must pad the shared timeline to the full scene duration. No independent timer or timeline is created.']}};
 }
 export type SpriteStageCompilation=ReturnType<typeof compileSpriteStage>;

@@ -183,6 +183,17 @@ export async function buildServer(options: ServerOptions = {}) {
     const bytes=await actorSpeechSheetBytes(root,variant);
     return reply.type('image/png').header('Content-Length',bytes.length).send(bytes);
   });
+  app.get<{Params:Named&{id:string;fingerprint:string}}>('/api/projects/:name/motions/speech/:id/:fingerprint/native-sheet',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);const root=await rootFor(request.params.name),variant=await loadActorSpeech(root,Id.parse(request.params.id),MotionHash.parse(request.params.fingerprint));
+    const motion=await loadActorMotion(root,variant.motionId,variant.motionFingerprint),bytes=await motionSheetBytes(root,motion.sheet.path,motion.sheet.hash);
+    return reply.type('image/png').header('Content-Length',bytes.length).send(bytes);
+  });
+  app.get<{Params:Named&{id:string;fingerprint:string}}>('/api/projects/:name/motions/speech/:id/:fingerprint/preview',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);const root=await rootFor(request.params.name),variant=await loadActorSpeech(root,Id.parse(request.params.id),MotionHash.parse(request.params.fingerprint));
+    const preview=motionWorkbench(await loadActorMotion(root,variant.motionId,variant.motionFingerprint),1,variant);
+    return reply.type('text/html; charset=utf-8')
+      .header('Content-Security-Policy',"default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self'; object-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'").send(preview.html);
+  });
   app.put<{Params:Named}>('/api/projects/:name/motions/catalog',async request=>{
     NoMotionQuery.parse(request.query);const body=MotionCatalogSaveSchema.parse(request.body);
     return mutate(request.params.name,async (root,core)=>{

@@ -18,7 +18,7 @@ import { renderCinematic } from '../../library/shots/cinematic.js';
 import { secureSceneFiles, validateSceneFiles } from '../scenes/security.js';
 import { outputPath } from '../render/process.js';
 import { actingRepairSchemaFor, applyActingRepair, fixedMotionFields } from './acting-repair.js';
-import {loadSpriteSceneMotions} from '../motion/scene-source.js';
+import {loadSpriteSceneMotions,loadSpriteSceneSpeech} from '../motion/scene-source.js';
 
 const RepairSchema=z.object({artDirection:ArtDirectionSchema}).strict();
 
@@ -39,9 +39,9 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
   const binding={modelsHash:hash({primary:config.models.storyboard,fallback:config.models.fallback}),shotHash:hash(shot),narrationHash:hash(narration),...(actingRepair?{repairContract:'bounded-actor-motion-1'}:{})};
   const validate=async(candidate:Shot)=>{
     validateExplainerStoryboard({shots:[candidate]},narration,beats,profile,rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true});
-    const motions=await loadSpriteSceneMotions(root,candidate);
-    const files=renderCinematic(candidate,profile,rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,narration,motions).files;
-    const problems=validateSceneFiles(secureSceneFiles(files),candidate,config.workflow.max_scene_bytes,[...(motions?.values()??[])].map(motion=>`assets/${motion.sheet.hash}.png`),config.rendering.final);
+    const motions=await loadSpriteSceneMotions(root,candidate),speech=await loadSpriteSceneSpeech(root,candidate,motions);
+    const files=renderCinematic(candidate,profile,rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,narration,motions,speech).files;
+    const problems=validateSceneFiles(secureSceneFiles(files),candidate,config.workflow.max_scene_bytes,[...(motions?.values()??[]),...(speech?.values()??[])].map(asset=>`assets/${asset.sheet.hash}.png`),config.rendering.final);
     if(problems.length)throw new Error(`${shot.id}: artwork repair is invalid: ${problems.join('\n')}`);
   };
   const responseCandidate=(value:unknown):Shot=>{

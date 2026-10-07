@@ -13,18 +13,23 @@ import {compileSpriteStoryActors} from './story-stage.js';
 import {validateSpriteCamera} from './camera.js';
 import {spriteSceneTargets,SPRITE_SCENE_VERSION} from './scene-validation.js';
 import type {ActorMotion} from './schemas.js';
+import type {ActorSpeech} from './speech-schemas.js';
+import type {Narration} from '../core/schemas.js';
+import type {SpeechActivity} from '../voice/schemas.js';
 
 export interface SpriteSceneGeometry {
   kind:'sprite-actors';controllerVersion:typeof SPRITE_SCENE_VERSION;shotId:string;stageHash:string;castHash:string;
   motions:Array<{actorId:string;motionId:string;fingerprint:string}>;
+  speech?:Array<{actorId:string;clipId:string;variantId:string;fingerprint:string;sheetHash:string;segmentIds:string[];audioHash?:string;narrationHash:string;activityHash:string;scheduleHash:string;synchronization:'audio-activity'|'segment-draft'}>;
   interactions:Array<{actorId:string;landmark:string;type:'sprite-contact';startMs:number;reachMs:number;endMs:number;contactMs:number;partId:string;target:{x:number;y:number};measured:{x:number;y:number};errorPx:number;tolerancePx:number}>;
 }
 
 /** Canonical sprite branch: shared world/camera layers, no skeletal performer. */
-export function renderSpriteScene(shot:Shot,profile:HostProfile,config:FactoryConfig,motions:ReadonlyMap<string,ActorMotion>,background?:string){
+export function renderSpriteScene(shot:Shot,profile:HostProfile,config:FactoryConfig,motions:ReadonlyMap<string,ActorMotion>,background?:string,narration?:Narration,activity?:SpeechActivity,variants?:ReadonlyMap<string,ActorSpeech>){
   validateCinematicShot(shot,profile,config);
   const c=shot.cinematic!,plan=c.spriteStage!,v=shot.visualization!,{width,height}=plan.stage;
-  const actors=compileSpriteStoryActors(shot,plan,motions,spriteSceneTargets(shot)),camera=validateSpriteCamera(shot,motions),art=c.artDirection;
+  const speechContext=narration&&activity&&variants?{narration,activity,variants,shotStartMs:shot.startMs}:undefined;
+  const actors=compileSpriteStoryActors(shot,plan,motions,spriteSceneTargets(shot),speechContext),camera=validateSpriteCamera(shot,motions),art=c.artDirection;
   const palette=art?.palette??{background:'#F3DDAA',surface:'#FFF3DB',ink:'#201A15',accent:'#F4CD68'},labels=sceneLabels(config.project.language);
   const planes={background:artLayers(shot,'background','frame'),worldBackground:artLayers(shot,'background','world'),midground:artLayers(shot,'midground'),foreground:artLayers(shot,'foreground'),overlay:artLayers(shot,'overlay')};
   const scope=`[data-composition-id="${shot.id}"]`,selector=(value:string)=>JSON.stringify(`${scope} ${value.replace(/#([a-zA-Z][\w.-]*)/g,(_,id:string)=>`[id=${JSON.stringify(id)}]`)}`);
@@ -72,9 +77,11 @@ export function renderSpriteScene(shot:Shot,profile:HostProfile,config:FactoryCo
   const environment=background?cameraEnvironmentBounds(c.camera,plan.stage,plan.durationMs):undefined;
   const css=`html,body{margin:0;overflow:hidden;background:${palette.background}}${scope}{position:relative;width:${width}px;height:${height}px;overflow:hidden}${scope} .stage{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}${scope} .environment{position:absolute;object-fit:cover;left:${environment?.left??0}px;top:${environment?.top??0}px;width:${environment?.width??width}px;height:${environment?.height??height}px}`;
   const js=`const tl=gsap.timeline({paused:true});\nwindow.__timelines=window.__timelines||{};\nwindow.__timelines[${JSON.stringify(shot.id)}]=tl;\n${calls.join('\n')}\ntl.to({},{duration:${plan.durationMs/1000}},0);`;
-  const files:SceneFiles={files:[{path:'index.html',content:html},{path:'style.css',content:css},{path:'scene.js',content:js}],dependencies:[],notes:[`${SPRITE_SCENE_VERSION}; candidate sprite actors; no skeletal rig`, 'Baked sprites: speechSync none; production acceptance pending.']};
+  const files:SceneFiles={files:[{path:'index.html',content:html},{path:'style.css',content:css},{path:'scene.js',content:js}],dependencies:[],notes:[`${SPRITE_SCENE_VERSION}; candidate sprite actors; no skeletal rig`, actors.report.speechSync==='none'?'Baked sprites: speechSync none; production acceptance pending.':`Speech: ${actors.report.speechSync}; binary rest/open only; not phoneme lip-sync; production acceptance pending.`]};
   const geometry:SpriteSceneGeometry={kind:'sprite-actors',controllerVersion:SPRITE_SCENE_VERSION,shotId:shot.id,stageHash:actors.report.stageHash,castHash:actors.report.castHash,
     motions:actors.report.clips.map(clip=>({actorId:clip.actorId,motionId:clip.motionId,fingerprint:clip.fingerprint})),
+    ...(actors.report.clips.some(clip=>clip.speech)?{speech:actors.report.clips.flatMap(clip=>clip.speech?[{actorId:clip.actorId,clipId:clip.clipId,variantId:clip.speech.variantId,fingerprint:clip.speech.fingerprint,sheetHash:clip.speech.sheetHash,
+      segmentIds:clip.speech.segmentIds,...(clip.speech.audioHash?{audioHash:clip.speech.audioHash}:{}),narrationHash:clip.speech.narrationHash,activityHash:clip.speech.activityHash,scheduleHash:clip.speech.scheduleHash,synchronization:clip.speech.synchronization}]:[])}:{}),
     interactions:actors.report.contacts.map(contact=>{
       const clip=plan.actors.find(actor=>actor.actorId===contact.actorId)!.clips.find(clip=>clip.id===contact.clipId)!;
       return {actorId:contact.actorId,landmark:contact.landmark,type:'sprite-contact',startMs:shot.startMs+clip.startMs,reachMs:shot.startMs+contact.timeMs,endMs:shot.startMs+clip.endMs,contactMs:shot.startMs+contact.timeMs,partId:contact.targetId,target:contact.target,measured:contact.measured,errorPx:contact.errorPx,tolerancePx:contact.maxErrorPx};

@@ -4,7 +4,8 @@ import {SourceRefSchema} from '../explainer/schemas.js';
 import type {z} from 'zod';
 import type {ActorMotion,MotionPoint} from './schemas.js';
 import {SpriteStageSchema,type SpriteStage} from './stage-schemas.js';
-import {compileSpriteStage} from './stage.js';
+import {compileSpriteStage,type SpriteStageSpeechContext} from './stage.js';
+import {validateSpriteSpeechAssignments,validateSpriteSpeechCoverage} from './speech-binding.js';
 
 const referenceKey=(ref:z.infer<typeof SourceRefSchema>)=>JSON.stringify([ref.kind,ref.segmentId??null,ref.quote]);
 
@@ -22,8 +23,7 @@ export function validateSpriteStoryBinding(shotInput:Shot,planInput:SpriteStage)
   const castIds=cast.map(actor=>actor.id),trackIds=plan.actors.map(actor=>actor.actorId);
   if(new Set(castIds).size!==castIds.length || castIds.length!==trackIds.length || castIds.some(id=>!trackIds.includes(id)))
     throw new Error(`${shot.id}: sprite stage must preserve the exact story cast`);
-  if(scene.speakingSegmentIds.length || scene.supporting.some(actor=>actor.speakingSegmentIds.length))
-    throw new Error(`${shot.id}: needs-sprite-speech: baked sprite actors have no supported mouth/voice synchronization`);
+  validateSpriteSpeechAssignments(shot,plan);
 
   const verified=new Set((shot.sourceRefs??[]).map(referenceKey));
   if(!verified.size)throw new Error(`${shot.id}: sprite story requires shot source references`);
@@ -36,9 +36,13 @@ export function validateSpriteStoryBinding(shotInput:Shot,planInput:SpriteStage)
   return {shot,plan,cast};
 }
 
-export function compileSpriteStoryActors(shotInput:Shot,planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,targets:ReadonlyMap<string,MotionPoint>){
+export function compileSpriteStoryActors(shotInput:Shot,planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,targets:ReadonlyMap<string,MotionPoint>,speechContext?:SpriteStageSpeechContext){
   const {shot,plan,cast}=validateSpriteStoryBinding(shotInput,planInput);
-  const compiled=compileSpriteStage(plan,motions,targets);
+  if(plan.actors.some(actor=>actor.clips.some(clip=>clip.speech))){
+    if(!speechContext||speechContext.shotStartMs!==shot.startMs)throw new Error(`${shot.id}: needs-sprite-speech-context: source narration clock must match the shot`);
+    validateSpriteSpeechCoverage(shot,plan,motions,speechContext.narration);
+  }
+  const compiled=compileSpriteStage(plan,motions,targets,speechContext);
   return {...compiled,report:{...compiled.report,shotId:shot.id,shotHash:hash(shot),castHash:hash(cast),stageHash:hash(plan),
     shotStartMs:shot.startMs,sourceRefs:shot.sourceRefs!,sourceEvidence:'shot-references-only' as const,
     warnings:[...compiled.report.warnings,'Actor fragment only: caller must validate narration/source text, immutable motion bytes, world targets and camera before canonical scene publication.']}};

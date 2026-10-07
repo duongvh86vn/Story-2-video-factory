@@ -22,6 +22,8 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
   if(shot.cinematic?.spriteStage){
     const windows=actingSourceWindows(expected,beat,narration,shot);
     const clips=shot.cinematic.spriteStage.actors.find(actor=>actor.actorId===expected.participantId)?.clips??[];
+    if(kind==='speech')return windows.some(window=>speakingSegmentIds.includes(window.id)&&clips.some(clip=>clip.speech?.segmentIds.includes(window.id)
+      &&shot.startMs+clip.startMs<window.endMs&&shot.startMs+clip.endMs>window.startMs&&clip.sourceRefs.some(ref=>ref.kind==='narration'&&ref.segmentId===window.id&&isWholeSourceStatement(expected.statement,ref.quote))));
     return clips.some(clip=>{
       const declared=clip.sourcedAction;
       if(!declared || declared.kind!==kind || declared.statement!==expected.statement || declared.movement!==expected.movement || declared.operation!==expected.operation || hash(declared.targetIds??[])!==hash(expected.targetIds??[]))return false;

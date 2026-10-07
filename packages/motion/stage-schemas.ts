@@ -7,12 +7,16 @@ import {spriteSeconds} from './clock.js';
 export const SPRITE_STAGE_VERSION='sprite-stage-1' as const;
 const StageTransform=SpritePlacementSchema.extend({x:z.number().finite().min(-100000).max(100000),y:z.number().finite().min(-100000).max(100000)});
 export const SpriteRootKeySchema=z.object({timeMs:z.number().finite().nonnegative().max(120000),transform:StageTransform,ease:z.enum(['none','sine.inOut']).default('none')}).strict();
+export const SpriteClipSpeechSchema=z.object({variantId:Id,fingerprint:MotionHash,segmentIds:z.array(Id).min(1).max(128)}).strict()
+  .refine(binding=>new Set(binding.segmentIds).size===binding.segmentIds.length,'Duplicate sprite speech cue ID');
 export const SpriteStageClipSchema=SpriteClipSchema.innerType().extend({
   placement:StageTransform,motionId:Id,fingerprint:MotionHash,
   sourceRefs:z.array(SourceRefSchema).min(1).max(16),root:z.array(SpriteRootKeySchema).min(2).max(64),
   /** Declared source intent, bound to the immutable asset's registered state.
    * Art/motion acceptance still must verify that pixels actually perform it. */
   sourcedAction:SceneIntentSchema.shape.acting.unwrap().element.omit({participantId:true,sourceRefs:true}).extend({motionState:Id}).strict().optional(),
+  /** Original actor-owned narration cues, never a model-authored activity schedule. */
+  speech:SpriteClipSpeechSchema.optional(),
 }).strict().superRefine((clip,ctx)=>{
   const issue=(message:string)=>ctx.addIssue({code:'custom',message});
   if(clip.endMs<=clip.startMs || spriteSeconds(clip.endMs)<=spriteSeconds(clip.startMs))issue('Invalid sprite clip clock');

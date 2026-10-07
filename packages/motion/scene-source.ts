@@ -6,6 +6,8 @@ import type {ActorMotion} from './schemas.js';
 import {spriteMotionKey} from './stage.js';
 import {validateSpriteScenePlan} from './scene-validation.js';
 import {validateLoadedSpriteCatalog} from './catalog.js';
+import {loadActorSpeech} from './speech-import.js';
+import {bindActorSpeech,spriteSpeechKey,type ActorSpeech} from './speech-schemas.js';
 
 export async function loadSpriteSceneMotions(root:string,shot:Shot):Promise<ReadonlyMap<string,ActorMotion>|undefined>{
   if(!shot.cinematic?.spriteStage)return undefined;
@@ -16,6 +18,23 @@ export async function loadSpriteSceneMotions(root:string,shot:Shot):Promise<Read
   }
   await validateLoadedSpriteCatalog(root,shot,motions);
   return motions;
+}
+
+export async function loadSpriteSceneSpeech(root:string,shot:Shot,motions:ReadonlyMap<string,ActorMotion>|undefined):Promise<ReadonlyMap<string,ActorSpeech>|undefined>{
+  const plan=shot.cinematic?.spriteStage;
+  if(!plan||!plan.actors.some(actor=>actor.clips.some(clip=>clip.speech)))return undefined;
+  validateSpriteScenePlan(shot);
+  if(!motions)throw new Error(`${shot.id}: speech artwork requires verified native motions`);
+  const variants=new Map<string,ActorSpeech>();
+  for(const actor of plan.actors)for(const clip of actor.clips){
+    if(!clip.speech)continue;
+    const key=spriteSpeechKey(clip.speech.variantId,clip.speech.fingerprint);
+    if(!variants.has(key))variants.set(key,await loadActorSpeech(root,clip.speech.variantId,clip.speech.fingerprint));
+    const motion=motions.get(spriteMotionKey(clip.motionId,clip.fingerprint));
+    if(!motion)throw new Error(`${shot.id}: missing native speech motion`);
+    bindActorSpeech(motion,variants.get(key)!);
+  }
+  return variants;
 }
 
 /** Hash the exact bounded Buffer that will be staged, not a previously checked path. */
