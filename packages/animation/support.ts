@@ -56,10 +56,11 @@ type Feet=Record<'left'|'right',Point>;
 export function sourceSupportMotion(plan:PerformancePlan,profile:HostProfile,timeMs:number,root:Point,groundFeet:Feet){
   if(!usesReferenceBody(profile))throw new Error('Source support motion requires the source body rig.');
   const m=rigMetrics(profile),s=plan.scale,bend=plan.facing==='left'?-1:1;
+  const contactOffset={x:-bend*(m.seatContactOffset?.x??0)*s,y:(m.seatContactOffset?.y??0)*s};
   const target=(pose:PostureTarget)=>{
     if(pose.pose==='seated'){
       const seat=seatFor(plan,pose);
-      return {pose:pose.pose,pelvis:{...seat.center},feet:{
+      return {pose:pose.pose,pelvis:{x:seat.center.x-contactOffset.x,y:seat.center.y-contactOffset.y},feet:{
         left:{x:root.x+m.hips!.left.x*s,y:root.y},right:{x:root.x+m.hips!.right.x*s,y:root.y}}};
     }
     const drop=(pose.pose==='crouch'?.42:pose.pose==='lean'?.04:0)*(pose.intensity??1);
@@ -83,9 +84,11 @@ export function sourceSupportMotion(plan:PerformancePlan,profile:HostProfile,tim
     // Anticipation bends toward the planted feet; it settles to the held pose.
     const leanOffset=(entering?Math.sin(Math.PI*Math.max(0,Math.min(1,p/.75))):leaving?Math.sin(Math.PI*Math.max(0,Math.min(1,p/.62))):0)*bend*7;
     return {pelvis:mix(value.pelvis,next.pelvis,bodyProgress),bend,feet:{left:left.point,right:right.point},
-      stance:{left:left.planted,right:right.planted},ownsFeet:entering||leaving||value.pose==='seated',leanOffset};
+      stance:{left:left.planted,right:right.planted},ownsFeet:entering||leaving||value.pose==='seated',leanOffset,
+      supportWeight:(value.pose==='seated'?1:0)*(1-bodyProgress)+(next.pose==='seated'?1:0)*bodyProgress,contactOffset};
   }
-  return {pelvis:value.pelvis,bend,feet:value.feet,stance:{left:true,right:true},ownsFeet:value.pose==='seated',leanOffset:0};
+  return {pelvis:value.pelvis,bend,feet:value.feet,stance:{left:true,right:true},ownsFeet:value.pose==='seated',leanOffset:0,
+    supportWeight:value.pose==='seated'?1:0,contactOffset};
 }
 /** Reserve the seat throughout approach/sit and stand recovery, not only contact. */
 export function seatOccupancy(plan:PerformancePlan):Array<{supportId:string;startMs:number;endMs:number}>{

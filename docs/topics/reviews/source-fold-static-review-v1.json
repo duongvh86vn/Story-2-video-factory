@@ -1,0 +1,75 @@
+{
+  "scope": "static-authored-seated-garment-and-transition-poses-only",
+  "appliesTo": "forest-source-body-motion-3 / forest-source-body-svg-3",
+  "bodyPackFingerprint": "e003cea486264a5ed30a5ff1e00021e9bb199472e25adc3e675542964d3510a5",
+  "codeHashes": {
+    "compiler.ts": "9e6ee8f45af7bbb1c14935417f47d68efacd58eeaa3067b9f552acdc8a2bc57c",
+    "rig.ts": "096f791587b5d266996abc822332ccda31393e101a8dc38ce92eda157d0d258d",
+    "support.ts": "55921b8ab31c3476383da43c46281465e16212cfbbf166d0b13a2c8633861266",
+    "forest-garment-art.ts": "c6fc8307ffd54470cf9523f30216394c0fe79bcdaf42a0e49581b5b2f09de840"
+  },
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.lila",
+        "type": "cloth_transition_ghosting",
+        "severity": "high",
+        "description": "At sit-left 1240ms, the dress has overlapping translucent silhouettes across the thighs and ragged hem. Pale duplicate edges and doubled folds make the lower garment read as multiple layered shapes rather than one opaque ragged dress; its color and outline no longer match the source.",
+        "repair": "Replace the overlapping cloth crossfade with a single opaque transition silhouette, or mask the outgoing and incoming shapes so only one exterior hem is visible. Preserve the source brown, dark outline and fold treatment throughout the transition."
+      },
+      {
+        "shotId": "character.karo",
+        "type": "cloth_transition_ghosting",
+        "severity": "high",
+        "description": "At sit-left 1240ms, translucent gray-brown duplicates extend below both shorts cuffs, with overlapping diagonal cloth edges across the thighs. This weakens the two-short-leg silhouette and produces visibly washed-out hems compared with the solid source and held seated poses.",
+        "repair": "Give each shorts leg a clean, opaque transition shape with a distinct cuff. Remove the duplicate outgoing hems through masking or a topology-compatible deformation, keeping the closed hip, source color and outline weight."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "All four supplied static poses were inspected; the transition defects remain material even though the held seated and restored standing samples do not show the same ghosting.",
+      "Side/rear torso artwork is absent; the fixed source torso cannot establish fidelity for those views.",
+      "No motion/video proof is supplied. Timing, interpolation smoothness and attachment stability between these samples cannot be verified.",
+      "These samples do not establish final episode, background or full production acceptance."
+    ]
+  },
+  "productionAcceptance": false,
+  "usage": {
+    "calls": 1,
+    "successes": 1,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 10667,
+    "outputTokens": 560,
+    "totalTokens": 11227,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 10667,
+        "outputTokens": 560,
+        "totalTokens": 11227,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 1,
+        "successes": 1,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 10667,
+        "outputTokens": 560,
+        "totalTokens": 11227,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

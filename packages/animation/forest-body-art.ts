@@ -2,24 +2,28 @@ import type {HostProfile} from '../host/schemas.js';
 import type {RigHand} from '../core/identifiers.js';
 import {hash} from '../core/utils.js';
 import {referenceImageUrl,type ReferenceHeadView} from './forest-head-art.js';
+import {seatedGarmentAssets,seatedGarmentDescription,seatedGarmentSvg} from './forest-garment-art.js';
 type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-2';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-2';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-3';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-3';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
 } as const;
-/** Measured source units, not generic stick proportions. The working cutouts
- * remain candidates. Masks never rewrite the bitmap or reconstruct occlusion. */
+/** Source contours and per-side total limb lengths. Knees are not drawn, so
+ * their split and the closed-hip seat contact are inferred candidate geometry.
+ * Masks never rewrite the bitmap; supplemental seated art reconstructs folds. */
 const bodies={
   lila:{file:'library/topics/prehistoric-life/lila-cutout-v1.png',sha256:'ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e',width:430,height:766,unitScale:318/766,
     pelvis:{x:235,y:435},groundY:754,neck:{x:263,y:274},headArtworkScale:.88,
     shoulders:{left:{x:236,y:276},right:{x:294,y:294}},
     hips:{left:{x:205,y:440},right:{x:260,y:440}},
-    legs:{left:{upper:209,lower:82},right:{upper:202,lower:81}},ankleY:{left:719,right:719},
+    // The source has no drawn knee. Preserve each total measured chain, but
+    // infer a human thigh/shin ratio instead of the old very short shins.
+    legs:{left:{upper:152,lower:139},right:{upper:147,lower:136}},ankleY:{left:719,right:719},seatContact:{x:12,y:32},
     hands:{left:{x:113,y:512},right:{x:376,y:516}},feet:{left:{x:135,y:751},right:{x:283,y:752}},
     arms:{left:{upper:145,lower:128},right:{upper:96,lower:144}},handRestRotation:{left:18.1,right:-16.4},
     hem:'M136 250H330V480L326 480L321 480L316 527L311 564L306 561L301 576L296 574L291 563L286 567L281 574L276 562L271 574L266 586L261 592L256 571L251 555L246 557L241 534L236 529L231 539L226 552L221 571L216 557L211 562L206 573L201 590L196 588L191 565L186 568L181 558L176 566L171 573L166 564L161 567L156 572L151 480L146 480L141 480L136 480Z',
@@ -33,7 +37,7 @@ const bodies={
     pelvis:{x:214,y:428},groundY:706,neck:{x:212,y:279},headArtworkScale:.8,
     shoulders:{left:{x:169,y:252},right:{x:269,y:286}},
     hips:{left:{x:190,y:437},right:{x:245,y:437}},
-    legs:{left:{upper:179,lower:75},right:{upper:169,lower:84}},ankleY:{left:679,right:680},
+    legs:{left:{upper:132,lower:122},right:{upper:132,lower:121}},ankleY:{left:679,right:680},seatContact:{x:12,y:26},
     hands:{left:{x:77,y:493},right:{x:343,y:493}},feet:{left:{x:128,y:702},right:{x:266,y:698}},
     arms:{left:{upper:131,lower:131},right:{upper:88,lower:136}},handRestRotation:{left:14.0,right:-20.8},
     hem:'M124 250H304V463L299 463L294 463L289 463L284 527L279 530L274 516L269 521L264 521L259 532L254 525L249 530L244 541L239 519L234 519L229 503L224 489L219 475L214 478L209 488L204 501L199 517L194 522L189 519L184 532L179 545L174 535L169 528L164 537L159 523L154 526L149 519L144 525L139 535L134 463L129 463L124 463Z',
@@ -65,6 +69,7 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
     shoulders:{left:relative(source.shoulders.left),right:relative(source.shoulders.right)},arms,
     handRestRotation:{...source.handRestRotation},
     hips:{left:relative(source.hips.left),right:relative(source.hips.right)},legs,
+    seatContactOffset:{x:source.seatContact.x*b,y:source.seatContact.y*b},
     armRest:{left:{x:(source.hands.left.x-source.shoulders.left.x)*k,y:(source.hands.left.y-source.shoulders.left.y)*k},
       right:{x:(source.hands.right.x-source.shoulders.right.x)*k,y:(source.hands.right.y-source.shoulders.right.y)*k}},
     footOffsets:{left:(source.feet.left.x-source.pelvis.x)*k,right:(source.feet.right.x-source.pelvis.x)*k},
@@ -81,7 +86,7 @@ export function referenceBodyHeadAttachment(profile:HostProfile,view:ReferenceHe
 export function referenceBodyAssets(appearance:HostProfile['appearance']){
   if(appearance.artworkVersion!==FOREST_BODY_VERSION)return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
-  const source=bodies[actor];return [{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'}];
+  const source=bodies[actor];return [{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'},...seatedGarmentAssets(appearance)];
 }
 export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
@@ -97,18 +102,20 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
     return '<g stroke="none" fill="none" transform="scale('+source.unitScale+')"><g transform="translate('+(-anchor.x)+' '+(-anchor.y)+')" clip-path="url(#forest-body-'+id+')">'
       +(id==='clothing'?'<g mask="url(#forest-body-hem)">':'')+(layer?'<g clip-path="url(#forest-garment-'+layer+')">':'')+'<use href="#'+imageId+'"/>'+(layer?'</g>':'')+(id==='clothing'?'</g>':'')+'</g></g>';
   };
-  return {defs,neck:part('neck'),torso:part('clothing','upper'),garments:{left:part('clothing','left'),right:part('clothing','right')},
+  const seated=seatedGarmentSvg(profile,mode);
+  return {defs:defs+seated.defs,seatedGarments:seated.artwork,neck:part('neck'),torso:part('clothing','upper'),garments:{left:part('clothing','left'),right:part('clothing','right')},
     hands:{left:part('hand-left'),right:part('hand-right')},feet:{left:part('foot-left'),right:part('foot-right')}};
 }
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments}),sources:bodies,garmentLayers:garments,
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription()}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through hidden IK joint',softness:.28,anatomicalGuarantee:false},
   secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered',hair:'Lila ponytail source masks with 120ms follow; no simulated hair physics',
-    clothing:'source upper body / two hip-attached lower panels; 100ms thigh follow, no fabric simulation'},
+    clothing:'source standing panels with 100ms thigh follow; authored seated folds; opacity transition still visibly ghosted and unaccepted; no fabric simulation'},
+  inferredAnatomy:{knees:'not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved',seat:'closed hip contact below/behind belt, not the pelvis anchor itself'},
   headAttachment:{neck:'original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone'},
   footContact:{frameFeet:'sole anchors',inkEndpoint:'ankle',pelvisWalkDrop:'minimum fixed-leg reach plus small bob; not .23 of long thigh'},
   seatedMotion:{method:'asymmetric source chains, sole/ankle offsets, staggered foot preparation, one continuous knee branch',minimumTransitionMs:1500,productionAcceptance:false},

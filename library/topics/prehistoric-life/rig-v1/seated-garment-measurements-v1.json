@@ -1,0 +1,13 @@
+{
+  "status": "candidate, no production acceptance",
+  "method": "Read original generated PNG alpha (threshold 20); SVG clip/waist coordinates are authored calibration, not source anatomical landmarks. PNG pixels were not rewritten.",
+  "assets": [
+    {"actor":"lila","file":"lila-seated-garment-v1.png","sha256":"9db3501a16c1c4d4f36b504cbea99ad7b52a3eb855bd656029ff7d3f73c451c2","width":2172,"height":724,"hasAlpha":true,"scale":0.105,
+      "right":{"alphaBounds":{"minX":103,"minY":94,"maxX":972,"maxY":656},"waist":{"x":350,"y":145},"clip":{"x":80,"y":60,"width":920,"height":630}},
+      "left":{"alphaBounds":{"minX":1212,"minY":88,"maxX":2057,"maxY":659},"waist":{"x":1810,"y":145},"clip":{"x":1180,"y":60,"width":920,"height":630}}},
+    {"actor":"karo","file":"karo-seated-garment-v1.png","sha256":"06e01182df8bb332ce95d5fc765a4e3b236d2d08c5565e8f00b133374377cd0e","width":1774,"height":887,"hasAlpha":true,"scale":0.1,
+      "right":{"alphaBounds":{"minX":78,"minY":246,"maxX":797,"maxY":673},"waist":{"x":305,"y":298},"clip":{"x":50,"y":220,"width":770,"height":480}},
+      "left":{"alphaBounds":{"minX":976,"minY":246,"maxX":1695,"maxY":673},"waist":{"x":1470,"y":298},"clip":{"x":950,"y":220,"width":770,"height":480}}}
+  ],
+  "transition": "Bend-dependent opacity blend still produces duplicate/translucent hems. Native mesh prototype was rejected during restored-standing inspection; it is not imported into the renderer."
+}

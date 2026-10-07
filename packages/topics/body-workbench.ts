@@ -28,8 +28,8 @@ export function bodyCalibrationSvg(actor:'lila'|'karo',action:BodyAction,timeMs:
     const direction=action==='sit-left'?-1:1;
     plan.facing=direction===1?'right':'left';plan.headView=direction===1?'three-quarter-right':'three-quarter-left';
     plan.supports=[{id:'calibration-log',kind:'seat',facing:plan.facing,width:64,center:{
-      x:plan.root.x-direction*(m.legs!.left.upper+m.legs!.right.upper)/2,
-      y:plan.root.y-(m.legs!.left.lower+m.legs!.right.lower)/2-(m.footSoleOffset!.left+m.footSoleOffset!.right)*profile.appearance.bodyScale/2-(m.hips!.left.y+m.hips!.right.y)/2}}];
+      x:plan.root.x-direction*((m.legs!.left.upper+m.legs!.right.upper)/2+(m.seatContactOffset?.x??0)),
+      y:plan.root.y-(m.legs!.left.lower+m.legs!.right.lower)/2-(m.footSoleOffset!.left+m.footSoleOffset!.right)*profile.appearance.bodyScale/2-(m.hips!.left.y+m.hips!.right.y)/2+(m.seatContactOffset?.y??0)}}];
     plan.postures=[{pose:'seated',supportId:'calibration-log',startMs:300,endMs:1800},{pose:'stand',startMs:3000,endMs:4500}];
   }
   validatePerformance(plan,profile);
@@ -51,7 +51,7 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood):string 
     +'<figcaption>Rig từ cutout · '+escapeHtml(action)+' · '+timeMs+' ms</figcaption></figure></div></section>').join('');
   return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rig toàn thân Lila &amp; Karo</title><style>'
     +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair{grid-template-columns:1fr}img,svg{height:410px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
-    +'<p>Trang phục, bàn tay và bàn chân giữ texture/nét nguồn. Vạt dưới gắn theo từng hông, theo đùi trễ 100 ms; đuôi tóc Lila theo đầu. Sit-left/right: hai bước thu chân, chuyển hông lên khúc gỗ (1800 ms), giữ, đứng lên rồi mở lại chân (4500 ms). Chân có độ dài riêng và sole/ankle riêng. Head-turn đi qua góc trước tại 900 ms, vẫn là ba hình rời. Đây là ảnh pose tại một thời điểm; nếp áo, tiếp xúc và độ mượt chưa nghiệm thu video. Góc thân nghiêng/lưng và các lớp tóc/râu còn lại đang làm.</p>'
+    +'<p>Trang phục đứng, bàn tay và bàn chân giữ texture/nét nguồn. Nếp quần/váy ngồi là artwork bổ sung theo mẫu cho hai hướng; hiện blend lớp theo độ gập đùi còn chồng mờ ở pose chuyển tiếp, cần sửa trước khi sản xuất. Tổng chiều dài từng chân được giữ, vị trí gối không có trong ảnh nên phân bổ đùi/cẳng chân gần 52/48. Điểm tựa mông nằm dưới/sau dây lưng và giữ trên support khi nghiêng thân. Sit-left/right: thu chân, ngồi 300–1800 ms, giữ, đứng 3000–4500 ms rồi mở chân. Head-turn ở 900 ms vẫn dùng ba hình rời. Đây là ảnh pose tĩnh; anatomy, nếp vải và độ mượt chưa nghiệm thu video. Góc thân nghiêng/lưng và các lớp tóc/râu còn thiếu.</p>'
     +'<form method="get"><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'
     +'<label>Thời điểm (ms)<input type="number" name="timeMs" min="0" max="'+(action.startsWith('sit-')?5000:4000)+'" step="20" value="'+timeMs+'"></label><label>Biểu cảm<select name="mood">'
     +(['neutral','happy','thinking','angry'] as const).map(value=>'<option value="'+value+'"'+(mood===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><button>Xem pose</button></form>'

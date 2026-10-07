@@ -1,6 +1,6 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Phiên bản:** 0.8 · **Ngày:** 07/10/2026
+**Phiên bản:** 0.9 · **Ngày:** 07/10/2026
 
 **Trạng thái:** Đang triển khai; bộ SVG vẽ lại đã bị người dùng loại. Đầu và thân từ tài sản bám ảnh tham chiếu đã vào renderer ở mức ứng viên; fidelity, màu cảnh và chuyển động còn chưa nghiệm thu.
 
@@ -344,7 +344,7 @@ Khóa được lấy từ environment/cấu hình local; không ghi vào MD, pro
 | E — Một tập theo câu chuyện người dùng | Script/clock/storyboard, draft, sửa, MP4 và báo cáo | Đúng nguồn và đạt chất lượng; người dùng góp ý theo đoạn cụ thể |
 | F — Tích hợp tool và nghiệm thu | Chọn chủ đề và ba mode script/wav/story trong Studio/API/CLI; agent qua 9router, resume/rebuild | Model test kiểm đủ ba luồng, ca mới và provider thật; không dùng demo riêng làm chứng cứ thay thế |
 
-Clip ở giai đoạn C là bài kiểm chuyển động ngắn, chưa phải câu chuyện do hệ thống tự chọn. Giai đoạn E chờ nội dung người dùng cung cấp. Lần cập nhật hiện tại chỉnh MD và kiểm kết nối đọc 9router; chưa triển khai hoặc chạy production pipeline theo đặc tả này.
+Clip ở giai đoạn C là bài kiểm chuyển động ngắn, chưa phải câu chuyện do hệ thống tự chọn. Giai đoạn E chờ nội dung người dùng cung cấp. Source ba đầu vào và rig ứng viên đã có theo mục 12; production pipeline của chủ đề chưa mở vì bộ hình/chuyển động còn thiếu.
 
 ### Hướng công nghệ
 
@@ -418,7 +418,7 @@ node --import tsx scripts/prehistoric-pack.ts
 
 Các PNG lớp nháp được tạo bằng công cụ **image_gen tích hợp**; prompt atlas được lưu tại `library/topics/prehistoric-life/parts-prompts-v1.json`. Việc đo alpha chỉ tạo metadata, không crop/ghi đè ảnh nguồn. Chưa đưa atlas vào sản xuất hoặc ghi `approved=true`.
 
-### Lớp đầu và thân được tích hợp ở phiên bản 0.8
+### Lớp đầu và thân được tích hợp đến phiên bản 0.9
 
 - Sáu PNG `library/topics/prehistoric-life/rig-v1/*-head-*.png` có alpha, tóc/râu và da ấm: chính diện và ba phần tư trái/phải cho mỗi actor. Đây là tài sản phái sinh từ image_gen tích hợp; prompt thật và đường dẫn PNG được lưu ở `rig-v1/head-prompts.json` và `rig-v1/front-prompts.json`. Manifest giữ SHA-256, kích thước, anchor và tỷ lệ từng hình. PASS ảnh tĩnh chưa phải người dùng chốt tạo hình hoặc nghiệm thu video.
 - Mắt/chân mày và nụ cười dùng mask SVG trên ảnh cận gốc. Các miệng nói/tròn/nhăn được ghép riêng; một số hình miệng là nét SVG mới, chưa có bộ biểu cảm đầy đủ từ ảnh. Nét mặt có parent anchor cố định, blink/rotation không kéo toàn bộ khuôn mặt.
@@ -449,7 +449,15 @@ Trang [rig toàn thân](http://127.0.0.1:8850/api/topics/prehistoric-life/body) 
 
 Agent được cung cấp số đo source và gợi ý center của seat qua `topicContext.bodyMotion`. Không đặt seat theo rig đối xứng chung; validator kiểm hình học thật và thời gian chuẩn bị. Support không đang được dùng không được chiếm stance của clip đi/nhảy. Preview khúc gỗ là vật hiệu chỉnh đơn giản, chưa phải artwork môi trường đã chốt. Bộ source vẫn cần góc thân đúng hướng, nếp trang phục ngồi và kiểm chuyển động/tiếp xúc trong MP4 thật.
 
-Review source-seat qua 9router có hai lượt trong journal riêng, giới hạn 2. [Lượt v1](reviews/source-seat-static-review-v1.json) FAIL do khe cổ Karo; đã thêm crop da nguồn. [Lượt v2](reviews/source-seat-static-review-v2.json) vẫn FAIL: vai Karo và silhouette vạt quần/váy ngồi. Sau v2 đã mở lại vùng da vai và chuyển điểm gắn/chiều dài tay Karo theo nguồn; xem [bản ráp tự kiểm mới](reviews/source-seat-right-v3.jpg). Bản sửa vai chưa có review model lại. Nếp gấp vẫn chưa sửa xong: cần artwork vải theo hip–thigh, tránh hai flap có viền chồng và mũi nhọn. Giữ hai kết quả FAIL và ảnh đã gửi; không ghi đè lịch sử hoặc dùng chúng làm nghiệm thu motion. Không gỡ guard sản xuất dựa trên build pass.
+Lịch sử mốc 0.8: review source-seat qua 9router có hai lượt trong journal riêng, giới hạn 2. [Lượt v1](reviews/source-seat-static-review-v1.json) FAIL do khe cổ Karo; đã thêm crop da nguồn. [Lượt v2](reviews/source-seat-static-review-v2.json) vẫn FAIL ở vai Karo và các flap quần/váy. Sau v2 đã sửa da vai, điểm gắn/chiều dài tay; [ảnh sửa vai](reviews/source-seat-right-v3.jpg) là self-inspection. Giữ toàn bộ kết quả và ảnh cũ, không dùng làm nghiệm thu motion hoặc mở guard.
+
+**Mốc 0.9 — artwork nếp ngồi và hình học tựa mông:** `forest-source-body-motion-3 / forest-source-body-svg-3` thêm hai PNG alpha, mỗi atlas có góc ngồi trái/phải vẽ riêng: quần Karo hai ống, váy Lila liền, khối hông kín, nếp ép và gấu có viền đen. Tạo bằng imagegen tích hợp, không sửa pixel nguồn; prompt thực tế ở `library/topics/prehistoric-life/rig-v1/seated-garment-prompts.json`. Đã đo vùng clip, waist anchor, kích thước/alpha/hash, stage dưới allowlist tài sản và namespace cùng rig. Đây là artwork bổ sung ứng viên, không cam kết tách đúng từng pixel.
+
+Ảnh nguồn không vẽ gối: chia lại đùi/cẳng chân gần 52/48, giữ **tổng chiều dài riêng của cả bốn chân**, đế và offset cổ chân. Điểm tựa mông nằm sau/dưới belt; validator, evaluator, agent context và preview dùng chung offset. Khi nghiêng thân, pelvis bù chuyển động để điểm tựa vẫn nằm trên support; không kiểm contact bằng cách đặt belt trên mặt ghế. Số đo split/contact là suy luận cần nghiệm thu, không giả là landmark đã đo từ ảnh.
+
+[Review nếp ngồi v1](reviews/source-fold-static-review-v1.json) qua 9router **FAIL**: ở [pose chuyển 1240 ms](reviews/source-folded-transition-v1.jpg), cả váy Lila và ống quần Karo có viền/gấu chồng mờ và nhạt màu. [Pose ngồi phải](reviews/source-folded-right-v1.jpg), [trái](reviews/source-folded-left-v1.jpg) và [đứng lại](reviews/source-folded-restored-v1.jpg) không thay cho nghiệm thu toàn chu kỳ. Journal mới giới hạn 2, đã dùng 1 lượt; không reset hai journal trước.
+
+Đã thử một bề mặt mesh SVG đục theo thân/đùi, nhưng mapping ngồi → đứng làm co/méo váy/quần và seam tam giác; **loại khỏi renderer**. Code/ảnh self-inspection giữ ở `design/prehistoric-cloth-mesh-v1/`, không import vào pipeline và không coi hết transparency là đã đạt. Bước tiếp cần correspondence/UV và contour đứng–ngồi đúng, hoặc artwork trung gian cùng topology: chỉ một silhouette đục và một gấu ngoài, giữ màu/viền và từng ống quần. Không thay ghosting bằng một lần đổi pose giật hoặc một tấm áo xoay cứng. Còn thiếu góc thân, nhiều lớp tóc/râu, cảnh có texture, MP4 liên tục và ba luồng runtime; `productionReady=false` giữ nguyên.
 
 Review head v1/v2 là lịch sử lỗi. Đã bỏ vùng miệng “Angry” còn răng cười trong sheet: giữ texture râu/da hiện có và dùng contour miệng căng/cong xuống, không ghép mảng râu khác màu. Miệng nói có ba nhóm: bình thường, căng khi buồn/giận và tròn khi ngạc nhiên/lo sợ. Karo dùng khoang miệng rộng với viền môi ấm, tránh O nhỏ trông như mắt trong râu. Speech activity điều khiển độ mở; actor im lặng không bật miệng nói. Lila có vùng clip da mặt đã đo, điểm gắn miệng cao hơn và độ mở có giới hạn để không chạm tóc dưới cằm. Mask chân mày cả hai actor được thu theo nét thực, tránh lấy mảnh tóc vào glyph.
 
@@ -490,7 +498,7 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-| Hạng mục | Trạng thái tại phiên bản 0.8 |
+| Hạng mục | Trạng thái tại phiên bản 0.9 |
 |---|---|
 | Chủ đề và hai model tham chiếu | Đã xác định từ yêu cầu/ảnh của người dùng |
 | MD và ảnh tham chiếu lưu bền vững | Đã lưu ảnh cận, expression, palette và hai bảng 6688×3760; có hash/metadata trong manifest |
@@ -503,9 +511,10 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 | Hai atlas tách lớp | Bản nháp từ imagegen; cần kiểm fidelity, đo vùng cắt/điểm gắn, tách thêm nét mặt và góc nhìn |
 | Ráp lớp pose nghỉ | Đã có bản hiệu chỉnh tĩnh bám hệ tọa độ nguồn và vùng cắt đo được; chưa đạt rig chuyển động |
 | Lớp đầu và face evaluator | Sáu texture, ba hướng mỗi actor đã vào renderer; miệng căng/tròn giữ cảm xúc khi nói, miệng Lila nằm trong vùng da mặt, mask chân mày đã sửa. Review ảnh tĩnh của ba góc PASS; chưa nghiệm thu runtime hoặc chuyển đầu mượt |
-| Thân bám nguồn | Mask cutout, metrics riêng, hông tại belt, xương ẩn và mực cong đã vào compiler/renderer; ngồi/đứng có bước chuẩn bị và tiếp xúc source, cổ da riêng. Quay thân còn chặn; nếp ngồi và motion chưa nghiệm thu |
+| Thân bám nguồn | Mask cutout, cổ da, xương ẩn/mực cong; chiều dài chân riêng giữ nguyên, split gối gần 52/48 là suy luận. Có bước ngồi/đứng và điểm tựa mông dưới/sau belt; quay thân và motion còn thiếu |
 | Chuyển động phụ | Nhịp thở nhỏ, blink lệch, đuôi tóc và panel trang phục theo sau đã có code; mái/râu/nếp vải và chất lượng chuyển trọng lượng còn chờ |
-| Review source seat | Hai lượt static đều FAIL; cổ đã sửa, vai đã hiệu chỉnh sau v2, nếp quần/váy ngồi còn cần artwork mới. Không có PASS body/video |
+| Nếp quần/váy ngồi | Hai atlas alpha trái/phải đã vào staging/renderer; khối hông/nếp/gấu có artwork bổ sung. Blend chuyển tiếp còn ghosting; mesh thử bị loại do méo khi đứng |
+| Review source seat/folds | Hai lượt source-seat và một lượt nếp mới đều FAIL; lỗi chuyển tiếp cần sửa. Không có PASS body/video |
 | Model nhiều góc, expression, pose, rig từ ảnh | Đang chuẩn bị tài sản; chưa đủ bộ để sản xuất |
 | Mẫu màu ngày/chiều/đêm | Bản vector thử không đạt; cần dựng lại bằng model/artwork bám ảnh |
 | Motion/interaction đạt chuẩn mẫu | Chưa nghiệm thu; demo trước chưa được chấp nhận |

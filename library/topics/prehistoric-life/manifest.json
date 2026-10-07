@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.8-source-seated",
+  "version": "forest-tribe-0.9-seated-folds",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -167,6 +167,26 @@
       "view": "three-quarter-left",
       "approved": false,
       "status": "candidate-layered-head"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
+      "sha256": "9db3501a16c1c4d4f36b504cbea99ad7b52a3eb855bd656029ff7d3f73c451c2",
+      "width": 2172,
+      "height": 724,
+      "hasAlpha": true,
+      "actor": "lila",
+      "approved": false,
+      "status": "candidate-authored-seated-folds"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v1.png",
+      "sha256": "06e01182df8bb332ce95d5fc765a4e3b236d2d08c5565e8f00b133374377cd0e",
+      "width": 1774,
+      "height": 887,
+      "hasAlpha": true,
+      "actor": "karo",
+      "approved": false,
+      "status": "candidate-authored-seated-folds"
     }
   ],
   "rejectedArtifacts": [
@@ -621,9 +641,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-2",
-    "rendererVersion": "forest-source-body-svg-2",
-    "fingerprint": "59006aab91b691ccb6699cb0008126f1c6f4da3c1d9e6e5cce63d8d806a9ac0e",
+    "compilerVersion": "forest-source-body-motion-3",
+    "rendererVersion": "forest-source-body-svg-3",
+    "fingerprint": "e003cea486264a5ed30a5ff1e00021e9bb199472e25adc3e675542964d3510a5",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -663,17 +683,21 @@
         },
         "legs": {
           "left": {
-            "upper": 209,
-            "lower": 82
+            "upper": 152,
+            "lower": 139
           },
           "right": {
-            "upper": 202,
-            "lower": 81
+            "upper": 147,
+            "lower": 136
           }
         },
         "ankleY": {
           "left": 719,
           "right": 719
+        },
+        "seatContact": {
+          "x": 12,
+          "y": 32
         },
         "hands": {
           "left": {
@@ -794,17 +818,21 @@
         },
         "legs": {
           "left": {
-            "upper": 179,
-            "lower": 75
+            "upper": 132,
+            "lower": 122
           },
           "right": {
-            "upper": 169,
-            "lower": 84
+            "upper": 132,
+            "lower": 121
           }
         },
         "ankleY": {
           "left": 679,
           "right": 680
+        },
+        "seatContact": {
+          "x": 12,
+          "y": 26
         },
         "hands": {
           "left": {
@@ -904,6 +932,77 @@
         "maxRotation": 90
       }
     },
+    "seatedGarments": {
+      "version": "forest-seated-garment-1",
+      "assets": {
+        "lila": {
+          "file": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
+          "sha256": "9db3501a16c1c4d4f36b504cbea99ad7b52a3eb855bd656029ff7d3f73c451c2",
+          "width": 2172,
+          "height": 724,
+          "scale": 0.105,
+          "right": {
+            "anchor": {
+              "x": 350,
+              "y": 145
+            },
+            "region": {
+              "x": 80,
+              "y": 60,
+              "width": 920,
+              "height": 630
+            }
+          },
+          "left": {
+            "anchor": {
+              "x": 1810,
+              "y": 145
+            },
+            "region": {
+              "x": 1180,
+              "y": 60,
+              "width": 920,
+              "height": 630
+            }
+          }
+        },
+        "karo": {
+          "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v1.png",
+          "sha256": "06e01182df8bb332ce95d5fc765a4e3b236d2d08c5565e8f00b133374377cd0e",
+          "width": 1774,
+          "height": 887,
+          "scale": 0.1,
+          "right": {
+            "anchor": {
+              "x": 305,
+              "y": 298
+            },
+            "region": {
+              "x": 50,
+              "y": 220,
+              "width": 770,
+              "height": 480
+            }
+          },
+          "left": {
+            "anchor": {
+              "x": 1470,
+              "y": 298
+            },
+            "region": {
+              "x": 950,
+              "y": 220,
+              "width": 770,
+              "height": 480
+            }
+          }
+        }
+      },
+      "status": "candidate-authored-folds",
+      "productionReady": false,
+      "method": "independently authored seated left/right lower garments; waist attachment with bend-dependent opacity; no bitmap rewrite or fabric simulation",
+      "prompts": "library/topics/prehistoric-life/rig-v1/seated-garment-prompts.json"
+    },
     "anatomicalMapping": {
       "rig-left": "source-view anatomical right",
       "rig-right": "source-view anatomical left"
@@ -919,7 +1018,11 @@
       "breath": "bounded continuous body lean",
       "blink": "actor-staggered",
       "hair": "Lila ponytail source masks with 120ms follow; no simulated hair physics",
-      "clothing": "source upper body / two hip-attached lower panels; 100ms thigh follow, no fabric simulation"
+      "clothing": "source standing panels with 100ms thigh follow; authored seated folds; opacity transition still visibly ghosted and unaccepted; no fabric simulation"
+    },
+    "inferredAnatomy": {
+      "knees": "not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved",
+      "seat": "closed hip contact below/behind belt, not the pelvis anchor itself"
     },
     "headAttachment": {
       "neck": "original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone"
@@ -942,7 +1045,7 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "753f12fcb4ca5de629d700580a20f95caa495852a480bf671d05abf312c427db"
+    "codeHash": "03a4711ce99cbcf15847cfc8752948f0473a0f0f6656da937a38fafb465210a4"
   },
   "restCalibration": {
     "status": "candidate",
@@ -972,22 +1075,23 @@
     ]
   },
   "bodyStaticReview": {
-    "file": "docs/topics/reviews/source-seat-static-review-v2.json",
+    "file": "docs/topics/reviews/source-fold-static-review-v1.json",
     "pass": false,
     "scope": "static-source-body-seated-poses-only",
-    "appliesTo": "forest-source-body-motion-2 / forest-source-body-svg-2",
-    "fingerprintMatches": false,
+    "appliesTo": "forest-source-body-motion-3 / forest-source-body-svg-3",
+    "fingerprintMatches": true,
     "productionAcceptance": false,
     "history": [
-      "docs/topics/reviews/source-seat-static-review-v1.json"
+      "docs/topics/reviews/source-seat-static-review-v1.json",
+      "docs/topics/reviews/source-seat-static-review-v2.json"
     ],
-    "currentRepair": "Warm source neck layer and Karo shoulder repair; latest self-inspection source-seat-right-v3.jpg is not a model PASS. Seated garment drape still needs new authored folds."
+    "currentRepair": "Authored seated left/right folds, inferred balanced knees with original leg totals and a closed hip seat contact. Transition opacity blend remains visibly ghosted; end poses do not prove motion acceptance."
   },
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
     "Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.",
-    "Seated source motion and hip-attached garment panels are candidates. Static source-seat reviews failed; shoulder repair and especially authored clothing folds remain unaccepted.",
+    "Seated source motion and authored lower clothing remain candidates. Transition images show opacity ghosting; cloth mesh/inbetweens, full body views and continuous motion remain unaccepted.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]
 }

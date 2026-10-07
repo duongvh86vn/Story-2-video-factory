@@ -1,0 +1,32 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "purpose": "Authored seated lower garment candidates; not a runtime or visual acceptance.",
+  "prompts": [
+    {
+      "actor": "karo",
+      "stage": "initial",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D animation garment atlas for Karo. Input image 1 is the source character, a STYLE AND CLOTHING reference; preserve the exact amber ochre brown hide material, irregular thick near-black hand-painted outlines, tiny hand-drawn tears/creases and ragged shorts hems. Create ONLY his lower garment from the waist downward, no character, no head, no limbs, no skin, no hands, no support object, no ground, no lettering. A single atlas with TWO isolated sprites spaced widely apart horizontally. LEFT sprite is his shorts in a seated pose with the thighs extending to SCREEN RIGHT; RIGHT sprite is the same shorts seated toward SCREEN LEFT, independently drawn rather than copied/mirrored. Each has one coherent rounded hip/seat portion, two distinct overlapping short leg tubes with ragged hems, naturally compressed rounded folds at the hip and crotch and stretched folds along horizontal thighs. Not floating triangular flaps. The waist begins upright at the left/rear of the right-facing sprite (and right/rear in the left-facing sprite) then transitions into the horizontal lap/thighs. The waist edge should be plain and partly occluded by the existing tunic and belt in the rig: do not add a second belt or a waistband. Match this original shorts length and design, do not turn into a skirt, trousers, leather modern costume or furry collar. Full sprites must be safely inside the canvas with transparent margin. Each lower garment has a closed organic silhouette, especially the sitting hip; thick original-style black outer border remains everywhere, richer golden mid-brown on the light side and dark amber-brown on the far side. True transparent alpha background with no backdrop, no white/cream card, no checkerboard painted into the image. Overall one horizontal garment atlas, even scale and alignment between the two sprites.",
+      "reference": "library/topics/prehistoric-life/karo-cutout-v1.png",
+      "selected": false
+    },
+    {
+      "actor": "karo",
+      "stage": "color-and-waist-repair",
+      "prompt": "Use case: precise-object-edit. Asset type: transparent garment atlas for a 2D actor rig. Image 1 is the EDIT TARGET, a two-sprite seated shorts atlas. Image 2 is the AUTHORITATIVE original clothing color/style reference. Preserve the two separate right-seated/left-seated shorts, their size, relative placement, ragged hems, two overlapping short leg tubes, thick dark outer ink borders, organic sitting hip contours and seated folds. Make exactly two corrections: (1) Match the shorts' material to image 2's medium amber/earth brown (approximately #9b622f midtone, warm dark brown shadows) instead of the target's yellow/gold. Preserve painterly texture, do not desaturate to pale gray. (2) Remove the tall upright pointed waist/tunic extension at the rear/top of each shorts sprite; the top should be a low smooth curved waist opening just above the rounded hip and lap. These sprites represent ONLY shorts below an existing belt, no extra garment rising up the stomach. Keep a narrow overlap at the plain waist edge for attachment under the existing belt; do not add belt or waistband. Do not change pose or add people, limbs, hands, skin, support objects, shadows, text or background. Preserve genuine transparent alpha everywhere outside sprites and generous clear gap/margins.",
+      "references": [
+        "original generated atlas",
+        "library/topics/prehistoric-life/karo-cutout-v1.png"
+      ],
+      "output": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v1.png",
+      "selected": true
+    },
+    {
+      "actor": "lila",
+      "stage": "initial",
+      "prompt": "Use case: illustration-story. Asset type: transparent 2D animation garment atlas for Lila. Input image is the source character, used as the authoritative clothing/style reference. Create ONLY the lower part of her ragged brown hide dress BELOW her existing rope belt, from waist to ragged hem. No character, head, torso, arms, legs, hands, skin, belt, support, shadow, lettering or background. ONE horizontal atlas with TWO isolated sprites at equal scale widely spaced. LEFT sprite depicts the skirt when seated with thighs extending SCREEN RIGHT; RIGHT sprite depicts the skirt seated with thighs extending SCREEN LEFT, independently drawn, not a mirrored copy. The female costume is ONE continuous skirt draping over both thighs, not two shorts legs. The rear sitting hip has a rounded organic closed silhouette, compressed rounded fabric folds at the hip and gentle tension over the horizontal lap, a loosely hanging ragged hem over knees, and a few tiny original-style tears. Keep the original matte earthy medium umber/brown tone and subtle painted grain; near-black thick irregular hand-drawn outlines and jagged fur-hide fringe; no pale gray/beige desaturation, no yellow gold material, no orange redesign, no realistic fabric photography. The waist opening sits upright at the rear, gradually curves into the horizontal lap silhouette; its plain upper edge will tuck under the existing source belt and bodice in the rig. Do not add a double belt. The coherent skirt shape covers the thigh area naturally, avoid stiff projecting triangular wedges or stacks of disconnected flaps. True transparent alpha background, nothing else, full edges inside generous transparent margins, no white cream backing card or checkerboard painted into bitmap.",
+      "reference": "library/topics/prehistoric-life/lila-cutout-v1.png",
+      "output": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
+      "selected": true
+    }
+  ]
+}

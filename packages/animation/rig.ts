@@ -16,6 +16,8 @@ export interface RigMetrics {
   /** Sole-to-ankle offset in foot artwork units, before its bodyScale. */
   footSoleOffset?:Record<'left'|'right',number>;
   armRest?:Record<'left'|'right',Point>;footOffsets?:Record<'left'|'right',number>;
+  /** Positive X is the distance behind the facing direction; Y is below belt. */
+  seatContactOffset?:Point;
 }
 export function rigMetrics(profile: HostProfile):RigMetrics {
   if(usesReferenceBody(profile))return referenceBodyMetrics(profile);
@@ -48,7 +50,7 @@ export function performanceSvg(profile: HostProfile,imageMode:'embedded'|'scene'
   const neck=`<g id="neck"${body?' opacity="0"':''}><path d="M0 0V1" vector-effect="non-scaling-stroke"/></g>`;
   return `<g id="performer" data-profile-hash="${profile.profileHash}" fill="none" stroke="${a.outline}" stroke-width="${a.strokeWidth}" stroke-linecap="round" stroke-linejoin="round">`
     + `${body?.defs??''}${inkPaths}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g>`
-    + (body?`<g id="garment-left">${body.garments.left}</g><g id="garment-right">${body.garments.right}</g>`:'')
-    + `${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?'':neck}${body?ink('arm'):''}${limbs}`
+    + (body?`<g id="garment-left"><g id="garment-standing-left">${body.garments.left}</g></g><g id="garment-right"><g id="garment-standing-right">${body.garments.right}</g></g>`:'')
+    + `${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?.seatedGarments??''}${body?'':neck}${body?ink('arm'):''}${limbs}`
     + `<g id="head">${head}${costume('head')}${drawn?'':`<g id="face-orientation">${faceLayers(0, -4, 18, robot ? a.accent : a.outline, robot ? a.screen : a.shell, 15)}</g>`}</g></g>`;
 }

@@ -21,7 +21,7 @@ function fixture(actor:'lila'|'karo'){
 }
 test('source body keeps asymmetric shoulders and hands, with pelvis at the belt',()=>{
   for(const actor of ['lila','karo'] as const){const {profile}=fixture(actor),metrics=referenceBodyMetrics(profile),assets=referenceBodyAssets(profile.appearance);
-    assert.equal(assets.length,1);assert.equal(hash(readReferenceHeadAsset(assets[0]!)),assets[0]!.sha256);
+    assert.equal(assets.length,2);for(const asset of assets)assert.equal(hash(readReferenceHeadAsset(asset)),asset.sha256);
     assert.notEqual(metrics.arms.left.upper,metrics.arms.right.upper);
     assert.notEqual(Math.abs(metrics.armRest.left.x),metrics.armRest.right.x);
     assert.ok(metrics.pelvisY < -120);
@@ -49,8 +49,8 @@ test('source body cannot silently simulate missing full-body views or a seat wit
 function seatingFixture(actor:'lila'|'karo',facing:'left'|'right'){
   const {profile,plan}=fixture(actor),m=rigMetrics(profile),direction=facing==='left'?-1:1;
   plan.durationMs=6000;plan.facing=facing;plan.headView=facing==='left'?'three-quarter-left':'three-quarter-right';
-  plan.supports=[{id:'source-seat',kind:'seat',facing,width:80,center:{x:plan.root.x-direction*(m.legs!.left.upper+m.legs!.right.upper)/2,
-    y:plan.root.y-(m.legs!.left.lower+m.legs!.right.lower)/2-(m.footSoleOffset!.left+m.footSoleOffset!.right)*profile.appearance.bodyScale/2-(m.hips!.left.y+m.hips!.right.y)/2}}];
+  plan.supports=[{id:'source-seat',kind:'seat',facing,width:80,center:{x:plan.root.x-direction*((m.legs!.left.upper+m.legs!.right.upper)/2+m.seatContactOffset!.x),
+    y:plan.root.y-(m.legs!.left.lower+m.legs!.right.lower)/2-(m.footSoleOffset!.left+m.footSoleOffset!.right)*profile.appearance.bodyScale/2-(m.hips!.left.y+m.hips!.right.y)/2+m.seatContactOffset!.y}}];
   plan.postures=[{pose:'seated',supportId:'source-seat',startMs:300,endMs:1800},{pose:'stand',startMs:3000,endMs:4500}];
   return {profile,plan,m};
 }
@@ -76,6 +76,12 @@ for(const actor of ['lila','karo'] as const)for(const facing of ['left','right']
     }
     const entry=samplePerformance(plan,profile,0,silence),exit=samplePerformance(plan,profile,4800,silence);
     assert.deepEqual(exit.feet,entry.feet);
+    for(const side of ['left','right'] as const){
+      assert.equal(entry.face['garment-fold-'+side]!.opacity,0);assert.equal(exit.face['garment-fold-'+side]!.opacity,0);
+      assert.equal(exit.face['garment-standing-'+side]!.opacity,1);
+      assert.equal(before.face['garment-fold-'+side]!.opacity,side===facing?1:0);
+      assert.equal(before.face['garment-standing-'+side]!.opacity,0);
+    }
     const compiled=compilePerformance(plan,profile,silence);assert.ok(compiled.report.maxInterpolationGapPx<=.2);
     assert.ok(compiled.report.maxSeatContactErrorPx!<.001);
     const result=performanceScene(plan,profile,silence),resources=[...referenceHeadAssets(profile.appearance),...referenceBodyAssets(profile.appearance)].map(asset=>asset.path);
@@ -87,6 +93,19 @@ test('source seat refuses shortened preparation and generic seat geometry that i
   assert.throws(()=>validatePerformance(plan,profile),/1500ms/);
   plan.postures![0]!.endMs=1800;plan.supports![0]!.center.y=200;
   assert.throws(()=>validatePerformance(plan,profile),/seat\/foot geometry/);
+});
+test('source seat keeps the closed hip contact planted during explicit lean and emotion changes',()=>{
+  for(const actor of ['lila','karo'] as const)for(const facing of ['left','right'] as const){
+    const {profile,plan,m}=seatingFixture(actor,facing);
+    plan.postures!.splice(1,0,{pose:'seated',supportId:'source-seat',leanDeg:facing==='left'?-12:12,startMs:1900,endMs:2400});
+    plan.expressions=[{startMs:1800,endMs:3000,mood:'thinking'}];
+    validatePerformance(plan,profile);
+    for(const at of [1850,2000,2300,2600,2900]){
+      const f=samplePerformance(plan,profile,at,silence);assert.ok(f.seatContact!.errorPx<.001);
+      const pelvis=nums(f.transforms.pelvis!),seat=plan.supports![0]!;
+      assert.ok(pelvis[1]!<seat.center.y-m.seatContactOffset!.y*.8);
+    }
+  }
 });
 test('pose inspection preserves opacity on hidden bones and source hair namespaces',()=>{
   const svg=bodyCalibrationSvg('lila','point',1600,'happy');

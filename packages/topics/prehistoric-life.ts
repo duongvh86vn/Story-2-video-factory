@@ -5,7 +5,7 @@ import type { Storyboard } from '../core/schemas.js';
 import {FOREST_HEAD_VIEWS} from '../animation/forest-head-art.js';
 import {referenceBodyDescription,referenceBodyMetrics} from '../animation/forest-body-art.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.8-source-seated';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.9-seated-folds';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -37,11 +37,11 @@ export function topicContext(config:FactoryConfig) {
     palette:forestPalette,environments:{settings:['forest','camp','cave','river','neutral'],approvedPlates:[],lighting:['day','sunset','night'],rule:'No topic environment plate is approved. The flat vector studies are not production backgrounds. Prepare source-faithful textured layered artwork before enabling production; do not invent historical factual claims from scenery.'},
     headViews:{available:FOREST_HEAD_VIEWS,pending:['left','right','back-left','back-right','back'],turnRendering:'stepped-authored-views-with-front',fields:'performance.headView and non-overlapping headTurns:{startMs,endMs,direction}; head controls, not full-body rotation. Three authored drawings are available with forest-head-1; opposing head turns pass through the front texture. Partner/object gaze selects a drawing when no explicit head track overrides it. Additional inbetweens and complete body views remain pending; three drawings are not continuous rotation.'},
     bodyMotion:{pack:referenceBodyDescription().fingerprint,compiler:referenceBodyDescription().compilerVersion,
-      rule:'Fixed authored torso; body turns remain unsupported. Source sitting/rising requires at least 1500ms. Sitting prepares each foot, plants both soles, then transfers the pelvis to a physical seat. Rising transfers the pelvis first, then restores the standing stance. Do not use generic symmetric leg lengths or put the seat at ankle height. Explicit hand gestures override automatic hands resting on the lap. Source garment panels follow their own hip/thigh; folds and all motion remain candidates.',
+      rule:'Fixed authored torso; body turns remain unsupported. Source sitting/rising requires at least 1500ms. Sitting prepares each foot, plants both soles, then transfers the closed hip contact (below/behind the belt) to a physical seat. Rising transfers the body first, then restores the standing stance. The original per-side leg totals are preserved; knees were not drawn in the source, so thigh/shin split is inferred near 52/48. Do not use generic symmetric lengths or put the support at belt/ankle height. Explicit hand gestures override automatic hands resting on the lap. Standing source panels follow the thigh; authored seated lower garments blend according to knee bend. Folds and all motion remain candidates.',
       seatCalibration:(['lila','karo'] as const).map(id=>{
         const m=referenceBodyMetrics({appearance:topicAppearance(id)});
-        return {actor:id,metrics:m,relativeCenter:{xMagnitude:(m.legs.left.upper+m.legs.right.upper)/2,
-          y:-(m.legs.left.lower+m.legs.right.lower)/2-(m.footSoleOffset.left+m.footSoleOffset.right)*topicAppearance(id).bodyScale/2-(m.hips.left.y+m.hips.right.y)/2},
+        return {actor:id,metrics:m,relativeCenter:{xMagnitude:(m.legs.left.upper+m.legs.right.upper)/2+m.seatContactOffset.x,
+          y:-(m.legs.left.lower+m.legs.right.lower)/2-(m.footSoleOffset.left+m.footSoleOffset.right)*topicAppearance(id).bodyScale/2-(m.hips.left.y+m.hips.right.y)/2+m.seatContactOffset.y},
           convention:'seat.center.x = root.x - xMagnitude for right facing, root.x + xMagnitude for left facing; seat.center.y = root.y + relativeCenter.y; scale all offsets by performance.scale. The validator checks actual pose lean and asymmetric chain reach.'};
       })},
     cast:[{id:'lila',name:'Lila',description:'Female prehistoric stick actor: long dark brown hair with side-swept fringe, warm face, asymmetric ragged fur dress.',appearance:topicAppearance('lila')},

@@ -104,9 +104,10 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
       if((root.x-seat.center.x)*direction<=0)throw new Error(`${seat.id}: planted feet must be in front of the seat`);
       const facing=[...(plan.turns??[])].filter(t=>t.endMs<=time).sort((a,b)=>a.endMs-b.endMs).at(-1)?.direction??plan.facing??'front';
       if(facing!==seat.facing)throw new Error(`${seat.id}: seated facing must agree with the seat direction`);
+      const sourcePose=usesReferenceBody(profile)?bodyStateAt(plan,profile,time):undefined;
       for(const side of ['left','right'] as const){
-        const foot={x:root.x+(m.hips?.[side].x??(side==='left'?-1:1)*m.stance)*s,y:root.y};
-        const geometry=legGeometry(m,seat.center,foot,side,s,profile.appearance.bodyScale,usesReferenceBody(profile)?postureAt(plan,time).leanDeg+direction*3:0);
+        const foot=sourcePose?.walk.feet[side]??{x:root.x+(m.hips?.[side].x??(side==='left'?-1:1)*m.stance)*s,y:root.y};
+        const geometry=legGeometry(m,sourcePose?.pelvis??seat.center,foot,side,s,profile.appearance.bodyScale,sourcePose?.lean??0);
         const leg=solveChain(geometry.hip,geometry.ankle,geometry.bones.upper,geometry.bones.lower,direction);
         if(!leg.reachable||leg.error>.01||(leg.joint.x-geometry.hip.x)*direction<=0||Math.abs(leg.joint.y-geometry.hip.y)>geometry.bones.upper*.45||leg.joint.y>=geometry.ankle.y)throw new Error(`${seat.id}: seat/foot geometry cannot form supported thighs and grounded shins`);
       }
@@ -262,6 +263,13 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
   const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath+(sourceSupported?.leanOffset??0);
   const walkDrop=source?sourceWalkDrop(root,walk,m,profile,s,lean):walk.activation*m.upperLeg*.23*s;
   const pelvis=supported?.pelvis??{x:root.x,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walkDrop};
+  if(sourceSupported){
+    // A seated hip is below/behind the belt. Counter the body's lean around
+    // this attachment so the contact stays on the support rather than orbiting.
+    const rotated=rotate(sourceSupported.contactOffset,lean),weight=sourceSupported.supportWeight;
+    pelvis.x+=(sourceSupported.contactOffset.x-rotated.x)*weight;
+    pelvis.y+=(sourceSupported.contactOffset.y-rotated.y)*weight;
+  }
   if(supported&&walk.activation)pelvis.y+=walkDrop;
   if(air)pelvis.y+=air.bodyOffsetY;
   return {m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend:supported?.bend??1};
@@ -438,6 +446,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
   const chinAt=(side:RigHand)=>add(head,rotate({x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},lean+pose.tilt*emotion.weight));
   const garment=usesReferenceBody(profile)?referenceGarmentMotion(profile):undefined,lagged=garment?bodyStateAt(plan,profile,Math.max(0,t-garment.lagMs)):undefined;
+  const thighAngles:number[]=[];
   // Both listening elbows point down/back from the shoulder before the hands
   // rest forward on the lap. Select the same pole from the plan's first frame
   // instead of switching a bent elbow halfway through sitting.
@@ -446,6 +455,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     // One continuous bend branch, including rest, walk entry and recovery.
     const geometry=legGeometry(m,pelvis,walk.feet[side],side,s,profile.appearance.bodyScale,lean),{hip,ankle}=geometry;
     const leg=solveChain(hip,ankle,geometry.bones.upper,geometry.bones.lower,bend);
+    thighAngles.push(leg.upper);
     if(leg.error>1)throw new Error(`${plan.id}: ${side} foot cannot reach ground at ${t}ms (${leg.error.toFixed(2)}px)`);
     transforms[`leg-${side}-upper`]=transform(hip,leg.upper,s);transforms[`leg-${side}-lower`]=transform(leg.joint,leg.lower,s);
     if(drawn)paths[`ink-leg-${side}`]=inkLimb(hip,leg.joint,ankle,usesReferenceBody(profile)?.28:.17);
@@ -534,6 +544,18 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
     delete transforms['face-orientation'];
   }
+  if(usesReferenceBody(profile)){
+    const weight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,n)=>sum+n,0));
+    const flex=Math.abs(thighAngles.reduce((sum,n)=>sum+n,0)/thighAngles.length-lean);
+    // Known WIP: different exterior hems ghost during this blend. Keep this
+    // candidate explicit until correspondence/opaque transition art is ready.
+    const folded=smooth((weight-.2)/.35)*smooth((flex-35)/35);
+    for(const side of ['left','right'] as const){
+      transforms['garment-seated-'+side]=transform(pelvis,lean,s*profile.appearance.bodyScale);
+      face['garment-fold-'+side]={opacity:(side===(bend===1?'right':'left')?folded:0)};
+      face['garment-standing-'+side]={opacity:1-folded};
+    }
+  }
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
   for(const prop of plan.props){
     let point=prop.origin,attached=false;
@@ -565,7 +587,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   }
   const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
-  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(pelvis,seat.center)}}:{})};
+  const seatOffset=m.seatContactOffset?rotate({x:-bend*m.seatContactOffset.x*s,y:m.seatContactOffset.y*s},lean):{x:0,y:0};
+  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
