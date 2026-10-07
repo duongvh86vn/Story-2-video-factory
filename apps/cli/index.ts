@@ -19,6 +19,7 @@ import { NARRATION_LANGUAGES,LANGUAGE_TAG,primaryLanguage } from '../../packages
 import {importActorMotion,listActorMotions,loadActorMotion} from '../../packages/motion/import.js';
 import {motionWorkbench} from '../../packages/motion/workbench.js';
 import {loadSpriteMotionCatalog} from '../../packages/motion/catalog.js';
+import {importActorSpeech,listActorSpeech} from '../../packages/motion/speech-import.js';
 import {boundPath,ensureIdle,ProjectName} from '../server/security.js';
 
 const cli=new Command().name('video-factory').description('Turn a topic/story, complete script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
@@ -33,6 +34,16 @@ cli.command('motion-import <project> <metadata>').description('Import a local sp
   });
 cli.command('motion-list <project>').description('List verified candidate motion descriptors as JSON')
   .action(async(project:string)=>console.log(JSON.stringify(await listActorMotions(path.resolve(project)),null,2)));
+cli.command('speech-import <project> <sheet>').description('Import candidate native-frame mouth artwork; does not approve or produce a video')
+  .requiredOption('--registration <file>','Exact native motion/version and per-frame mouth rectangles')
+  .action(async(project:string,sheet:string,options:{registration:string})=>{
+    const root=path.resolve(project);await boundPath(root,'project.yaml');await loadConfig(root);await ensureIdle(root);
+    const selectedSheet=path.isAbsolute(sheet)?sheet:await boundPath(root,sheet);
+    const registration=path.isAbsolute(options.registration)?options.registration:await boundPath(root,options.registration);
+    console.log(JSON.stringify(await importActorSpeech(root,selectedSheet,registration),null,2));
+  });
+cli.command('speech-list <project>').description('List verified candidate mouth variants and their exact native motion identity')
+  .action(async(project:string)=>console.log(JSON.stringify(await listActorSpeech(path.resolve(project)),null,2)));
 cli.command('motion-catalog <project>').description('Read the verified movement library and its draft-only capabilities as JSON')
   .action(async(project:string)=>console.log(JSON.stringify(await loadSpriteMotionCatalog(path.resolve(project)),null,2)));
 cli.command('motion-preview <project> <id> <fingerprint>').description('Validate a candidate and print its preview URL in the running project Studio')

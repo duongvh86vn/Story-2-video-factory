@@ -46,6 +46,7 @@ import {MotionHash} from '../../packages/motion/schemas.js';
 import {Id} from '../../packages/core/identifiers.js';
 import {motionWorkbench} from '../../packages/motion/workbench.js';
 import {loadSpriteMotionCatalog,saveSpriteMotionCatalog} from '../../packages/motion/catalog.js';
+import {importActorSpeech,listActorSpeech,loadActorSpeech,actorSpeechSheetBytes} from '../../packages/motion/speech-import.js';
 import {MotionCatalogSaveSchema} from '../../packages/motion/catalog-schemas.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
@@ -53,6 +54,7 @@ type Named = { name: string };
 const RunBody = z.object({ until: z.enum(States).default('DONE'), force: z.boolean().default(false), shotIds: z.array(SafeId).min(1).max(100).optional(),retryModelErrors:z.boolean().optional(),sceneRepairAttempts:z.number().int().min(0).max(3).optional() }).strict();
 const loopback = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
 const MotionImportBody=z.object({metadata:z.string().min(1).max(240),registration:z.string().min(1).max(240)}).strict();
+const SpeechImportBody=z.object({sheet:z.string().min(1).max(240),registration:z.string().min(1).max(240)}).strict();
 const NoMotionQuery=z.object({}).strict();
 
 /** Re-read and verify the exact bytes sent, never re-open an unverified stream. */
@@ -164,6 +166,21 @@ export async function buildServer(options: ServerOptions = {}) {
   app.get<{Params:Named}>('/api/projects/:name/motions/catalog',async request=>{
     NoMotionQuery.parse(request.query);
     return loadSpriteMotionCatalog(await rootFor(request.params.name));
+  });
+  app.get<{Params:Named}>('/api/projects/:name/motions/speech',async request=>{
+    NoMotionQuery.parse(request.query);return {variants:await listActorSpeech(await rootFor(request.params.name))};
+  });
+  app.post<{Params:Named}>('/api/projects/:name/motions/speech/import',async request=>{
+    NoMotionQuery.parse(request.query);const body=SpeechImportBody.parse(request.body);
+    return mutate(request.params.name,async root=>{
+      await boundPath(root,'project.yaml');await loadConfig(root);
+      return importActorSpeech(root,await boundPath(root,body.sheet),await boundPath(root,body.registration));
+    });
+  });
+  app.get<{Params:Named&{id:string;fingerprint:string}}>('/api/projects/:name/motions/speech/:id/:fingerprint/sheet',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);const root=await rootFor(request.params.name),variant=await loadActorSpeech(root,Id.parse(request.params.id),MotionHash.parse(request.params.fingerprint));
+    const bytes=await actorSpeechSheetBytes(root,variant);
+    return reply.type('image/png').header('Content-Length',bytes.length).send(bytes);
   });
   app.put<{Params:Named}>('/api/projects/:name/motions/catalog',async request=>{
     NoMotionQuery.parse(request.query);const body=MotionCatalogSaveSchema.parse(request.body);

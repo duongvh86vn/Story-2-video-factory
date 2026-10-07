@@ -1,5 +1,8 @@
 import {ActorMotionSchema, SpriteClipSchema, SPRITE_PLAYER_VERSION, type ActorMotion, type SpriteClip} from './schemas.js';
 import {spriteClock as clock} from './clock.js';
+import {bindActorSpeech,type ActorSpeech} from './speech-schemas.js';
+import {SpriteSpeechScheduleSchema,createSpriteSpeechSampler,type SpriteSpeechSchedule} from './speech-clock.js';
+import {hash} from '../core/utils.js';
 
 const MAX_EVENTS=6000;
 
@@ -96,8 +99,24 @@ function visualEdges(p:Prepared,nodes:number[]) {
   return edges;
 }
 
-export function compileActorMotion(motion:ActorMotion,clip:SpriteClip,sheetUrl?:string) {
+export interface ActorSpeechPlayback {variant:ActorSpeech;schedule:SpriteSpeechSchedule;sheetUrl?:string;}
+function speechContext(prepared:Prepared,input:ActorSpeechPlayback){
+  const {variant}=bindActorSpeech(prepared.motion,input.variant),schedule=SpriteSpeechScheduleSchema.parse(input.schedule);
+  if(clock(schedule.slot.startMs/1000)!==prepared.start||clock(schedule.slot.endMs/1000)!==clock(prepared.clip.endMs/1000))throw new Error('Speech activity belongs to a different actor slot clock');
+  if(prepared.motion.playback.end==='hide'&&schedule.intervals.some(interval=>clock(interval.endMs/1000)>prepared.end))throw new Error('Speech activity extends into hidden native artwork');
+  return {variant,schedule,url:localSheetUrl(input.sheetUrl??`assets/${variant.sheet.hash}.png`)};
+}
+export function createActorSpeechSampler(motion:ActorMotion,clip:SpriteClip,input:ActorSpeechPlayback):(timeMs:number)=>'hidden'|'rest'|'open'{
+  const prepared=prepare(motion,clip),speech=speechContext(prepared,input),active=createSpriteSpeechSampler(speech.schedule);
+  return timeMs=>{
+    if(sample(prepared,timeMs)===null)return 'hidden';
+    return active(timeMs)?'open':'rest';
+  };
+}
+
+export function compileActorMotion(motion:ActorMotion,clip:SpriteClip,sheetUrl?:string,speechInput?:ActorSpeechPlayback) {
   const p=prepare(motion,clip), url=localSheetUrl(sheetUrl??`assets/${p.motion.sheet.hash}.png`);
+  const speech=speechInput?speechContext(p,speechInput):undefined;
   const unique=new Map<string,number>();
   const visuals:ActorMotion['frames']=[];
   const nodes=p.motion.frames.map(frame=>{
@@ -115,7 +134,8 @@ export function compileActorMotion(motion:ActorMotion,clip:SpriteClip,sheetUrl?:
   // No cycle/event generation happens until the complete literal-call budget is checked.
   const edges=visualEdges(p,nodes);
   const terminalCalls=endNode===lastNode?0:endNode===null?1:2;
-  const eventCount=visuals.length+(start>0 && entryNode!==null?1:0)+edges.reduce((sum,edge)=>sum+2*edge.count,0)+terminalCalls;
+  const speechEvents=speech?2+speech.schedule.intervals.length*4:0;
+  const eventCount=visuals.length+(start>0 && entryNode!==null?1:0)+edges.reduce((sum,edge)=>sum+2*edge.count,0)+terminalCalls+speechEvents;
   if(eventCount>MAX_EVENTS) throw new Error(`Sprite timeline requires ${eventCount} events; maximum is ${MAX_EVENTS}`);
 
   const prefix=`sprite-${p.clip.id}`, nodeId=(index:number)=>`${prefix}-frame-${index}`;
@@ -134,20 +154,37 @@ export function compileActorMotion(motion:ActorMotion,clip:SpriteClip,sheetUrl?:
   events.sort((a,b)=>a.time-b.time);
   for(const event of events){set(event.from,0,event.time);set(event.to,1,event.time);}
   if(endNode!==lastNode){set(lastNode,0,end);if(endNode!==null)set(endNode,1,end);}
+  if(speech){
+    const mouthSelector=(state:'rest'|'open')=>JSON.stringify(`[data-composition-id="${p.clip.compositionId}"] [id="${prefix}"] .sprite-mouth-${state}`);
+    const mouth=(open:boolean,seconds:number)=>{
+      calls.push(`tl.set(${mouthSelector('rest')},{opacity:${open?0:1},immediateRender:${seconds===0?'true':'false'}},${seconds});`);
+      calls.push(`tl.set(${mouthSelector('open')},{opacity:${open?1:0},immediateRender:${seconds===0?'true':'false'}},${seconds});`);
+    };
+    mouth(false,0);
+    for(const interval of speech.schedule.intervals){mouth(true,clock(interval.startMs/1000));mouth(false,clock(interval.endMs/1000));}
+  }
 
   const {x,y,scale,rotation}=p.clip.placement;
   const artwork=visuals.map((frame,index)=>{
     const {rect,anchor}=frame, cropId=`${prefix}-crop-${index}`;
     const opacity=start===0 && index===entryNode?1:0;
-    return `<g id="${nodeId(index)}" opacity="${opacity}" transform="translate(${-anchor.x} ${-anchor.y})"><defs><clipPath id="${cropId}" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="${rect.w}" height="${rect.h}"/></clipPath></defs><g clip-path="url(#${cropId})"><image href="${url}" x="${-rect.x}" y="${-rect.y}" width="${p.motion.sheet.width}" height="${p.motion.sheet.height}" preserveAspectRatio="none"/></g></g>`;
+    const image=(href:string)=>`<image href="${href}" x="${-rect.x}" y="${-rect.y}" width="${p.motion.sheet.width}" height="${p.motion.sheet.height}" preserveAspectRatio="none"/>`;
+    const artwork=speech?`<g class="sprite-mouth-rest" opacity="1">${image(url)}</g><g class="sprite-mouth-open" opacity="0">${image(speech.url)}</g>`:image(url);
+    return `<g id="${nodeId(index)}" opacity="${opacity}" transform="translate(${-anchor.x} ${-anchor.y})"><defs><clipPath id="${cropId}" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="${rect.w}" height="${rect.h}"/></clipPath></defs><g clip-path="url(#${cropId})">${artwork}</g></g>`;
   }).join('');
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" overflow="visible"><g id="${prefix}" transform="translate(${x} ${y}) rotate(${rotation}) scale(${scale})">${artwork}</g></svg>`;
   return {svg,js:calls.join('\n'),report:{
     producer:SPRITE_PLAYER_VERSION,actorId:p.motion.actorId,fingerprint:p.motion.fingerprint,
     frameCount:p.motion.frames.length,eventCount,nativeDurationMs:p.nativeDurationMs,
     clipDurationMs:p.clip.endMs-p.clip.startMs,sourceLoop:p.motion.source.loop,playback:{...p.motion.playback},
-    productionReady:false as const,speechSync:'none' as const,
+    productionReady:false as const,speechSync:speech?.schedule.synchronization??'none' as const,
+    ...(speech?{speech:{producer:'sprite-speech-clock-1' as const,variantId:speech.variant.id,fingerprint:speech.variant.fingerprint,
+      nativeMotionId:p.motion.id,nativeFingerprint:p.motion.fingerprint,sheetHash:speech.variant.sheet.hash,
+      scheduleHash:hash(speech.schedule),activityHash:speech.schedule.activityHash,narrationHash:speech.schedule.narrationHash,
+      ...(speech.schedule.audioHash?{audioHash:speech.schedule.audioHash}:{}),segmentIds:speech.schedule.slot.segmentIds,
+      intervalCount:speech.schedule.intervals.length,mode:'binary-rest-open' as const,phonemeLipSync:false as const}}:{}),
     warnings:[...p.motion.review.warnings,'GSAP clock resolution: 0.0001 ms; input clocks and absolute entry/frame/end boundaries share this resolution.',
-      'Candidate motion: identity, pose anatomy, fluidity and speech synchronization have not been approved.'],
+      'Candidate motion: identity, pose anatomy, fluidity and speech synchronization have not been approved.',
+      ...(speech?['Registered mouth pixels on the native pose clock; binary activity or labelled segment draft, not phoneme lip-sync.']:[])],
   }};
 }

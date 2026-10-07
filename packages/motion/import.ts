@@ -1,27 +1,19 @@
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
-import {randomUUID} from 'node:crypto';
-import sharp from 'sharp';
 import {z} from 'zod';
 import {Id} from '../core/identifiers.js';
-import {hash, safePath, safeRealPath} from '../core/utils.js';
+import {hash} from '../core/utils.js';
+import {MOTION_JSON_LIMIT as JSON_LIMIT,MOTION_PNG_LIMIT as PNG_LIMIT,motionCanonical as canonical,motionFilePath as local,
+  motionRead as bounded,motionPng as png,motionDirectories as directories,motionWriteImmutable as immutable,motionSourceDirectory as sourceDirectory} from './files.js';
 import {ACTOR_MOTION_VERSION, ActorMotionSchema, MotionHash, MotionPoint, MotionRect, MotionRegistrationSchema,
   type ActorMotion, type MotionRegistration} from './schemas.js';
 
-const JSON_LIMIT=2*1024*1024, PNG_LIMIT=16*1024*1024, PIXELS=64_000_000;
-const pngSignature=Buffer.from([137,80,78,71,13,10,26,10]);
 const count=z.number().int().min(1).max(512);
 const duration=z.number().finite().min(1).max(60000);
 const object=z.record(z.unknown());
 const own=(value:Record<string,unknown>, key:string):unknown=>Object.hasOwn(value,key)?value[key]:undefined;
 const record=(value:unknown):Record<string,unknown>=>object.parse(value);
 
-function canonical(value:unknown):string {
-  if(Array.isArray(value))return `[${value.map(canonical).join(',')}]`;
-  if(value!==null && typeof value==='object')return `{${Object.entries(value).sort(([a],[b])=>a<b?-1:a>b?1:0)
-    .map(([key,v])=>`${JSON.stringify(key)}:${canonical(v)}`).join(',')}}`;
-  return JSON.stringify(value);
-}
 const sheetPath=(id:string,fingerprint:string)=>`assets/motions/${id}/${fingerprint}/sheet.png`;
 /** Break the path/fingerprint cycle using a fixed token. Load separately enforces the exact expanded path.
  * Every other saved field, including source hashes, review and playback, participates in this hash. */
@@ -79,74 +71,6 @@ export function normalizeSpriteMotion(metadata:unknown, sheet:{width:number;heig
     review:{status:'candidate',productionReady:false,warnings}});
   motion.fingerprint=descriptorHash(motion);motion.sheet.path=sheetPath(motion.id,motion.fingerprint);
   return ActorMotionSchema.parse(motion);
-}
-
-/** Reject symlinks in every component, including in-project links. safeRealPath also enforces containment. */
-async function local(root:string, relative:string):Promise<string> {
-  const target=safePath(root,relative), rel=path.relative(path.resolve(root),target);
-  let current=path.resolve(root);
-  for(const part of rel.split(path.sep).filter(Boolean)) {
-    current=path.join(current,part);
-    if((await fs.lstat(current)).isSymbolicLink())throw new Error('Motion paths cannot contain symlinks');
-  }
-  return safeRealPath(root,relative);
-}
-async function bounded(root:string, relative:string, limit:number):Promise<Buffer> {
-  const file=await local(root,relative), handle=await fs.open(file,'r');
-  try {
-    const stat=await handle.stat();
-    if(!stat.isFile()||stat.size>limit)throw new Error('Motion file exceeds size limit or is not a file');
-    // Read at most limit+1 bytes even if a source grows between stat and read.
-    const buffer=Buffer.alloc(Math.min(stat.size+1,limit+1));
-    let offset=0;
-    while(offset<buffer.length) {
-      const {bytesRead}=await handle.read(buffer,offset,buffer.length-offset,null);
-      if(!bytesRead)break;offset+=bytesRead;
-    }
-    const after=await handle.stat();
-    if(offset>limit||after.size>limit||after.size!==stat.size||offset!==stat.size)throw new Error('Motion file changed during bounded read');
-    return buffer.subarray(0,offset);
-  } finally {await handle.close();}
-}
-async function png(bytes:Buffer):Promise<{width:number;height:number;hash:string}> {
-  if(bytes.length>PNG_LIMIT||!bytes.subarray(0,8).equals(pngSignature))throw new Error('Invalid PNG signature/size');
-  const image=sharp(bytes,{limitInputPixels:PIXELS,failOn:'warning'}), info=await image.metadata();
-  if(info.format!=='png'||!info.width||!info.height||!info.hasAlpha||info.width>32768||info.height>32768||info.width*info.height>PIXELS||(info.pages??1)!==1)throw new Error('Invalid PNG dimensions/alpha/pages');
-  // Force pixel decoding to reject truncated/compressed corruption; never re-encode saved bytes.
-  const decoded=await image.raw().toBuffer({resolveWithObject:true});
-  if(decoded.info.width!==info.width||decoded.info.height!==info.height)throw new Error('PNG decoded dimensions mismatch');
-  return {width:info.width,height:info.height,hash:hash(bytes)};
-}
-async function directories(root:string, relative:string):Promise<void> {
-  let prefix='';
-  for(const part of relative.split('/')) {
-    prefix=prefix?`${prefix}/${part}`:part;
-    try {await fs.mkdir(safePath(root,prefix));}catch(error){if((error as NodeJS.ErrnoException).code!=='EEXIST')throw error;}
-    const resolved=await local(root,prefix);
-    if(!(await fs.stat(resolved)).isDirectory())throw new Error('Motion output parent is not a directory');
-  }
-}
-async function immutable(root:string, relative:string, bytes:Buffer, limit:number):Promise<void> {
-  if(bytes.length>limit)throw new Error('Motion output exceeds size limit');
-  const parent=path.posix.dirname(relative);await local(root,parent);
-  const temp=`${parent}/.${randomUUID()}.tmp`;
-  let created=false;
-  try {
-    const handle=await fs.open(safePath(root,temp),'wx');
-    created=true;
-    try {await handle.writeFile(bytes);}finally {await handle.close();}
-    try {await fs.link(await local(root,temp),safePath(root,relative));}
-    catch(error) {
-      if((error as NodeJS.ErrnoException).code!=='EEXIST')throw error;
-      if(!(await bounded(root,relative,limit)).equals(bytes))throw new Error('Immutable motion output conflict');
-    }
-  } finally {if(created)await fs.unlink(safePath(root,temp)).catch(()=>{});}
-}
-
-/** Check the selected directory itself and every ancestor before using it as a containment root. */
-async function sourceDirectory(file:string):Promise<string> {
-  const directory=path.dirname(file), filesystemRoot=path.parse(file).root;
-  return local(filesystemRoot,path.relative(filesystemRoot,directory));
 }
 
 export async function importActorMotion(projectRoot:string, metadataFile:string, registrationFile:string):Promise<ActorMotion> {
