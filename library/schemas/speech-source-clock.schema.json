@@ -1,0 +1,111 @@
+{
+  "$ref": "#/definitions/speech-source-clock",
+  "definitions": {
+    "speech-source-clock": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "speech-source-clock-1"
+        },
+        "ownerId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "storyboard-cues",
+            "shot-cues",
+            "narration"
+          ]
+        },
+        "cueIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 96,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+          }
+        },
+        "startMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endMs": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "sourceActivityHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "activity": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "audio-rms",
+                "segment-draft"
+              ]
+            },
+            "audioHash": {
+              "type": "string"
+            },
+            "windowMs": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "intervals": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "endMs": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "level": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "startMs",
+                  "endMs",
+                  "level"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "method",
+            "windowMs",
+            "intervals"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "ownerId",
+        "scope",
+        "cueIds",
+        "startMs",
+        "endMs",
+        "sourceActivityHash",
+        "activity"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

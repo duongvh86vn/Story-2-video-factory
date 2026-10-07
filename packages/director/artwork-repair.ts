@@ -19,6 +19,7 @@ import { secureSceneFiles, validateSceneFiles } from '../scenes/security.js';
 import { outputPath } from '../render/process.js';
 import { actingRepairSchemaFor, applyActingRepair, fixedMotionFields } from './acting-repair.js';
 import {loadSpriteSceneMotions,loadSpriteSceneSpeech} from '../motion/scene-source.js';
+import {assertRigSpeechPublicationBinding,type RigSpeechPublicationBinding} from '../actors/speech-clock.js';
 
 const RepairSchema=z.object({artDirection:ArtDirectionSchema}).strict();
 
@@ -83,12 +84,13 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
 }
 
 /** Commit only after the repaired plan has passed the actual browser scene validation. */
-export async function persistCinematicArtworkRepair(root:string,config:FactoryConfig,previous:Shot,repaired:Shot,attemptFile:string,scenePublication:ReadonlyMap<string,string>=new Map()):Promise<void> {
+export async function persistCinematicArtworkRepair(root:string,config:FactoryConfig,previous:Shot,repaired:Shot,attemptFile:string,scenePublication:ReadonlyMap<string,string>=new Map(),speechBinding?:RigSpeechPublicationBinding):Promise<void> {
   const boardFile=path.join(root,'work/storyboard.json'),board=await readJson(boardFile,StoryboardSchema);
   const index=board.shots.findIndex(s=>s.id===previous.id);
   if(index<0||hash(board.shots[index])!==hash(previous))throw new Error(`${previous.id}: storyboard changed during artwork repair`);
   const originalHash=hash(board),narration=await readJson(path.join(root,'work/narration.json'),NarrationSchema),beats=await readJson(path.join(root,'work/beats.json'),z.array(BeatSchema));
   board.shots[index]=repaired;
+  assertRigSpeechPublicationBinding(repaired,narration,board,speechBinding);
   const {profile,rig}=await loadHost(root);
   validateExplainerStoryboard(board,narration,beats,profile,rig,config);
   // Read every prerequisite before touching any accepted file.
@@ -123,7 +125,13 @@ export async function persistCinematicArtworkRepair(root:string,config:FactoryCo
     if(!relative.startsWith(`scenes/${previous.id}/`))throw new Error('Artwork publication must belong to its shot');
     pending.set(relative,next);
   }
-  try{await publishSceneRevision(root,pending,stagedRoot);}catch(error){
+  try{
+    // Long validation/staging must not silently overwrite a sibling edit made
+    // after the accepted source identity was checked above.
+    if(hash(await readJson(boardFile,StoryboardSchema))!==originalHash)throw new Error(`${previous.id}: storyboard changed during artwork repair publication`);
+    assertRigSpeechPublicationBinding(repaired,await readJson(path.join(root,'work/narration.json'),NarrationSchema),board,speechBinding);
+    await publishSceneRevision(root,pending,stagedRoot);
+  }catch(error){
     await writeJson(attemptFile,{...attempt,status:'commit-failed',result:repaired,runtimeValidation:'passed',commitError:String(error)});
     throw error;
   }

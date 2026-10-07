@@ -1,5 +1,7 @@
 # Lila/Karo — lớp miệng ở góc nhìn bạn diễn
 
+**Lịch sử 0.30:** [Mốc hiện hành 0.31](SOURCE-SPEECH-PHASE-HANDOFF.md) đã triển khai context clock nguồn và các ca cross-shot **NOT RUN**. Hạn chế clipping/envelope bên dưới mô tả source0.30, không còn mô tả implementation hiện hành; nghiệm thu runtime vẫn chưa có. Figure/measurement native v1 vẫn là tài liệu artwork tĩnh, không phải evidence video.
+
 Mốc 0.30, 08/10/2026; foundation `6b3cf00179878c45e137af7ba300b6ba4c78708b`, fixture fixes `6433243`/`d6bc260c9b104cdcaad0999695166db70cbfa599` đã push/đối chiếu remote trên `codex/prehistoric-life`, tiếp nối `cb13bcb`. Đây là một phần tiếp tục của tool ba input, chưa là bản hoàn thành hay nghiệm thu video. Không cần dịch vụ image-to-video để triển khai.
 
 ## Source và lựa chọn

@@ -1,6 +1,6 @@
 import type { FactoryConfig } from '../../packages/core/config.js';
-import type { SceneFiles, Shot,Narration } from '../../packages/core/schemas.js';
-import { escapeHtml } from '../../packages/core/utils.js';
+import type { SceneFiles, Shot,Narration,Storyboard } from '../../packages/core/schemas.js';
+import { escapeHtml,hash } from '../../packages/core/utils.js';
 import {rigHand} from '../../packages/core/identifiers.js';
 import {cinematicActionGroups} from '../../packages/director/actions.js';
 import type { HostProfile, HostRig } from '../../packages/host/schemas.js';
@@ -16,6 +16,9 @@ import { CAMERA_VIEWPORT, cameraMatrixAt, cameraTimeline, cameraModelLabel, came
 import { artLayers, customModelArt, customModelForegroundArt, customModelMotionOrigin, MODEL_FOREGROUND_VERSION } from '../../packages/director/art-direction.js';
 import { rendersModelLabel,rendersModelControl } from '../../packages/director/art-direction-schemas.js';
 import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../packages/actors/model.js';
+import {actorShotSpeech,narrationCueOwners,shotUsesSourceSpeechClock} from '../../packages/actors/speech-clock.js';
+import {hasBodyViewSpeech} from '../../packages/animation/body-view-mouth.js';
+import {SPEECH_SOURCE_CLOCK_VERSION,windowSpeechActivity,validateSpeechActivityTrack,type SpeechSourceClock} from '../../packages/animation/speech-clock.js';
 import {buildRig} from '../../packages/host/rig.js';
 import {performanceSvg} from '../../packages/animation/rig.js';
 import {namespaceRigSvg} from '../../packages/animation/svg-namespace.js';
@@ -30,7 +33,7 @@ function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w
   return part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
 }
 
-function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):{
+function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,board?:Storyboard):{
   files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;propId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[]};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
@@ -40,8 +43,18 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   const art=c.artDirection,palette=art?.palette??{background:'#F3DDAA',surface:'#FFF3DB',ink:'#201A15',accent:'#F4CD68'};
   const planes={background:artLayers(shot,'background','frame'),worldBackground:artLayers(shot,'background','world'),midground:artLayers(shot,'midground'),foreground:artLayers(shot,'foreground'),overlay:artLayers(shot,'overlay')};
   const speech=c.actorScene?actorSpeech(activity,narration,c.actorScene.speakingSegmentIds,shot.startMs,shot.endMs):activity;
-  const localActivity:SpeechActivity={...speech,intervals:speech.intervals.filter(a=>a.startMs<shot.endMs&&a.endMs>shot.startMs)
+  let localActivity:SpeechActivity={...speech,intervals:speech.intervals.filter(a=>a.startMs<shot.endMs&&a.endMs>shot.startMs)
     .map(a=>({...a,startMs:Math.max(0,a.startMs-shot.startMs),endMs:Math.min(p.durationMs,a.endMs-shot.startMs)}))};
+  if(board&&shotUsesSourceSpeechClock(shot)&&!narration)throw new Error('needs-speech-phase: storyboard source phase requires narration');
+  const owners=board&&shotUsesSourceSpeechClock(shot)?narrationCueOwners(board,shot,narration!):undefined;
+  let primaryClock:SpeechSourceClock|undefined;
+  if(hasBodyViewSpeech(profile)&&c.actorScene?.primary!==null){
+    if(c.actorScene){const projected=actorShotSpeech(activity,narration,profile.id,c.actorScene.speakingSegmentIds,shot.startMs,shot.endMs,owners?.get(profile.id)??(owners?[]:undefined));
+      localActivity=projected.activity;primaryClock=projected.sourceClock;
+    }else {validateSpeechActivityTrack(activity);primaryClock={version:SPEECH_SOURCE_CLOCK_VERSION,ownerId:profile.id,scope:'narration',cueIds:[],startMs:shot.startMs,endMs:shot.endMs,
+      sourceActivityHash:hash(activity),activity:windowSpeechActivity(activity,shot.startMs,shot.endMs)};}
+  }
+  const performerSpeech=new Map<string,{activity:SpeechActivity;sourceClock?:SpeechSourceClock}>([[profile.id,{activity:localActivity,sourceClock:primaryClock}]]);
   const supports=c.propBindings.length?c.propBindings.flatMap(binding=>{
     const part=v.parts.find(part=>part.id===binding.partId)!,prop=p.props.find(prop=>prop.id===binding.propId)!;
     // A dropped object has no invented table underneath its held entry or floor landing.
@@ -49,7 +62,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     if(p.gestures.some(g=>g.propId===prop.id&&g.action==='drop'))return [];
     return [prop.origin,...(prop.destination?[prop.destination]:[])].map(center=>({x:center.x,y:center.y+part.height*height*.5,width:part.width*width*1.12}));
   }):undefined;
-  const seats=sceneSeats(shot),result=performanceScene(p,profile,localActivity,background,supports,{items:seats,palette}),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s.replace(/#([a-zA-Z][\w.-]*)/g,(_,id:string)=>`[id=${JSON.stringify(id)}]`)}`);
+  const seats=sceneSeats(shot),result=performanceScene(p,profile,localActivity,background,supports,{items:seats,palette},primaryClock),scope=`[data-composition-id="${shot.id}"]`,selector=(s:string)=>JSON.stringify(`${scope} ${s.replace(/#([a-zA-Z][\w.-]*)/g,(_,id:string)=>`[id=${JSON.stringify(id)}]`)}`);
   const decoration=c.setting==='road'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#A78C66"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#E8D6AF" stroke-width="5" stroke-dasharray="45 24"/>`
     :c.setting==='workshop'?`<path d="M0 ${p.stage.groundY}H${width}V${height}H0Z" fill="#B79C72"/><path d="M${width*.6} ${height*.26}H${width*.9}V${height*.63}H${width*.6}Z" fill="#836D52" opacity=".3"/><path d="M0 ${p.stage.groundY}H${width}" stroke="#876E4F" stroke-width="3"/>`
     :`<path d="M0 ${p.stage.groundY}H${width}" stroke="#A38B65" stroke-width="3"/>`;
@@ -57,9 +70,14 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   const actorReports:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>=[];
   const supporting=(c.actorScene?.supporting??[]).map(actor=>{
     const definition=actorProfile(actor.character,profile),prefix=`actor-${actor.character.id}-`;
-    const local=actorSpeech(activity,narration,actor.speakingSegmentIds,shot.startMs,shot.endMs);
+    let local=actorSpeech(activity,narration,actor.speakingSegmentIds,shot.startMs,shot.endMs);
     local.intervals=local.intervals.map(interval=>({...interval,startMs:interval.startMs-shot.startMs,endMs:interval.endMs-shot.startMs}));
-    const compiled=compilePerformance(actor.performance,definition,local,prefix);
+    let sourceClock:SpeechSourceClock|undefined;
+    if(hasBodyViewSpeech(definition)){const projected=actorShotSpeech(activity,narration,definition.id,actor.speakingSegmentIds,shot.startMs,shot.endMs,owners?.get(definition.id)??(owners?[]:undefined));
+      local=projected.activity;sourceClock=projected.sourceClock;
+    }
+    performerSpeech.set(definition.id,{activity:local,sourceClock});
+    const compiled=compilePerformance(actor.performance,definition,local,prefix,sourceClock);
     actorReports.push({actorId:definition.id,profileHash:definition.profileHash,rigHash:buildRig(definition).rigHash,report:compiled.report});
     calls.push(compiled.js);
     return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}</g>`;
@@ -166,12 +184,13 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   }),notes:[`${p.compilerVersion}; story-cinematic; illustration`, `Speech activity: ${activity.method}; no phoneme lip-sync.`]};
   const geometry:HostGeometry={controllerVersion:p.compilerVersion,profileHash:profile.profileHash,rigHash:rig.rigHash,shotId:shot.id,
     hostHeightRatio:rigMetrics(profile).height*p.scale/height,interactions:[]};
-  const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity}]),
-    ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,activity:{...activity,intervals:[]}}))];
+  const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity,sourceClock:primaryClock}]),
+    ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,
+      activity:performerSpeech.get(actor.character.id)!.activity,sourceClock:performerSpeech.get(actor.character.id)!.sourceClock}))];
   for(const performer of performers)for(const {action:a,gestures} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs))if(a.target)for(const [index,g] of gestures.entries()){
     const target=index===1?a.secondTarget!:a.target;
     const reach=g.contactMs??Math.min(g.endMs-1,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
-    const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity),anchor=g.target!,handSide=rigHand(g),hand=f.hands[handSide];
+    const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity,performer.sourceClock),anchor=g.target!,handSide=rigHand(g),hand=f.hands[handSide];
     geometry.interactions.push({actorId:performer.id,handSide,type:a.type,startMs:g.startMs+shot.startMs,reachMs:Math.round(reach)+shot.startMs,endMs:g.endMs+shot.startMs,partId:target.partId,
       target:anchor,hand,errorPx:Math.hypot(hand.x-anchor.x,hand.y-anchor.y),root:f.root,gaze:anchor,
       ...(a.contactMs===undefined?{}:{contactMs:a.contactMs})});
@@ -185,8 +204,8 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
 
 // Legacy seven-argument callers retain the rig report type and byte contract.
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):ReturnType<typeof renderRigCinematic>;
-export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background:string|undefined,narration:Narration|undefined,motions:ReadonlyMap<string,ActorMotion>|undefined,speech?:ReadonlyMap<string,import('../../packages/motion/speech-schemas.js').ActorSpeech>):ReturnType<typeof renderRigCinematic>|ReturnType<typeof renderSpriteScene>;
-export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,motions?:ReadonlyMap<string,ActorMotion>,speech?:ReadonlyMap<string,import('../../packages/motion/speech-schemas.js').ActorSpeech>){
+export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background:string|undefined,narration:Narration|undefined,motions:ReadonlyMap<string,ActorMotion>|undefined,speech?:ReadonlyMap<string,import('../../packages/motion/speech-schemas.js').ActorSpeech>,board?:Storyboard):ReturnType<typeof renderRigCinematic>|ReturnType<typeof renderSpriteScene>;
+export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,motions?:ReadonlyMap<string,ActorMotion>,speech?:ReadonlyMap<string,import('../../packages/motion/speech-schemas.js').ActorSpeech>,board?:Storyboard){
   const cast=shot.cinematic?.actorScene,renderer=config.presentation.actor_renderer;
   if(renderer==='rig'&&shot.cinematic?.spriteStage)throw new Error(`${shot.id}: rig selection cannot render an image-motion stage`);
   if(renderer==='sprite'&&(cast?.primary||cast?.supporting.length)&&!shot.cinematic?.spriteStage)throw new Error(`${shot.id}: needs-motion-library: image motion cannot fall back to skeletal actors`);
@@ -194,5 +213,5 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     if(!motions)throw new Error(`${shot.id}: needs-sprite-motion-context: canonical rendering requires verified sprite descriptors`);
     return renderSpriteScene(shot,profile,config,motions,background,narration,activity,speech);
   }
-  return renderRigCinematic(shot,profile,rig,activity,config,background,narration);
+  return renderRigCinematic(shot,profile,rig,activity,config,background,narration,board);
 }

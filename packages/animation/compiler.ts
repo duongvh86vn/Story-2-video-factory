@@ -18,6 +18,7 @@ import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-a
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
 import {usesBodyView,registeredBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,validateBodyViewMouthActivity,bodyViewMouthDescription,BODY_VIEW_MOUTH_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS} from './body-view-mouth.js';
+import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
 import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
@@ -605,9 +606,10 @@ function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gest
 }
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
-export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity):FrameState {
+export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity,sourceClock?:SpeechSourceClock):FrameState {
   if(plan.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
+  if(hasBodyViewSpeech(profile)&&sourceClock&&(sourceClock.ownerId!==profile.id||sourceClock.endMs-sourceClock.startMs!==plan.durationMs))throw new Error('needs-speech-phase: source owner or shot span does not match performer');
   if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires explicit registered-mouth-v1 candidate');
   const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t);
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
@@ -799,7 +801,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       ...(bodyHead?{sourceBody:true}:{})});
     for(const id of Object.keys(face))delete face[id];
     if(hasBodyViewSpeech(profile)){
-      const mouth=sampleBodyViewMouth(profile,activity,t);Object.assign(face,mouth.face);Object.assign(paths,mouth.paths);
+      const mouth=sampleBodyViewMouth(profile,activity,t,sourceClock);Object.assign(face,mouth.face);Object.assign(paths,mouth.paths);
     }else Object.assign(face,usesBodyView(profile)?{'head-view-front':{opacity:1}}:sourceFace);
     if(usesReferenceBody(profile))for(const side of ['left','right'] as const){
       const cue=activeGestures[side];
@@ -842,8 +844,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       if(g.releaseMs!==undefined&&t>=g.releaseMs){
         if(g.action==='drop'){
           // Evaluate the actual hand without prop recursion; no assumed release anchor.
-          const bare={...plan,props:[]},release=samplePerformance(bare,profile,g.releaseMs,activity).hands[rigHand(g)];
-          const prior=samplePerformance(bare,profile,Math.max(0,g.releaseMs-1),activity).hands[rigHand(g)];
+          const bare={...plan,props:[]},release=samplePerformance(bare,profile,g.releaseMs,activity,sourceClock).hands[rigHand(g)];
+          const prior=samplePerformance(bare,profile,Math.max(0,g.releaseMs-1),activity,sourceClock).hands[rigHand(g)];
           const releasePoint={x:release.x-offset.x*s,y:release.y-offset.y*s},destination={x:g.destination!.x-offset.x*s,y:g.destination!.y-offset.y*s};
           point=sampleFallingObject({releaseMs:g.releaseMs,landingMs:g.landingMs!,release:releasePoint,destination,velocityY:(release.y-prior.y)*1000,velocityX:(release.x-prior.x)*1000},t);
           if(point.x<0||point.x>plan.stage.width||point.y<0||point.y>plan.stage.groundY)throw new Error(g.id+': falling prop leaves the physical stage');
@@ -924,9 +926,10 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile,plan:Per
 // between duplicate appearances of the same physical arm or hand.
 const isPainterSlot=(id:string)=>/^(?:hand|ink-arm)-(?:left|right)-(?:front|back)-slot$/.test(id);
 
-export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,namespace='') {
+export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,namespace='',sourceClock?:SpeechSourceClock) {
   validatePerformance(plan,profile);
   if(hasBodyViewSpeech(profile))validateBodyViewMouthActivity(activity);
+  if(hasBodyViewSpeech(profile)&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
   const times=new Set<number>([0,plan.durationMs]);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...plan.gestures,...(plan.spears??[]),...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
@@ -960,7 +963,9 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   // Audio RMS is a sampled signal: its boundaries are explicit, without blending across silence.
   for(const cue of activity.intervals)for(const at of [cue.startMs,cue.endMs]){times.add(at);times.add(at-.01);}
   if(hasBodyViewSpeech(profile))for(const cue of activity.intervals)for(const at of [cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])if(at>=cue.startMs&&at<=cue.endMs)times.add(at);
-  const samples=[...new Set([...times].filter(t=>t>=0&&t<=plan.durationMs).map(t=>Number(t.toFixed(4))))].sort((a,b)=>a-b).map(t=>samplePerformance(plan,profile,t,activity));
+  if(hasBodyViewSpeech(profile)&&sourceClock)for(const cue of sourceClock.activity.intervals)for(const at of [cue.startMs,cue.endMs,cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])times.add(at-sourceClock.startMs);
+  const frameAt=(t:number)=>samplePerformance(plan,profile,t,activity,sourceClock);
+  const samples=[...new Set([...times].filter(t=>t>=0&&t<=plan.durationMs).map(t=>Number(t.toFixed(4))))].sort((a,b)=>a-b).map(frameAt);
   const frames:FrameState[]=[samples[0]!];
   const precise=plan.compilerVersion===HUNT_ANIMATION_VERSION||plan.compilerVersion===ANIMATION_VERSION||plan.compilerVersion===AIRBORNE_ANIMATION_VERSION;
   // Bone connectivity alone does not bound a curved brow/eye expression between
@@ -968,7 +973,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   const faceError=(a:FrameState,b:FrameState):number=>{
     let error=0;
     for(const progress of [.17,.5,.83]){
-      const actual=samplePerformance(plan,profile,lerp(a.timeMs,b.timeMs,progress),activity);
+      const actual=frameAt(lerp(a.timeMs,b.timeMs,progress));
       if(usesReferenceBody(profile)&&!usesBodyView(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
@@ -991,7 +996,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     const b=unwrapFrame(raw,a),gap=interpolationGap(a,b,profile,plan),face=precise?faceError(a,b):0;
     let curveError=0;
     if(a.paths)for(const progress of [.17,.5,.83]){
-      const actual=samplePerformance(plan,profile,lerp(a.timeMs,b.timeMs,progress),activity);
+      const actual=frameAt(lerp(a.timeMs,b.timeMs,progress));
       for(const [id,d] of Object.entries(a.paths)){
         const from=pathCoordinates(d),to=pathCoordinates(b.paths![id]!),wanted=pathCoordinates(actual.paths![id]!);
         curveError=Math.max(curveError,...from.map((n,i)=>Math.abs(lerp(n,to[i]!,progress)-wanted[i]!)));
@@ -1000,7 +1005,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     if(gap<=.2&&face<=1&&curveError<=.2)return [b];
     const middle=Number(((a.timeMs+b.timeMs)/2).toFixed(4));
     if(depth>=12||middle<=a.timeMs||middle>=b.timeMs)throw new Error(`${plan.id}: needs-animation: interpolation cannot maintain bones/expression near ${middle}ms (${gap.toFixed(2)}px, face error ${face.toFixed(2)})`);
-    const left=refine(a,samplePerformance(plan,profile,middle,activity),depth+1);
+    const left=refine(a,frameAt(middle),depth+1);
     return [...left,...refine(left.at(-1)!,raw,depth+1)];
   };
   for(const sample of samples.slice(1))frames.push(...refine(frames.at(-1)!,sample));
@@ -1031,6 +1036,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       availableViews:usesBodyView(profile)?[registeredBodyView(profile).view]:usesCutoutHead(profile)?['source-orientation']:referenceHeadDescription().views,turnRendering:usesBodyView(profile)?'fixed-authored-body-view-candidate':usesCutoutHead(profile)?'registered-cutout-source-orientation':'stepped-authored-views-with-front',fullBodyReplacement:usesReferenceBody(profile),productionAcceptance:false}}:{}),
     ...(usesReferenceBody(profile)?{bodyArtwork:referenceBodyDescription()}:{}),
     ...(hasBodyViewSpeech(profile)?{bodySpeech:{...bodyViewMouthDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
-      activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,audioVerified:false,clock:'supplied activity windows in shot-local time; actor ownership validated upstream'}}:{}),
+      activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,audioVerified:false,
+      clock:sourceClock?'owned original activity clock, projected to shot-local time':'supplied activity windows in shot-local time; actor ownership validated upstream',
+      sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null}}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

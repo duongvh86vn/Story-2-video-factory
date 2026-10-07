@@ -1,5 +1,7 @@
 # Fixed-view mouth — bounded source review record
 
+Historical0.30 record. The required source-phase follow-up is now implemented at0.31, with separate [review/fixes](source-speech-phase-source-review-v1.md) and [NOT RUN handoff](../SOURCE-SPEECH-PHASE-HANDOFF.md). Earlier PASS/findings and runtime status below remain preserved; implementation does not imply phase/audio/acting acceptance.
+
 Base `cb13bcb0c33738f0a66f1f2b48443395278e6d82`, 08/10/2026. Scope: new mouth module, appearance schema, native head attachment, compiler envelope/paths/report/gates, body/head versions/fingerprints, workbench/server mouth selection and canonical per-actor activity routing. No production rig approval or full-product completion.
 
 Foundation source published as `6b3cf00179878c45e137af7ba300b6ba4c78708b`; remote SHA matched. Controller source reading records one pending behavior limitation outside the initial per-shot scope: activity is clipped to the shot before envelope evaluation, so a continuing sentence restarts attack/release at scene boundaries. This must be handled with preserved source/owned phase and delegated coverage; source PASS below is not continuous-speech acceptance.

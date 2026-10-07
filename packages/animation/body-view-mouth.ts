@@ -1,9 +1,10 @@
 import type {HostProfile} from '../host/schemas.js';
-import {ActivitySchema,type SpeechActivity} from '../voice/schemas.js';
+import type {SpeechActivity} from '../voice/schemas.js';
 import {hash} from '../core/utils.js';
+import {SPEECH_SOURCE_CLOCK_VERSION,SPEECH_ENVELOPE_ATTACK_MS,SPEECH_ENVELOPE_RELEASE_MS,validateSpeechActivityTrack,validateSpeechSourceClock,type SpeechSourceClock} from './speech-clock.js';
 
 export const BODY_VIEW_SPEECH_VERSION='registered-mouth-v1' as const;
-export const BODY_VIEW_MOUTH_VERSION='forest-fixed-view-mouth-1';
+export const BODY_VIEW_MOUTH_VERSION='forest-fixed-view-mouth-2';
 type Point={x:number;y:number};
 type Mouth={sourceHash:string;sourceSize:readonly [number,number];kind:'skin-strip'|'native-rim';bounds:{x:number;y:number;width:number;height:number};
   clip:string;top:readonly [Point,Point,Point,Point];depth:number;lift:number;stroke:number;
@@ -68,14 +69,14 @@ export function bodyViewMouthSvg(profile:Pick<HostProfile,'appearance'>,source:{
     :`<path d="${c.clip}" fill="${c.interior}"/>`;
   return `<defs><clipPath id="view-mouth-region"><path d="${c.clip}"/></clipPath><clipPath id="view-mouth-aperture"><use href="#view-mouth-interior"/></clipPath></defs><g id="view-mouth-layer" opacity="0" clip-path="url(#view-mouth-region)" data-mouth-artwork="${BODY_VIEW_MOUTH_VERSION}">${repair}<path id="view-mouth-interior" d="${p['view-mouth-interior']}" fill="#211008" stroke="#160B05" stroke-width="${c.stroke}" stroke-linejoin="round"/><g clip-path="url(#view-mouth-aperture)"><path id="view-mouth-teeth" d="${p['view-mouth-teeth']}" fill="#FFF8E9"/><path id="view-mouth-tongue" d="${p['view-mouth-tongue']}" fill="#B3471F"/></g></g>`;
 }
-export const BODY_VIEW_MOUTH_ATTACK_MS=45,BODY_VIEW_MOUTH_RELEASE_MS=70;
+export const BODY_VIEW_MOUTH_ATTACK_MS=SPEECH_ENVELOPE_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS=SPEECH_ENVELOPE_RELEASE_MS;
 export function validateBodyViewMouthActivity(activity:SpeechActivity):void{
-  ActivitySchema.parse(activity);let end=0;
-  for(const cue of activity.intervals){if(cue.startMs<end||cue.endMs<=cue.startMs)throw new Error('needs-view-speech-clock: activity intervals overlap or are out of order');end=cue.endMs;}
+  validateSpeechActivityTrack(activity);
 }
 /** Uses only adjacent positive source windows; no extension over silence.
  * Caller data is never mutated, and no previous playback frame is consulted. */
-export function bodyViewMouthLevel(activity:SpeechActivity,timeMs:number):number{
+export function bodyViewMouthLevel(activity:SpeechActivity,timeMs:number,sourceClock?:SpeechSourceClock):number{
+  if(sourceClock){validateSpeechSourceClock(activity,sourceClock);return bodyViewMouthLevel(sourceClock.activity,timeMs+sourceClock.startMs);}
   if(!Number.isFinite(timeMs))throw new Error('Invalid mouth clock');
   if(!Number.isFinite(activity.windowMs)||activity.windowMs<=0||!['audio-rms','segment-draft'].includes(activity.method))throw new Error('needs-view-speech-clock: invalid activity method/window');
   // Direct random-access callers receive the same fail-closed clock checks as
@@ -99,12 +100,12 @@ export function bodyViewMouthLevel(activity:SpeechActivity,timeMs:number):number
   if(timeMs>=center&&positive(next)&&next!.startMs===cue.endMs){const b=(next!.startMs+next!.endMs)/2;level=cue.level+(next!.level-cue.level)*clamp((timeMs-center)/(b-center));}
   return (.25+.75*Math.sqrt(clamp(level)))*ease((timeMs-start)/BODY_VIEW_MOUTH_ATTACK_MS)*ease((end-timeMs)/BODY_VIEW_MOUTH_RELEASE_MS);
 }
-export function sampleBodyViewMouth(profile:Pick<HostProfile,'appearance'>,activity:SpeechActivity,timeMs:number){
-  const c=registeredBodyViewMouth(profile),amount=bodyViewMouthLevel(activity,timeMs);
+export function sampleBodyViewMouth(profile:Pick<HostProfile,'appearance'>,activity:SpeechActivity,timeMs:number,sourceClock?:SpeechSourceClock){
+  const c=registeredBodyViewMouth(profile),amount=bodyViewMouthLevel(activity,timeMs,sourceClock);
   return {paths:bodyViewMouthPaths(c,amount),face:{'head-view-front':{opacity:1},'view-mouth-layer':{opacity:ease(amount/.08)}}};
 }
 export const bodyViewMouthDescription={version:BODY_VIEW_MOUTH_VERSION,selection:BODY_VIEW_SPEECH_VERSION,
-  registrations:bodyViewMouthRegistration,fingerprint:hash({version:BODY_VIEW_MOUTH_VERSION,bodyViewMouthRegistration,attackMs:BODY_VIEW_MOUTH_ATTACK_MS,releaseMs:BODY_VIEW_MOUTH_RELEASE_MS}),
+  registrations:bodyViewMouthRegistration,fingerprint:hash({version:BODY_VIEW_MOUTH_VERSION,bodyViewMouthRegistration,sourceClock:SPEECH_SOURCE_CLOCK_VERSION,attackMs:BODY_VIEW_MOUTH_ATTACK_MS,releaseMs:BODY_VIEW_MOUTH_RELEASE_MS}),
   method:'bounded native-coordinate mouth-only SVG; Lila aperture, Karo native grin with inner teeth/tongue; original happy image during silence; source-window envelope',
   synchronization:'audio-activity-or-labelled-segment-draft',phonemeLipSync:false,productionReady:false,approved:false,
   limitations:['native mouth/skin-strip/outer-rim artistic review','happy fixed view only','no phonemes/prosody inference','actor-owned cue and real audio verification remain upstream','no motion/video acceptance']};
