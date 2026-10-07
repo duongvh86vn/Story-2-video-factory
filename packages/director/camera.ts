@@ -3,6 +3,7 @@ import type { HostProfile } from '../host/schemas.js';
 import type { PerformancePlan, Point } from '../animation/schemas.js';
 import { rigMetrics } from '../animation/rig.js';
 import { samplePerformance } from '../animation/compiler.js';
+import {usesCutoutHead,cutoutHeadCalibration} from '../animation/forest-cutout-head.js';
 import { CameraSchema, type CinematicCamera } from './schemas.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
 import { cinematicActionGroups } from './actions.js';
@@ -40,7 +41,13 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
     const match=/^translate\(([-\d.]+) ([-\d.]+)\) rotate\(([-\d.]+)\) scale\(([-\d.]+)\)$/.exec(frame.transforms.head!);
     if(!match)throw new Error('Camera cannot measure the production head transform.');
     const x=Number(match[1]),y=Number(match[2]),angle=Number(match[3])*Math.PI/180,scale=Number(match[4]),local=emptyBounds();
-    if(profile.kind==='stick-man'){include(local,{x,y},(40+stroke)*scale);}
+    if(usesCutoutHead(profile)){
+      const c=cutoutHeadCalibration[profile.appearance.characterVariant!];
+      for(const px of [c.bounds.left,c.bounds.right])for(const py of [c.bounds.top,c.bounds.bottom]){
+        const dx=(px-c.neck.x)*c.scale,dy=(py-c.neck.y)*c.scale;
+        include(local,{x:x+(dx*Math.cos(angle)-dy*Math.sin(angle))*scale,y:y+(dx*Math.sin(angle)+dy*Math.cos(angle))*scale});
+      }
+    }else if(profile.kind==='stick-man'){include(local,{x,y},(40+stroke)*scale);}
     else {
       const point=(px:number,py:number)=>({x:x+(px*Math.cos(angle)-py*Math.sin(angle))*scale,y:y+(px*Math.sin(angle)+py*Math.cos(angle))*scale});
       for(const px of [-50,50])for(const py of [-42,42])include(local,point(px,py),stroke*scale);

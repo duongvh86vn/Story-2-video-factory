@@ -1,0 +1,38 @@
+{
+  "actor": "karo",
+  "action": "jump",
+  "model": "cx/gpt-image-2",
+  "endpoint": "http://127.0.0.1:20128/v1/images/generations",
+  "adapter": "cx-one-inline-reference-board",
+  "prompt": "Generate ONE full-body drawing of male Karo with the exact warm peach face, simple black oval eyes, original broad smile and brown beard, messy dark brown hair, ragged brown one-shoulder fur tunic and shorts with belt, in the requested pose, using the LEFT reference as the exact character identity. The RIGHT image supplies pose mechanics only. This is a STICK FIGURE, not a flesh-limbed cartoon caveman. ARMS AND LEGS ARE SINGLE SLIM SOLID BLACK INK STROKES. Hands are simple black mitten silhouettes, feet simple black oval silhouettes. No skin-colored limbs, fingers, toes, muscles, boots or realistic anatomy details. Keep the original face, eye spacing, original nose and smile, hair outline, beard if present, ragged fur garment and belt from the LEFT image. Do not simplify or redesign the head, hair or clothes. Preserve rich warm skin and brown colors. Smooth softly curved ink strokes, natural elbows, exactly two arms and two legs, no backwards joints, no abrupt zigzag bends. Jump in the air with knees comfortably bent and coordinated lifted arms, slim BLACK ink limbs with black mitten hands and black oval feet. Plain cream background. One character only, ample empty margins, whole spear/hair/hands/feet inside canvas, no text, no grid, no other poses. Face remains original happy for this mechanical pose study. This is a design reference pending review, not finished video.",
+  "references": [
+    {
+      "role": "primary-character-identity",
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    }
+  ],
+  "status": "candidate-needs-registration-and-motion-review",
+  "approved": false,
+  "productionReady": false,
+  "requestedAt": "2026-10-07T05:14:04.972Z",
+  "file": "karo-jump-v3.png",
+  "sha256": "2c57213eeb937a6f85dfe4d1ae373cc6413796443706506bb4d287283d45a51b",
+  "width": 1049,
+  "height": 1500,
+  "generatedAt": "2026-10-07T05:14:43.620Z",
+  "developerInspection": {
+    "viewed": true,
+    "scope": "static-art-only",
+    "productionAcceptance": false,
+    "notes": "Closer source identity and black limbs; proportions, face direction, costume, expression and hand/tool grip still require registration and review."
+  },
+  "reviewNotes": [
+    "Review Gemini: một vai gắn cao gần mép râu; cần đăng ký vai đúng thân gốc."
+  ],
+  "staticModelAdvice": {
+    "file": "docs/topics/reviews/gemini-pose-advice-v3.json",
+    "scope": "static-art-advice-only",
+    "productionAcceptance": false
+  }
+}

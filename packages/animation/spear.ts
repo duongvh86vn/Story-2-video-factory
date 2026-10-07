@@ -31,7 +31,7 @@ export function spearSvg(prop:SpearProp):string {
   const half=(prop.length??120)/2;
   return `<g id="prop-${prop.id}" stroke="#29170F" stroke-linecap="round" stroke-linejoin="round"><path d="M${-half} 0H${half-15}" stroke-width="5"/><path d="M${-half+2} -1H${half-15}" stroke="#A76632" stroke-width="2.5"/><path d="M${half-18} -6L${half} 0L${half-18} 6L${half-14} 0Z" fill="#8A8880" stroke-width="1.8"/><path d="M${half-22} -3l2 6m2 -6l2 6m2 -6l2 6" stroke="#D7B777" stroke-width="1.7"/></g>`;
 }
-export const spearDescription={version:'forest-spear-grips-2',grip:'primary shoulder-local rig units; second hand owns a point on the same shaft; rear-quarter grip permits a full-length hunting spear',
+export const spearDescription={version:'forest-spear-grips-3',grip:'primary shoulder-local rig units; second hand owns a distinct point on the same shaft; 45 actor-scaled unit span in frontal calibration, rear-quarter primary grip on full-length spear; authored diagonal lunge and raised rear elbow remain pending',
   ownership:'one entry-owned tool track covers the shot; no unsupported pickup, throw or cross-cut handoff',
   clocks:'windup → ready → extension → contact hold → recovery; quintic translation',
   target:'world-space aim; thrust tip reaches it only at contact, unreachable arms or out-of-stage shaft rejected',productionReady:false};

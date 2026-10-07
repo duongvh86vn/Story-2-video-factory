@@ -1,0 +1,114 @@
+{
+  "topicVersion": "forest-tribe-0.16-pose-art-source-face-candidate",
+  "modelImageCalls": 14,
+  "modelStaticAdviceCalls": 2,
+  "evidence": [
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/lila-poses-v1.jpg",
+      "sha256": "b1b3f9509b16009cb8e79775846729907187a5923717feed79134cae70ef792f",
+      "model": "ag/gemini-3.1-flash-image",
+      "actor": "lila",
+      "status": "rejected-limb-style-and-identity"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/lila-spear-lunge-left-v2.jpg",
+      "sha256": "09f2410e5c88920252d5787e2d414fe145b58e923d8d20b6212eba195327b95e",
+      "model": "ag/gemini-3.1-flash-image",
+      "actor": "lila",
+      "status": "anatomy-study-only-identity-rejected"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/lila-point-v3.png",
+      "sha256": "21f6b2ea312e9a6e52053ccbd61d815e07fa809920366997a3baca5ae04e1cce",
+      "model": "cx/gpt-image-2",
+      "actor": "lila",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/lila-think-v3.png",
+      "sha256": "c987d95646870e83dadb029dc3927dcb840ef21b4835d69df02afdb4c49ed0e6",
+      "model": "cx/gpt-image-2",
+      "actor": "lila",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/lila-run-left-v3.png",
+      "sha256": "1bdacad856a00c70787f9b7cb1b44189fa8a0ee815c3bb151629fdb16e2529f4",
+      "model": "cx/gpt-image-2",
+      "actor": "lila",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/lila-jump-v3.png",
+      "sha256": "ec1299ee1f95f9c79b454d838456eb221c8b5fb0b6fa4c099556809bb5216181",
+      "model": "cx/gpt-image-2",
+      "actor": "lila",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/lila-spear-lunge-left-v3.png",
+      "sha256": "227a0f546f47281d936a0656351cbb585881116dd3971f2f8282faf95d192af7",
+      "model": "cx/gpt-image-2",
+      "actor": "lila",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/karo-poses-v1.jpg",
+      "sha256": "5abb61c73922d63ff583141659e39f34988b79e55eacb56db129a77ef52297d3",
+      "model": "ag/gemini-3.1-flash-image",
+      "actor": "karo",
+      "status": "rejected-limb-style-and-identity"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/karo-spear-lunge-left-v2.jpg",
+      "sha256": "2f6deea2bc7366f420e82ef87ad304d3ab9b5f34a07da5e13a2c7a46d6c88acc",
+      "model": "ag/gemini-3.1-flash-image",
+      "actor": "karo",
+      "status": "anatomy-study-only-identity-rejected"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/karo-point-v3.png",
+      "sha256": "e18198b377d1f1b095ed00605b0f88538003ca7c6bcedcf6c08cea8c836f4b70",
+      "model": "cx/gpt-image-2",
+      "actor": "karo",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/karo-think-v3.png",
+      "sha256": "2e4494c3a277fdcf2831b4af9c4893f8db14654f14a897072090e8018c2ef072",
+      "model": "cx/gpt-image-2",
+      "actor": "karo",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/karo-run-left-v3.png",
+      "sha256": "026e353b9364351f31315eec8ef338c73dfb7f0b0085187927d4fa5380dd4037",
+      "model": "cx/gpt-image-2",
+      "actor": "karo",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/karo-jump-v3.png",
+      "sha256": "2c57213eeb937a6f85dfe4d1ae373cc6413796443706506bb4d287283d45a51b",
+      "model": "cx/gpt-image-2",
+      "actor": "karo",
+      "status": "candidate-needs-registration-and-motion-review"
+    },
+    {
+      "file": "library/topics/prehistoric-life/pose-studies/karo-spear-lunge-left-v3.png",
+      "sha256": "e17a90deb6092f641aa37db1b80720c5dd1567b41b9b7a9b26e7a871f0f898c0",
+      "model": "cx/gpt-image-2",
+      "actor": "karo",
+      "status": "candidate-needs-registration-and-motion-review"
+    }
+  ],
+  "primaryIdentity": "docs/topics/assets/reference-lila-full.png / reference-karo-full.png",
+  "promptFiles": "Per-image JSON alongside each output; references labelled and hash-bound.",
+  "scope": "artwork-only",
+  "runtimeTestsRun": false,
+  "videoRendered": false,
+  "ttsAsrCalled": false,
+  "approved": false,
+  "productionReady": false,
+  "generatedPosesIntegratedAsProductionRig": false
+}

@@ -1,8 +1,14 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Phiên bản:** 0.12 · **Ngày:** 07/10/2026
+**Phiên bản:** 0.17 · **Ngày:** 07/10/2026
 
-**Trạng thái:** Đang triển khai; bộ SVG vẽ lại đã bị người dùng loại. Đầu và thân từ tài sản bám ảnh tham chiếu đã vào renderer ở mức ứng viên; fidelity, màu cảnh và chuyển động còn chưa nghiệm thu.
+**Cập nhật hiện hành 0.17:** sửa preset hai grip giáo, kiểm hình tay theo role, target cằm từng tay/foreground slot, góc chạy chỉ theo clip đang hoạt động, point reach từng chain và free-seat foot reach. Đã có bảng 138 ô inspection tĩnh, sáu ô head-turn chặn do thiếu artwork. Đã gọi thêm bốn lượt tư vấn source/ảnh qua 9router ngoài hai lượt artwork review trước đó. Đây chưa phải anatomy/video PASS; lunge tay sau nâng và các góc nhìn đúng nguồn còn phải dựng. Bàn giao code, môi trường và danh sách việc còn thiếu: [ARM-POSE-REPAIR.md](ARM-POSE-REPAIR.md). Các mục 0.16 và những mốc cũ bên dưới là lịch sử.
+
+**Trạng thái:** Đang triển khai; người dùng tiếp tục loại tay/mặt của các pose 0.15. Đã tạo 14 ảnh pose và gọi hai lượt review ảnh qua 9router, trong đó có 10 pose rời v3 gần chuẩn hơn. Toàn bộ vẫn chưa duyệt; chưa nghiệm thu rig, màu cảnh hoặc chuyển động video.
+
+**Mốc code hiện tại:** body giữ nguyên mặt happy từ cutout đã đăng ký với cổ/thân, bỏ mesh yaw và ghép glyph mắt/miệng bị lệch. Cutout là bản tách AI, chưa bảo đảm khớp từng pixel nguồn. Chưa có góc nhìn bạn diễn; `head-turn` chờ artwork, không dùng mesh cũ làm fallback. Tay chạy dùng pendulum bắp tay và gập cẳng tay liên tục theo hai hướng, không ép cổ tay sau vào target làm khuỷu bật lên. Các pose AI chỉ là mẫu để dựng rig, chưa tự tích hợp thành bitmap diễn hoạt. Chi tiết, bằng chứng và lệnh chạy: [AI-POSE-WORKFLOW.md](AI-POSE-WORKFLOW.md).
+
+`productionReady=false`, `productionRig=null`. Các mô tả projection ±32°, glyph và tóc trễ ở những mốc cũ bên dưới là lịch sử; không mô tả body hiện hành. Ba luồng **kịch bản nguyên văn / WAV giữ lời và clock gốc / câu chuyện → kịch bản trung thành → video** vẫn phải nghiệm thu đầy đủ.
 
 **Mục tiêu sử dụng:** Xây một bộ chủ đề đủ tốt để người dùng chỉ cần đưa câu chuyện vào; hệ thống chuyển thành video có hai diễn viên người que Lila và Karo đóng vai trong câu chuyện đó.
 

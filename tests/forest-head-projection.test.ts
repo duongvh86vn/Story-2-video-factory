@@ -4,7 +4,10 @@ import {headProjectionTriangles,projectHeadPoint,projectedHeadState,projectedFea
 import {referenceHeadAssets,referenceHeadDescription} from '../packages/animation/forest-head-art.js';
 import {referenceBodyAssets} from '../packages/animation/forest-body-art.js';
 import {topicPreviewProfile} from '../packages/topics/preview.js';
-import {samplePerformance} from '../packages/animation/compiler.js';
+import {samplePerformance,validatePerformance} from '../packages/animation/compiler.js';
+import {cutoutHeadCalibration} from '../packages/animation/forest-cutout-head.js';
+import {performanceSvg} from '../packages/animation/rig.js';
+import {cameraHostBounds} from '../packages/director/camera.js';
 import {ANIMATION_VERSION,type PerformancePlan} from '../packages/animation/schemas.js';
 import {performanceScene} from '../packages/animation/scene.js';
 import {secureSceneFiles,validateSceneFiles,validateSceneScript} from '../packages/scenes/security.js';
@@ -13,7 +16,7 @@ function fixture(actor:'lila'|'karo'){
   const profile=topicPreviewProfile(actor);
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'projected-'+actor,leadCharacterId:actor,profileHash:profile.profileHash,
     kind:'stick-man',durationMs:2000,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
-    headView:'three-quarter-left',headTurns:[{startMs:300,endMs:1500,direction:'three-quarter-right'}],walks:[],gestures:[],props:[],gazes:[],expressions:[]};
+    headView:'front',walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:2000,mood:'happy'}]};
   return {profile,plan};
 }
 test('projection has positive UV orientation, a pinned neck and a strict angle limit',()=>{
@@ -38,19 +41,24 @@ test('scene contract permits literal finite mesh matrices/polygons without widen
   for(const d of ['M0 0L10 0Z','M0 0L10 0L0 InfinityZ','M0 0L100001 0L0 10Z'])assert.ok(validateSceneScript(script({d}),'mesh').length);
   assert.ok(validateSceneScript(script({href:'https://example.org/payload.svg'}),'mesh').length);
 });
-test('body head moves through one painted surface, including former view-switch thresholds',()=>{
+test('body happy face retains one registered cutout instead of relocated enlarged glyphs or mesh yaw',()=>{
   for(const actor of ['lila','karo'] as const){
     const {profile,plan}=fixture(actor),times=[0,300,500,700,899.9,900,900.1,1100,1300,1500,2000];
     for(const time of times){
       const face=samplePerformance(plan,profile,time,silence).face;
       assert.equal(face['head-view-front']!.opacity,1);
-      assert.equal(face['head-view-three-quarter-left']!.opacity,0);assert.equal(face['head-view-three-quarter-right']!.opacity,0);
       assert.equal(face['mouth-talk-front']!.opacity,0);
-      assert.ok(face['head-anchor-eye-left']!.attr?.transform);
+      assert.equal(face['source-mouth-cover']!.opacity,0);
+      assert.ok(!Object.keys(face).some(id=>id.startsWith('head-projection-')||id.startsWith('head-anchor-eye-')));
     }
     const mid=samplePerformance(plan,profile,700,silence);samplePerformance(plan,profile,1300,silence);
     assert.deepEqual(samplePerformance(plan,profile,700,silence),mid);
-    assert.notDeepEqual(samplePerformance(plan,profile,699,silence).face['head-projection-paint-30'],mid.face['head-projection-paint-30']);
+    assert.match(performanceSvg(profile),/data-head-artwork="forest-cutout-head-1"/);
+    assert.equal(referenceHeadAssets(profile.appearance)[0]!.sha256,cutoutHeadCalibration[actor].sha256);
+    assert.throws(()=>validatePerformance({...plan,headView:'three-quarter-left'},profile),/needs-head-view/);
+    assert.throws(()=>validatePerformance({...plan,headTurns:[{startMs:300,endMs:900,direction:'three-quarter-right'}]},profile),/needs-head-view/);
+    const bounds=cameraHostBounds(plan,profile),head=samplePerformance(plan,profile,0,silence).transforms.head!.match(/translate\(([-\d.]+) ([-\d.]+)\)/)!;
+    assert.ok(bounds.head.top<Number(head[2])-80,'source hair above the neck must be included, not a generic radius-40 circle');
   }
 });
 test('texture vertex error catches an unsafe tween even when coefficient errors are small',()=>{
@@ -82,7 +90,7 @@ test('projected actor scene remains hash-staged, namespaced, declarative and wit
   for(const actor of ['lila','karo'] as const){
     const {profile,plan}=fixture(actor),scene=performanceScene(plan,profile,silence),allowed=[...referenceHeadAssets(profile.appearance),...referenceBodyAssets(profile.appearance)].map(a=>a.path);
     const html=scene.files.files.find(f=>f.path==='index.html')!.content;
-    assert.equal(scene.compiled.report.headArtwork?.turnRendering,'continuous-front-projection-32deg');
+    assert.equal(scene.compiled.report.headArtwork?.turnRendering,'registered-cutout-source-orientation');
     assert.ok(!html.includes('data:image'));
     assert.deepEqual(validateSceneFiles(secureSceneFiles(scene.files),{id:plan.id,startMs:0,endMs:2000} as Parameters<typeof validateSceneFiles>[1],2000000,allowed,plan.stage),[]);
   }

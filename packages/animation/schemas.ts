@@ -44,7 +44,7 @@ export const GestureSchema = z.object({ ...Interval, id: Id,
 }).strict();
 export const SpearTrackSchema=z.object({...Interval,id:Id,propId:Id,hand:RigHandSchema,
   action:z.enum(['hold','thrust']),grip:PointSchema,aim:PointSchema,
-  twoHands:z.boolean().default(true),secondaryOffset:z.number().finite().min(-40).max(-10).default(-20),
+  twoHands:z.boolean().default(true),secondaryOffset:z.number().finite().min(-100).max(-10).default(-20),
   readyMs:Time.optional(),contactMs:Time.optional(),recoverMs:Time.optional()}).strict();
 export const PerformancePlanSchema = z.object({
   version: z.literal(22), compilerVersion: z.enum([HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,BODY_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,

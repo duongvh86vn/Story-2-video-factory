@@ -6,12 +6,13 @@ import {seatedGarmentAssets,seatedGarmentDescription,seatedGarmentSvg} from './f
 import {sourceWalkDescription} from './source-walk.js';
 import {runningDescription} from './running.js';
 import {spearDescription} from './spear.js';
+import {sourceArmDescription} from './source-arm.js';
 type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-10';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-7';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-13';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-9';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -21,7 +22,7 @@ const garments={
  * Masks never rewrite the bitmap; supplemental seated art reconstructs folds. */
 const bodies={
   lila:{file:'library/topics/prehistoric-life/lila-cutout-v1.png',sha256:'ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e',width:430,height:766,unitScale:318/766,
-    pelvis:{x:235,y:435},groundY:754,neck:{x:263,y:274},headArtworkScale:.88,
+    pelvis:{x:235,y:435},groundY:754,neck:{x:263,y:274},headArtworkScale:1,
     shoulders:{left:{x:236,y:276},right:{x:294,y:294}},
     hips:{left:{x:205,y:440},right:{x:260,y:440}},
     // The source has no drawn knee. Preserve each total measured chain, but
@@ -37,7 +38,7 @@ const bodies={
       'foot-left':{anchor:{x:135,y:751},clip:rect(74,714,91,45)},'foot-right':{anchor:{x:283,y:752},clip:rect(258,712,96,47)}},
   },
   karo:{file:'library/topics/prehistoric-life/karo-cutout-v1.png',sha256:'f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665',width:377,height:716,unitScale:318/716,
-    pelvis:{x:214,y:428},groundY:706,neck:{x:212,y:279},headArtworkScale:.8,
+    pelvis:{x:214,y:428},groundY:706,neck:{x:212,y:279},headArtworkScale:1,
     shoulders:{left:{x:169,y:252},right:{x:269,y:286}},
     hips:{left:{x:190,y:437},right:{x:245,y:437}},
     legs:{left:{upper:132,lower:122},right:{upper:132,lower:121}},ankleY:{left:679,right:680},seatContact:{x:12,y:26},
@@ -72,7 +73,7 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
     upperLeg:Math.max(legs.left.upper,legs.right.upper),lowerLeg:Math.max(legs.left.lower,legs.right.lower),hipOffset:20*b,stance:31*b,
     shoulderY:(source.shoulders.right.y-source.groundY)*k,shoulderOffset:relative(source.shoulders.right).x,
     upperArm:Math.max(arms.left.upper,arms.right.upper),lowerArm:Math.max(arms.left.lower,arms.right.lower),
-    headY:(source.neck.y-source.groundY)*k-2*b-(actor==='lila'?32:72)*profile.appearance.headScale*source.headArtworkScale,
+    headY:(source.neck.y-source.groundY)*k-2*b,
     headRadius:40*profile.appearance.headScale,headArtworkScale:source.headArtworkScale,
     torsoTop:relative(source.neck).y,neckX:relative(source.neck).x,
     shoulders:{left:relative(source.shoulders.left),right:relative(source.shoulders.right)},arms,
@@ -118,19 +119,19 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),
-  actionMotion:{run:runningDescription,spear:spearDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),
+  actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through the projected hidden IK joint; source knee depth preserves physical XYZ lengths',softness:.28,anatomicalGuarantee:false},
-  secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered',hair:'Lila ponytail source masks with 120ms follow; no simulated hair physics',
+  secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered provisional source overlays',hair:'registered cutout follows the head rigidly; independent ponytail/fringe follow pending',
     clothing:'all source body plans use one opaque shared cloth surface with a pinned waist and blended 100ms thigh follow below it, limited to 22 degrees; seat plans also use semantic UV correspondences through seated/rising, fading thigh follow into the seated pose; source/authored fold materials share that surface; legacy independently rotating panels are hidden to avoid opening a waist gap during ordinary walking; inverted triangles block evaluation; no fabric simulation or motion acceptance'},
   inferredAnatomy:{knees:'not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved',
-    elbows:'not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; aimed spear uses 0.85 projection-plane weight to retain a readable down/back elbow',
+    elbows:'not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; frontal spear/run use full planar lengths with role-specific flexion guards; authored depth arms remain pending',
     seat:'closed hip contact below/behind belt, not the pelvis anchor itself'},
   headAttachment:{neck:'original warm-skin neck crop, independently attached behind chin/beard and upper clothing; hidden physical neck bone'},
   footContact:{frameFeet:'sole anchors',inkEndpoint:'ankle',pelvisWalkDrop:'minimum fixed-leg reach plus small bob; not .23 of long thigh'},
   walkMotion:sourceWalkDescription,
   seatedMotion:{method:'asymmetric source chains, sole/ankle offsets, low C2 foot preparation, one knee branch; projection plane follows actual pelvis transfer onto support',minimumTransitionMs:1500,productionAcceptance:false},
-  headMotion:referenceHeadDescription().projection,
-  pending:['rear/side body artwork','projected head fidelity and continuous motion acceptance; body turns','remaining fringe/beard secondary motion','occluded clothing reconstruction','garment fold and seated motion acceptance','runtime anatomy and motion acceptance']};}
+  headMotion:referenceHeadDescription().bodyHead,
+  pending:['rear/side body artwork','registered cutout identity/expression acceptance; authored partner-facing views and body turns','remaining fringe/beard secondary motion','occluded clothing reconstruction','garment fold and seated motion acceptance','runtime anatomy and motion acceptance']};}

@@ -35,7 +35,8 @@ import {discoverNineRouter} from '../../packages/models/nine-router.js';
 import {prehistoricReadiness,prehistoricReferences} from '../../packages/topics/prehistoric-life.js';
 import {referencePuppetSvg} from '../../packages/topics/reference-puppet.js';
 import {headWorkbench,headWorkbenchManifest} from '../../packages/topics/head-workbench.js';
-import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,bodyActionDuration} from '../../packages/topics/body-workbench.js';
+import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
+import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
 import {Moods} from '../../packages/animation/schemas.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
@@ -190,6 +191,17 @@ export async function buildServer(options: ServerOptions = {}) {
     return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood));
   });
   app.get('/api/topics/prehistoric-life/body/manifest',async()=>bodyWorkbenchManifest());
+  app.get<{Querystring:{group?:string;phase?:string;mood?:string}}>('/api/topics/prehistoric-life/arm-audit',async(request,reply)=>{
+    const group=z.enum(ARM_AUDIT_GROUPS).parse(request.query.group??'spear'),phase=z.enum(['entry','pose','recover']).parse(request.query.phase??'entry');
+    const mood=z.enum(['happy','angry','thinking','neutral']).parse(request.query.mood??'happy');
+    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'").send(armAuditWorkbench(group,phase,mood));
+  });
+  app.get('/api/topics/prehistoric-life/pose-art',async(_request,reply)=>reply.type('text/html')
+    .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(await poseArtWorkbench(repo)));
+  app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/pose-art/:file',async(request,reply)=>{
+    const asset=await poseArtImage(repo,request.params.file);
+    return reply.type(asset.type).header('Cache-Control','no-store').send(asset.bytes);
+  });
   app.get<{Querystring:{variant?:string}}>('/api/topics/prehistoric-life/compare',async(request,reply)=>{
     const variant=z.enum(['cutout','assembly']).default('cutout').parse(request.query.variant);
     const rows=['lila','karo'].map(id=>`<section><h2>${id==='lila'?'Lila':'Karo'}</h2><div class="pair"><figure><img src="/api/topics/prehistoric-life/references/reference-${id}-full.png"><figcaption>Ảnh gốc người dùng</figcaption></figure><figure><img src="/api/topics/prehistoric-life/${variant==='assembly'?`assembly/${id}`:`assets/${id}-cutout-v1.png`}"><figcaption>${variant==='assembly'?'Ráp lớp theo tỷ lệ nguồn — nháp':'Bản tách nền đề xuất — chưa duyệt'}</figcaption></figure></div></section>`).join('');

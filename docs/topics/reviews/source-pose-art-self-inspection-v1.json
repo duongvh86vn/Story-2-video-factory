@@ -1,0 +1,257 @@
+{
+  "version": "forest-tribe-0.17-arm-role-shape-candidate",
+  "createdAt": "2026-10-07T06:17:25.890Z",
+  "scope": "developer-static-pose-inspection-only",
+  "pass": null,
+  "productionAcceptance": false,
+  "productionReady": false,
+  "bodyPackFingerprint": "fa766a48ea0351131d0d3933a3bed1b97c2ff3f99bb69c6a7ddac965dfaa636b",
+  "headPackFingerprint": "49de71e542cae8ac30a1c3e2a6d081910009622867f2c96e67b038a7242761c1",
+  "source": [
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "c641f473741d36a68962967f9063419345ffe331e32fefa280481babe73b9bf2"
+    },
+    {
+      "file": "packages/animation/source-arm.ts",
+      "sha256": "3a2ecf6594d6a4edffe1d9e1bf636bc23eadc3ecd6839c2a4939d9caf4e17a27"
+    },
+    {
+      "file": "packages/animation/forest-cutout-head.ts",
+      "sha256": "4b1502175d8958422a7d7a5aa079a5d39e503b0aed6e9ba331dcebb75a30362f"
+    },
+    {
+      "file": "packages/animation/forest-body-art.ts",
+      "sha256": "b8d84be6e1f715a10e3af5f8ebf02820a849b1a6f76fb71e8d5215848d32d543"
+    },
+    {
+      "file": "packages/animation/forest-head-art.ts",
+      "sha256": "78f64b5eb323c140b320f1b954ad2f2a78108501b44c936a9f3aba6c82bdaa0c"
+    },
+    {
+      "file": "packages/animation/rig.ts",
+      "sha256": "92661b7b688999f884d2774810938a0bc607d3238cc0526e050cb68e85044da3"
+    },
+    {
+      "file": "packages/animation/running.ts",
+      "sha256": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40"
+    },
+    {
+      "file": "packages/animation/spear.ts",
+      "sha256": "ef0912d4320de516c4716aa5f9d34482a8358f0e49553cc28ab3d8532e3b273b"
+    },
+    {
+      "file": "packages/animation/schemas.ts",
+      "sha256": "2f2a6bb29638815ed285921c480ce5a6831a20062fe3040e9ee1f30808dca972"
+    },
+    {
+      "file": "packages/director/camera.ts",
+      "sha256": "29a7a621c0fd0462590aa41dbb76600927534a63ddd59179b6265e9d1d3cd54b"
+    },
+    {
+      "file": "packages/topics/body-workbench.ts",
+      "sha256": "60079aed21cef981829440564d6bc88012c173229f1fe862ec4d08463419c3a4"
+    }
+  ],
+  "images": [
+    {
+      "file": "docs/topics/reviews/source-hunt-aim-before-v1.png",
+      "sha256": "740a4e31f03ff909e250e7be23d61838d2be38043adc30c19f138d90ba0b8859"
+    },
+    {
+      "file": "docs/topics/reviews/source-hunt-aim-after-v1.png",
+      "sha256": "9e795ee57b6c4269cc7f7502d9e4e4ba6c068523559933ec036296a9c171eb12"
+    },
+    {
+      "file": "docs/topics/reviews/source-hunt-aim-after-v2.png",
+      "sha256": "f13acf65c27b1e79be76ae273edc8e2482b2a84ef4cf69c6909e9a1eef6e5772"
+    },
+    {
+      "file": "docs/topics/reviews/source-think-occluded-before-v1.png",
+      "sha256": "15e5e73ba6477bd3624c493afbd9e74e783215d56310d0d0ab2101d67ded29d4"
+    },
+    {
+      "file": "docs/topics/reviews/source-think-after-v1.png",
+      "sha256": "186f39c4a31cb9a83a7f1ca85ee8fbe57c8daeb11177b9b43b97ed9b7240e980"
+    },
+    {
+      "file": "docs/topics/reviews/ai-pose-gallery-run-v1.png",
+      "sha256": "7f5b3cb5587b0368ed36288c6221d10ea68faee2d8ac7bf2378c0b8068864ad5"
+    },
+    {
+      "file": "docs/topics/reviews/source-think-after-v2.png",
+      "sha256": "ec0406883a217d0a4861800c08fe70fc7a3b0c6298f882ea40e6ffd9301d27b5"
+    }
+  ],
+  "matrix": [
+    {
+      "group": "gestures",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=gestures&phase=entry&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-gestures-entry-v4.png",
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": 14,
+      "sha256": "ba7cb01ce44962df974465ec83ae8fcf58a4d971aa6cdcc19f0925ce52669699",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "gestures",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=gestures&phase=pose&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-gestures-pose-v4.png",
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": 14,
+      "sha256": "af7ec56d9bdf6b260a6acf700ab6d973713556699261ec838ce15c05501af589",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "gestures",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=gestures&phase=recover&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-gestures-recover-v4.png",
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": 14,
+      "sha256": "16340e7448f641291b3449b0b9f4b38da5d431f349834069e202919980910667",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "locomotion",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=locomotion&phase=entry&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-locomotion-entry-v2.png",
+      "blocked": [],
+      "cards": 12,
+      "sha256": "150a88a2a78aa427074ec196f67e9567338f66b8e12687218664d38860fb511e",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "locomotion",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=locomotion&phase=pose&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-locomotion-pose-v2.png",
+      "blocked": [],
+      "cards": 12,
+      "sha256": "f1ac3ed518806a49fd9924a2c9b0d78c7782e527026eb54cb82c6366301be08f",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "locomotion",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=locomotion&phase=recover&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-locomotion-recover-v2.png",
+      "blocked": [],
+      "cards": 12,
+      "sha256": "242438491c87b1ba564554b6b254682af7ae80a4ca90cf101b12c4a97453f8ad",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "spear",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=entry&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-spear-entry-v3.png",
+      "blocked": [],
+      "cards": 12,
+      "sha256": "68b9a4ad132eb83f35470c81a4f73db49ccae9b26aa70bdeef6659521603bc99",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "spear",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=pose&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-spear-pose-v4.png",
+      "blocked": [],
+      "cards": 12,
+      "sha256": "49a3a23e87b14f8f165410dc0fd67ace44ee79ab2c5b7ca7d228278602bb7b7b",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "spear",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=spear&phase=recover&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-spear-recover-v3.png",
+      "blocked": [],
+      "cards": 12,
+      "sha256": "cf698eaccc506df42d4f85a1ca32113c63f9b1d096712156340474bf7ab8e653",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "seated",
+      "phase": "entry",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=seated&phase=entry&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-seated-entry-v3.png",
+      "blocked": [],
+      "cards": 8,
+      "sha256": "36f51dc191af735602f9ba8fd1dca72340b2d19c56debe7c08f14360b8866e4a",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "seated",
+      "phase": "pose",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=seated&phase=pose&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-seated-pose-v3.png",
+      "blocked": [],
+      "cards": 8,
+      "sha256": "f9c771ca6da6dea003fe43a449bafe23962f7ab32f3414f242e89d18df481010",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    },
+    {
+      "group": "seated",
+      "phase": "recover",
+      "url": "http://127.0.0.1:8850/api/topics/prehistoric-life/arm-audit?group=seated&phase=recover&mood=happy",
+      "file": "docs/topics/reviews/arm-audit-seated-recover-v3.png",
+      "blocked": [],
+      "cards": 8,
+      "sha256": "7c60e2e71ff8265923a4420011ab0c000e3a8918e0c7d7dc925343638b396247",
+      "completedDocument": true,
+      "scope": "static-frame-only",
+      "motionPass": null
+    }
+  ],
+  "summary": {
+    "cards": 138,
+    "intentionalMissingHeadViewCards": 6,
+    "otherStaticErrorCards": 0,
+    "fullMotionTestRun": false,
+    "episodeRenderRun": false
+  },
+  "observedLimitations": [
+    "Frontal spear silhouette remains a temporary calibration. Raised rear elbow and whole-body diagonal lunge need registered body/head views and role-specific trajectories.",
+    "Chin mitten is visible; forearm occlusion, clasp shape and expression overlays remain candidates.",
+    "All 14 generated images are unapproved; none automatically replaces the rig.",
+    "Only fixed frames with happy mood were inspected in this matrix; clocks/other moods/scales, motion, seeking and baked scenes are untested."
+  ],
+  "adviceAssessment": "docs/topics/ARM-POSE-REPAIR.md",
+  "workflow": "docs/topics/AI-POSE-WORKFLOW.md",
+  "captureStages": "Gestures v4 and think v2 were recaptured after ink foreground slots. Other group frames precede that layer-only change and show unchanged non-chin geometry; they are not a rerun of the final renderer."
+}

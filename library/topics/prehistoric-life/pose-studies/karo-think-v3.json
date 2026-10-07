@@ -1,0 +1,38 @@
+{
+  "actor": "karo",
+  "action": "think",
+  "model": "cx/gpt-image-2",
+  "endpoint": "http://127.0.0.1:20128/v1/images/generations",
+  "adapter": "cx-one-inline-reference-board",
+  "prompt": "Generate ONE full-body drawing of male Karo with the exact warm peach face, simple black oval eyes, original broad smile and brown beard, messy dark brown hair, ragged brown one-shoulder fur tunic and shorts with belt, in the requested pose, using the LEFT reference as the exact character identity. The RIGHT image supplies pose mechanics only. This is a STICK FIGURE, not a flesh-limbed cartoon caveman. ARMS AND LEGS ARE SINGLE SLIM SOLID BLACK INK STROKES. Hands are simple black mitten silhouettes, feet simple black oval silhouettes. No skin-colored limbs, fingers, toes, muscles, boots or realistic anatomy details. Keep the original face, eye spacing, original nose and smile, hair outline, beard if present, ragged fur garment and belt from the LEFT image. Do not simplify or redesign the head, hair or clothes. Preserve rich warm skin and brown colors. Smooth softly curved ink strokes, natural elbows, exactly two arms and two legs, no backwards joints, no abrupt zigzag bends. Thinking: one small black mitten hand beside the chin, elbow below the hand, other arm relaxed. No arm across the face. Plain cream background. One character only, ample empty margins, whole spear/hair/hands/feet inside canvas, no text, no grid, no other poses. Face remains original happy for this mechanical pose study. This is a design reference pending review, not finished video.",
+  "references": [
+    {
+      "role": "primary-character-identity",
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    }
+  ],
+  "status": "candidate-needs-registration-and-motion-review",
+  "approved": false,
+  "productionReady": false,
+  "requestedAt": "2026-10-07T05:10:02.825Z",
+  "file": "karo-think-v3.png",
+  "sha256": "2e4494c3a277fdcf2831b4af9c4893f8db14654f14a897072090e8018c2ef072",
+  "width": 1049,
+  "height": 1500,
+  "generatedAt": "2026-10-07T05:10:40.901Z",
+  "developerInspection": {
+    "viewed": true,
+    "scope": "static-art-only",
+    "productionAcceptance": false,
+    "notes": "Closer source identity and black limbs; proportions, face direction, costume, expression and hand/tool grip still require registration and review."
+  },
+  "reviewNotes": [
+    "Review Gemini: bàn tay lẫn vào râu; cần khoảng trống để đọc rõ contact và silhouette."
+  ],
+  "staticModelAdvice": {
+    "file": "docs/topics/reviews/gemini-pose-advice-v3.json",
+    "scope": "static-art-advice-only",
+    "productionAcceptance": false
+  }
+}

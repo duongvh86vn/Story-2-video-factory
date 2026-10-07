@@ -1,0 +1,38 @@
+{
+  "actor": "lila",
+  "action": "point",
+  "model": "cx/gpt-image-2",
+  "endpoint": "http://127.0.0.1:20128/v1/images/generations",
+  "adapter": "cx-one-inline-reference-board",
+  "prompt": "Generate ONE full-body drawing of female Lila with the exact warm peach face, two simple black oval eyes, original smile and nose, dark messy brown hair tied low on her left, ragged brown one-shoulder fur dress and belt, in the requested pose, using the LEFT reference as the exact character identity. The RIGHT image supplies pose mechanics only. This is a STICK FIGURE, not a flesh-limbed cartoon caveman. ARMS AND LEGS ARE SINGLE SLIM SOLID BLACK INK STROKES. Hands are simple black mitten silhouettes, feet simple black oval silhouettes. No skin-colored limbs, fingers, toes, muscles, boots or realistic anatomy details. Keep the original face, eye spacing, original nose and smile, hair outline, beard if present, ragged fur garment and belt from the LEFT image. Do not simplify or redesign the head, hair or clothes. Preserve rich warm skin and brown colors. Smooth softly curved ink strokes, natural elbows, exactly two arms and two legs, no backwards joints, no abrupt zigzag bends. Point toward screen-left at chest height, one soft naturally bent black ink arm, the other arm relaxed downward. Plain cream background. One character only, ample empty margins, whole spear/hair/hands/feet inside canvas, no text, no grid, no other poses. Face remains original happy for this mechanical pose study. This is a design reference pending review, not finished video.",
+  "references": [
+    {
+      "role": "primary-character-identity",
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    }
+  ],
+  "status": "candidate-needs-registration-and-motion-review",
+  "approved": false,
+  "productionReady": false,
+  "requestedAt": "2026-10-07T05:14:02.310Z",
+  "file": "lila-point-v3.png",
+  "sha256": "21f6b2ea312e9a6e52053ccbd61d815e07fa809920366997a3baca5ae04e1cce",
+  "width": 1017,
+  "height": 1547,
+  "generatedAt": "2026-10-07T05:14:33.544Z",
+  "developerInspection": {
+    "viewed": true,
+    "scope": "static-art-only",
+    "productionAcceptance": false,
+    "notes": "Closer source identity and black limbs; proportions, face direction, costume, expression and hand/tool grip still require registration and review."
+  },
+  "reviewNotes": [
+    "Review Gemini: bàn tay chỉ đã mọc ngón dài; cần giữ silhouette bàn tay gốc và đo khuỷu theo pose."
+  ],
+  "staticModelAdvice": {
+    "file": "docs/topics/reviews/gemini-pose-advice-v3.json",
+    "scope": "static-art-advice-only",
+    "productionAcceptance": false
+  }
+}

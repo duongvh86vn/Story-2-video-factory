@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.15-spear-anatomy-candidate",
+  "version": "forest-tribe-0.17-arm-role-shape-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -579,8 +579,8 @@
         }
       }
     },
-    "faceCompilerVersion": "forest-face-motion-8",
-    "rendererVersion": "forest-head-svg-9",
+    "faceCompilerVersion": "forest-face-motion-9",
+    "rendererVersion": "forest-head-svg-10",
     "facialCalibration": {
       "eyeStretch": {
         "x": 1.25,
@@ -623,6 +623,7 @@
     },
     "projection": {
       "version": "forest-head-projection-2-glyph-floor",
+      "activeForBody": false,
       "calibration": {
         "maxYawDeg": 32,
         "lila": {
@@ -704,34 +705,131 @@
         }
       },
       "uvOverlapPixels": 3.5,
-      "scope": "forest-body-1 only; front head raster on a shared 60-triangle surface; feature centers, jaw mask and ponytail follow the actual triangle mapping on the absolute clock; small glyph stretch/shear is bounded for readability",
+      "scope": "Historical rejected inferred-yaw candidate; not active in source-body calibration. Its utility and review evidence remain for comparison.",
       "notReconstructed3D": true,
       "maxYawDeg": 32
     },
-    "fingerprint": "36605ee2b5cb825621fb4ec4c02826a3993a993a56e27b1648102c0c70cf89e3",
+    "bodyHead": {
+      "version": "forest-cutout-head-1",
+      "calibration": {
+        "lila": {
+          "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
+          "sha256": "ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e",
+          "width": 430,
+          "height": 766,
+          "scale": 0.4151436031331593,
+          "neck": {
+            "x": 263,
+            "y": 274
+          },
+          "chin": {
+            "left": {
+              "x": 335,
+              "y": 230
+            },
+            "right": {
+              "x": 335,
+              "y": 230
+            }
+          },
+          "eyes": [
+            {
+              "x": 285,
+              "y": 158
+            },
+            {
+              "x": 347,
+              "y": 150
+            }
+          ],
+          "mouth": {
+            "x": 305,
+            "y": 201
+          },
+          "bounds": {
+            "left": 80,
+            "right": 430,
+            "top": 0,
+            "bottom": 434
+          },
+          "clip": "M0 0H430V250L363 298L337 420L305 365L299 311L281 263L243 263L221 365L160 434H0Z",
+          "mouthCover": "M269 185Q306 180 340 187L345 213Q310 230 272 216Z"
+        },
+        "karo": {
+          "file": "library/topics/prehistoric-life/karo-cutout-v1.png",
+          "sha256": "f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665",
+          "width": 377,
+          "height": 716,
+          "scale": 0.4441340782122905,
+          "neck": {
+            "x": 212,
+            "y": 279
+          },
+          "chin": {
+            "left": {
+              "x": 300,
+              "y": 245
+            },
+            "right": {
+              "x": 190,
+              "y": 255
+            }
+          },
+          "eyes": [
+            {
+              "x": 216,
+              "y": 141
+            },
+            {
+              "x": 282,
+              "y": 137
+            }
+          ],
+          "mouth": {
+            "x": 245,
+            "y": 201
+          },
+          "bounds": {
+            "left": 80,
+            "right": 360,
+            "top": 0,
+            "bottom": 291
+          },
+          "clip": "M0 0H377V255L283 281L229 291L196 279L165 247H0Z",
+          "mouthCover": "M199 181Q245 166 293 181L288 216Q246 243 207 221Z"
+        }
+      },
+      "fingerprint": "dfd9f05c15dc08eccc461561dd8e4e91ca9226c39620736044d6af029da25822",
+      "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
+      "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
+      "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
+      "productionReady": false
+    },
+    "fingerprint": "49de71e542cae8ac30a1c3e2a6d081910009622867f2c96e67b038a7242761c1",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
-    "turnRendering": "continuous-front-projection-for-body; stepped-authored-views-for-head-only",
+    "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
     "pending": [
-      "profile/back textures",
-      "projected front-head fidelity and continuous motion acceptance",
+      "authored partner-facing body/head views, profile/back textures",
+      "registered source cutout fidelity and accepted expression layers",
       "full-body views and seated rig acceptance",
       "separate fringe/beard/clothing secondary motion",
-      "authored turns beyond the bounded projection",
+      "authored continuous turns",
       "runtime motion acceptance"
     ],
     "prompts": [
       "library/topics/prehistoric-life/rig-v1/head-prompts.json",
       "library/topics/prehistoric-life/rig-v1/front-prompts.json"
     ],
-    "codeHash": "6e6ad092f78a38176bbab2cbd1b87c79871c8abbcfdc812380230a99dd621e0c",
+    "codeHash": "78f64b5eb323c140b320f1b954ad2f2a78108501b44c936a9f3aba6c82bdaa0c",
+    "cutoutCodeHash": "4b1502175d8958422a7d7a5aa079a5d39e503b0aed6e9ba331dcebb75a30362f",
     "projectionCodeHash": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22"
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-10",
-    "rendererVersion": "forest-source-body-svg-7",
-    "fingerprint": "34cae29dc5c962f26427a0b0d373814588575edca065dcd1ac895f4f9371f1ee",
+    "compilerVersion": "forest-source-body-motion-13",
+    "rendererVersion": "forest-source-body-svg-9",
+    "fingerprint": "fa766a48ea0351131d0d3933a3bed1b97c2ff3f99bb69c6a7ddac965dfaa636b",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -748,7 +846,7 @@
           "x": 263,
           "y": 274
         },
-        "headArtworkScale": 0.88,
+        "headArtworkScale": 1,
         "shoulders": {
           "left": {
             "x": 236,
@@ -883,7 +981,7 @@
           "x": 212,
           "y": 279
         },
-        "headArtworkScale": 0.8,
+        "headArtworkScale": 1,
         "shoulders": {
           "left": {
             "x": 169,
@@ -1137,7 +1235,7 @@
     },
     "actionMotion": {
       "run": {
-        "version": "forest-run-contact-1",
+        "version": "forest-run-contact-2",
         "poses": [
           {
             "id": "support",
@@ -1162,16 +1260,30 @@
         ],
         "flight": "support ends at step phase 0.62 before opposite contact; timed body/sole lift, grounded shadow",
         "feet": "alternating fixed world-space support anchors; quintic swing; final two placements settle standing stance",
-        "arms": "source elbow-flexed forward/back drive; source front projection infers elbow depth; no simultaneous side spreading",
+        "arms": "source upper-arm pendulum and continuous forearm flexion, interpolated from each current rest branch using exact lengths; frontal plane, no plan-global run pole or idle foreshortening",
         "scope": "candidate front-body horizontal locomotion, not authored profile/rear running or accepted dynamics",
         "productionReady": false
       },
       "spear": {
-        "version": "forest-spear-grips-2",
-        "grip": "primary shoulder-local rig units; second hand owns a point on the same shaft; rear-quarter grip permits a full-length hunting spear",
+        "version": "forest-spear-grips-3",
+        "grip": "primary shoulder-local rig units; second hand owns a distinct point on the same shaft; 45 actor-scaled unit span in frontal calibration, rear-quarter primary grip on full-length spear; authored diagonal lunge and raised rear elbow remain pending",
         "ownership": "one entry-owned tool track covers the shot; no unsupported pickup, throw or cross-cut handoff",
         "clocks": "windup → ready → extension → contact hold → recovery; quintic translation",
         "target": "world-space aim; thrust tip reaches it only at contact, unreachable arms or out-of-stage shaft rejected",
+        "productionReady": false
+      },
+      "arms": {
+        "version": "forest-arm-role-shape-1",
+        "limits": {
+          "point": 110,
+          "chin": 145,
+          "run": 120,
+          "spear-front": 125,
+          "spear-rear": 135
+        },
+        "shapes": "fixed XYZ lengths; reject excessive role-specific flexion and projected segments below 0.7 of the original; smooth C1 ink is not anatomy acceptance",
+        "roles": "active clip and current posture only; future run/seat must not change idle arms",
+        "layer": "chin-contact ink and mitten share explicit foreground slots, each with one physical definition; inactive arms/hands keep normal layers",
         "productionReady": false
       },
       "acceptance": "pending",
@@ -1190,13 +1302,13 @@
     },
     "secondaryMotion": {
       "breath": "bounded continuous body lean",
-      "blink": "actor-staggered",
-      "hair": "Lila ponytail source masks with 120ms follow; no simulated hair physics",
+      "blink": "actor-staggered provisional source overlays",
+      "hair": "registered cutout follows the head rigidly; independent ponytail/fringe follow pending",
       "clothing": "all source body plans use one opaque shared cloth surface with a pinned waist and blended 100ms thigh follow below it, limited to 22 degrees; seat plans also use semantic UV correspondences through seated/rising, fading thigh follow into the seated pose; source/authored fold materials share that surface; legacy independently rotating panels are hidden to avoid opening a waist gap during ordinary walking; inverted triangles block evaluation; no fabric simulation or motion acceptance"
     },
     "inferredAnatomy": {
       "knees": "not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved",
-      "elbows": "not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; aimed spear uses 0.85 projection-plane weight to retain a readable down/back elbow",
+      "elbows": "not visible in source; upper/forearm ratio 52/48, original per-side total lengths preserved; frontal spear/run use full planar lengths with role-specific flexion guards; authored depth arms remain pending",
       "seat": "closed hip contact below/behind belt, not the pelvis anchor itself"
     },
     "headAttachment": {
@@ -1252,117 +1364,374 @@
       "productionAcceptance": false
     },
     "headMotion": {
-      "version": "forest-head-projection-2-glyph-floor",
+      "version": "forest-cutout-head-1",
       "calibration": {
-        "maxYawDeg": 32,
         "lila": {
-          "columns": [
-            0,
-            250,
-            445,
-            665,
-            880,
-            1145
-          ],
-          "rows": [
-            0,
-            330,
-            486,
-            585,
-            798.3333333333334,
-            1030,
-            1374
-          ],
-          "faceRadius": 36,
-          "frontDepth": 18,
-          "hairDepth": -6,
-          "nose": {
-            "x": -1,
-            "y": 9,
-            "depth": 4
+          "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
+          "sha256": "ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e",
+          "width": 430,
+          "height": 766,
+          "scale": 0.4151436031331593,
+          "neck": {
+            "x": 263,
+            "y": 274
           },
-          "neckY": 32,
-          "faceTop": -27,
-          "faceBottom": 32
+          "chin": {
+            "left": {
+              "x": 335,
+              "y": 230
+            },
+            "right": {
+              "x": 335,
+              "y": 230
+            }
+          },
+          "eyes": [
+            {
+              "x": 285,
+              "y": 158
+            },
+            {
+              "x": 347,
+              "y": 150
+            }
+          ],
+          "mouth": {
+            "x": 305,
+            "y": 201
+          },
+          "bounds": {
+            "left": 80,
+            "right": 430,
+            "top": 0,
+            "bottom": 434
+          },
+          "clip": "M0 0H430V250L363 298L337 420L305 365L299 311L281 263L243 263L221 365L160 434H0Z",
+          "mouthCover": "M269 185Q306 180 340 187L345 213Q310 230 272 216Z"
         },
         "karo": {
-          "columns": [
-            0,
-            280,
-            400,
-            665,
-            980,
-            1312
-          ],
-          "rows": [
-            0,
-            340,
-            467,
-            598,
-            835,
-            1131.3333333333333,
-            1199
-          ],
-          "faceRadius": 44,
-          "frontDepth": 20,
-          "hairDepth": -5,
-          "nose": {
-            "x": 5,
-            "y": 9,
-            "depth": 5
+          "file": "library/topics/prehistoric-life/karo-cutout-v1.png",
+          "sha256": "f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665",
+          "width": 377,
+          "height": 716,
+          "scale": 0.4441340782122905,
+          "neck": {
+            "x": 212,
+            "y": 279
           },
-          "neckY": 72,
-          "faceTop": -32,
-          "faceBottom": 71
+          "chin": {
+            "left": {
+              "x": 300,
+              "y": 245
+            },
+            "right": {
+              "x": 190,
+              "y": 255
+            }
+          },
+          "eyes": [
+            {
+              "x": 216,
+              "y": 141
+            },
+            {
+              "x": 282,
+              "y": 137
+            }
+          ],
+          "mouth": {
+            "x": 245,
+            "y": 201
+          },
+          "bounds": {
+            "left": 80,
+            "right": 360,
+            "top": 0,
+            "bottom": 291
+          },
+          "clip": "M0 0H377V255L283 281L229 291L196 279L165 247H0Z",
+          "mouthCover": "M199 181Q245 166 293 181L288 216Q246 243 207 221Z"
         }
       },
-      "glyphLimits": {
-        "eye": {
-          "minScaleX": 0.78,
-          "maxScaleX": 1.12,
-          "shearWeight": 0
-        },
-        "brow": {
-          "minScaleX": 0.75,
-          "maxScaleX": 1.15,
-          "shearWeight": 0.25
-        },
-        "mouth": {
-          "minScaleX": 0.8,
-          "maxScaleX": 1.15,
-          "shearWeight": 0.35
-        }
-      },
-      "uvOverlapPixels": 3.5,
-      "scope": "forest-body-1 only; front head raster on a shared 60-triangle surface; feature centers, jaw mask and ponytail follow the actual triangle mapping on the absolute clock; small glyph stretch/shear is bounded for readability",
-      "notReconstructed3D": true,
-      "maxYawDeg": 32
+      "fingerprint": "dfd9f05c15dc08eccc461561dd8e4e91ca9226c39620736044d6af029da25822",
+      "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
+      "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
+      "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
+      "productionReady": false
     },
     "pending": [
       "rear/side body artwork",
-      "projected head fidelity and continuous motion acceptance; body turns",
+      "registered cutout identity/expression acceptance; authored partner-facing views and body turns",
       "remaining fringe/beard secondary motion",
       "occluded clothing reconstruction",
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "8f7f9b66126b794568b301e8f351188f4a506044e5fad721147ebe1efb5f72b8",
+    "codeHash": "b8d84be6e1f715a10e3af5f8ebf02820a849b1a6f76fb71e8d5215848d32d543",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
-    "runCodeHash": "8c605dc2b6dc62889028582aa89deed1c1dc0fbc96051405e4410d52f8ab8534",
-    "spearCodeHash": "1712e03b879b05e3f9b221768fbd19d31bc358d986c3e68106461bcc56c3d660",
-    "compilerCodeHash": "6468c01efad21537ba651331332ab8088308aab229960f8adc9268b893178ac9",
-    "rigCodeHash": "7a9ad7f40d2804d087b881deba80028604ef787232bcd173cc04b1500854e2c6"
+    "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
+    "spearCodeHash": "ef0912d4320de516c4716aa5f9d34482a8358f0e49553cc28ab3d8532e3b273b",
+    "armShapeCodeHash": "3a2ecf6594d6a4edffe1d9e1bf636bc23eadc3ecd6839c2a4939d9caf4e17a27",
+    "compilerCodeHash": "c641f473741d36a68962967f9063419345ffe331e32fefa280481babe73b9bf2",
+    "rigCodeHash": "92661b7b688999f884d2774810938a0bc607d3238cc0526e050cb68e85044da3",
+    "cameraCodeHash": "29a7a621c0fd0462590aa41dbb76600927534a63ddd59179b6265e9d1d3cd54b"
+  },
+  "poseArtwork": {
+    "scope": "static-artwork-only",
+    "inventory": "library/topics/prehistoric-life/pose-studies/inspection-v1.json",
+    "generatedImageCalls": 14,
+    "staticVisionAdviceCalls": 2,
+    "evidence": [
+      {
+        "actor": "karo",
+        "action": "jump",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/karo-jump-v3.png",
+        "sha256": "2c57213eeb937a6f85dfe4d1ae373cc6413796443706506bb4d287283d45a51b",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: một vai gắn cao gần mép râu; cần đăng ký vai đúng thân gốc."
+        ],
+        "width": 1049,
+        "height": 1500,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "action": "point",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/karo-point-v3.png",
+        "sha256": "e18198b377d1f1b095ed00605b0f88538003ca7c6bcedcf6c08cea8c836f4b70",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: tay chỉ có ngón, khác bàn tay mẫu; cần chỉnh độ gập và line of action."
+        ],
+        "width": 1049,
+        "height": 1500,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "action": "sheet",
+        "model": "ag/gemini-3.1-flash-image",
+        "file": "library/topics/prehistoric-life/pose-studies/karo-poses-v1.jpg",
+        "sha256": "5abb61c73922d63ff583141659e39f34988b79e55eacb56db129a77ef52297d3",
+        "status": "rejected-limb-style-and-identity",
+        "approved": false,
+        "reviewNotes": [],
+        "width": 1264,
+        "height": 848,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "action": "run-left",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/karo-run-left-v3.png",
+        "sha256": "026e353b9364351f31315eec8ef338c73dfb7f0b0085187927d4fa5380dd4037",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: mặt phẳng tay sau khó đọc; cần đo vai/khuỷu/cổ tay, sửa hướng nhìn trước khi dựng motion."
+        ],
+        "width": 1049,
+        "height": 1500,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "action": "spear-lunge-left",
+        "model": "ag/gemini-3.1-flash-image",
+        "file": "library/topics/prehistoric-life/pose-studies/karo-spear-lunge-left-v2.jpg",
+        "sha256": "2f6deea2bc7366f420e82ef87ad304d3ab9b5f34a07da5e13a2c7a46d6c88acc",
+        "status": "anatomy-study-only-identity-rejected",
+        "approved": false,
+        "reviewNotes": [],
+        "width": 1264,
+        "height": 848,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "action": "spear-lunge-left",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/karo-spear-lunge-left-v3.png",
+        "sha256": "e17a90deb6092f641aa37db1b80720c5dd1567b41b9b7a9b26e7a871f0f898c0",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: tay trước có dấu hiệu quá duỗi và cán che thân; cần sửa độ gập, lớp tay/cán và khoảng cách hai grip."
+        ],
+        "width": 1536,
+        "height": 1024,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "action": "think",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/karo-think-v3.png",
+        "sha256": "2e4494c3a277fdcf2831b4af9c4893f8db14654f14a897072090e8018c2ef072",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: bàn tay lẫn vào râu; cần khoảng trống để đọc rõ contact và silhouette."
+        ],
+        "width": 1049,
+        "height": 1500,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "action": "jump",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/lila-jump-v3.png",
+        "sha256": "ec1299ee1f95f9c79b454d838456eb221c8b5fb0b6fa4c099556809bb5216181",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: tay tròn làm mất notch bàn tay; cần giữ tay mẫu, chỉnh stretch và tỷ lệ."
+        ],
+        "width": 1017,
+        "height": 1547,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "action": "point",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/lila-point-v3.png",
+        "sha256": "21f6b2ea312e9a6e52053ccbd61d815e07fa809920366997a3baca5ae04e1cce",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: bàn tay chỉ đã mọc ngón dài; cần giữ silhouette bàn tay gốc và đo khuỷu theo pose."
+        ],
+        "width": 1017,
+        "height": 1547,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "action": "sheet",
+        "model": "ag/gemini-3.1-flash-image",
+        "file": "library/topics/prehistoric-life/pose-studies/lila-poses-v1.jpg",
+        "sha256": "b1b3f9509b16009cb8e79775846729907187a5923717feed79134cae70ef792f",
+        "status": "rejected-limb-style-and-identity",
+        "approved": false,
+        "reviewNotes": [],
+        "width": 1264,
+        "height": 848,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "action": "run-left",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/lila-run-left-v3.png",
+        "sha256": "1bdacad856a00c70787f9b7cb1b44189fa8a0ee815c3bb151629fdb16e2529f4",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: chân phía sau đổi silhouette oval; cần sửa bàn chân và đo lại tỷ lệ pose."
+        ],
+        "width": 1017,
+        "height": 1547,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "action": "spear-lunge-left",
+        "model": "ag/gemini-3.1-flash-image",
+        "file": "library/topics/prehistoric-life/pose-studies/lila-spear-lunge-left-v2.jpg",
+        "sha256": "09f2410e5c88920252d5787e2d414fe145b58e923d8d20b6212eba195327b95e",
+        "status": "anatomy-study-only-identity-rejected",
+        "approved": false,
+        "reviewNotes": [],
+        "width": 1264,
+        "height": 848,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "action": "spear-lunge-left",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/lila-spear-lunge-left-v3.png",
+        "sha256": "227a0f546f47281d936a0656351cbb585881116dd3971f2f8282faf95d192af7",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: grip và khuỷu tay sau chưa thuyết phục. Đối chiếu pose người dùng: tay sau có thể nâng khuỷu lên/sau; cần kiểm cả vai, cẳng tay, cán và contact, không loại chỉ vì khuỷu cao."
+        ],
+        "width": 1527,
+        "height": 1030,
+        "hasAlpha": false,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "action": "think",
+        "model": "cx/gpt-image-2",
+        "file": "library/topics/prehistoric-life/pose-studies/lila-think-v3.png",
+        "sha256": "c987d95646870e83dadb029dc3927dcb840ef21b4835d69df02afdb4c49ed0e6",
+        "status": "candidate-needs-registration-and-motion-review",
+        "approved": false,
+        "reviewNotes": [
+          "Review Gemini: cẳng tay hơi ngắn; cần registration với tỷ lệ xương gốc và contact tại mép cằm."
+        ],
+        "width": 1017,
+        "height": 1547,
+        "hasAlpha": false,
+        "productionAllowed": false
+      }
+    ],
+    "approved": false,
+    "productionReady": false,
+    "generatedPosesIntegratedAsProductionRig": false,
+    "reviews": [
+      "docs/topics/reviews/gemini-pose-advice-v1.json",
+      "docs/topics/reviews/gemini-pose-advice-v3.json"
+    ],
+    "workflow": "docs/topics/AI-POSE-WORKFLOW.md"
   },
   "actionPoseInspection": {
-    "file": "docs/topics/reviews/source-spear-pose-self-inspection-v2.json",
+    "file": "docs/topics/reviews/source-pose-art-self-inspection-v1.json",
     "scope": "developer-static-pose-inspection-only",
     "pass": null,
     "productionAcceptance": false,
     "supersedes": {
-      "file": "docs/topics/reviews/source-action-pose-self-inspection-v1.json",
-      "reason": "User rejected spear contact arm geometry and short shaft; earlier snapshots remain historical, not acceptance."
+      "file": "docs/topics/reviews/source-spear-pose-self-inspection-v2.json",
+      "reason": "User rejected other arms and face distortion after 0.15. Earlier snapshots and AI artwork remain studies, not acceptance."
     },
-    "currentRepair": "Per-side source arm totals retained, inferred 52/48 split and readable down/back elbows; full-length 1.2-height spear, rear-quarter primary grip, wider stage, left/right aim calibration. Run/jump/stalk source poses, authored body views, quarry rig, sourced bindings, animal response and continuous video acceptance remain pending."
+    "currentRepair": "Retain registered happy cutout; inferred yaw removed. Widen frontal spear grips, retain planar source lengths with role-specific fold guards, orient mittens to shaft; chin has per-hand registration and foreground slots. Run angles interpolate from current rest only during active clips; point reach follows each chain. Free pelvis corrects foot reach before support lock. 138 static cards include six intentionally blocked head views; no continuous-motion pass. Authored body/head views, raised-rear-elbow whole-body lunge, pose registration, quarry/contact and story integration remain pending.",
+    "sourceAdvice": {
+      "completedCalls": 4,
+      "scope": "static-source-and-art-advice-only",
+      "reports": [
+        "docs/topics/reviews/gemini-arm-source-advice-v1.json",
+        "docs/topics/reviews/coder-arm-source-advice-v1.json",
+        "docs/topics/reviews/gemini-arm-source-advice-v2.json",
+        "docs/topics/reviews/gemini-arm-source-advice-v3.json"
+      ],
+      "assessment": "docs/topics/ARM-POSE-REPAIR.md",
+      "pass": null,
+      "productionAcceptance": false
+    },
+    "workflow": "docs/topics/ARM-POSE-REPAIR.md"
   },
   "walkPoseInspection": {
     "file": "docs/topics/reviews/source-walk-pose-self-inspection-v1.json",
@@ -1400,13 +1769,15 @@
   },
   "headProjectionStaticReview": {
     "file": "docs/topics/reviews/source-head-projection-static-review-v1.json",
+    "activeForBody": false,
     "pass": false,
+    "historicalReviewPass": false,
     "scope": "static-five-pose-projected-head-candidate-only",
     "appliesTo": "forest-face-motion-8 / forest-head-svg-9; forest-source-body-motion-7",
     "fingerprintMatches": false,
     "productionAcceptance": false,
-    "latestSelfInspection": "docs/topics/reviews/source-head-projection-self-inspection-v2.json",
-    "currentRepair": "Five-pose review on the 98-triangle candidate failed a compressed Lila far eye at 0ms and a small Karo neutral mouth at 0ms. Subsequent 60-triangle cage follows actual barycentric material mapping, pins the neck at a cage row, and bounds eye/brow/mouth deformation. Eye horizontal scale floor 0.78 with zero shear. New revision has developer static inspection only; mouth/emotion onset and full animation remain pending."
+    "latestSelfInspection": "docs/topics/reviews/source-pose-art-self-inspection-v1.json",
+    "currentRepair": "The inferred yaw mesh and independently generated enlarged face glyphs were rejected by the user and removed from the body. Source cutout face now follows the registered neck/torso as one image. Provisional overlays, independent hair and authored partner-facing/profile/rear views remain pending."
   },
   "bodyStaticReview": {
     "file": "docs/topics/reviews/source-waist-static-review-v1.json",
@@ -1429,7 +1800,8 @@
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
-    "Head-only inspection retains three authored drawings. Body candidates have a continuous but limited front-raster 2.5D projection through a 60-triangle cage, with readability bounds. The five-pose review failed before the latest repair; current fidelity, full clock, profile/rear/body views and other secondary layers remain unaccepted.",
+    "Head-only inspection retains three historical authored drawings. Body uses one registered cutout source orientation without inferred yaw. Happy retains that cutout face, but the AI extraction is not guaranteed pixel identity. Partner-facing/profile/rear body/head views, accepted expressions, secondary layers and continuous motion remain pending.",
+    "All 14 AI pose artifacts are unapproved. V1 changes limb style; V2 changes identity; ten V3 poses still require hand/silhouette/anatomy corrections and joint registration. Static model advice is not animation or production acceptance.",
     "Source clothing remains a candidate. Six-pose cuffs PASS applies to version 5 only. Version 6 waist review failed duplicate Karo ink; the subsequent wider texture exclusion has developer static inspection only. Area governor is not physical cloth or anatomy validation. Full clock, body views and final video remain unaccepted.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]

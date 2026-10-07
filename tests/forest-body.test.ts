@@ -18,7 +18,7 @@ function fixture(actor:'lila'|'karo'){
   const profile=topicPreviewProfile(actor);
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'body-fixture',leadCharacterId:actor,profileHash:profile.profileHash,
     kind:'stick-man',durationMs:4000,fps:30,stage:{width:640,height:480,groundY:420},root:{x:320,y:420},scale:1,
-    headView:actor==='lila'?'three-quarter-right':'three-quarter-left',walks:[],gestures:[],props:[],gazes:[],expressions:[]};
+    headView:'front',walks:[],gestures:[],props:[],gazes:[],expressions:[]};
   return {profile,plan};
 }
 test('source body keeps asymmetric shoulders and hands, with pelvis at the belt',()=>{
@@ -50,7 +50,7 @@ test('source body cannot silently simulate missing full-body views or a seat wit
 });
 function seatingFixture(actor:'lila'|'karo',facing:'left'|'right'){
   const {profile,plan}=fixture(actor),m=rigMetrics(profile),direction=facing==='left'?-1:1;
-  plan.durationMs=6000;plan.facing=facing;plan.headView=facing==='left'?'three-quarter-left':'three-quarter-right';
+  plan.durationMs=6000;plan.facing=facing;plan.headView='front';
   plan.supports=[{id:'source-seat',kind:'seat',facing,width:80,center:{x:plan.root.x-direction*((m.legs!.left.upper+m.legs!.right.upper)/2+m.seatContactOffset!.x),
     y:plan.root.y-(m.legs!.left.lower+m.legs!.right.lower)/2-(m.footSoleOffset!.left+m.footSoleOffset!.right)*profile.appearance.bodyScale/2-(m.hips!.left.y+m.hips!.right.y)/2+m.seatContactOffset!.y}}];
   plan.postures=[{pose:'seated',supportId:'source-seat',startMs:300,endMs:1800},{pose:'stand',startMs:3000,endMs:4500}];
@@ -192,13 +192,14 @@ test('large opposing thigh motion preserves the waist and a positive area margin
     assert.equal(f.face['garment-standing-left']!.opacity,0);assert.equal(f.face['garment-standing-right']!.opacity,0);
   }
 });
-test('pose inspection preserves opacity on hidden bones and source hair namespaces',()=>{
+test('pose inspection preserves hidden bones and the complete registered source face',()=>{
   const svg=bodyCalibrationSvg('lila','point',1600,'happy');
   assert.match(svg,/<g id="lila-calibration-leg-left-upper" opacity="0" transform=/);
-  assert.match(svg,/id="lila-calibration-hair-tail-three-quarter-right"/);
+  assert.match(svg,/data-head-artwork="forest-cutout-head-1"/);
+  assert.match(svg,/id="lila-calibration-source-head-clip"/);
   assert.match(svg,/<g id="lila-calibration-neck" opacity="0" transform=/);
   assert.match(svg,/id="lila-calibration-neck-art"/);
-  assert.match(svg,/mask="url\(#lila-calibration-forest-static-hair-three-quarter-right\)"/);
+  assert.ok(!svg.includes('head-projection-paint-')&&!svg.includes('hair-tail-three-quarter-'));
 });
 test('source body scenes reference staged original resources under the scene contract',()=>{
   const {profile,plan}=fixture('karo'),result=performanceScene(plan,profile,silence);

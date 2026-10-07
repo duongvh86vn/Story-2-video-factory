@@ -1,0 +1,35 @@
+{
+  "actor": "lila",
+  "model": "ag/gemini-3.1-flash-image",
+  "endpoint": "http://127.0.0.1:20128/v1/images/generations",
+  "adapter": "ag-one-inline-reference-board",
+  "prompt": "Create an animation DESIGN REFERENCE, one clean 3-column by 2-row pose sheet of ONLY female Lila with the exact warm peach face, two simple black oval eyes, original smile and nose, dark messy brown hair tied low on her left, ragged brown one-shoulder fur dress and belt. The LEFT image is the authoritative character design. Preserve its face proportions, eyes/nose/mouth positions, clothing silhouette, warm skin, saturated brown palette, painted linework and original simple black ink limbs/hands/feet. Do not add boots, jewelry, fur collar, realistic muscles, white skin or extra detail. Do not replace the face with a generic face. The RIGHT image, if present, is ONLY a reference for the spear lunge mechanics, not for identity or scenery.\nEach cell shows the entire same character with unclipped hair, hands, feet and spear. Plain light cream background, no scenery, no shadows obscuring feet, no titles or labels. Readable silhouette with generous margins. Cells in exact reading order: 1 neutral relaxed standing with original happy face; 2 point toward a partner with a soft naturally bent arm, relaxed other arm; 3 thinking with fingertips near chin and elbow naturally below the hand; 4 running left with opposite arm/leg swing and a forward lean; 5 jumping with believable takeoff/air pose and coordinated arms; 6 two-handed SPEAR LUNGE toward lower left, front knee bent and shin nearly vertical, back leg extended, body weight forward. In cell 6 spear is a continuous long wooden shaft with stone point at lower-left, butt up-right; front hand low/forward nearer shaft center, rear hand up/back, rear elbow raised/back as in the pose reference. Both hands grip this SAME shaft with no gap. Spear total length about 1.2 character heights.\nLimbs remain smooth continuous black drawn strokes, subtle curves instead of harsh zigzag corners. Exactly two arms and two legs per character, one natural elbow/knee each, no reverse elbow, no broken wrist, no crossing the face, no impossible arm lengths. This is a pose study, not a final animation, not a sprite sheet for a slideshow. Match the reference character extremely closely.",
+  "references": [
+    {
+      "role": "primary-character-identity",
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "role": "user-spear-pose-mechanics",
+      "file": "docs/topics/assets/reference-spear-pose.png",
+      "sha256": "a5c5de51c742855f8dc993c1273cc27bbb35b0314ca12c3563c41d60c2fa350e"
+    }
+  ],
+  "status": "rejected-limb-style-and-identity",
+  "approved": false,
+  "productionReady": false,
+  "requestedAt": "2026-10-07T05:00:41.565Z",
+  "file": "lila-poses-v1.jpg",
+  "sha256": "b1b3f9509b16009cb8e79775846729907187a5923717feed79134cae70ef792f",
+  "width": 1264,
+  "height": 848,
+  "generatedAt": "2026-10-07T05:00:53.776Z",
+  "developerInspection": {
+    "viewed": true,
+    "scope": "static-art-only",
+    "productionAcceptance": false,
+    "notes": "Skin-colored limbs, fingers/toes and changed identity."
+  },
+  "action": "sheet"
+}

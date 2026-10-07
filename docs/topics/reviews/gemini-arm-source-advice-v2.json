@@ -1,0 +1,80 @@
+{
+  "model": "ag/gemini-3.8-flash",
+  "prompt": "Review actual source and attached static frames for this user-reported arm defect, NOT runtime tests. Preserve the original warm Lila/Karo face/hair/clothes and black stick limbs/mitten hands. User requires softly drawn strokes, not hard zigzag hinges. Characters are actors in arbitrary sourced stories, not presenters. Images show source identity, bad hunt-aim/think frames, and the user spear reference. Diagnose BOTH HANDS across rest, point, think, walk, run, jump, crouch, seated, holding/aiming/thrusting/chasing with spear. Evaluate primary/secondary grip spacing relative to asymmetric source shoulders, bend polarity per arm role, front-vs-depth foreshortening, hidden face-contact hand caused by SVG z-order, severe flexion, wrist orientation, and smooth entry/recovery. Do not declare an elbow invalid simply because it is high: user reference has a raised rear elbow. Source torso is front artwork; cannot fake profile by flipping costume. Propose concrete TypeScript changes with numeric examples from the supplied source lengths, stable branch/pose trajectories, and constraints that reject unconvincing shapes even when the wrist is mathematically reachable. Do not reduce bone lengths or relax contact tolerances to hide the defect. Differentiate a useful temporary frontal pose from pending true authored body/head views and whole-body lunge. Return JSON with rootCauses, fixes, checks, limitations. Do not claim video/motion pass.",
+  "source": [
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "b813721e17e3868adf6b6a116525f2335670b5063b6bfcffc22c49b36cfa6929"
+    },
+    {
+      "file": "packages/animation/forest-body-art.ts",
+      "sha256": "1daf6001bdb2e4a4b9fdf541ec7444517b0cd82b11d4ba6904d88a7716779823"
+    },
+    {
+      "file": "packages/animation/spear.ts",
+      "sha256": "ef0912d4320de516c4716aa5f9d34482a8358f0e49553cc28ab3d8532e3b273b"
+    },
+    {
+      "file": "packages/topics/body-workbench.ts",
+      "sha256": "952cff39bf8a5c053110dc50ccd0c6df7c7f830efac7eab37915fa6b26659963"
+    },
+    {
+      "file": "packages/animation/rig.ts",
+      "sha256": "e93f871046bd38203e355b790dcaad98154188e0dda04b8f50211cdf4afbc636"
+    }
+  ],
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    },
+    {
+      "file": "docs/topics/assets/user-hunt-aim-arm-feedback.png",
+      "sha256": "ed589d048cbbc13a1af531574d306598d16bb5e3302734ae8b5fba2899fc4dd2"
+    },
+    {
+      "file": "docs/topics/reviews/source-hunt-aim-before-v1.png",
+      "sha256": "740a4e31f03ff909e250e7be23d61838d2be38043adc30c19f138d90ba0b8859"
+    },
+    {
+      "file": "docs/topics/reviews/source-hunt-aim-after-v1.png",
+      "sha256": "9e795ee57b6c4269cc7f7502d9e4e4ba6c068523559933ec036296a9c171eb12"
+    },
+    {
+      "file": "docs/topics/reviews/source-think-after-v1.png",
+      "sha256": "186f39c4a31cb9a83a7f1ca85ee8fbe57c8daeb11177b9b43b97ed9b7240e980"
+    },
+    {
+      "file": "docs/topics/reviews/arm-audit-gestures-pose-v3.png",
+      "sha256": "00ba5e0f16d8c921a9afe8fd3684c684d8e89dc839af78543f3e26f95313accd"
+    },
+    {
+      "file": "docs/topics/reviews/arm-audit-locomotion-entry-v2.png",
+      "sha256": "150a88a2a78aa427074ec196f67e9567338f66b8e12687218664d38860fb511e"
+    },
+    {
+      "file": "docs/topics/reviews/arm-audit-spear-pose-v4.png",
+      "sha256": "49a3a23e87b14f8f165410dc0fd67ace44ee79ab2c5b7ca7d228278602bb7b7b"
+    },
+    {
+      "file": "docs/topics/reviews/arm-audit-seated-pose-v3.png",
+      "sha256": "f9c771ca6da6dea003fe43a449bafe23962f7ab32f3414f242e89d18df481010"
+    },
+    {
+      "file": "docs/topics/assets/reference-spear-pose.png",
+      "sha256": "a5c5de51c742855f8dc993c1273cc27bbb35b0314ca12c3563c41d60c2fa350e"
+    }
+  ],
+  "response": "```json\n{\n  \"rootCauses\": [\n    {\n      \"area\": \"twoHandedSpearGripAndShoulderAsymmetry\",\n      \"diagnosis\": \"In packages/topics/body-workbench.ts and packages/animation/spear.ts, the spear grip offset is hardcoded as primary grip at {x: 70 * direction * b, y: 20 * b} with secondaryOffset at -45 * b. Karo's source shoulders are heavily asymmetric (left: {x: 169, y: 252}, right: {x: 269, y: 286} relative to pelvis {x: 214, y: 428}). Assigning the front hand to primary and rear hand to secondary with a narrow 45-unit span forces the trailing arm (left shoulder at rear) into severe cramp or over-extension, while both arms are solved with an identical IK pole (spear.track.aim.x >= plan.root.x ? -1 : 1). This causes Karo's rear arm in hunt-aim (visible in Image 3 red arrow and Image 4) to fold inward into an unnatural, sharp V-hinge against the chest instead of branching outward/upward.\"\n    },\n    {\n      \"area\": \"highRearElbowVsPlanarPoleSymmetry\",\n      \"diagnosis\": \"The solver in compiler.ts enforces a single planar bend pole (-1 or +1) for both arms during spear tasks. As shown in the user's spear reference (Image 11), a realistic two-handed thrust/aim stance employs a raised rear elbow (humerus abducted and extended back-upward) while the leading support arm points forward-downward. Forcing a downward pole on the rear arm prevents the authentic raised rear elbow, creating severe flexion (<45° interior angle / >135° flexion) and acute elbow creasing.\"\n    },\n    {\n      \"area\": \"svgZOrderAndHiddenFaceContactHand\",\n      \"diagnosis\": \"In packages/animation/rig.ts (performanceSvg), the mittens are rendered in defs and referenced via hand-${side}-back-slot inside limbs, positioned in the SVG DOM before the head group. Meanwhile, hand-${side}-front-slot is hardcoded to opacity='0'. In think-source (Images 6 and 7), when the wrist moves to chinAt(side), the mitten hand is occluded behind the torso clothing, neck, and beard/chin bitmap cutout rather than cupping the jaw from the front.\"\n    },\n    {\n      \"area\": \"missingCurvedInkArmAndHardZigzagHinges\",\n      \"diagnosis\": \"While legs utilize inkLimb() with cubic Bézier smoothing and depth projection (ink-leg-${side}), arms rely on raw unprojected rigid two-bone chains (arm-${side}-upper and arm-${side}-lower) with M0 0Vlength straight paths. Under high flexion (>100° in think, jump, and spear poses), the joint renders as an abrupt, mechanical zigzag vertex rather than the hand-drawn organic curve matching Lila and Karo's reference art.\"\n    },\n    {\n      \"area\": \"unconstrainedPlanarReachabilityVsForeshortening\",\n      \"diagnosis\": \"In compiler.ts, projectedArm is computed via projectSourceKnee but discarded, leaving planar solveChain outputs unprojected and unconstrained by 3D foreshortening. When 3D distance between shoulder and hand decreases along the Z-axis (pointing forward or gripping a shaft extending in depth), 2D IK collapses into extreme acute flexion in the XY plane because the rig lacks an ellipse-of-reach / minimum interior elbow angle constraint.\"\n    }\n  ],\n  \"fixes\": [\n    {\n      \"file\": \"packages/animation/compiler.ts\",\n      \"description\": \"Differentiate elbow poles and roles for primary vs. secondary spear hands; enforce minimum elbow interior angle (shape guard); dynamically promote front-slot hand opacity when contacting head/chin.\",\n      \"codeSnippet\": \"/** Differentiate leading vs trailing arm kinematics and enforce organic curvature guard. */\\nexport function solveSpearArms(\\n  shoulder: Point,\\n  target: Point,\\n  upper: number,\\n  lower: number,\\n  role: 'spear-lead' | 'spear-trail',\\n  aimDirection: number\\n): Chain {\\n  // Trailing hand cocked high with raised elbow (pole 1 when facing right),\\n  // leading hand supporting shaft below (pole -1 when facing right).\\n  const pole = role === 'spear-trail' ? (aimDirection >= 0 ? 1 : -1) : (aimDirection >= 0 ? -1 : 1);\\n  const chain = solveChain(shoulder, target, upper, lower, pole);\\n  \\n  // Reject unnatural pinches: interior angle < 38 deg (flexion > 142 deg)\\n  const interiorAngle = Math.abs(chain.lower - chain.upper);\\n  if (interiorAngle < 38) {\\n    throw new Error(`spear-arm-cramp: acute elbow pinch (${interiorAngle.toFixed(1)}°) violates organic stick limb aesthetics`);\\n  }\\n  return chain;\\n}\"\n    },\n    {\n      \"file\": \"packages/topics/body-workbench.ts\",\n      \"description\": \"Adjust grip anchors and secondary spacing to match Lila/Karo asymmetric source metrics (Karo total arms: left upper 131/lower 131 = 262px, right upper 88/lower 136 = 224px; scaled by k). Expand grip spacing from 45 to 68-75 units.\",\n      \"codeSnippet\": \"// In bodyCalibrationPlan for spear / hunt actions:\\nconst span = 72 * b; // expanded from 45*b to prevent chest-cramp on asymmetric shoulders\\nconst rearGripOffset = -32 * b;\\nconst frontGripOffset = rearGripOffset + span;\\nconst primary = hand === 'right' ? frontGripOffset : rearGripOffset;\\nconst secondary = hand === 'right' ? rearGripOffset : frontGripOffset;\\n\\nplan.spears = [{\\n  id: 'calibration-grip',\\n  propId: prop.id,\\n  hand,\\n  action: thrust ? 'thrust' : 'hold',\\n  startMs: 0,\\n  endMs: durationMs,\\n  grip: { x: (direction === 1 ? 58 : -58) * b, y: 12 * b },\\n  aim,\\n  twoHands: true,\\n  secondaryOffset: hand === 'right' ? -span : span,\\n  ...(thrust ? { readyMs: 1200, contactMs: 1800, recoverMs: 2200 } : {})\\n}];\"\n    },\n    {\n      \"file\": \"packages/animation/rig.ts\",\n      \"description\": \"Generate smooth Bézier ink paths for arms (inkLimb) and enable z-index slot switching between hand-back-slot and hand-front-slot during chin/face gestures.\",\n      \"codeSnippet\": \"// In performanceSvg / frame emission:\\nconst isChinContact = gesture?.action === 'think' || (gesture && contacts(gesture));\\n// Slot switching via opacity\\ntransforms[`hand-${side}-back-slot`] = `opacity=\\\"${isChinContact ? 0 : 1}\\\"`;\\ntransforms[`hand-${side}-front-slot`] = `opacity=\\\"${isChinContact ? 1 : 0}\\\"`;\\n\\n// Generate soft Bézier curve for stick arms matching ink-leg\\nif (drawn) {\\n  paths[`ink-arm-${side}`] = inkLimb(shoulder, arm.joint, arm.end, 0.22);\\n}\"\n    }\n  ],\n  \"checks\": [\n    \"Verify Karo hunt-aim and spear-thrust at 500ms, 1600ms, and 1800ms: right front arm flexes smoothly between 55° and 85°, left rear elbow rises cleanly behind the torso without penetrating the spine or crumpling to <40° interior angle.\",\n    \"Verify think gesture for both rig-left and rig-right at 1600ms: mitten hand is composited on hand-front-slot in front of chin/beard artwork, not occluded beneath head/neck clip paths.\",\n    \"Verify seated lap rests (sit-right, sit-left at 2200ms): hands rest gently upon thigh height, elbows drop naturally with flexion between 60° and 80° without sharp zigzag points.\",\n    \"Verify run cycle arm pendulums: arms pass naturally along hips without high trailing elbow spikes above shoulder Y in torso coordinates.\",\n    \"Verify shape-guard constraint throws explicit errors when target coordinates force mathematically reachable but visually unconvincing pinched joints.\"\n  ],\n  \"limitations\": [\n    \"Does not constitute continuous motion / video quality acceptance; verified strictly on static candidate workbench frames.\",\n    \"Temporary frontal pose calibration does not substitute for true authored 3/4 or profile body views, turn-arounds, or diagonal dynamic lunge meshes.\",\n    \"Cutout head retains original front happy registration; partner head-turn remains deliberately blocked awaiting authored source-faithful assets.\"\n  ]\n}\n```",
+  "usage": {
+    "inputTokens": 37638,
+    "outputTokens": 2101
+  },
+  "scope": "static-source-and-art-advice-only",
+  "productionAcceptance": false,
+  "createdAt": "2026-10-07T06:01:24.816Z"
+}

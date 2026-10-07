@@ -1,5 +1,11 @@
 # Lila/Karo: chạy, nhảy và diễn hành động săn
 
+**Hiện hành 0.17:** tay hunt-aim tiếp tục bị người dùng loại. Preset mới tách hai grip, giữ chain lengths, có role flexion guard, target cằm từng tay và foreground slot; run không áp pole theo clip tương lai. Bảng inspection có 138 ô tĩnh, sáu ô head-turn chờ artwork. Source và ảnh đã được Gemini cùng model code khác tư vấn qua 9router; không phải runtime test hoặc PASS video. [ARM-POSE-REPAIR.md](ARM-POSE-REPAIR.md) ghi code, bằng chứng cuối, giới hạn còn lại và lệnh chạy. Lunge cả người theo mẫu chưa được dựng.
+
+**Lịch sử 0.16:** tay ở 0.15 tiếp tục bị người dùng loại; các snapshot cũ không phải pose đã duyệt. Đã tạo 10 pose riêng v3 (point/think/run-left/jump/spear-lunge-left cho mỗi actor), giữ cả Gemini v1/v2 bị loại để đối chiếu. Có hai lượt review ảnh Gemini thật qua 9router; review v3 vẫn chỉ ra lỗi bàn tay, silhouette và giáo, không cho phép mở production guard. Tool artwork, prompt, gallery, công việc còn thiếu và môi trường ở [AI-POSE-WORKFLOW.md](AI-POSE-WORKFLOW.md).
+
+Code body 0.16 dùng mặt happy nguyên lớp cutout, không bóp qua mesh yaw; góc nhìn bạn diễn chưa có. Tay chạy được dựng từ góc bắp tay trước/sau và góc gập cẳng tay, rồi mới suy ra hand target; không ép hai cổ tay đối xứng làm khuỷu tay sau chĩa lên. Thân và đầu profile, lunge toàn thân theo pose người dùng, shaft/grip binding và nghiệm thu liên tục vẫn thiếu. Các mục 0.15 bên dưới là lịch sử kỹ thuật; bản mới vẫn `productionReady=false`, không phải video đã đạt.
+
 Mốc hiện tại 0.15, ngày 07/10/2026; sửa tay/giáo sau góp ý của người dùng về 0.14. Đây là bộ điều khiển chuyển động ứng viên cho đúng hai model da ấm, tóc nâu, áo một vai và nét tay/chân đen từ ảnh đã gửi. Không đổi thành người dẫn hoặc gán một câu chuyện săn cố định. Ba input vẫn là kịch bản nguyên văn, WAV giữ lời/clock giọng gốc, và câu chuyện → kịch bản trung thành → narration → video.
 
 ## Sửa pose đâm giáo 0.15

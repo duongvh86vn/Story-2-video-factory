@@ -46,8 +46,8 @@ export function sampleRunning(schedule:ReturnType<typeof runSchedule>,time:numbe
     feetOffsetY:samples.reduce((n,s)=>n+s.feetOffsetY,0),shadowScale:Math.min(1,...samples.map(s=>s.shadowScale))};
   return {feet,stance,air};
 }
-export const runningDescription={version:'forest-run-contact-1',poses:RUN_POSES,
+export const runningDescription={version:'forest-run-contact-2',poses:RUN_POSES,
   flight:'support ends at step phase 0.62 before opposite contact; timed body/sole lift, grounded shadow',
   feet:'alternating fixed world-space support anchors; quintic swing; final two placements settle standing stance',
-  arms:'source elbow-flexed forward/back drive; source front projection infers elbow depth; no simultaneous side spreading',
+  arms:'source upper-arm pendulum and continuous forearm flexion, interpolated from each current rest branch using exact lengths; frontal plane, no plan-global run pole or idle foreshortening',
   scope:'candidate front-body horizontal locomotion, not authored profile/rear running or accepted dynamics',productionReady:false};

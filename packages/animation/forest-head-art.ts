@@ -5,12 +5,13 @@ import type {HostProfile} from '../host/schemas.js';
 import type {FrameState} from './compiler.js';
 import type {HeadView} from './schemas.js';
 import {hash} from '../core/utils.js';
-import {projectedHeadSvg,projectedHeadState,projectedFeatureTransform,projectedSkinPolygon,headProjectionCalibration,headProjectionGlyphLimits,HEAD_PROJECTION_UV_OVERLAP,HEAD_PROJECTION_VERSION} from './forest-head-projection.js';
+import {cutoutHeadSvg,cutoutHeadFaceState,cutoutHeadDescription,usesCutoutHead} from './forest-cutout-head.js';
+import {projectedHeadSvg,projectedSkinPolygon,headProjectionCalibration,headProjectionGlyphLimits,HEAD_PROJECTION_UV_OVERLAP,HEAD_PROJECTION_VERSION} from './forest-head-projection.js';
 
 export const FOREST_HEAD_VERSION='forest-head-1' as const;
 // Bump these when render/evaluation logic changes after a pack is released.
-export const FOREST_FACE_COMPILER_VERSION='forest-face-motion-8';
-export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-9';
+export const FOREST_FACE_COMPILER_VERSION='forest-face-motion-9';
+export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-10';
 export const FOREST_HEAD_VIEWS=['three-quarter-left','front','three-quarter-right'] as const;
 export type ReferenceHeadView=typeof FOREST_HEAD_VIEWS[number];
 type View=ReferenceHeadView;
@@ -76,6 +77,7 @@ export function usesReferenceHead(profile:HostProfile):boolean {
 export function validateReferenceHead(profile:HostProfile,views:Array<HeadView|undefined>):void {
   if(!usesReferenceHead(profile))return;
   if(profile.kind!=='stick-man'||!profile.appearance.characterVariant)throw new Error('Reference head requires a Lila/Karo stick actor.');
+  if(usesCutoutHead(profile)&&views.some(view=>view&&view!=='front'))throw new Error('needs-head-view: registered source head has one source orientation; authored partner-facing/profile/rear views are pending. The rejected mesh yaw is not a fallback.');
   for(const view of views)if(view&&!FOREST_HEAD_VIEWS.includes(view as View))
     throw new Error('needs-head-view: forest-head-1 has authored front and three-quarter-left/right textures; profile/rear views are pending. No mirrored fallback.');
 }
@@ -103,6 +105,7 @@ const fmt=(n:number)=>String(Number(n.toFixed(5)));
 const clipId=(region:Region)=>'glyph-'+hash(region).slice(0,12);
 export function forestHeadSvg(profile:HostProfile,mode:'embedded'|'scene'='embedded'):string {
   validateReferenceHead(profile,[]);
+  if(usesCutoutHead(profile))return cutoutHeadSvg(profile,(file,sha)=>referenceImageUrl(file,sha,mode));
   const actor=profile.appearance.characterVariant!,source=sources[actor],imageId='forest-source-face';
   const glyph=(region:Region,maskInk=true)=>'<g transform="translate('+(-region.anchor.x)+' '+(-region.anchor.y)+')" clip-path="url(#'+clipId(region)+')"><use href="#'+imageId+'"'+(maskInk?' filter="url(#forest-ink-only)"':'')+'/></g>';
   const regions=[...source.eyes,...source.brows,source.mouth];
@@ -153,13 +156,14 @@ export function forestHeadSvg(profile:HostProfile,mode:'embedded'|'scene'='embed
   }).join('');
   return '<g data-head-artwork="'+FOREST_HEAD_VERSION+'" stroke="none" fill="none">'+defs+viewSvg+'</g>';
 }
-export interface ReferenceFaceInput {view:View;gaze:Point;blink:number;browY:number;browAngle:number;eyeOpen:number;smile:number;round:number;frown:number;speechLevel:number|null;projection?:{actor:Actor;yaw:number;tailRotation:number};}
+export interface ReferenceFaceInput {view:View;gaze:Point;blink:number;browY:number;browAngle:number;eyeOpen:number;smile:number;round:number;frown:number;speechLevel:number|null;sourceBody?:boolean;}
 /** Shared pure evaluator: no accumulated frames, whole-head mirroring or claim
  * of phoneme synchronization. Unsupported views fail before rendering. */
 export function referenceFaceState(input:ReferenceFaceInput):FrameState['face'] {
+  if(input.sourceBody)return cutoutHeadFaceState(input);
   const face:FrameState['face']={};
   for(const view of FOREST_HEAD_VIEWS){
-    face['head-view-'+view]={opacity:(input.projection?'front':input.view)===view?1:0};
+    face['head-view-'+view]={opacity:input.view===view?1:0};
     for(const [i,side] of (['left','right'] as const).entries()){
       face['eye-'+side+'-'+view]={x:input.gaze.x,y:input.gaze.y,scaleY:Math.max(.035,(1-input.blink)*input.eyeOpen)};
       face['brow-'+side+'-'+view]={y:input.browY,rotation:(i?-1:1)*input.browAngle*2.2};
@@ -176,24 +180,16 @@ export function referenceFaceState(input:ReferenceFaceInput):FrameState['face'] 
     face['mouth-round-'+view]={opacity:round*(1-frown)};
     face['mouth-frown-'+view]={opacity:frown};
   }
-  if(input.projection){
-    const {actor,yaw,tailRotation}=input.projection,texture=textures[actor].front;
-    Object.assign(face,projectedHeadState(actor,texture,yaw,actor==='lila'?tails.front.pivot:undefined,tailRotation));
-    for(const [i,side] of (['left','right'] as const).entries()){
-      face['head-anchor-eye-'+side]={attr:{transform:projectedFeatureTransform(actor,texture,texture.eyes[i]!,yaw,'eye')}};
-      face['head-anchor-brow-'+side]={attr:{transform:projectedFeatureTransform(actor,texture,texture.brows[i]!,yaw,'brow')}};
-    }
-    for(const name of ['rest','smile','talk','talk-tense','talk-round','round','frown'])face['head-anchor-mouth-'+name]={attr:{transform:projectedFeatureTransform(actor,texture,texture.mouth,yaw,'mouth')}};
-  }
   return face;
-}
-export function referenceHeadProjectionPaths(actor:Actor,yaw:number):Record<string,string>{
-  return actor==='lila'?{'head-projection-skin':projectedSkinPolygon(actor,textures[actor].front,frontSkin,yaw)}:{};
 }
 /** Fixed pack resources only. Stage original bytes and retain their hashes. */
 export function referenceHeadAssets(appearance:HostProfile['appearance']):Array<{file:string;sha256:string;path:string}> {
   if(appearance.artworkVersion!==FOREST_HEAD_VERSION&&appearance.artworkVersion!=='forest-body-1')return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference head actor variant missing.');
+  if(appearance.artworkVersion==='forest-body-1'){
+    const c=cutoutHeadDescription().calibration[actor];
+    return [{file:c.file,sha256:c.sha256,path:'assets/rigs/'+c.sha256+'.png'}];
+  }
   const source=sources[actor];
   return [{file:source.file,sha256:source.sha256},...FOREST_HEAD_VIEWS.map(view=>({file:'library/topics/prehistoric-life/rig-v1/'+textures[actor][view].file,sha256:textures[actor][view].sha256}))]
     .map(asset=>({...asset,path:'assets/rigs/'+asset.sha256+'.png'}));
@@ -207,8 +203,9 @@ export function referenceHeadDescription(){
   return {version:FOREST_HEAD_VERSION,views:FOREST_HEAD_VIEWS,assets:textures,features:sources,
     faceCompilerVersion:FOREST_FACE_COMPILER_VERSION,rendererVersion:FOREST_HEAD_RENDER_VERSION,
     facialCalibration:{eyeStretch,inkMatrix,browResponse:2.2,tenseMouth,speechShapes:'relaxed, tense for frown, rounded for surprise/fear; audio activity only'},secondaryHair:{tails,scope:'Lila ponytail mask; neck/fringe/back hair remain one painted layer'},
-    projection:{version:HEAD_PROJECTION_VERSION,calibration:headProjectionCalibration,glyphLimits:headProjectionGlyphLimits,uvOverlapPixels:HEAD_PROJECTION_UV_OVERLAP,scope:'forest-body-1 only; front head raster on a shared 60-triangle surface; feature centers, jaw mask and ponytail follow the actual triangle mapping on the absolute clock; small glyph stretch/shear is bounded for readability',notReconstructed3D:true,maxYawDeg:headProjectionCalibration.maxYawDeg},
-    fingerprint:hash({version:FOREST_HEAD_VERSION,faceCompiler:FOREST_FACE_COMPILER_VERSION,renderer:FOREST_HEAD_RENDER_VERSION,textures,sources,eyeStretch,inkMatrix,tenseMouth,tails,frontSkin,projection:headProjectionCalibration,projectionVersion:HEAD_PROJECTION_VERSION,glyphLimits:headProjectionGlyphLimits,uvOverlapPixels:HEAD_PROJECTION_UV_OVERLAP}),
-    status:'candidate-head-layer-integration',productionReady:false,turnRendering:'continuous-front-projection-for-body; stepped-authored-views-for-head-only',
-    pending:['profile/back textures','projected front-head fidelity and continuous motion acceptance','full-body views and seated rig acceptance','separate fringe/beard/clothing secondary motion','authored turns beyond the bounded projection','runtime motion acceptance']};
+    projection:{version:HEAD_PROJECTION_VERSION,activeForBody:false,calibration:headProjectionCalibration,glyphLimits:headProjectionGlyphLimits,uvOverlapPixels:HEAD_PROJECTION_UV_OVERLAP,scope:'Historical rejected inferred-yaw candidate; not active in source-body calibration. Its utility and review evidence remain for comparison.',notReconstructed3D:true,maxYawDeg:headProjectionCalibration.maxYawDeg},
+    bodyHead:cutoutHeadDescription(),
+    fingerprint:hash({version:FOREST_HEAD_VERSION,faceCompiler:FOREST_FACE_COMPILER_VERSION,renderer:FOREST_HEAD_RENDER_VERSION,textures,sources,eyeStretch,inkMatrix,tenseMouth,tails,frontSkin,cutout:cutoutHeadDescription(),projection:headProjectionCalibration,projectionVersion:HEAD_PROJECTION_VERSION,glyphLimits:headProjectionGlyphLimits,uvOverlapPixels:HEAD_PROJECTION_UV_OVERLAP}),
+    status:'candidate-head-layer-integration',productionReady:false,turnRendering:'registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only',
+    pending:['authored partner-facing body/head views, profile/back textures','registered source cutout fidelity and accepted expression layers','full-body views and seated rig acceptance','separate fringe/beard/clothing secondary motion','authored continuous turns','runtime motion acceptance']};
 }

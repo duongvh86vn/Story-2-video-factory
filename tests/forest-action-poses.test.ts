@@ -3,15 +3,58 @@ import assert from 'node:assert/strict';
 import {bodyCalibrationPlan,bodyWorkbench} from '../packages/topics/body-workbench.js';
 import {samplePerformance,validatePerformance,compilePerformance} from '../packages/animation/compiler.js';
 import {ANIMATION_VERSION} from '../packages/animation/schemas.js';
-import {rigMetrics} from '../packages/animation/rig.js';
+import {rigMetrics,performanceSvg} from '../packages/animation/rig.js';
+import {solveChain} from '../packages/animation/compiler.js';
+import {sourceArmShape} from '../packages/animation/source-arm.js';
 import {prehistoricReadiness} from '../packages/topics/prehistoric-life.js';
 const silent={method:'segment-draft' as const,windowMs:20,intervals:[]};
 const values=(s:string)=>s.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
 const length=(a:{x:number;y:number},b:{x:number;y:number},depth=0)=>Math.hypot(a.x-b.x,a.y-b.y,depth);
 
+test('source arm guard rejects a reachable but pinched spear elbow without shortening bones',()=>{
+  const shoulder={x:0,y:0},target={x:18,y:8},chain=solveChain(shoulder,target,60,55,-1);
+  assert.ok(chain.reachable);
+  assert.throws(()=>sourceArmShape('spear-front',shoulder,chain.joint,chain.end,60,55),/needs-arm-pose.*folds/);
+  assert.ok(Math.abs(length(shoulder,chain.joint)-60)<.0001);
+  assert.ok(Math.abs(length(chain.joint,chain.end)-55)<.0001);
+});
+
+for(const actor of ['lila','karo'] as const){
+  test(`${actor}: a future run or seat clip cannot alter the current idle arms`,()=>{
+    const {plan:rest,profile}=bodyCalibrationPlan(actor,'rest','happy');
+    const baseline=samplePerformance(rest,profile,0,silent);
+    for(const action of ['run','run-left','sit-right','sit-left'] as const){
+      const {plan}=bodyCalibrationPlan(actor,action,'happy');
+      const frame=samplePerformance(plan,profile,0,silent);
+      assert.deepEqual(frame.hands,baseline.hands,action+' changed an idle wrist');
+      for(const side of ['left','right'] as const){
+        assert.equal(frame.paths!['ink-arm-'+side],baseline.paths!['ink-arm-'+side]);
+        assert.equal(frame.armGeometry![side]!.role,'rest');
+      }
+    }
+  });
+  for(const hand of ['left','right'] as const)test(`${actor}/${hand}: chin contact uses one hand definition in the foreground`,()=>{
+    const {plan,profile}=bodyCalibrationPlan(actor,'think','happy',hand),frame=samplePerformance(plan,profile,1600,silent);
+    const svg=performanceSvg(profile);
+    assert.equal(frame.face[`hand-${hand}-front-slot`]!.opacity,1);
+    assert.equal(frame.face[`hand-${hand}-back-slot`]!.opacity,0);
+    assert.equal(frame.face[`ink-arm-${hand}-front-slot`]!.opacity,1);
+    assert.equal(frame.face[`ink-arm-${hand}-back-slot`]!.opacity,0);
+    assert.equal((svg.match(new RegExp(`id="hand-${hand}"`,'g'))??[]).length,1);
+    assert.equal((svg.match(new RegExp(`id="ink-arm-${hand}"`,'g'))??[]).length,1);
+    assert.ok(svg.indexOf(`id="hand-${hand}-front-slot"`)>svg.indexOf('id="head"'));
+    assert.ok(svg.indexOf(`id="ink-arm-${hand}-front-slot"`)>svg.indexOf('id="head"'));
+    const rest=samplePerformance(plan,profile,3900,silent);
+    assert.equal(rest.face[`hand-${hand}-front-slot`]!.opacity,0);
+    assert.equal(rest.face[`hand-${hand}-back-slot`]!.opacity,1);
+    assert.equal(rest.face[`ink-arm-${hand}-front-slot`]!.opacity,0);
+    assert.equal(rest.face[`ink-arm-${hand}-back-slot`]!.opacity,1);
+  });
+}
+
 for(const actor of ['lila','karo'] as const)for(const action of ['run','run-left'] as const){
   test(`${actor}/${action}: running has genuine flight, fixed support contacts, grounded settling and reproducible seeks`,()=>{
-    const {plan,profile}=bodyCalibrationPlan(actor,action,'happy');
+    const {plan,profile}=bodyCalibrationPlan(actor,action,'happy'),m=rigMetrics(profile);
     let flight=false,support=false,prior=samplePerformance(plan,profile,0,silent);
     for(let t=10;t<=plan.durationMs;t+=10){
       const f=samplePerformance(plan,profile,t,silent);
@@ -22,6 +65,11 @@ for(const actor of ['lila','karo'] as const)for(const action of ['run','run-left
         if(f.stance[side]){support=true;assert.equal(f.feet[side].y,plan.stage.groundY);}
         if(prior.stance[side]&&f.stance[side])assert.deepEqual(f.feet[side],prior.feet[side],'support sole slid');
         assert.ok(f.feet[side].y<=plan.stage.groundY);
+        const u=values(f.transforms['arm-'+side+'-upper']!),l=values(f.transforms['arm-'+side+'-lower']!);
+        const shoulder={x:u[0]!,y:u[1]!},elbow={x:l[0]!,y:l[1]!},depth=f.armProjection?.[side]?.elbowDepth??0,bones=m.arms![side];
+        assert.ok(elbow.y>shoulder.y,'a running recovery elbow must not snap upward beside the head');
+        assert.ok(Math.abs(length(shoulder,elbow,depth)-bones.upper)<.002,'running upper arm changed length');
+        assert.ok(Math.abs(length(elbow,f.hands[side],depth)-bones.lower)<.002,'running forearm changed length');
       }
       assert.ok(Object.values(f.transforms).every(s=>!s.includes('NaN')));
       prior=f;
@@ -55,6 +103,7 @@ for(const actor of ['lila','karo'] as const){
     const hit=samplePerformance(plan,profile,track.contactMs!,silent),ready=samplePerformance(plan,profile,track.readyMs!,silent);
     assert.ok(length(hit.props[prop.id]!.tip!,track.aim)<.0001);
     assert.ok(length(ready.props[prop.id]!.tip!,track.aim)>5);
+    assert.equal(track.secondaryOffset,-45*profile.appearance.bodyScale,'frontal mittens need distinct grips; do not crowd them on one wrist target');
     for(let t=0;t<=plan.durationMs;t+=20){
       const f=samplePerformance(plan,profile,t,silent),tool=f.props[prop.id]!,a=tool.angle!*Math.PI/180;
       assert.equal(tool.attached,true);assert.ok(f.contactError<.001);

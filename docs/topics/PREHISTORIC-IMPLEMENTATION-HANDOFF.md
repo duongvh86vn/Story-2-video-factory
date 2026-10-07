@@ -1,5 +1,11 @@
 # Bàn giao source WIP — Cuộc sống thời tiền sử
 
+**Hiện hành 0.17:** bản sửa source và inspection đầy đủ tại [ARM-POSE-REPAIR.md](ARM-POSE-REPAIR.md). Grip giáo tách xa thân, shape guard theo từng role, think có hand slot trước cằm, run chỉ tác động khi đang chạy, point reach theo chain và free-seat pelvis giữ foot reach. Đã gọi bốn lượt tư vấn source/ảnh qua 9router (ba Gemini, một model code), ngoài hai lượt artwork review trước đó. 138 ô tĩnh gồm sáu head-turn bị chặn; không thay thế kiểm cả clock. Lunge, body/head đúng hướng và nghiệm thu ba luồng vẫn còn; guard giữ nguyên. Các mục bên dưới là lịch sử.
+
+**Lịch sử 0.16:** người dùng tiếp tục loại tay/mặt ở các pose cũ. Đã gọi thật 14 lượt tạo ảnh + hai lượt review ảnh qua 9router, có bộ 10 pose rời v3 và gallery `/api/topics/prehistoric-life/pose-art`. V1 đổi tay chân thành màu da nên bị loại; v2 đổi identity; v3 vẫn là ứng viên. Review ảnh v3 chỉ ra lỗi tay nắm/mitten/silhouette và không phải nghiệm thu chuyển động. Prompt, hash, báo cáo, lệnh chạy và thứ tự việc còn thiếu tại [AI-POSE-WORKFLOW.md](AI-POSE-WORKFLOW.md).
+
+Body hiện giữ nguyên mặt happy trên cutout đăng ký với cổ/thân, bỏ mesh yaw và các glyph bị lệch. Các tuyên bố projection ±32°/tóc trễ 120ms ở mục lịch sử bên dưới không còn áp dụng cho body 0.16. Chưa có hướng nhìn bạn diễn; explicit view thiếu artwork bị chặn `needs-head-view`. Camera đã đo biên tóc/đầu thực; think dùng target cằm đăng ký; tay chạy mới dùng bắp tay pendulum và cẳng tay cùng nhịp. Ảnh pose mới chưa được chuyển thành rig sản xuất. `productionReady=false`, `productionRig=null`; ba luồng chủ đề còn chờ nghiệm thu. Runtime test, fixture/video và TTS/ASR giao model khác.
+
 Ngày 07/10/2026. Nhánh `codex/prehistoric-life`; chưa nghiệm thu chủ đề. Đặc tả chính: [CUOC-SONG-THOI-TIEN-SU.md](CUOC-SONG-THOI-TIEN-SU.md).
 
 ## Đã có trong source

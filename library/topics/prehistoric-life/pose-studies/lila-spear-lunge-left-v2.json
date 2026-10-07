@@ -1,0 +1,35 @@
+{
+  "actor": "lila",
+  "action": "spear-lunge-left",
+  "model": "ag/gemini-3.1-flash-image",
+  "endpoint": "http://127.0.0.1:20128/v1/images/generations",
+  "adapter": "ag-one-inline-reference-board",
+  "prompt": "Generate ONE full-body drawing of female Lila with the exact warm peach face, two simple black oval eyes, original smile and nose, dark messy brown hair tied low on her left, ragged brown one-shoulder fur dress and belt, in the requested pose, using the LEFT reference as the exact character identity. The RIGHT image supplies pose mechanics only. This is a STICK FIGURE, not a flesh-limbed cartoon caveman. ARMS AND LEGS ARE SINGLE SLIM SOLID BLACK INK STROKES. Hands are simple black mitten silhouettes, feet simple black oval silhouettes. No skin-colored limbs, fingers, toes, muscles, boots or realistic anatomy details. Keep the original face, eye spacing, original nose and smile, hair outline, beard if present, ragged fur garment and belt from the LEFT image. Do not simplify or redesign the head, hair or clothes. Preserve rich warm skin and brown colors. Smooth softly curved ink strokes, natural elbows, exactly two arms and two legs, no backwards joints, no abrupt zigzag bends. Match the RIGHT POSE REFERENCE: wide stable SPEAR LUNGE toward lower-left, front knee bent with nearly vertical shin, rear leg extended to the right, body leaning forward left. A continuous long wooden spear runs from stone tip lower-left to butt upper-right, length about 1.2 character heights. Front hand low/forward near shaft middle; rear hand up/back on the same shaft; rear elbow raised/back near shoulder. Both BLACK MITTEN HANDS visibly grip the same shaft. Preserve the exact simple black line limbs of the LEFT character. Plain cream background. One character only, ample empty margins, whole spear/hair/hands/feet inside canvas, no text, no grid, no other poses. Face remains original happy for this mechanical pose study. This is a design reference pending review, not finished video.",
+  "references": [
+    {
+      "role": "primary-character-identity",
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "role": "user-spear-pose-mechanics",
+      "file": "docs/topics/assets/reference-spear-pose.png",
+      "sha256": "a5c5de51c742855f8dc993c1273cc27bbb35b0314ca12c3563c41d60c2fa350e"
+    }
+  ],
+  "status": "anatomy-study-only-identity-rejected",
+  "approved": false,
+  "productionReady": false,
+  "requestedAt": "2026-10-07T05:05:26.376Z",
+  "file": "lila-spear-lunge-left-v2.jpg",
+  "sha256": "09f2410e5c88920252d5787e2d414fe145b58e923d8d20b6212eba195327b95e",
+  "width": 1264,
+  "height": 848,
+  "generatedAt": "2026-10-07T05:05:37.330Z",
+  "developerInspection": {
+    "viewed": true,
+    "scope": "static-art-only",
+    "productionAcceptance": false,
+    "notes": "Black stick limbs restored but hair, face and belt change; not an identity reference."
+  }
+}
