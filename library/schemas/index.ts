@@ -12,6 +12,7 @@ import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/schemas.
 import { ConfigSchema } from '../../packages/core/config.js';
 import { GeneratedDraftSchema, ScriptGenerationReportSchema } from '../../packages/orchestrator/script-generation.js';
 import {ActorMotionSchema,MotionRegistrationSchema,SpriteClipSchema} from '../../packages/motion/schemas.js';
+import {SpriteStageSchema} from '../../packages/motion/stage-schemas.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary = {
@@ -24,6 +25,7 @@ export const schemaLibrary = {
   'explanation-plan':ExplanationPlanSchema,'voice-report':VoiceReportSchema,'speech-activity':ActivitySchema,
   'generated-script':GeneratedDraftSchema,'script-generation':ScriptGenerationReportSchema,
   'actor-motion':ActorMotionSchema,'actor-motion-registration':MotionRegistrationSchema,'sprite-clip':SpriteClipSchema,
+  'sprite-stage':SpriteStageSchema,
 };
 
 export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(import.meta.url))): Promise<void> {

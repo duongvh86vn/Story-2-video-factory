@@ -1,0 +1,350 @@
+{
+  "$ref": "#/definitions/sprite-stage",
+  "definitions": {
+    "sprite-stage": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "number",
+          "const": 1
+        },
+        "producer": {
+          "type": "string",
+          "const": "sprite-stage-1"
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "durationMs": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 120000
+        },
+        "stage": {
+          "type": "object",
+          "properties": {
+            "width": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 32768
+            },
+            "height": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 32768
+            }
+          },
+          "required": [
+            "width",
+            "height"
+          ],
+          "additionalProperties": false
+        },
+        "actors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "actorId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "clips": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "compositionId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "startMs": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "endMs": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 120000
+                    },
+                    "rate": {
+                      "type": "number",
+                      "minimum": 0.5,
+                      "maximum": 2,
+                      "default": 1
+                    },
+                    "placement": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "number",
+                          "minimum": -100000,
+                          "maximum": 100000
+                        },
+                        "y": {
+                          "type": "number",
+                          "minimum": -100000,
+                          "maximum": 100000
+                        },
+                        "scale": {
+                          "type": "number",
+                          "minimum": 0.01,
+                          "maximum": 8
+                        },
+                        "rotation": {
+                          "type": "number",
+                          "minimum": -180,
+                          "maximum": 180
+                        }
+                      },
+                      "required": [
+                        "x",
+                        "y",
+                        "scale",
+                        "rotation"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "motionId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "fingerprint": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "sourceRefs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "narration",
+                              "source"
+                            ]
+                          },
+                          "segmentId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "quote": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2000
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "quote"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1,
+                      "maxItems": 16
+                    },
+                    "root": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "timeMs": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 120000
+                          },
+                          "transform": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number",
+                                "minimum": -100000,
+                                "maximum": 100000
+                              },
+                              "y": {
+                                "type": "number",
+                                "minimum": -100000,
+                                "maximum": 100000
+                              },
+                              "scale": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 8
+                              },
+                              "rotation": {
+                                "type": "number",
+                                "minimum": -180,
+                                "maximum": 180
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y",
+                              "scale",
+                              "rotation"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "ease": {
+                            "type": "string",
+                            "enum": [
+                              "none",
+                              "sine.inOut"
+                            ],
+                            "default": "none"
+                          }
+                        },
+                        "required": [
+                          "timeMs",
+                          "transform"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 2,
+                      "maxItems": 64
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "compositionId",
+                    "startMs",
+                    "endMs",
+                    "placement",
+                    "motionId",
+                    "fingerprint",
+                    "sourceRefs",
+                    "root"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 64
+              }
+            },
+            "required": [
+              "actorId",
+              "clips"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "actorId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "clipId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "landmark": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9_]{0,31}$"
+              },
+              "targetId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "timeMs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 120000
+              },
+              "effectMs": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 120000
+              },
+              "maxErrorPx": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 32
+              },
+              "sourceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "narration",
+                        "source"
+                      ]
+                    },
+                    "segmentId": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "quote": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "quote"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 16
+              }
+            },
+            "required": [
+              "id",
+              "actorId",
+              "clipId",
+              "landmark",
+              "targetId",
+              "timeMs",
+              "maxErrorPx",
+              "sourceRefs"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 64,
+          "default": []
+        }
+      },
+      "required": [
+        "version",
+        "producer",
+        "id",
+        "durationMs",
+        "stage",
+        "actors"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

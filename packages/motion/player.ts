@@ -1,8 +1,7 @@
 import {ActorMotionSchema, SpriteClipSchema, SPRITE_PLAYER_VERSION, type ActorMotion, type SpriteClip} from './schemas.js';
+import {spriteClock as clock} from './clock.js';
 
 const MAX_EVENTS=6000;
-/** Match GSAP's seconds clock, without quantizing native durations or metadata. */
-const clock=(seconds:number)=>Math.round(seconds*10000000)/10000000;
 
 /** Parsing validates every frame before timing, geometry or output is used. */
 function prepare(input:ActorMotion, inputClip:SpriteClip) {
@@ -73,6 +72,24 @@ function localSheetUrl(value:string):string {
   return value;
 }
 
+/** Count changed visual boundaries before expanding any repeated cycles. */
+function visualEdges(p:Prepared,nodes:number[]) {
+  const edges:Array<{frame:number;count:number}>=[];
+  for(let frame=0;frame<nodes.length;frame++) {
+    if(frame===0 && p.motion.playback.mode==='once')continue;
+    const previous=frame===0?nodes.at(-1):nodes[frame-1];
+    if(previous===nodes[frame])continue;
+    const firstCycle=frame===0?1:0;
+    let count=p.motion.playback.mode==='once'?1:Math.max(0,Math.ceil((p.end-boundary(p,firstCycle,frame))/(p.period/1000)));
+    if(p.motion.playback.mode==='loop'){
+      if(count>0 && boundary(p,firstCycle+count-1,frame)>=p.end)count--;
+      if(boundary(p,firstCycle+count,frame)<p.end)count++;
+    }
+    if(count>0)edges.push({frame,count});
+  }
+  return edges;
+}
+
 export function compileActorMotion(motion:ActorMotion,clip:SpriteClip,sheetUrl?:string) {
   const p=prepare(motion,clip), url=localSheetUrl(sheetUrl??`assets/${p.motion.sheet.hash}.png`);
   const unique=new Map<string,number>();
@@ -90,20 +107,7 @@ export function compileActorMotion(motion:ActorMotion,clip:SpriteClip,sheetUrl?:
 
   // Each entry is a distinct visual boundary, with its repetition count computed in O(frames).
   // No cycle/event generation happens until the complete literal-call budget is checked.
-  const edges:Array<{frame:number;count:number}>=[];
-  for(let frame=0;frame<nodes.length;frame++) {
-    if(frame===0 && p.motion.playback.mode==='once') continue;
-    const previous=frame===0?nodes.at(-1):nodes[frame-1];
-    if(previous===nodes[frame]) continue;
-    const firstCycle=frame===0?1:0;
-    let count=p.motion.playback.mode==='once'?1:Math.max(0,Math.ceil((end-boundary(p,firstCycle,frame))/(p.period/1000)));
-    if(p.motion.playback.mode==='loop'){
-      // Preflight on the same seconds clock as sampling and emission, including count zero.
-      if(count>0 && boundary(p,firstCycle+count-1,frame)>=end) count--;
-      if(boundary(p,firstCycle+count,frame)<end) count++;
-    }
-    if(count>0) edges.push({frame,count});
-  }
+  const edges=visualEdges(p,nodes);
   const terminalCalls=endNode===lastNode?0:endNode===null?1:2;
   const eventCount=visuals.length+(start>0 && entryNode!==null?1:0)+edges.reduce((sum,edge)=>sum+2*edge.count,0)+terminalCalls;
   if(eventCount>MAX_EVENTS) throw new Error(`Sprite timeline requires ${eventCount} events; maximum is ${MAX_EVENTS}`);

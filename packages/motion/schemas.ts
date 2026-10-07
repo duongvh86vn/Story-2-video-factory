@@ -5,6 +5,7 @@ export const ACTOR_MOTION_VERSION='actor-motion-1' as const;
 export const SPRITE_PLAYER_VERSION='sprite-timeline-1' as const;
 export const MotionHash=z.string().regex(/^[a-f0-9]{64}$/);
 export const MotionPoint=z.object({x:z.number().finite(),y:z.number().finite()}).strict();
+export type MotionPoint=z.infer<typeof MotionPoint>;
 export const MotionRect=z.object({x:z.number().int().nonnegative(),y:z.number().int().nonnegative(),w:z.number().int().positive(),h:z.number().int().positive()}).strict();
 export const MotionView=z.enum(['front','back','left','right','three-quarter-left','three-quarter-right','back-three-quarter-left','back-three-quarter-right']);
 const LandmarkName=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/).refine(s=>!['constructor','prototype','__proto__'].includes(s));
