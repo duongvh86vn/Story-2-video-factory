@@ -32,6 +32,7 @@ import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
 import {creativeActingBrief} from './acting-brief.js';
 import {applyTopicCast,topicContext,requireTopicProductionReady} from '../topics/prehistoric-life.js';
+import {loadSpriteSceneMotions} from '../motion/scene-source.js';
 
 /** The general shot contract also supports legacy video; creative production needs these fields. */
 export const CreativeStoryboardSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -56,7 +57,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   const lockIds=new Set(locks.map(shot=>shot.id)),system=await loadPrompt('creative-director');
   const identity=creativeInputIdentity(context.narration,context.beats,context.profile,context.rig);
   const reportFile=path.join(root,'work/creative-direction-report.json');
-  const normalize=(value:Storyboard,origin:'model'|'authored'):Storyboard=>{
+  const normalize=async(value:Storyboard,origin:'model'|'authored'):Promise<Storyboard>=>{
     const unlocked=normalizeCreativeSourceRefs({shots:value.shots.filter(s=>!lockIds.has(s.id))},context.narration);
     const board=StoryboardSchema.parse({shots:[...unlocked.shots,...locks].sort((a,b)=>a.startMs-b.startMs)});
     applyTopicCast({shots:board.shots.filter(s=>!lockIds.has(s.id))},config);
@@ -96,10 +97,12 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
-      check(()=>validateCamera(shot,shotPerformer(shot,context.profile,context.rig).profile));
+      if(!shot.cinematic?.spriteStage)check(()=>validateCamera(shot,shotPerformer(shot,context.profile,context.rig).profile));
+      let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;
+      try{motions=await loadSpriteSceneMotions(root,shot);}catch(error){failures.add(String(error));}
       check(()=>{
-        const rendered=renderCinematic(shot,context.profile,context.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,context.narration);
-        const errors=validateSceneFiles(secureSceneFiles(rendered.files),shot,config.workflow.max_scene_bytes,[],config.rendering.final);
+        const rendered=renderCinematic(shot,context.profile,context.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,context.narration,motions);
+        const errors=validateSceneFiles(secureSceneFiles(rendered.files),shot,config.workflow.max_scene_bytes,[...(motions?.values()??[])].map(motion=>`assets/${motion.sheet.hash}.png`),config.rendering.final);
         for(const error of errors)failures.add(`${shot.id}: creative artwork/security: ${error}`);
       });
     }
@@ -118,7 +121,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   if(await exists(authoredFile)){
     const authored=await readJson(authoredFile,AuthoredDirectionSchema);
     if(hash(authored.identity)!==hash(identity))throw new Error('needs-art-direction: authored direction belongs to a different narration, explanation, host or producer; re-author input/art-direction.json');
-    return report(normalize(authored.storyboard,'authored'),'authored',hash(authored));
+    return report(await normalize(authored.storyboard,'authored'),'authored',hash(authored));
   }
   const requestContext={task:'creative-storyboard',story:{title:context.story.title,style:context.story.style,genre:context.story.genre,authoring:context.story.authoring},narration:{durationMs:context.narration.durationMs,segments:context.narration.segments,words:context.narration.words},
     characterMode:config.presentation.character_mode,topic:topicContext(config),characters:context.characters.characters,
@@ -138,7 +141,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   const cacheFile=path.join(root,'work/creative-storyboard-cache.json');
   if(await exists(cacheFile)){
     const cached=await readJson<{inputHash:string;storyboard:unknown}>(cacheFile);
-    if(cached.inputHash===inputHash){try{return await report(normalize(StoryboardSchema.parse(cached.storyboard),'model'),'model',inputHash);}catch{/* Invalid edits are regenerated through the configured real role. */}}
+    if(cached.inputHash===inputHash){try{return await report(await normalize(StoryboardSchema.parse(cached.storyboard),'model'),'model',inputHash);}catch{/* Invalid edits are regenerated through the configured real role. */}}
   }
   // A model response rejected by an earlier validator can become valid after a renderer repair.
   // Reuse only matching current request data/instructions; never relabel edited or unrelated output.
@@ -150,7 +153,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       const attempt=await readJson<{status:string;request?:{system:string;context:unknown};response?:unknown;binding?:unknown}>(file);
       if(attempt.status!=='domain-rejected'||!attempt.response||hash(attempt.binding)!==hash(binding)||hash(attempt.request?.context)!==hash(requestContext)||attempt.request?.system!==generationSystem)continue;
       try{
-        const board=normalize(StoryboardSchema.parse(attempt.response),'model');
+        const board=await normalize(StoryboardSchema.parse(attempt.response),'model');
         await writeJson(cacheFile,{inputHash,storyboard:board,revalidatedAttempt:path.relative(root,file).split(path.sep).join('/')});
         return report(board,'model',inputHash);
       }catch(error){

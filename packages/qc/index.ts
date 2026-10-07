@@ -7,6 +7,7 @@ import { outputPath, redact } from '../render/process.js';
 import { ffmpeg, probe, type ProbeResult } from '../audio/ffmpeg.js';
 import { serializeSrt } from '../ingest/srt.js';
 import { requireVoice, VoiceReportSchema } from '../voice/index.js';
+import {assertNoCandidateSpriteActors} from '../motion/scene-validation.js';
 
 export interface QCInterval {startMs:number;endMs:number;}
 export interface QCIssue {type:string;severity:'high'|'medium'|'low';description:string;startMs?:number;endMs?:number;}
@@ -39,6 +40,7 @@ function fps(value:string|undefined):number {if(!value) return NaN;const [n,d]=v
 function loudness(log:string):Record<string,string>|undefined {for(const match of log.matchAll(/\{[^{}]*"input_i"[^{}]*\}/g)){try{return JSON.parse(match[0]) as Record<string,string>;}catch{/* continue */}}return undefined;}
 
 export async function runQC(projectRoot:string,config:FactoryConfig,narration:Narration,storyboard:Storyboard):Promise<{pass:boolean;issues:unknown[];video:unknown}> {
+  assertNoCandidateSpriteActors(storyboard);
   const issues:QCIssue[]=[],warnings:string[]=[],detections:QCReport['detections']={black:[],freeze:[],silence:[]};
   let video:unknown=null,metadata:ProbeResult|undefined;
   const add=(type:string,description:string,interval?:QCInterval,severity:QCIssue['severity']='high')=>issues.push({type,severity,description,...interval});

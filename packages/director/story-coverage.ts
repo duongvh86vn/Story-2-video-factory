@@ -19,6 +19,15 @@ export function actingSourceWindows(expected:Acting,beat:Beat,narration:Narratio
 
 function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],speakingSegmentIds:string[],shot:Shot,beat:Beat,narration:Narration):boolean{
   const kind=expected.kind;
+  if(shot.cinematic?.spriteStage){
+    const windows=actingSourceWindows(expected,beat,narration,shot);
+    const clips=shot.cinematic.spriteStage.actors.find(actor=>actor.actorId===expected.participantId)?.clips??[];
+    return clips.some(clip=>{
+      const declared=clip.sourcedAction;
+      if(!declared || declared.kind!==kind || declared.statement!==expected.statement || declared.movement!==expected.movement || declared.operation!==expected.operation || hash(declared.targetIds??[])!==hash(expected.targetIds??[]))return false;
+      return windows.some(window=>shot.startMs+clip.startMs<window.endMs&&shot.startMs+clip.endMs>window.startMs && clip.sourceRefs.some(ref=>ref.kind==='narration'&&ref.segmentId===window.id&&isWholeSourceStatement(expected.statement,ref.quote)));
+    });
+  }
   if(kind==='hold')return true; // Presence is the intended performance; no artificial activity quota.
   const windows=actingSourceWindows(expected,beat,narration,shot);
   const overlaps=(clip:{startMs:number;endMs:number})=>windows.some(window=>shot.startMs+clip.startMs<window.endMs&&shot.startMs+clip.endMs>window.startMs);

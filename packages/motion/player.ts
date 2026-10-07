@@ -51,6 +51,12 @@ export function sampleMotionFrame(motion:ActorMotion,clip:SpriteClip,timeMs:numb
   return sample(prepare(motion,clip),timeMs);
 }
 
+/** Parse into an owned snapshot once for repeated camera/scene samples. */
+export function createActorMotionSampler(motion:ActorMotion,clip:SpriteClip):(timeMs:number)=>number|null {
+  const prepared=prepare(motion,clip);
+  return timeMs=>sample(prepared,timeMs);
+}
+
 export function motionLandmarkAt(motion:ActorMotion,clip:SpriteClip,name:string,timeMs:number):{x:number;y:number}|null {
   const p=prepare(motion,clip);
   // Missing registration is an error even when the actor is currently hidden.

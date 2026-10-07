@@ -21,6 +21,11 @@ import { rigMetrics } from '../animation/rig.js';
 import {actorProfile,shotPerformer} from '../actors/model.js';
 import {castDesignAdvisories} from '../actors/design.js';
 import {hostPreviewSvg} from '../host/rig.js';
+import {loadSpriteSceneMotions,spriteSceneSheetBytes} from '../motion/scene-source.js';
+import {validateSpriteCamera} from '../motion/camera.js';
+import type {SpriteSceneGeometry} from '../motion/scene.js';
+import {renderCinematic} from '../../library/shots/cinematic.js';
+type SceneGeometry=HostGeometry|SpriteSceneGeometry;
 
 interface PreviewFrame { shotId:string; fraction:number; timeMs:number; path:string; hash:string; }
 interface PreviewManifest { frames:PreviewFrame[]; actions?:PreviewFrame[]; sceneHashes:Record<string,string>; masterHash:string; global:string; sheetHashes:Record<string,string>; }
@@ -28,6 +33,11 @@ const fractions=[0,.25,.5,.75,1] as const;
 /** Sample changes and consequences, beyond a hand's early reach window. */
 export function eventPreviewTimes(shot:Shot):number[]{
   const times=new Set<number>(),clamp=(ms:number)=>Math.max(shot.startMs,Math.min(shot.endMs-1,Math.round(ms)));
+  if(shot.cinematic?.spriteStage){
+    for(const actor of shot.cinematic.spriteStage.actors)for(const clip of actor.clips)
+      for(const local of [clip.startMs,(clip.startMs+clip.endMs)/2,clip.endMs-1,...clip.root.map(key=>key.timeMs)])times.add(clamp(shot.startMs+local));
+    for(const contact of shot.cinematic.spriteStage.contacts)times.add(clamp(shot.startMs+contact.timeMs));
+  }
   for(const event of shot.visualization?.events??[])if(['state','flow','part-motion','compare','reveal'].includes(event.type)){
     for(const ms of [event.startMs,Math.min(event.endMs-1,event.startMs+280),Math.floor((event.startMs+event.endMs)/2),event.endMs-1])times.add(clamp(ms));
   }
@@ -85,7 +95,7 @@ export async function createPreviews(projectRoot:string,config:FactoryConfig,sto
       frames.push({shotId:shot.id,fraction,timeMs:shot.startMs+timeMs,path:file,hash:''});
     }
     if(shot.host){
-      const geometry=await readJson<HostGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`)),times=new Set<number>(),step=Math.ceil(1000/config.rendering.final.fps);
+      const geometry=await readJson<SceneGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`)),times=new Set<number>(),step=Math.ceil(1000/config.rendering.final.fps);
       for(const action of geometry.interactions)for(const time of [action.reachMs-step,action.reachMs,action.reachMs+step])times.add(Math.max(shot.startMs,Math.min(shot.endMs-1,time)));
       for(const time of eventPreviewTimes(shot))times.add(time);
       for(const timeMs of [...times].sort((a,b)=>a-b)){
@@ -161,15 +171,23 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
   const explainer=config.content.mode==='narrated-explainer';
   const host=explainer?await loadHost(projectRoot):undefined;
   const voice=explainer?await readJson(path.join(projectRoot,'work/voice-report.json'),VoiceReportSchema):undefined;
-  const cameraReports=new Map<string,ReturnType<typeof validateCamera>>();
+  const cameraReports=new Map<string,ReturnType<typeof validateCamera>|ReturnType<typeof validateSpriteCamera>>();
   if(explainer&&host){
     const n=await readJson(path.join(projectRoot,'work/narration.json'),NarrationSchema),beats=await readJson(path.join(projectRoot,'work/beats.json'),z.array(BeatSchema));
     try{validateExplainerStoryboard(storyboard,n,beats,host.profile,host.rig,config);}catch(error){issues.push(issue(storyboard.shots[0]!,'host-plan','high',String(error),'Edit the affected storyboard host/visualization plan.'));}
     for(const shot of storyboard.shots){
       const files={files:await Promise.all(['index.html','style.css','scene.js'].map(async name=>({path:name,content:await fs.readFile(await safeRealPath(projectRoot,`scenes/${shot.id}/${name}`),'utf8')}))),dependencies:[],notes:[]};
       for(const error of await validateExplainerSources(projectRoot,config,shot,files))issues.push(issue(shot,'host-scene-integrity','high',error,'Rebuild from the validated storyboard.'));
-      const geometry=await readJson<HostGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`));
+      const geometry=await readJson<SceneGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`));
       const cinematic=config.presentation.mode==='story-cinematic'?shot.cinematic:undefined;
+      if(cinematic?.spriteStage){
+        const motions=await loadSpriteSceneMotions(projectRoot,shot);
+        const expected=renderCinematic(shot,host.profile,host.rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,n,motions).geometry;
+        if(!('kind' in geometry)||geometry.kind!=='sprite-actors'||hash(geometry)!==hash(expected))issues.push(issue(shot,'sprite-identity','high','Sprite geometry differs from its validated story/motion/contact plan.','Restore assets or rebuild the shot.'));
+        cameraReports.set(shot.id,validateSpriteCamera(shot,motions!));warnings.push(`${shot.id}: candidate sprite art/motion/speech acceptance is pending; draft review cannot authorize final.`);
+        continue;
+      }
+      if('kind' in geometry){issues.push(issue(shot,'host-identity','high','Sprite geometry cannot stand in for the declared rig scene.','Rebuild the shot.'));continue;}
       const performer=shotPerformer(shot,host.profile,host.rig);
       // Cinematic geometry records world body size; the camera validator measures visible framing.
       const heightInvalid=cinematic
@@ -203,7 +221,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
       for(const frame of manifest.actions){const shot=shots.get(frame.shotId);if(!shot||frame.timeMs<shot.startMs||frame.timeMs>=shot.endMs)throw new Error('Invalid action snapshot time');
         if(hash(await fs.readFile(await safeRealPath(projectRoot,frame.path)))!==frame.hash)throw new Error(`Action snapshot changed: ${frame.path}`);actionTimes.add(`${frame.shotId}:${frame.timeMs}`);}
       const step=Math.ceil(1000/config.rendering.final.fps);
-      for(const shot of storyboard.shots){const geometry=await readJson<HostGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`));
+      for(const shot of storyboard.shots){const geometry=await readJson<SceneGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`));
         for(const action of geometry.interactions)for(const sample of [action.reachMs-step,action.reachMs,action.reachMs+step])if(!actionTimes.has(`${shot.id}:${Math.max(shot.startMs,Math.min(shot.endMs-1,sample))}`))throw new Error(`${shot.id}: missing before/during/after target evidence`);
         const eventTimes=eventPreviewTimes(shot);
         for(const sample of eventTimes)if(!actionTimes.has(`${shot.id}:${sample}`))throw new Error(`${shot.id}: missing timed event evidence`);
@@ -221,7 +239,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
     for(let start=0;start<storyboard.shots.length;start+=batchSize) {
       const shots=storyboard.shots.slice(start,start+batchSize),ids=new Set(shots.map(shot=>shot.id));
       const batchCameraReports=shots.flatMap(shot=>{const report=cameraReports.get(shot.id);return report?[{shotId:shot.id,...report}]:[];});
-      const framingInstructions=batchCameraReports.length?' Use cameraReports as validated cinematic framing intent. Actor scenes have no fixed body-size or presence quota. Inspect the visible focus and flag hidden contact, cropped face/hand/object, caption intrusion or source contradictions; deliberate body cropping in a close shot is allowed.':'';
+      const framingInstructions=batchCameraReports.length?' Use cameraReports as declared cinematic framing intent; sprite reports are sampled candidate checks. Actor scenes have no fixed body-size or presence quota. Inspect the visible focus and flag hidden contact, cropped face/hand/object, caption intrusion or source contradictions; deliberate body cropping in a close shot is allowed. Sprite reference crops are candidate asset frames, not approved source identity sheets. Registration/state/source declarations do not prove pixel motion or anatomy. Draft review cannot release them for final.':'';
       const designInstructions=' Review story-specific staging and visual legibility: visible pose, gaze and expression for the intended action; readable focal subject, cast identification, prop interaction and environment. Do not impose a palette, costume, camera quota, presenter, or machinery theme. In actorScene, each accepted actor definition/reference governs identity; the base host sheet is a rig fallback, not a shared costume or mascot lock. Report only defects visible in these samples. Still sheets cannot prove fluid movement, full-film continuity or audio synchrony.';
       const images:Array<{path:string;mimeType?:string}>=[];
       if(start===0) images.push({path:await safeRealPath(projectRoot,'previews/contact-sheet-global.jpg'),mimeType:'image/jpeg'});
@@ -229,7 +247,18 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
       if(explainer){
         const cast=[...new Map(shots.flatMap(s=>[...(s.cinematic?.actorScene?.primary?[s.cinematic.actorScene.primary]:[]),...(s.cinematic?.actorScene?.supporting.map(a=>a.character)??[])]).map(a=>[a.id,a])).values()];
         if(!cast.length&&!shots.every(s=>s.cinematic?.actorScene))images.push({path:await safeRealPath(projectRoot,'previews/host-preview-sheet.png'),mimeType:'image/png'});
-        for(const actor of cast){const profile=actorProfile(actor),dest=await outputPath(projectRoot,`previews/references/cast-${profile.profileHash}.png`);await fs.mkdir(path.dirname(dest),{recursive:true});await sharp(Buffer.from(hostPreviewSvg(profile))).png().toFile(dest);images.push({path:dest,mimeType:'image/png'});}
+        const spriteActors=new Set(shots.flatMap(shot=>shot.cinematic?.spriteStage?.actors.map(actor=>actor.actorId)??[]));
+        for(const actor of cast){
+          if(spriteActors.has(actor.id)){
+            const sourceShot=shots.find(shot=>shot.cinematic?.spriteStage?.actors.some(track=>track.actorId===actor.id))!,motions=await loadSpriteSceneMotions(projectRoot,sourceShot);
+            const motion=[...motions!.values()].find(motion=>motion.actorId===actor.id)!;
+            const frame=motion.frames[0]!,dest=await outputPath(projectRoot,`previews/references/sprite-${motion.fingerprint}.png`);await fs.mkdir(path.dirname(dest),{recursive:true});
+            await sharp(await spriteSceneSheetBytes(projectRoot,motion)).extract({left:frame.rect.x,top:frame.rect.y,width:frame.rect.w,height:frame.rect.h}).resize({width:512,height:512,fit:'inside'}).png().toFile(dest);
+            images.push({path:dest,mimeType:'image/png'});
+          }else{
+            const profile=actorProfile(actor),dest=await outputPath(projectRoot,`previews/references/cast-${profile.profileHash}.png`);await fs.mkdir(path.dirname(dest),{recursive:true});await sharp(Buffer.from(hostPreviewSvg(profile))).png().toFile(dest);images.push({path:dest,mimeType:'image/png'});
+          }
+        }
         for(const shot of shots)if(await exists(path.join(projectRoot,`previews/${shot.id}/action-sheet.jpg`)))images.push({path:await safeRealPath(projectRoot,`previews/${shot.id}/action-sheet.jpg`),mimeType:'image/jpeg'});
       }
       const characterIds=new Set(shots.flatMap(shot=>shot.characters));

@@ -172,7 +172,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
       if(e.contactHands&&new Set(e.contactHands).size!==e.contactHands.length)throw new Error(`${shot.id}: duplicate required contact hand`);
       if(e.contactActorId&&!performers.some(performer=>performer.profile.id===e.contactActorId))throw new Error(`${shot.id}: unknown contact actor ${e.contactActorId}`);
       if(!shot.cinematic&&e.contactHands?.includes('left'))throw new Error(`${shot.id}: left-hand contact requires the cinematic renderer`);
-      if(e.contactRequired){
+      if(e.contactRequired&&!shot.cinematic?.spriteStage){
         const eligible=performers.filter(performer=>!e.contactActorId||performer.profile.id===e.contactActorId);
         const contacted=eligible.some(performer=>{
           const actions=performer.actions.filter(a=>a.type==='operate-model'&&a.target?.partId===(e.contactPartId??e.targetId)&&a.contactMs!==undefined&&a.contactMs<e.startMs&&a.endMs>=e.endMs);

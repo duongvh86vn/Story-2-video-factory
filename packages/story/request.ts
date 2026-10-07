@@ -12,7 +12,7 @@ import {planningCacheIdentity,reuseAcceptedPlanning} from './planning-cache.js';
 export async function planWithValidation<T, R>(
   root: string, config: FactoryConfig, router: ModelRouter, role: ModelRole,
   stage: string, request: ModelRequest, schema: ZodType<T, ZodTypeDef, any>,
-  normalize: (value: T) => R, binding?: unknown, initialRepair?: { previous: unknown; feedback: string }, options?:{reuseAccepted?:boolean},
+  normalize: (value: T) => R|Promise<R>, binding?: unknown, initialRepair?: { previous: unknown; feedback: string }, options?:{reuseAccepted?:boolean},
 ): Promise<R> {
   if (!/^[a-zA-Z0-9_.-]+$/.test(stage)) throw new Error(`Invalid planning stage ${stage}`);
   const cacheIdentity=planningCacheIdentity(config,role,request,schema,binding);
@@ -37,7 +37,7 @@ export async function planWithValidation<T, R>(
     }
     previous = value;
     try {
-      const result = normalize(value);
+      const result = await normalize(value);
       await persist(file, { attempt: attempt + 1, status: 'accepted', request: input, binding, cacheIdentity, baseRequestHash:hash(request), response: value, result });
       return result;
     } catch (error) {

@@ -43,6 +43,7 @@ import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js
 import { PROP_BINDING_VERSION } from '../director/props.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
 import {topicFingerprint,requireTopicProductionReady} from '../topics/prehistoric-life.js';
+import {assertNoCandidateSpriteActors} from '../motion/scene-validation.js';
 
 export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; retryModelErrors?:boolean; sceneRepairAttempts?:number; onProgress?:(state:ProjectState)=>void; }
 const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
@@ -262,6 +263,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
         const story=()=>readJson(path.join(root,'work/story.json'),StorySchema);
         const narration=()=>readJson(path.join(root,'work/narration.json'),NarrationSchema);
         const voiced=()=>config!.content.mode==='narrated-explainer'?readJson(path.join(root,'work/voiced-narration.json'),NarrationSchema):narration();
+        if(['QC_PASSED','DONE'].includes(next))assertNoCandidateSpriteActors(await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema));
         const characters=()=>readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema);
         const beats=()=>readJson(path.join(root,'work/beats.json'),z.array(BeatSchema));
         const board=()=>readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);
@@ -327,6 +329,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             if(review.issues.some(i=>i.severity==='high') || !review.pass) throw new Error('Review failed after the configured repair budget; edit or unlock the affected shots before resuming'); break;
           }
           case 'FINAL_RENDERED': { const review=await readJson(path.join(root,'work/review.json'),ReviewSchema); if(!review.pass) throw new Error('Final render requires a passing draft review');
+            assertNoCandidateSpriteActors(await board());
             if(config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'){
               const sb=await board(),b=await beats();requireFinalStoryDirection(sb,b);
               const n=await narration(),{profile,rig}=await loadHost(root);validateExplainerStoryboard(sb,n,b,profile,rig,config);

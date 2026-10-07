@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {Id} from '../core/identifiers.js';
-import {SourceRefSchema} from '../explainer/schemas.js';
+import {SourceRefSchema,SceneIntentSchema} from '../explainer/schemas.js';
 import {MotionHash,SpriteClipSchema,SpritePlacementSchema} from './schemas.js';
 import {spriteSeconds} from './clock.js';
 
@@ -10,6 +10,9 @@ export const SpriteRootKeySchema=z.object({timeMs:z.number().finite().nonnegativ
 export const SpriteStageClipSchema=SpriteClipSchema.innerType().extend({
   placement:StageTransform,motionId:Id,fingerprint:MotionHash,
   sourceRefs:z.array(SourceRefSchema).min(1).max(16),root:z.array(SpriteRootKeySchema).min(2).max(64),
+  /** Declared source intent, bound to the immutable asset's registered state.
+   * Art/motion acceptance still must verify that pixels actually perform it. */
+  sourcedAction:SceneIntentSchema.shape.acting.unwrap().element.omit({participantId:true,sourceRefs:true}).extend({motionState:Id}).strict().optional(),
 }).strict().superRefine((clip,ctx)=>{
   const issue=(message:string)=>ctx.addIssue({code:'custom',message});
   if(clip.endMs<=clip.startMs || spriteSeconds(clip.endMs)<=spriteSeconds(clip.startMs))issue('Invalid sprite clip clock');

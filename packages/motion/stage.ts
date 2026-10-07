@@ -1,5 +1,5 @@
 import {ActorMotionSchema,type ActorMotion,type MotionPoint,type SpritePlacement,type SpriteClip} from './schemas.js';
-import {compileActorMotion,sampleMotionFrame,motionLandmarkAt} from './player.js';
+import {compileActorMotion,createActorMotionSampler,motionLandmarkAt} from './player.js';
 import {spriteSeconds} from './clock.js';
 import {SpriteStageSchema,SPRITE_STAGE_VERSION,type SpriteStage,type SpriteStageClip} from './stage-schemas.js';
 
@@ -14,10 +14,11 @@ function prepare(planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>){
     const motion=ActorMotionSchema.parse(source);
     if(motion.id!==clip.motionId || motion.fingerprint!==clip.fingerprint || motion.actorId!==actor.actorId)
       throw new Error(`Sprite motion identity mismatch: ${actor.actorId}/${clip.id}`);
+    if(clip.sourcedAction && clip.sourcedAction.motionState!==motion.state)throw new Error(`Sprite sourced action uses a different registered state: ${clip.id}`);
     // Project across the strict player boundary; stage-only fields stay here.
     const playbackClip:SpriteClip={id:clip.id,compositionId:clip.compositionId,startMs:clip.startMs,endMs:clip.endMs,rate:clip.rate,placement:clip.placement};
-    sampleMotionFrame(motion,playbackClip,-1);
-    return {clip,motion,playbackClip};
+    const sampleFrame=createActorMotionSampler(motion,playbackClip);
+    return {clip,motion,playbackClip,sampleFrame};
   })}));
   return {plan,actors};
 }
@@ -59,9 +60,9 @@ export interface SpriteActorSample {
 function samplePrepared(prepared:PreparedStage,timeMs:number):SpriteActorSample[]{
   const seconds=spriteSeconds(timeMs),samples:SpriteActorSample[]=[];
   if(seconds<0 || seconds>=spriteSeconds(prepared.plan.durationMs))return samples;
-  for(const actor of prepared.actors)for(const {clip,motion,playbackClip} of actor.clips){
+  for(const actor of prepared.actors)for(const {clip,motion,sampleFrame} of actor.clips){
     if(seconds<spriteSeconds(clip.startMs) || seconds>=spriteSeconds(clip.endMs))continue;
-    const frameIndex=sampleMotionFrame(motion,playbackClip,timeMs);
+    const frameIndex=sampleFrame(timeMs);
     if(frameIndex===null)continue;
     const frame=motion.frames[frameIndex]!,root=rootAt(clip,seconds);
     const world=(point:MotionPoint)=>transformPoint(transformPoint({x:point.x-frame.anchor.x,y:point.y-frame.anchor.y},clip.placement),root);
@@ -75,6 +76,10 @@ function samplePrepared(prepared:PreparedStage,timeMs:number):SpriteActorSample[
 
 export function sampleSpriteStage(plan:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,timeMs:number):SpriteActorSample[]{
   return samplePrepared(prepare(plan,motions),timeMs);
+}
+export function createSpriteStageSampler(plan:SpriteStage,motions:ReadonlyMap<string,ActorMotion>):(timeMs:number)=>SpriteActorSample[]{
+  const prepared=prepare(plan,motions);
+  return timeMs=>samplePrepared(prepared,timeMs);
 }
 const rootTransform=(root:SpritePlacement)=>`translate(${root.x} ${root.y}) rotate(${root.rotation}) scale(${root.scale})`;
 

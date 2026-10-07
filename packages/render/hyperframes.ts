@@ -2,7 +2,9 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import type { FactoryConfig } from '../core/config.js';
-import { exists, safeRealPath, writeJson, hash, walk } from '../core/utils.js';
+import { exists, safeRealPath, writeJson, hash, walk,readJson } from '../core/utils.js';
+import {StoryboardSchema} from '../core/schemas.js';
+import {assertNoCandidateSpriteActors} from '../motion/scene-validation.js';
 import { execute, parseEnvelope, outputPath, redact } from './process.js';
 import type { VideoEngine, ValidationResult, RenderResult } from './engine.js';
 export type { ValidationResult, RenderResult } from './engine.js';
@@ -73,6 +75,11 @@ export class HyperFramesEngine implements VideoEngine {
   }
   private async render(profile: 'draft' | 'final', project?: string): Promise<RenderResult> {
     const source = await this.project(project), settings = this.config.rendering[profile];
+    if(profile==='final'){
+      if(await exists(path.join(this.projectRoot,'work/storyboard.json')))assertNoCandidateSpriteActors(await readJson(await safeRealPath(this.projectRoot,'work/storyboard.json'),StoryboardSchema));
+      for(const file of (await walk(source)).filter(file=>path.extname(file).toLowerCase()==='.html'))
+        if(/data-sprite-status\s*=\s*["']candidate["']/i.test(await fs.readFile(file,'utf8')))throw new Error('needs-sprite-acceptance: candidate sprite scene cannot render final');
+    }
     if (settings.width % 2 || settings.height % 2) throw new Error('H.264 output dimensions must be even');
     const files = await walk(source), fileHashes: [string,string][] = [];
     for (const file of files) fileHashes.push([path.relative(source,file), hash(await fs.readFile(file))]);

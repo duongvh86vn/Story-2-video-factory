@@ -16,7 +16,7 @@ const repairPrefix='\n\nDomain validation failed: ';
  * The current schema and domain normalizer still run. Failed domain attempts and
  * bare/edited aggregate artifacts are never promoted to an accepted checkpoint. */
 export async function reuseAcceptedPlanning<T,R>(root:string,config:FactoryConfig,role:ModelRole,stage:string,request:ModelRequest,
-  schema:ZodType<T,ZodTypeDef,any>,normalize:(value:T)=>R,binding:unknown):Promise<{result:R}|undefined> {
+  schema:ZodType<T,ZodTypeDef,any>,normalize:(value:T)=>R|Promise<R>,binding:unknown):Promise<{result:R}|undefined> {
   if(role!=='planner'||! /^(?:story-analysis|character-bible|chapters|beats-[a-zA-Z0-9_.-]+)$/.test(stage))return;
   const identity=planningCacheIdentity(config,role,request,schema,binding),jsonSchema=jsonSchemaFor(schema);
   let journal:AttemptRecord[];
@@ -70,7 +70,7 @@ export async function reuseAcceptedPlanning<T,R>(root:string,config:FactoryConfi
         if(artifact.status!=='success'||artifact.callId!==completed.callId||artifact.id!==completed.id||artifact.requestHash!==requestHash||hash(artifact.request)!==hash(input)||hash(artifact.schema)!==hash(jsonSchema)||!artifact.response||hash(artifact.response.text)!==completed.responseHash||artifact.responseHash!==completed.responseHash)continue;
         const value=validateStructured(artifact.response,schema);
         if(hash(value)!==hash(schema.parse(receipt.response)))continue;
-        let result:R;try{result=normalize(value);}catch{continue;}
+        let result:R;try{result=await normalize(value);}catch{continue;}
         if(hash(result)!==hash(receipt.result))continue;
         // Historical settings remain unattested; all existing request/schema/
         // routing/provider/journal and current-domain gates still apply.

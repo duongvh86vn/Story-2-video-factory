@@ -22,6 +22,7 @@ import {actorProfile,seedActorShot} from '../actors/model.js';
 import {buildRig} from '../host/rig.js';
 import {writeActorAssets} from '../actors/assets.js';
 import {sceneSeats} from '../stage/seats.js';
+import {validateSpriteScenePlan} from '../motion/scene-validation.js';
 
 const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'curious',mechanism:'effort',process:'understanding',
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
@@ -219,6 +220,11 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   if(hash(c.sourceRefs)!==hash(shot.sourceRefs)||!parts||(parts.length?!parts.some(part=>part.id===c.attentionPartId):!!c.attentionPartId))throw new Error(`${shot.id}: cinematic attention/source mismatch`);
   if(!parts.length&&(config.presentation.character_mode!=='actors'||!c.sceneIntent?.participants.length||!(c.actorScene?.primary||c.actorScene?.supporting.length)||shot.visualization!.events.length||shot.visualization!.relations.length||p.props.length||shot.host?.actions.some(a=>a.target||a.secondTarget||a.contactMs!==undefined)))throw new Error(`${shot.id}: objectless scene requires real sourced actors without dangling objects or contact`);
   if(hash(c.models)!==hash(stageModels(shot)))throw new Error(`${shot.id}: cinematic model variant lacks its source evidence`);
+  if(c.spriteStage){
+    validateSpriteScenePlan(shot);
+    if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
+    return;
+  }
   if(hash(c.continuity.entry)!==hash(p.root)||Math.abs(c.continuity.exit.x-(p.walks.at(-1)?.toX??p.root.x))>.01)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
   validatePropBindings(shot);
   if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);

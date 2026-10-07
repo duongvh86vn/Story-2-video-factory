@@ -11,7 +11,7 @@ const referenceKey=(ref:z.infer<typeof SourceRefSchema>)=>JSON.stringify([ref.ki
 /** Binds a candidate actor fragment to an already source-validated story shot.
  * This does not validate narration bytes, stage assets, the world renderer or final QC.
  */
-export function compileSpriteStoryActors(shotInput:Shot,planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,targets:ReadonlyMap<string,MotionPoint>){
+export function validateSpriteStoryBinding(shotInput:Shot,planInput:SpriteStage){
   const shot=ShotSchema.parse(shotInput),plan=SpriteStageSchema.parse(planInput),cinematic=shot.cinematic,scene=cinematic?.actorScene;
   if(!cinematic || !scene)throw new Error(`${shot.id}: sprite actors require a cinematic actorScene`);
   if(plan.id!==shot.id || cinematic.shotId!==shot.id || cinematic.performance.id!==shot.id || scene.supporting.some(actor=>actor.performance.id!==shot.id)
@@ -33,7 +33,11 @@ export function compileSpriteStoryActors(shotInput:Shot,planInput:SpriteStage,mo
   }
   for(const contact of plan.contacts)if(!shot.visualization?.parts.some(part=>part.id===contact.targetId))
     throw new Error(`${shot.id}: sprite contact target is outside the story scene: ${contact.targetId}`);
+  return {shot,plan,cast};
+}
 
+export function compileSpriteStoryActors(shotInput:Shot,planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,targets:ReadonlyMap<string,MotionPoint>){
+  const {shot,plan,cast}=validateSpriteStoryBinding(shotInput,planInput);
   const compiled=compileSpriteStage(plan,motions,targets);
   return {...compiled,report:{...compiled.report,shotId:shot.id,shotHash:hash(shot),castHash:hash(cast),stageHash:hash(plan),
     shotStartMs:shot.startMs,sourceRefs:shot.sourceRefs!,sourceEvidence:'shot-references-only' as const,

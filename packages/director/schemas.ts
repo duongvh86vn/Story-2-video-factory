@@ -4,6 +4,7 @@ import { PointSchema, PerformancePlanSchema } from '../animation/schemas.js';
 import { SourceRefSchema,SceneIntentSchema } from '../explainer/schemas.js';
 import { ArtDirectionSchema } from './art-direction-schemas.js';
 import {ActorSceneSchema} from '../actors/schemas.js';
+import {SpriteStageSchema} from '../motion/stage-schemas.js';
 
 export const DIRECTION_VERSION='story-direction-2.2.31';
 export const CINEMATIC_PLAN_FILES=['story-direction.json','stage-plan.json','performance-plan.json','camera-plan.json','creative-direction-report.json','actor-cast.json','actor-timeline.json'] as const;
@@ -29,6 +30,7 @@ export const CinematicPlanSchema=z.object({
   provenance:z.literal('illustration'),
   artDirection:ArtDirectionSchema.optional(),
   actorScene:ActorSceneSchema.optional(),
+  spriteStage:SpriteStageSchema.optional(),
   sceneIntent:SceneIntentSchema.optional(),
   models:z.array(CinematicModelSchema),
   propBindings:z.array(z.object({propId:Id,partId:Id,role:z.literal('illustrative-model'),sourceRefs:z.array(SourceRefSchema).min(1)}).strict()).default([]),

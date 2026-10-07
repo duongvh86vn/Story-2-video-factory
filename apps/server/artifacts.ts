@@ -27,6 +27,7 @@ import { inspectCinematicStoryboard, validateCinematicEdit } from './cinematic.j
 import type { CinematicArtifactStatus } from './contracts.js';
 import {assertActorLocks} from '../../packages/actors/locks.js';
 import {outdatedSceneInputs,lockedShot} from '../../packages/scenes/index.js';
+import {assertNoCandidateSpriteActors} from '../../packages/motion/scene-validation.js';
 import {readJson} from '../../packages/core/utils.js';
 
 interface ArtifactSpec { paths: string[]; schema?: z.ZodTypeAny; editable?: boolean; from?: ProjectStatus; text?: boolean; }
@@ -311,7 +312,9 @@ export async function currentDownload(root:string,name:string):Promise<boolean>{
   const config=await loadConfig(root);
   if(config.content.mode==='narrated-explainer'){
     try{
-      const outdated=await outdatedSceneInputs(root,config,await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema),await readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema),await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema));
+      const board=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);
+      if(name!=='draft.mp4')assertNoCandidateSpriteActors(board);
+      const outdated=await outdatedSceneInputs(root,config,board,await readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema),await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema));
       if(outdated.length)return false;
     }catch{return false;}
   }

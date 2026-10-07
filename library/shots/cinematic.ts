@@ -23,12 +23,14 @@ import {compilePerformance} from '../../packages/animation/compiler.js';
 import {PROP_BINDING_VERSION} from '../../packages/director/props.js';
 import {sceneSeats,SEAT_SUPPORT_VERSION} from '../../packages/stage/seats.js';
 import {sceneLabels} from './scene-labels.js';
+import {renderSpriteScene} from '../../packages/motion/scene.js';
+import type {ActorMotion} from '../../packages/motion/schemas.js';
 
 function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w:number,h:number):string{
   return part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
 }
 
-export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):{
+function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):{
   files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;propId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[]};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
@@ -181,4 +183,14 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
   })}:{})}};
 }
 
+// Legacy seven-argument callers retain the rig report type and byte contract.
+export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):ReturnType<typeof renderRigCinematic>;
+export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background:string|undefined,narration:Narration|undefined,motions:ReadonlyMap<string,ActorMotion>|undefined):ReturnType<typeof renderRigCinematic>|ReturnType<typeof renderSpriteScene>;
+export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,motions?:ReadonlyMap<string,ActorMotion>){
+  if(shot.cinematic?.spriteStage){
+    if(!motions)throw new Error(`${shot.id}: needs-sprite-motion-context: canonical rendering requires verified sprite descriptors`);
+    return renderSpriteScene(shot,profile,config,motions,background);
+  }
+  return renderRigCinematic(shot,profile,rig,activity,config,background,narration);
+}
 

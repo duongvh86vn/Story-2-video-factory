@@ -214,6 +214,68 @@
                       },
                       "minItems": 2,
                       "maxItems": 64
+                    },
+                    "sourcedAction": {
+                      "type": "object",
+                      "properties": {
+                        "movement": {
+                          "type": "string",
+                          "enum": [
+                            "walk",
+                            "run",
+                            "jump"
+                          ]
+                        },
+                        "operation": {
+                          "type": "string",
+                          "enum": [
+                            "contact",
+                            "pick-place",
+                            "carry",
+                            "drop"
+                          ]
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "locomotion",
+                            "manipulation",
+                            "posture",
+                            "observation",
+                            "indication",
+                            "speech",
+                            "reaction",
+                            "hold",
+                            "unsupported"
+                          ]
+                        },
+                        "statement": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 2000
+                        },
+                        "targetIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "minItems": 1,
+                          "maxItems": 8
+                        },
+                        "motionState": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "statement",
+                        "motionState"
+                      ],
+                      "additionalProperties": false
                     }
                   },
                   "required": [
