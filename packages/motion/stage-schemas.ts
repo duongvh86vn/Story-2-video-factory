@@ -47,7 +47,7 @@ export const SpriteStageSchema=z.object({
   for(const contact of plan.contacts){
     const clip=plan.actors.find(actor=>actor.actorId===contact.actorId)?.clips.find(c=>c.id===contact.clipId);
     if(!clip || spriteSeconds(contact.timeMs)<spriteSeconds(clip.startMs) || spriteSeconds(contact.timeMs)>=spriteSeconds(clip.endMs))issue('Sprite contact is outside its actor clip');
-    if(contact.effectMs!==undefined && (contact.effectMs<contact.timeMs || contact.effectMs>plan.durationMs))issue('Sprite effect must follow contact within the scene clock');
+    if(contact.effectMs!==undefined && (spriteSeconds(contact.effectMs)<spriteSeconds(contact.timeMs) || spriteSeconds(contact.effectMs)>spriteSeconds(plan.durationMs)))issue('Sprite effect must follow contact within the scene clock');
   }
 });
 export type SpriteStage=z.infer<typeof SpriteStageSchema>;

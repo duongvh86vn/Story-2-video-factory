@@ -51,6 +51,13 @@ test('clock and dimensions must match story instead of stretching audio to sprit
   plan.stage.width=1920;assert.throws(()=>compileSpriteStoryActors(shot,plan,motions,targets),/clock\/dimensions mismatch/);
 });
 
+test('nested cinematic and primary performance IDs cannot borrow a different shot clock',()=>{
+  const {shot,plan,motions,targets}=fixture();shot.cinematic!.shotId='other';
+  assert.throws(()=>compileSpriteStoryActors(shot,plan,motions,targets),/clock\/dimensions mismatch/);
+  shot.cinematic!.shotId=shot.id;shot.cinematic!.performance.id='other';
+  assert.throws(()=>compileSpriteStoryActors(shot,plan,motions,targets),/clock\/dimensions mismatch/);
+});
+
 test('invented source quotes and a narration reference outside the shot are rejected',()=>{
   const {shot,plan,motions,targets}=fixture(),ref=plan.actors[0]!.clips[0]!.sourceRefs[0]!;
   ref.quote='Lila hunts a machine.';assert.throws(()=>compileSpriteStoryActors(shot,plan,motions,targets),/unbound story source/);

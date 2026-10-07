@@ -1,4 +1,4 @@
-import {ActorMotionSchema,type ActorMotion,type MotionPoint,type SpritePlacement} from './schemas.js';
+import {ActorMotionSchema,type ActorMotion,type MotionPoint,type SpritePlacement,type SpriteClip} from './schemas.js';
 import {compileActorMotion,sampleMotionFrame,motionLandmarkAt} from './player.js';
 import {spriteSeconds} from './clock.js';
 import {SpriteStageSchema,SPRITE_STAGE_VERSION,type SpriteStage,type SpriteStageClip} from './stage-schemas.js';
@@ -14,9 +14,10 @@ function prepare(planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>){
     const motion=ActorMotionSchema.parse(source);
     if(motion.id!==clip.motionId || motion.fingerprint!==clip.fingerprint || motion.actorId!==actor.actorId)
       throw new Error(`Sprite motion identity mismatch: ${actor.actorId}/${clip.id}`);
-    // Enforce native once duration even for sampling before the clip starts.
-    sampleMotionFrame(motion,clip,-1);
-    return {clip,motion};
+    // Project across the strict player boundary; stage-only fields stay here.
+    const playbackClip:SpriteClip={id:clip.id,compositionId:clip.compositionId,startMs:clip.startMs,endMs:clip.endMs,rate:clip.rate,placement:clip.placement};
+    sampleMotionFrame(motion,playbackClip,-1);
+    return {clip,motion,playbackClip};
   })}));
   return {plan,actors};
 }
@@ -30,7 +31,14 @@ function rootAt(clip:SpriteStageClip,seconds:number):SpritePlacement {
     if(seconds<=end){
       const start=spriteSeconds(previous.timeMs),linear=(seconds-start)/(end-start);
       const progress=next.ease==='sine.inOut'?(1-Math.cos(Math.PI*linear))/2:linear;
-      const value=(key:keyof SpritePlacement)=>previous.transform[key]+(next.transform[key]-previous.transform[key])*progress;
+      // GSAP AttrPlugin's complex-string renderer rounds changed interpolated
+      // numbers to four decimals, while preserving exact endpoint/static strings.
+      const value=(key:keyof SpritePlacement)=>{
+        const before=previous.transform[key],after=next.transform[key];
+        if(progress===0)return before;
+        if(progress===1 || before===after)return after;
+        return Math.round((before+(after-before)*progress)*10000)/10000;
+      };
       return {x:value('x'),y:value('y'),scale:value('scale'),rotation:value('rotation')};
     }
   }
@@ -51,9 +59,9 @@ export interface SpriteActorSample {
 function samplePrepared(prepared:PreparedStage,timeMs:number):SpriteActorSample[]{
   const seconds=spriteSeconds(timeMs),samples:SpriteActorSample[]=[];
   if(seconds<0 || seconds>=spriteSeconds(prepared.plan.durationMs))return samples;
-  for(const actor of prepared.actors)for(const {clip,motion} of actor.clips){
+  for(const actor of prepared.actors)for(const {clip,motion,playbackClip} of actor.clips){
     if(seconds<spriteSeconds(clip.startMs) || seconds>=spriteSeconds(clip.endMs))continue;
-    const frameIndex=sampleMotionFrame(motion,clip,timeMs);
+    const frameIndex=sampleMotionFrame(motion,playbackClip,timeMs);
     if(frameIndex===null)continue;
     const frame=motion.frames[frameIndex]!,root=rootAt(clip,seconds);
     const world=(point:MotionPoint)=>transformPoint(transformPoint({x:point.x-frame.anchor.x,y:point.y-frame.anchor.y},clip.placement),root);
@@ -77,7 +85,7 @@ export function compileSpriteStage(planInput:SpriteStage,motions:ReadonlyMap<str
     if(!target || !Number.isFinite(target.x) || !Number.isFinite(target.y))throw new Error(`Missing/invalid scene target: ${contact.targetId}`);
     const actor=prepared.actors.find(actor=>actor.actorId===contact.actorId)!;
     const binding=actor.clips.find(({clip})=>clip.id===contact.clipId)!;
-    const point=motionLandmarkAt(binding.motion,binding.clip,contact.landmark,contact.timeMs);
+    const point=motionLandmarkAt(binding.motion,binding.playbackClip,contact.landmark,contact.timeMs);
     // All frames require registration; visibility must also match the outer scene slot.
     if(point===null || !samplePrepared(prepared,contact.timeMs).some(sample=>sample.actorId===contact.actorId && sample.clipId===contact.clipId))
       throw new Error(`Hidden sprite contact: ${contact.id}`);
@@ -88,16 +96,21 @@ export function compileSpriteStage(planInput:SpriteStage,motions:ReadonlyMap<str
   });
 
   let eventCount=0;
-  const calls:string[]=[],actors:string[]=[],clipReports:Array<ReturnType<typeof compileActorMotion>['report'] & {clipId:string;motionId:string;sourceRefs:SpriteStageClip['sourceRefs']}> = [];
+  const calls:string[]=[],actors:string[]=[],clipReports:Array<ReturnType<typeof compileActorMotion>['report'] & {clipId:string;motionId:string;sourceRefs:SpriteStageClip['sourceRefs'];dom:{slotId:string;rootId:string;artworkId:string}}> = [];
+  let slotNumber=0;
   const selector=(id:string)=>JSON.stringify(`[data-composition-id="${plan.id}"] [id="${id}"]`);
   for(const actor of prepared.actors){
     const slots:string[]=[];
-    for(const {clip,motion} of actor.clips){
-      const compiled=compileActorMotion(motion,clip),start=spriteSeconds(clip.startMs),end=spriteSeconds(clip.endMs);
+    for(const {clip,motion,playbackClip} of actor.clips){
+      // Ordinal namespaces are internal and disjoint by role. Raw public IDs
+      // such as "slot-c" or "c-frame-0" cannot collide with generated node IDs.
+      const ordinal=slotNumber++,playerId=`stage.motion.${ordinal}`;
+      const slotId=`sprite-stage-slot-${ordinal}`,rootId=`sprite-stage-root-${ordinal}`,artworkId=`sprite-${playerId}`;
+      const compiled=compileActorMotion(motion,{...playbackClip,id:playerId}),start=spriteSeconds(clip.startMs),end=spriteSeconds(clip.endMs);
       const wrapperCalls=1+(start>0?1:0)+1,rootCalls=clip.root.length;
       eventCount+=compiled.report.eventCount+wrapperCalls+rootCalls;
       if(eventCount>MAX_STAGE_EVENTS)throw new Error(`Sprite stage exceeds ${MAX_STAGE_EVENTS} timeline calls`);
-      const slotId=`sprite-slot-${clip.id}`,rootId=`sprite-root-${clip.id}`,first=clip.root[0]!.transform;
+      const first=clip.root[0]!.transform;
       calls.push(`tl.set(${selector(slotId)},{opacity:${start===0?1:0},immediateRender:true},0);`);
       if(start>0)calls.push(`tl.set(${selector(slotId)},{opacity:1,immediateRender:false},${start});`);
       calls.push(`tl.set(${selector(slotId)},{opacity:0,immediateRender:false},${end});`);
@@ -108,14 +121,14 @@ export function compileSpriteStage(planInput:SpriteStage,motions:ReadonlyMap<str
       }
       calls.push(compiled.js);
       const artwork=compiled.svg.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
-      slots.push(`<g id="${slotId}" opacity="${start===0?1:0}"><g id="${rootId}" transform="${rootTransform(first)}">${artwork}</g></g>`);
-      clipReports.push({...compiled.report,clipId:clip.id,motionId:motion.id,sourceRefs:clip.sourceRefs});
+      slots.push(`<g id="${slotId}" data-clip-id="${clip.id}" opacity="${start===0?1:0}"><g id="${rootId}" transform="${rootTransform(first)}">${artwork}</g></g>`);
+      clipReports.push({...compiled.report,clipId:clip.id,motionId:motion.id,sourceRefs:clip.sourceRefs,dom:{slotId,rootId,artworkId}});
     }
     actors.push(`<g data-actor-id="${actor.actorId}">${slots.join('')}</g>`);
   }
   return {svg:actors.join(''),js:calls.join('\n'),report:{producer:SPRITE_STAGE_VERSION,compositionId:plan.id,durationMs:plan.durationMs,eventCount,
     actors:prepared.actors.map(actor=>({actorId:actor.actorId,clipIds:actor.clips.map(({clip})=>clip.id)})),clips:clipReports,contacts,
     productionReady:false as const,speechSync:'none' as const,contactCoverage:'declared-points-only' as const,
-    boundsKind:'source-frame-rectangle' as const,warnings:['Candidate actor fragment; scene camera, anatomy, identity, fluidity, foot support and speech remain unaccepted.','Caller must pad the shared timeline to the full scene duration. No independent timer or timeline is created.']}};
+    boundsKind:'source-frame-rectangle' as const,rootPrecision:'GSAP-AttrPlugin-4-decimals' as const,warnings:['Candidate actor fragment; scene camera, anatomy, identity, fluidity, foot support and speech remain unaccepted.','Caller must pad the shared timeline to the full scene duration. No independent timer or timeline is created.']}};
 }
 export type SpriteStageCompilation=ReturnType<typeof compileSpriteStage>;

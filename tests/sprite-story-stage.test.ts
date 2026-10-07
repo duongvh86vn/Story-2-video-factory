@@ -26,7 +26,7 @@ function fixture(){
 }
 const near=(actual:number,expected:number)=>assert.ok(Math.abs(actual-expected)<1e-7,`${actual} != ${expected}`);
 
-test('source pixels stay unchanged; candidate fragment uses one external timeline and existing validator',()=>{
+test('descriptor stays unchanged; local sheet fragment uses one external timeline and existing validator',()=>{
   const {plan,motion,motions}=fixture(),before=JSON.stringify(motion),result=compileSpriteStage(plan,motions);
   assert.equal(JSON.stringify(motion),before);assert.equal(result.report.productionReady,false);
   assert.equal(result.report.speechSync,'none');assert.equal(result.report.contactCoverage,'declared-points-only');
@@ -54,7 +54,7 @@ test('two actors have independent logical frames, slots and motion identities',(
   const samples=sampleSpriteStage(plan,motions,250);
   assert.deepEqual(samples.map(s=>[s.actorId,s.frameIndex]),[['lila',1],['karo',1]]);
   assert.equal(sampleSpriteStage(plan,motions,300).find(s=>s.actorId==='karo')!.frameIndex,0);
-  const output=compileSpriteStage(plan,motions);assert.match(output.svg,/data-actor-id="karo"/);assert.match(output.svg,/sprite-slot-karo\.1/);
+  const output=compileSpriteStage(plan,motions);assert.match(output.svg,/data-actor-id="karo"/);assert.match(output.svg,/data-clip-id="karo\.1"/);
 });
 
 test('root transform composes outside clip placement and measures frame corners and landmarks',()=>{
@@ -69,7 +69,7 @@ test('root transform composes outside clip placement and measures frame corners 
 test('sine interpolation follows destination ease and accepts fractional clocks without metadata rounding',()=>{
   const {plan,motions}=fixture(),clip=plan.actors[0]!.clips[0]!;
   clip.root[1]!.ease='sine.inOut';
-  near(sampleSpriteStage(plan,motions,225)[0]!.root.x,14.64466094067262);
+  near(sampleSpriteStage(plan,motions,225)[0]!.root.x,14.6447);
   near(sampleSpriteStage(plan,motions,350)[0]!.root.x,50);
   const times=[100,200,225,599.999,300,100];
   assert.deepEqual(times.map(t=>sampleSpriteStage(plan,motions,t)),times.slice().reverse().map(t=>sampleSpriteStage(plan,motions,t)).reverse());
@@ -97,7 +97,11 @@ test('contact measures registered point through both transforms and caller-resol
   assert.equal(compiled.report.contacts[0]!.errorPx,0);
   assert.throws(()=>compileSpriteStage(plan,motions),/Missing.*scene target/);
   assert.throws(()=>compileSpriteStage(plan,motions,new Map([['berry',{x:0,y:0}]])),/exceeds tolerance/);
-  plan.contacts[0]!.effectMs=99.99999;assert.throws(()=>compileSpriteStage(plan,motions),/effect must follow contact/);
+  plan.contacts[0]!.effectMs=99.99999;assert.doesNotThrow(()=>compileSpriteStage(plan,motions,new Map([['berry',{x:108,y:204}]])));
+  plan.contacts[0]!.effectMs=99.999;assert.throws(()=>compileSpriteStage(plan,motions),/effect must follow contact/);
+  plan.contacts[0]!.effectMs=100;
+  plan.actors[0]!.clips[0]!.root.forEach(key=>{key.transform={x:10,y:20,rotation:90,scale:3};});
+  near(compileSpriteStage(plan,motions,new Map([['berry',{x:-602,y:344}]] )).report.contacts[0]!.errorPx,0);
 });
 
 test('missing landmarks, hidden native end and malformed contact ownership are errors',()=>{
@@ -131,10 +135,26 @@ test('global literal-call budget rejects individually valid motions without trun
   assert.throws(()=>compileSpriteStage(plan,motions),/stage exceeds 12000/);
 });
 
+test('legal user clip IDs cannot collide with another clip slot/root/artwork/frame/crop',()=>{
+  const {plan,motions}=fixture(),base=plan.actors[0]!.clips[0]!,ids=['c','slot-c','root-c','c-frame-0','c-crop-0','stage.motion.0','sprite-stage-slot-0','sprite-stage.motion.0'];
+  plan.durationMs=ids.length*200;
+  plan.actors[0]!.clips=ids.map((id,index)=>{
+    const clip=structuredClone(base);clip.id=id;clip.startMs=index*200;clip.endMs=clip.startMs+200;
+    clip.root=[{...clip.root[0]!,timeMs:clip.startMs},{...clip.root[1]!,timeMs:clip.endMs}];return clip;
+  });
+  const compiled=compileSpriteStage(plan,motions),domIds=[...compiled.svg.matchAll(/\sid="([^"]+)"/g)].map(match=>match[1]!);
+  assert.equal(new Set(domIds).size,domIds.length);
+  for(const report of compiled.report.clips){assert.ok(domIds.includes(report.dom.slotId));assert.ok(domIds.includes(report.dom.rootId));assert.ok(domIds.includes(report.dom.artworkId));}
+  assert.deepEqual(ids.map((id,index)=>sampleSpriteStage(plan,motions,index*200)[0]!.clipId),ids);
+});
+
 // Real installed GSAP on plain opacity/AttrPlugin targets; browser painting is a separate acceptance test.
 test('shared GSAP seek agrees with sampled root/slot when seeking forward and backward',()=>{
-  const {plan,motions}=fixture();plan.actors[0]!.clips[0]!.root[1]!.ease='sine.inOut';
+  const {plan,motions}=fixture(),clip=plan.actors[0]!.clips[0]!;
+  clip.root[0]!.transform={x:0.123456,y:10.123456,rotation:10.432109,scale:1.000012};
+  clip.root[1]!.transform={x:100.234567,y:90.123456,rotation:45.789123,scale:2.378912};clip.root[1]!.ease='sine.inOut';
   const compiled=compileSpriteStage(plan,motions);
+  const dom=compiled.report.clips[0]!.dom;
   const targets=new Map<string,Record<string,unknown>>(),attributes=new Map<string,Map<string,string>>();
   for(const match of compiled.svg.matchAll(/<g id="([^"]+)"[^>]*>/g)){
     const id=match[1]!,attrs=new Map<string,string>();
@@ -150,11 +170,13 @@ test('shared GSAP seek agrees with sampled root/slot when seeking forward and ba
   const timeline=window.testTimeline as {seek:(seconds:number,suppressEvents:boolean)=>void;kill:()=>void};
   for(const time of [0,100,225,599.999,600,1000,300,100,0]){
     timeline.seek(time/1000,true);
-    const sample=sampleSpriteStage(plan,motions,time)[0],visible=Number(targets.get('[data-composition-id="shot.1"] [id="sprite-slot-lila.1"]')!.opacity)>.5;
+    const sample=sampleSpriteStage(plan,motions,time)[0],visible=Number(targets.get(`[data-composition-id="shot.1"] [id="${dom.slotId}"]`)!.opacity)>.5;
     assert.equal(visible,Boolean(sample));
     if(sample){
-      const match=/translate\(([-\d.e+]+) ([-\d.e+]+)\)/.exec(attributes.get('sprite-root-lila.1')!.get('transform')!);
-      assert.ok(match);assert.ok(Math.abs(Number(match[1])-sample.root.x)<.001);
+      const match=/translate\(([-\d.e+]+) ([-\d.e+]+)\) rotate\(([-\d.e+]+)\) scale\(([-\d.e+]+)\)/.exec(attributes.get(dom.rootId)!.get('transform')!);
+      assert.ok(match);near(Number(match[1]),sample.root.x);near(Number(match[2]),sample.root.y);near(Number(match[3]),sample.root.rotation);near(Number(match[4]),sample.root.scale);
+      const frameNodes=[...targets].filter(([selector,target])=>selector.includes(`${dom.artworkId}-frame-`) && Number(target.opacity)>.5);
+      assert.equal(frameNodes.length,1);assert.ok(frameNodes[0]![0].includes(`${dom.artworkId}-frame-${sample.frameIndex}"`));
     }
   }
   timeline.kill();

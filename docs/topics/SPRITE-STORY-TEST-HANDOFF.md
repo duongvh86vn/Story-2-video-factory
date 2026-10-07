@@ -20,12 +20,12 @@ node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 t
 node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/sprite-motion-player.test.ts
 ```
 
-File stage có 11 ca, binding có 7 ca được khai báo. Ca cuối stage sử dụng GSAP thật trên opacity/AttrPlugin targets trong VM để kiểm seek hai chiều; không chứng nhận browser paint hoặc anatomy. Regression player cần chạy vì clock được chuyển sang helper chung và phần preflight event được tách tên.
+File stage có 12 ca, binding có 8 ca được khai báo. Ca cuối stage sử dụng GSAP thật trên opacity/AttrPlugin targets trong VM để kiểm seek hai chiều, cả X/Y/rotation/scale và active frame; không chứng nhận browser paint hoặc anatomy. Regression player cần chạy vì clock được chuyển sang helper chung và phần preflight event được tách tên. Có ca IDs dễ gây trùng selector và nested performance ID sai.
 
 ## Cần xác nhận khi chạy
 
 1. Clip hiện đúng khoảng `[start,end)`, native hold không tràn vào clip tiếp theo; gap và scene end ẩn. Hai actor không dùng nhầm frame, asset hoặc selector của nhau.
-2. Root dịch/chuyển/rotate/scale/ease khớp sampler khi seek hai chiều, ở clock lẻ và biên lượng tử hóa. Không mirror; không sinh artwork giả trong gap.
+2. Root dịch/chuyển/rotate/scale/ease khớp sampler khi seek hai chiều, ở clock lẻ và biên lượng tử hóa. AttrPlugin nội suy các thành phần thay đổi ở precision 4 decimals; endpoint/static giữ nguyên. Không mirror; không sinh artwork giả trong gap.
 3. Landmark tiếp xúc được đo sau placement và root, target thuộc scene thật, missing/hidden/out-of-tolerance phải lỗi. Đây chỉ là kiểm các điểm đã khai, chưa phải contact liên tục/foot planting.
 4. Tổng event cap không truncate, compiler chỉ sinh literal GSAP trong validator hiện có. Caller sở hữu một paused timeline và pad đến đủ duration.
 5. Shot binding giữ id/clock/dimensions/cast/source refs. Ref ngoài shot, thêm narrator, thay actor hoặc target tưởng tượng phải lỗi. Sourced dialogue phải báo `needs-sprite-speech`, không giả lip-sync.

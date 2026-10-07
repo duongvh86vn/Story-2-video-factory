@@ -14,7 +14,8 @@ const referenceKey=(ref:z.infer<typeof SourceRefSchema>)=>JSON.stringify([ref.ki
 export function compileSpriteStoryActors(shotInput:Shot,planInput:SpriteStage,motions:ReadonlyMap<string,ActorMotion>,targets:ReadonlyMap<string,MotionPoint>){
   const shot=ShotSchema.parse(shotInput),plan=SpriteStageSchema.parse(planInput),cinematic=shot.cinematic,scene=cinematic?.actorScene;
   if(!cinematic || !scene)throw new Error(`${shot.id}: sprite actors require a cinematic actorScene`);
-  if(plan.id!==shot.id || plan.durationMs!==shot.endMs-shot.startMs || plan.durationMs!==cinematic.performance.durationMs
+  if(plan.id!==shot.id || cinematic.shotId!==shot.id || cinematic.performance.id!==shot.id || scene.supporting.some(actor=>actor.performance.id!==shot.id)
+    || plan.durationMs!==shot.endMs-shot.startMs || plan.durationMs!==cinematic.performance.durationMs
     || plan.stage.width!==cinematic.performance.stage.width || plan.stage.height!==cinematic.performance.stage.height)
     throw new Error(`${shot.id}: sprite story stage clock/dimensions mismatch`);
   const cast=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(actor=>actor.character)];

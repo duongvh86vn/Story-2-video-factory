@@ -38,6 +38,8 @@ Stage: id/duration/stage dimensions, 1–8 actor tracks, tối đa 64 clips toà
 
 Pure sampler trả logical frame, motion identity, transform, frame rectangle world bounds và measured landmarks của clip đang hiện. Transform root ngoài placement. Candidate wrapper chỉ hiện `[start,end)` kể cả native motion có end=hold/first; gaps ẩn. Không suy luận gaze từ landmark tay hoặc tự đưa pose mới vào khoảng trống.
 
+Root sampling phải dùng precision của AttrPlugin trong GSAP đã cài: các thành phần transform đang nội suy được làm tròn 4 chữ số thập phân; endpoint/static components giữ giá trị đã khai. Không dùng một sampler precision cao hơn transform thực để báo contact sai. Đây là kiểm từ source thư viện, runtime parity vẫn giao model test.
+
 Compiler chỉ xuất SVG fragment và literal `tl.set/to` fragment, không sở hữu clock/timeline khác. Tổng tối đa 12000 calls, cap player 6000 giữ nguyên. Report gồm các actor/clip/fingerprint/source reference, số event và contact điểm (errorPx); chưa chứng nhận anatomy/fluidity/speech. Thiếu target/landmark, hidden contact, error lớn hoặc effect trước contact phải lỗi. Target ID không được suy thành một tọa độ default.
 
 Tests chuẩn bị: nhiều actors, clip boundary/gap/overlap, once full duration, root rotation/scale/ease, backward seek parity, contact qua 2 transforms, effect clock, missing/corrupt identity, caps và validator literal subset. Assertions chỉ nằm trong callbacks.
@@ -64,4 +66,11 @@ Xuất stage schema để model/test dùng cùng contract. Bàn giao lệnh test
 
 ## Status
 
-Plan đã chốt; implementation chưa được xác nhận tại thời điểm tạo file. Toàn bộ nghiệm thu runtime và video vẫn chờ.
+Tasks 1–2 đã có source tại `3a403a8`. Controller chạy `npm run build` và `npm run test:typecheck`: exit 0 sau sửa type alias `MotionPoint`; `npm run schemas`: exit 0; diff check không báo lỗi. Runtime **NOT RUN**. Source review độc lập đang chờ; chưa mở production topic hoặc claim đạt video mẫu.
+
+Các điểm tích hợp tiếp đã xác định từ source hiện có:
+
+- `packages/scenes/index.ts`: canonical source comparison (line 50), publication geometry/report (line 185), trusted render và artwork repair (line 233/263) đều gọi renderer đồng bộ. Motion descriptor/PNG phải được load/verify trước khi gọi, không đọc file/network trong compiler.
+- `packages/director/creative.ts` và `artwork-repair.ts` cũng render source trước asset staging; context sprite phải được đưa vào rõ ràng hoặc chặn thiếu asset, không âm thầm fallback rig.
+- `packages/review/index.ts` hiện đọc `HostGeometry`, so hostHeightRatio với rigMetrics và cần bằng chứng trước/trong/sau contact. Sprite cần geometry/report có discriminator và đo từ artwork/frame registration, không nhét kết quả giả vào schema rig cũ.
+- Scene cache/lock phải xác minh cả descriptor và PNG đã staged; sampler trả frame rectangle gồm cả margin alpha, nên rectangle đó chỉ là bound bảo thủ và chưa đủ dùng cho face focus hay chân đặt đất.
