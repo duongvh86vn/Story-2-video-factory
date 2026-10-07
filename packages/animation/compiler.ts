@@ -3,7 +3,7 @@ import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
 import { rigHand, type RigHand } from '../core/identifiers.js';
 import { rigMetrics,type RigMetrics } from './rig.js';
-import { HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
+import { HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema,isCurrentAnimation, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
 import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy,sourceSupportMotion} from './support.js';
 import { selectedClips } from './library.js';
 import {sampleAirborne,sampleFallingObject,type AirborneSample} from './airborne.js';
@@ -15,6 +15,7 @@ import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHead
 import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
+import {articulatedGestureWindow,articulatedPoseFromDirections,sampleArticulatedArm} from './arm-trajectory.js';
 import {usesBodyView,registeredBodyView} from './body-view-art.js';
 import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
@@ -466,6 +467,13 @@ function expressionAt(plan:PerformancePlan,time:number) {
   if(next?.startMs!==clip.endMs)pose=blendExpression(neutral,pose,smooth((clip.endMs-time)/window));
   return {mood:clip.mood,weight:1,pose};
 }
+function expressiveAim(g:Gesture,neutral:Point,chin:Point,shoulder:Point,sourceReach?:number):Point{
+  if(g.action==='think')return chin;
+  if(g.target)return g.target;
+  const side=rigHand(g)==='left'?-1:1;
+  if(sourceReach!==undefined)return {x:shoulder.x+sourceReach*(g.action==='react'?.7:.8)*side,y:shoulder.y+sourceReach*(g.action==='react'?-.15:.2)};
+  return g.action==='react'?{x:neutral.x+25*side,y:neutral.y-110}:{x:neutral.x+55*side,y:neutral.y-45};
+}
 function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,scale:number,shoulder:Point):Point {
   const side=rigHand(g)==='left'?-1:1;
   const settle=Math.min(220,(g.endMs-g.startMs)*.18),recover=smooth((g.endMs-time)/settle);
@@ -492,7 +500,7 @@ function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,s
     return mix(dest!,neutral,smooth((time-release)/(g.endMs-release)));
   }
   // A think target owns attention, while the hand owns the thoughtful chin pose.
-  const aim=g.action==='think'?chin:g.target??(g.action==='react'?{x:neutral.x+25*side,y:neutral.y-110}:{x:neutral.x+55*side,y:neutral.y-45});
+  const aim=expressiveAim(g,neutral,chin,shoulder);
   if(g.action==='operate'){
     const contact=g.contactMs!,release=recoveryStart(g);
     return time<contact?mix(neutral,aim,smooth((time-g.startMs)/(contact-g.startMs))):time<=release?aim:mix(aim,neutral,smooth((time-release)/(g.endMs-release)));
@@ -541,6 +549,14 @@ function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undef
     bend=phase<.5?activeBend:restBend;
   }
   return solveChain(shoulder,point,upper,lower,bend);
+}
+
+function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gesture,time:number,upper:number,lower:number,side:RigHand,entryChain?:Chain,entryPole?:number):Chain{
+  const restPole=side==='right'?1:-1,activePole=gesture.elbowPole==='reach'?-restPole:gesture.elbowPole==='rest'?restPole:entryPole??restPole;
+  const rest=entryChain??solveChain(shoulder,neutral,upper,lower,restPole),active=solveChain(shoulder,aim,upper,lower,activePole);
+  if(rest.error>.001||active.error>.001)throw new Error('needs-arm-keypose: expressive source pose cannot reach its authored grip with fixed lengths');
+  return sampleArticulatedArm(shoulder,upper,lower,articulatedPoseFromDirections(rest.upper+90,rest.lower+90),
+    articulatedPoseFromDirections(active.upper+90,active.lower+90),articulatedGestureWindow(gesture),time);
 }
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
@@ -645,7 +661,10 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const sourceGesture=usesReferenceBody(profile)&&gesture?.action==='think'&&!gesture.elbowPole?{...gesture,elbowPole:'rest' as const}:gesture;
     const spearPole=spear?.track.elbowPoles?.[side===spear?.track.hand?'primary':'secondary']??(spear&&spear.track.aim.x>=plan.root.x?-1:1);
     if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
-    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lowerToGrip,side,
+    const expressiveSource=usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion)&&gesture&&!contacts(gesture);
+    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:expressiveSource
+      ?expressiveSourceArm(shoulder,neutral,expressiveAim(sourceGesture!,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),sourceGesture!,t,lengths.upper*s,lowerToGrip,side,authoredRun,authoredRun?walk.direction:undefined)
+      :armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
     // Grip is a rigid continuation of the forearm, not a bone endpoint or a
     // second independently solved contact. This preserves the existing palm
@@ -869,6 +888,10 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   for(const g of plan.gestures.filter(g=>g.action==='drop')){times.add(g.landingMs!);times.add(g.landingMs!-.01);times.add(g.landingMs!+.01);}
   for(const clip of plan.postures??[])for(const at of [(clip.startMs+clip.endMs)/2,(clip.startMs+clip.endMs)/2-.01,(clip.startMs+clip.endMs)/2+.01])times.add(at);
   for(const g of plan.gestures)for(const at of [g.contactMs,g.releaseMs,recoveryStart(g)])if(at!==undefined){times.add(at);times.add(at-.01);times.add(at+.01);}
+  if(usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion))for(const gesture of plan.gestures.filter(g=>!contacts(g))){
+    const window=articulatedGestureWindow(gesture);
+    for(const at of [window.reachMs,window.recoverMs])for(const near of [at-.01,at,at+.01])times.add(near);
+  }
   for(const g of plan.spears??[])for(const at of [g.readyMs,g.contactMs,g.recoverMs])if(at!==undefined)for(const near of [at-.01,at,at+.01])times.add(near);
   for(const g of plan.gestures.filter(g=>g.action==='carry')){
     if(!enteringCarry(g))times.add(g.contactMs!+CARRY_TRANSITION_MS);

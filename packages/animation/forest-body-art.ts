@@ -7,6 +7,7 @@ import {sourceWalkDescription} from './source-walk.js';
 import {runningDescription} from './running.js';
 import {spearDescription} from './spear.js';
 import {sourceArmDescription} from './source-arm.js';
+import {sourceArmTrajectoryDescription} from './arm-trajectory.js';
 import {usesBodyView,bodyViewMetrics,bodyViewAsset,bodyViewClothingSvg,bodyViewDescription} from './body-view-art.js';
 import {lungeDescription} from './lunge.js';
 import {forestHandRegistration,forestHandMetrics,forestWristChainTotal,forestHandDescription} from './forest-hand.js';
@@ -14,7 +15,7 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-16';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-17';
 export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-11';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
@@ -57,7 +58,7 @@ const bodies={
       'foot-left':{anchor:{x:128,y:702},clip:rect(76,674,96,42)},'foot-right':{anchor:{x:266,y:698},clip:rect(250,672,91,42)}},
   },
 } as const;
-export function usesReferenceBody(profile:HostProfile):boolean {return profile.appearance.artworkVersion===FOREST_BODY_VERSION||usesBodyView(profile);}
+export function usesReferenceBody(profile:Pick<HostProfile,'appearance'>):boolean {return profile.appearance.artworkVersion===FOREST_BODY_VERSION||usesBodyView(profile);}
 export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body variant missing.');
   const source=bodies[actor],u=source.unitScale,b=profile.appearance.bodyScale,k=u*b;
@@ -130,8 +131,8 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,hands:forestHandDescription,views:bodyViewDescription,lunge:lungeDescription}),sources:bodies,handRegistration:forestHandDescription,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
-  actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,lunge:lungeDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,armTrajectory:sourceArmTrajectoryDescription,hands:forestHandDescription,views:bodyViewDescription,lunge:lungeDescription}),sources:bodies,handRegistration:forestHandDescription,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
+  actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,expressiveArms:sourceArmTrajectoryDescription,lunge:lungeDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through the projected hidden IK joint; source knee depth preserves physical XYZ lengths',softness:.28,anatomicalGuarantee:false},

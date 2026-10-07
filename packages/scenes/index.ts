@@ -33,7 +33,7 @@ import { ARTWORK_RENDER_VERSION, ARTWORK_EASING_VERSION, ARTWORK_WORLD_BACKGROUN
 import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
 import {referenceHeadAssets,readReferenceHeadAsset,referenceHeadDescription} from '../animation/forest-head-art.js';
-import {referenceBodyAssets,referenceBodyDescription} from '../animation/forest-body-art.js';
+import {referenceBodyAssets,referenceBodyDescription,usesReferenceBody} from '../animation/forest-body-art.js';
 import {loadSpriteSceneMotions,loadSpriteSceneSpeech,spriteSceneSheetBytes} from '../motion/scene-source.js';
 import {actorSpeechSheetBytes} from '../motion/speech-import.js';
 import {SPRITE_SCENE_VERSION} from '../motion/scene-validation.js';
@@ -122,7 +122,7 @@ async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characte
   const speechNarration=shot.cinematic?.spriteStage?.actors.some(actor=>actor.clips.some(clip=>clip.speech))?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
   const actorScene=shot.cinematic?.actorScene,actors=[...(actorScene?.primary?[actorScene.primary]:[]),...(actorScene?.supporting.map(actor=>actor.character)??[])];
   const referenceRig=Object.keys(assetHashes).some(file=>file.startsWith('assets/rigs/'))?{referenceHeadPack:referenceHeadDescription().fingerprint,
-    ...(actors.some(actor=>actor.appearance.artworkVersion==='forest-body-1')?{referenceBodyPack:referenceBodyDescription().fingerprint}:{})}:{};
+    ...(actors.some(actor=>usesReferenceBody(actor))?{referenceBodyPack:referenceBodyDescription().fingerprint}:{})}:{};
   return hash({shot,...referenceRig,...(shot.cinematic?.spriteStage?{spriteSceneRenderer:SPRITE_SCENE_VERSION}:{}),...(speechNarration?{spriteSpeechNarration:hash(speechNarration)}:{}),source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:3,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?shot.cinematic.performance.compilerVersion:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,artworkEasingRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.keyframes.some(frame=>frame.ease!==undefined))?ARTWORK_EASING_VERSION:undefined,artworkWorldBackgroundRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.plane==='background'&&layer.coordinateSpace==='world')?ARTWORK_WORLD_BACKGROUND_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelContactAnchor:shot.cinematic?.artDirection?.models.some(model=>model.handleAnchor!==undefined)?MODEL_CONTACT_ANCHOR_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,sceneLabels:sceneLabelIdentity(shot,config),activity});
 }
 async function validStagedRigAssets(root:string,dir:string,hashes:Record<string,string>):Promise<boolean>{
