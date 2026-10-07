@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.9-seated-folds",
+  "version": "forest-tribe-0.10-cloth-correspondence",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -641,9 +641,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-3",
-    "rendererVersion": "forest-source-body-svg-3",
-    "fingerprint": "e003cea486264a5ed30a5ff1e00021e9bb199472e25adc3e675542964d3510a5",
+    "compilerVersion": "forest-source-body-motion-4",
+    "rendererVersion": "forest-source-body-svg-4",
+    "fingerprint": "0598fadf74e1be7f6e105dd7af85d13e5484af525db38e9be2d3f1e33a226af0",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -933,7 +933,7 @@
       }
     },
     "seatedGarments": {
-      "version": "forest-seated-garment-1",
+      "version": "forest-seated-garment-2-correspondence",
       "assets": {
         "lila": {
           "file": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
@@ -1000,7 +1000,36 @@
       },
       "status": "candidate-authored-folds",
       "productionReady": false,
-      "method": "independently authored seated left/right lower garments; waist attachment with bend-dependent opacity; no bitmap rewrite or fabric simulation",
+      "correspondence": {
+        "file": "library/topics/prehistoric-life/rig-v1/garment-correspondence-v1.json",
+        "fingerprint": "0d408d3fb78e1e673d030a6eb3d42869980c0ead8ca664e2ec8dfc78a5ca9548",
+        "cageVertices": 16,
+        "outlineVertices": 50,
+        "mappings": {
+          "lila": {
+            "left": {
+              "triangles": 14,
+              "minimumTriangleArea": 17.32059322784941
+            },
+            "right": {
+              "triangles": 14,
+              "minimumTriangleArea": 17.32059322784941
+            }
+          },
+          "karo": {
+            "left": {
+              "triangles": 14,
+              "minimumTriangleArea": 0.8617257157863296
+            },
+            "right": {
+              "triangles": 14,
+              "minimumTriangleArea": 0.23879254962453084
+            }
+          }
+        },
+        "guarantee": "positive triangle area for undeformed rest/seated interpolation; not a physical cloth/anatomy or runtime acceptance guarantee"
+      },
+      "method": "common semantic UV triangles and one opaque interpolated SVG contour; source and authored seated materials share the same surface; no bitmap rewrite or fabric simulation",
       "prompts": "library/topics/prehistoric-life/rig-v1/seated-garment-prompts.json"
     },
     "anatomicalMapping": {
@@ -1018,7 +1047,7 @@
       "breath": "bounded continuous body lean",
       "blink": "actor-staggered",
       "hair": "Lila ponytail source masks with 120ms follow; no simulated hair physics",
-      "clothing": "source standing panels with 100ms thigh follow; authored seated folds; opacity transition still visibly ghosted and unaccepted; no fabric simulation"
+      "clothing": "source standing panels with 100ms thigh follow outside seat plans; seat plans use semantic UV correspondences and one opaque contour from standing through seated/rising; interior source/authored fold materials share that surface; seated rest has no independent panel swing yet; no fabric simulation or motion acceptance"
     },
     "inferredAnatomy": {
       "knees": "not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved",
@@ -1045,7 +1074,7 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "03a4711ce99cbcf15847cfc8752948f0473a0f0f6656da937a38fafb465210a4"
+    "codeHash": "a5047426d32391b2967d30288c2d811610396f18a31a58cdb0fc97f09fb825fa"
   },
   "restCalibration": {
     "status": "candidate",
@@ -1075,23 +1104,24 @@
     ]
   },
   "bodyStaticReview": {
-    "file": "docs/topics/reviews/source-fold-static-review-v1.json",
+    "file": "docs/topics/reviews/source-fold-static-review-v2.json",
     "pass": false,
     "scope": "static-source-body-seated-poses-only",
-    "appliesTo": "forest-source-body-motion-3 / forest-source-body-svg-3",
+    "appliesTo": "forest-source-body-motion-4 / forest-source-body-svg-4",
     "fingerprintMatches": true,
     "productionAcceptance": false,
     "history": [
       "docs/topics/reviews/source-seat-static-review-v1.json",
-      "docs/topics/reviews/source-seat-static-review-v2.json"
+      "docs/topics/reviews/source-seat-static-review-v2.json",
+      "docs/topics/reviews/source-fold-static-review-v1.json"
     ],
-    "currentRepair": "Authored seated left/right folds, inferred balanced knees with original leg totals and a closed hip seat contact. Transition opacity blend remains visibly ghosted; end poses do not prove motion acceptance."
+    "currentRepair": "Shared semantic UV mesh and one opaque rest/seated contour replace exterior ghosting. Static review v2 still fails Karo seated shorts tube readability. Independent cloth swing inside seat plans, body views and continuous motion remain pending."
   },
   "limitations": [
     "AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.",
     "The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.",
     "Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.",
-    "Seated source motion and authored lower clothing remain candidates. Transition images show opacity ghosting; cloth mesh/inbetweens, full body views and continuous motion remain unaccepted.",
+    "Seated source motion and authored lower clothing remain candidates. A shared UV/opaque contour addresses exterior ghosting in sampled static poses; Karo seated cuffs remain unclear. Independent seat-plan cloth swing, full body views and continuous motion remain unaccepted.",
     "Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted."
   ]
 }

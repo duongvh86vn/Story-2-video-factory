@@ -11,6 +11,8 @@ import {performanceScene} from '../packages/animation/scene.js';
 import {secureSceneFiles,validateSceneFiles} from '../packages/scenes/security.js';
 import {legGeometry} from '../packages/animation/body-geometry.js';
 import {rigMetrics} from '../packages/animation/rig.js';
+import garmentGeometry from '../library/topics/prehistoric-life/rig-v1/garment-correspondence-v1.json' with {type:'json'};
+import {seatedGarmentState} from '../packages/animation/forest-garment-art.js';
 const silence={method:'segment-draft' as const,windowMs:20,intervals:[]};
 function fixture(actor:'lila'|'karo'){
   const profile=topicPreviewProfile(actor);
@@ -77,8 +79,8 @@ for(const actor of ['lila','karo'] as const)for(const facing of ['left','right']
     const entry=samplePerformance(plan,profile,0,silence),exit=samplePerformance(plan,profile,4800,silence);
     assert.deepEqual(exit.feet,entry.feet);
     for(const side of ['left','right'] as const){
-      assert.equal(entry.face['garment-fold-'+side]!.opacity,0);assert.equal(exit.face['garment-fold-'+side]!.opacity,0);
-      assert.equal(exit.face['garment-standing-'+side]!.opacity,1);
+      assert.equal(entry.face['garment-fold-'+side]!.opacity,side===facing?1:0);assert.equal(exit.face['garment-fold-'+side]!.opacity,side===facing?1:0);
+      assert.equal(exit.face['garment-standing-'+side]!.opacity,0);
       assert.equal(before.face['garment-fold-'+side]!.opacity,side===facing?1:0);
       assert.equal(before.face['garment-standing-'+side]!.opacity,0);
     }
@@ -93,6 +95,30 @@ test('source seat refuses shortened preparation and generic seat geometry that i
   assert.throws(()=>validatePerformance(plan,profile),/1500ms/);
   plan.postures![0]!.endMs=1800;plan.supports![0]!.center.y=200;
   assert.throws(()=>validatePerformance(plan,profile),/seat\/foot geometry/);
+});
+
+test('cloth correspondences keep one opaque surface and do not invert triangles between rest and seated views',()=>{
+  const matrix=(value:string)=>value.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi)!.map(Number);
+  const point=(m:number[],p:{x:number;y:number})=>({x:m[0]!*p.x+m[2]!*p.y+m[4]!,y:m[1]!*p.x+m[3]!*p.y+m[5]!});
+  for(const actor of ['lila','karo'] as const)for(const facing of ['left','right'] as const){
+    const {profile}=fixture(actor),geometry=garmentGeometry.actors[actor];
+    for(let phase=0;phase<=20;phase++){
+      const state=seatedGarmentState(profile,facing,phase/20);
+      assert.equal(state.face['garment-material-'+facing+'-rest']!.opacity,1);
+      for(const [i,piece] of geometry.views[facing].pieces.entries()){
+        const positions=(material:'rest'|'seat')=>piece[material].map(p=>point(matrix(String(state.face['garment-texture-'+facing+'-'+material+'-'+i]!.attr!.transform)),p));
+        const rest=positions('rest'),seat=positions('seat'),[a,b,c]=rest;
+        assert.ok((b!.x-a!.x)*(c!.y-a!.y)-(b!.y-a!.y)*(c!.x-a!.x)>0);
+        for(let j=0;j<3;j++)assert.ok(Math.hypot(rest[j]!.x-seat[j]!.x,rest[j]!.y-seat[j]!.y)<.001);
+      }
+      assert.equal(state.paths['garment-fill-'+facing],state.paths['garment-contour-'+facing]);
+      assert.equal(state.paths['garment-edge-'+facing],state.paths['garment-contour-'+facing]);
+    }
+    const svg=bodyCalibrationSvg(actor,'sit-'+facing as 'sit-left'|'sit-right',1240,'happy');
+    assert.match(svg,/id="[^"]+-garment-fill-[^"]+"[^>]*fill="#[A-Fa-f0-9]{6}"[^>]*stroke="none"/);
+    assert.match(svg,/id="[^"]+-garment-edge-[^"]+"[^>]*stroke-width="1.1"/);
+    assert.ok(svg.indexOf('id="'+actor+'-calibration-garment-seated-'+facing+'"')<svg.indexOf('id="'+actor+'-calibration-chest"'));
+  }
 });
 test('source seat keeps the closed hip contact planted during explicit lean and emotion changes',()=>{
   for(const actor of ['lila','karo'] as const)for(const facing of ['left','right'] as const){

@@ -12,6 +12,7 @@ import {forestHeadContour} from './forest-tribe-art.js';
 import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription,referenceHeadViewForYaw,FOREST_HEAD_VIEWS} from './forest-head-art.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
+import {seatedGarmentState,seatedGarmentMatrixError} from './forest-garment-art.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t = clamp(n); return t * t * (3 - 2 * t); };
@@ -547,13 +548,14 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(usesReferenceBody(profile)){
     const weight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,n)=>sum+n,0));
     const flex=Math.abs(thighAngles.reduce((sum,n)=>sum+n,0)/thighAngles.length-lean);
-    // Known WIP: different exterior hems ghost during this blend. Keep this
-    // candidate explicit until correspondence/opaque transition art is ready.
     const folded=smooth((weight-.2)/.35)*smooth((flex-35)/35);
+    const hasSeat=[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated');
     for(const side of ['left','right'] as const){
       transforms['garment-seated-'+side]=transform(pelvis,lean,s*profile.appearance.bodyScale);
-      face['garment-fold-'+side]={opacity:(side===(bend===1?'right':'left')?folded:0)};
-      face['garment-standing-'+side]={opacity:1-folded};
+      const chosen=side===(bend===1?'right':'left'),surface=seatedGarmentState(profile,side,hasSeat&&chosen?folded:0);
+      Object.assign(face,surface.face);Object.assign(paths,surface.paths);
+      face['garment-fold-'+side]={opacity:hasSeat&&chosen?1:0};
+      face['garment-standing-'+side]={opacity:hasSeat?0:1};
     }
   }
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
@@ -655,6 +657,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     let error=0;
     for(const progress of [.17,.5,.83]){
       const actual=samplePerformance(plan,profile,lerp(a.timeMs,b.timeMs,progress),activity);
+      if(usesReferenceBody(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       for(const [id,from] of Object.entries(a.face)){
         // Audio activity is intentionally stepped at its own explicit boundaries.
         if(id==='mouth-talk')continue;

@@ -1,0 +1,68 @@
+{
+  "scope": "static-common-uv-garment-and-transition-poses-only",
+  "appliesTo": "forest-source-body-motion-4 / forest-source-body-svg-4",
+  "bodyPackFingerprint": "0598fadf74e1be7f6e105dd7af85d13e5484af525db38e9be2d3f1e33a226af0",
+  "codeHashes": {
+    "compiler.ts": "e8f6a4e07a38a753ddce992a2178d4b740c25a3e23514e151cf67412bd356228",
+    "rig.ts": "1d65b163112db345894d73cdfc8982738a3ea86f22cd5c8c8861164ec39b97d2",
+    "support.ts": "55921b8ab31c3476383da43c46281465e16212cfbbf166d0b13a2c8633861266",
+    "forest-garment-art.ts": "03d8f08bf19246f15b55c27c51718f5ba0fd2a0dbe102c3f60daac8fe8e2ad3e"
+  },
+  "result": {
+    "pass": false,
+    "issues": [
+      {
+        "shotId": "character.karo",
+        "type": "garment_tube_readability",
+        "severity": "medium",
+        "description": "At 2200ms seated-right, Karo's shorts read as one compressed ragged band across the lap: the two leg openings and their separating contour are not clearly distinguishable. Both 1240ms transitions retain a crotch notch, and the 4800ms standing pose clearly restores two tubes, so the standing endpoint does not resolve the seated silhouette issue.",
+        "repair": "Adjust the seated mesh and internal crotch/hem contours so two distinct shorts tubes remain readable around the respective thighs. Preserve the opaque outer boundary and closed waist/hip coverage; verify both 1240ms directions and the 2200ms hold after adjustment."
+      }
+    ],
+    "mode": "vision",
+    "warnings": [
+      "All four screenshots were inspected. No clear translucent exterior hem, doubled exterior silhouette, open outline, or exposed mesh crack is visible at this resolution. Lila retains a single ragged dress; no clear detached hand or neck attachment is visible.",
+      "Side/rear torso artwork and independent garment-panel swing in seated plans remain unproved.",
+      "These static poses do not establish continuous-motion smoothness, video quality, background integration, or acceptance of the final episode and all three input flows.",
+      "The inferred knee placement near 52/48, preservation of total source leg lengths, and seat contact below/behind the belt do not establish anatomical or fabric-simulation guarantees."
+    ]
+  },
+  "productionAcceptance": false,
+  "usage": {
+    "calls": 2,
+    "successes": 2,
+    "failures": 0,
+    "pendingCalls": 0,
+    "inputTokens": 21752,
+    "outputTokens": 1103,
+    "totalTokens": 22855,
+    "costUsd": 0,
+    "unknownUsageCalls": 0,
+    "byRole": {
+      "visual_review": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 21752,
+        "outputTokens": 1103,
+        "totalTokens": 22855,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    },
+    "byModel": {
+      "gateway/cx/gpt-6.1-sol": {
+        "calls": 2,
+        "successes": 2,
+        "failures": 0,
+        "pendingCalls": 0,
+        "inputTokens": 21752,
+        "outputTokens": 1103,
+        "totalTokens": 22855,
+        "costUsd": 0,
+        "unknownUsageCalls": 0
+      }
+    }
+  }
+}

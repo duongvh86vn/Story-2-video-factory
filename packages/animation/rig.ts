@@ -51,6 +51,6 @@ export function performanceSvg(profile: HostProfile,imageMode:'embedded'|'scene'
   return `<g id="performer" data-profile-hash="${profile.profileHash}" fill="none" stroke="${a.outline}" stroke-width="${a.strokeWidth}" stroke-linecap="round" stroke-linejoin="round">`
     + `${body?.defs??''}${inkPaths}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g>`
     + (body?`<g id="garment-left"><g id="garment-standing-left">${body.garments.left}</g></g><g id="garment-right"><g id="garment-standing-right">${body.garments.right}</g></g>`:'')
-    + `${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?.seatedGarments??''}${body?'':neck}${body?ink('arm'):''}${limbs}`
+    + `${body?.seatedGarments??''}${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?'':neck}${body?ink('arm'):''}${limbs}`
     + `<g id="head">${head}${costume('head')}${drawn?'':`<g id="face-orientation">${faceLayers(0, -4, 18, robot ? a.accent : a.outline, robot ? a.screen : a.shell, 15)}</g>`}</g></g>`;
 }

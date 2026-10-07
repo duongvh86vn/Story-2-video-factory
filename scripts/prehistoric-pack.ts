@@ -27,7 +27,7 @@ const headPack=referenceHeadDescription();
 const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
 const headReview=await fs.readFile(path.join(repo,headReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;headPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const headReviewCurrent=headReview?.headPackFingerprint===headPack.fingerprint;
-const bodyPack=referenceBodyDescription(),bodyReviewFile='docs/topics/reviews/source-fold-static-review-v1.json';
+const bodyPack=referenceBodyDescription(),bodyReviewFile='docs/topics/reviews/source-fold-static-review-v2.json';
 const bodyReview=await fs.readFile(path.join(repo,bodyReviewFile),'utf8').then(text=>JSON.parse(text) as {appliesTo:string;bodyPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const bodyReviewCurrent=bodyReview?.bodyPackFingerprint===bodyPack.fingerprint;
 const headCandidates=await Promise.all(Object.entries(headPack.assets).flatMap(([actor,views])=>Object.entries(views).map(async([view,asset])=>{
@@ -50,11 +50,11 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   headStaticReview:{file:headReviewFile,pass:headReviewCurrent&&headReview?.result.pass===true,scope:'static-three-view-head-layer-only',appliesTo:headReview?.appliesTo,
     fingerprintMatches:headReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/head-layer-static-review-v2.json','docs/topics/reviews/head-layer-static-review-v3.json','docs/topics/reviews/head-layer-static-review-v4.json','docs/topics/reviews/front-head-static-review-v1.json']},
   bodyStaticReview:{file:bodyReviewFile,pass:bodyReviewCurrent&&bodyReview?.result.pass===true,scope:'static-source-body-seated-poses-only',appliesTo:bodyReview?.appliesTo,
-    fingerprintMatches:bodyReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/source-seat-static-review-v1.json','docs/topics/reviews/source-seat-static-review-v2.json'],
-    currentRepair:'Authored seated left/right folds, inferred balanced knees with original leg totals and a closed hip seat contact. Transition opacity blend remains visibly ghosted; end poses do not prove motion acceptance.'},
+    fingerprintMatches:bodyReviewCurrent,productionAcceptance:false,history:['docs/topics/reviews/source-seat-static-review-v1.json','docs/topics/reviews/source-seat-static-review-v2.json','docs/topics/reviews/source-fold-static-review-v1.json'],
+    currentRepair:'Shared semantic UV mesh and one opaque rest/seated contour replace exterior ghosting. Static review v2 still fails Karo seated shorts tube readability. Independent cloth swing inside seat plans, body views and continuous motion remain pending.'},
   limitations:['AI cutouts and part atlases can redraw source details; none is a pixel-exact extraction guarantee.',
     'The atlas generator did not establish exact cell geometry. Define measured crops and pivots before use.',
     'Layered heads support front and two authored three-quarter views; turns are stepped through three drawings. Further inbetweens, profile/rear/body views and other secondary layers remain pending.',
-    'Seated source motion and authored lower clothing remain candidates. Transition images show opacity ghosting; cloth mesh/inbetweens, full body views and continuous motion remain unaccepted.',
+    'Seated source motion and authored lower clothing remain candidates. A shared UV/opaque contour addresses exterior ghosting in sampled static poses; Karo seated cuffs remain unclear. Independent seat-plan cloth swing, full body views and continuous motion remain unaccepted.',
     'Full-body color frames, layered rig, natural motion and the three complete video flows remain unaccepted.']});
 console.log(JSON.stringify({references:references.length,candidates:candidates.length+headCandidates.length+garmentCandidates.length,headCandidates:headCandidates.length,garmentCandidates:garmentCandidates.length,rejected:rejected.length,productionReady:false}));
