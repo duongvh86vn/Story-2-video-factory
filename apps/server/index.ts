@@ -35,7 +35,8 @@ import {discoverNineRouter} from '../../packages/models/nine-router.js';
 import {prehistoricReadiness,prehistoricReferences} from '../../packages/topics/prehistoric-life.js';
 import {referencePuppetSvg} from '../../packages/topics/reference-puppet.js';
 import {headWorkbench,headWorkbenchManifest} from '../../packages/topics/head-workbench.js';
-import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
+import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
+import {viewRegistrationWorkbench} from '../../packages/topics/view-registration-workbench.js';
 import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
 import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
 import {Moods} from '../../packages/animation/schemas.js';
@@ -185,13 +186,16 @@ export async function buildServer(options: ServerOptions = {}) {
     return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(headWorkbench(mood,timeMs,mouth));
   });
   app.get('/api/topics/prehistoric-life/heads/manifest',async()=>headWorkbenchManifest());
-  app.get<{Querystring:{action?:string;timeMs?:string;mood?:string}}>('/api/topics/prehistoric-life/body',async(request,reply)=>{
+  app.get<{Querystring:{action?:string;timeMs?:string;mood?:string;view?:string}}>('/api/topics/prehistoric-life/body',async(request,reply)=>{
     const action=z.enum(BODY_ACTIONS).parse(request.query.action??'rest');
     const timeMs=z.coerce.number().int().min(0).max(bodyActionDuration(action)).parse(request.query.timeMs??600);
     const mood=z.enum(['neutral','happy','thinking','angry']).parse(request.query.mood??'happy');
-    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood));
+    const view=z.enum(BODY_WORKBENCH_VIEWS).parse(request.query.view??(action==='spear-lunge'?'three-quarter-right':'source'));
+    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood,view));
   });
   app.get('/api/topics/prehistoric-life/body/manifest',async()=>bodyWorkbenchManifest());
+  app.get('/api/topics/prehistoric-life/view-registration',async(_request,reply)=>reply.type('text/html')
+    .header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'").send(viewRegistrationWorkbench()));
   app.get<{Querystring:{group?:string;phase?:string;mood?:string}}>('/api/topics/prehistoric-life/arm-audit',async(request,reply)=>{
     const group=z.enum(ARM_AUDIT_GROUPS).parse(request.query.group??'spear'),phase=z.enum(['entry','pose','recover']).parse(request.query.phase??'entry');
     const mood=z.enum(['happy','angry','thinking','neutral']).parse(request.query.mood??'happy');

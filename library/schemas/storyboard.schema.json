@@ -958,6 +958,7 @@
                               "type": "string",
                               "enum": [
                                 "walk",
+                                "run",
                                 "jump"
                               ]
                             },
@@ -1133,7 +1134,11 @@
                     "enum": [
                       "workshop",
                       "road",
-                      "neutral"
+                      "neutral",
+                      "forest",
+                      "camp",
+                      "cave",
+                      "river"
                     ]
                   },
                   "environmentAssetId": {
@@ -1563,6 +1568,27 @@
                                     "type": "number",
                                     "minimum": 2,
                                     "maximum": 10
+                                  },
+                                  "characterVariant": {
+                                    "type": "string",
+                                    "enum": [
+                                      "lila",
+                                      "karo"
+                                    ]
+                                  },
+                                  "artworkVersion": {
+                                    "type": "string",
+                                    "enum": [
+                                      "forest-head-1",
+                                      "forest-body-1",
+                                      "forest-body-view-1"
+                                    ]
+                                  },
+                                  "bodyView": {
+                                    "type": "string",
+                                    "enum": [
+                                      "three-quarter-right"
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -1746,6 +1772,27 @@
                                       "type": "number",
                                       "minimum": 2,
                                       "maximum": 10
+                                    },
+                                    "characterVariant": {
+                                      "type": "string",
+                                      "enum": [
+                                        "lila",
+                                        "karo"
+                                      ]
+                                    },
+                                    "artworkVersion": {
+                                      "type": "string",
+                                      "enum": [
+                                        "forest-head-1",
+                                        "forest-body-1",
+                                        "forest-body-view-1"
+                                      ]
+                                    },
+                                    "bodyView": {
+                                      "type": "string",
+                                      "enum": [
+                                        "three-quarter-right"
+                                      ]
                                     }
                                   },
                                   "required": [
@@ -1811,6 +1858,7 @@
                                 "compilerVersion": {
                                   "type": "string",
                                   "enum": [
+                                    "performance-2.2.15",
                                     "performance-2.2.14",
                                     "performance-2.2.13",
                                     "performance-2.2.12",
@@ -1931,6 +1979,55 @@
                                     ],
                                     "additionalProperties": false
                                   }
+                                },
+                                "headView": {
+                                  "type": "string",
+                                  "enum": [
+                                    "front",
+                                    "three-quarter-left",
+                                    "three-quarter-right",
+                                    "left",
+                                    "right",
+                                    "back-left",
+                                    "back-right",
+                                    "back"
+                                  ]
+                                },
+                                "headTurns": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "startMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "endMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "direction": {
+                                        "type": "string",
+                                        "enum": [
+                                          "front",
+                                          "three-quarter-left",
+                                          "three-quarter-right",
+                                          "left",
+                                          "right",
+                                          "back-left",
+                                          "back-right",
+                                          "back"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "startMs",
+                                      "endMs",
+                                      "direction"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "maxItems": 40
                                 },
                                 "entryPosture": {
                                   "type": "object",
@@ -2086,6 +2183,13 @@
                                       },
                                       "toX": {
                                         "type": "number"
+                                      },
+                                      "gait": {
+                                        "type": "string",
+                                        "enum": [
+                                          "walk",
+                                          "run"
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -2121,6 +2225,11 @@
                                       "height": {
                                         "type": "number",
                                         "exclusiveMinimum": 0
+                                      },
+                                      "tuck": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 0.5
                                       }
                                     },
                                     "required": [
@@ -2255,6 +2364,247 @@
                                     ],
                                     "additionalProperties": false
                                   }
+                                },
+                                "spears": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "startMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "endMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "id": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                      },
+                                      "propId": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                      },
+                                      "hand": {
+                                        "type": "string",
+                                        "enum": [
+                                          "left",
+                                          "right"
+                                        ]
+                                      },
+                                      "action": {
+                                        "type": "string",
+                                        "enum": [
+                                          "hold",
+                                          "thrust"
+                                        ]
+                                      },
+                                      "grip": {
+                                        "type": "object",
+                                        "properties": {
+                                          "x": {
+                                            "type": "number"
+                                          },
+                                          "y": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "x",
+                                          "y"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "aim": {
+                                        "type": "object",
+                                        "properties": {
+                                          "x": {
+                                            "type": "number"
+                                          },
+                                          "y": {
+                                            "type": "number"
+                                          }
+                                        },
+                                        "required": [
+                                          "x",
+                                          "y"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "twoHands": {
+                                        "type": "boolean",
+                                        "default": true
+                                      },
+                                      "secondaryOffset": {
+                                        "type": "number",
+                                        "minimum": -200,
+                                        "maximum": -10,
+                                        "default": -20
+                                      },
+                                      "elbowPoles": {
+                                        "type": "object",
+                                        "properties": {
+                                          "primary": {
+                                            "type": "number",
+                                            "enum": [
+                                              -1,
+                                              1
+                                            ]
+                                          },
+                                          "secondary": {
+                                            "type": "number",
+                                            "enum": [
+                                              -1,
+                                              1
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "primary",
+                                          "secondary"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "readyMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "contactMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      },
+                                      "recoverMs": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "startMs",
+                                      "endMs",
+                                      "id",
+                                      "propId",
+                                      "hand",
+                                      "action",
+                                      "grip",
+                                      "aim"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "maxItems": 8
+                                },
+                                "lunge": {
+                                  "type": "object",
+                                  "properties": {
+                                    "version": {
+                                      "type": "string",
+                                      "const": "forest-planted-lunge-1"
+                                    },
+                                    "spearId": {
+                                      "type": "string",
+                                      "maxLength": 96,
+                                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                    },
+                                    "soles": {
+                                      "type": "object",
+                                      "properties": {
+                                        "left": {
+                                          "type": "object",
+                                          "properties": {
+                                            "x": {
+                                              "type": "number"
+                                            },
+                                            "y": {
+                                              "type": "number"
+                                            }
+                                          },
+                                          "required": [
+                                            "x",
+                                            "y"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "right": {
+                                          "type": "object",
+                                          "properties": {
+                                            "x": {
+                                              "type": "number"
+                                            },
+                                            "y": {
+                                              "type": "number"
+                                            }
+                                          },
+                                          "required": [
+                                            "x",
+                                            "y"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "left",
+                                        "right"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "kneePoles": {
+                                      "type": "object",
+                                      "properties": {
+                                        "left": {
+                                          "type": "number",
+                                          "enum": [
+                                            -1,
+                                            1
+                                          ]
+                                        },
+                                        "right": {
+                                          "type": "number",
+                                          "enum": [
+                                            -1,
+                                            1
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "left",
+                                        "right"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "advanceX": {
+                                      "type": "number",
+                                      "minimum": -20,
+                                      "maximum": 20
+                                    },
+                                    "dropY": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 12
+                                    },
+                                    "entryLeanDeg": {
+                                      "type": "number",
+                                      "minimum": -20,
+                                      "maximum": 20
+                                    },
+                                    "contactLeanDeg": {
+                                      "type": "number",
+                                      "minimum": -25,
+                                      "maximum": 25
+                                    }
+                                  },
+                                  "required": [
+                                    "version",
+                                    "spearId",
+                                    "soles",
+                                    "kneePoles",
+                                    "advanceX",
+                                    "dropY",
+                                    "entryLeanDeg",
+                                    "contactLeanDeg"
+                                  ],
+                                  "additionalProperties": false
                                 },
                                 "expressions": {
                                   "type": "array",
@@ -2401,6 +2751,18 @@
                                           "left-hand",
                                           "right-hand"
                                         ]
+                                      },
+                                      "kind": {
+                                        "type": "string",
+                                        "enum": [
+                                          "generic",
+                                          "spear"
+                                        ]
+                                      },
+                                      "length": {
+                                        "type": "number",
+                                        "minimum": 50,
+                                        "maximum": 600
                                       }
                                     },
                                     "required": [
@@ -2701,6 +3063,7 @@
                               "type": "string",
                               "enum": [
                                 "walk",
+                                "run",
                                 "jump"
                               ]
                             },
@@ -3096,6 +3459,7 @@
                       "compilerVersion": {
                         "type": "string",
                         "enum": [
+                          "performance-2.2.15",
                           "performance-2.2.14",
                           "performance-2.2.13",
                           "performance-2.2.12",
@@ -3216,6 +3580,55 @@
                           ],
                           "additionalProperties": false
                         }
+                      },
+                      "headView": {
+                        "type": "string",
+                        "enum": [
+                          "front",
+                          "three-quarter-left",
+                          "three-quarter-right",
+                          "left",
+                          "right",
+                          "back-left",
+                          "back-right",
+                          "back"
+                        ]
+                      },
+                      "headTurns": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "direction": {
+                              "type": "string",
+                              "enum": [
+                                "front",
+                                "three-quarter-left",
+                                "three-quarter-right",
+                                "left",
+                                "right",
+                                "back-left",
+                                "back-right",
+                                "back"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "startMs",
+                            "endMs",
+                            "direction"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "maxItems": 40
                       },
                       "entryPosture": {
                         "type": "object",
@@ -3371,6 +3784,13 @@
                             },
                             "toX": {
                               "type": "number"
+                            },
+                            "gait": {
+                              "type": "string",
+                              "enum": [
+                                "walk",
+                                "run"
+                              ]
                             }
                           },
                           "required": [
@@ -3406,6 +3826,11 @@
                             "height": {
                               "type": "number",
                               "exclusiveMinimum": 0
+                            },
+                            "tuck": {
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 0.5
                             }
                           },
                           "required": [
@@ -3540,6 +3965,247 @@
                           ],
                           "additionalProperties": false
                         }
+                      },
+                      "spears": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "id": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "propId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "hand": {
+                              "type": "string",
+                              "enum": [
+                                "left",
+                                "right"
+                              ]
+                            },
+                            "action": {
+                              "type": "string",
+                              "enum": [
+                                "hold",
+                                "thrust"
+                              ]
+                            },
+                            "grip": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "aim": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "twoHands": {
+                              "type": "boolean",
+                              "default": true
+                            },
+                            "secondaryOffset": {
+                              "type": "number",
+                              "minimum": -200,
+                              "maximum": -10,
+                              "default": -20
+                            },
+                            "elbowPoles": {
+                              "type": "object",
+                              "properties": {
+                                "primary": {
+                                  "type": "number",
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ]
+                                },
+                                "secondary": {
+                                  "type": "number",
+                                  "enum": [
+                                    -1,
+                                    1
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "primary",
+                                "secondary"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "readyMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "contactMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "recoverMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "startMs",
+                            "endMs",
+                            "id",
+                            "propId",
+                            "hand",
+                            "action",
+                            "grip",
+                            "aim"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "maxItems": 8
+                      },
+                      "lunge": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "string",
+                            "const": "forest-planted-lunge-1"
+                          },
+                          "spearId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "soles": {
+                            "type": "object",
+                            "properties": {
+                              "left": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "right": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "left",
+                              "right"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "kneePoles": {
+                            "type": "object",
+                            "properties": {
+                              "left": {
+                                "type": "number",
+                                "enum": [
+                                  -1,
+                                  1
+                                ]
+                              },
+                              "right": {
+                                "type": "number",
+                                "enum": [
+                                  -1,
+                                  1
+                                ]
+                              }
+                            },
+                            "required": [
+                              "left",
+                              "right"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "advanceX": {
+                            "type": "number",
+                            "minimum": -20,
+                            "maximum": 20
+                          },
+                          "dropY": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 12
+                          },
+                          "entryLeanDeg": {
+                            "type": "number",
+                            "minimum": -20,
+                            "maximum": 20
+                          },
+                          "contactLeanDeg": {
+                            "type": "number",
+                            "minimum": -25,
+                            "maximum": 25
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "spearId",
+                          "soles",
+                          "kneePoles",
+                          "advanceX",
+                          "dropY",
+                          "entryLeanDeg",
+                          "contactLeanDeg"
+                        ],
+                        "additionalProperties": false
                       },
                       "expressions": {
                         "type": "array",
@@ -3686,6 +4352,18 @@
                                 "left-hand",
                                 "right-hand"
                               ]
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "generic",
+                                "spear"
+                              ]
+                            },
+                            "length": {
+                              "type": "number",
+                              "minimum": 50,
+                              "maximum": 600
                             }
                           },
                           "required": [

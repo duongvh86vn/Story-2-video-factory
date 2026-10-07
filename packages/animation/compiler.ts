@@ -15,6 +15,8 @@ import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHead
 import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
+import {usesBodyView,registeredBodyView} from './body-view-art.js';
+import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
 import {seatedGarmentState,seatedGarmentMatrixError,type GarmentRestPose} from './forest-garment-art.js';
@@ -92,6 +94,20 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   overlaps(plan.jumps??[],'jump',plan.durationMs);
   if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.jumps?.length||plan.gestures.some(g=>g.action==='drop'||g.landingMs!==undefined)))throw new Error('Jump/drop clips require animation2.2.14 or newer');
   if(plan.compilerVersion!==HUNT_ANIMATION_VERSION&&(plan.walks.some(w=>w.gait==='run')||plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('Run/spear tracks require animation2.2.15');
+  if(usesBodyView(profile)){
+    if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
+    if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending');
+    if(plan.expressions.some(e=>e.mood!=='happy'))throw new Error('needs-view-expression: authored-view candidate has only its intact happy face');
+    if(plan.facing!==undefined&&plan.facing!=='right')throw new Error('needs-body-registration: fixed right-facing artwork cannot portray the opposite body direction');
+    if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'))throw new Error('needs-view-motion: this authored view has only point/chin and spear candidates');
+  }
+  if(plan.lunge){
+    const strike=plan.spears?.find(s=>s.id===plan.lunge!.spearId);
+    if(!usesBodyView(profile)||plan.compilerVersion!==HUNT_ANIMATION_VERSION||plan.spears?.length!==1||!strike||strike.action!=='thrust'||!strike.twoHands||!strike.elbowPoles||strike.startMs!==0||strike.endMs!==plan.durationMs)throw new Error('needs-lunge-pose: fixed authored-view stance must own one two-hand thrust with fixed elbow poles for the entire shot');
+    if(plan.walks.length||plan.jumps?.length||plan.turns?.length||plan.postures?.length||plan.entryPosture||plan.supports?.length)throw new Error('needs-lunge-pose: prepare the stance before shot entry; conflicting body tracks are not supported');
+    for(const foot of Object.values(plan.lunge.soles))if(foot.y!==plan.root.y||foot.x<0||foot.x>plan.stage.width)throw new Error('needs-lunge-pose: fixed entry soles must be on the stage ground');
+    if(plan.root.y!==plan.stage.groundY)throw new Error('needs-lunge-pose: planted stance root must be on the stage ground');
+  }
   if(plan.compilerVersion!==HUNT_ANIMATION_VERSION&&plan.jumps?.some(j=>j.tuck!==undefined))throw new Error('Authored jump tuck requires animation2.2.15');
   if(plan.compilerVersion===LEGACY_ANIMATION_VERSION&&(plan.entryPosture||plan.postures?.length||plan.gestures.some(g=>g.elbowPole)))throw new Error('Body posture/elbow pole data requires animation2.2.8 or newer');
   if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.gestures.some(g=>g.hand)||plan.props.some(p=>p.attachedTo==='left-hand')))throw new Error('Hand tracks require animation2.2.9 or newer');
@@ -314,6 +330,8 @@ function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetri
 }
 function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
   const m=rigMetrics(profile),s=plan.scale,root=rootAt(plan,t),walk=gait(plan,profile,t),emotion=expressionAt(plan,t),pose=emotion.pose;
+  const lunge=sampleLunge(plan,t);
+  if(lunge){walk.feet={left:{...lunge.soles.left},right:{...lunge.soles.right}};walk.stance={left:true,right:true};}
   const jump=plan.jumps?.find(j=>t>=j.startMs&&t<=j.endMs),air=jump?sampleAirborne(jump,t,s):walk.runAir;
   if(air)for(const side of ['left','right'] as const){walk.feet[side].y+=air.feetOffsetY;walk.stance[side]=walk.runAir?walk.stance[side]&&!air.airborne:!air.airborne;}
   if(jump?.tuck&&air?.airborne){
@@ -325,13 +343,14 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
   const sourceSupported=source&&plan.supports?.length?sourceSupportMotion(plan,profile,t,root,walk.feet):undefined;
   const supported=sourceSupported??(plan.supports?.length?seatedPlacement(plan,profile,t,root):undefined);
   if(sourceSupported?.ownsFeet&&!walk.activation){walk.feet=sourceSupported.feet;walk.stance=sourceSupported.stance;}
-  const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath+(sourceSupported?.leanOffset??0)+(source&&walk.running?walk.direction*10*walk.activation:0);
-  const postureDrop=Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s;
+  const lean=lunge?lunge.leanDeg:bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath+(sourceSupported?.leanOffset??0)+(source&&walk.running?walk.direction*10*walk.activation:0);
+  const postureDrop=Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+(lunge?.dropY??0);
   // Seats have their own contact solver. For unsupported/planted poses, rotate
   // the hips before measuring required leg reach; never lengthen a leg or relax
   // the reach tolerance when a leaning emotion moves its hip away from a sole.
-  const walkDrop=source?(supported&&!walk.activation?0:sourceWalkDrop(root,walk,m,profile,s,lean,(air?.bodyOffsetY??0)+postureDrop)):walk.activation*m.upperLeg*.23*s;
-  const pelvis=supported?.pelvis??{x:root.x+walk.supportShiftX,y:root.y+m.pelvisY*s+postureDrop+walkDrop};
+  const pelvisRoot={x:root.x+(lunge?.advanceX??0),y:root.y};
+  const walkDrop=source?(supported&&!walk.activation?0:sourceWalkDrop(pelvisRoot,walk,m,profile,s,lean,(air?.bodyOffsetY??0)+postureDrop)):walk.activation*m.upperLeg*.23*s;
+  const pelvis=supported?.pelvis??{x:pelvisRoot.x+walk.supportShiftX,y:root.y+m.pelvisY*s+postureDrop+walkDrop};
   if(sourceSupported){
     // A seated hip is below/behind the belt. Counter the body's lean around
     // this attachment so the contact stays on the support rather than orbiting.
@@ -356,7 +375,17 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
   if(supported&&walk.activation){pelvis.x+=walk.supportShiftX;pelvis.y+=walkDrop;}
   if(air)pelvis.y+=air.bodyOffsetY;
   return {m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend:supported?.bend??1,
-    kneeSeatWeight:sourceSupported?.supportWeight??Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0)};
+    kneeSeatWeight:usesBodyView(profile)?1:sourceSupported?.supportWeight??Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0)};
+}
+/** Shared body landmarks for authoring a tool target without invoking arm IK.
+ * Does not advance a scene, render a video or accept the resulting pose. */
+export function bodyPoseAnchors(plan:PerformancePlan,profile:HostProfile,timeMs:number){
+  const {m,s,pelvis,lean}=bodyStateAt(plan,profile,clamp(timeMs,0,plan.durationMs));
+  const shoulders=Object.fromEntries((['left','right'] as const).map(side=>{
+    const p=m.shoulders?.[side]??{x:m.shoulderOffset*(side==='left'?-1:1),y:m.shoulderY-m.pelvisY};
+    return [side,add(pelvis,rotate({x:p.x*s,y:p.y*s},lean))];
+  })) as Record<RigHand,Point>;
+  return {pelvis,lean,shoulders};
 }
 function moodAt(plan:PerformancePlan,time:number):{mood:Mood;weight:number} {
   const e=plan.expressions.find(e=>time>=e.startMs&&time<e.endMs);
@@ -512,6 +541,7 @@ function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undef
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity):FrameState {
+  if(usesBodyView(profile)&&activity.intervals.length)throw new Error('needs-view-voice-animation: authored-view speech overlays are not registered');
   const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t);
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
   const paths:Record<string,string>={},drawn=!!profile.appearance.characterVariant;
@@ -534,23 +564,23 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     return {track,state};
   });
   const headArtScale=profile.appearance.headScale*(usesCutoutHead(profile)?profile.appearance.bodyScale:m.headArtworkScale??1);
-  const headAngle=lean+pose.tilt*emotion.weight,headBottom=(usesCutoutHead(profile)?0:usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*headArtScale;
+  const headAngle=lean+(usesBodyView(profile)?0:pose.tilt*emotion.weight),headBottom=(usesCutoutHead(profile)?0:usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*headArtScale;
   const torsoTop=m.torsoTop??(profile.kind==='mini-robot'?-94:-92)*profile.appearance.bodyScale;
   const neckStart=toWorld(m.neckX??0,torsoTop);
-  const neckEnd=toWorld(m.neckX??0,usesReferenceBody(profile)?torsoTop-2*profile.appearance.bodyScale:Math.min(m.headY-m.pelvisY+headBottom,torsoTop-10*profile.appearance.bodyScale));
+  const neckEnd=toWorld(m.neckX??0,usesBodyView(profile)?torsoTop:usesReferenceBody(profile)?torsoTop-2*profile.appearance.bodyScale:Math.min(m.headY-m.pelvisY+headBottom,torsoTop-10*profile.appearance.bodyScale));
   if(usesReferenceBody(profile))transforms['neck-art']=transform(neckStart,lean,s*profile.appearance.bodyScale);
   const head=add(neckEnd,rotate({x:0,y:-headBottom*s},headAngle));
   transforms.neck=`translate(${number(neckStart.x)} ${number(neckStart.y)}) rotate(${number(degrees(Math.atan2(neckEnd.y-neckStart.y,neckEnd.x-neckStart.x))-90)}) scale(${number(s)} ${number(distance(neckStart,neckEnd))})`;
   transforms.head=transform(head,headAngle,s*headArtScale);
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
   const chinAt=(side:RigHand)=>add(head,rotate(usesCutoutHead(profile)?{x:cutoutHeadChin(profile,side).x*s*headArtScale,y:cutoutHeadChin(profile,side).y*s*headArtScale}:{x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},lean+pose.tilt*emotion.weight));
-  const garment=usesReferenceBody(profile)?referenceGarmentMotion(profile):undefined,lagged=garment?bodyStateAt(plan,profile,Math.max(0,t-garment.lagMs)):undefined;
+  const garment=usesReferenceBody(profile)&&!usesBodyView(profile)?referenceGarmentMotion(profile):undefined,lagged=garment?bodyStateAt(plan,profile,Math.max(0,t-garment.lagMs)):undefined;
   const thighAngles:number[]=[];
   const restCloth={} as GarmentRestPose;
   for(const [i,side] of (['left','right'] as const).entries()){
     // One continuous bend branch, including rest, walk entry and recovery.
     const geometry=legGeometry(m,pelvis,walk.feet[side],side,s,profile.appearance.bodyScale,lean),{hip,ankle}=geometry;
-    const pole=usesReferenceBody(profile)?sourceKneePole(plan,side,bend):bend;
+    const pole=plan.lunge?.kneePoles[side]??(usesBodyView(profile)?1:usesReferenceBody(profile)?sourceKneePole(plan,side,bend):bend);
     const leg=solveChain(hip,ankle,geometry.bones.upper,geometry.bones.lower,pole);
     const projected=legProjection?kneeProjection({kneeSeatWeight},geometry,leg):undefined;
     thighAngles.push(projected?.upper??leg.upper);
@@ -687,7 +717,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       eyeOpen:lerp(1,pose.eyeOpen??1,emotion.weight),smile:pose.smile*emotion.weight,
       round:pose.round*emotion.weight,frown:(pose.frown??0)*emotion.weight,speechLevel:speech?.level??null,
       ...(bodyHead?{sourceBody:true}:{})});
-    for(const id of Object.keys(face))delete face[id];Object.assign(face,sourceFace);
+    for(const id of Object.keys(face))delete face[id];Object.assign(face,usesBodyView(profile)?{'head-view-front':{opacity:1}}:sourceFace);
     if(usesReferenceBody(profile))for(const side of ['left','right'] as const){
       const cue=activeGestures[side];
       // Use the same physical hand once in either painter slot, never a new
@@ -700,7 +730,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
     delete transforms['face-orientation'];
   }
-  if(usesReferenceBody(profile)){
+  if(usesReferenceBody(profile)&&!usesBodyView(profile)){
     const weight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,n)=>sum+n,0));
     const flex=Math.abs(thighAngles.reduce((sum,n)=>sum+n,0)/thighAngles.length-lean);
     const folded=smooth((weight-.2)/.35)*smooth((flex-35)/35);
@@ -783,7 +813,7 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile):number 
           distance(end(lower,part==='arm'?armLengths.lower:legLengths.lower),tipPoint));
       }
     }
-    const neck=at('neck'),head=at('head'),bottom=(usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*head[3]!;
+    const neck=at('neck'),head=at('head'),bottom=(usesCutoutHead(profile)?0:usesReferenceBody(profile)?referenceBodyHeadAttachment(profile,'three-quarter-right').y:profile.kind==='mini-robot'?42:40)*head[3]!;
     gap=Math.max(gap,distance({x:neck[0]!-Math.sin(rad(neck[2]!))*neck[4]!,y:neck[1]!+Math.cos(rad(neck[2]!))*neck[4]!},
       {x:head[0]!-Math.sin(rad(head[2]!))*bottom,y:head[1]!+Math.cos(rad(head[2]!))*bottom}));
   }
@@ -829,7 +859,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     let error=0;
     for(const progress of [.17,.5,.83]){
       const actual=samplePerformance(plan,profile,lerp(a.timeMs,b.timeMs,progress),activity);
-      if(usesReferenceBody(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
+      if(usesReferenceBody(profile)&&!usesBodyView(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
         // Audio activity is intentionally stepped at its own explicit boundaries.
@@ -888,7 +918,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile))),interpolationGapLimitPx:.2,selectedClips:selectedClips(plan),
     ...(plan.supports?.length?{seatSupports:plan.supports,maxSeatContactErrorPx:Math.max(0,...frames.flatMap(f=>f.seatContact?[f.seatContact.errorPx]:[]))}:{}),
     ...(usesReferenceHead(profile)?{headArtwork:{version:referenceHeadDescription().version,fingerprint:referenceHeadDescription().fingerprint,
-      availableViews:usesCutoutHead(profile)?['source-orientation']:referenceHeadDescription().views,turnRendering:usesCutoutHead(profile)?'registered-cutout-source-orientation':'stepped-authored-views-with-front',fullBodyReplacement:usesReferenceBody(profile)}}:{}),
+      availableViews:usesBodyView(profile)?[registeredBodyView(profile).view]:usesCutoutHead(profile)?['source-orientation']:referenceHeadDescription().views,turnRendering:usesBodyView(profile)?'fixed-authored-body-view-candidate':usesCutoutHead(profile)?'registered-cutout-source-orientation':'stepped-authored-views-with-front',fullBodyReplacement:usesReferenceBody(profile),productionAcceptance:false}}:{}),
     ...(usesReferenceBody(profile)?{bodyArtwork:referenceBodyDescription()}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

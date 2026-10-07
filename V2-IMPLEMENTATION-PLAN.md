@@ -1,5 +1,7 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
+Chủ đề tiền sử 0.19: đã đăng ký ứng viên 3/4 phải và phối hợp thân/chân/giáo thành lunge trên evaluator chung. Mask mới giữ viền áo, xương/sole/clock giữ nguyên; wrist–palm/grasp, joint silhouette, cloth/secondary motion và runtime vẫn thiếu. Hai lượt review ảnh thật qua 9router không chứng nhận anatomy/video. `productionReady=false`; ba input vẫn giữ contract, chưa nghiệm thu sản phẩm. [Chi tiết và lệnh chạy](docs/topics/VIEW-LUNGE-IMPLEMENTATION.md).
+
 Checkpoint06/10: code443220f đã qua hai đợt độc lập: source-context494PASS/0FAIL/2SKIP và corrected contact229PASS/0FAIL/1SKIP, đều exit0. Sáu assertion custom-handle GSAP/outbound chưa chạy vì fixture ESM setup thất bại; cache parity cụ thể, browser contact và phim còn chờ. Raw failures giữ nguyên. Ca sinh nhật gốc vẫn28started/28completed/0pending, còn2/30calls, chưa video mới. Tester cũ hếtquota trước completion/counter receipt; parent closure chỉ đọc xác nhận703artifact hashes,403source/423dist/169case nguyên vẹn và74known resources terminal, không thay attestation thiếu. Chủ dự án giao model test khác. [Bàn giao có lệnh và fixture chuẩn bị](docs/NEXT-MODEL-TEST-HANDOFF.md), [kết quả/phạm vi](docs/validation/2026-10-06-sourced-world-contact.md). Chất lượng phim và toàn sản phẩm chưa nghiệm thu.
 
 Các checkpoint bên dưới giữ lịch sử và phạm vi source riêng; đoạn này thay trạng thái hiện hành của ca sinh nhật và motion batch mới.

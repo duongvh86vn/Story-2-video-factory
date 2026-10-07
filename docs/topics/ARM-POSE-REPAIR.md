@@ -1,4 +1,6 @@
-# Lila/Karo — sửa tay và rà soát pose 0.18
+# Lila/Karo — sửa tay và rà soát pose 0.19
+
+**Hiện hành 0.19:** hai view 3/4 phải có registration kỹ thuật và ứng viên lunge qua rig/evaluator chung; giữ source bones, cổ/mặt nguyên lớp, near/far arms, sole trụ và clock giáo. Áo view mới vẫn rigid, wrist/palm/grasp và độ đọc joint còn thiếu; hai model review qua 9router chưa chấp nhận anatomy hoàn thiện. Chỉ build/typecheck và inspection clock tĩnh; runtime/MP4/ba input giao model test khác. `productionReady=false`, `productionRig=null`. [Source, ảnh, việc thiếu và lệnh server/test](VIEW-LUNGE-IMPLEMENTATION.md). Các mốc 0.18 trở về trước bên dưới là lịch sử, không phải trạng thái mới.
 
 Ngày 07/10/2026. Đây là bàn giao source và inspection ảnh tĩnh, **không phải video hoặc rig đã nghiệm thu**. `productionReady=false`, `productionRig=null` giữ nguyên.
 

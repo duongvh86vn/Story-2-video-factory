@@ -468,6 +468,27 @@
           },
           "default": {}
         },
+        "topic": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "prehistoric-life"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "additionalProperties": false,
+          "default": {}
+        },
         "input": {
           "type": "object",
           "properties": {
@@ -475,12 +496,17 @@
               "type": "string",
               "enum": [
                 "auto",
+                "story",
                 "idea",
                 "script",
                 "wav",
                 "srt"
               ],
               "default": "auto"
+            },
+            "story": {
+              "type": "string",
+              "default": "input/story.txt"
             },
             "idea": {
               "type": "string",

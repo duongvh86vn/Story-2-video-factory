@@ -6,12 +6,13 @@ import type {FrameState} from './compiler.js';
 import type {HeadView} from './schemas.js';
 import {hash} from '../core/utils.js';
 import {cutoutHeadSvg,cutoutHeadFaceState,cutoutHeadDescription,usesCutoutHead} from './forest-cutout-head.js';
+import {usesBodyView,registeredBodyView,bodyViewAsset} from './body-view-art.js';
 import {projectedHeadSvg,projectedSkinPolygon,headProjectionCalibration,headProjectionGlyphLimits,HEAD_PROJECTION_UV_OVERLAP,HEAD_PROJECTION_VERSION} from './forest-head-projection.js';
 
 export const FOREST_HEAD_VERSION='forest-head-1' as const;
 // Bump these when render/evaluation logic changes after a pack is released.
-export const FOREST_FACE_COMPILER_VERSION='forest-face-motion-9';
-export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-10';
+export const FOREST_FACE_COMPILER_VERSION='forest-face-motion-10';
+export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-11';
 export const FOREST_HEAD_VIEWS=['three-quarter-left','front','three-quarter-right'] as const;
 export type ReferenceHeadView=typeof FOREST_HEAD_VIEWS[number];
 type View=ReferenceHeadView;
@@ -72,11 +73,16 @@ const tails:Record<View,{pivot:Point;clip:string}>={
 // Measured front jaw containment; the same projection moves this mask and lips.
 const frontSkin=[{x:444,y:560},{x:864,y:560},{x:864,y:692},{x:834,y:738},{x:804,y:759},{x:774,y:772},{x:744,y:783},{x:714,y:791},{x:684,y:797},{x:654,y:799},{x:624,y:797},{x:594,y:791},{x:564,y:783},{x:534,y:772},{x:504,y:757},{x:474,y:735},{x:444,y:638}];
 export function usesReferenceHead(profile:HostProfile):boolean {
-  return profile.appearance.artworkVersion===FOREST_HEAD_VERSION||profile.appearance.artworkVersion==='forest-body-1';
+  return profile.appearance.artworkVersion===FOREST_HEAD_VERSION||profile.appearance.artworkVersion==='forest-body-1'||usesBodyView(profile);
 }
 export function validateReferenceHead(profile:HostProfile,views:Array<HeadView|undefined>):void {
   if(!usesReferenceHead(profile))return;
   if(profile.kind!=='stick-man'||!profile.appearance.characterVariant)throw new Error('Reference head requires a Lila/Karo stick actor.');
+  if(usesBodyView(profile)){
+    const c=registeredBodyView(profile);
+    if(views.some(view=>view!==undefined&&view!==c.view))throw new Error('needs-head-view: authored candidate needs its matching fixed body/head view; no front fallback');
+    return;
+  }
   if(usesCutoutHead(profile)&&views.some(view=>view&&view!=='front'))throw new Error('needs-head-view: registered source head has one source orientation; authored partner-facing/profile/rear views are pending. The rejected mesh yaw is not a fallback.');
   for(const view of views)if(view&&!FOREST_HEAD_VIEWS.includes(view as View))
     throw new Error('needs-head-view: forest-head-1 has authored front and three-quarter-left/right textures; profile/rear views are pending. No mirrored fallback.');
@@ -184,6 +190,7 @@ export function referenceFaceState(input:ReferenceFaceInput):FrameState['face'] 
 }
 /** Fixed pack resources only. Stage original bytes and retain their hashes. */
 export function referenceHeadAssets(appearance:HostProfile['appearance']):Array<{file:string;sha256:string;path:string}> {
+  if(usesBodyView({appearance}))return [bodyViewAsset(appearance)];
   if(appearance.artworkVersion!==FOREST_HEAD_VERSION&&appearance.artworkVersion!=='forest-body-1')return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference head actor variant missing.');
   if(appearance.artworkVersion==='forest-body-1'){

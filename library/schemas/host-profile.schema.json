@@ -74,6 +74,27 @@
               "type": "number",
               "minimum": 2,
               "maximum": 10
+            },
+            "characterVariant": {
+              "type": "string",
+              "enum": [
+                "lila",
+                "karo"
+              ]
+            },
+            "artworkVersion": {
+              "type": "string",
+              "enum": [
+                "forest-head-1",
+                "forest-body-1",
+                "forest-body-view-1"
+              ]
+            },
+            "bodyView": {
+              "type": "string",
+              "enum": [
+                "three-quarter-right"
+              ]
             }
           },
           "required": [

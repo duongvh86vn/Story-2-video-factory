@@ -3,7 +3,7 @@ import type { HostProfile } from '../host/schemas.js';
 import type { PerformancePlan, Point } from '../animation/schemas.js';
 import { rigMetrics } from '../animation/rig.js';
 import { samplePerformance } from '../animation/compiler.js';
-import {usesCutoutHead,cutoutHeadCalibration} from '../animation/forest-cutout-head.js';
+import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
 import { CameraSchema, type CinematicCamera } from './schemas.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
 import { cinematicActionGroups } from './actions.js';
@@ -42,7 +42,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
     if(!match)throw new Error('Camera cannot measure the production head transform.');
     const x=Number(match[1]),y=Number(match[2]),angle=Number(match[3])*Math.PI/180,scale=Number(match[4]),local=emptyBounds();
     if(usesCutoutHead(profile)){
-      const c=cutoutHeadCalibration[profile.appearance.characterVariant!];
+      const c=cutoutHeadRegistration(profile);
       for(const px of [c.bounds.left,c.bounds.right])for(const py of [c.bounds.top,c.bounds.bottom]){
         const dx=(px-c.neck.x)*c.scale,dy=(py-c.neck.y)*c.scale;
         include(local,{x:x+(dx*Math.cos(angle)-dy*Math.sin(angle))*scale,y:y+(dx*Math.sin(angle)+dy*Math.cos(angle))*scale});

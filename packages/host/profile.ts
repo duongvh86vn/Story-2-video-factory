@@ -42,6 +42,7 @@ export async function parseHostProfile(root: string, config: FactoryConfig, rout
   };
   const Definition = HostProfileSchema.omit({ profileHash: true, compilerVersion: true, sourcePath: true });
   let definition = Definition.parse(seed);
+  if(definition.appearance.artworkVersion==='forest-body-view-1'||definition.appearance.bodyView)throw new Error('needs-body-approval: authored view registration is a developer candidate, not an approved production character');
   // Authored appearance parameters are authoritative. Natural-language customization uses a validated model definition.
   const builtIn = file.startsWith(path.join(await findRepoRoot(), 'library', 'characters') + path.sep);
   if (!router.isMock('planner') && !builtIn) {
@@ -54,6 +55,7 @@ export async function parseHostProfile(root: string, config: FactoryConfig, rout
     if (definition.id !== seed.id || definition.kind !== kind || definition.version !== seed.version) throw new Error('Host compiler cannot change profile ID, version or kind');
   }
   if (config.host.profile_id && definition.id !== config.host.profile_id) throw new Error('Configured host profile_id does not match the MD');
+  if(definition.appearance.artworkVersion==='forest-body-view-1'||definition.appearance.bodyView)throw new Error('needs-body-approval: planner cannot promote an unapproved authored view');
   for (const action of ['idle', 'explain', 'point', 'operate-model', 'compare', 'summarize']) {
     if (!definition.actions.includes(action as typeof HostActions[number])) throw new Error(`Host profile must support ${action}`);
   }

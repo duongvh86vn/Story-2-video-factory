@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.18-spear-pair-and-view-candidate",
+  "version": "forest-tribe-0.19-view-registration-and-lunge-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -579,8 +579,8 @@
         }
       }
     },
-    "faceCompilerVersion": "forest-face-motion-9",
-    "rendererVersion": "forest-head-svg-10",
+    "faceCompilerVersion": "forest-face-motion-10",
+    "rendererVersion": "forest-head-svg-11",
     "facialCalibration": {
       "eyeStretch": {
         "x": 1.25,
@@ -799,13 +799,147 @@
           "mouthCover": "M199 181Q245 166 293 181L288 216Q246 243 207 221Z"
         }
       },
-      "fingerprint": "dfd9f05c15dc08eccc461561dd8e4e91ca9226c39620736044d6af029da25822",
+      "authoredViews": {
+        "version": "forest-view-registration-1",
+        "artworkVersion": "forest-body-view-1",
+        "sources": {
+          "lila": {
+            "view": "three-quarter-right",
+            "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+            "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+            "width": 1173,
+            "height": 1341,
+            "bodyScale": 0.27154471544715447,
+            "headScale": 0.2658878504672897,
+            "pelvis": {
+              "x": 627,
+              "y": 742
+            },
+            "neck": {
+              "x": 620,
+              "y": 496
+            },
+            "shoulders": {
+              "left": {
+                "x": 542,
+                "y": 509
+              },
+              "right": {
+                "x": 675,
+                "y": 535
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 586,
+                "y": 754
+              },
+              "right": {
+                "x": 665,
+                "y": 754
+              }
+            },
+            "nearHand": "left",
+            "farHand": "right",
+            "clothing": "M574 456L652 456L692 480L692 480L694 485L695 490L695 495L695 500L695 505L695 510L700 515L701 520L703 525L704 530L706 535L709 540L695 545L682 550L684 555L688 560L692 565L696 570L700 575L699 580L698 585L700 590L703 595L705 600L707 605L709 610L704 615L703 620L702 625L700 630L698 635L677 640L685 645L686 650L686 655L686 660L686 665L686 670L686 675L687 680L687 685L689 690L686 695L689 700L693 705L697 710L691 715L694 720L682 725L701 730L701 735L697 740L689 745L697 750L700 755L703 760L706 765L709 770L713 775L716 780L719 785L707 790L711 795L713 800L716 805L719 810L721 815L723 820L725 825L727 830L729 835L731 840L733 845L724 850L726 855L728 860L729 865L731 870L733 875L735 880L736 885L738 890L740 895L742 900L731 905L733 910L734 915L735 920L737 925L738 930L739 935L740 940L745 971L740 968L735 965L730 986L725 980L720 974L715 969L710 964L705 982L700 974L695 964L690 956L685 967L680 977L675 986L670 995L665 990L660 970L655 950L650 943L645 948L640 954L635 923L615 930L610 945L605 960L600 964L595 951L590 952L585 963L580 976L575 989L570 1002L565 989L560 954L555 960L550 965L545 970L540 975L535 952L530 957L525 962L520 966L515 971L510 976L505 962L500 966L495 970L490 974L504 940L504 940L506 935L490 930L492 925L494 920L497 915L499 910L501 905L504 900L506 895L509 890L512 885L492 880L495 875L497 870L500 865L502 860L505 855L508 850L510 845L513 840L516 835L519 830L522 825L525 820L527 815L520 810L523 805L527 800L530 795L533 790L536 785L539 780L543 775L530 770L530 765L535 760L540 755L544 750L548 745L554 740L565 735L565 730L586 725L568 720L565 715L565 710L565 705L569 700L572 695L572 690L573 685L574 680L573 675L572 670L571 665L570 660L570 655L567 650L565 645L565 640L565 635L565 630L565 625L565 620L565 615L567 610L574 605L579 600L570 595L569 590L568 585L568 580L536 575L536 570L535 565L535 560L535 555L535 550L536 545L536 540L537 535L539 530L540 525L542 520L544 515L530 510L550 505L542 500L560 495L550 490L550 485L530 480Z",
+            "inkPad": 7,
+            "headClip": "M0 0H1173V451L815 451L749 507L689 504L635 456L585 456L555 516L540 650L494 753H0Z",
+            "headBounds": {
+              "left": 295,
+              "right": 858,
+              "top": 60,
+              "bottom": 753
+            },
+            "chin": {
+              "left": {
+                "x": 751,
+                "y": 429
+              },
+              "right": {
+                "x": 592,
+                "y": 438
+              }
+            }
+          },
+          "karo": {
+            "view": "three-quarter-right",
+            "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+            "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+            "width": 910,
+            "height": 1729,
+            "bodyScale": 0.17606382978723406,
+            "headScale": 0.2421875,
+            "pelvis": {
+              "x": 475,
+              "y": 983
+            },
+            "neck": {
+              "x": 486,
+              "y": 607
+            },
+            "shoulders": {
+              "left": {
+                "x": 365,
+                "y": 620
+              },
+              "right": {
+                "x": 545,
+                "y": 661
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 422,
+                "y": 1000
+              },
+              "right": {
+                "x": 525,
+                "y": 1000
+              }
+            },
+            "nearHand": "left",
+            "farHand": "right",
+            "clothing": "M397 600L520 600L553 630L553 630L557 635L561 640L564 645L568 650L567 655L565 660L567 665L569 670L571 675L572 680L574 685L575 690L577 695L578 700L571 705L572 710L574 715L576 720L577 725L579 730L580 735L581 740L582 745L584 750L583 755L575 760L577 765L578 770L579 775L581 780L582 785L583 790L584 795L585 800L586 805L580 810L577 815L577 820L579 825L581 830L583 835L584 840L586 845L583 850L578 855L579 860L581 865L583 870L585 875L587 880L589 885L591 890L592 895L589 900L585 905L585 910L588 915L590 920L593 925L595 930L598 935L600 940L602 945L589 950L577 955L564 960L598 965L601 970L599 975L593 980L562 985L596 990L599 995L602 1000L605 1005L607 1010L609 1015L612 1020L615 1025L616 1030L611 1035L602 1040L605 1045L607 1050L609 1055L611 1060L612 1065L614 1070L615 1075L617 1080L618 1085L620 1090L621 1095L623 1100L614 1105L613 1110L615 1115L617 1120L618 1125L620 1130L621 1135L623 1140L624 1145L617 1150L618 1155L619 1160L620 1165L622 1170L623 1175L624 1180L625 1185L626 1190L630 1215L625 1213L620 1238L615 1226L610 1210L605 1198L600 1202L595 1209L590 1215L585 1212L580 1214L575 1222L570 1218L565 1221L560 1232L555 1243L550 1251L545 1256L540 1205L535 1205L530 1209L525 1214L520 1202L515 1168L510 1164L505 1163L495 1141L490 1155L485 1171L480 1195L475 1213L470 1208L465 1203L460 1199L455 1203L450 1226L445 1253L440 1269L435 1260L430 1251L425 1241L420 1229L415 1218L410 1219L405 1226L400 1235L395 1241L390 1211L385 1207L380 1211L375 1214L370 1218L365 1221L360 1202L355 1209L350 1222L345 1234L340 1245L335 1227L330 1229L338 1190L338 1190L339 1185L341 1180L343 1175L348 1170L337 1165L335 1160L337 1155L338 1150L339 1145L341 1140L342 1135L343 1130L344 1125L346 1120L347 1115L349 1110L349 1105L332 1100L333 1095L335 1090L336 1085L337 1080L338 1075L340 1070L341 1065L343 1060L344 1055L346 1050L349 1045L351 1040L336 1035L338 1030L339 1025L341 1020L343 1015L345 1010L347 1005L349 1000L352 995L367 990L353 985L350 980L351 975L353 970L377 965L363 960L352 955L341 950L342 945L344 940L347 935L350 930L352 925L354 920L357 915L359 910L361 905L357 900L352 895L354 890L356 885L358 880L361 875L363 870L359 865L348 860L350 855L352 850L354 845L356 840L357 835L363 830L372 825L379 820L364 815L364 810L365 805L365 800L366 795L366 790L366 785L367 780L367 775L367 770L368 765L368 760L368 755L368 750L368 745L368 740L369 735L369 730L369 725L369 720L369 715L371 710L368 705L357 700L352 695L350 690L352 685L354 680L356 675L358 670L361 665L363 660L365 655L367 650L369 645L371 640L373 635L374 630Z",
+            "inkPad": 7,
+            "headClip": "M0 0H910V558L642 558L601 619L548 635L501 625L457 635L409 617L363 579H0Z",
+            "headBounds": {
+              "left": 287,
+              "right": 710,
+              "top": 95,
+              "bottom": 635
+            },
+            "chin": {
+              "left": {
+                "x": 622,
+                "y": 538
+              },
+              "right": {
+                "x": 378,
+                "y": 551
+              }
+            }
+          }
+        },
+        "fingerprint": "4ef952807acc7a578858f7729a60b057bd6c0b4fc533ae3d343f82693036b71c",
+        "status": "developer-landmark-and-layer-candidate",
+        "productionReady": false,
+        "approved": false,
+        "method": "fixed authored 3/4 right head/body with independent uniform source registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+        "limitations": [
+          "identity/proportion/mask review",
+          "only happy silent fixed-view poses",
+          "rigid garment; no walking/seating/cloth follow for this view",
+          "no continuous body/head turn",
+          "no motion acceptance"
+        ]
+      },
+      "fingerprint": "c060f32f93bd0b278a0bdd2563646a1984d03ef4e988985916d48b845cae0e6b",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "49de71e542cae8ac30a1c3e2a6d081910009622867f2c96e67b038a7242761c1",
+    "fingerprint": "fbf16aa3ef682f2a5a3369eaf3593d7c9e2bddd234323ee3008d94f0b6e1754f",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -821,15 +955,15 @@
       "library/topics/prehistoric-life/rig-v1/head-prompts.json",
       "library/topics/prehistoric-life/rig-v1/front-prompts.json"
     ],
-    "codeHash": "78f64b5eb323c140b320f1b954ad2f2a78108501b44c936a9f3aba6c82bdaa0c",
-    "cutoutCodeHash": "4b1502175d8958422a7d7a5aa079a5d39e503b0aed6e9ba331dcebb75a30362f",
+    "codeHash": "6564fc83da1e4dbe071f498f904be6910f2ac9f8ab7bff2e51e10351eb58619a",
+    "cutoutCodeHash": "0b5e68bbef25aa4a851cbf76e2fda5d491d4b44f945dd78d48f864dba6c0e249",
     "projectionCodeHash": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22"
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-14",
-    "rendererVersion": "forest-source-body-svg-9",
-    "fingerprint": "77d70368b7de373b79757489e01bc6282c6ce40f0dec0eb6054ab283d5b06bef",
+    "compilerVersion": "forest-source-body-motion-15",
+    "rendererVersion": "forest-source-body-svg-10",
+    "fingerprint": "5abfee47945abc136f877906c16471d003839dce6feac7ff4b474b0296827403",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -1233,6 +1367,140 @@
       "prompts": "library/topics/prehistoric-life/rig-v1/seated-garment-prompts.json",
       "repairPrompt": "library/topics/prehistoric-life/rig-v1/karo-cuffs-v2-prompt.json"
     },
+    "authoredViews": {
+      "version": "forest-view-registration-1",
+      "artworkVersion": "forest-body-view-1",
+      "sources": {
+        "lila": {
+          "view": "three-quarter-right",
+          "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+          "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+          "width": 1173,
+          "height": 1341,
+          "bodyScale": 0.27154471544715447,
+          "headScale": 0.2658878504672897,
+          "pelvis": {
+            "x": 627,
+            "y": 742
+          },
+          "neck": {
+            "x": 620,
+            "y": 496
+          },
+          "shoulders": {
+            "left": {
+              "x": 542,
+              "y": 509
+            },
+            "right": {
+              "x": 675,
+              "y": 535
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 586,
+              "y": 754
+            },
+            "right": {
+              "x": 665,
+              "y": 754
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "clothing": "M574 456L652 456L692 480L692 480L694 485L695 490L695 495L695 500L695 505L695 510L700 515L701 520L703 525L704 530L706 535L709 540L695 545L682 550L684 555L688 560L692 565L696 570L700 575L699 580L698 585L700 590L703 595L705 600L707 605L709 610L704 615L703 620L702 625L700 630L698 635L677 640L685 645L686 650L686 655L686 660L686 665L686 670L686 675L687 680L687 685L689 690L686 695L689 700L693 705L697 710L691 715L694 720L682 725L701 730L701 735L697 740L689 745L697 750L700 755L703 760L706 765L709 770L713 775L716 780L719 785L707 790L711 795L713 800L716 805L719 810L721 815L723 820L725 825L727 830L729 835L731 840L733 845L724 850L726 855L728 860L729 865L731 870L733 875L735 880L736 885L738 890L740 895L742 900L731 905L733 910L734 915L735 920L737 925L738 930L739 935L740 940L745 971L740 968L735 965L730 986L725 980L720 974L715 969L710 964L705 982L700 974L695 964L690 956L685 967L680 977L675 986L670 995L665 990L660 970L655 950L650 943L645 948L640 954L635 923L615 930L610 945L605 960L600 964L595 951L590 952L585 963L580 976L575 989L570 1002L565 989L560 954L555 960L550 965L545 970L540 975L535 952L530 957L525 962L520 966L515 971L510 976L505 962L500 966L495 970L490 974L504 940L504 940L506 935L490 930L492 925L494 920L497 915L499 910L501 905L504 900L506 895L509 890L512 885L492 880L495 875L497 870L500 865L502 860L505 855L508 850L510 845L513 840L516 835L519 830L522 825L525 820L527 815L520 810L523 805L527 800L530 795L533 790L536 785L539 780L543 775L530 770L530 765L535 760L540 755L544 750L548 745L554 740L565 735L565 730L586 725L568 720L565 715L565 710L565 705L569 700L572 695L572 690L573 685L574 680L573 675L572 670L571 665L570 660L570 655L567 650L565 645L565 640L565 635L565 630L565 625L565 620L565 615L567 610L574 605L579 600L570 595L569 590L568 585L568 580L536 575L536 570L535 565L535 560L535 555L535 550L536 545L536 540L537 535L539 530L540 525L542 520L544 515L530 510L550 505L542 500L560 495L550 490L550 485L530 480Z",
+          "inkPad": 7,
+          "headClip": "M0 0H1173V451L815 451L749 507L689 504L635 456L585 456L555 516L540 650L494 753H0Z",
+          "headBounds": {
+            "left": 295,
+            "right": 858,
+            "top": 60,
+            "bottom": 753
+          },
+          "chin": {
+            "left": {
+              "x": 751,
+              "y": 429
+            },
+            "right": {
+              "x": 592,
+              "y": 438
+            }
+          }
+        },
+        "karo": {
+          "view": "three-quarter-right",
+          "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+          "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+          "width": 910,
+          "height": 1729,
+          "bodyScale": 0.17606382978723406,
+          "headScale": 0.2421875,
+          "pelvis": {
+            "x": 475,
+            "y": 983
+          },
+          "neck": {
+            "x": 486,
+            "y": 607
+          },
+          "shoulders": {
+            "left": {
+              "x": 365,
+              "y": 620
+            },
+            "right": {
+              "x": 545,
+              "y": 661
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 422,
+              "y": 1000
+            },
+            "right": {
+              "x": 525,
+              "y": 1000
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "clothing": "M397 600L520 600L553 630L553 630L557 635L561 640L564 645L568 650L567 655L565 660L567 665L569 670L571 675L572 680L574 685L575 690L577 695L578 700L571 705L572 710L574 715L576 720L577 725L579 730L580 735L581 740L582 745L584 750L583 755L575 760L577 765L578 770L579 775L581 780L582 785L583 790L584 795L585 800L586 805L580 810L577 815L577 820L579 825L581 830L583 835L584 840L586 845L583 850L578 855L579 860L581 865L583 870L585 875L587 880L589 885L591 890L592 895L589 900L585 905L585 910L588 915L590 920L593 925L595 930L598 935L600 940L602 945L589 950L577 955L564 960L598 965L601 970L599 975L593 980L562 985L596 990L599 995L602 1000L605 1005L607 1010L609 1015L612 1020L615 1025L616 1030L611 1035L602 1040L605 1045L607 1050L609 1055L611 1060L612 1065L614 1070L615 1075L617 1080L618 1085L620 1090L621 1095L623 1100L614 1105L613 1110L615 1115L617 1120L618 1125L620 1130L621 1135L623 1140L624 1145L617 1150L618 1155L619 1160L620 1165L622 1170L623 1175L624 1180L625 1185L626 1190L630 1215L625 1213L620 1238L615 1226L610 1210L605 1198L600 1202L595 1209L590 1215L585 1212L580 1214L575 1222L570 1218L565 1221L560 1232L555 1243L550 1251L545 1256L540 1205L535 1205L530 1209L525 1214L520 1202L515 1168L510 1164L505 1163L495 1141L490 1155L485 1171L480 1195L475 1213L470 1208L465 1203L460 1199L455 1203L450 1226L445 1253L440 1269L435 1260L430 1251L425 1241L420 1229L415 1218L410 1219L405 1226L400 1235L395 1241L390 1211L385 1207L380 1211L375 1214L370 1218L365 1221L360 1202L355 1209L350 1222L345 1234L340 1245L335 1227L330 1229L338 1190L338 1190L339 1185L341 1180L343 1175L348 1170L337 1165L335 1160L337 1155L338 1150L339 1145L341 1140L342 1135L343 1130L344 1125L346 1120L347 1115L349 1110L349 1105L332 1100L333 1095L335 1090L336 1085L337 1080L338 1075L340 1070L341 1065L343 1060L344 1055L346 1050L349 1045L351 1040L336 1035L338 1030L339 1025L341 1020L343 1015L345 1010L347 1005L349 1000L352 995L367 990L353 985L350 980L351 975L353 970L377 965L363 960L352 955L341 950L342 945L344 940L347 935L350 930L352 925L354 920L357 915L359 910L361 905L357 900L352 895L354 890L356 885L358 880L361 875L363 870L359 865L348 860L350 855L352 850L354 845L356 840L357 835L363 830L372 825L379 820L364 815L364 810L365 805L365 800L366 795L366 790L366 785L367 780L367 775L367 770L368 765L368 760L368 755L368 750L368 745L368 740L369 735L369 730L369 725L369 720L369 715L371 710L368 705L357 700L352 695L350 690L352 685L354 680L356 675L358 670L361 665L363 660L365 655L367 650L369 645L371 640L373 635L374 630Z",
+          "inkPad": 7,
+          "headClip": "M0 0H910V558L642 558L601 619L548 635L501 625L457 635L409 617L363 579H0Z",
+          "headBounds": {
+            "left": 287,
+            "right": 710,
+            "top": 95,
+            "bottom": 635
+          },
+          "chin": {
+            "left": {
+              "x": 622,
+              "y": 538
+            },
+            "right": {
+              "x": 378,
+              "y": 551
+            }
+          }
+        }
+      },
+      "fingerprint": "4ef952807acc7a578858f7729a60b057bd6c0b4fc533ae3d343f82693036b71c",
+      "status": "developer-landmark-and-layer-candidate",
+      "productionReady": false,
+      "approved": false,
+      "method": "fixed authored 3/4 right head/body with independent uniform source registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+      "limitations": [
+        "identity/proportion/mask review",
+        "only happy silent fixed-view poses",
+        "rigid garment; no walking/seating/cloth follow for this view",
+        "no continuous body/head turn",
+        "no motion acceptance"
+      ]
+    },
     "actionMotion": {
       "run": {
         "version": "forest-run-contact-2",
@@ -1286,6 +1554,17 @@
         "layer": "chin-contact ink and mitten share explicit foreground slots, each with one physical definition; inactive arms/hands keep normal layers",
         "spearPair": "at least 60% of the shorter source chain between grips; rear elbow behind its shoulder on the shaft axis and rear wrist no more than 30% of its chain forward; fixed role poles for an entry-owned track; no universal elbow-below-shoulder rule",
         "productionReady": false
+      },
+      "lunge": {
+        "version": "forest-planted-lunge-1",
+        "productionReady": false,
+        "method": "fixed entry-owned world soles, original bones, minimum pelvis reach drop plus authored transfer, C2 quintic advance/recovery on the spear clock; same shared evaluator as scenes",
+        "pending": [
+          "stance preparation in story shots",
+          "rigid authored-view garment acceptance",
+          "head/arm/hair clearance",
+          "continuous motion acceptance"
+        ]
       },
       "acceptance": "pending",
       "hunting": "stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending"
@@ -1454,7 +1733,141 @@
           "mouthCover": "M199 181Q245 166 293 181L288 216Q246 243 207 221Z"
         }
       },
-      "fingerprint": "dfd9f05c15dc08eccc461561dd8e4e91ca9226c39620736044d6af029da25822",
+      "authoredViews": {
+        "version": "forest-view-registration-1",
+        "artworkVersion": "forest-body-view-1",
+        "sources": {
+          "lila": {
+            "view": "three-quarter-right",
+            "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+            "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+            "width": 1173,
+            "height": 1341,
+            "bodyScale": 0.27154471544715447,
+            "headScale": 0.2658878504672897,
+            "pelvis": {
+              "x": 627,
+              "y": 742
+            },
+            "neck": {
+              "x": 620,
+              "y": 496
+            },
+            "shoulders": {
+              "left": {
+                "x": 542,
+                "y": 509
+              },
+              "right": {
+                "x": 675,
+                "y": 535
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 586,
+                "y": 754
+              },
+              "right": {
+                "x": 665,
+                "y": 754
+              }
+            },
+            "nearHand": "left",
+            "farHand": "right",
+            "clothing": "M574 456L652 456L692 480L692 480L694 485L695 490L695 495L695 500L695 505L695 510L700 515L701 520L703 525L704 530L706 535L709 540L695 545L682 550L684 555L688 560L692 565L696 570L700 575L699 580L698 585L700 590L703 595L705 600L707 605L709 610L704 615L703 620L702 625L700 630L698 635L677 640L685 645L686 650L686 655L686 660L686 665L686 670L686 675L687 680L687 685L689 690L686 695L689 700L693 705L697 710L691 715L694 720L682 725L701 730L701 735L697 740L689 745L697 750L700 755L703 760L706 765L709 770L713 775L716 780L719 785L707 790L711 795L713 800L716 805L719 810L721 815L723 820L725 825L727 830L729 835L731 840L733 845L724 850L726 855L728 860L729 865L731 870L733 875L735 880L736 885L738 890L740 895L742 900L731 905L733 910L734 915L735 920L737 925L738 930L739 935L740 940L745 971L740 968L735 965L730 986L725 980L720 974L715 969L710 964L705 982L700 974L695 964L690 956L685 967L680 977L675 986L670 995L665 990L660 970L655 950L650 943L645 948L640 954L635 923L615 930L610 945L605 960L600 964L595 951L590 952L585 963L580 976L575 989L570 1002L565 989L560 954L555 960L550 965L545 970L540 975L535 952L530 957L525 962L520 966L515 971L510 976L505 962L500 966L495 970L490 974L504 940L504 940L506 935L490 930L492 925L494 920L497 915L499 910L501 905L504 900L506 895L509 890L512 885L492 880L495 875L497 870L500 865L502 860L505 855L508 850L510 845L513 840L516 835L519 830L522 825L525 820L527 815L520 810L523 805L527 800L530 795L533 790L536 785L539 780L543 775L530 770L530 765L535 760L540 755L544 750L548 745L554 740L565 735L565 730L586 725L568 720L565 715L565 710L565 705L569 700L572 695L572 690L573 685L574 680L573 675L572 670L571 665L570 660L570 655L567 650L565 645L565 640L565 635L565 630L565 625L565 620L565 615L567 610L574 605L579 600L570 595L569 590L568 585L568 580L536 575L536 570L535 565L535 560L535 555L535 550L536 545L536 540L537 535L539 530L540 525L542 520L544 515L530 510L550 505L542 500L560 495L550 490L550 485L530 480Z",
+            "inkPad": 7,
+            "headClip": "M0 0H1173V451L815 451L749 507L689 504L635 456L585 456L555 516L540 650L494 753H0Z",
+            "headBounds": {
+              "left": 295,
+              "right": 858,
+              "top": 60,
+              "bottom": 753
+            },
+            "chin": {
+              "left": {
+                "x": 751,
+                "y": 429
+              },
+              "right": {
+                "x": 592,
+                "y": 438
+              }
+            }
+          },
+          "karo": {
+            "view": "three-quarter-right",
+            "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+            "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+            "width": 910,
+            "height": 1729,
+            "bodyScale": 0.17606382978723406,
+            "headScale": 0.2421875,
+            "pelvis": {
+              "x": 475,
+              "y": 983
+            },
+            "neck": {
+              "x": 486,
+              "y": 607
+            },
+            "shoulders": {
+              "left": {
+                "x": 365,
+                "y": 620
+              },
+              "right": {
+                "x": 545,
+                "y": 661
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 422,
+                "y": 1000
+              },
+              "right": {
+                "x": 525,
+                "y": 1000
+              }
+            },
+            "nearHand": "left",
+            "farHand": "right",
+            "clothing": "M397 600L520 600L553 630L553 630L557 635L561 640L564 645L568 650L567 655L565 660L567 665L569 670L571 675L572 680L574 685L575 690L577 695L578 700L571 705L572 710L574 715L576 720L577 725L579 730L580 735L581 740L582 745L584 750L583 755L575 760L577 765L578 770L579 775L581 780L582 785L583 790L584 795L585 800L586 805L580 810L577 815L577 820L579 825L581 830L583 835L584 840L586 845L583 850L578 855L579 860L581 865L583 870L585 875L587 880L589 885L591 890L592 895L589 900L585 905L585 910L588 915L590 920L593 925L595 930L598 935L600 940L602 945L589 950L577 955L564 960L598 965L601 970L599 975L593 980L562 985L596 990L599 995L602 1000L605 1005L607 1010L609 1015L612 1020L615 1025L616 1030L611 1035L602 1040L605 1045L607 1050L609 1055L611 1060L612 1065L614 1070L615 1075L617 1080L618 1085L620 1090L621 1095L623 1100L614 1105L613 1110L615 1115L617 1120L618 1125L620 1130L621 1135L623 1140L624 1145L617 1150L618 1155L619 1160L620 1165L622 1170L623 1175L624 1180L625 1185L626 1190L630 1215L625 1213L620 1238L615 1226L610 1210L605 1198L600 1202L595 1209L590 1215L585 1212L580 1214L575 1222L570 1218L565 1221L560 1232L555 1243L550 1251L545 1256L540 1205L535 1205L530 1209L525 1214L520 1202L515 1168L510 1164L505 1163L495 1141L490 1155L485 1171L480 1195L475 1213L470 1208L465 1203L460 1199L455 1203L450 1226L445 1253L440 1269L435 1260L430 1251L425 1241L420 1229L415 1218L410 1219L405 1226L400 1235L395 1241L390 1211L385 1207L380 1211L375 1214L370 1218L365 1221L360 1202L355 1209L350 1222L345 1234L340 1245L335 1227L330 1229L338 1190L338 1190L339 1185L341 1180L343 1175L348 1170L337 1165L335 1160L337 1155L338 1150L339 1145L341 1140L342 1135L343 1130L344 1125L346 1120L347 1115L349 1110L349 1105L332 1100L333 1095L335 1090L336 1085L337 1080L338 1075L340 1070L341 1065L343 1060L344 1055L346 1050L349 1045L351 1040L336 1035L338 1030L339 1025L341 1020L343 1015L345 1010L347 1005L349 1000L352 995L367 990L353 985L350 980L351 975L353 970L377 965L363 960L352 955L341 950L342 945L344 940L347 935L350 930L352 925L354 920L357 915L359 910L361 905L357 900L352 895L354 890L356 885L358 880L361 875L363 870L359 865L348 860L350 855L352 850L354 845L356 840L357 835L363 830L372 825L379 820L364 815L364 810L365 805L365 800L366 795L366 790L366 785L367 780L367 775L367 770L368 765L368 760L368 755L368 750L368 745L368 740L369 735L369 730L369 725L369 720L369 715L371 710L368 705L357 700L352 695L350 690L352 685L354 680L356 675L358 670L361 665L363 660L365 655L367 650L369 645L371 640L373 635L374 630Z",
+            "inkPad": 7,
+            "headClip": "M0 0H910V558L642 558L601 619L548 635L501 625L457 635L409 617L363 579H0Z",
+            "headBounds": {
+              "left": 287,
+              "right": 710,
+              "top": 95,
+              "bottom": 635
+            },
+            "chin": {
+              "left": {
+                "x": 622,
+                "y": 538
+              },
+              "right": {
+                "x": 378,
+                "y": 551
+              }
+            }
+          }
+        },
+        "fingerprint": "4ef952807acc7a578858f7729a60b057bd6c0b4fc533ae3d343f82693036b71c",
+        "status": "developer-landmark-and-layer-candidate",
+        "productionReady": false,
+        "approved": false,
+        "method": "fixed authored 3/4 right head/body with independent uniform source registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+        "limitations": [
+          "identity/proportion/mask review",
+          "only happy silent fixed-view poses",
+          "rigid garment; no walking/seating/cloth follow for this view",
+          "no continuous body/head turn",
+          "no motion acceptance"
+        ]
+      },
+      "fingerprint": "c060f32f93bd0b278a0bdd2563646a1984d03ef4e988985916d48b845cae0e6b",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -1468,14 +1881,17 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "10aeaacfc98ffcae1a578049306f0374cb507516c8518a118915c700bfa0f43a",
+    "codeHash": "018d02fe0a513703751c975426a7cad58631d87f7cd0bf956d27f6424502a37f",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "73318e3d89b87185c989c6c2e580196c3b6539d305c41bd318a45f272df40dd3",
-    "compilerCodeHash": "d6fd3ab852204648e11b64fcc2e31f070f30f96b96f35c55c18b1a70061d10a0",
-    "rigCodeHash": "92661b7b688999f884d2774810938a0bc607d3238cc0526e050cb68e85044da3",
-    "cameraCodeHash": "29a7a621c0fd0462590aa41dbb76600927534a63ddd59179b6265e9d1d3cd54b"
+    "compilerCodeHash": "8c8214c3fa5ea07af1366225d1197bba66cf79842eb510b00116b41e7ec7dd66",
+    "rigCodeHash": "1587400a30ee59a9698657170f71881f674624289b2e1335f3c1b0dd2a4046ec",
+    "cameraCodeHash": "999d4649ae717202c21d27b3f000e4ace6f6b81e9f08a707bbee2853681a34b7",
+    "viewCodeHash": "7c909df374eaf2db2b37f4af80b8fc5b64681b9efd7f10471d091537405ce552",
+    "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
+    "lungeCodeHash": "3d54c801e6a7143b61eb660e7670ab9c5ecd84d575cd852e6db4b8ba0f2afe24"
   },
   "poseArtwork": {
     "scope": "static-artwork-only",
@@ -1906,6 +2322,141 @@
       }
     ],
     "registered": false,
+    "registrationFlagScope": "all artwork approved/registered for production: false; raw generation metadata remains immutable",
+    "engineeringRegistrations": {
+      "version": "forest-view-registration-1",
+      "artworkVersion": "forest-body-view-1",
+      "sources": {
+        "lila": {
+          "view": "three-quarter-right",
+          "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+          "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+          "width": 1173,
+          "height": 1341,
+          "bodyScale": 0.27154471544715447,
+          "headScale": 0.2658878504672897,
+          "pelvis": {
+            "x": 627,
+            "y": 742
+          },
+          "neck": {
+            "x": 620,
+            "y": 496
+          },
+          "shoulders": {
+            "left": {
+              "x": 542,
+              "y": 509
+            },
+            "right": {
+              "x": 675,
+              "y": 535
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 586,
+              "y": 754
+            },
+            "right": {
+              "x": 665,
+              "y": 754
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "clothing": "M574 456L652 456L692 480L692 480L694 485L695 490L695 495L695 500L695 505L695 510L700 515L701 520L703 525L704 530L706 535L709 540L695 545L682 550L684 555L688 560L692 565L696 570L700 575L699 580L698 585L700 590L703 595L705 600L707 605L709 610L704 615L703 620L702 625L700 630L698 635L677 640L685 645L686 650L686 655L686 660L686 665L686 670L686 675L687 680L687 685L689 690L686 695L689 700L693 705L697 710L691 715L694 720L682 725L701 730L701 735L697 740L689 745L697 750L700 755L703 760L706 765L709 770L713 775L716 780L719 785L707 790L711 795L713 800L716 805L719 810L721 815L723 820L725 825L727 830L729 835L731 840L733 845L724 850L726 855L728 860L729 865L731 870L733 875L735 880L736 885L738 890L740 895L742 900L731 905L733 910L734 915L735 920L737 925L738 930L739 935L740 940L745 971L740 968L735 965L730 986L725 980L720 974L715 969L710 964L705 982L700 974L695 964L690 956L685 967L680 977L675 986L670 995L665 990L660 970L655 950L650 943L645 948L640 954L635 923L615 930L610 945L605 960L600 964L595 951L590 952L585 963L580 976L575 989L570 1002L565 989L560 954L555 960L550 965L545 970L540 975L535 952L530 957L525 962L520 966L515 971L510 976L505 962L500 966L495 970L490 974L504 940L504 940L506 935L490 930L492 925L494 920L497 915L499 910L501 905L504 900L506 895L509 890L512 885L492 880L495 875L497 870L500 865L502 860L505 855L508 850L510 845L513 840L516 835L519 830L522 825L525 820L527 815L520 810L523 805L527 800L530 795L533 790L536 785L539 780L543 775L530 770L530 765L535 760L540 755L544 750L548 745L554 740L565 735L565 730L586 725L568 720L565 715L565 710L565 705L569 700L572 695L572 690L573 685L574 680L573 675L572 670L571 665L570 660L570 655L567 650L565 645L565 640L565 635L565 630L565 625L565 620L565 615L567 610L574 605L579 600L570 595L569 590L568 585L568 580L536 575L536 570L535 565L535 560L535 555L535 550L536 545L536 540L537 535L539 530L540 525L542 520L544 515L530 510L550 505L542 500L560 495L550 490L550 485L530 480Z",
+          "inkPad": 7,
+          "headClip": "M0 0H1173V451L815 451L749 507L689 504L635 456L585 456L555 516L540 650L494 753H0Z",
+          "headBounds": {
+            "left": 295,
+            "right": 858,
+            "top": 60,
+            "bottom": 753
+          },
+          "chin": {
+            "left": {
+              "x": 751,
+              "y": 429
+            },
+            "right": {
+              "x": 592,
+              "y": 438
+            }
+          }
+        },
+        "karo": {
+          "view": "three-quarter-right",
+          "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+          "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+          "width": 910,
+          "height": 1729,
+          "bodyScale": 0.17606382978723406,
+          "headScale": 0.2421875,
+          "pelvis": {
+            "x": 475,
+            "y": 983
+          },
+          "neck": {
+            "x": 486,
+            "y": 607
+          },
+          "shoulders": {
+            "left": {
+              "x": 365,
+              "y": 620
+            },
+            "right": {
+              "x": 545,
+              "y": 661
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 422,
+              "y": 1000
+            },
+            "right": {
+              "x": 525,
+              "y": 1000
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "clothing": "M397 600L520 600L553 630L553 630L557 635L561 640L564 645L568 650L567 655L565 660L567 665L569 670L571 675L572 680L574 685L575 690L577 695L578 700L571 705L572 710L574 715L576 720L577 725L579 730L580 735L581 740L582 745L584 750L583 755L575 760L577 765L578 770L579 775L581 780L582 785L583 790L584 795L585 800L586 805L580 810L577 815L577 820L579 825L581 830L583 835L584 840L586 845L583 850L578 855L579 860L581 865L583 870L585 875L587 880L589 885L591 890L592 895L589 900L585 905L585 910L588 915L590 920L593 925L595 930L598 935L600 940L602 945L589 950L577 955L564 960L598 965L601 970L599 975L593 980L562 985L596 990L599 995L602 1000L605 1005L607 1010L609 1015L612 1020L615 1025L616 1030L611 1035L602 1040L605 1045L607 1050L609 1055L611 1060L612 1065L614 1070L615 1075L617 1080L618 1085L620 1090L621 1095L623 1100L614 1105L613 1110L615 1115L617 1120L618 1125L620 1130L621 1135L623 1140L624 1145L617 1150L618 1155L619 1160L620 1165L622 1170L623 1175L624 1180L625 1185L626 1190L630 1215L625 1213L620 1238L615 1226L610 1210L605 1198L600 1202L595 1209L590 1215L585 1212L580 1214L575 1222L570 1218L565 1221L560 1232L555 1243L550 1251L545 1256L540 1205L535 1205L530 1209L525 1214L520 1202L515 1168L510 1164L505 1163L495 1141L490 1155L485 1171L480 1195L475 1213L470 1208L465 1203L460 1199L455 1203L450 1226L445 1253L440 1269L435 1260L430 1251L425 1241L420 1229L415 1218L410 1219L405 1226L400 1235L395 1241L390 1211L385 1207L380 1211L375 1214L370 1218L365 1221L360 1202L355 1209L350 1222L345 1234L340 1245L335 1227L330 1229L338 1190L338 1190L339 1185L341 1180L343 1175L348 1170L337 1165L335 1160L337 1155L338 1150L339 1145L341 1140L342 1135L343 1130L344 1125L346 1120L347 1115L349 1110L349 1105L332 1100L333 1095L335 1090L336 1085L337 1080L338 1075L340 1070L341 1065L343 1060L344 1055L346 1050L349 1045L351 1040L336 1035L338 1030L339 1025L341 1020L343 1015L345 1010L347 1005L349 1000L352 995L367 990L353 985L350 980L351 975L353 970L377 965L363 960L352 955L341 950L342 945L344 940L347 935L350 930L352 925L354 920L357 915L359 910L361 905L357 900L352 895L354 890L356 885L358 880L361 875L363 870L359 865L348 860L350 855L352 850L354 845L356 840L357 835L363 830L372 825L379 820L364 815L364 810L365 805L365 800L366 795L366 790L366 785L367 780L367 775L367 770L368 765L368 760L368 755L368 750L368 745L368 740L369 735L369 730L369 725L369 720L369 715L371 710L368 705L357 700L352 695L350 690L352 685L354 680L356 675L358 670L361 665L363 660L365 655L367 650L369 645L371 640L373 635L374 630Z",
+          "inkPad": 7,
+          "headClip": "M0 0H910V558L642 558L601 619L548 635L501 625L457 635L409 617L363 579H0Z",
+          "headBounds": {
+            "left": 287,
+            "right": 710,
+            "top": 95,
+            "bottom": 635
+          },
+          "chin": {
+            "left": {
+              "x": 622,
+              "y": 538
+            },
+            "right": {
+              "x": 378,
+              "y": 551
+            }
+          }
+        }
+      },
+      "fingerprint": "4ef952807acc7a578858f7729a60b057bd6c0b4fc533ae3d343f82693036b71c",
+      "status": "developer-landmark-and-layer-candidate",
+      "productionReady": false,
+      "approved": false,
+      "method": "fixed authored 3/4 right head/body with independent uniform source registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+      "limitations": [
+        "identity/proportion/mask review",
+        "only happy silent fixed-view poses",
+        "rigid garment; no walking/seating/cloth follow for this view",
+        "no continuous body/head turn",
+        "no motion acceptance"
+      ]
+    },
     "approved": false,
     "productionReady": false,
     "integratedAsProductionRig": false,
@@ -1917,7 +2468,7 @@
     ]
   },
   "actionPoseInspection": {
-    "file": "docs/topics/reviews/source-spear-pair-self-inspection-v1.json",
+    "file": "docs/topics/reviews/source-view-lunge-self-inspection-v1.json",
     "scope": "developer-static-pose-inspection-only",
     "pass": null,
     "productionAcceptance": false,
@@ -1925,9 +2476,9 @@
       "file": "docs/topics/reviews/source-spear-pose-self-inspection-v2.json",
       "reason": "User rejected other arms and face distortion after 0.15. Earlier snapshots and AI artwork remain studies, not acceptance."
     },
-    "currentRepair": "Retain registered happy cutout; inferred yaw removed. Frontal low spear hold uses 100 actor-scaled unit grip span, fixed role poles, pair silhouette guards and exact planar chains. Chin ink/mitten share foreground slots. Run angles affect active clips only; free pelvis preserves foot reach. Current 138 static cards include six intentionally blocked head views; no continuous-motion pass. Nine new authored-view artworks remain unregistered and unapproved; complete body/head views, raised-rear-elbow whole-body lunge, quarry/contact and story integration remain pending.",
+    "currentRepair": "0.19 registers two right 3/4 engineering candidates with source bones and near/far arm layers. A fixed entry-owned planted lunge shares spear clocks, with 170 actor-scaled grip span and intact happy face; new garment contour preserves ink. Five static clock poses for both actors are developer inspection only. Wrist/palm/grasp, readable joints, cloth/hair motion, other views, stance preparation and story integration remain pending. The 138-card audit belongs to historical 0.18, not current-motion acceptance.",
     "sourceAdvice": {
-      "completedCalls": 6,
+      "completedCalls": 8,
       "scope": "static-source-and-art-advice-only",
       "reports": [
         "docs/topics/reviews/gemini-arm-source-advice-v1.json",
@@ -1935,9 +2486,11 @@
         "docs/topics/reviews/gemini-arm-source-advice-v2.json",
         "docs/topics/reviews/gemini-arm-source-advice-v3.json",
         "docs/topics/reviews/gemini-spear-pair-advice-v1.json",
-        "docs/topics/reviews/coder-spear-pair-advice-v1.json"
+        "docs/topics/reviews/coder-spear-pair-advice-v1.json",
+        "docs/topics/reviews/gemini-view-lunge-advice-v1.json",
+        "docs/topics/reviews/coder-view-lunge-advice-v1.json"
       ],
-      "assessment": "docs/topics/ARM-POSE-REPAIR.md",
+      "assessment": "docs/topics/VIEW-LUNGE-IMPLEMENTATION.md",
       "pass": null,
       "productionAcceptance": false
     },

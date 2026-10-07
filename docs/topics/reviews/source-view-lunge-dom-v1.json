@@ -1,0 +1,792 @@
+{
+  "scope": "developer-static-fixed-clock-only",
+  "productionAcceptance": false,
+  "pass": null,
+  "observations": [
+    {
+      "phase": "entry",
+      "timeMs": 0,
+      "actors": [
+        {
+          "bones": [
+            {
+              "id": "lila-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-chest",
+              "transform": "translate(210 285.3028) rotate(9) scale(1)"
+            },
+            {
+              "id": "lila-calibration-prop-calibration-spear",
+              "transform": "translate(300.9974 305.9705) rotate(18) scale(1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-upper",
+              "transform": "translate(198.494 286.7796) rotate(18.1155) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-lower",
+              "transform": "translate(178.8735 346.7536) rotate(30.0241) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-left",
+              "transform": "translate(150 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-upper",
+              "transform": "translate(197.1005 219.2012) rotate(-248.1303) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-lower",
+              "transform": "translate(142.408 197.2485) rotate(18.8842) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-upper",
+              "transform": "translate(219.6819 290.1355) rotate(-25.3664) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-lower",
+              "transform": "translate(245.8258 345.2779) rotate(-25.3514) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-right",
+              "transform": "translate(270 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-upper",
+              "transform": "translate(231.6668 231.8241) rotate(-12.0582) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-lower",
+              "transform": "translate(242.4902 282.4909) rotate(-66.9008) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-head",
+              "transform": "translate(218.5724 219.0279) rotate(9) scale(1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Lila",
+          "svgCount": 2
+        },
+        {
+          "bones": [
+            {
+              "id": "karo-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-chest",
+              "transform": "translate(210 288.9801) rotate(9) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-prop-calibration-spear",
+              "transform": "translate(307.6018 310.6662) rotate(18) scale(1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-upper",
+              "transform": "translate(199.5405 290.5963) rotate(21.1503) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-lower",
+              "transform": "translate(176.6951 349.6469) rotate(32.5614) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-left",
+              "transform": "translate(145.2 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-left-upper",
+              "transform": "translate(200.1389 217.5338) rotate(-247.7631) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-left-lower",
+              "transform": "translate(139.6496 192.8031) rotate(21.7368) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-upper",
+              "transform": "translate(218.8847 293.6601) rotate(-27.443) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-lower",
+              "transform": "translate(248.0648 349.8509) rotate(-27.4283) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-right",
+              "transform": "translate(274.8 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-right-upper",
+              "transform": "translate(232.7247 230.5882) rotate(-12.2154) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-right-lower",
+              "transform": "translate(244.5464 285.1945) rotate(-66.7268) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-head",
+              "transform": "translate(223.2503 218.6915) rotate(9) scale(1.1232)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Karo",
+          "svgCount": 2
+        }
+      ],
+      "clock": "0",
+      "errors": [],
+      "view": "three-quarter-right"
+    },
+    {
+      "phase": "ready",
+      "timeMs": 1200,
+      "actors": [
+        {
+          "bones": [
+            {
+              "id": "lila-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-chest",
+              "transform": "translate(210 285.3028) rotate(9) scale(1)"
+            },
+            {
+              "id": "lila-calibration-prop-calibration-spear",
+              "transform": "translate(293.389 303.4983) rotate(18) scale(1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-upper",
+              "transform": "translate(198.494 286.7796) rotate(18.1155) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-lower",
+              "transform": "translate(178.8735 346.7536) rotate(30.0241) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-left",
+              "transform": "translate(150 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-upper",
+              "transform": "translate(197.1005 219.2012) rotate(-248.8212) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-lower",
+              "transform": "translate(142.1472 197.9096) rotate(27.3048) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-upper",
+              "transform": "translate(219.6819 290.1355) rotate(-25.3664) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-lower",
+              "transform": "translate(245.8258 345.2779) rotate(-25.3514) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-right",
+              "transform": "translate(270 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-upper",
+              "transform": "translate(231.6668 231.8241) rotate(-2.0507) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-lower",
+              "transform": "translate(233.5208 283.6008) rotate(-71.4928) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-head",
+              "transform": "translate(218.5724 219.0279) rotate(9) scale(1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Lila",
+          "svgCount": 2
+        },
+        {
+          "bones": [
+            {
+              "id": "karo-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-chest",
+              "transform": "translate(210 288.9801) rotate(9) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-prop-calibration-spear",
+              "transform": "translate(299.9933 308.1941) rotate(18) scale(1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-upper",
+              "transform": "translate(199.5405 290.5963) rotate(21.1503) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-lower",
+              "transform": "translate(176.6951 349.6469) rotate(32.5614) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-left",
+              "transform": "translate(145.2 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-left-upper",
+              "transform": "translate(200.1389 217.5338) rotate(-248.6854) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-left-lower",
+              "transform": "translate(139.2594 193.7799) rotate(29.3408) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-upper",
+              "transform": "translate(218.8847 293.6601) rotate(-27.443) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-lower",
+              "transform": "translate(248.0648 349.8509) rotate(-27.4283) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-right",
+              "transform": "translate(274.8 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-right-upper",
+              "transform": "translate(232.7247 230.5882) rotate(-2.8716) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-right-lower",
+              "transform": "translate(235.5238 286.3894) rotate(-71.0941) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-head",
+              "transform": "translate(223.2503 218.6915) rotate(9) scale(1.1232)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Karo",
+          "svgCount": 2
+        }
+      ],
+      "clock": "1200",
+      "errors": [],
+      "view": "three-quarter-right"
+    },
+    {
+      "phase": "advance",
+      "timeMs": 1500,
+      "actors": [
+        {
+          "bones": [
+            {
+              "id": "lila-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-chest",
+              "transform": "translate(215 287.5924) rotate(12.5) scale(1)"
+            },
+            {
+              "id": "lila-calibration-prop-calibration-spear",
+              "transform": "translate(306.0639 312.8545) rotate(16.5722) scale(1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-upper",
+              "transform": "translate(203.4253 288.364) rotate(26.2397) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-lower",
+              "transform": "translate(175.5263 344.9634) rotate(26.2544) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-left",
+              "transform": "translate(150 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-upper",
+              "transform": "translate(206.1599 220.8266) rotate(-258.7862) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-lower",
+              "transform": "translate(148.3513 209.3657) rotate(21.4071) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-upper",
+              "transform": "translate(224.3688 293.0071) rotate(-39.2263) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-lower",
+              "transform": "translate(262.9608 340.2813) rotate(-7.1621) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-right",
+              "transform": "translate(270 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-upper",
+              "transform": "translate(239.8912 235.5362) rotate(-10.0643) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-lower",
+              "transform": "translate(248.9452 286.5489) rotate(-62.6766) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-head",
+              "transform": "translate(227.6024 221.9645) rotate(12.5) scale(1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Lila",
+          "svgCount": 2
+        },
+        {
+          "bones": [
+            {
+              "id": "karo-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-chest",
+              "transform": "translate(215.4 291.7657) rotate(12.5) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-prop-calibration-spear",
+              "transform": "translate(313.3702 318.4301) rotate(16.5108) scale(1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-upper",
+              "transform": "translate(204.8613 292.7403) rotate(29.3132) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-lower",
+              "transform": "translate(173.863 347.9489) rotate(29.3279) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-left",
+              "transform": "translate(145.2 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-left-upper",
+              "transform": "translate(209.919 219.8506) rotate(-258.1335) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-left-lower",
+              "transform": "translate(145.966 206.4126) rotate(23.8911) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-upper",
+              "transform": "translate(223.9824 296.9794) rotate(-42.1402) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-lower",
+              "transform": "translate(266.4639 343.9284) rotate(-8.2578) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-right",
+              "transform": "translate(274.8 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-right-upper",
+              "transform": "translate(241.6471 234.87) rotate(-10.5637) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-right-lower",
+              "transform": "translate(251.8899 289.7944) rotate(-62.3287) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-head",
+              "transform": "translate(232.9166 222.4171) rotate(12.5) scale(1.1232)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Karo",
+          "svgCount": 2
+        }
+      ],
+      "clock": "1500",
+      "errors": [],
+      "view": "three-quarter-right"
+    },
+    {
+      "phase": "recover",
+      "timeMs": 3000,
+      "actors": [
+        {
+          "bones": [
+            {
+              "id": "lila-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-chest",
+              "transform": "translate(216.0331 288.2497) rotate(13.2232) scale(1)"
+            },
+            {
+              "id": "lila-calibration-prop-calibration-spear",
+              "transform": "translate(311.0263 315.577) rotate(16.2202) scale(1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-upper",
+              "transform": "translate(204.4496 288.8751) rotate(26.7826) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-lower",
+              "transform": "translate(176.0155 345.2076) rotate(26.7974) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-left",
+              "transform": "translate(150 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-upper",
+              "transform": "translate(208.0365 221.3776) rotate(-260.8993) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-lower",
+              "transform": "translate(149.8445 212.056) rotate(17.8862) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-upper",
+              "transform": "translate(225.3329 293.7822) rotate(-40.6949) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-lower",
+              "transform": "translate(265.1238 340.0517) rotate(-4.9546) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-right",
+              "transform": "translate(270 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-upper",
+              "transform": "translate(241.5794 236.5118) rotate(-15.6371) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-lower",
+              "transform": "translate(255.5444 286.4041) rotate(-58.611) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-head",
+              "transform": "translate(229.4629 222.786) rotate(13.2232) scale(1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Lila",
+          "svgCount": 2
+        },
+        {
+          "bones": [
+            {
+              "id": "karo-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-chest",
+              "transform": "translate(216.5158 292.5266) rotate(13.2232) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-prop-calibration-spear",
+              "transform": "translate(318.4112 321.3077) rotate(16.1487) scale(1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-upper",
+              "transform": "translate(205.9657 293.3681) rotate(29.9106) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-lower",
+              "transform": "translate(174.3934 348.2505) rotate(29.9253) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-left",
+              "transform": "translate(145.2 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-left-upper",
+              "transform": "translate(211.9429 220.5481) rotate(-260.0377) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-left-lower",
+              "transform": "translate(147.5787 209.2426) rotate(20.7358) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-upper",
+              "transform": "translate(225.0317 297.8482) rotate(-43.6754) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-lower",
+              "transform": "translate(268.7558 343.6422) rotate(-5.9776) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-right",
+              "transform": "translate(274.8 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-right-upper",
+              "transform": "translate(243.4789 235.9667) rotate(-15.724) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-right-lower",
+              "transform": "translate(258.6202 289.7472) rotate(-58.4631) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-head",
+              "transform": "translate(234.9063 223.4047) rotate(13.2232) scale(1.1232)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Karo",
+          "svgCount": 2
+        }
+      ],
+      "clock": "3000",
+      "errors": [],
+      "view": "three-quarter-right"
+    },
+    {
+      "phase": "contact",
+      "timeMs": 1800,
+      "actors": [
+        {
+          "bones": [
+            {
+              "id": "lila-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-chest",
+              "transform": "translate(220 290.8986) rotate(16) scale(1)"
+            },
+            {
+              "id": "lila-calibration-prop-calibration-spear",
+              "transform": "translate(313.2064 321.1347) rotate(14.8004) scale(1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-upper",
+              "transform": "translate(208.3998 290.9622) rotate(28.9016) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-left-lower",
+              "transform": "translate(177.9022 346.2047) rotate(28.9164) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-left",
+              "transform": "translate(150 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-upper",
+              "transform": "translate(215.2524 223.7176) rotate(89.572) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-left-lower",
+              "transform": "translate(156.3202 224.1578) rotate(24.1204) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-upper",
+              "transform": "translate(229.0208 296.8752) rotate(-45.1844) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-leg-right-lower",
+              "transform": "translate(272.3114 339.8881) rotate(2.3463) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-foot-right",
+              "transform": "translate(270 410) rotate(0) scale(1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-upper",
+              "transform": "translate(248.0227 240.459) rotate(-11.45) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-arm-right-lower",
+              "transform": "translate(258.3077 291.2379) rotate(-57.0707) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-head",
+              "transform": "translate(236.5854 226.1624) rotate(16) scale(1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "lila-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Lila",
+          "svgCount": 2
+        },
+        {
+          "bones": [
+            {
+              "id": "karo-calibration-ink-arm-right-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-chest",
+              "transform": "translate(220.8 295.6046) rotate(16) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-prop-calibration-spear",
+              "transform": "translate(320.68 327.4518) rotate(14.6831) scale(1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-upper",
+              "transform": "translate(210.2215 295.934) rotate(32.2478) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-left-lower",
+              "transform": "translate(176.4374 349.4833) rotate(32.2624) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-left",
+              "transform": "translate(145.2 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-left-upper",
+              "transform": "translate(219.7195 223.489) rotate(-269.4971) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-left-lower",
+              "transform": "translate(154.3725 222.9155) rotate(26.8481) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-upper",
+              "transform": "translate(229.0481 301.3325) rotate(-48.4247) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-leg-right-lower",
+              "transform": "translate(276.4137 343.349) rotate(1.5932) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-foot-right",
+              "transform": "translate(274.8 410) rotate(0) scale(1.08)"
+            },
+            {
+              "id": "karo-calibration-arm-right-upper",
+              "transform": "translate(250.4715 240.4173) rotate(-11.3564) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-arm-right-lower",
+              "transform": "translate(261.4733 295.1948) rotate(-57.0139) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-back-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-head",
+              "transform": "translate(242.5176 227.4547) rotate(16) scale(1.1232)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-left-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            },
+            {
+              "id": "karo-calibration-ink-arm-right-front-slot",
+              "transform": "translate(0 0) rotate(0) scale(1 1)"
+            }
+          ],
+          "name": "Karo",
+          "svgCount": 2
+        }
+      ],
+      "clock": "1800",
+      "errors": [],
+      "view": "three-quarter-right"
+    }
+  ]
+}

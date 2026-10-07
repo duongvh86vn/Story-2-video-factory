@@ -7,12 +7,14 @@ import {sourceWalkDescription} from './source-walk.js';
 import {runningDescription} from './running.js';
 import {spearDescription} from './spear.js';
 import {sourceArmDescription} from './source-arm.js';
+import {usesBodyView,bodyViewMetrics,bodyViewAsset,bodyViewClothingSvg,bodyViewDescription} from './body-view-art.js';
+import {lungeDescription} from './lunge.js';
 type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-14';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-9';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-15';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-10';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -54,7 +56,7 @@ const bodies={
       'foot-left':{anchor:{x:128,y:702},clip:rect(76,674,96,42)},'foot-right':{anchor:{x:266,y:698},clip:rect(250,672,91,42)}},
   },
 } as const;
-export function usesReferenceBody(profile:HostProfile):boolean {return profile.appearance.artworkVersion===FOREST_BODY_VERSION;}
+export function usesReferenceBody(profile:HostProfile):boolean {return profile.appearance.artworkVersion===FOREST_BODY_VERSION||usesBodyView(profile);}
 export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body variant missing.');
   const source=bodies[actor],u=source.unitScale,b=profile.appearance.bodyScale,k=u*b;
@@ -85,6 +87,7 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
     footOffsets:{left:(source.feet.left.x-source.pelvis.x)*k,right:(source.feet.right.x-source.pelvis.x)*k},
     footSoleOffset:{left:(source.feet.left.y-source.ankleY.left)*u,right:(source.feet.right.y-source.ankleY.right)*u},
     strokeWidth:16*u,
+    ...(usesBodyView(profile)?bodyViewMetrics(profile):{}),
   };
 }
 /** The attachment is under the actual authored chin/beard, off center from
@@ -94,9 +97,9 @@ export function referenceBodyHeadAttachment(profile:HostProfile,view:ReferenceHe
   return {x:view==='front'?0:(view==='three-quarter-left'?1:-1)*(lila?14:10),y:lila?32:72};
 }
 export function referenceBodyAssets(appearance:HostProfile['appearance']){
-  if(appearance.artworkVersion!==FOREST_BODY_VERSION)return [];
+  if(appearance.artworkVersion!==FOREST_BODY_VERSION&&appearance.artworkVersion!=='forest-body-view-1')return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
-  const source=bodies[actor];return [{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'},...seatedGarmentAssets(appearance)];
+  const source=bodies[actor];return [{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'},...(usesBodyView({appearance})?[bodyViewAsset(appearance)]:seatedGarmentAssets(appearance))];
 }
 export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
@@ -112,6 +115,11 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
     return '<g stroke="none" fill="none" transform="scale('+source.unitScale+')"><g transform="translate('+(-anchor.x)+' '+(-anchor.y)+')" clip-path="url(#forest-body-'+id+')">'
       +(id==='clothing'?'<g mask="url(#forest-body-hem)">':'')+(layer?'<g clip-path="url(#forest-garment-'+layer+')">':'')+'<use href="#'+imageId+'"/>'+(layer?'</g>':'')+(id==='clothing'?'</g>':'')+'</g></g>';
   };
+  if(usesBodyView(profile)){
+    const view=bodyViewClothingSvg(profile,(file,sha)=>referenceImageUrl(file,sha,mode));
+    return {defs:defs+view.defs,seatedGarments:'',neck:'',torso:view.torso,garments:{left:'',right:''},
+      hands:{left:part('hand-left'),right:part('hand-right')},feet:{left:part('foot-left'),right:part('foot-right')}};
+  }
   const seated=seatedGarmentSvg(profile,mode);
   return {defs:defs+seated.defs,seatedGarments:seated.artwork,neck:part('neck'),torso:part('clothing','upper'),garments:{left:part('clothing','left'),right:part('clothing','right')},
     hands:{left:part('hand-left'),right:part('hand-right')},feet:{left:part('foot-left'),right:part('foot-right')}};
@@ -119,8 +127,8 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),
-  actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,views:bodyViewDescription,lunge:lungeDescription}),sources:bodies,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
+  actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,lunge:lungeDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through the projected hidden IK joint; source knee depth preserves physical XYZ lengths',softness:.28,anatomicalGuarantee:false},

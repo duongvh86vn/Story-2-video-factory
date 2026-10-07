@@ -425,6 +425,7 @@
                           "type": "string",
                           "enum": [
                             "walk",
+                            "run",
                             "jump"
                           ]
                         },

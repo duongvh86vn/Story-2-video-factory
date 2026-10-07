@@ -47,6 +47,11 @@ export const SpearTrackSchema=z.object({...Interval,id:Id,propId:Id,hand:RigHand
   twoHands:z.boolean().default(true),secondaryOffset:z.number().finite().min(-200).max(-10).default(-20),
   elbowPoles:z.object({primary:z.union([z.literal(-1),z.literal(1)]),secondary:z.union([z.literal(-1),z.literal(1)])}).strict().optional(),
   readyMs:Time.optional(),contactMs:Time.optional(),recoverMs:Time.optional()}).strict();
+export const LungeSchema=z.object({version:z.literal('forest-planted-lunge-1'),spearId:Id,
+  soles:z.object({left:PointSchema,right:PointSchema}).strict(),
+  kneePoles:z.object({left:z.union([z.literal(-1),z.literal(1)]),right:z.union([z.literal(-1),z.literal(1)])}).strict(),
+  advanceX:z.number().finite().min(-20).max(20),dropY:z.number().finite().min(0).max(12),
+  entryLeanDeg:z.number().finite().min(-20).max(20),contactLeanDeg:z.number().finite().min(-25).max(25)}).strict();
 export const PerformancePlanSchema = z.object({
   version: z.literal(22), compilerVersion: z.enum([HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,BODY_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,
   leadCharacterId: Id, profileHash: z.string().min(1), kind: z.enum(['stick-man', 'mini-robot']),
@@ -58,6 +63,7 @@ export const PerformancePlanSchema = z.object({
   entryPosture:PostureTargetSchema.optional(),postures:z.array(PostureSchema).optional(),
   supports:z.array(SeatSupportSchema).max(12).optional(),
   walks: z.array(WalkSchema), jumps:z.array(JumpSchema).max(16).optional(), gestures: z.array(GestureSchema),spears:z.array(SpearTrackSchema).max(8).optional(),
+  lunge:LungeSchema.optional(),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
   gazes: z.array(z.object({ ...Interval, target: PointSchema }).strict()),
   props: z.array(z.object({ id: Id, origin: PointSchema, destination: PointSchema.optional(), gripOffset: PointSchema.optional(), attachedTo:z.enum(['left-hand','right-hand']).optional(),kind:z.enum(['generic','spear']).optional(),length:z.number().finite().min(50).max(600).optional() }).strict().superRefine((prop,ctx)=>{

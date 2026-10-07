@@ -1,5 +1,7 @@
 # Karo: sửa dáng chân và bộ pose chuyển động
 
+**Hiện hành 0.19:** hai view 3/4 phải có registration kỹ thuật và ứng viên lunge qua rig/evaluator chung; giữ source bones, cổ/mặt nguyên lớp, near/far arms, sole trụ và clock giáo. Áo view mới vẫn rigid, wrist/palm/grasp và độ đọc joint còn thiếu; hai model review qua 9router chưa chấp nhận anatomy hoàn thiện. Chỉ build/typecheck và inspection clock tĩnh; runtime/MP4/ba input giao model test khác. `productionReady=false`, `productionRig=null`. [Source, ảnh, việc thiếu và lệnh server/test](VIEW-LUNGE-IMPLEMENTATION.md). Các mốc 0.18 trở về trước bên dưới là lịch sử, không phải trạng thái mới.
+
 Bổ sung theo yêu cầu chạy/nhảy/đi săn/cầm–đâm giáo ở [POSES-CHAY-NHAY-SAN.md](POSES-CHAY-NHAY-SAN.md), mốc 0.14. Phần 0.13 dưới đây giữ làm lịch sử; build/typecheck không thay nghiệm thu video.
 
 Ngày 07/10/2026, chủ đề 0.13. Cả Karo và Lila vẫn là diễn viên trong câu chuyện. Tạo hình, màu, trang phục và lời kể đã chốt không đổi khi hiệu chỉnh chuyển động.

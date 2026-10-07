@@ -1,0 +1,158 @@
+{
+  "version": "forest-tribe-0.19-view-registration-and-lunge-candidate",
+  "scope": "developer-static-fixed-clock-and-source-inspection-only",
+  "startingHead": "496a52296b61b510d7d92c7d42b73f08b2d9de13",
+  "pass": null,
+  "productionAcceptance": false,
+  "productionReady": false,
+  "productionRig": null,
+  "bodyPackFingerprint": "5abfee47945abc136f877906c16471d003839dce6feac7ff4b474b0296827403",
+  "headPackFingerprint": "fbf16aa3ef682f2a5a3369eaf3593d7c9e2bddd234323ee3008d94f0b6e1754f",
+  "clockEvidence": {
+    "file": "docs/topics/reviews/source-view-lunge-dom-v1.json",
+    "sha256": "91772cf506570e2ff629c5f899c4fad0f873687f4166e8fc26e699d8ead8d235",
+    "clockCount": 5,
+    "actorClockCombinations": 10,
+    "errors": [],
+    "note": "Only five selected static clocks for each actor; duplicate full/detail views are not additional runtime cases"
+  },
+  "sources": [
+    {
+      "file": "packages/animation/body-view-art.ts",
+      "sha256": "7c909df374eaf2db2b37f4af80b8fc5b64681b9efd7f10471d091537405ce552"
+    },
+    {
+      "file": "packages/animation/body-view-contours.ts",
+      "sha256": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d"
+    },
+    {
+      "file": "packages/animation/lunge.ts",
+      "sha256": "3d54c801e6a7143b61eb660e7670ab9c5ecd84d575cd852e6db4b8ba0f2afe24"
+    },
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "8c8214c3fa5ea07af1366225d1197bba66cf79842eb510b00116b41e7ec7dd66"
+    },
+    {
+      "file": "packages/animation/rig.ts",
+      "sha256": "1587400a30ee59a9698657170f71881f674624289b2e1335f3c1b0dd2a4046ec"
+    },
+    {
+      "file": "packages/animation/schemas.ts",
+      "sha256": "d224b258d2ba78f45ddd80b37d613649c361ab9b1a7cae170eb12acc57dd5597"
+    },
+    {
+      "file": "packages/animation/forest-body-art.ts",
+      "sha256": "018d02fe0a513703751c975426a7cad58631d87f7cd0bf956d27f6424502a37f"
+    },
+    {
+      "file": "packages/animation/forest-cutout-head.ts",
+      "sha256": "0b5e68bbef25aa4a851cbf76e2fda5d491d4b44f945dd78d48f864dba6c0e249"
+    },
+    {
+      "file": "packages/animation/forest-head-art.ts",
+      "sha256": "6564fc83da1e4dbe071f498f904be6910f2ac9f8ab7bff2e51e10351eb58619a"
+    },
+    {
+      "file": "packages/director/camera.ts",
+      "sha256": "999d4649ae717202c21d27b3f000e4ace6f6b81e9f08a707bbee2853681a34b7"
+    },
+    {
+      "file": "packages/host/schemas.ts",
+      "sha256": "cd904d82778bc7018a35b0fd10c73444eda5378171b7f67401f65da0335089ce"
+    },
+    {
+      "file": "packages/host/profile.ts",
+      "sha256": "85751c2e35d11da1d2842cc907bb834edc3015872a7f49fea9405855f7ee237e"
+    },
+    {
+      "file": "packages/topics/body-workbench.ts",
+      "sha256": "66330e4d165566ab85a64b2815cce7ae4a72a08d71bc957536377710e059217d"
+    },
+    {
+      "file": "packages/topics/view-registration-workbench.ts",
+      "sha256": "3fadfcb1e291ca9592b5aff860aebcbf723be28a9fc1aefbd45937b5c23af6a1"
+    },
+    {
+      "file": "scripts/forest-motion-fixture.ts",
+      "sha256": "3c8cc09973e777604b784cf72ea39f5593a66e22e7a748ffcb3e07b9dabeeb8e"
+    }
+  ],
+  "images": [
+    {
+      "file": "docs/topics/reviews/source-view-lunge-lila-contact-v1.png",
+      "sha256": "96ad412d0da3597ea4af8e0bd24e33a57cb0f303cf9d3210ffc410f49be32f84"
+    },
+    {
+      "file": "docs/topics/reviews/source-view-lunge-karo-contact-v1.png",
+      "sha256": "ca934664f058c7f33ea0f16ed00170f81d92e8ced2966e4f0f0acad1906d92a6"
+    },
+    {
+      "file": "docs/topics/reviews/source-view-lunge-entry-v3.png",
+      "sha256": "b6c26c30a43aa4a70330a2d9e59f806b46d611b19c25c86dee5a418f87fa3fd2"
+    },
+    {
+      "file": "docs/topics/reviews/source-view-lunge-ready-v3.png",
+      "sha256": "d5e02cbb9595cc776c2c7705f03cd18003cba4158de7442fb625b480dbe80096"
+    },
+    {
+      "file": "docs/topics/reviews/source-view-lunge-advance-v3.png",
+      "sha256": "6db93f08e57aa7f25d67aada1a962e7515ec8686f9214d477e923feb112b08df"
+    },
+    {
+      "file": "docs/topics/reviews/source-view-lunge-recover-v3.png",
+      "sha256": "bda47609bc92ddd04ac46e0b9d7d37296db639685a8bdd695f70d885f3e3a12e"
+    },
+    {
+      "file": "docs/topics/reviews/source-view-lunge-contact-v3.png",
+      "sha256": "7f5017c76e07a03111f0691f8ee7430e652113730fdd96013d36d97d4c7ab66a"
+    }
+  ],
+  "completedChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "notRun": [
+    "npm test",
+    "forest-motion-fixture runtime export",
+    "HyperFrames validator/render",
+    "TTS or ASR",
+    "story episode/three-input acceptance"
+  ],
+  "modelAdvice": [
+    {
+      "file": "docs/topics/reviews/gemini-view-lunge-advice-v1.json",
+      "sha256": "e479c6bf6b8c262e4c1187f8854d0e60868a27d2453f7cdb0100d8b06b17286f",
+      "scope": "static advice; not acceptance"
+    },
+    {
+      "file": "docs/topics/reviews/coder-view-lunge-advice-v1.json",
+      "sha256": "73900975d64733454bf4e21a80d0449d8ecfe3f222cf3a25cce792abecb2e0b8",
+      "scope": "static advice; not acceptance"
+    }
+  ],
+  "pending": [
+    "wrist/palm/grasp registration",
+    "readable elbow/knee silhouette and mask clearance",
+    "identity and proportions",
+    "cloth/hair secondary motion",
+    "other body/head views",
+    "stance preparation and story integration",
+    "full-clock runtime and final video acceptance"
+  ],
+  "createdAt": "2026-10-07T07:57:36.010Z"
+}

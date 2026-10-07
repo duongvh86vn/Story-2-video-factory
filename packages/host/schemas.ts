@@ -11,7 +11,11 @@ export const HostProfileSchema = z.object({
     headScale: z.number().min(0.75).max(1.25), bodyScale: z.number().min(0.75).max(1.25),
     strokeWidth: z.number().min(2).max(10),
     characterVariant: z.enum(['lila','karo']).optional(),
-    artworkVersion: z.enum(['forest-head-1','forest-body-1']).optional() }).strict(),
+    artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
+    bodyView:z.enum(['three-quarter-right']).optional() }).strict().superRefine((a,ctx)=>{
+      if(a.artworkVersion==='forest-body-view-1'&&(!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Authored body candidate requires its actor and registered view'});
+      if(a.bodyView&&a.artworkVersion!=='forest-body-view-1')ctx.addIssue({code:'custom',message:'bodyView requires the authored body candidate artwork version'});
+    }),
   costume: z.array(z.object({joint:z.enum(['head','chest','pelvis','hand-left','hand-right']),svg:z.string().min(1).max(24000)}).strict()).max(12).optional(),
   actions: z.array(z.enum(HostActions)).min(1), immutable: z.array(z.string()).min(1),
   profileHash: z.string(), compilerVersion: z.string(), sourcePath: z.string(),
