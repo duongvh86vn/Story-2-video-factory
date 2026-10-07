@@ -558,3 +558,11 @@ Evidence review ảnh tĩnh: [karo-atlas-static-review-v1.json](reviews/karo-atl
 Thông tin có thể bổ sung cùng đầu vào: chọn script/wav/story, nội dung hoặc file WAV, ngôn ngữ, yêu cầu giọng/subtitle, tỷ lệ video và điểm cần nhấn. Nội dung có sẵn được suy ra trước; chỉ hỏi những lựa chọn quan trọng còn thiếu. WAV không đòi người dùng viết lại câu chuyện hoặc cấp giọng TTS mới. Không yêu cầu người dùng viết lại bộ mô tả nhân vật/màu cho từng tập.
 
 **Mục tiêu hoàn thành:** bộ chủ đề được chốt về tạo hình, nét, trang phục, màu và diễn xuất; câu chuyện mới đi qua tool ra video có hai diễn viên đóng đúng nội dung. Chưa đạt mục tiêu đó chỉ bằng việc hoàn thành MD này.
+
+### Mốc 0.13 — pose và chân Karo
+
+Phản hồi người dùng: chân Karo ở `walk 800ms` trông như bị tật. Kiểm source và ảnh live cho thấy nhấc chân cố định bằng 25% chiều dài đùi, hai gối dùng chung một nhánh và toàn bộ độ gập được vẽ trên mặt phẳng chính diện. Chỉ làm mềm nét cubic không sửa được lỗi dáng đó.
+
+`source-walk.ts` nay có pose chuyển lực/rời đất/đưa chân qua/đặt chân/nhận lực. Một rig liên tục giữ texture và nét nguồn; chiều cao nhấc theo quãng di chuyển của chân, có giới hạn, tốc độ/gia tốc về 0 lúc rời/chạm đất. Hông dịch nhỏ về chân trụ, tay đánh theo tốc độ. Bước thu/mở chân khi ngồi/đứng dùng cùng quỹ đạo. Gối front chiếu theo chiều sâu suy luận, giữ độ dài xương trong XYZ; xương hiện ngắn lại do phép chiếu, mực nối đúng joint đã chiếu và cổ chân. Mặt phẳng gập chuyển theo lúc pelvis vào/ra support; plan ngồi giữ nhánh gối để không snap. Compiler kiểm nối bằng scale Y và lấy các mốc pose khi bake. Body compiler tăng `forest-source-body-motion-8`; fingerprint mới chỉ làm lại hình, narrative contract vẫn `prehistoric-story-contract-1`.
+
+Ảnh developer inspection và kế hoạch còn thiếu nằm trong [KARO-MOTION-POSES.md](KARO-MOTION-POSES.md). Chưa có review độc lập hoặc video chuyển động cho bản này; không suy ra anatomy, biomechanics, đi profile hoặc full-body 3D đã đạt. Bộ pose nhiều góc/artwork thân và chuyển động toàn chu kỳ còn phải làm. Guard `productionReady=false` giữ nguyên; test runtime tiếp tục giao model khác.

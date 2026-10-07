@@ -12,7 +12,7 @@ Studio có tab **Chủ đề / Câu chuyện**, model viết kịch bản, nút 
 
 Checkpoint06/10: source-context494PASS/0FAIL/2SKIP và corrected contact229PASS/0FAIL/1SKIP trên code443220f; custom-handle temporal/outbound và phim còn chờ. Ca sinh nhật gốc28/28/0, còn2/30calls, chưa video mới. Chủ dự án giao model test khác; [bàn giao để gửi model test](docs/NEXT-MODEL-TEST-HANDOFF.md), [phạm vi evidence](docs/validation/2026-10-06-sourced-world-contact.md).
 
-Chủ đề **Cuộc sống thời tiền sử 0.12** có candidate đầu biến dạng liên tục qua một texture chính diện, góc giới hạn ±32°, cùng clock với mắt/miệng/tóc và cổ. Review năm pose của bản đầu FAIL mắt xa Lila và miệng Karo 0ms; bản giới hạn glyph/lưới 60 tam giác mới chỉ tự inspection. Viền/eo Karo giữ bản sửa 0.11; chưa nghiệm thu toàn chu kỳ. Contract scene đã thêm matrix/polygon hữu hạn cho UV/vải. Bộ góc thân, diễn xuất/cảnh và ba luồng tập còn chờ; `productionReady=false` chặn topic trước model/TTS. [Đặc tả và evidence](docs/topics/CUOC-SONG-THOI-TIEN-SU.md), [lệnh server/môi trường và việc giao model test](docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md).
+Chủ đề **Cuộc sống thời tiền sử 0.13** bổ sung pose bước/chạm đất, giảm nhấc chân theo quãng bước và chiếu độ gập gối theo chiều sâu để sửa dáng chân Karo. Đi/ngồi dùng cùng rig/evaluator; đây là candidate, chưa nghiệm thu chuyển động. Đầu front có projection giới hạn ±32°; review bản đầu FAIL, bản sửa chỉ tự inspection. Viền/eo Karo giữ bản sửa 0.11. Bộ góc thân, diễn xuất/cảnh và ba luồng tập còn chờ; `productionReady=false` chặn topic trước model/TTS. [Pose và lệnh kiểm chuyển động](docs/topics/KARO-MOTION-POSES.md), [đặc tả](docs/topics/CUOC-SONG-THOI-TIEN-SU.md), [bàn giao](docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md).
 
 ## Bắt đầu
 

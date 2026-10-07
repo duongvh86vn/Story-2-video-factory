@@ -1,6 +1,7 @@
 import type {HostProfile} from '../host/schemas.js';
 import {rigMetrics} from './rig.js';
 import {usesReferenceBody} from './forest-body-art.js';
+import {sourceSwing} from './source-walk.js';
 import type {PerformancePlan,Point,PostureTarget,SeatSupport} from './schemas.js';
 
 const smooth=(n:number)=>{const t=Math.max(0,Math.min(1,n));return t*t*(3-2*t);};
@@ -76,9 +77,9 @@ export function sourceSupportMotion(plan:PerformancePlan,profile:HostProfile,tim
     const step=(side:'left'|'right')=>{
       if(!entering&&!leaving)return {point:mix(value.feet[side],next.feet[side],smooth(p)),planted:true};
       const start=entering?(side==='left'?.04:.21):(side==='left'?.62:.81),end=entering?(side==='left'?.21:.38):(side==='left'?.81:1);
-      const phase=Math.max(0,Math.min(1,(p-start)/(end-start))),point=mix(value.feet[side],next.feet[side],smooth(phase));
-      point.y-=Math.sin(Math.PI*phase)*7*s;
-      return {point,planted:phase===0||phase===1};
+      const phase=Math.max(0,Math.min(1,(p-start)/(end-start)));
+      const sampled=sourceSwing(value.feet[side],next.feet[side].x,root.y,phase,m.legs![side].upper,s);
+      return {point:sampled.point,planted:sampled.planted};
     };
     const left=step('left'),right=step('right');
     // Anticipation bends toward the planted feet; it settles to the held pose.

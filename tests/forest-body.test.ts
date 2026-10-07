@@ -67,8 +67,9 @@ for(const actor of ['lila','karo'] as const)for(const facing of ['left','right']
       for(const side of ['left','right'] as const){
         const g=legGeometry(m,{x:pelvis[0]!,y:pelvis[1]!},f.feet[side],side,plan.scale,profile.appearance.bodyScale,lean);
         const upper=nums(f.transforms['leg-'+side+'-upper']!),lower=nums(f.transforms['leg-'+side+'-lower']!);
-        const end={x:lower[0]!-Math.sin(lower[2]!*Math.PI/180)*g.bones.lower,y:lower[1]!+Math.cos(lower[2]!*Math.PI/180)*g.bones.lower};
-        assert.ok(Math.abs(Math.hypot(lower[0]!-upper[0]!,lower[1]!-upper[1]!)-g.bones.upper)<.001);
+        const end={x:lower[0]!-Math.sin(lower[2]!*Math.PI/180)*g.bones.lower*lower[4]!,y:lower[1]!+Math.cos(lower[2]!*Math.PI/180)*g.bones.lower*lower[4]!};
+        assert.ok(Math.abs(Math.hypot(lower[0]!-upper[0]!,lower[1]!-upper[1]!,f.legProjection![side].kneeDepth)-g.bones.upper)<.001);
+        assert.ok(Math.abs(Math.hypot(end.x-lower[0]!,end.y-lower[1]!,f.legProjection![side].kneeDepth)-g.bones.lower)<.001);
         assert.ok(Math.hypot(end.x-g.ankle.x,end.y-g.ankle.y)<.001);
         assert.ok(f.feet[side].y<=plan.stage.groundY+.001);
         if(f.stance[side])assert.equal(f.feet[side].y,plan.stage.groundY);

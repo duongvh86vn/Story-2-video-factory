@@ -1,0 +1,134 @@
+{
+  "scope": "developer-static-inspection-only",
+  "pass": null,
+  "modelReview": null,
+  "runtimeTestsRun": false,
+  "videoRendered": false,
+  "productionAcceptance": false,
+  "bodyPackFingerprint": "d51528d6f42dc9bcb15383d9a9080d8550f19af280bb25be1c49abad4e0e7aa9",
+  "compiler": "forest-source-body-motion-8",
+  "walk": {
+    "version": "forest-walk-poses-2-depth-knee",
+    "poses": [
+      {
+        "id": "load",
+        "phase": 0,
+        "label": "Chuyển lực · hai chân chạm đất"
+      },
+      {
+        "id": "toe-off",
+        "phase": 0.12,
+        "label": "Rời đất"
+      },
+      {
+        "id": "passing",
+        "phase": 0.47,
+        "label": "Đưa chân qua"
+      },
+      {
+        "id": "contact",
+        "phase": 0.82,
+        "label": "Đặt chân"
+      },
+      {
+        "id": "settle",
+        "phase": 1,
+        "label": "Nhận lực · hai chân chạm đất"
+      }
+    ],
+    "lift": "min(actual foot travel * 0.18, upperLeg * scale * 0.10)",
+    "interpolation": "quintic horizontal; sixth-degree arch with zero velocity and acceleration at contact",
+    "kneePoles": "front artwork: left -1, right +1; seat plans retain their support branch",
+    "kneeProjection": "orthographic inferred XYZ chain; front planar weight 0.16, smoothly reaches 1 on the seated support; physical XYZ bone lengths unchanged",
+    "armSwing": "distance/elapsed-speed dependent, maximum 16 degrees",
+    "support": "fixed sole in world coordinates, minimum reach drop; at least one planted foot",
+    "weightTransfer": "pelvis shifts toward the planted sole during load/swing, capped at 0.08 * thigh; candidate acting offset, not measured biomechanics",
+    "bodyViews": "front torso only; sideways travel does not establish an authored profile gait",
+    "productionAcceptance": false
+  },
+  "profileHashes": {
+    "lila": "6be58d99573284b48c94395cd5702a61c09813f2c4cc6fb4a0857410c5305e69",
+    "karo": "4c47b0409d3ea2f27154828f7c04693fa732146228ec1093452d87e00bf2ef4f"
+  },
+  "codeHashes": {
+    "packages/animation/source-walk.ts": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
+    "packages/animation/compiler.ts": "46eed2b71fca1a978db14b38a3a2b40d4e3850dd3c48f815b5f756315005f26b",
+    "packages/animation/support.ts": "fa9d7e031220084c2812ff0298cb076de3b48c5b77b0503c7772370e6be9a83f",
+    "packages/animation/forest-body-art.ts": "06ab036617b5e728a0947d2219cbc60a87d59a67c0c2a730721d50ee9cb9299e",
+    "packages/topics/body-workbench.ts": "8419a26e613e3e9fc16ecfdc6628a5e8ab73d2f101c73a8195162ffb55d6e6da",
+    "scripts/forest-motion-fixture.ts": "d754ed97f286566053205669e90ab60632aaf0ea0bcab65a06c1c613e2a82853"
+  },
+  "evidence": [
+    {
+      "file": "docs/topics/reviews/karo-walk-depth-800-v1.png",
+      "action": "walk",
+      "timeMs": 800,
+      "actors": [
+        "karo"
+      ],
+      "sha256": "3ac89bf20e736b27a35f0b9e1575bbb1cf96b4395aee5fc6210fb648de39b14a"
+    },
+    {
+      "file": "docs/topics/reviews/karo-walk-depth-passing-v1.png",
+      "action": "walk",
+      "timeMs": 817,
+      "actors": [
+        "karo"
+      ],
+      "sha256": "8fed4b57ba2ac5f41e33ee2d29d51cb3d28c74d2079985330484c48fab2cfe97"
+    },
+    {
+      "file": "docs/topics/reviews/karo-walk-depth-contact-v1.png",
+      "action": "walk",
+      "timeMs": 1202,
+      "actors": [
+        "karo"
+      ],
+      "sha256": "53548ebfbe76ce7478fbc9badc5d0b3d317406eb8e937af1f886a33fb0364882"
+    },
+    {
+      "file": "docs/topics/reviews/karo-walk-left-depth-800-v1.png",
+      "action": "walk-left",
+      "timeMs": 800,
+      "actors": [
+        "karo"
+      ],
+      "sha256": "48de085c56a46a18b7e96a170af6fc37c89e590fbd2fcad40a4c74fc00397249"
+    },
+    {
+      "file": "docs/topics/reviews/source-walk-left-both-800-v1.png",
+      "action": "walk-left",
+      "timeMs": 800,
+      "actors": [
+        "lila",
+        "karo"
+      ],
+      "sha256": "344c913131e0af7b71b22948820b619ed99e03037e0f14f96af17c62a920b35a"
+    },
+    {
+      "file": "docs/topics/reviews/karo-seat-after-depth-2200-v1.png",
+      "action": "sit-right",
+      "timeMs": 2200,
+      "actors": [
+        "karo"
+      ],
+      "sha256": "701f3ad473bffce367659060fa8fcb019c683d7938f3d0a0689f10a332e48184"
+    }
+  ],
+  "observations": [
+    "Karo walk 800ms has a much smaller visible knee bend and low raised sole compared with the previous gait snapshot. This is developer inspection, not an independent PASS.",
+    "Passing, contact, left travel and a held seat were inspected at the listed isolated times; garment ink and the original foot shapes remain visible.",
+    "Front leg depth is inferred; no authored profile gait or full-body 3D reconstruction is asserted.",
+    "The final source also reuses the C2 foot path for seat preparation and follows the actual body-transfer weight. These short transitions were not inspected continuously.",
+    "The fixture exporter/render command has been prepared and typechecked only; it has not been run."
+  ],
+  "remaining": [
+    "delegated unit/scene/runtime checks",
+    "continuous gait and seat transitions, random/reverse seeks",
+    "short and fast steps at many scales",
+    "current independent artwork/pose review",
+    "authored side/rear bodies and eight-pose gait per view",
+    "toe/heel roll and occlusion",
+    "actor interactions, world layers and the three complete input flows"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.12-projected-head-candidate",
+  "version": "forest-tribe-0.13-walk-pose-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -729,9 +729,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-7",
+    "compilerVersion": "forest-source-body-motion-8",
     "rendererVersion": "forest-source-body-svg-7",
-    "fingerprint": "eaba3b2443af449c11532e03f8c57ea1c033744e5711fbb88cba0c6487ac9e62",
+    "fingerprint": "d51528d6f42dc9bcb15383d9a9080d8550f19af280bb25be1c49abad4e0e7aa9",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -1142,7 +1142,7 @@
     "status": "candidate-source-body-integration",
     "productionReady": false,
     "visibleLimbs": {
-      "method": "two joined cubics through hidden IK joint",
+      "method": "two joined cubics through the projected hidden IK joint; source knee depth preserves physical XYZ lengths",
       "softness": 0.28,
       "anatomicalGuarantee": false
     },
@@ -1164,8 +1164,47 @@
       "inkEndpoint": "ankle",
       "pelvisWalkDrop": "minimum fixed-leg reach plus small bob; not .23 of long thigh"
     },
+    "walkMotion": {
+      "version": "forest-walk-poses-2-depth-knee",
+      "poses": [
+        {
+          "id": "load",
+          "phase": 0,
+          "label": "Chuyển lực · hai chân chạm đất"
+        },
+        {
+          "id": "toe-off",
+          "phase": 0.12,
+          "label": "Rời đất"
+        },
+        {
+          "id": "passing",
+          "phase": 0.47,
+          "label": "Đưa chân qua"
+        },
+        {
+          "id": "contact",
+          "phase": 0.82,
+          "label": "Đặt chân"
+        },
+        {
+          "id": "settle",
+          "phase": 1,
+          "label": "Nhận lực · hai chân chạm đất"
+        }
+      ],
+      "lift": "min(actual foot travel * 0.18, upperLeg * scale * 0.10)",
+      "interpolation": "quintic horizontal; sixth-degree arch with zero velocity and acceleration at contact",
+      "kneePoles": "front artwork: left -1, right +1; seat plans retain their support branch",
+      "kneeProjection": "orthographic inferred XYZ chain; front planar weight 0.16, smoothly reaches 1 on the seated support; physical XYZ bone lengths unchanged",
+      "armSwing": "distance/elapsed-speed dependent, maximum 16 degrees",
+      "support": "fixed sole in world coordinates, minimum reach drop; at least one planted foot",
+      "weightTransfer": "pelvis shifts toward the planted sole during load/swing, capped at 0.08 * thigh; candidate acting offset, not measured biomechanics",
+      "bodyViews": "front torso only; sideways travel does not establish an authored profile gait",
+      "productionAcceptance": false
+    },
     "seatedMotion": {
-      "method": "asymmetric source chains, sole/ankle offsets, staggered foot preparation, one continuous knee branch",
+      "method": "asymmetric source chains, sole/ankle offsets, low C2 foot preparation, one knee branch; projection plane follows actual pelvis transfer onto support",
       "minimumTransitionMs": 1500,
       "productionAcceptance": false
     },
@@ -1264,7 +1303,15 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "88c2f8f339c9e3ecd96659ef3e5ec67aea640cf54b997daec7f99f27bda1f646"
+    "codeHash": "06ab036617b5e728a0947d2219cbc60a87d59a67c0c2a730721d50ee9cb9299e",
+    "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07"
+  },
+  "walkPoseInspection": {
+    "file": "docs/topics/reviews/source-walk-pose-self-inspection-v1.json",
+    "scope": "developer-static-inspection-only",
+    "pass": null,
+    "productionAcceptance": false,
+    "currentRepair": "Distance-dependent C2 foot lift, bounded support transfer, speed-dependent arms and inferred XYZ knee projection. Isolated front-body poses only; full gait, seated transitions, authored side/rear body views and production acceptance remain pending."
   },
   "restCalibration": {
     "status": "candidate",

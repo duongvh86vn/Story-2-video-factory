@@ -14,6 +14,7 @@ import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
 import {seatedGarmentState,seatedGarmentMatrixError,type GarmentRestPose} from './forest-garment-art.js';
+import {SOURCE_WALK_POSES,sourceSwing,sourceKneePole,projectSourceKnee} from './source-walk.js';
 
 const clamp = (n: number, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 const smooth = (n: number) => { const t = clamp(n); return t * t * (3 - 2 * t); };
@@ -199,6 +200,7 @@ export interface FrameState {
   timeMs:number; airborne?:{phase:string;bodyVelocityY:number}; root:Point; feet:Record<'left'|'right',Point>; stance:Record<'left'|'right',boolean>;
   bodyPosture:BodyPosture;
   seatContact?:{supportId:string;errorPx:number};
+  legProjection?:Record<RigHand,{kneeDepth:number;upperRatio:number;lowerRatio:number}>;
   hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
   transforms:Record<string,string>; paths?:Record<string,string>; face:Record<string,{opacity?:number;scaleX?:number;scaleY?:number;rotation?:number;x?:number;y?:number;attr?:{transform:string}}>;
   props:Record<string,{point:Point;attached:boolean}>;
@@ -222,7 +224,7 @@ function walkSteps(plan:PerformancePlan,profile:HostProfile,walk:PerformancePlan
 function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
   const m=rigMetrics(profile), scale=plan.scale;
   let feet={left:{x:plan.root.x+(m.footOffsets?.left??-m.stance)*scale,y:plan.root.y},right:{x:plan.root.x+(m.footOffsets?.right??m.stance)*scale,y:plan.root.y}};
-  const stance={left:true,right:true};let activation=0,phase=0,direction=1;
+  const stance={left:true,right:true};let activation=0,phase=0,direction=1,armSwing=25,supportShiftX=0;
   for(const walk of chronological(plan.walks)){
     if(timeMs<walk.startMs)break;
     direction=Math.sign(walk.toX-walk.fromX)||1;
@@ -230,15 +232,30 @@ function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
       if(timeMs<start)break;
       // Last two placements establish the final balanced stance, preserving shot-boundary continuity.
       const p=clamp((timeMs-start)/(end-start));
-      feet={...feet,[side]:{x:lerp(feet[side].x,landing,smooth(p)),y:plan.root.y-Math.sin(Math.PI*p)*m.upperLeg*.25*scale}};
-      if(p<1){stance[side]=false;phase=i+p;}
+      if(usesReferenceBody(profile)){
+        const sampled=sourceSwing(feet[side],landing,plan.root.y,p,m.upperLeg,scale);
+        feet={...feet,[side]:sampled.point};
+        if(p<1){
+          stance[side]=sampled.planted;phase=i+p;
+          const support=feet[side==='left'?'right':'left'];
+          supportShiftX=clamp(support.x-rootAt(plan,timeMs).x,-m.upperLeg*.08*scale,m.upperLeg*.08*scale)*sampled.supportWeight;
+        }
+      }else{
+        feet={...feet,[side]:{x:lerp(feet[side].x,landing,smooth(p)),y:plan.root.y-Math.sin(Math.PI*p)*m.upperLeg*.25*scale}};
+        if(p<1){stance[side]=false;phase=i+p;}
+      }
     }
     if(timeMs<walk.endMs){
       const transition=Math.min(180,(walk.endMs-walk.startMs)/4);
       activation=smooth((timeMs-walk.startMs)/transition)*smooth((walk.endMs-timeMs)/transition);
+      if(usesReferenceBody(profile)){
+        const progress=clamp((timeMs-walk.startMs)/(walk.endMs-walk.startMs));
+        const speed=Math.abs(walk.toX-walk.fromX)/scale/((walk.endMs-walk.startMs)/1000)*6*progress*(1-progress);
+        armSwing=clamp(speed/Math.max(1,m.upperLeg),0,1)*16;
+      }
     }
   }
-  return {feet,stance,activation,phase,direction};
+  return {feet,stance,activation,phase,direction,armSwing,supportShiftX};
 }
 /** Lower the source pelvis only as far as the fixed limbs require. A generic
  * fraction of its long hidden thigh would produce a deep crouch every step. */
@@ -246,7 +263,7 @@ function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetri
   if(!walk.activation)return 0;
   let needed=0;
   for(const side of ['left','right'] as const){
-    const base={x:root.x,y:root.y+metrics.pelvisY*scale},geometry=legGeometry(metrics,base,walk.feet[side],side,scale,profile.appearance.bodyScale,lean);
+    const base={x:root.x+walk.supportShiftX,y:root.y+metrics.pelvisY*scale},geometry=legGeometry(metrics,base,walk.feet[side],side,scale,profile.appearance.bodyScale,lean);
     const dx=geometry.ankle.x-geometry.hip.x,length=geometry.bones.upper+geometry.bones.lower-1e-6;
     if(Math.abs(dx)>=length)throw new Error('needs-source-motion: stride exceeds source leg reach.');
     needed=Math.max(needed,geometry.ankle.y-Math.sqrt(length*length-dx*dx)-geometry.hip.y);
@@ -264,7 +281,7 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
   if(sourceSupported?.ownsFeet&&!walk.activation){walk.feet=sourceSupported.feet;walk.stance=sourceSupported.stance;}
   const lean=bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath+(sourceSupported?.leanOffset??0);
   const walkDrop=source?sourceWalkDrop(root,walk,m,profile,s,lean):walk.activation*m.upperLeg*.23*s;
-  const pelvis=supported?.pelvis??{x:root.x,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walkDrop};
+  const pelvis=supported?.pelvis??{x:root.x+walk.supportShiftX,y:root.y+m.pelvisY*s+Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+walkDrop};
   if(sourceSupported){
     // A seated hip is below/behind the belt. Counter the body's lean around
     // this attachment so the contact stays on the support rather than orbiting.
@@ -272,9 +289,10 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
     pelvis.x+=(sourceSupported.contactOffset.x-rotated.x)*weight;
     pelvis.y+=(sourceSupported.contactOffset.y-rotated.y)*weight;
   }
-  if(supported&&walk.activation)pelvis.y+=walkDrop;
+  if(supported&&walk.activation){pelvis.x+=walk.supportShiftX;pelvis.y+=walkDrop;}
   if(air)pelvis.y+=air.bodyOffsetY;
-  return {m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend:supported?.bend??1};
+  return {m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend:supported?.bend??1,
+    kneeSeatWeight:sourceSupported?.supportWeight??Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0)};
 }
 function moodAt(plan:PerformancePlan,time:number):{mood:Mood;weight:number} {
   const e=plan.expressions.find(e=>time>=e.startMs&&time<e.endMs);
@@ -430,9 +448,11 @@ function armPose(shoulder:Point,neutral:Point,target:Point,gesture:Gesture|undef
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity):FrameState {
-  const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend}=bodyStateAt(plan,profile,t);
+  const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t);
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
   const paths:Record<string,string>={},drawn=!!profile.appearance.characterVariant;
+  const legProjection=usesReferenceBody(profile)?{} as NonNullable<FrameState['legProjection']>:undefined;
+  const kneeProjection=(state:{kneeSeatWeight:number},geometry:ReturnType<typeof legGeometry>,chain:Chain)=>projectSourceKnee(geometry.hip,chain.end,chain.joint,geometry.bones.upper,geometry.bones.lower,state.kneeSeatWeight);
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
   transforms.pelvis=transform(pelvis);transforms.chest=transform(pelvis,lean,s*profile.appearance.bodyScale);
   const toWorld=(x:number,y:number)=>add(pelvis,rotate({x:x*s,y:y*s},lean));
@@ -457,24 +477,31 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   for(const [i,side] of (['left','right'] as const).entries()){
     // One continuous bend branch, including rest, walk entry and recovery.
     const geometry=legGeometry(m,pelvis,walk.feet[side],side,s,profile.appearance.bodyScale,lean),{hip,ankle}=geometry;
-    const leg=solveChain(hip,ankle,geometry.bones.upper,geometry.bones.lower,bend);
-    thighAngles.push(leg.upper);
+    const pole=usesReferenceBody(profile)?sourceKneePole(plan,side,bend):bend;
+    const leg=solveChain(hip,ankle,geometry.bones.upper,geometry.bones.lower,pole);
+    const projected=legProjection?kneeProjection({kneeSeatWeight},geometry,leg):undefined;
+    thighAngles.push(projected?.upper??leg.upper);
     if(leg.error>1)throw new Error(`${plan.id}: ${side} foot cannot reach ground at ${t}ms (${leg.error.toFixed(2)}px)`);
-    transforms[`leg-${side}-upper`]=transform(hip,leg.upper,s);transforms[`leg-${side}-lower`]=transform(leg.joint,leg.lower,s);
-    if(drawn)paths[`ink-leg-${side}`]=inkLimb(hip,leg.joint,ankle,usesReferenceBody(profile)?.28:.17);
+    if(projected){
+      transforms[`leg-${side}-upper`]=`translate(${number(hip.x)} ${number(hip.y)}) rotate(${number(projected.upper)}) scale(${number(s)} ${number(s*projected.upperRatio)})`;
+      transforms[`leg-${side}-lower`]=`translate(${number(projected.joint.x)} ${number(projected.joint.y)}) rotate(${number(projected.lower)}) scale(${number(s)} ${number(s*projected.lowerRatio)})`;
+      legProjection![side]={kneeDepth:projected.depth,upperRatio:projected.upperRatio,lowerRatio:projected.lowerRatio};
+    }else{transforms[`leg-${side}-upper`]=transform(hip,leg.upper,s);transforms[`leg-${side}-lower`]=transform(leg.joint,leg.lower,s);}
+    if(drawn)paths[`ink-leg-${side}`]=inkLimb(hip,projected?.joint??leg.joint,ankle,usesReferenceBody(profile)?.28:.17);
     transforms[`foot-${side}`]=transform(walk.feet[side],0,s*(usesReferenceBody(profile)?profile.appearance.bodyScale:1));
     if(garment&&lagged){
       const prior=legGeometry(m,lagged.pelvis,lagged.walk.feet[side],side,s,profile.appearance.bodyScale,lagged.lean);
-      const lagLeg=solveChain(prior.hip,prior.ankle,prior.bones.upper,prior.bones.lower,lagged.bend);
+      const lagLeg=solveChain(prior.hip,prior.ankle,prior.bones.upper,prior.bones.lower,sourceKneePole(plan,side,lagged.bend));
       const rest=legGeometry(m,{x:0,y:m.pelvisY*s},{x:m.footOffsets![side]*s,y:0},side,s,profile.appearance.bodyScale);
-      const restLeg=solveChain(rest.hip,rest.ankle,rest.bones.upper,rest.bones.lower,bend);
-      const angle=lean+clamp((lagLeg.upper-lagged.lean-restLeg.upper)*garment.follow,-garment.maxRotation,garment.maxRotation);
+      const restLeg=solveChain(rest.hip,rest.ankle,rest.bones.upper,rest.bones.lower,pole);
+      const priorProjected=kneeProjection(lagged,prior,lagLeg),restProjected=kneeProjection({kneeSeatWeight:0},rest,restLeg);
+      const angle=lean+clamp((priorProjected.upper-lagged.lean-restProjected.upper)*garment.follow,-garment.maxRotation,garment.maxRotation);
       transforms[`garment-${side}`]=transform(hip,angle,s*profile.appearance.bodyScale);
       restCloth[side]={hip:{x:m.hips![side].x/profile.appearance.bodyScale,y:m.hips![side].y/profile.appearance.bodyScale},angle:angle-lean};
     }
     const sourceShoulder=m.shoulders?.[side];
     const shoulder=toWorld(sourceShoulder?.x??(i?1:-1)*m.shoulderOffset,sourceShoulder?.y??m.shoulderY-m.pelvisY);
-    const swing=Math.sin(walk.phase*Math.PI)*(i?-1:1)*25*walk.activation;
+    const swing=Math.sin(walk.phase*Math.PI)*(i?-1:1)*walk.armSwing*walk.activation;
     const rest=m.armRest?.[side],lengths=m.arms?.[side]??{upper:m.upperArm,lower:m.lowerArm};
     let neutral=add(shoulder,rotate({x:(rest?.x??(i?12:-12))*s,y:(rest?.y??(m.upperArm+m.lowerArm-8))*s},swing));
     if(usesReferenceBody(profile)){
@@ -601,7 +628,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
   const seatOffset=m.seatContactOffset?rotate({x:-bend*m.seatContactOffset.x*s,y:m.seatContactOffset.y*s},lean):{x:0,y:0};
-  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
+  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}
@@ -619,7 +646,7 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile):number 
   const m=rigMetrics(profile);let gap=0;
   for(const progress of [.17,.5,.83]){
     const at=(id:string)=>{const x=transformNumbers(a.transforms[id]!),y=transformNumbers(b.transforms[id]!);return x.map((n,i)=>lerp(n,y[i]!,progress));};
-    const end=(values:number[],length:number)=>({x:values[0]!-Math.sin(rad(values[2]!))*length*values[3]!,y:values[1]!+Math.cos(rad(values[2]!))*length*values[3]!});
+    const end=(values:number[],length:number)=>({x:values[0]!-Math.sin(rad(values[2]!))*length*(values[4]??values[3]!),y:values[1]!+Math.cos(rad(values[2]!))*length*(values[4]??values[3]!)});
     const origin=(values:number[])=>({x:values[0]!,y:values[1]!});
     for(const side of ['left','right'] as const){
       for(const part of ['arm','leg']){
@@ -656,7 +683,10 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     if(!enteringCarry(g))times.add(g.contactMs!+CARRY_TRANSITION_MS);
     if(g.releaseMs!==undefined)times.add(g.releaseMs-CARRY_TRANSITION_MS);
   }
-  for(const walk of plan.walks)for(const step of walkSteps(plan,profile,walk))for(const at of [step.startMs,step.endMs])times.add(at);
+  for(const walk of plan.walks)for(const step of walkSteps(plan,profile,walk)){
+    for(const at of [step.startMs,step.endMs])times.add(at);
+    if(usesReferenceBody(profile))for(const pose of SOURCE_WALK_POSES)times.add(step.startMs+(step.endMs-step.startMs)*pose.phase);
+  }
   // Audio RMS is a sampled signal: its boundaries are explicit, without blending across silence.
   for(const cue of activity.intervals)for(const at of [cue.startMs,cue.endMs]){times.add(at);times.add(at-.01);}
   const samples=[...new Set([...times].filter(t=>t>=0&&t<=plan.durationMs).map(t=>Number(t.toFixed(4))))].sort((a,b)=>a-b).map(t=>samplePerformance(plan,profile,t,activity));
