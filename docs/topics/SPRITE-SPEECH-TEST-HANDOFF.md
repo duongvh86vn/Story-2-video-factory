@@ -2,9 +2,11 @@
 
 ## Phạm vi source hiện có
 
-Base `e2b040e94546aa56cc2732dd0431f7f0345af02f`, source `a6b62fa7dda49c139ff6868fb3f6bf2dc960a7f4`, fixes `59af28e`. [Plan đầy đủ](../plans/2026-10-07-sprite-speech.md), [review accumulator](reviews/sprite-speech-source-review-v1.md). Fresh build core/Studio/Vite, test:typecheck, schema export exit 0; diff check clean. **24 ca mới NOT RUN:** importer 10, clock/player 10, API 4. Không thực chạy assertion, fixture, GSAP VM, browser/API/CLI, model acceptance, TTS/ASR, render hoặc MP4.
+Source tích hợp `3d9aab1532afd4ba44c63f1e471cfa6ce8558dc6`, correction hiện hành `818b03683c51586a6061277a1811aef4cc628904`, base `97a7c13a677f7f94d13144ecd0a3dacbc3445b65`. Foundation `a6b62fa`, fixes `59af28e` được giữ làm lịch sử. [Plan đầy đủ](../plans/2026-10-07-sprite-speech.md), [review tích hợp](reviews/sprite-speech-integration-source-review-v1.md), [findings foundation](reviews/sprite-speech-source-review-v1.md).
 
-Task 1–2 có source và CLI/API nhập/đọc/serve artwork. **Chưa nối vào spriteStage/story/canonical renderer, Director/catalog/Studio lựa chọn hoặc pipeline video.** Cảnh nhiều actor vẫn chặn dialogue như trước. Không dùng mốc này để nói video đã có lip-sync. Topic giữ `productionReady=false`, `productionRig=null`, và mọi ảnh miệng vẫn candidate.
+Fresh build core/Studio/Vite, test:typecheck, schema export exit 0; diff check clean. Một lỗi TS2339 trong khai báo test mới đã sửa bằng narrowing trước typecheck thành công. Full build/test:typecheck chạy lại sau correction exit 0; schemas không đổi. **42 ca NOT RUN:** importer 10, clock/player 10, API 5, stage 11, integration 6; 18 ca được thêm tính cả fix review. Không thực chạy assertion, fixture, GSAP VM, browser/API/CLI, model acceptance, TTS/ASR, render hoặc MP4.
+
+Task 1–3 có source: importer/player, actor-owned bindings trong spriteStage/story, canonical renderer/source checks, catalog/Director và Studio chọn phiên bản. Sourced dialogue chỉ được chấp nhận về contract khi đủ binding và clock; thiếu artwork/ownership/coverage phải chặn, không fallback sang rig. **Chưa có artwork miệng/chuyển động Lila/Karo mới được tạo hoặc duyệt, chưa có video nghiệm thu.** Review độc lập tích hợp tìm một Important vượt budget preview, đã sửa tại `818b036`; focused re-review xác nhận đã giải quyết, không có Critical/Important/Minor mới trong fix. Review foundation không phủ code mới. Topic giữ `productionReady=false`, `productionRig=null`, và final candidate vẫn chặn.
 
 ## Contract artwork
 
@@ -26,7 +28,19 @@ JSON <=2 MiB; PNG <=16 MiB, alpha, một page, <=64 Mpx; <=512 frame; tổng fra
 
 `compileActorMotion(..., speechContext?)` đặt artwork rest/open trong cùng crop/native anchor; dùng literal opacity calls trên timeline hiện có, không callback/timer hoặc fade hai cơ thể. Cap 6000 events bao gồm mouth changes; không truncate audio/schedule. Không có context thì markup/report/script giữ nhánh cũ. Report nói rõ binary-rest-open, `audio-activity` hoặc `segment-draft`, `phonemeLipSync=false`, candidate và acceptance pending.
 
-Direct low-level caller phải dùng variant đã load và schedule từ clock gốc. Parser/compiler không tự đọc/hash file audio hoặc chứng minh pixels; story/canonical integration Task 3 sẽ phải xây schedule từ narration/activity thật, không nhận schedule do model tự khai.
+Direct low-level caller phải dùng variant đã load và schedule từ clock gốc. Parser/compiler không tự đọc/hash file audio hoặc chứng minh pixels. Stage/story/canonical hiện xây schedule từ narration/activity nguồn, không nhận schedule do model tự khai. Kiểm hash audio bytes và waveform thật vẫn thuộc upstream/test toàn luồng.
+
+## Binding actor, stage và nguồn canonical
+
+Mỗi `cinematic.spriteStage.actors[].clips[].speech` là `{variantId,fingerprint,segmentIds}`: phiên bản ảnh miệng chính xác, danh sách ID cue gốc, không phải tên pose nói chuyện. Variant phải khớp native motion/version/actor/view/reference và được liên kết trong catalog của chính motion đó. `actorScene` khai báo diễn viên sở hữu cue; một cue không được thuộc nhiều diễn viên hoặc lặp ownership. Clip cần narration source reference có cùng cue ID và quote nằm trong text gốc, không mượn evidence từ lời người khác.
+
+Coverage là toàn bộ cue gốc sau khi clip vào cửa sổ shot, không chỉ đoạn speech activity có tiếng. Các clip native liền nhau có thể chia coverage cùng cue nếu không để gap; once/hide kết thúc sớm phải lỗi kể cả khoảng còn lại im lặng. Cue lạ, sai shot clock, binding thiếu/sai native/variant và quote không có trong narration phải lỗi. `createSpriteStageSpeechSampler` và compiler dùng snapshot và clock chung; seek ngược, boundary, đổi pose giữa câu phải cho cùng kết quả. Tổng stage cap 12000 events bao gồm miệng, không bỏ event để vừa cap.
+
+Verified loader đọc lại PNG/manifest và pixel constraints; staging giữ raw native/alternate PNG ở `assets/<hash>.png`. Canonical allowlist/source comparison và geometry provenance nhận cùng narration, speech activity và variants; geometry ghi actor/clip/variant, original cue IDs, audio/narration/activity/schedule hashes và synchronization level. Cache/lock phải phản ánh phiên bản miệng và nguồn narration/activity khi bound; đổi giọng hoặc nội dung không được reuse clock cũ. Hash metadata không chứng minh audio/art đã được duyệt.
+
+Director chỉ thấy các phiên bản catalog đã load/verify; source normalization dùng draft activity có nhãn để kiểm contract, không coi đó là voice evidence. Body capability không được đổi thành `kind: speech` để tránh thiếu ảnh miệng. `story-coverage` đòi actual mouth binding cùng owner/source, rồi timed canonical validation kiểm đủ visible cue. Missing/unsupported assets phải báo blocker, không dựng fallback hoặc mở final.
+
+Ownership hiện ở mức **một cue — một diễn viên được khai báo**, không tự nhận diện người nói từ WAV. Cue có nhiều lượt thoại trong cùng clock cần word/subcue timing cùng ownership chính xác; chưa hỗ trợ, không tự chia timestamp/đổi text để né giới hạn. Model test phải ghi rõ trường hợp này chưa đạt.
 
 ## CLI/API có source — chưa chạy
 
@@ -34,18 +48,26 @@ Node >=22.13/npm lockfile; source worktree `C:/Users/Duongvh-pc/.codex/worktrees
 
 ```powershell
 # Chỉ model test thực chạy trong project riêng, không dùng project người dùng.
-node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/sprite-speech-import.test.ts tests/sprite-speech-clock.test.ts tests/sprite-speech-api.test.ts
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/sprite-speech-import.test.ts tests/sprite-speech-clock.test.ts tests/sprite-speech-api.test.ts tests/sprite-speech-stage.test.ts tests/sprite-speech-integration.test.ts
 node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/sprite-motion-import.test.ts tests/sprite-motion-player.test.ts tests/sprite-motion-api.test.ts
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/cinematic-sprites.test.ts
 
 # Khi có artwork/registration thật và Studio project riêng:
 npm run cli -- speech-import <project> <alternate.png> --registration <registration.json>
 npm run cli -- speech-list <project>
+npm run cli -- speech-preview <project> <variant-id> <variant-fingerprint> --port 8850
 ```
 
-API `GET /api/projects/:name/motions/speech`, `POST .../speech/import` strict `{sheet,registration}` bên trong project và idle/mutation guard, `GET .../speech/:id/:fingerprint/sheet` chỉ serve bytes đã verify. Không nhận provider/account/query/path tùy ý; không gọi model/coordinator production, không mở final. Import hiện chưa có form Studio hoặc preview speech chạy audio thật.
+API `GET /api/projects/:name/motions/speech`, `POST .../speech/import` strict `{sheet,registration}` bên trong project và idle/mutation guard; `GET .../speech/:id/:fingerprint/sheet` và `.../native-sheet` chỉ serve bytes đã verify. `GET .../preview` là diagnostic rest/open, không audio. Không nhận provider/account/query/path tùy ý; local import không load coordinator production hoặc gọi model, không mở final.
+
+Studio motion library có form nhập variant riêng: PNG alternate và registration JSON cần nằm sẵn trong project input, điền đường dẫn project-relative. Đây chưa phải upload file từ ngoài project. Lưu lựa chọn library trước khi import vì import reload form. Mỗi native motion chỉ hiện mouth variants đúng phiên bản; lưu catalog dùng snapshot/revision, không âm thầm bỏ liên kết nếu listing lệch snapshot. Preview từng variant có nhãn `diagnostic-rest-open`, đổi miệng theo nửa frame trong một native cycle để xem artwork (loop preview tối đa 120s). Native-only preview vẫn hai cycle như trước; compiler cap 6000 không đổi. Preview **không có narration/audio**, không dùng các hash chẩn đoán làm receipt voice hoặc nghiệm thu.
 
 ## Nghiệm thu và công việc còn thiếu
 
 Model test ghi từng lệnh/exit/assertion/NOT RUN cùng commit; kiểm seek frame/clock ở cả chiều, native once/loop/end/rate, cue/audio silence, scoped GSAP/security, corruption/path/busy và regression helpers/fingerprints/legacy output. Real GSAP trong một callback kiểm plain opacity targets, chưa là browser render hoặc video acceptance.
 
-Tiếp tục Task 3: actor-owned cue/variant bindings, speaker ownership và visible slot coverage, source refs, staging/allowlist, camera/source comparison/cache/lock/resume, Director/catalog/Studio. Giữ blocker thiếu artwork/voice/unsupported props/handoff; không dựng rig fallback để tránh lỗi thoại. Cần actual mouth/motion art, gaze/expressions và acceptance receipts, rồi mới video script/WAV/story trong EN/VI/JA/KO. Kết quả V1 hoặc build không thay nghiệm thu đó.
+Các ca mới cần kiểm hai diễn viên không mượn cue; silence và seek hai chiều; đổi native pose giữa câu; gap nhỏ và once/hide; variant thuộc native khác; unknown/duplicate cue; source quote/clock mismatch; immutable/corrupt bytes; catalog exact linkage; Studio snapshot/form boundary; API diagnostic labels/native-sheet; 512-frame mouth preview budget và native duration không đổi; source staging/geometry/provenance/legacy equality. Fixture nhiều actor/event cap chỉ kiểm contract, không chứng minh diễn xuất đẹp, acoustic speaker identity hoặc video đúng kỳ vọng.
+
+Sau khi có artwork thật, test riêng source staging/allowlist, source comparison, cache/lock/resume/rebuild với đổi script/voice/actor/variant; review ảnh và xem toàn chu kỳ ở scale/crop video. Diagnostic preview và source tests không thay kiểm browser paint, màu, anatomy hoặc độ mượt.
+
+Tiếp tục công việc sản phẩm: actual mouth/motion art và các head views đúng nguồn; gaze/expressions; grips/props/contact/handoff; art/motion receipts; exact mixed-speaker word/subcue ownership; rồi video script/WAV/story trong EN/VI/JA/KO với giọng thật/local TTS. Giữ blocker thiếu artwork/voice/unsupported props/handoff và final candidate; không dùng fallback tránh lỗi thoại. Kết quả V1 hoặc build không thay nghiệm thu video ba input.

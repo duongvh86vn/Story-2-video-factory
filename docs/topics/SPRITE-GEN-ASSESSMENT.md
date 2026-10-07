@@ -19,7 +19,7 @@ Theo [changelog 2.39.0](https://github.com/aldegad/sprite-gen/blob/ece1ac8b4827d
 
 Source generation hiện có adapter Codex/Grok/OpenAI; xAI/OpenAI dùng endpoint cố định, chưa có adapter Gemini/9router trong source đã đọc. Nối 9router phải dựa vào API ảnh/video thực tế, không suy ra từ một chat model. [Provider docs](https://github.com/aldegad/sprite-gen/blob/ece1ac8b4827d5d8075592471aef5152c371cda9/docs/gen.md), [xAI transport](https://github.com/aldegad/sprite-gen/blob/ece1ac8b4827d5d8075592471aef5152c371cda9/sprite_gen/gen/xai.py).
 
-Chỉ clone và đọc source trong thư mục nghiên cứu local; không chạy code upstream, cài dependency, gọi generation hoặc test runtime. Chưa có bằng chứng Lila/Karo chuyển động đẹp hơn nhờ repo này. Cầu nối Factory đã có source import/player/canonical/catalog và nền tảng speech; tích hợp thoại đầy đủ, artwork được duyệt, props/handoff và video hoàn chỉnh còn phải làm.
+Chỉ clone và đọc source trong thư mục nghiên cứu local; không chạy code upstream, cài dependency, gọi generation hoặc test runtime. Chưa có bằng chứng Lila/Karo chuyển động đẹp hơn nhờ repo này. Cầu nối Factory đã có source import/player/canonical/catalog và speech binding theo actor/cue ở `3d9aab1`; [bàn giao 42 ca NOT RUN](SPRITE-SPEECH-TEST-HANDOFF.md), review source xác nhận Important preview budget đã sửa tại `818b036`, không có Critical/Important/Minor mới trong fix. Artwork được duyệt, diễn xuất/gaze, props/handoff, mixed-speaker timing và video hoàn chỉnh còn phải làm; source không thay bằng chứng animation thực.
 
 ## Kết luận và bản source
 
