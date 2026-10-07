@@ -19,7 +19,11 @@ Follow-up verified source paths: creative.ts:114 has complete board; artwork-rep
 - First test:typecheck exit1: declaration-only optional-number mutations, unsupported part.handleAnchor, missing action.target.modelId and geometry union narrowing. Fixed the fixture to actual contracts; fresh test:typecheck exit0. All thirteen callbacks NOT RUN.
 - Schema export exit0: shared Shot/Storyboard sourceSpan, view-acting-clock v2 and new gesture-source-span; persisted voice activity/source speech clock and original audio unchanged.
 - Lần export lại sau fix exit1 do filesystem UNKNOWN/open shot.schema.json; kiểm tra file vẫn tồn tại, Archive, rồi retry export exit0. Không thay schema contract để né lỗi I/O.
-- After both P2 fixes, resource policy and deeper declarations: full npm run build exit0 (core/studio TypeScript and Vite); fresh npm run test:typecheck exit0; schema retry exit0; whitespace exit0. Bounded source follow-up PASS. Publication SHA pending.
+- After both P2 fixes, resource policy and deeper declarations: full npm run build exit0 (core/studio TypeScript and Vite); fresh npm run test:typecheck exit0; schema retry exit0; whitespace/staged whitespace exit0. Bounded source follow-up PASS.
 - No image generation, bitmap edits, sampled pose frames, evaluator/GSAP/browser/API/model/voice/audio/pipeline/render/MP4 executed. Original PNG hashes/bytes unchanged by this source work. No fake physical contact: source reach/recover describes arm keypose motion only.
 
 productionReady=false/productionRig=null and final source/identity/voice/target/sync gates remain. [Full commands/environment/remaining product scope](../NATIVE-SOURCE-GESTURE-HANDOFF.md).
+
+## Published source checkpoint
+
+`44b221f0dc3d41853678efdb5c46bdcacae41faf` — `Preserve native actor hand gestures across continuous shots`, branch `codex/prehistoric-life`, pushed to the authorized Story-2-video-factory repository. Actual git rev-parse HEAD and git ls-remote branch SHA matched; tracked changes clean after push. Owned26 files only, no .env/PNG/SVG or unrelated WIP staged. This checkpoint is source/build/review evidence only. This later record update contains documentation only; no additional runtime claim.
