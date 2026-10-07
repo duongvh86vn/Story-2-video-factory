@@ -140,12 +140,14 @@ test('paired actors speak only their assigned source cue windows and preserve or
 
 test('canonical cinematic primary and supporting mouths select independent native views with actor-owned reports',async t=>{
   const f=await creativeFixture(await temporary(t)),s=f.shot,c=s.cinematic!;
+  const shiftMs=1000-s.startMs;
   s.startMs=1000;s.endMs=6000;s.narrationSegmentIds=['lila-line','karo-line'];c.propBindings=[];
+  s.visualization!.events=s.visualization!.events.map(e=>({...e,startMs:e.startMs+shiftMs,endMs:e.endMs+shiftMs}));
   const n:Narration={mode:'wav',durationMs:6000,words:[],segments:[{id:'lila-line',startMs:1000,endMs:2900,text:'Lila shares.'},{id:'karo-line',startMs:3100,endMs:6000,text:'Karo thanks her.'}]};
   const definitions=(['lila','karo'] as const).map((actor,i)=>{
     const {profile,plan}=candidate(actor,i?'three-quarter-left':'three-quarter-right');
     const character=ActorDefinitionSchema.parse({id:actor,name:actor,role:'illustration',kind:'stick-man',identity:'illustrative',sourceRefs:[{kind:'narration',segmentId:n.segments[i]!.id,quote:n.segments[i]!.text}],appearance:profile.appearance});
-    plan.id=s.id;plan.durationMs=5000;plan.expressions[0]!.endMs=5000;plan.stage={width:1280,height:720,groundY:650};plan.root={x:i?800:380,y:650};plan.scale=.8;
+    plan.id=s.id;plan.durationMs=5000;plan.expressions[0]!.endMs=5000;plan.stage={width:1280,height:720,groundY:540};plan.root={x:i?800:380,y:540};plan.scale=.8;
     return {character,plan};
   });
   c.performance=definitions[0]!.plan;c.actorScene=ActorSceneSchema.parse({primary:definitions[0]!.character,speakingSegmentIds:['lila-line'],supporting:[{character:definitions[1]!.character,performance:definitions[1]!.plan,actions:[],speakingSegmentIds:['karo-line']}]});
