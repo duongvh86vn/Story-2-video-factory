@@ -1,0 +1,967 @@
+{
+  "version": "forest-fixed-view-mouth-1",
+  "fingerprint": "7cc0cfba35d3996a656ee7ace658a64f8ed11562db7a6b93169b5b1ec91bc720",
+  "productionReady": false,
+  "approved": false,
+  "kind": "static-native-png-readings-and-manual-mouth-svg-artwork",
+  "measurements": [
+    {
+      "actor": "lila",
+      "view": "three-quarter-right",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "width": 1173,
+      "height": 1341,
+      "mouth": {
+        "sourceHash": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+        "sourceSize": [
+          1173,
+          1341
+        ],
+        "kind": "skin-strip",
+        "bounds": {
+          "x": 634,
+          "y": 355,
+          "width": 126,
+          "height": 82
+        },
+        "clip": "M639 373C648 360 670 361 678 371C698 369 727 367 748 371C757 375 756 389 748 396C733 425 700 432 676 409C658 398 648 389 639 385Z",
+        "top": [
+          {
+            "x": 655,
+            "y": 377
+          },
+          {
+            "x": 680,
+            "y": 405
+          },
+          {
+            "x": 725,
+            "y": 401
+          },
+          {
+            "x": 746,
+            "y": 381
+          }
+        ],
+        "depth": 30,
+        "lift": 12,
+        "stroke": 5,
+        "strip": {
+          "x": 634,
+          "y": 357,
+          "width": 126,
+          "height": 8
+        }
+      },
+      "readings": [
+        {
+          "y": 355,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 358,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 361,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 364,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 367,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 370,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 373,
+          "ink": [
+            657,
+            665
+          ],
+          "teeth": null
+        },
+        {
+          "y": 376,
+          "ink": [
+            651,
+            662
+          ],
+          "teeth": null
+        },
+        {
+          "y": 379,
+          "ink": [
+            648,
+            747
+          ],
+          "teeth": null
+        },
+        {
+          "y": 382,
+          "ink": [
+            658,
+            745
+          ],
+          "teeth": null
+        },
+        {
+          "y": 385,
+          "ink": [
+            663,
+            743
+          ],
+          "teeth": null
+        },
+        {
+          "y": 388,
+          "ink": [
+            667,
+            739
+          ],
+          "teeth": null
+        },
+        {
+          "y": 391,
+          "ink": [
+            673,
+            735
+          ],
+          "teeth": null
+        },
+        {
+          "y": 394,
+          "ink": [
+            680,
+            729
+          ],
+          "teeth": null
+        },
+        {
+          "y": 397,
+          "ink": [
+            689,
+            720
+          ],
+          "teeth": null
+        },
+        {
+          "y": 400,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 403,
+          "ink": [
+            759,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 406,
+          "ink": [
+            756,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 409,
+          "ink": [
+            753,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 412,
+          "ink": [
+            749,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 415,
+          "ink": [
+            745,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 418,
+          "ink": [
+            741,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 421,
+          "ink": [
+            737,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 424,
+          "ink": [
+            732,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 427,
+          "ink": [
+            727,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 430,
+          "ink": [
+            721,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 433,
+          "ink": [
+            714,
+            759
+          ],
+          "teeth": null
+        },
+        {
+          "y": 436,
+          "ink": [
+            706,
+            759
+          ],
+          "teeth": null
+        }
+      ],
+      "caveat": "Dark readings can include face/hair/beard boundaries; row extents are measurements, not inferred anatomical mouth bounds."
+    },
+    {
+      "actor": "lila",
+      "view": "three-quarter-left",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "width": 1024,
+      "height": 1536,
+      "mouth": {
+        "sourceHash": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+        "sourceSize": [
+          1024,
+          1536
+        ],
+        "kind": "skin-strip",
+        "bounds": {
+          "x": 375,
+          "y": 382,
+          "width": 103,
+          "height": 75
+        },
+        "clip": "M379 399C396 396 431 393 453 383C464 382 474 390 468 401C454 433 423 448 402 434C388 426 377 414 379 399Z",
+        "top": [
+          {
+            "x": 386,
+            "y": 408
+          },
+          {
+            "x": 408,
+            "y": 432
+          },
+          {
+            "x": 439,
+            "y": 420
+          },
+          {
+            "x": 459,
+            "y": 395
+          }
+        ],
+        "depth": 24,
+        "lift": 8,
+        "stroke": 5,
+        "strip": {
+          "x": 375,
+          "y": 382,
+          "width": 103,
+          "height": 6
+        }
+      },
+      "readings": [
+        {
+          "y": 382,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 385,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 388,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 391,
+          "ink": [
+            457,
+            462
+          ],
+          "teeth": null
+        },
+        {
+          "y": 394,
+          "ink": [
+            456,
+            464
+          ],
+          "teeth": null
+        },
+        {
+          "y": 397,
+          "ink": [
+            452,
+            460
+          ],
+          "teeth": null
+        },
+        {
+          "y": 400,
+          "ink": [
+            448,
+            457
+          ],
+          "teeth": null
+        },
+        {
+          "y": 403,
+          "ink": [
+            443,
+            453
+          ],
+          "teeth": null
+        },
+        {
+          "y": 406,
+          "ink": [
+            384,
+            450
+          ],
+          "teeth": null
+        },
+        {
+          "y": 409,
+          "ink": [
+            384,
+            445
+          ],
+          "teeth": null
+        },
+        {
+          "y": 412,
+          "ink": [
+            387,
+            440
+          ],
+          "teeth": null
+        },
+        {
+          "y": 415,
+          "ink": [
+            391,
+            434
+          ],
+          "teeth": null
+        },
+        {
+          "y": 418,
+          "ink": [
+            397,
+            426
+          ],
+          "teeth": null
+        },
+        {
+          "y": 421,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 424,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 427,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 430,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 433,
+          "ink": null,
+          "teeth": null
+        },
+        {
+          "y": 436,
+          "ink": [
+            375,
+            377
+          ],
+          "teeth": null
+        },
+        {
+          "y": 439,
+          "ink": [
+            375,
+            380
+          ],
+          "teeth": null
+        },
+        {
+          "y": 442,
+          "ink": [
+            375,
+            384
+          ],
+          "teeth": null
+        },
+        {
+          "y": 445,
+          "ink": [
+            375,
+            388
+          ],
+          "teeth": null
+        },
+        {
+          "y": 448,
+          "ink": [
+            375,
+            393
+          ],
+          "teeth": null
+        },
+        {
+          "y": 451,
+          "ink": [
+            375,
+            398
+          ],
+          "teeth": null
+        },
+        {
+          "y": 454,
+          "ink": [
+            375,
+            403
+          ],
+          "teeth": null
+        }
+      ],
+      "caveat": "Dark readings can include face/hair/beard boundaries; row extents are measurements, not inferred anatomical mouth bounds."
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "width": 910,
+      "height": 1729,
+      "mouth": {
+        "sourceHash": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+        "sourceSize": [
+          910,
+          1729
+        ],
+        "kind": "native-rim",
+        "bounds": {
+          "x": 525,
+          "y": 447,
+          "width": 112,
+          "height": 63
+        },
+        "clip": "M528 449C557 456 598 457 633 449C630 469 611 500 584 502C558 505 536 478 528 449Z",
+        "top": [
+          {
+            "x": 532,
+            "y": 451
+          },
+          {
+            "x": 558,
+            "y": 458
+          },
+          {
+            "x": 606,
+            "y": 458
+          },
+          {
+            "x": 629,
+            "y": 451
+          }
+        ],
+        "depth": 62,
+        "lift": 0,
+        "stroke": 3,
+        "interior": "#211008"
+      },
+      "readings": [
+        {
+          "y": 447,
+          "ink": [
+            525,
+            636
+          ],
+          "teeth": null
+        },
+        {
+          "y": 450,
+          "ink": [
+            525,
+            633
+          ],
+          "teeth": null
+        },
+        {
+          "y": 453,
+          "ink": [
+            526,
+            632
+          ],
+          "teeth": [
+            535,
+            621
+          ]
+        },
+        {
+          "y": 456,
+          "ink": [
+            526,
+            631
+          ],
+          "teeth": [
+            536,
+            620
+          ]
+        },
+        {
+          "y": 459,
+          "ink": [
+            526,
+            630
+          ],
+          "teeth": [
+            538,
+            619
+          ]
+        },
+        {
+          "y": 462,
+          "ink": [
+            527,
+            629
+          ],
+          "teeth": [
+            546,
+            614
+          ]
+        },
+        {
+          "y": 465,
+          "ink": [
+            528,
+            628
+          ],
+          "teeth": [
+            558,
+            606
+          ]
+        },
+        {
+          "y": 468,
+          "ink": [
+            529,
+            627
+          ],
+          "teeth": null
+        },
+        {
+          "y": 471,
+          "ink": [
+            531,
+            626
+          ],
+          "teeth": null
+        },
+        {
+          "y": 474,
+          "ink": [
+            533,
+            624
+          ],
+          "teeth": null
+        },
+        {
+          "y": 477,
+          "ink": [
+            535,
+            622
+          ],
+          "teeth": null
+        },
+        {
+          "y": 480,
+          "ink": [
+            538,
+            620
+          ],
+          "teeth": null
+        },
+        {
+          "y": 483,
+          "ink": [
+            541,
+            618
+          ],
+          "teeth": null
+        },
+        {
+          "y": 486,
+          "ink": [
+            544,
+            636
+          ],
+          "teeth": null
+        },
+        {
+          "y": 489,
+          "ink": [
+            548,
+            636
+          ],
+          "teeth": null
+        },
+        {
+          "y": 492,
+          "ink": [
+            552,
+            636
+          ],
+          "teeth": null
+        },
+        {
+          "y": 495,
+          "ink": [
+            557,
+            634
+          ],
+          "teeth": null
+        },
+        {
+          "y": 498,
+          "ink": [
+            525,
+            631
+          ],
+          "teeth": null
+        },
+        {
+          "y": 501,
+          "ink": [
+            525,
+            628
+          ],
+          "teeth": null
+        },
+        {
+          "y": 504,
+          "ink": [
+            527,
+            625
+          ],
+          "teeth": null
+        },
+        {
+          "y": 507,
+          "ink": [
+            531,
+            621
+          ],
+          "teeth": null
+        }
+      ],
+      "caveat": "Dark readings can include face/hair/beard boundaries; row extents are measurements, not inferred anatomical mouth bounds."
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "width": 910,
+      "height": 1729,
+      "mouth": {
+        "sourceHash": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+        "sourceSize": [
+          910,
+          1729
+        ],
+        "kind": "native-rim",
+        "bounds": {
+          "x": 333,
+          "y": 455,
+          "width": 113,
+          "height": 65
+        },
+        "clip": "M336 458C369 467 412 468 443 458C441 482 421 510 392 514C365 518 346 493 336 458Z",
+        "top": [
+          {
+            "x": 340,
+            "y": 461
+          },
+          {
+            "x": 365,
+            "y": 469
+          },
+          {
+            "x": 416,
+            "y": 469
+          },
+          {
+            "x": 439,
+            "y": 461
+          }
+        ],
+        "depth": 59,
+        "lift": 0,
+        "stroke": 3,
+        "interior": "#211008"
+      },
+      "readings": [
+        {
+          "y": 455,
+          "ink": [
+            333,
+            445
+          ],
+          "teeth": null
+        },
+        {
+          "y": 458,
+          "ink": [
+            333,
+            445
+          ],
+          "teeth": null
+        },
+        {
+          "y": 461,
+          "ink": [
+            334,
+            445
+          ],
+          "teeth": null
+        },
+        {
+          "y": 464,
+          "ink": [
+            334,
+            445
+          ],
+          "teeth": [
+            342,
+            437
+          ]
+        },
+        {
+          "y": 467,
+          "ink": [
+            335,
+            445
+          ],
+          "teeth": [
+            344,
+            429
+          ]
+        },
+        {
+          "y": 470,
+          "ink": [
+            336,
+            445
+          ],
+          "teeth": [
+            345,
+            432
+          ]
+        },
+        {
+          "y": 473,
+          "ink": [
+            337,
+            445
+          ],
+          "teeth": [
+            348,
+            427
+          ]
+        },
+        {
+          "y": 476,
+          "ink": [
+            339,
+            443
+          ],
+          "teeth": [
+            353,
+            419
+          ]
+        },
+        {
+          "y": 479,
+          "ink": [
+            341,
+            442
+          ],
+          "teeth": [
+            363,
+            408
+          ]
+        },
+        {
+          "y": 482,
+          "ink": [
+            343,
+            440
+          ],
+          "teeth": null
+        },
+        {
+          "y": 485,
+          "ink": [
+            345,
+            439
+          ],
+          "teeth": null
+        },
+        {
+          "y": 488,
+          "ink": [
+            347,
+            437
+          ],
+          "teeth": null
+        },
+        {
+          "y": 491,
+          "ink": [
+            348,
+            435
+          ],
+          "teeth": null
+        },
+        {
+          "y": 494,
+          "ink": [
+            350,
+            432
+          ],
+          "teeth": null
+        },
+        {
+          "y": 497,
+          "ink": [
+            352,
+            430
+          ],
+          "teeth": null
+        },
+        {
+          "y": 500,
+          "ink": [
+            354,
+            427
+          ],
+          "teeth": null
+        },
+        {
+          "y": 503,
+          "ink": [
+            357,
+            423
+          ],
+          "teeth": null
+        },
+        {
+          "y": 506,
+          "ink": [
+            333,
+            420
+          ],
+          "teeth": null
+        },
+        {
+          "y": 509,
+          "ink": [
+            333,
+            445
+          ],
+          "teeth": null
+        },
+        {
+          "y": 512,
+          "ink": [
+            333,
+            445
+          ],
+          "teeth": null
+        },
+        {
+          "y": 515,
+          "ink": [
+            333,
+            445
+          ],
+          "teeth": null
+        },
+        {
+          "y": 518,
+          "ink": [
+            336,
+            444
+          ],
+          "teeth": null
+        }
+      ],
+      "caveat": "Dark readings can include face/hair/beard boundaries; row extents are measurements, not inferred anatomical mouth bounds."
+    }
+  ]
+}

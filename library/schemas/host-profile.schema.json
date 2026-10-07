@@ -97,6 +97,10 @@
                 "three-quarter-left"
               ]
             },
+            "bodySpeech": {
+              "type": "string",
+              "const": "registered-mouth-v1"
+            },
             "sourceColour": {
               "type": "string",
               "const": "original-rgb-v2"

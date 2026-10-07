@@ -2,6 +2,7 @@ import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {bodyViewClothingContours} from './body-view-contours.js';
 import {bodyViewLeftRegistration} from './body-view-left-registration.js';
+import {bodyViewMouthSvg,bodyViewMouthDescription} from './body-view-mouth.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
 export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-2';
@@ -64,9 +65,10 @@ export function bodyViewHeadCalibration(profile:HostProfile){
 }
 export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
   const c=registeredBodyView(profile);
-  // Keep the complete authored happy face together. Unregistered blink/lip or
-  // expression overlays must not paint over this angle or silently use front.
-  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath></defs><g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#source-head-clip)"><image width="${c.width}" height="${c.height}" href="${imageUrl(c.file,c.sha256)}"/></g></g></g>`;
+  // Whole native face and optional mouth-only art share one uniform attachment.
+  // Unregistered blink/gaze/expression/turn overlays remain blocked.
+  const url=imageUrl(c.file,c.sha256),mouth=bodyViewMouthSvg(profile,{sha256:c.sha256,width:c.width,height:c.height,url});
+  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath></defs><g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#source-head-clip)"><image width="${c.width}" height="${c.height}" href="${url}"/>${mouth}</g></g></g>`;
 }
 export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
   const c=registeredBodyView(profile);
@@ -74,7 +76,7 @@ export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sh
     torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})" mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>`};
 }
 export const bodyViewDescription={version:BODY_VIEW_REGISTRATION_VERSION,artworkVersion:BODY_VIEW_VERSION,
-  sources:bodyViewRegistrations,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations}),
+  sources:bodyViewRegistrations,mouthCandidate:bodyViewMouthDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,mouth:bodyViewMouthDescription.fingerprint}),
   status:'developer-landmark-and-layer-candidate',productionReady:false,approved:false,
   method:'fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp',
-  limitations:['identity/proportion/mask review','only happy silent fixed-view poses','rigid garment; no walking/seating/cloth follow for this view','no continuous body/head turn','no motion acceptance']};
+  limitations:['identity/proportion/mask review','happy fixed view; speech requires explicit unapproved registered-mouth-v1 candidate','rigid garment; no walking/seating/cloth follow for this view','no continuous body/head turn or target gaze','no motion acceptance']};
