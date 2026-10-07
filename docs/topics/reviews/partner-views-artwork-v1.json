@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "scope": "static-authored-PNG-inspection-document",
+  "sources": [
+    {
+      "file": "lila-three-quarter-right-v2",
+      "path": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "width": 1173,
+      "height": 1341
+    },
+    {
+      "file": "lila-three-quarter-left-v2",
+      "path": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "width": 1024,
+      "height": 1536
+    },
+    {
+      "file": "karo-three-quarter-right-v1",
+      "path": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "width": 910,
+      "height": 1729
+    },
+    {
+      "file": "karo-three-quarter-left-v1",
+      "path": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "width": 910,
+      "height": 1729
+    }
+  ],
+  "figure": {
+    "path": "docs/topics/reviews/partner-views-artwork-v1.png",
+    "sha256": "7ab4dce16c92f69e666eb0a053bbaba627a383c839896922875fab99088fe7f3"
+  },
+  "approved": false,
+  "productionReady": false,
+  "bodyEvaluatorUsed": false
+}

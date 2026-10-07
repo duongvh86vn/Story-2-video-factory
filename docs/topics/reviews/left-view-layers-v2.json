@@ -1,0 +1,39 @@
+{
+  "scope": "static-native-SVG-layer-authoring",
+  "records": [
+    {
+      "actor": "lila",
+      "source": {
+        "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+        "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+        "width": 1024,
+        "height": 1536
+      },
+      "registration": "eed530c48850ab5ad46fccfaed1a04d6d4bd018bf2df8219b0402dfc9be43d30",
+      "figure": {
+        "path": "docs/topics/reviews/left-view-layers-lila-v2.png",
+        "sha256": "8a331d77e96c4d56533f0a6588b0ebd373368e5c965ec9c98191f477be3e6538"
+      },
+      "approved": false,
+      "productionReady": false,
+      "bodyEvaluatorUsed": false
+    },
+    {
+      "actor": "karo",
+      "source": {
+        "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+        "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+        "width": 910,
+        "height": 1729
+      },
+      "registration": "1b2def64dfaa49a099489dd3ebaf048e621214fca323447cb325ddffd2c4d4e9",
+      "figure": {
+        "path": "docs/topics/reviews/left-view-layers-karo-v2.png",
+        "sha256": "b7c0cca0e8cad8c450c9cbf780c01f93ce1d798a59d4be15b1f499896135b0fc"
+      },
+      "approved": false,
+      "productionReady": false,
+      "bodyEvaluatorUsed": false
+    }
+  ]
+}
