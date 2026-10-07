@@ -44,6 +44,7 @@ import { PROP_BINDING_VERSION } from '../director/props.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
 import {topicFingerprint,requireTopicProductionReady} from '../topics/prehistoric-life.js';
 import {assertNoCandidateSpriteActors} from '../motion/scene-validation.js';
+import {loadSpriteMotionCatalog} from '../motion/catalog.js';
 
 export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; retryModelErrors?:boolean; sceneRepairAttempts?:number; onProgress?:(state:ProjectState)=>void; }
 const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
@@ -66,10 +67,13 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
   const inputContents=await Promise.all(relativeFiles.map(async file=>[file,await digest(file)]));
   const repo=await findRepoRoot(),seriesFiles=config.project.series?await walk(safePath(path.join(repo,'series'),config.project.series)):[];
   const series=await Promise.all(seriesFiles.sort().map(async file=>[path.relative(root,file),hash(await fs.readFile(file))]));
+  const catalog=config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'?await loadSpriteMotionCatalog(root):undefined;
+  if(config.presentation.actor_renderer==='sprite'&&!catalog?.entries.length)throw new Error('needs-motion-library: register imported actor movements before image motion production');
   const cinematic=config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,artwork:ARTWORK_RENDER_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,seats:SEAT_SUPPORT_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
-      authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null}:undefined;
+      authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null,
+      ...(catalog&&(catalog.revision!==null||config.presentation.actor_renderer==='sprite')?{spriteMotionCatalog:catalog.snapshotHash}:{})}:undefined;
   const vocabularyRevision=config.content.mode==='narrated-explainer'&&await exists(path.join(root,'work/narration.json'))
     ?explanationVocabularyRevision(await readJson(path.join(root,'work/narration.json'),NarrationSchema)):undefined;
   const airborneRevision=config.content.mode==='narrated-explainer'&&config.presentation.character_mode==='actors'&&await exists(path.join(root,'work/narration.json'))

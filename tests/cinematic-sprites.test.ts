@@ -64,6 +64,15 @@ test('seven-argument legacy API cannot silently ignore a sprite plan; normal rig
   assert.ok('rigHash' in rigResult.geometry);assert.match(rigResult.files.files[0]!.content,/id="performer"/);
 });
 
+test('explicit movement method rejects the other renderer instead of silently falling back',()=>{
+  const f=fixture(),plan=f.shot.cinematic!.spriteStage;
+  f.config.presentation.actor_renderer='rig';assert.throws(()=>renderCinematic(f.shot,f.profile,f.rig,activity(),f.config,undefined,undefined,f.motions),/rig selection/);
+  f.config.presentation.actor_renderer='sprite';delete f.shot.cinematic!.spriteStage;
+  assert.throws(()=>renderCinematic(f.shot,f.profile,f.rig,activity(),f.config),/cannot fall back/);
+  f.shot.cinematic!.spriteStage=plan;
+  assert.ok('kind' in renderCinematic(f.shot,f.profile,f.rig,activity(),f.config,undefined,undefined,f.motions).geometry);
+});
+
 test('two sprites share world clock with distinct source identity and actual frame bounds',()=>{
   const f=fixture(),c=f.shot.cinematic!,character=structuredClone(c.actorScene!.primary!);character.id='karo';character.name='Karo';
   const motion=structuredClone(f.motion);motion.id='karo-idle';motion.actorId='karo';f.motions.set(spriteMotionKey(motion.id,motion.fingerprint),motion);

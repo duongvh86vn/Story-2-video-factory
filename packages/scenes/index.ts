@@ -36,6 +36,7 @@ import {referenceHeadAssets,readReferenceHeadAsset,referenceHeadDescription} fro
 import {referenceBodyAssets,referenceBodyDescription} from '../animation/forest-body-art.js';
 import {loadSpriteSceneMotions,spriteSceneSheetBytes} from '../motion/scene-source.js';
 import {SPRITE_SCENE_VERSION} from '../motion/scene-validation.js';
+import {validateLoadedSpriteCatalog} from '../motion/catalog.js';
 export { validateSceneFiles, validateSceneScript, SCENE_CSP } from './security.js';
 async function cinematicBackground(root:string,shot:Shot):Promise<string|undefined>{
   const id=shot.cinematic?.environmentAssetId;if(!id)return undefined;
@@ -68,6 +69,7 @@ async function stageAssets(root:string,dir:string,shot:Shot,manifest:AssetManife
   const selected=manifest.assets.filter(asset=>asset.shotIds.includes(shot.id) || shot.assetNeeds.some(need=>need.id===asset.id));
   const refs:RecipeAsset[]=[], hashes:Record<string,string>={};
   const spriteMotions=await loadSpriteSceneMotions(root,shot),spritePaths=new Set<string>();
+  if(spriteMotions){const catalogHash=await validateLoadedSpriteCatalog(root,shot,spriteMotions);if(catalogHash!==null)hashes['sprite-catalog']=catalogHash;}
   for(const [key,motion] of spriteMotions??[]){
     const relative=`assets/${motion.sheet.hash}.png`,bytes=await spriteSceneSheetBytes(root,motion);
     hashes[relative]=motion.sheet.hash;hashes[`sprite-descriptor:${key}`]=hash(motion);spritePaths.add(relative);

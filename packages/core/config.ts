@@ -37,6 +37,7 @@ export const ConfigSchema = z.object({
     reuse_rig: z.literal(true).default(true), identity_locked: z.literal(true).default(true) }).strict().default({}),
   presentation: z.object({ mode: z.enum(['diagram','story-cinematic']).default('diagram'),
     character_mode:z.enum(['actors','presenter']).default('presenter'),
+    actor_renderer:z.enum(['rig','sprite']).optional(),
     design_brief:z.string().max(6000).optional(),
     minimum_host_speech_visibility: z.number().min(0).max(1).default(0.70),
     maximum_host_absence_seconds: z.number().nonnegative().default(6),
@@ -86,6 +87,8 @@ export async function loadConfig(projectRoot: string, projectOverrides: Record<s
   config.voice=cleanVoiceSettings(config.voice);
   if(config.content.mode==='legacy'&&['idea','story'].includes(config.input.mode))throw new Error('Story authoring requires narrated-explainer content; select the modern story pipeline.');
   if(config.topic.id && (config.content.mode!=='narrated-explainer'||config.presentation.mode!=='story-cinematic'||config.presentation.character_mode!=='actors'))throw new Error('A story topic requires story-cinematic actors.');
+  if(config.presentation.actor_renderer==='sprite'&&(config.content.mode!=='narrated-explainer'||config.presentation.mode!=='story-cinematic'||config.presentation.character_mode!=='actors'))
+    throw new z.ZodError([{code:'custom',path:['presentation','actor_renderer'],message:'Image motion requires narrated story-cinematic actors.'}]);
   if(config.content.mode==='legacy'&&config.presentation.mode==='story-cinematic')
     throw new z.ZodError([{code:'custom',path:['presentation','mode'],message:'story-cinematic requires narrated-explainer content; choose diagram for the legacy renderer.'}]);
   if (config.rendering.final.width % 2 || config.rendering.final.height % 2) throw new Error('Video dimensions must be even for H.264');

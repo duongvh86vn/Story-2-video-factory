@@ -10,7 +10,8 @@ import { LANGUAGE_TAG, primaryLanguage } from '../core/languages.js';
 
 export const PresentationPatchSchema = z.object({ mode: ConfigSchema.shape.presentation.removeDefault().shape.mode.removeDefault().optional(),
   character_mode:ConfigSchema.shape.presentation.removeDefault().shape.character_mode.removeDefault().optional(),
-  design_brief:ConfigSchema.shape.presentation.removeDefault().shape.design_brief }).strict().refine(patch=>patch.mode!==undefined||patch.character_mode!==undefined||patch.design_brief!==undefined,'Choose a presentation mode, character mode or supply a design brief');
+  actor_renderer:ConfigSchema.shape.presentation.removeDefault().shape.actor_renderer,
+  design_brief:ConfigSchema.shape.presentation.removeDefault().shape.design_brief }).strict().refine(patch=>patch.mode!==undefined||patch.character_mode!==undefined||patch.actor_renderer!==undefined||patch.design_brief!==undefined,'Choose presentation, character, movement renderer or supply a design brief');
 export const CreativeModelPatchSchema=ModelSettingsSchema.pick({provider:true,model:true,base_url:true,api_key_env:true,temperature:true,timeout_ms:true,vision:true}).partial().strict();
 export const SettingsPatchSchema = z.object({ revision: z.string().optional(),
   input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']), story: z.enum(['input/story.txt','input/story.md']).optional(), idea: z.enum(['input/idea.txt','input/idea.md']).optional(), script: z.enum(['input/script.txt','input/script.md']).optional() }).strict().optional(),

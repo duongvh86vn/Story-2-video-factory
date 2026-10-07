@@ -187,10 +187,12 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):ReturnType<typeof renderRigCinematic>;
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background:string|undefined,narration:Narration|undefined,motions:ReadonlyMap<string,ActorMotion>|undefined):ReturnType<typeof renderRigCinematic>|ReturnType<typeof renderSpriteScene>;
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,motions?:ReadonlyMap<string,ActorMotion>){
+  const cast=shot.cinematic?.actorScene,renderer=config.presentation.actor_renderer;
+  if(renderer==='rig'&&shot.cinematic?.spriteStage)throw new Error(`${shot.id}: rig selection cannot render an image-motion stage`);
+  if(renderer==='sprite'&&(cast?.primary||cast?.supporting.length)&&!shot.cinematic?.spriteStage)throw new Error(`${shot.id}: needs-motion-library: image motion cannot fall back to skeletal actors`);
   if(shot.cinematic?.spriteStage){
     if(!motions)throw new Error(`${shot.id}: needs-sprite-motion-context: canonical rendering requires verified sprite descriptors`);
     return renderSpriteScene(shot,profile,config,motions,background);
   }
   return renderRigCinematic(shot,profile,rig,activity,config,background,narration);
 }
-

@@ -81,6 +81,13 @@
               ],
               "default": "presenter"
             },
+            "actor_renderer": {
+              "type": "string",
+              "enum": [
+                "rig",
+                "sprite"
+              ]
+            },
             "design_brief": {
               "type": "string",
               "maxLength": 6000

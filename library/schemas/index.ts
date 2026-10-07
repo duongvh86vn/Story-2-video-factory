@@ -13,6 +13,7 @@ import { ConfigSchema } from '../../packages/core/config.js';
 import { GeneratedDraftSchema, ScriptGenerationReportSchema } from '../../packages/orchestrator/script-generation.js';
 import {ActorMotionSchema,MotionRegistrationSchema,SpriteClipSchema} from '../../packages/motion/schemas.js';
 import {SpriteStageSchema} from '../../packages/motion/stage-schemas.js';
+import {SpriteMotionCatalogSchema} from '../../packages/motion/catalog-schemas.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary = {
@@ -26,6 +27,7 @@ export const schemaLibrary = {
   'generated-script':GeneratedDraftSchema,'script-generation':ScriptGenerationReportSchema,
   'actor-motion':ActorMotionSchema,'actor-motion-registration':MotionRegistrationSchema,'sprite-clip':SpriteClipSchema,
   'sprite-stage':SpriteStageSchema,
+  'sprite-motion-catalog':SpriteMotionCatalogSchema,
 };
 
 export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(import.meta.url))): Promise<void> {

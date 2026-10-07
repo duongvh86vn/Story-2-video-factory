@@ -5,6 +5,7 @@ import {loadActorMotion} from './import.js';
 import type {ActorMotion} from './schemas.js';
 import {spriteMotionKey} from './stage.js';
 import {validateSpriteScenePlan} from './scene-validation.js';
+import {validateLoadedSpriteCatalog} from './catalog.js';
 
 export async function loadSpriteSceneMotions(root:string,shot:Shot):Promise<ReadonlyMap<string,ActorMotion>|undefined>{
   if(!shot.cinematic?.spriteStage)return undefined;
@@ -13,6 +14,7 @@ export async function loadSpriteSceneMotions(root:string,shot:Shot):Promise<Read
     const key=spriteMotionKey(clip.motionId,clip.fingerprint);
     if(!motions.has(key))motions.set(key,await loadActorMotion(root,clip.motionId,clip.fingerprint));
   }
+  await validateLoadedSpriteCatalog(root,shot,motions);
   return motions;
 }
 

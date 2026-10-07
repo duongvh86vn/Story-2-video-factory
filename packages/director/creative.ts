@@ -33,6 +33,7 @@ import {supportedArtworkTags} from './art-direction.js';
 import {creativeActingBrief} from './acting-brief.js';
 import {applyTopicCast,topicContext,requireTopicProductionReady} from '../topics/prehistoric-life.js';
 import {loadSpriteSceneMotions} from '../motion/scene-source.js';
+import {loadSpriteMotionCatalog,validateSpriteCatalogSelection} from '../motion/catalog.js';
 
 /** The general shot contract also supports legacy video; creative production needs these fields. */
 export const CreativeStoryboardSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -54,6 +55,8 @@ export interface CreativeContext {story:Story;narration:Narration;beats:Beat[];c
 /** The source clock is authoritative; the seed's visual style and choreography are editable. */
 export async function createCreativeStoryboard(root:string,config:FactoryConfig,router:ModelRouter,context:CreativeContext,seed:Storyboard,locks:Shot[]):Promise<Storyboard>{
   requireTopicProductionReady(config);
+  const catalog=await loadSpriteMotionCatalog(root),renderer=config.presentation.actor_renderer;
+  if(renderer==='sprite'&&!catalog.entries.length)throw new Error('needs-motion-library: import and register actor movements before image motion production');
   const lockIds=new Set(locks.map(shot=>shot.id)),system=await loadPrompt('creative-director');
   const identity=creativeInputIdentity(context.narration,context.beats,context.profile,context.rig);
   const reportFile=path.join(root,'work/creative-direction-report.json');
@@ -64,6 +67,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     if(board.shots.length>config.rendering.max_shots)throw new Error('Creative storyboard exceeds configured shot limit');
     const failures=new Set<string>();
     const check=(operation:()=>unknown)=>{try{operation();}catch(error){failures.add(error instanceof Error?error.message:String(error));}};
+    check(()=>validateSpriteCatalogSelection(board,catalog,renderer));
     if(context.lockedActors?.length)check(()=>assertActorLocks({shots:context.lockedActors!.map(primary=>({cinematic:{actorScene:{primary,supporting:[]}}}))},board,Object.fromEntries(context.lockedActors!.map(a=>[actorLockKey(a.id),true]))));
     for(const [i,shot] of board.shots.entries()){
       const c=shot.cinematic;
@@ -80,9 +84,11 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
           c.performance.id=shot.id;check(()=>{c.models=stageModels(shot);});
           shot.camera={shotSize:c.camera.framing,movement:c.camera.movement,angle:'eye-level'};
           shot.sceneType='character-scene';shot.recipeId=EXPLAINER_RECIPES[shot.visualization!.type];
-          c.continuity.entry={...c.performance.root};
-          c.continuity.exit={x:c.performance.walks.at(-1)?.toX??c.performance.root.x,y:c.performance.stage.groundY};
-          c.continuity.facing=[...(c.performance.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??c.performance.facing??'front';
+          if(!c.spriteStage){
+            c.continuity.entry={...c.performance.root};
+            c.continuity.exit={x:c.performance.walks.at(-1)?.toX??c.performance.root.x,y:c.performance.stage.groundY};
+            c.continuity.facing=[...(c.performance.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??c.performance.facing??'front';
+          }
           c.continuity.models=modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
         }
       }
@@ -125,19 +131,22 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   }
   const requestContext={task:'creative-storyboard',story:{title:context.story.title,style:context.story.style,genre:context.story.genre,authoring:context.story.authoring},narration:{durationMs:context.narration.durationMs,segments:context.narration.segments,words:context.narration.words},
     characterMode:config.presentation.character_mode,topic:topicContext(config),characters:context.characters.characters,
+    ...(catalog.revision!==null||renderer==='sprite'?{motionLibrary:{producer:'actor-motion-catalog-1',snapshotHash:catalog.snapshotHash,renderer:renderer??'authored',entries:catalog.entries,
+      rule:'Use only these exact actorId/motionId/fingerprint/state/view/capability versions for spriteStage. Preserve source action statements and target IDs. Capability metadata is candidate, not visual acceptance. Native once action must fit its full duration/rate; do not truncate or mirror. No baked speech, skeletal props or continuous handoff. Root and contact clock is shot-local; preserve narration-global cues. Explicit sprite selection requires spriteStage for actor shots, no rig fallback; object-only cutaways remain allowed. Bounds are frame rectangles, common landmarks are present in every native frame, not certified anatomy.'}}:{}),
     beats:context.beats,host:context.profile,rig:{rigHash:context.rig.rigHash},seed:seed.shots,seedVisualAdvisories:castDesignAdvisories(seed),lockedShots:locks,...(context.lockedActors?.length?{lockedActors:context.lockedActors}:{}),
     dimensions:config.rendering.final,...(config.presentation.design_brief?{designBrief:config.presentation.design_brief}:{}),artworkCoordinates:'Layers use stage pixels. Models default to normalized-stretch: centered 100x100 is scaled independently into part width/height, including text. Use sourced stage-pixel labels or explicit projection=model-viewport with one complete valid SVG viewBox to preserve its authored aspect policy in the actual part viewport. Recheck geometry and contact if letterboxing changes the illustration. Keyframes use the local shot clock.',
     ...(context.narration.segments.some(cue=>mentionsRunning(cue.text)||mentionsAirborne(cue.text))?{animationCapabilities:ANIMATION_LIBRARY}:{}),
     creativeFreedom:'Choose a visual language for this story. The seed is editable, not a mandatory layout, mood schedule, palette or recipe sequence.'};
   let generationSystem=config.presentation.character_mode==='actors'
     ?system.replace('with stick figures as ACTORS WITHIN THE STORY',`with ${context.profile.kind} performers as ACTORS WITHIN THE STORY`):system;
+  if(renderer==='sprite')generationSystem+='\nThe project explicitly selects image-based motion. Design actor shots with cinematic.spriteStage using the supplied motionLibrary versions and sourcedAction capability. Do not substitute skeletal gestures/walks or rewrite source speech to evade an unsupported sprite feature. Legacy performance/header fields describe metadata only in a sprite shot; actual artwork/action comes from registered clips and roots. Keep actorScene continuity=cut until sprite handoff is supported. Preserve the original source and report missing movement capabilities through validation rather than inventing assets.';
   if(config.presentation.character_mode==='actors'&&requestContext.animationCapabilities){
     generationSystem=generationSystem.replace('locomotion needs an actual nonzero walk;',
       'locomotion needs the actual clip matching its movement subtype: movement=jump requires a timed performance.jumps flight/landing; movement=run requires a nonzero walks path with gait=run under compiler performance-2.2.15; movement=walk requires gait=walk or omitted; an omitted movement requires a nonzero locomotion path;');
   }
   const inputHash=hash({identity,system,context:requestContext,models:config.models.storyboard,fallback:config.models.fallback,retry:config.retry.structured_output,schema:DIRECTION_VERSION});
   const binding={modelsHash:hash({primary:config.models.storyboard,fallback:config.models.fallback})};
-  if(router.isMock('storyboard')){if(config.topic.id)throw new Error('needs-art-direction: configure a real director through 9router for the reusable story topic; an offline seed is not a directed episode');return report(seed,'offline',inputHash);}
+  if(router.isMock('storyboard')){if(config.topic.id||renderer==='sprite')throw new Error('needs-art-direction: configure a real director or authored direction; an offline seed is not a directed image-motion episode');return report(seed,'offline',inputHash);}
   const cacheFile=path.join(root,'work/creative-storyboard-cache.json');
   if(await exists(cacheFile)){
     const cached=await readJson<{inputHash:string;storyboard:unknown}>(cacheFile);

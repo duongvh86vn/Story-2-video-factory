@@ -18,6 +18,7 @@ import { installedWindowsVoices,matchingWindowsVoices } from '../../packages/voi
 import { NARRATION_LANGUAGES,LANGUAGE_TAG,primaryLanguage } from '../../packages/core/languages.js';
 import {importActorMotion,listActorMotions,loadActorMotion} from '../../packages/motion/import.js';
 import {motionWorkbench} from '../../packages/motion/workbench.js';
+import {loadSpriteMotionCatalog} from '../../packages/motion/catalog.js';
 import {boundPath,ensureIdle,ProjectName} from '../server/security.js';
 
 const cli=new Command().name('video-factory').description('Turn a topic/story, complete script, WAV or SRT into an animated story with stick figure or robot actors.').version('2.2.0');
@@ -32,6 +33,8 @@ cli.command('motion-import <project> <metadata>').description('Import a local sp
   });
 cli.command('motion-list <project>').description('List verified candidate motion descriptors as JSON')
   .action(async(project:string)=>console.log(JSON.stringify(await listActorMotions(path.resolve(project)),null,2)));
+cli.command('motion-catalog <project>').description('Read the verified movement library and its draft-only capabilities as JSON')
+  .action(async(project:string)=>console.log(JSON.stringify(await loadSpriteMotionCatalog(path.resolve(project)),null,2)));
 cli.command('motion-preview <project> <id> <fingerprint>').description('Validate a candidate and print its preview URL in the running project Studio')
   .option('--port <port>','Port of the running Studio for this project','8850')
   .action(async(project:string,id:string,fingerprint:string,options:{port:string})=>{
@@ -44,11 +47,11 @@ cli.command('motion-preview <project> <id> <fingerprint>').description('Validate
 cli.command('configure <project>')
   .option('--language <code>','Narration language: en, vi, ja, ko or locale (e.g. en-US)').option('--input <mode>','story, script, wav (legacy: idea, srt, auto)')
   .option('--host <kind>','mini-robot, stick-man or custom actor rig').option('--style <mode>','diagram or story-cinematic; keeps valid narration/audio')
-  .option('--characters <mode>','actors or legacy presenter').option('--tts <provider>','windows-speech, azure-speech, omnivoice-studio, openai-compatible, http, command or none').option('--voice <id>').option('--tts-url <url>')
+  .option('--characters <mode>','actors or legacy presenter').option('--actor-renderer <kind>','rig or sprite; image motion needs a registered movement library').option('--tts <provider>','windows-speech, azure-speech, omnivoice-studio, openai-compatible, http, command or none').option('--voice <id>').option('--tts-url <url>')
   .option('--tts-model <id>','Model installed on the local TTS server').option('--tts-timeout <seconds>','Per-segment TTS timeout').option('--tts-options <json>','Additional provider parameters').option('--tts-fields <json>','Custom HTTP request field names')
-  .action(async(project:string,o:{language?:string;input?:string;host?:string;style?:string;characters?:string;tts?:string;voice?:string;ttsUrl?:string;ttsModel?:string;ttsTimeout?:string;ttsOptions?:string;ttsFields?:string})=>{
+  .action(async(project:string,o:{language?:string;input?:string;host?:string;style?:string;characters?:string;actorRenderer?:string;tts?:string;voice?:string;ttsUrl?:string;ttsModel?:string;ttsTimeout?:string;ttsOptions?:string;ttsFields?:string})=>{
     await updateSettings(path.resolve(project),{...(o.language?{language:o.language}:{}),
-      ...(o.style!==undefined||o.characters!==undefined?{presentation:PresentationPatchSchema.parse({...o.style?{mode:o.style}:{},...o.characters?{character_mode:o.characters}:{}})}:{}),
+      ...(o.style!==undefined||o.characters!==undefined||o.actorRenderer!==undefined?{presentation:PresentationPatchSchema.parse({...o.style?{mode:o.style}:{},...o.characters?{character_mode:o.characters}:{},...o.actorRenderer?{actor_renderer:o.actorRenderer}:{}})}:{}),
       ...(o.input?{input:{mode:z.enum(['auto','story','idea','script','wav','srt']).parse(o.input)}}:{}),
       ...(o.host?{host:z.enum(['mini-robot','stick-man','custom']).parse(o.host)}:{}),
       ...(o.tts||o.voice||o.ttsUrl||o.ttsModel||o.ttsTimeout||o.ttsOptions||o.ttsFields?{voice:{...(o.tts?{tts_provider:z.enum(['none','windows-speech','azure-speech','omnivoice-studio','openai-compatible','http','command']).parse(o.tts)}:{}),...(o.voice?{voice_id:o.voice}:{}),...(o.ttsUrl?{base_url:o.ttsUrl}:{}),

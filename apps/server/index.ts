@@ -45,6 +45,8 @@ import {importActorMotion,listActorMotions,loadActorMotion} from '../../packages
 import {MotionHash} from '../../packages/motion/schemas.js';
 import {Id} from '../../packages/core/identifiers.js';
 import {motionWorkbench} from '../../packages/motion/workbench.js';
+import {loadSpriteMotionCatalog,saveSpriteMotionCatalog} from '../../packages/motion/catalog.js';
+import {MotionCatalogSaveSchema} from '../../packages/motion/catalog-schemas.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
 type Named = { name: string };
@@ -158,6 +160,18 @@ export async function buildServer(options: ServerOptions = {}) {
   app.get<{Params:Named}>('/api/projects/:name/motions',async request=>{
     NoMotionQuery.parse(request.query);
     return {motions:await listActorMotions(await rootFor(request.params.name))};
+  });
+  app.get<{Params:Named}>('/api/projects/:name/motions/catalog',async request=>{
+    NoMotionQuery.parse(request.query);
+    return loadSpriteMotionCatalog(await rootFor(request.params.name));
+  });
+  app.put<{Params:Named}>('/api/projects/:name/motions/catalog',async request=>{
+    NoMotionQuery.parse(request.query);const body=MotionCatalogSaveSchema.parse(request.body);
+    return mutate(request.params.name,async root=>{
+      await boundPath(root,'project.yaml');await loadConfig(root);
+      try{return await saveSpriteMotionCatalog(root,body.catalog,body.revision);}
+      catch(error){if(error instanceof Error&&error.message.startsWith('REVISION_CONFLICT:'))throw new ApiError(409,'The movement library changed. Reload before saving.','REVISION_CONFLICT');throw error;}
+    });
   });
   app.post<{Params:Named}>('/api/projects/:name/motions/import',async request=>{
     const body=MotionImportBody.parse(request.body);

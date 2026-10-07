@@ -2,6 +2,9 @@ import type { ArtifactDocument, ProjectDetail, ProjectSummary, SceneDocument, Up
 import type { Job } from '../../server/jobs.js';
 import type { ProjectStatus } from '../../../packages/core/schemas.js';
 import type {ActorDefinition} from '../../../packages/actors/schemas.js';
+import type {ActorMotion} from '../../../packages/motion/schemas.js';
+import type {SpriteMotionCatalogSnapshot} from '../../../packages/motion/catalog.js';
+import type {SpriteMotionCatalog} from '../../../packages/motion/catalog-schemas.js';
 
 export class RequestError extends Error {
   constructor(message: string, public status: number, public code: string, public issues: Array<{ path: string; message: string }> = []) { super(message); }
@@ -21,6 +24,9 @@ export const projectUrl = (name: string) => `/api/projects/${encodeURIComponent(
 export const staticUrl = (name: string, relative: string) => `/project-static/${encodeURIComponent(name)}/${relative.split('/').map(encodeURIComponent).join('/')}`;
 export const api = {
   projects: () => request<{ projects: ProjectSummary[] }>('/api/projects'),
+  motions:(name:string)=>request<{motions:ActorMotion[]}>(`${projectUrl(name)}/motions`),
+  motionCatalog:(name:string)=>request<SpriteMotionCatalogSnapshot>(`${projectUrl(name)}/motions/catalog`),
+  saveMotionCatalog:(name:string,catalog:SpriteMotionCatalog,revision:string|null)=>request<SpriteMotionCatalogSnapshot>(`${projectUrl(name)}/motions/catalog`,{method:'PUT',body:JSON.stringify({catalog,revision})}),
   create: (name: string, example: boolean, mode: 'diagram' | 'story-cinematic',topic?:'prehistoric-life') => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example, topic,presentation: { mode } }) }),
   project: (name: string) => request<ProjectDetail>(projectUrl(name)),
   run: (name: string, until: ProjectStatus, shotIds?: string[],retryModelErrors=false,sceneRepairAttempts?:number) => request<{ job: Job }>(`${projectUrl(name)}/run`, { method: 'POST', body: JSON.stringify({ until, ...(shotIds ? { shotIds } : {}),...(retryModelErrors?{retryModelErrors:true}:{}),...(sceneRepairAttempts===undefined?{}:{sceneRepairAttempts}) }) }),
