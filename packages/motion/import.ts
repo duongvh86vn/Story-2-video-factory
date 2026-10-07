@@ -127,6 +127,7 @@ async function directories(root:string, relative:string):Promise<void> {
   }
 }
 async function immutable(root:string, relative:string, bytes:Buffer, limit:number):Promise<void> {
+  if(bytes.length>limit)throw new Error('Motion output exceeds size limit');
   const parent=path.posix.dirname(relative);await local(root,parent);
   const temp=`${parent}/.${randomUUID()}.tmp`;
   let created=false;
@@ -142,12 +143,19 @@ async function immutable(root:string, relative:string, bytes:Buffer, limit:numbe
   } finally {if(created)await fs.unlink(safePath(root,temp)).catch(()=>{});}
 }
 
+/** Check the selected directory itself and every ancestor before using it as a containment root. */
+async function sourceDirectory(file:string):Promise<string> {
+  const directory=path.dirname(file), filesystemRoot=path.parse(file).root;
+  return local(filesystemRoot,path.relative(filesystemRoot,directory));
+}
+
 export async function importActorMotion(projectRoot:string, metadataFile:string, registrationFile:string):Promise<ActorMotion> {
   // Caller may select a local source outside the project; PNG must remain inside its metadata directory.
-  const metadataPath=path.resolve(projectRoot,metadataFile), sourceRoot=path.dirname(metadataPath);
+  const metadataPath=path.resolve(projectRoot,metadataFile), sourceRoot=await sourceDirectory(metadataPath);
   const metadataBytes=await bounded(sourceRoot,path.basename(metadataPath),JSON_LIMIT);
   const registrationPath=path.resolve(projectRoot,registrationFile);
-  const reg=MotionRegistrationSchema.parse(JSON.parse((await bounded(path.dirname(registrationPath),path.basename(registrationPath),JSON_LIMIT)).toString('utf8')));
+  const registrationRoot=await sourceDirectory(registrationPath);
+  const reg=MotionRegistrationSchema.parse(JSON.parse((await bounded(registrationRoot,path.basename(registrationPath),JSON_LIMIT)).toString('utf8')));
   const metadata:unknown=JSON.parse(metadataBytes.toString('utf8')), meta=record(metadata);
   let sourceSheet:string;
   if(Object.hasOwn(meta,'frame_layout')) {
@@ -159,10 +167,13 @@ export async function importActorMotion(projectRoot:string, metadataFile:string,
   }
   const bytes=await bounded(sourceRoot,sourceSheet,PNG_LIMIT);
   const motion=normalizeSpriteMotion(metadata,await png(bytes),reg,hash(metadataBytes));
+  const manifestBytes=Buffer.from(canonical(motion)+'\n');
+  // Normalized landmark maps can exceed the input JSON size. Reject before publishing either file.
+  if(manifestBytes.length>JSON_LIMIT)throw new Error('Motion manifest exceeds size limit');
   const directory=`assets/motions/${motion.id}/${motion.fingerprint}`;
   await directories(projectRoot,directory);
   await immutable(projectRoot,motion.sheet.path,bytes,PNG_LIMIT);
-  await immutable(projectRoot,`${directory}/manifest.json`,Buffer.from(canonical(motion)+'\n'),JSON_LIMIT);
+  await immutable(projectRoot,`${directory}/manifest.json`,manifestBytes,JSON_LIMIT);
   return loadActorMotion(projectRoot,motion.id,motion.fingerprint);
 }
 

@@ -199,6 +199,42 @@ test('source PNG symlinks are rejected and list skips directory symlinks',async 
   await fs.symlink(b.source,path.join(b.root,'assets/motions/linked'),'junction');
   assert.equal((await listActorMotions(b.root)).length,1);
 });
+for(const selection of ['metadata','registration'] as const) {
+  for(const ancestor of [false,true])test(`${selection} selection rejects ${ancestor?'ancestor':'parent'} directory junction before publication`,async t=>{
+    const b=await bundle(t),link=path.join(b.root,'source-link');
+    await fs.symlink(ancestor?b.root:b.source,link,'junction');
+    const selectedRoot=ancestor?path.join(link,'bundle'):link;
+    const metadataFile=selection==='metadata'?path.join(selectedRoot,path.basename(b.metadataFile)):b.metadataFile;
+    const registrationFile=selection==='registration'?path.join(selectedRoot,path.basename(b.registrationFile)):b.registrationFile;
+    await assert.rejects(importActorMotion(b.root,metadataFile,registrationFile),/symlink/);
+    await assert.rejects(fs.access(path.join(b.root,'assets')),{code:'ENOENT'});
+  });
+}
+test('expanded manifest above the read limit is rejected before either output is published',async t=>{
+  const b=await bundle(t),limit=2*1024*1024;
+  const makeMetadata=(landmarkCount:number)=>({game_input:'atlas.png',
+    frame_layout:{rows:{walk:Array.from({length:512},()=>({x:0,y:0,w:4,h:4}))}},
+    animation:{rows:{walk:{frames:512,loop:true,durations_ms:Array.from({length:512},()=>1)}}},
+    rig:{landmarks:{walk:Array.from({length:512},()=>Object.fromEntries(
+      Array.from({length:landmarkCount},(_,i)=>[`p${String(i).padStart(3,'0')}`,[1,2]])))}}});
+  const reg=registration();reg.requiredLandmarks=[];
+  await fs.writeFile(b.registrationFile,JSON.stringify(reg));
+  // Both inputs fit the source bound; only the larger descriptor crosses the saved-manifest bound.
+  const oversized=makeMetadata(200),sourceBytes=Buffer.from(JSON.stringify(oversized));
+  assert.ok(sourceBytes.length<limit);
+  const motion=normalizeSpriteMotion(oversized,{width:8,height:4,hash:hash(b.bytes)},reg,hash(sourceBytes));
+  assert.ok(Buffer.byteLength(JSON.stringify(motion)+'\n')>limit);
+  await fs.writeFile(b.metadataFile,sourceBytes);
+  await assert.rejects(importActorMotion(b.root,b.metadataFile,b.registrationFile),/manifest exceeds size limit/);
+  await assert.rejects(fs.access(path.join(b.root,'assets')),{code:'ENOENT'});
+  // The smaller expansion remains importable and loadable using the unchanged 2 MiB read bound.
+  const accepted=makeMetadata(180),acceptedBytes=Buffer.from(JSON.stringify(accepted));
+  const acceptedMotion=normalizeSpriteMotion(accepted,{width:8,height:4,hash:hash(b.bytes)},reg,hash(acceptedBytes));
+  assert.ok(Buffer.byteLength(JSON.stringify(acceptedMotion)+'\n')<limit);
+  await fs.writeFile(b.metadataFile,acceptedBytes);
+  const saved=await importActorMotion(b.root,b.metadataFile,b.registrationFile);
+  assert.deepEqual(await loadActorMotion(b.root,saved.id,saved.fingerprint),saved);
+});
 test('output directory junctions cannot redirect immutable writes',async t=>{
   const b=await bundle(t),outside=path.join(b.root,'outside');await fs.mkdir(outside);
   await fs.symlink(outside,path.join(b.root,'assets'),'junction');
