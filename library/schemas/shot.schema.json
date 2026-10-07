@@ -1584,6 +1584,10 @@
                               "enum": [
                                 "three-quarter-right"
                               ]
+                            },
+                            "sourceColour": {
+                              "type": "string",
+                              "const": "original-rgb-v2"
                             }
                           },
                           "required": [
@@ -1788,6 +1792,10 @@
                                 "enum": [
                                   "three-quarter-right"
                                 ]
+                              },
+                              "sourceColour": {
+                                "type": "string",
+                                "const": "original-rgb-v2"
                               }
                             },
                             "required": [

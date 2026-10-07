@@ -14,4 +14,6 @@ Base `fca55fdb57d9aa5d08506156e200c75a905e78db`. Previous goal turn made source/
 
 ## Acceptance boundary
 
+Source `31070cc` implements the optional candidate source-colour selection, shared SVG, head/body resources/render/cache and body inspection API. Core/full build/test:typecheck/schema export exit0; scoped read-only review PASS with no actionable findings. Six runtime declarations remain NOT RUN. Original RGB static authoring v3 retains the refined bounded filter plus protected face regions; visible edge fringes remain unaccepted. [Source review and evidence](../topics/reviews/source-colour-rig-review-v1.md), [commands and remaining work](../topics/SOURCE-COLOUR-RIG-HANDOFF.md). This is a completed source checkpoint within the still-incomplete full product, not an episode/rig acceptance.
+
 Static authoring can reveal colour, contours and matte defects. It cannot establish smooth acting, speech synchrony, interaction or episode quality. The user's other model owns runtime tests. This checkpoint must not mark the complete tool usable or DONE from static pictures and source checks.
