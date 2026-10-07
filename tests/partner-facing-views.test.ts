@@ -2,6 +2,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {hash} from '../packages/core/utils.js';
+import {ConfigSchema} from '../packages/core/config.js';
+import {topicContext,topicNarrativeContext,requireTopicProductionReady} from '../packages/topics/prehistoric-life.js';
 import {HostProfileSchema,type HostProfile} from '../packages/host/schemas.js';
 import {topicPreviewProfile} from '../packages/topics/preview.js';
 import {bodyCalibrationPlan,bodyWorkbench,BODY_WORKBENCH_VIEWS} from '../packages/topics/body-workbench.js';
@@ -78,7 +80,7 @@ test('fixed-view mismatches, unregistered motion/expressions and speech fail in 
     const {profile,plan}=bodyCalibrationPlan(actor,'rest','happy',undefined,view);
     const cases=[
       {plan:{...plan,facing:plan.facing==='left'?'right' as const:'left' as const},error:/needs-body-registration/},
-      {plan:{...plan,headView:view==='three-quarter-left'?'three-quarter-right' as const:'three-quarter-left' as const},error:/needs-body-registration/},
+      {plan:{...plan,headView:view==='three-quarter-left'?'three-quarter-right' as const:'three-quarter-left' as const},error:/needs-(?:head-view|body-registration)/},
       {plan:{...plan,walks:[{startMs:300,endMs:3600,fromX:210,toX:240}]},error:/needs-view-motion/},
       {plan:{...plan,entryPosture:{pose:'crouch' as const}},error:/needs-view-motion/},
       {plan:{...plan,expressions:[{startMs:0,endMs:4000,mood:'angry' as const}]},error:/needs-view-expression/},
@@ -134,4 +136,14 @@ test('body and native registration workbenches expose both candidates with separ
   const right=bodyCalibrationPlan('karo','rest','happy',undefined,'three-quarter-right').profile;
   const left=bodyCalibrationPlan('karo','rest','happy',undefined,'three-quarter-left').profile;
   assert.notEqual(left.profileHash,right.profileHash);
+});
+
+test('topic metadata describes registered candidates while preserving the production and narration contract',()=>{
+  const config=ConfigSchema.parse({topic:{id:'prehistoric-life'},presentation:{mode:'story-cinematic',character_mode:'actors'}});
+  const context=topicContext(config)!;
+  assert.deepEqual(context.headViews.bodyCandidates.sources,bodyViewRegistrations);
+  assert.equal(context.headViews.bodyCandidates.approved,false);assert.equal(context.readiness.productionReady,false);
+  assert.throws(()=>requireTopicProductionReady(config),/needs-art-direction/);
+  assert.equal(topicNarrativeContext(config)!.version,'prehistoric-story-contract-1');
+  assert.match(topicNarrativeContext(config)!.rule,/Preserve source names, meaning and dialogue/);
 });
