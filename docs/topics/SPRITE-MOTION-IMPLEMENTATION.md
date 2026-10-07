@@ -40,7 +40,13 @@ Opt-in `cinematic.spriteStage` đã có branch scene đầy đủ với world ar
 
 Candidate final bị chặn ở engine, pipeline, QC và download. Speech, skeletal props và cross-shot continuous handoff chưa có trong branch mới nên báo blocker rõ. Async domain normalization được await trước receipt/hash/cache acceptance. Ban đầu có 11 test canonical scene và 2 test async normalization; thêm ba ca regression sau review, tổng 14 + 2, **chưa chạy callback/assertion**. Fix `d1fb7e4`, `36e2172` giải quyết resource allowlist, same-actor hands và contact object/label/response endpoint framing. Fresh build, test:typecheck, schema export và diff check qua; [review source độc lập](reviews/canonical-sprite-source-review-v1.md) PASS trong phạm vi mốc code, không phải nghiệm thu sản phẩm. [Plan](../plans/2026-10-07-canonical-sprite-scenes.md), [lệnh bàn giao](SPRITE-STORY-TEST-HANDOFF.md).
 
-Catalog/Studio chọn asset, receipt art/motion acceptance, source artwork đủ diễn xuất, speech/props/continuous contact và video ba input đến final vẫn là công việc sản phẩm còn thiếu. Không dùng mốc renderer này để công bố tool hoàn thành hoặc Lila/Karo đạt mẫu.
+Catalog/Studio chọn asset đã được viết source ở mốc tiếp theo; receipt art/motion acceptance, source artwork đủ diễn xuất, speech/props/continuous contact và video ba input đến final vẫn là công việc sản phẩm còn thiếu. Không dùng mốc renderer này để công bố tool hoàn thành hoặc Lila/Karo đạt mẫu.
+
+## Thư viện chuyển động — source tại `d974dbd`
+
+`input/motion-catalog.json` gắn nhãn hành động cho phiên bản motion bất biến. Snapshot cho Director gồm actor/state/view/reference, native clock/playback, frame bounds và common landmarks. Chọn `presentation.actor_renderer: sprite` yêu cầu actor shot dùng spriteStage đúng thư viện; explicit rig từ chối sprite, cấu hình cũ thiếu field vẫn giữ behavior trước. Asset và labels vẫn candidate; thư viện không duyệt anatomy hoặc mở final.
+
+API/CLI có đọc thư viện verified; Studio có form chọn khả năng và preview từng phiên bản, lưu với revision. Input identity phần hình và normalization kiểm lại selection khi cache/resume/locked shot; narration identity tách riêng. Fix `d8954d7` giữ annotations không hiện trong một listing lệch snapshot và hash effective prompt; `8401278` invalidate phần hình ngay khi lưu thay đổi, giữ audio/locks. Nhập motion vẫn qua CLI/API hiện có, chưa có generator tự dựng bộ diễn xuất được duyệt. [Plan](../plans/2026-10-07-sprite-motion-catalog.md), [review pending vì quota/timeouts](reviews/sprite-catalog-source-review-v1.md), [20 khai báo test mới và lệnh bàn giao](SPRITE-CATALOG-TEST-HANDOFF.md). Fresh build/typecheck/schema export exit 0; runtime/UI/video **NOT RUN**; cần review và nghiệm thu đúng phạm vi trước khi dùng.
 
 ## Global Constraints
 
