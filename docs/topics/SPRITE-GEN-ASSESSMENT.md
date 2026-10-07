@@ -2,6 +2,8 @@
 
 Ngày khảo sát: 07/10/2026. Phạm vi: đọc source và tài liệu; chưa cài dependency, gọi dịch vụ tạo ảnh/video, chạy pipeline hoặc nghiệm thu chuyển động.
 
+Tiến độ triển khai sau khảo sát được ghi riêng trong [cầu nối sprite motion](SPRITE-MOTION-IMPLEMENTATION.md) và [bàn giao test](SPRITE-MOTION-TEST-HANDOFF.md). Đánh giá dưới đây giải thích khả năng upstream; nghiệm thu runtime/art/video vẫn đang chờ.
+
 ## Kết luận và bản source
 
 **Có ích, đặc biệt để tạo thư viện pose và chuỗi động tác từ ảnh mẫu.** Đề xuất thử nhánh asset chuyển động bên cạnh rig hiện tại. Không có bằng chứng để nói đã hết lỗi tay/chân hoặc đạt chất lượng video mẫu.
@@ -26,7 +28,7 @@ Nguồn chính: [README](https://github.com/aldegad/sprite-gen/blob/f7cb0dbbad93
 
 Tài liệu [QA motion](https://github.com/aldegad/sprite-gen/blob/f7cb0dbbad9392b62fe7f358193f0c96115e58b9/docs/qa-motion.md) yêu cầu kiểm mọi frame humanoid vì khuỷu, gối, tay và chiều dài chi dễ bị biến dạng. Walk/run chỉ được công nhận sau review chuyển động. `effects/anatomy.py` phục vụ vùng bảo vệ khi tạo chuyển động thở; không phải solver sửa tay/chân người. Vì vậy không thay lỗi IK hiện tại bằng một chuỗi frame AI chưa duyệt.
 
-## Hướng tích hợp đề xuất — chưa triển khai
+## Hướng tích hợp và các bước sản phẩm còn cần
 
 ### 1. Giữ model và tạo anchor theo hướng nhìn
 

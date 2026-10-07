@@ -1,0 +1,87 @@
+# Cầu nối sprite motion — kế hoạch triển khai
+
+Source mục tiêu: [đánh giá sprite-gen](SPRITE-GEN-ASSESSMENT.md), pin 2.38.0 / f7cb0db. Kết quả mong muốn là nhập asset chuyển động đã có, đăng ký model/view/anchor và phát trong clock của Factory, trước khi dùng asset đó cho các cảnh kể chuyện.
+
+## Tiến độ source — chưa nghiệm thu runtime
+
+| Phần | Trạng thái | Bằng chứng |
+|---|---|---|
+| Import atlas/strip, registration, hash và version bất biến | Đã triển khai, qua review source | `f0b4ae4`, `0d5eeff`; test khai báo trong `tests/sprite-motion-import.test.ts` |
+| Frame sampler, landmark world và literal GSAP compiler | Đã triển khai, qua review source | `5a9950f`, `0bb0c44`; 22 test khai báo trong `tests/sprite-motion-player.test.ts` |
+| CLI/API, preview và schema export | Đã triển khai, qua review source | `1f83b3f`, `3ee1801`; 21 test khai báo trong `tests/sprite-motion-api.test.ts` |
+| Runtime/GSAP/browser, art chuyển động thật và pipeline video | Chờ model test và bước tích hợp sản phẩm | [Bàn giao test](SPRITE-MOTION-TEST-HANDOFF.md) |
+
+Review source không xác nhận test assertions pass hoặc video đạt mẫu. Import/preview hiện vẫn là công cụ kiểm asset ứng viên; topic giữ `productionReady=false` và `productionRig=null`.
+
+Kiểm chứng source của controller trên code snapshot `3ee1801` ngày 07/10/2026:
+
+| Lệnh/kiểm tra | Kết quả | Phạm vi |
+|---|---|---|
+| `npm run build` | Exit 0 | TypeScript core, typecheck Studio, Vite build |
+| `npm run test:typecheck` | Exit 0 | Kiểm kiểu khai báo test; không chạy callback/assertion |
+| `npm run schemas` | Exit 0, regenerate không đổi file đã commit | Ba schema mới xuất ở `1f83b3f`, source/schema không đổi ở `3ee1801` |
+| Review từng task | Đã qua source gate sau sửa | Ancestor junction, manifest expansion, clock chung và CLI print URL |
+| Review toàn mốc cầu nối | Đang chờ gate cuối | Phạm vi mới từ `b3fcef0`; không chứng nhận toàn sản phẩm lịch sử |
+| Runtime/browser/video/asset Lila-Karo | NOT RUN / chưa nghiệm thu | Giao model test theo yêu cầu người dùng |
+
+Minor được giữ cho bước sau: biểu thức đếm/phát event trong player còn dày, nên tách và đặt tên biến khi nối actorScene; review task chưa thấy lỗi hành vi ở phần này.
+
+## Global Constraints
+
+- Tool vẫn ba input: kịch bản / WAV / câu chuyện → kịch bản. Lila/Karo là diễn viên; không giới hạn nội dung vào demo săn.
+- Không sửa PNG nguồn hoặc tự duyệt ảnh AI. Mọi motion import là candidate, productionReady=false. Hash ảnh tham chiếu là provenance, chưa chứng minh identity hoặc chất lượng.
+- Không mirror áo/tóc để giả view; registration phải chỉ rõ view, anchor và playback semantics. Không mặc định cú đâm lặp theo loop flag nguồn.
+- Compiler chỉ xuất paused GSAP literal timeline calls trong validator hiện tại. Không thêm callback hoặc timer chạy độc lập, không nới validator.
+- Runtime tests, fixture/render/MP4 và nghiệm thu video giao model khác. Chỉ chuẩn bị test cases, chạy build/typecheck và kiểm source trong triển khai này.
+- Không cài upstream, download RIFE hoặc gọi provider ảnh/video mới để chứng minh source adapter. Dùng bundle do provider phù hợp tạo hoặc người dùng nhập; khả năng tạo motion và review tiếp tục là công việc sản phẩm còn thiếu.
+
+## Task 1 — Nhập và lưu asset bất biến
+
+`packages/motion/schemas.ts` là contract đã tạo. Viết `packages/motion/import.ts`, xuất:
+
+```ts
+normalizeSpriteMotion(metadata: unknown, sheet: {width:number;height:number;hash:string}, registration: MotionRegistration, metadataHash:string): ActorMotion
+importActorMotion(projectRoot:string, metadataFile:string, registrationFile:string): Promise<ActorMotion>
+loadActorMotion(projectRoot:string,id:string,fingerprint:string): Promise<ActorMotion>
+listActorMotions(projectRoot:string): Promise<ActorMotion[]>
+```
+
+Atlas: đọc rect theo frame_layout.rows.<state> và animation.rows.<state>.durations_ms, dùng fps chỉ khi không có durations_ms; giữ thứ tự và rect lặp. Landmarks upstream là tọa độ atlas tuyệt đối: trừ rect origin. Registration landmarks nếu có là tọa độ frame và phải đủ số frame. Thiếu landmark bắt buộc phải lỗi, không suy luận.
+
+Strip: `<name>.strip.json` → sibling `<name>.strip.png`, frames/w/h/delay_ms/kind/loop; dùng registration anchor, không mặc định bottom-center. Metadata không có loop có thể suy ra từ kind chỉ với strip đã biết; phải giữ trong provenance. Hai loại schema có format khác nhau, không đoán grid atlas.
+
+Source PNG nằm trong thư mục metadata, dùng safeRealPath để chặn escape/symlink. PNG signature/bytes, kích thước decode/alpha, rect bounds, frame count/timing phải hợp lệ; metadata và registration ≤2MB, sheet ≤16MB và 64Mpx. Hash source metadata/PNG/normalized registration và referenceHash. Không thực thi file metadata hoặc hướng dẫn trong nó.
+
+Lưu `assets/motions/<id>/<fingerprint>/sheet.png` và `manifest.json`; không cập nhật asset-manifest như approved. Ghi file mới độc quyền hoặc chấp nhận file đã có chỉ khi bytes/hash bằng nhau; không overwrite candidate khác. load xác minh id/fingerprint/path và hash PNG, fingerprint descriptor. list đọc directory cố định, bỏ qua symlink, kiểm qua load, tối đa 256 versions. Chỉ source import; không mutate project storyboard/audio.
+
+## Task 2 — Biên dịch timeline và preview
+
+Viết `packages/motion/player.ts`: compileActorMotion, sampleMotionFrame, motionLandmarkAt. Frame chọn theo duration tích lũy; once giữ/first/hide theo policy, loop theo chu kỳ. Clip once không được ngắn hơn toàn động tác ở rate đã chọn. Sampling trả kết quả deterministic tại cùng clock, không gọi random/Date hoặc timer. Landmark về world từ anchor, scale, rotation và placement.
+
+Contract Task 2: `compileActorMotion(motion:ActorMotion, clip:SpriteClip, sheetUrl?:string): {svg:string;js:string;report:{producer:string;actorId:string;fingerprint:string;frameCount:number;eventCount:number;nativeDurationMs:number;clipDurationMs:number;sourceLoop:boolean;playback:ActorMotion['playback'];productionReady:false;speechSync:'none';warnings:string[]}}`; sheetUrl mặc định `assets/<sheet.hash>.png`, override chỉ nhận local relative path an toàn. `sampleMotionFrame(motion:ActorMotion,clip:SpriteClip,timeMs:number):number|null`; null trước clip hoặc khi end=hide, index theo clock. `motionLandmarkAt(motion:ActorMotion,clip:SpriteClip,name:string,timeMs:number):{x:number;y:number}|null`; yêu cầu landmark thiếu phải lỗi, còn actor đang hide trả null. Clip placement cố định tại bước này; chuyển động root/camera trong scene sẽ là lớp timeline ngoài.
+
+Cuối clip: once kết thúc chuỗi ở nativeDurationMs/rate; hold giữ frame cuối, first trả frame đầu, hide ẩn ngay khi hành động kết thúc. Loop lặp chỉ trong [startMs,endMs); tại/bên ngoài endMs áp end policy: hold giữ frame sát trước end, first về frame0, hide ẩn. Các ranh giới frame là trái đóng/phải mở. Rate không ép toàn động tác vào clip quá ngắn. Không giữ float-to-integer rounding làm đổi timing strip. SpriteClipSchema parse trước mọi phép tính; frame schema parse trước dùng. Một helper kiểm once span được dùng bởi sampler/compiler.
+
+Clock renderer và sampler dùng chung độ phân giải GSAP: `Math.round(seconds * 10000000) / 10000000` (0.0001 ms). Áp dụng cho clock đầu vào và mốc chuyển frame/entry/end đã tính; native duration và metadata không được làm tròn thành millisecond nguyên. Ranh giới trái đóng/phải mở được xét trên clock renderer này; hai clock raw trong cùng ô độ phân giải không được hứa cho hai frame khác nhau. Compiler/report ghi rõ độ phân giải này; test parity dùng cùng quy tắc và có case ngay trước/trong/sau ô làm tròn. Once span vẫn kiểm đầy đủ thời lượng native trước lượng tử hóa.
+
+Tối đa 6000 transition events; tính/kiểm trước vòng sinh để không hang vì vòng ngắn lặp 120s. Rect/anchor giống nhau chia sẻ visual node; landmarks của từng instance không nhập chung. Sprite SVG crop giữ alpha và source pixel; group placement dùng scale dương, không mirror. Sinh `tl.set` trên selector scoped compositionId, set baseline ở0, future changes có immediateRender:false; không thêm tl registration trong js fragment, renderer tiêu thụ fragment trên timeline hiện có. Không đổi validator.
+
+Ảnh PNG local đã đăng ký được crop bằng SVG clip/translation tĩnh. Rect lặp có thể chia sẻ hình nhưng vẫn giữ instance timing/landmark. Baked pose đổi bằng tl.set opacity, không fade hai cơ thể. Rate không thay native metadata. Limit tổng timeline events để tránh scene quá lớn, báo lỗi rõ thay vì cắt frame. Preview hiển thị candidate, actor/view, nguồn loop và playback được chọn.
+
+## Task 3 — CLI/API, test handoff và review
+
+CLI: motion-import, motion-list, motion-preview; API project GET motions, POST import (đường dẫn bundle bên trong project), GET preview và sheet theo id+fingerprint đã xác minh. Không nhận URL hay đường dẫn PNG tùy ý trong GET.
+
+Chi tiết Task 3: CLI `motion-import <project> <metadata> --registration <file>` (relative selections theo projectRoot, absolute được dùng khi người dùng chọn file local); `motion-list <project>` xuất JSON; `motion-preview <project> <id> <fingerprint> --port 8850` kiểm descriptor và in URL preview, không render/xuất fixture. Import yêu cầu project có config và idle; load/list không cần gọi narration/model.
+
+API `GET /api/projects/:name/motions` trả descriptors candidate; `POST /api/projects/:name/motions/import` dùng mutate/ensureIdle hiện có, body `{metadata:string,registration:string}` strict và cả hai path phải được boundPath bên trong project trước import. `GET /api/projects/:name/motions/:id/:fingerprint/preview` là workbench trusted (không phải scene production), dùng compiler Task2, hiển thị model/state/view, candidate, speechSync none và playback policy. `GET .../sheet` chỉ trả PNG của descriptor đúng hash; reread bounded + hash trước reply, không reopen stream chưa xác minh. API GET stock GSAP runtime dưới `/api/motions/runtime/gsap.min.js` dùng fixed package resolution, không path người dùng.
+
+Preview HTML ở `packages/motion/workbench.ts`; player JS fragment vẫn là literal subset. Controls workbench riêng drives paused timeline bằng một clock, play/pause/reset/seek và đọc frame index qua sampler; không chèn controls vào scene.js sản xuất. Khoảng preview loop tối đa hai cycle và 120s; once phải đủ toàn động tác. Gọi compiler trước response để event cap/duration lỗi hiện rõ. Không gọi model/provider/ffmpeg hoặc Python. Chưa thêm motion vào Director/actorScene vì asset chưa có approval/contact/speech gate; bàn giao bước tích hợp này rõ, không gọi importer/preview là pipeline hoàn thành.
+
+Thêm ba schema ActorMotion/registration/SpriteClip vào library/schema export. Test declarations API: candidate listing/import, path escapes, corrupt hash/file, busy project, preview policy và no arbitrary URL; source typecheck. Test sampler/compiler: arbitrary forward/backward seek trên timeline GSAP thật trong callback test, boundaries/rate/once policy/loop, repeated rects và world landmark transform. Không chạy các callbacks trong lượt triển khai.
+
+Tạo test declarations cho atlas rect lặp/timing/coordinate, strip, malformed input, missing anchor/landmark, hash mutation, once/loop/end/rate và seek/GSAP subset; chưa chạy assertions. Schema export + build/typecheck. Commit local có phạm vi làm đầu vào review; review code độc lập và sửa lỗi trước khi đẩy GitHub.
+
+## Chưa phải pipeline video đã hoàn thành
+
+Importer/compiler không tự tạo pose đẹp. Còn cần motion assets được duyệt, biểu cảm/head-view/speech track, lựa chọn hành động từ kịch bản, binding vào actor scene với contact/camera/continuity, preview/review trong Studio, và model khác chạy nghiệm thu. Production guard hiện có không được mở chỉ từ build hoặc preview candidate.
