@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
-import {importedSpeechFixture} from './sprite-speech-support.js';
+import {importedSpeechFixture,speechClockFixture} from './sprite-speech-support.js';
 import {spriteSpeechStageFixture} from './sprite-speech-stage-support.js';
 import {importActorSpeech,actorSpeechSheetBytes} from '../packages/motion/speech-import.js';
 import {loadSpriteSceneMotions,loadSpriteSceneSpeech} from '../packages/motion/scene-source.js';
@@ -57,4 +57,18 @@ test('candidate mouth workbench labels diagnostic timing while native workbench 
   const old=motionWorkbench(motion),preview=motionWorkbench(motion,1,variant);
   assert.equal(old.report.speechSync,'none');assert.doesNotMatch(old.html,/diagnostic-rest-open|native-sheet/);
   assert.match(preview.html,/diagnostic-rest-open/);assert.match(preview.html,/No narration or audio/);assert.equal(preview.report.productionReady,false);
+});
+
+test('diagnostic mouth preview fits the existing budget for 512 distinct frames without shortening native preview',()=>{
+  const f=speechClockFixture(),width=512*32;
+  const motion={...f.motion,sheet:{...f.motion.sheet,width},frames:Array.from({length:512},(_,index)=>({...f.motion.frames[0]!,rect:{x:index*32,y:0,w:32,h:48}}))};
+  const variant={...f.variant,sheet:{...f.variant.sheet,width},regions:Array.from({length:512},()=>({...f.variant.regions[0]!}))};
+  const native=motionWorkbench(motion),preview=motionWorkbench(motion,1,variant);
+  assert.equal(native.clip.endMs,102400);assert.equal(native.report.eventCount,2558);
+  assert.equal(preview.clip.endMs,51200);assert.equal(preview.report.eventCount,3584);
+  assert.match(preview.html,/1 native cycle; loop preview capped at 120 seconds/);
+  for(const end of ['hold','first','hide'] as const)for(const rate of [.5,1,2]){
+    const candidate=motionWorkbench({...motion,playback:{mode:'loop',end}},rate,variant);
+    assert.equal(candidate.clip.endMs,51200/rate);assert.ok(candidate.report.eventCount<=6000);
+  }
 });

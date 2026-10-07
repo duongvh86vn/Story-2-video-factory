@@ -15,15 +15,18 @@ export function motionWorkbench(input:ActorMotion, rate=1, mouth?:ActorSpeech) {
   const selectedRate=SpriteClipSchema.innerType().shape.rate.parse(rate);
   const nativeDurationMs=motion.frames.reduce((sum,frame)=>sum+frame.durationMs,0);
   const periodMs=nativeDurationMs/selectedRate;
-  const durationMs=motion.playback.mode==='once'?periodMs:Math.min(2*periodMs,120000);
+  // One diagnostic mouth cycle fits the compiler budget for every allowed frame
+  // count. Native-only previews retain their existing two-cycle behavior.
+  const previewCycles=mouth?1:2;
+  const durationMs=motion.playback.mode==='once'?periodMs:Math.min(previewCycles*periodMs,120000);
   const clip=SpriteClipSchema.parse({id:'candidate',compositionId:'motion-workbench',startMs:0,endMs:durationMs,
     rate:selectedRate,placement:{x:0,y:0,scale:1,rotation:0}});
   // Preflight parsing, once-span and compiler event caps before returning any HTML.
   // Diagnostic artwork comparison only: each native frame shows rest then open.
   // No narration, speaker or audio evidence is manufactured by this workbench.
   const intervals:Array<{startMs:number;endMs:number}>=[];
-  if(mouth)for(let cycle=0;cycle<(motion.playback.mode==='loop'?2:1);cycle++){
-    let offsetMs=cycle*periodMs;
+  if(mouth){
+    let offsetMs=0;
     for(const frame of motion.frames){
       const endMs=Math.min(durationMs,offsetMs+frame.durationMs/selectedRate),startMs=offsetMs+frame.durationMs/selectedRate/2;
       if(startMs<endMs)intervals.push({startMs,endMs});
@@ -38,7 +41,7 @@ export function motionWorkbench(input:ActorMotion, rate=1, mouth?:ActorSpeech) {
   // At most two cycles × 512 logical positions + terminal. Labels use the shared sampler,
   // including repeated rectangles; no frame-selection algorithm is shipped to the browser.
   const times=new Set<number>([0,duration]);
-  for(let cycle=0;cycle<(motion.playback.mode==='loop'?2:1);cycle++) {
+  for(let cycle=0;cycle<(motion.playback.mode==='loop'?previewCycles:1);cycle++) {
     let offsetMs=0;
     for(const frame of motion.frames) {
       const time=quantize((cycle*periodMs+offsetMs/selectedRate)/1000);
@@ -55,7 +58,7 @@ export function motionWorkbench(input:ActorMotion, rate=1, mouth?:ActorSpeech) {
     productionReady:false,sourceLoop:motion.source.loop,playback:motion.playback.mode,end:motion.playback.end,
     speechSync:mouth?'diagnostic-rest-open':'none',rate:selectedRate,nativeDurationMs,previewDurationMs:durationMs,
     ...(mouth?{previewPurpose:'artwork comparison only; no narration or audio',variantId:mouth.id,variantFingerprint:mouth.fingerprint}:{}),
-    previewLimit:'max 2 cycles / 120 seconds',fingerprint:motion.fingerprint};
+    previewLimit:mouth?'1 native cycle; loop preview capped at 120 seconds':'max 2 cycles / 120 seconds',fingerprint:motion.fingerprint};
   const html=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${mouth?'Candidate mouth artwork':'Candidate motion workbench'}</title><style>
 body{font:16px system-ui;margin:24px;background:#f4f1e9;color:#252525}main{max-width:920px;margin:auto}
