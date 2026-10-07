@@ -6,6 +6,10 @@ import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
 import {createRequire} from 'node:module';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+import {createServer} from 'node:net';
 import sharp from 'sharp';
 import {buildServer} from '../apps/server/index.js';
 import type {Coordinator} from '../apps/server/jobs.js';
@@ -303,4 +307,80 @@ test('once hold workbench pads the single clock through final-frame dwell beyond
     assert.equal(probe.tl.time(),seconds);
   }
   assert.match(probe.controls.get('frame')!.textContent,/Frame 3 \/ 3/);
+});
+
+// Delegated CLI probes only: argument arrays avoid shell execution, and timeout requires
+// validate-and-print commands to exit. These helpers are called exclusively in callbacks.
+async function cliProbe(cwd:string,args:string[]) {
+  const cli=fileURLToPath(new URL('../apps/cli/index.ts',import.meta.url));
+  const loader=pathToFileURL(createRequire(import.meta.url).resolve('tsx')).href;
+  return promisify(execFile)(process.execPath,['--import',loader,cli,...args],
+    {cwd,encoding:'utf8',timeout:20000,maxBuffer:4*1024*1024});
+}
+
+async function protectedProjectFiles(root:string) {
+  const files=new Map<string,Buffer>([
+    ['project.yaml',await fs.readFile(path.join(root,'project.yaml'))],
+    ['narration.json',Buffer.from(JSON.stringify({version:1,segments:[{id:'spoken.1',text:'Keep narration',startMs:0,endMs:420}]}))],
+    ['asset-manifest.json',Buffer.from(JSON.stringify({version:1,assets:[{id:'approved-art',approved:true,path:'assets/approved.svg'}]}))],
+    ['project-state.json',Buffer.from(JSON.stringify({version:1,name:'fixture',state:'REVIEWED',updatedAt:'2026-10-07T00:00:00.000Z',
+      inputHash:'unchanged',approvals:{host:true,characters:true,storyboard:true,hostHash:'approved-host'},locked:{'shot.1':true}}))],
+  ]);
+  for(const [relative,bytes] of files)await fs.writeFile(path.join(root,relative),bytes);
+  return async()=>{
+    for(const [relative,bytes] of files)assert.deepEqual(await fs.readFile(path.join(root,relative)),bytes,`${relative} must remain unchanged`);
+    await assert.rejects(fs.access(path.join(root,'scenes')));
+    await assert.rejects(fs.access(path.join(root,'voiced-narration.json')));
+  };
+}
+
+test('CLI preview prints the existing Studio URL and exits even when that port is occupied',async t=>{
+  const f=await fixture(t),motion=await f.importMotion(),unchanged=await protectedProjectFiles(f.root);
+  const listener=createServer(socket=>socket.destroy());
+  await new Promise<void>((resolve,reject)=>{listener.once('error',reject);listener.listen(0,'127.0.0.1',resolve);});
+  t.after(()=>new Promise<void>((resolve,reject)=>listener.close(error=>error?reject(error):resolve())));
+  const address=listener.address();assert.ok(address && typeof address==='object');
+  const args=['motion-preview',f.root,motion.id,motion.fingerprint];
+  // Occupied ephemeral port exercises the same collision as running Studio on 8850,
+  // without requiring the delegated runner to stop or replace its real Studio.
+  const selected=await cliProbe(f.projectsRoot,[...args,'--port',String(address.port)]);
+  assert.equal(selected.stdout.trim(),`http://127.0.0.1:${address.port}${route(motion)}/preview`);
+  assert.equal(listener.listening,true);
+  const defaults=await cliProbe(f.projectsRoot,args);
+  assert.equal(defaults.stdout.trim(),`http://127.0.0.1:8850${route(motion)}/preview`);
+  await unchanged();
+});
+
+test('CLI preview validates port and descriptor before printing a URL',async t=>{
+  const f=await fixture(t),motion=await f.importMotion(),unchanged=await protectedProjectFiles(f.root);
+  const args=['motion-preview',f.root,motion.id,motion.fingerprint];
+  for(const invalid of ['0','65536','1.5','invalid'])await assert.rejects(
+    cliProbe(f.projectsRoot,[...args,'--port',invalid]),error=>{
+      const failure=error as Error & {code?:number;stdout?:string};
+      assert.equal(failure.code,1);assert.equal(failure.stdout,'');return true;
+    });
+  await assert.rejects(cliProbe(f.projectsRoot,['motion-preview',f.root,motion.id,'bad']),error=>{
+    const failure=error as Error & {code?:number;stdout?:string};
+    assert.equal(failure.code,1);assert.equal(failure.stdout,'');return true;
+  });
+  await unchanged();
+});
+
+test('CLI imports project-relative and explicitly selected absolute local bundles without changing narration/assets/approvals',async t=>{
+  const f=await fixture(t),unchanged=await protectedProjectFiles(f.root);
+  // cwd is deliberately the parent rather than projectRoot: relative selections belong
+  // to the project, not to the launching shell's working directory.
+  const relative=await cliProbe(f.projectsRoot,['motion-import',f.root,f.body.metadata,'--registration',f.body.registration]);
+  const first=JSON.parse(relative.stdout) as ActorMotion;
+  assert.equal(first.review.status,'candidate');assert.equal(first.review.productionReady,false);
+  assert.equal(first.source.sheetHash,hash(f.bytes));await unchanged();
+  const selected=path.join(f.projectsRoot,'selected-local-bundle');await fs.mkdir(selected);
+  for(const file of ['metadata.json','registration.json','atlas.png'])await fs.copyFile(path.join(f.source,file),path.join(selected,file));
+  const absolute=await cliProbe(f.projectsRoot,['motion-import',f.root,path.join(selected,'metadata.json'),
+    '--registration',path.join(selected,'registration.json')]);
+  assert.deepEqual(JSON.parse(absolute.stdout),first);
+  const listing=await cliProbe(f.projectsRoot,['motion-list',f.root]);
+  assert.deepEqual(JSON.parse(listing.stdout),[first]);
+  assert.deepEqual(await fs.readFile(path.join(f.root,first.sheet.path)),f.bytes);
+  await unchanged();
 });
