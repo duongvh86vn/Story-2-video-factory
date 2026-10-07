@@ -146,7 +146,16 @@ export async function ruleReview(root:string,config:FactoryConfig,storyboard:Sto
     try {
       const files=[];for(const file of ['index.html','style.css','scene.js']) files.push({path:file,content:await fs.readFile(await safeRealPath(root,`scenes/${shot.id}/${file}`),'utf8')});
       const approvedPaths=relevant.filter(asset=>asset.status==='approved').map(visualAssetPath).filter((value):value is string=>Boolean(value));
-      const errors=validateSceneFiles({files,dependencies:[],notes:[]},shot,config.workflow.max_scene_bytes,approvedPaths,config.rendering.final);
+      // Candidate motions are authorized draft resources through their immutable
+      // import contract, not through an invented approved asset-manifest entry.
+      const motions=await loadSpriteSceneMotions(root,shot),spritePaths:string[]=[];
+      for(const motion of motions?.values()??[]){
+        const resource=`assets/${motion.sheet.hash}.png`;
+        await spriteSceneSheetBytes(root,motion);
+        if(hash(await fs.readFile(await safeRealPath(root,`scenes/${shot.id}/${resource}`)))!==motion.sheet.hash)throw new Error('Staged sprite sheet changed before review');
+        spritePaths.push(resource);
+      }
+      const errors=validateSceneFiles({files,dependencies:[],notes:[]},shot,config.workflow.max_scene_bytes,[...approvedPaths,...spritePaths],config.rendering.final);
       for(const error of errors) issues.push(issue(shot,'scene-contract','high',error,'Repair the exact static validator error.'));
     } catch {issues.push(issue(shot,'scene-contract','high','Scene files are missing or unsafe.','Rebuild this scene.'));}
     const text=shot.textOnScreen??'';

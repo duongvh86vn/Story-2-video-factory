@@ -6,7 +6,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import {temporary} from './support.js';
 import {ConfigSchema} from '../packages/core/config.js';
-import {ShotSchema,CharacterBibleSchema} from '../packages/core/schemas.js';
+import {ShotSchema,CharacterBibleSchema,StorySchema} from '../packages/core/schemas.js';
 import {HostProfileSchema,HostActions} from '../packages/host/schemas.js';
 import {buildRig} from '../packages/host/rig.js';
 import {actorProfile} from '../packages/actors/model.js';
@@ -19,7 +19,8 @@ import {renderSpriteScene} from '../packages/motion/scene.js';
 import {createSpriteStageSampler,spriteMotionKey} from '../packages/motion/stage.js';
 import {loadSpriteSceneMotions,spriteSceneSheetBytes} from '../packages/motion/scene-source.js';
 import {importActorMotion} from '../packages/motion/import.js';
-import {assertNoCandidateSpriteActors} from '../packages/motion/scene-validation.js';
+import {assertNoCandidateSpriteActors,validateSpriteScenePlan} from '../packages/motion/scene-validation.js';
+import {ruleReview} from '../packages/review/index.js';
 import {validateSpriteCamera} from '../packages/motion/camera.js';
 import {SPRITE_STAGE_VERSION} from '../packages/motion/stage-schemas.js';
 import type {ActorMotion} from '../packages/motion/schemas.js';
@@ -112,6 +113,34 @@ test('world object response requires prior registered sprite hand contact, with 
   c.spriteStage!.contacts[0]!.timeMs=500;assert.throws(()=>renderSpriteScene(f.shot,f.profile,f.config,f.motions),/no registered contact/);
 });
 
+test('required two-hand contact must belong to one eligible actor, never one hand from each actor',()=>{
+  const f=fixture(),c=f.shot.cinematic!,ref=f.shot.sourceRefs![0]!,character=structuredClone(c.actorScene!.primary!);
+  character.id='karo';character.name='Karo';c.actorScene!.supporting=[{character,performance:{...structuredClone(c.performance),leadCharacterId:'karo'},actions:[],speakingSegmentIds:[]}];
+  const clip=structuredClone(c.spriteStage!.actors[0]!.clips[0]!);clip.id='karo.clip';c.spriteStage!.actors.push({actorId:'karo',clips:[clip]});
+  f.shot.visualization!.parts=[{id:'basket',label:'basket',kind:'object',x:.4,y:.5,width:.1,height:.1,sourceRefs:[ref]}];c.attentionPartId='basket';c.models=stageModels(f.shot);
+  const event={type:'highlight' as const,targetId:'basket',narrationAnchor:'s1',startMs:2500,endMs:2800,contactRequired:true,contactHands:['left','right'] as Array<'left'|'right'>,motion:'none' as const,sourceRefs:[ref]};f.shot.visualization!.events=[event];
+  c.spriteStage!.contacts=[{id:'left',actorId:'lila',clipId:'clip1',landmark:'hand_left',targetId:'basket',timeMs:300,effectMs:500,maxErrorPx:1,sourceRefs:[ref]},
+    {id:'right',actorId:'karo',clipId:'karo.clip',landmark:'hand_right',targetId:'basket',timeMs:400,effectMs:500,maxErrorPx:1,sourceRefs:[ref]}];
+  assert.throws(()=>validateSpriteScenePlan(f.shot),/no registered contact/);
+  c.spriteStage!.contacts[1]!.actorId='lila';c.spriteStage!.contacts[1]!.clipId='clip1';assert.doesNotThrow(()=>validateSpriteScenePlan(f.shot));
+  f.shot.visualization!.events[0]!.contactActorId='karo';assert.throws(()=>validateSpriteScenePlan(f.shot),/no registered contact/);
+});
+
+test('contact close keeps manipulated object, response object and labels visible over camera samples',()=>{
+  const f=fixture(),c=f.shot.cinematic!,ref=f.shot.sourceRefs![0]!;
+  const part={id:'basket',label:'basket',kind:'object' as const,x:(300+1280*.08*.35)/1280,y:500/720,width:.08,height:.12,sourceRefs:[ref]};
+  f.shot.visualization!.parts=[part];c.attentionPartId='basket';c.models=stageModels(f.shot);
+  c.spriteStage!.contacts=[{id:'touch',actorId:'lila',clipId:'clip1',landmark:'hand_left',targetId:'basket',timeMs:400,effectMs:500,maxErrorPx:1,sourceRefs:[ref]}];
+  c.camera={framing:'close',focus:'contact',movement:'locked',anchor:{x:300,y:480},startScale:2,endScale:2};f.shot.camera.shotSize='close';
+  assert.doesNotThrow(()=>validateSpriteCamera(f.shot,f.motions));
+  part.width=.9;assert.throws(()=>validateSpriteCamera(f.shot,f.motions),/crops basket/);part.width=.08;
+  c.camera.movement='push-in';c.camera.endScale=3.4;assert.throws(()=>validateSpriteCamera(f.shot,f.motions),/crops basket label/);
+  c.camera.movement='locked';c.camera.endScale=2;
+  f.shot.visualization!.parts.push({...part,id:'response',x:.9});c.models=stageModels(f.shot);
+  f.shot.visualization!.events=[{type:'highlight',targetId:'response',contactPartId:'basket',narrationAnchor:'s1',startMs:2500,endMs:2800,contactRequired:true,motion:'none',sourceRefs:[ref]}];
+  assert.throws(()=>validateSpriteCamera(f.shot,f.motions),/crops response/);
+});
+
 test('sampler closure owns validated snapshots and cannot drift after callers mutate source',()=>{
   const f=fixture(),sample=createSpriteStageSampler(f.shot.cinematic!.spriteStage!,f.motions),before=sample(500);
   f.motion.frames[0]!.anchor.x=0;f.shot.cinematic!.spriteStage!.actors[0]!.clips[0]!.placement.x=900;
@@ -136,6 +165,19 @@ test('scene source loader and byte reader preserve imported PNG and immutable de
   assert.equal(loaded.fingerprint,f.motion.fingerprint);
   await fs.writeFile(path.join(root,loaded.sheet.path),Buffer.from('tampered PNG'));
   await assert.rejects(loadSpriteSceneMotions(root,f.shot));
+});
+
+test('rule review permits verified candidate sheet outside manifest but rejects changed staged pixels',async t=>{
+  const root=await temporary(t),f=await imported(root),motions=await loadSpriteSceneMotions(root,f.shot),dir=path.join(root,'scenes/shot1');
+  const rendered=renderSpriteScene(f.shot,f.profile,f.config,motions!),files=secureSceneFiles(rendered.files);await fs.mkdir(path.join(dir,'assets'),{recursive:true});
+  for(const file of files.files)await fs.writeFile(path.join(dir,file.path),file.content);
+  const staged=path.join(dir,'assets',`${f.motion.sheet.hash}.png`);await fs.writeFile(staged,f.bytes);
+  const story=StorySchema.parse({title:'Waiting',story:'Lila waits.',style:{visual:'illustration'}}),characters=CharacterBibleSchema.parse({characters:[]});
+  const issues=await ruleReview(root,f.config,{shots:[f.shot]},story,characters,{assets:[]});
+  assert.ok(!issues.some(issue=>issue.type==='scene-contract'),JSON.stringify(issues));
+  await fs.writeFile(staged,'changed pixels');const changed=await ruleReview(root,f.config,{shots:[f.shot]},story,characters,{assets:[]});
+  assert.ok(changed.some(issue=>issue.type==='scene-contract'&&issue.severity==='high'));
+  assert.equal(f.motion.review.productionReady,false);
 });
 
 test('locked sprite scene verifies staged image before input identity and never overwrites it',async t=>{

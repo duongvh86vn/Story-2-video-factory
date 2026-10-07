@@ -55,6 +55,8 @@ export function validateSpriteCamera(shot:Shot,motions:ReadonlyMap<string,ActorM
     return screen.x-pad>=width*CAMERA_VIEWPORT.left-.01&&screen.x+pad<=width*CAMERA_VIEWPORT.right+.01&&screen.y-pad>=height*CAMERA_VIEWPORT.top-.01&&screen.y+pad<=height*CAMERA_VIEWPORT.bottom+.01;
   };
   const checkedActors=new Set<string>();
+  const contactParts=new Set(plan.contacts.map(contact=>contact.targetId));
+  for(const event of shot.visualization?.events??[])if(event.contactRequired&&contactParts.has(event.contactPartId??event.targetId))contactParts.add(event.targetId);
   const ratios:Record<string,{min:number;max:number}>=Object.create(null);
   for(const time of times){
     const matrix=spriteCameraMatrixAt(shot,time),actors=sample(time);
@@ -72,7 +74,9 @@ export function validateSpriteCamera(shot:Shot,motions:ReadonlyMap<string,ActorM
         }
       }
     }
-    if(camera.framing!=='close'||camera.focus==='object')for(const part of shot.visualization?.parts??[]){
+    for(const part of shot.visualization?.parts??[]){
+      const required=camera.framing!=='close'||camera.focus==='object'||camera.focus==='contact'&&contactParts.has(part.id);
+      if(!required)continue;
       checkBounds({left:(part.x-part.width*.56)*width,right:(part.x+part.width*.56)*width,top:(part.y-part.height*.6)*height,bottom:(part.y+part.height*.6)*height},part.id);
       if(rendersModelLabel(shot,part.id)){
         const label=cameraModelLabel(part,height,width);if(label.lines.length>4)throw new Error(`${shot.id}: sprite model label too long`);

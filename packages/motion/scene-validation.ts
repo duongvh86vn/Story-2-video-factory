@@ -21,7 +21,11 @@ export function validateSpriteScenePlan(shot:Shot){
       && spriteSeconds(contact.timeMs)<spriteSeconds(timeMs) && (contact.effectMs===undefined || spriteSeconds(contact.effectMs)===spriteSeconds(timeMs)));
     // The sprite landmark names are anatomical registration, not mirrored rig sides.
     const hands=event.contactHands??[];
-    if(!contacts.length || hands.some(hand=>!contacts.some(contact=>contact.landmark===`hand_${hand}`)))
+    const sameActor=plan.actors.some(actor=>{
+      const owned=contacts.filter(contact=>contact.actorId===actor.actorId);
+      return owned.length>0 && hands.every(hand=>owned.some(contact=>contact.landmark===`hand_${hand}`));
+    });
+    if(!sameActor)
       throw new Error(`${shot.id}: sprite effect has no registered contact before response: ${event.targetId}`);
   }
   return plan;
