@@ -7,6 +7,7 @@ import {PREHISTORIC_TOPIC_VERSION,prehistoricReadiness,prehistoricReferences} fr
 import {referenceHeadDescription} from '../packages/animation/forest-head-art.js';
 import {referenceBodyDescription} from '../packages/animation/forest-body-art.js';
 import {poseArtInventory} from '../packages/topics/pose-art-workbench.js';
+import {viewArtInventory} from '../packages/topics/view-art-workbench.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -29,6 +30,12 @@ const poseStudies=await poseArtInventory(repo);
 const poseEvidence=await Promise.all(poseStudies.map(async study=>{
   const measured=await describe(`library/topics/prehistoric-life/pose-studies/${study.file}`);
   if(measured.sha256!==study.sha256)throw new Error('Pose artwork changed: '+study.file);
+  return {...study,...measured,productionAllowed:false};
+}));
+const viewStudies=await viewArtInventory(repo);
+const viewEvidence=await Promise.all(viewStudies.map(async study=>{
+  const measured=await describe(`library/topics/prehistoric-life/body-views/${study.file}`);
+  if(measured.sha256!==study.sha256||measured.width!==study.width||measured.height!==study.height)throw new Error('Authored view metadata changed: '+study.file);
   return {...study,...measured,productionAllowed:false};
 }));
 const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
@@ -59,10 +66,14 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   poseArtwork:{scope:'static-artwork-only',inventory:'library/topics/prehistoric-life/pose-studies/inspection-v1.json',generatedImageCalls:14,staticVisionAdviceCalls:2,
     evidence:poseEvidence,approved:false,productionReady:false,generatedPosesIntegratedAsProductionRig:false,
     reviews:['docs/topics/reviews/gemini-pose-advice-v1.json','docs/topics/reviews/gemini-pose-advice-v3.json'],workflow:'docs/topics/AI-POSE-WORKFLOW.md'},
-  actionPoseInspection:{file:'docs/topics/reviews/source-pose-art-self-inspection-v1.json',scope:'developer-static-pose-inspection-only',pass:null,productionAcceptance:false,
+  authoredViewArtwork:{scope:'static-artwork-only',generatedImageCalls:viewEvidence.length,staticVisionAdviceCalls:2,evidence:viewEvidence,
+    registered:false,approved:false,productionReady:false,integratedAsProductionRig:false,
+    inventory:'library/topics/prehistoric-life/body-views/inspection-v1.json',workflow:'docs/topics/AUTHORED-VIEWS.md',
+    reviews:['docs/topics/reviews/gemini-authored-views-advice-v1.json','docs/topics/reviews/gemini-authored-views-advice-v2.json']},
+  actionPoseInspection:{file:'docs/topics/reviews/source-spear-pair-self-inspection-v1.json',scope:'developer-static-pose-inspection-only',pass:null,productionAcceptance:false,
     supersedes:{file:'docs/topics/reviews/source-spear-pose-self-inspection-v2.json',reason:'User rejected other arms and face distortion after 0.15. Earlier snapshots and AI artwork remain studies, not acceptance.'},
-    currentRepair:'Retain registered happy cutout; inferred yaw removed. Widen frontal spear grips, retain planar source lengths with role-specific fold guards, orient mittens to shaft; chin has per-hand registration and foreground slots. Run angles interpolate from current rest only during active clips; point reach follows each chain. Free pelvis corrects foot reach before support lock. 138 static cards include six intentionally blocked head views; no continuous-motion pass. Authored body/head views, raised-rear-elbow whole-body lunge, pose registration, quarry/contact and story integration remain pending.',
-    sourceAdvice:{completedCalls:4,scope:'static-source-and-art-advice-only',reports:['docs/topics/reviews/gemini-arm-source-advice-v1.json','docs/topics/reviews/coder-arm-source-advice-v1.json','docs/topics/reviews/gemini-arm-source-advice-v2.json','docs/topics/reviews/gemini-arm-source-advice-v3.json'],assessment:'docs/topics/ARM-POSE-REPAIR.md',pass:null,productionAcceptance:false},workflow:'docs/topics/ARM-POSE-REPAIR.md'},
+    currentRepair:'Retain registered happy cutout; inferred yaw removed. Frontal low spear hold uses 100 actor-scaled unit grip span, fixed role poles, pair silhouette guards and exact planar chains. Chin ink/mitten share foreground slots. Run angles affect active clips only; free pelvis preserves foot reach. Current 138 static cards include six intentionally blocked head views; no continuous-motion pass. Nine new authored-view artworks remain unregistered and unapproved; complete body/head views, raised-rear-elbow whole-body lunge, quarry/contact and story integration remain pending.',
+    sourceAdvice:{completedCalls:6,scope:'static-source-and-art-advice-only',reports:['docs/topics/reviews/gemini-arm-source-advice-v1.json','docs/topics/reviews/coder-arm-source-advice-v1.json','docs/topics/reviews/gemini-arm-source-advice-v2.json','docs/topics/reviews/gemini-arm-source-advice-v3.json','docs/topics/reviews/gemini-spear-pair-advice-v1.json','docs/topics/reviews/coder-spear-pair-advice-v1.json'],assessment:'docs/topics/ARM-POSE-REPAIR.md',pass:null,productionAcceptance:false},workflow:'docs/topics/ARM-POSE-REPAIR.md'},
   walkPoseInspection:{file:'docs/topics/reviews/source-walk-pose-self-inspection-v1.json',scope:'developer-static-inspection-only',pass:null,productionAcceptance:false,
     currentRepair:'Distance-dependent C2 foot lift, bounded support transfer, speed-dependent arms and inferred XYZ knee projection. Isolated front-body poses only; full gait, seated transitions, authored side/rear body views and production acceptance remain pending.'},
   restCalibration:{status:'candidate',method:'SVG masks on full cutouts',reconstructedOccludedParts:false,naturalMotion:false,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/reference-puppet.ts')))},

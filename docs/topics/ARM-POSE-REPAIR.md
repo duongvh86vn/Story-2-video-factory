@@ -1,6 +1,27 @@
-# Lila/Karo — sửa tay và rà soát pose 0.17
+# Lila/Karo — sửa tay và rà soát pose 0.18
 
 Ngày 07/10/2026. Đây là bàn giao source và inspection ảnh tĩnh, **không phải video hoặc rig đã nghiệm thu**. `productionReady=false`, `productionRig=null` giữ nguyên.
+
+## Cập nhật 0.18 — cặp tay giáo, không chỉ từng elbow
+
+Hai tay 0.17 vẫn cuộn cạnh nhau trước ngực dù từng wrist reachable. Bản 0.18 đặt grip chính `(±65,60)*bodyScale`, grip phụ lùi `100*bodyScale` trên cùng cán; primary offset `-0.18*length` để tay sau không vượt đuôi giáo. Cán vẫn `height*1.2`; thrust tạm là `8*bodyScale`, không kéo tay hết chiều dài để giấu reach error. Profile gốc và measured chain totals giữ nguyên.
+
+- `schemas.ts` nhận `elbowPoles.primary/secondary` cố định cho shot; nới miền secondary offset xuống -200 rig units để Karo có span 108. Vị trí hai grip vẫn bị kiểm nằm trên đoạn gỗ thật; không nới contact tolerance.
+- `compiler.ts` kiểm thêm `sourceSpearPairShape`: khoảng grip ≥60% chain ngắn hơn, khuỷu drive ở sau vai của chính nó trên trục cán, wrist sau không được đưa quá 30% chain về trước vai. Guards này là quy tắc thẩm mỹ ứng viên cho source front, không phải chứng nhận anatomy.
+- Cặp mới có pole cùng dấu nhưng wrist order khác nên hai elbow mở về hai phía. Đổi dấu tay sau một cách máy móc sẽ kéo elbow về phía trước áo. Giữ nhánh trọn shot, không chọn lại từ target theo từng frame. Không áp “mọi elbow phải thấp hơn shoulder”; lunge thật cần raised rear elbow.
+- `FrameState.spearGeometry` và bảng developer ghi grip span, minimum span, rear elbow along-shaft. `forest-source-body-motion-14`, `forest-arm-role-shape-2`, `forest-spear-grips-4` nằm trong fingerprint; cache cũ không được dùng như kết quả mới.
+
+[Ảnh mới](reviews/source-spear-pair-aim-v2.png) cho thấy hai tay không còn cuộn cạnh nhau trên ngực như [0.17](reviews/source-hunt-aim-after-v2.png). Đây vẫn là **frontal low hold**, chưa phải pose giáo chéo/lunge theo người dùng. Karo rear arm còn bow rộng; Lila arm chia silhouette với tóc. Wrist/grasp, ink clearance theo mask và motion cả chu kỳ còn phải dựng/kiểm.
+
+Đã mở lại đủ 12 trang developer của source 0.18: 138 ô ở ba clock cố định với mood happy; 132 ô render, sáu head-turn bị chặn đúng vì chưa có registration. [Inspection 0.18](reviews/source-spear-pair-self-inspection-v1.json) giữ source/ảnh hashes và DOM diagnostics. Không kết luận tất cả pose đẹp hoặc video mượt từ việc render không lỗi; các mood khác, toàn clock và runtime chưa chạy.
+
+Tư vấn bổ sung thật qua 9router: [Gemini pair](reviews/gemini-spear-pair-advice-v1.json), [model code pair](reviews/coder-spear-pair-advice-v1.json). Gemini đề xuất đổi pole và coi planar weight=1 là rút ngắn; các đề xuất này không khớp phép tính hiện hành nên không áp. Model code có tính hai branch: rear elbow hiện ở sau vai; nhánh ngược quay về áo. Reviewer cũng nêu nguy cơ cùng target cằm Lila, chuyển pole nhanh, mitten kink và thiếu body view/lunge. Những nguy cơ đó vẫn còn; advice không phải nghiệm thu.
+
+Có thêm chín output artwork góc thân/đầu và hai review ảnh, ngoài 14 pose/6 advice cũ. Tổng hiện tại: **23 lượt tạo ảnh thành công, 10 lượt tư vấn**, gồm sáu source/art advice, hai pose advice và hai authored-view advice. [AUTHORED-VIEWS.md](AUTHORED-VIEWS.md) ghi rõ ảnh chưa đăng ký, chỉnh Lila v2 và các vấn đề identity/canvas. Không dùng gallery thay rig liên tục.
+
+Build/typecheck source và test declarations được kiểm tra; regression runtime mới viết cho pair crowding/forward elbow và không áp universal elbow-height rule **chưa chạy**. Model test khác cần chạy đúng worktree 0.18, kiểm toàn clock và cả hai hướng trước khi báo PASS.
+
+Các phần 0.17 bên dưới là lịch sử giải thích root cause và cách sửa trước khi kiểm thêm silhouette cả cặp tay; số grip 70/20/45 không còn là preset hiện hành.
 
 ## Lỗi người dùng chỉ ra và phần đã sửa
 

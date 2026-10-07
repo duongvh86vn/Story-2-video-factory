@@ -14,7 +14,7 @@ import {forestHeadContour} from './forest-tribe-art.js';
 import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHeadDescription,referenceHeadViewForYaw} from './forest-head-art.js';
 import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
-import {sourceArmShape,type SourceArmRole} from './source-arm.js';
+import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
 import {seatedGarmentState,seatedGarmentMatrixError,type GarmentRestPose} from './forest-garment-art.js';
@@ -231,6 +231,7 @@ export interface FrameState {
   legProjection?:Record<RigHand,{kneeDepth:number;upperRatio:number;lowerRatio:number}>;
   armProjection?:Partial<Record<RigHand,{elbowDepth:number;upperRatio:number;lowerRatio:number}>>;
   armGeometry?:Partial<Record<RigHand,ReturnType<typeof sourceArmShape>>>;
+  spearGeometry?:Record<string,ReturnType<typeof sourceSpearPairShape>>;
   hands:Record<'left'|'right',Point>; contactError:number; contactErrors:Record<RigHand,number>; mood:Mood;
   transforms:Record<string,string>; paths?:Record<string,string>; face:Record<string,{opacity?:number;scaleX?:number;scaleY?:number;rotation?:number;x?:number;y?:number;attr?:{transform:string}}>;
   props:Record<string,{point:Point;attached:boolean;angle?:number;tip?:Point;phase?:string}>;
@@ -517,6 +518,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   const legProjection=usesReferenceBody(profile)?{} as NonNullable<FrameState['legProjection']>:undefined;
   const armProjection={} as NonNullable<FrameState['armProjection']>;
   const armGeometry={} as NonNullable<FrameState['armGeometry']>;
+  const spearGeometry={} as NonNullable<FrameState['spearGeometry']>;
+  const spearArms:Record<string,Partial<Record<RigHand,Parameters<typeof sourceSpearPairShape>[0]>>>={};
   const sourceRun=usesReferenceBody(profile)&&plan.walks.some(w=>w.gait==='run');
   const kneeProjection=(state:{kneeSeatWeight:number},geometry:ReturnType<typeof legGeometry>,chain:Chain)=>projectSourceKnee(geometry.hip,chain.end,chain.joint,geometry.bones.upper,geometry.bones.lower,state.kneeSeatWeight);
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
@@ -600,11 +603,12 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??(i?50:-50))*s,y:(gesture?.carryOffset?.y??35)*s},lean));
     const spear=spearStates.find(c=>c.track.hand===side||c.track.twoHands);
     const target=spear?(spear.track.hand===side?spear.state.primary:spear.state.secondary):gesture?goal(gesture,neutral,chin,carryAnchor,t,s,shoulder):neutral;
-    // Temporary frontal grip uses one fixed branch through its owned clip.
-    // This is not the user's raised-rear-elbow lunge: that needs authored body
-    // views and distinct role trajectories, not a blind IK polarity flip.
+    // Role poles are authored once for the owned shot, not selected again by
+    // per-frame target position. Grip geometry still has to open both elbows;
+    // a pole flag cannot by itself repair crowding or invent a profile body.
     const sourceGesture=usesReferenceBody(profile)&&gesture?.action==='think'&&!gesture.elbowPole?{...gesture,elbowPole:'rest' as const}:gesture;
-    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lengths.lower*s,spear.track.aim.x>=plan.root.x?-1:1):authoredRun&&!gesture?authoredRun:armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lengths.lower*s,side,
+    const spearPole=spear?.track.elbowPoles?.[side===spear?.track.hand?'primary':'secondary']??(spear&&spear.track.aim.x>=plan.root.x?-1:1);
+    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lengths.lower*s,spearPole):authoredRun&&!gesture?authoredRun:armPose(shoulder,neutral,target,sourceGesture,t,lengths.upper*s,lengths.lower*s,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
     if(spear&&arm.error>.01)throw new Error(`${spear.track.id}: ${side} hand cannot reach spear grip at ${t}ms (${arm.error.toFixed(2)}px)`);
     if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
@@ -625,7 +629,14 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       const seatedWeight=Object.values(bodyPosture.seatWeights??{}).reduce((sum,w)=>sum+w,0);
       const role:SourceArmRole=spear?(side===spear.track.hand?'spear-front':'spear-rear'):gesture?.action==='think'?'chin':gesture?.action==='point'?'point':gesture?'react':walk.running?'run':seatedWeight>.01?'lap':walk.activation>.01?'walk':'rest';
       armGeometry[side]=sourceArmShape(role,shoulder,projectedArm?.joint??arm.joint,arm.end,lengths.upper*s,lengths.lower*s,projectedArm?.depth??0);
+      if(spear){
+        (spearArms[spear.track.id]??={})[side]={shoulder,elbow:projectedArm?.joint??arm.joint,wrist:arm.end,upper:lengths.upper*s,lower:lengths.lower*s};
+      }
     }
+  }
+  for(const {track,state} of spearStates)if(usesReferenceBody(profile)&&track.twoHands){
+    const pair=spearArms[track.id]!,other=track.hand==='left'?'right':'left';
+    spearGeometry[track.id]=sourceSpearPairShape(pair[track.hand]!,pair[other]!,state.angle);
   }
   const activeGestures={right:gestureAt(plan,t,'right'),left:gestureAt(plan,t,'left')};
   const activeGesture=activeGestures.right?.target?activeGestures.right:activeGestures.left??activeGestures.right,explicitGaze=plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
@@ -742,7 +753,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
   const seatOffset=m.seatContactOffset?rotate({x:-bend*m.seatContactOffset.x*s,y:m.seatContactOffset.y*s},lean):{x:0,y:0};
-  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),...(Object.keys(armProjection).length?{armProjection}:{}),...(Object.keys(armGeometry).length?{armGeometry}:{}),hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
+  return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),...(Object.keys(armProjection).length?{armProjection}:{}),...(Object.keys(armGeometry).length?{armGeometry}:{}),...(Object.keys(spearGeometry).length?{spearGeometry}:{}),hands,transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
 }
 
 function transformNumbers(value:string):number[] {return value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);}

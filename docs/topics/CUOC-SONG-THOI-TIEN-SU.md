@@ -1,6 +1,9 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Phiên bản:** 0.17 · **Ngày:** 07/10/2026
+**Hiện hành 0.18:** kiểm silhouette cả cặp tay giáo ngoài reach/flexion: span 100*bodyScale, rear elbow ở sau vai theo trục cán, nhánh cố định suốt shot và cán gỗ còn sau grip. Cặp mới bỏ coils cũ nhưng vẫn là low frontal hold; lunge theo mẫu chưa dựng. Có chín output artwork góc đầu/thân qua 9router, chưa đăng ký/duyệt; profile phải và lưng còn thiếu. Source 0.18 có 138 ô inspection tĩnh happy, sáu head-turn bị chặn. Tổng 23 image calls thành công và 10 advice calls; không phải PASS motion/video. [Sửa tay](ARM-POSE-REPAIR.md), [góc thân/đầu và tool](AUTHORED-VIEWS.md). Giữ guard và ba luồng kịch bản / WAV / câu chuyện → kịch bản → video.
+
+Các mục 0.17 và trước đó bên dưới là lịch sử; preset 70/20/45 không còn hiện hành.
+**Phiên bản:** 0.18 · **Ngày:** 07/10/2026
 
 **Cập nhật hiện hành 0.17:** sửa preset hai grip giáo, kiểm hình tay theo role, target cằm từng tay/foreground slot, góc chạy chỉ theo clip đang hoạt động, point reach từng chain và free-seat foot reach. Đã có bảng 138 ô inspection tĩnh, sáu ô head-turn chặn do thiếu artwork. Đã gọi thêm bốn lượt tư vấn source/ảnh qua 9router ngoài hai lượt artwork review trước đó. Đây chưa phải anatomy/video PASS; lunge tay sau nâng và các góc nhìn đúng nguồn còn phải dựng. Bàn giao code, môi trường và danh sách việc còn thiếu: [ARM-POSE-REPAIR.md](ARM-POSE-REPAIR.md). Các mục 0.16 và những mốc cũ bên dưới là lịch sử.
 

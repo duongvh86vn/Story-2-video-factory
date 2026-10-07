@@ -1,0 +1,354 @@
+{
+  "notes": [
+    "Full pair geometry in aim v1/v2 is the same; v2 updates the stale 0.17 page header to 0.18",
+    "Images and absent error cards do not prove anatomy quality or smooth video",
+    "Authoring studies remain unregistered; whole-body diagonal lunge remains pending",
+    "Runtime tests delegated to another model"
+  ],
+  "mood": "happy",
+  "renderedCards": 132,
+  "observations": [
+    {
+      "group": "gestures",
+      "phase": "entry",
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": 14,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 81.9° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 85.7° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: point · gập 85.3° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: point · gập 86.7° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 108.1° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 96.3° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: chin · gập 115.6° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: chin · gập 109.7° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "gestures",
+      "phase": "pose",
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": 14,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 79.9° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 81.9° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: point · gập 80.7° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: point · gập 79.5° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 132.0° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 117.4° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: chin · gập 142.3° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: chin · gập 134.5° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "gestures",
+      "phase": "recover",
+      "blocked": [
+        "lilaneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint.",
+        "karoneeds-head-view: authored source-faithful partner-facing heads are pending.Pose bị chặn; không thay bằng hình giả hoặc tự nới constraint."
+      ],
+      "cards": 14,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 74.3° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: point · gập 77.3° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: point · gập 75.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: point · gập 77.8° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 86.3° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: chin · gập 76.8° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: chin · gập 91.1° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: chin · gập 87.1° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "locomotion",
+      "phase": "entry",
+      "blocked": [],
+      "cards": 12,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 25.8° · tỷ lệ nét 1.00/1.00right: walk · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 20.2° · tỷ lệ nét 1.00/1.00right: walk · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 25.8° · tỷ lệ nét 1.00/1.00right: walk · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 20.2° · tỷ lệ nét 1.00/1.00right: walk · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00right: run · gập 45.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00right: run · gập 45.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00right: run · gập 45.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 74.8° · tỷ lệ nét 1.00/1.00right: run · gập 45.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 100.7° · tỷ lệ nét 1.00/1.00right: react · gập 115.5° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 108.2° · tỷ lệ nét 1.00/1.00right: react · gập 115.6° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "locomotion",
+      "phase": "pose",
+      "blocked": [],
+      "cards": 12,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 25.8° · tỷ lệ nét 1.00/1.00right: walk · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 20.2° · tỷ lệ nét 1.00/1.00right: walk · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 25.8° · tỷ lệ nét 1.00/1.00right: walk · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 20.2° · tỷ lệ nét 1.00/1.00right: walk · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00right: run · gập 54.9° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00right: run · gập 54.9° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00right: run · gập 54.9° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: run · gập 65.1° · tỷ lệ nét 1.00/1.00right: run · gập 54.9° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 93.1° · tỷ lệ nét 1.00/1.00right: react · gập 105.0° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 113.4° · tỷ lệ nét 1.00/1.00right: react · gập 110.1° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "locomotion",
+      "phase": "recover",
+      "blocked": [],
+      "cards": 12,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 25.8° · tỷ lệ nét 1.00/1.00right: walk · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 20.2° · tỷ lệ nét 1.00/1.00right: walk · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 25.8° · tỷ lệ nét 1.00/1.00right: walk · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: walk · gập 20.2° · tỷ lệ nét 1.00/1.00right: walk · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 93.6° · tỷ lệ nét 1.00/1.00right: react · gập 104.5° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: react · gập 114.1° · tỷ lệ nét 1.00/1.00right: react · gập 109.4° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "seated",
+      "phase": "entry",
+      "blocked": [],
+      "cards": 8,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 64.1° · tỷ lệ nét 1.00/1.00right: lap · gập 51.4° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 55.8° · tỷ lệ nét 1.00/1.00right: lap · gập 47.6° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 47.3° · tỷ lệ nét 1.00/1.00right: lap · gập 61.7° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 45.2° · tỷ lệ nét 1.00/1.00right: lap · gập 58.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 64.1° · tỷ lệ nét 1.00/1.00right: lap · gập 51.4° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 55.8° · tỷ lệ nét 1.00/1.00right: lap · gập 47.6° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 47.3° · tỷ lệ nét 1.00/1.00right: lap · gập 61.7° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 45.2° · tỷ lệ nét 1.00/1.00right: lap · gập 58.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "seated",
+      "phase": "pose",
+      "blocked": [],
+      "cards": 8,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 93.8° · tỷ lệ nét 1.00/1.00right: lap · gập 91.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 66.0° · tỷ lệ nét 1.00/1.00right: lap · gập 79.9° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 77.6° · tỷ lệ nét 1.00/1.00right: lap · gập 68.7° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 77.8° · tỷ lệ nét 1.00/1.00right: lap · gập 64.0° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 93.8° · tỷ lệ nét 1.00/1.00right: lap · gập 91.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 66.0° · tỷ lệ nét 1.00/1.00right: lap · gập 79.9° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 77.6° · tỷ lệ nét 1.00/1.00right: lap · gập 68.7° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: lap · gập 77.8° · tỷ lệ nét 1.00/1.00right: lap · gập 64.0° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "seated",
+      "phase": "recover",
+      "blocked": [],
+      "cards": 8,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 25.8° · tỷ lệ nét 1.00/1.00right: rest · gập 19.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: rest · gập 20.2° · tỷ lệ nét 1.00/1.00right: rest · gập 22.2° · tỷ lệ nét 1.00/1.00Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "spear",
+      "phase": "entry",
+      "cards": 12,
+      "blocked": [],
+      "diagnosticsRecorded": false
+    },
+    {
+      "group": "spear",
+      "phase": "pose",
+      "blocked": [],
+      "cards": 12,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 95.4° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -49.9 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 90.6° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.5° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -41.9 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 77.5° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 107.2° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -46.7 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 81.1° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 114.7° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -41.5 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 97.7° · tỷ lệ nét 1.00/1.00right: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -46.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 89.8° · tỷ lệ nét 1.00/1.00right: spear-front · gập 37.7° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -36.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 67.9° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 108.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -43.7 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 73.3° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 112.9° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -35.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 84.1° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -48.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 79.1° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.5° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -41.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 65.0° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -46.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 56.2° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.5° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -37.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    },
+    {
+      "group": "spear",
+      "phase": "recover",
+      "blocked": [],
+      "cards": 12,
+      "diagnostics": [
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 98.3° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -50.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 88.5° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.5° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -41.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 77.5° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 104.4° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -46.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 81.1° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 116.8° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -41.4 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 99.5° · tỷ lệ nét 1.00/1.00right: spear-front · gập 45.3° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -48.3 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 89.4° · tỷ lệ nét 1.00/1.00right: spear-front · gập 45.2° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -38.6 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 72.0° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 105.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -44.9 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-front · gập 76.4° · tỷ lệ nét 1.00/1.00right: spear-rear · gập 114.7° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -38.0 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 98.3° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -50.1 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 88.5° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.5° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -41.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 98.9° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.8° · tỷ lệ nét 1.00/1.00Grip 100.0 / tối thiểu 59.8; khuỷu sau theo trục cán -50.2 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion.",
+        "Chi tiết thân/tay phía dưới chủ ý cắt phần giáo ở xa.left: spear-rear · gập 89.2° · tỷ lệ nét 1.00/1.00right: spear-front · gập 54.5° · tỷ lệ nét 1.00/1.00Grip 108.0 / tối thiểu 64.5; khuỷu sau theo trục cán -41.8 (≤0).Pose tĩnh ứng viên; chưa đạt nghiệm thu motion."
+      ]
+    }
+  ],
+  "version": "forest-tribe-0.18-spear-pair-and-view-candidate",
+  "source": [
+    {
+      "sha256": "d6fd3ab852204648e11b64fcc2e31f070f30f96b96f35c55c18b1a70061d10a0",
+      "file": "packages/animation/compiler.ts"
+    },
+    {
+      "sha256": "73318e3d89b87185c989c6c2e580196c3b6539d305c41bd318a45f272df40dd3",
+      "file": "packages/animation/source-arm.ts"
+    },
+    {
+      "sha256": "0f4d784419cb0af679dae4e1db395263117d0f30eafffc091f33f64ca719902f",
+      "file": "packages/animation/schemas.ts"
+    },
+    {
+      "sha256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
+      "file": "packages/animation/spear.ts"
+    },
+    {
+      "sha256": "10aeaacfc98ffcae1a578049306f0374cb507516c8518a118915c700bfa0f43a",
+      "file": "packages/animation/forest-body-art.ts"
+    },
+    {
+      "sha256": "92661b7b688999f884d2774810938a0bc607d3238cc0526e050cb68e85044da3",
+      "file": "packages/animation/rig.ts"
+    },
+    {
+      "sha256": "23668fb954ece9313465abeab6cb7c0b46f447c56da808bf18f16bb1a762d1c6",
+      "file": "packages/topics/body-workbench.ts"
+    },
+    {
+      "sha256": "f20004be135fe74b719ebcf2f995ade94be61810eddd2147030fd69efaeabc6a",
+      "file": "packages/topics/view-art-workbench.ts"
+    },
+    {
+      "sha256": "e632a88e36bad31d6aea6f71bf2e55711ac7d71a140af274805a04f5c0516644",
+      "file": "scripts/prehistoric-view-art.ts"
+    }
+  ],
+  "episodeRendered": false,
+  "intentionallyBlockedHeadCards": 6,
+  "captures": [
+    {
+      "sha256": "52f27ce7b70e548239041fdfeb463394cde729fff04a17e24ac2e903401f68fe",
+      "file": "docs/topics/reviews/source-spear-pair-aim-v1.png"
+    },
+    {
+      "sha256": "244d1519175272b8585739227611a5a6c6cc9fdd0ba9ae75961b412bc2fbac07",
+      "file": "docs/topics/reviews/source-spear-pair-aim-v2.png"
+    },
+    {
+      "sha256": "2c14839b99a491b6603d953e45ba06754f54fe3bb4019cb46f4b69407542a5f7",
+      "file": "docs/topics/reviews/arm-audit-spear-pair-entry-v1.png"
+    },
+    {
+      "sha256": "0fda59fad4615f4df85d9de9f5288f19067284c563c67c99bcd1afeaefb3c83b",
+      "file": "docs/topics/reviews/arm-audit-spear-pair-pose-v1.png"
+    },
+    {
+      "sha256": "0c49e759c7ff4a479da6d49a83712fb77ceecb7e2184bd3488c4af4890123616",
+      "file": "docs/topics/reviews/arm-audit-spear-pair-recover-v1.png"
+    },
+    {
+      "sha256": "33d4bcbfb880c2812ff8781b5b39ac862efb926c6fa0cbd823f5c85f2f3896ae",
+      "file": "docs/topics/reviews/arm-audit-v18-gestures-entry.png"
+    },
+    {
+      "sha256": "df8c3666b1e44585062217ce6aa20b4a44802c9a421e9e519e4f4a08be97e222",
+      "file": "docs/topics/reviews/arm-audit-v18-gestures-pose.png"
+    },
+    {
+      "sha256": "1569897dcdded23f52379cad030936a05770e44e9f62ec47e77589338a55d774",
+      "file": "docs/topics/reviews/arm-audit-v18-gestures-recover.png"
+    },
+    {
+      "sha256": "52d4e6d09b8b3add31d91dcfd7020767ea7e505471af7807b19fab3753cc4708",
+      "file": "docs/topics/reviews/arm-audit-v18-locomotion-entry.png"
+    },
+    {
+      "sha256": "b51d5c478079e5fae42dbd40e5841d04f1dca359be13c16290f7e722fb29df6f",
+      "file": "docs/topics/reviews/arm-audit-v18-locomotion-pose.png"
+    },
+    {
+      "sha256": "149891915229e135db00e20c84288e22569de6a30b72da469527071e208175ef",
+      "file": "docs/topics/reviews/arm-audit-v18-locomotion-recover.png"
+    },
+    {
+      "sha256": "7ad3d3ef182a91386d53e55d05207b50825010fc1e71169f3d5f08bb51cf31bc",
+      "file": "docs/topics/reviews/arm-audit-v18-seated-entry.png"
+    },
+    {
+      "sha256": "11a1bea0f54c298ef5a9f613eb308cae19c01f039b1e1730ec6053dcb63c392a",
+      "file": "docs/topics/reviews/arm-audit-v18-seated-pose.png"
+    },
+    {
+      "sha256": "ddcd543b59ddd9f89a5566f0da5ca57930427a0f4f867cb18572a695108013b7",
+      "file": "docs/topics/reviews/arm-audit-v18-seated-recover.png"
+    }
+  ],
+  "continuousMotionTested": false,
+  "scope": "developer-static-workbench-only",
+  "pass": null,
+  "cards": 138,
+  "productionAcceptance": false,
+  "checks": {
+    "typecheck": {
+      "exitCode": 0,
+      "command": "npm run test:typecheck"
+    },
+    "build": {
+      "exitCode": 0,
+      "command": "npm run build"
+    },
+    "runtimeTestsRun": false,
+    "fullMotionAcceptance": false,
+    "voiceTestsRun": false
+  },
+  "bodyPackFingerprint": "77d70368b7de373b79757489e01bc6282c6ce40f0dec0eb6054ab283d5b06bef"
+}

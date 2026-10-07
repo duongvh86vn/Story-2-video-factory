@@ -1,0 +1,141 @@
+{
+  "staticVisionAdviceCalls": 2,
+  "integratedAsRig": false,
+  "limitations": [
+    "Static artwork is not motion acceptance",
+    "Advisory hip/neck coordinates are not measured landmarks",
+    "Original artwork remains authoritative"
+  ],
+  "missingViews": [
+    "right",
+    "back"
+  ],
+  "generatedImageCalls": 9,
+  "assets": [
+    {
+      "registered": false,
+      "view": "left",
+      "actor": "karo",
+      "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+      "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "Profile có cổ/mũi/râu dài hơn nguồn; cần hiệu chỉnh tỷ lệ, không lấy nhận xét AI làm PASS."
+      ],
+      "approved": false,
+      "version": "v1"
+    },
+    {
+      "registered": false,
+      "view": "three-quarter-left",
+      "actor": "karo",
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất."
+      ],
+      "approved": false,
+      "version": "v1"
+    },
+    {
+      "registered": false,
+      "view": "three-quarter-right",
+      "actor": "karo",
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "Hai lượt Gemini đánh giá cùng costume khác nhau; chưa kết luận anatomical side chỉ theo screen side."
+      ],
+      "approved": false,
+      "version": "v1"
+    },
+    {
+      "registered": false,
+      "view": "left",
+      "actor": "lila",
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v1.png",
+      "sha256": "6716ca8ffca0fe0f2862b7f41fb3878a6bcf03e458d5cc028e2c4da70a75104e",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "AI thêm da ở phần bắp tay, khác nét đen của nguồn; bản v1 không dùng làm rig."
+      ],
+      "approved": false,
+      "version": "v1"
+    },
+    {
+      "registered": false,
+      "view": "left",
+      "actor": "lila",
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+      "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "Bản sửa đã làm nét tay đen rõ hơn; attachment đuôi tóc và tỷ lệ đầu/thân giữa góc còn phải kiểm.",
+        "Canvas output đã đổi so với edit target; không tái dùng registration cũ."
+      ],
+      "approved": false,
+      "version": "v2"
+    },
+    {
+      "registered": false,
+      "view": "three-quarter-left",
+      "actor": "lila",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v1.png",
+      "sha256": "935715ed6c3cab5112af6b63311f8d9b38b9db2add9de6f9a5a40d9845d4e04a",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "AI thêm da ở phần bắp tay, khác nét đen của nguồn; bản v1 không dùng làm rig."
+      ],
+      "approved": false,
+      "version": "v1"
+    },
+    {
+      "registered": false,
+      "view": "three-quarter-left",
+      "actor": "lila",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "Bản sửa đã làm nét tay đen rõ hơn; attachment đuôi tóc và tỷ lệ đầu/thân giữa góc còn phải kiểm."
+      ],
+      "approved": false,
+      "version": "v2"
+    },
+    {
+      "registered": false,
+      "view": "three-quarter-right",
+      "actor": "lila",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v1.png",
+      "sha256": "517f5db63095e6942a04ee14ac1c4e60f6dbe31cf11cb9eb30cca015a032acb9",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "AI thêm da ở phần bắp tay, khác nét đen của nguồn; bản v1 không dùng làm rig."
+      ],
+      "approved": false,
+      "version": "v1"
+    },
+    {
+      "registered": false,
+      "view": "three-quarter-right",
+      "actor": "lila",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "notes": [
+        "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+        "Bản sửa đã làm nét tay đen rõ hơn; attachment đuôi tóc và tỷ lệ đầu/thân giữa góc còn phải kiểm.",
+        "Canvas output đã đổi so với edit target; không tái dùng registration cũ."
+      ],
+      "approved": false,
+      "version": "v2"
+    }
+  ],
+  "reviewReports": [
+    "docs/topics/reviews/gemini-authored-views-advice-v1.json",
+    "docs/topics/reviews/gemini-authored-views-advice-v2.json"
+  ],
+  "productionReady": false,
+  "scope": "developer-static-artwork-inspection-only",
+  "productionRig": null
+}

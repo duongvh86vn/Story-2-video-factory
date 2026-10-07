@@ -11,7 +11,7 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-13';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-14';
 export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-9';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},

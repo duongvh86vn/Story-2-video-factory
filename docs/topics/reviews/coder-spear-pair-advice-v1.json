@@ -1,0 +1,141 @@
+{
+  "model": "cx/gpt-6.1-sol",
+  "focus": "spear-pair",
+  "prompt": "Review actual source and attached static frames for this user-reported arm defect, NOT runtime tests. Preserve the original warm Lila/Karo face/hair/clothes and black stick limbs/mitten hands. User requires softly drawn strokes, not hard zigzag hinges. Characters are actors in arbitrary sourced stories, not presenters. Images show source identity, bad hunt-aim/think frames, and the user spear reference. Diagnose BOTH HANDS across rest, point, think, walk, run, jump, crouch, seated, holding/aiming/thrusting/chasing with spear. Evaluate primary/secondary grip spacing relative to asymmetric source shoulders, bend polarity per arm role, front-vs-depth foreshortening, hidden face-contact hand caused by SVG z-order, severe flexion, wrist orientation, and smooth entry/recovery. Do not declare an elbow invalid simply because it is high: user reference has a raised rear elbow. Source torso is front artwork; cannot fake profile by flipping costume. Propose concrete TypeScript changes with numeric examples from the supplied source lengths, stable branch/pose trajectories, and constraints that reject unconvincing shapes even when the wrist is mathematically reachable. Do not reduce bone lengths or relax contact tolerances to hide the defect. Differentiate a useful temporary frontal pose from pending true authored body/head views and whole-body lunge. Return JSON with rootCauses, fixes, checks, limitations. Do not claim video/motion pass. FOCUS: filenames distinguish the 0.17 BEFORE frame from source-spear-pair/arm-audit-spear-pair 0.18 AFTER frames. Do not attribute old coils to the new pose. The new pair diagnostics show rearElbowAlong < 0 (behind its own shoulder), full planar bone ratios 1/1 and 100/108-unit grip span. Explicit role poles have the same numeric sign here because the rear wrist is now behind the front wrist; equal signs do not imply equal visible elbow direction. Before recommending a polarity change, calculate solveChain numerically: direction=atan2(dy,dx)-bend*acos((upper^2+d^2-lower^2)/(2*upper*d)). Check where both candidate elbows actually lie, including the source head/beard/garment. projectSourceKnee with plane weight 1 is the full planar case, not artificial depth shrinking. Distinguish unsightly shape in these exact images from an arbitrary flexion threshold. We still need a real raised rear elbow + diagonal shaft + wide-legged lunge on an authored side/3-quarter body; propose a path that keeps bones and tool contact, not merely flipping a front cutout or sign.",
+  "source": [
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "d6fd3ab852204648e11b64fcc2e31f070f30f96b96f35c55c18b1a70061d10a0",
+      "excerptRanges": [
+        {
+          "startLine": 59,
+          "endLine": 76
+        },
+        {
+          "startLine": 281,
+          "endLine": 362
+        },
+        {
+          "startLine": 420,
+          "endLine": 760
+        }
+      ],
+      "excerptSha256": "ac9cb83b7ced42fd5f030a64f6f6f28f97b6098bd3107c0e27475969f94cf3fa"
+    },
+    {
+      "file": "packages/animation/forest-body-art.ts",
+      "sha256": "10aeaacfc98ffcae1a578049306f0374cb507516c8518a118915c700bfa0f43a",
+      "excerptRanges": [
+        {
+          "startLine": 21,
+          "endLine": 90
+        },
+        {
+          "startLine": 122,
+          "endLine": 148
+        }
+      ],
+      "excerptSha256": "8daff5005b0e1ab87d103fb9fb64f07a36ee22fe8604fe2386873670462de08f"
+    },
+    {
+      "file": "packages/animation/source-arm.ts",
+      "sha256": "73318e3d89b87185c989c6c2e580196c3b6539d305c41bd318a45f272df40dd3",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 39
+        }
+      ],
+      "excerptSha256": "0b34c6a9d63bc84c1d4aa5d2eee79239bf95fa6551f556325f02dfffeb917a09"
+    },
+    {
+      "file": "packages/animation/forest-cutout-head.ts",
+      "sha256": "4b1502175d8958422a7d7a5aa079a5d39e503b0aed6e9ba331dcebb75a30362f",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 54
+        }
+      ],
+      "excerptSha256": "9cb3cd60ed14fa77a680968a52a622d2fb9552dafc5199659497cbbbca1b1ae6"
+    },
+    {
+      "file": "packages/animation/spear.ts",
+      "sha256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 38
+        }
+      ],
+      "excerptSha256": "e4183df46c875f808253927d950942ccf15fef6eb8c575c242b68a53044008ed"
+    },
+    {
+      "file": "packages/animation/schemas.ts",
+      "sha256": "0f4d784419cb0af679dae4e1db395263117d0f30eafffc091f33f64ca719902f",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 73
+        }
+      ],
+      "excerptSha256": "28a612a1f44f6e97759972de985b0fcfebcd837e5791e637b316837d5e8aa103"
+    },
+    {
+      "file": "packages/topics/body-workbench.ts",
+      "sha256": "23668fb954ece9313465abeab6cb7c0b46f447c56da808bf18f16bb1a762d1c6",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 151
+        }
+      ],
+      "excerptSha256": "35180b1d932abf741ca4abb6220d47a455ec418334b597e64d7fd0570d0528ef"
+    },
+    {
+      "file": "packages/animation/rig.ts",
+      "sha256": "92661b7b688999f884d2774810938a0bc607d3238cc0526e050cb68e85044da3",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 62
+        }
+      ],
+      "excerptSha256": "a7dbfc786dc71001d98e593dc55675fe30f76a65c4522a5499b0a8929f1afe91"
+    }
+  ],
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    },
+    {
+      "file": "docs/topics/assets/reference-spear-pose.png",
+      "sha256": "a5c5de51c742855f8dc993c1273cc27bbb35b0314ca12c3563c41d60c2fa350e"
+    },
+    {
+      "file": "docs/topics/reviews/source-hunt-aim-after-v2.png",
+      "sha256": "f13acf65c27b1e79be76ae273edc8e2482b2a84ef4cf69c6909e9a1eef6e5772"
+    },
+    {
+      "file": "docs/topics/reviews/source-spear-pair-aim-v1.png",
+      "sha256": "52f27ce7b70e548239041fdfeb463394cde729fff04a17e24ac2e903401f68fe"
+    },
+    {
+      "file": "docs/topics/reviews/arm-audit-spear-pair-pose-v1.png",
+      "sha256": "0fda59fad4615f4df85d9de9f5288f19067284c563c67c99bcd1afeaefb3c83b"
+    }
+  ],
+  "response": "{\n  \"rootCauses\": [\n    {\n      \"issue\": \"The BEFORE defect and the AFTER limitation are different.\",\n      \"evidence\": \"Image 4, source-hunt-aim-after-v2.png, is the 0.17 BEFORE snapshot despite its filename: both hands are crowded ahead of the torso, producing folded, overlapping strokes. Images 5 and 6, source-spear-pair-aim-v1.png and arm-audit-spear-pair-pose-v1.png, are the AFTER pair. The old coils are not present in that new pair.\",\n      \"diagnosis\": \"The AFTER arrangement is a useful low, frontal two-handed hold. It still does not depict the reference's raised rear elbow, diagonal weapon and wide-legged lunge.\"\n    },\n    {\n      \"issue\": \"Reachability and current shape guards are necessary but insufficient.\",\n      \"evidence\": \"The AFTER diagnostics show planar ratios 1.00/1.00, grip spans 100 for Lila and 108 for Karo, and negative rearElbowAlong. Rightward hold flexion is approximately 95.4/54.8 degrees for Lila's rear/front arms and 90.6/54.5 degrees for Karo. Leftward hold gives approximately 107.2/77.5 and 114.7/81.1 degrees.\",\n      \"diagnosis\": \"These are not the severe old coils, nor evidence of artificial depth shrinking. The visible rear-arm bow, waist-level mitten and flat shaft still read as a low hold rather than a forceful hunt aim. A flexion threshold alone cannot distinguish those silhouettes.\"\n    },\n    {\n      \"issue\": \"Polarity must be evaluated against asymmetric shoulders and wrist order, not mirrored by hand name.\",\n      \"evidence\": \"compiler.ts uses direction = atan2(dy,dx) - bend * alpha. The AFTER rightward primary wrist is ahead of its shoulder while the secondary wrist is behind the primary wrist. Consequently both authored poles can correctly be -1 while the elbows visibly open in different directions.\",\n      \"diagnosis\": \"Changing the secondary pole merely to make its sign differ would move that elbow forward across the torso. An elbow is not invalid because it is high; the user's rear elbow is intentionally raised.\"\n    },\n    {\n      \"issue\": \"The current body is front artwork, not an authored side or three-quarter action body.\",\n      \"evidence\": \"forest-body-art.ts preserves asymmetric source shoulders and costume. body-workbench.ts changes facing and arm ownership without mirroring the clothes. The reference has a side-oriented trunk, diagonal shaft, raised rear elbow and separated bent legs.\",\n      \"diagnosis\": \"Leaning or flipping the front cutout cannot supply the missing shoulder-depth relationship, chest turn, clothing reconstruction or whole-body lunge.\"\n    },\n    {\n      \"issue\": \"Chin contact has both geometric and painter-order requirements.\",\n      \"evidence\": \"rig.ts normally paints hands and arm ink before the head. Its explicit front slots, selected for think in compiler.ts, address the previously hidden face-contact hand using the same physical definitions.\",\n      \"diagnosis\": \"Keep this correction. However, both Lila chin anchors currently use source coordinate (335,230), so her two arms approach the same off-center location with very different shoulder distances. Visibility does not establish a convincing thoughtful pose.\"\n    },\n    {\n      \"issue\": \"Entry/recovery and wrist orientation remain underconstrained.\",\n      \"evidence\": \"armPose changes branches through near-full extension in windows of at most 80 ms. Spear arms bypass armPose and solve directly with fixed poles. Spear mittens use shaftAngle plus a fixed side-dependent 90-degree offset.\",\n      \"diagnosis\": \"Fixed poles avoid arbitrary branch reselection but do not guarantee a good trajectory. A forced extension excursion can look like a whip. Fixed mitten rotation does not measure the forearm-to-hand kink or distinguish support and drive grips.\"\n    }\n  ],\n  \"fixes\": [\n    {\n      \"file\": \"packages/animation/forest-body-art.ts\",\n      \"proposal\": \"Retain the current measured totals and 52/48 inferred split; expose per-view registered shoulder, head, garment and hand landmarks instead of introducing symmetric shoulder defaults.\",\n      \"numericExamples\": {\n        \"basis\": \"bodyScale=1 and plan.scale=1; multiply by bodyScale and plan.scale for world lengths\",\n        \"lila\": {\n          \"leftUpperLower\": [58.93, 54.40],\n          \"rightUpperLower\": [51.81, 47.83],\n          \"rightMinusLeftShoulder\": [24.08, 7.47]\n        },\n        \"karo\": {\n          \"leftUpperLower\": [60.51, 55.85],\n          \"rightUpperLower\": [51.73, 47.75],\n          \"rightMinusLeftShoulder\": [44.41, 15.10]\n        }\n      },\n      \"constraint\": \"Do not shorten these bones, change the measured totals or relax spear's 0.01-unit contact error to make a pose drawable.\"\n    },\n    {\n      \"file\": \"packages/animation/compiler.ts\",\n      \"proposal\": \"Keep the AFTER rightward poles unless an explicitly authored replacement trajectory demonstrates a better pair. Numerically inspect both branches before changing a pole.\",\n      \"calculation\": {\n        \"basis\": \"Unleaned rightward AFTER hold at bodyScale=1: primary shoulder-local wrist (65,60), secondaryOffset=-100. Elbows below are relative to their own shoulder, with SVG positive Y downward.\",\n        \"lilaFront\": {\n          \"wrist\": [65, 60],\n          \"thetaDeg\": 42.71,\n          \"alphaDegApprox\": 26.2,\n          \"bendMinus1ElbowApprox\": [18.7, 48.3],\n          \"bendPlus1ElbowApprox\": [49.7, 14.7]\n        },\n        \"lilaRear\": {\n          \"wrist\": [-10.92, 67.47],\n          \"thetaDegApprox\": 99.2,\n          \"alphaDegApprox\": 49.9,\n          \"bendMinus1ElbowApprox\": [-50.6, 30.2],\n          \"bendPlus1ElbowApprox\": [38.5, 44.6]\n        },\n        \"karoFront\": {\n          \"wrist\": [65, 60],\n          \"bendMinus1ElbowApprox\": [18.8, 48.2],\n          \"bendPlus1ElbowApprox\": [49.6, 14.8]\n        },\n        \"karoRear\": {\n          \"wrist\": [9.41, 75.10],\n          \"thetaDegApprox\": 82.9,\n          \"alphaDegApprox\": 46.8,\n          \"bendMinus1ElbowApprox\": [-38.6, 46.6],\n          \"bendPlus1ElbowApprox\": [48.9, 35.6]\n        },\n        \"interpretation\": \"The current rear candidates are behind their shoulders. The alternate rear candidates are forward. Converted to source pixels, Lila's alternate rear elbow is roughly (329,384), versus current (114,349); Karo's is roughly (279,332), versus current (82,357). The alternate rear forearms return across the garment toward the waist grip. These endpoints are below the chin/beard, not automatically inside the face; evaluate the entire stroked curve against the head, beard, hair and garment masks. Lila's current rear arm also shares silhouette space with her long hair. The alternate front elbows move outward and upward, approximately to source (414,329) for Lila and (381,319) for Karo, rather than repairing the rear role.\",\n        \"scaleNote\": \"Karo's displayed 108-unit span indicates bodyScale=1.08. Scaling the normalized rear solution gives an approximately -41.7-unit horizontal elbow offset, consistent with the displayed -41.9 along-shaft diagnostic after small pose transforms.\"\n      }\n    },\n    {\n      \"file\": \"packages/animation/source-arm.ts\",\n      \"proposal\": \"Extend sourceArmShape and sourceSpearPairShape with role-and-view silhouette checks. Keep flexion limits as provisional art bounds, not anatomy verdicts.\",\n      \"typescriptSketch\": \"type ArmPoseContext = { view: BodyView; role: SourceArmRole; shaftAxis?: Point; allowedContactMask?: string; authoredOcclusions: string[]; wristAxis: Point };\\nfunction assessArmInk(chain: Chain, ink: CubicPair, context: ArmPoseContext): ShapeIssue[];\",\n      \"constraints\": [\n        \"Reject self-intersecting or returning ink loops, except explicitly authored crossings.\",\n        \"Measure clearance using stroked curves and mitten silhouettes, not only elbow points. Start with clearance of 1.5 stroke widths for unrelated visible arm segments, then calibrate against the source style.\",\n        \"Check head/beard/hair and garment intersections against an authored occlusion map. Shoulder emergence and chin contact are allowed regions; arbitrary face crossings are not.\",\n        \"Retain gripSpan >= 0.6 times the shorter chain and rearElbowAlong <= 0 for this frontal preset. Add signed separation and silhouette checks rather than treating those inequalities as sufficient quality.\",\n        \"For a raised-rear-elbow action, use a registered view-specific elbow corridor. Do not impose elbowY >= shoulderY universally.\",\n        \"Do not reject the AFTER hold solely because its rear flexion is around 90–115 degrees. Its actual limitation is the low-hold silhouette and absent action body.\"\n      ]\n    },\n    {\n      \"file\": \"packages/animation/compiler.ts and the inkLimb implementation\",\n      \"proposal\": \"Preserve soft black strokes while making the curve construction bounded. Do not replace the limbs with hard shoulder-elbow-wrist polylines.\",\n      \"typescriptSketch\": \"const incoming = normalize(sub(elbow, shoulder));\\nconst outgoing = normalize(sub(wrist, elbow));\\nconst tangent = normalize(add(incoming, outgoing));\\nconst handle = Math.min(0.18 * upper, 0.18 * lower);\\n// Shared tangent at elbow: E - tangent*handle and E + tangent*handle.\\n// Bound endpoint handles and assess the resulting stroked curve.\",\n      \"details\": \"Use two C1 cubics through the hidden joint, rounded caps and the source black ink treatment. Shorten curve handles, not bones, when curvature overshoots. Reject loops or excessive bulging rather than smoothing an impossible silhouette into a decorative coil. The supplied excerpt does not include inkLimb's implementation, so its present handle behavior cannot be verified here.\"\n    },\n    {\n      \"file\": \"packages/animation/schemas.ts, compiler.ts and spear.ts\",\n      \"proposal\": \"Represent deterministic authored arm/tool trajectories and explicit grip frames.\",\n      \"typescriptSketch\": \"type ArmTrajectory = { branch: -1 | 1; keys: Array<{ timeMs: number; wrist: Point; elbowCorridorId: string }>; view: BodyView };\\ntype GripFrame = { shaftT: number; mittenRotationOffset: number; role: 'support' | 'drive' };\",\n      \"details\": [\n        \"Author a branch for the complete owned clip, including entry and recovery; do not choose it independently at every sample.\",\n        \"Prefer a same-branch shoulder-space trajectory with unwrapped angle and bounded radius. If a branch change is essential, author a longer near-extension passage, for example 250–400 ms, and reject it if it causes an implausible excursion.\",\n        \"Drive both grips from one interpolated rigid shaft frame. Keep their along-shaft coordinates fixed while contact is owned.\",\n        \"Calibrate mitten grip rotation by actor, view and role. Measure the forearm-to-mitten alignment; a provisional 35-degree deviation budget can flag candidates for artwork review, not override a locked contact.\",\n        \"Do not independently tween both wrists and the prop. Preserve exact shaft contacts during windup, thrust and recovery.\"\n      ]\n    },\n    {\n      \"file\": \"packages/animation/rig.ts and compiler.ts\",\n      \"proposal\": \"Retain one physical hand and one physical ink path referenced through mutually exclusive painter slots. Keep chin hand and ink above the head for the complete think gesture, including entry/recovery.\",\n      \"details\": \"Add registered actor-and-side chin contact frames including mitten orientation and allowed beard/hair overlap. Review Lila's same-coordinate anchors separately for both hands. Do not create an offset foreground clone to simulate contact.\"\n    },\n    {\n      \"file\": \"packages/topics/body-workbench.ts and future authored body-view assets\",\n      \"proposal\": \"Keep the current pair labeled temporary frontal low hold. Add a separate authored three-quarter/side lunge track rather than relabeling it as the reference action.\",\n      \"path\": [\n        \"Register source-faithful side/three-quarter torso and head art, preserving warm faces, hair, beard, asymmetric costume, black stick limbs and mitten identity.\",\n        \"Place fixed-length arms on that view's actual shoulders. Author the rear elbow raised and behind its shoulder, and a diagonal shaft matching the selected reference direction.\",\n        \"Choose the shared shaft pose inside both shoulder-centered reach annuli, then select branches whose full ink silhouettes clear the authored face and clothing.\",\n        \"Author separated planted soles, pelvis advance/drop, chest rotation and weight transfer using the existing fixed leg lengths. A lunge needs coordinated legs and pelvis, not an arm-only thrust.\",\n        \"Carry the same shaft grip coordinates through preparation, lunge/contact and recovery. If no convincing pair exists, change the body trajectory or shaft pose before contact, or author another view; do not move a locked hand or shrink a bone.\"\n      ]\n    }\n  ],\n  \"checks\": {\n    \"method\": \"Proposed source review and static-frame inspection only; no runtime tests performed and no motion pass claimed.\",\n    \"bothHandsByAction\": [\n      {\n        \"actions\": [\"rest\", \"point\", \"think\"],\n        \"checks\": \"Rest: retain each asymmetric source hand offset and outward branch. Point: inspect the active arm's authored reach branch and the inactive arm's unchanged rest silhouette; the preset uses 75% chain reach. Think: inspect both side-specific chin approaches, severe folding, mitten orientation and foreground-slot visibility. No attached AFTER think frame establishes visual acceptance.\"\n      },\n      {\n        \"actions\": [\"walk\", \"run\", \"jump\"],\n        \"checks\": \"Walk: inspect both alternating swings and entry/recovery, with current posture ownership only. Run: inspect both authored angle chains and blend from asymmetric rest; below-shoulder elbows are a choice for this pendulum, not a universal rule. Jump: both react gestures still use generic IK; add coordinated anticipation, airborne and landing arm keys rather than assuming independent reactions form a good jump.\"\n      },\n      {\n        \"actions\": [\"crouch\", \"seated\"],\n        \"checks\": \"Crouch: check both hands against the lowered garment and knees; standing hand vectors are not authored crouch acting. Seated: check both lap anchors against the actual visible lap surface, wrist rotations and limb overlap throughout transfer. Current lap blending alone is not seated-arm acceptance.\"\n      },\n      {\n        \"actions\": [\"spear-hold\", \"hunt-aim\", \"spear-thrust\", \"hunt-chase\"],\n        \"checks\": \"Inspect front and rear roles in both directions. AFTER hold/aim separates the grips and removes the old coils. AFTER thrust front flexion falls to about 37.7 degrees rightward, while leftward rear flexion remains around 108.8/112.9 degrees; neither number alone establishes quality. Chase keeps the tool pair owned while the run body moves, so check both shoulder trajectories against the same shaft and garment silhouette rather than expecting free arm swing.\"\n      }\n    ],\n    \"staticReviewRequirements\": [\n      \"Inspect exact contact times and neighboring entry/recovery snapshots, including both arm branches where a replacement is proposed.\",\n      \"Preserve physical lengths and existing contact tolerances.\",\n      \"Treat projectSourceKnee(..., 1) as the full planar case used here. Rename or wrap it as projectSourceArmPlanar for clarity, not to change geometry.\",\n      \"For future depth views, compute flexion from XYZ vectors rather than the current planar shoulder-wrist distance; genuine foreshortening requires authored depth and occlusion.\",\n      \"Check complete shafts in full-stage frames. Detail crops deliberately omit distant spear sections and cannot prove stage containment.\",\n      \"Keep blocked unsupported head-view cards blocked. Their absence of a rendered pose is not a successful head turn.\",\n      \"Preserve original identity separately from extracted cutout identity; the supplied code explicitly describes the cutouts as unaccepted extractions.\",\n      \"Use arbitrary sourced-story targets and actor intent, not presenter-facing defaults or address-viewer gestures.\"\n    ]\n  },\n  \"limitations\": [\n    \"Only the supplied source excerpts and six static images were reviewed. Rest, think, locomotion and seated diagnoses are source-grounded risks and proposed checks, not observed passes or failures in unattached frames.\",\n    \"The AFTER pair is materially improved over the BEFORE coils, but remains a provisional frontal low hold, not the requested raised-rear-elbow diagonal lunge.\",\n    \"True partner-facing body/head views, authored depth arms, clothing reconstruction and whole-body lunge trajectories remain pending.\",\n    \"Exact pixel-mask clearance, current cubic control points and continuous velocity/acceleration cannot be established from the supplied excerpts and static screenshots.\",\n    \"No successful constraint evaluation, absence of an error card or static contact measurement proves visual quality, animation smoothness or video acceptance.\"\n  ]\n}",
+  "usage": {
+    "inputTokens": 44600,
+    "outputTokens": 4223
+  },
+  "scope": "static-source-and-art-advice-only",
+  "productionAcceptance": false,
+  "createdAt": "2026-10-07T06:53:40.326Z"
+}

@@ -1,5 +1,8 @@
 # Lila/Karo: chạy, nhảy và diễn hành động săn
 
+**Hiện hành 0.18:** kiểm silhouette cả cặp tay giáo ngoài reach/flexion: span 100*bodyScale, rear elbow ở sau vai theo trục cán, nhánh cố định suốt shot và cán gỗ còn sau grip. Cặp mới bỏ coils cũ nhưng vẫn là low frontal hold; lunge theo mẫu chưa dựng. Có chín output artwork góc đầu/thân qua 9router, chưa đăng ký/duyệt; profile phải và lưng còn thiếu. Source 0.18 có 138 ô inspection tĩnh happy, sáu head-turn bị chặn. Tổng 23 image calls thành công và 10 advice calls; không phải PASS motion/video. [Sửa tay](ARM-POSE-REPAIR.md), [góc thân/đầu và tool](AUTHORED-VIEWS.md). Giữ guard và ba luồng kịch bản / WAV / câu chuyện → kịch bản → video.
+
+Các mục 0.17 và trước đó bên dưới là lịch sử; preset 70/20/45 không còn hiện hành.
 **Hiện hành 0.17:** tay hunt-aim tiếp tục bị người dùng loại. Preset mới tách hai grip, giữ chain lengths, có role flexion guard, target cằm từng tay và foreground slot; run không áp pole theo clip tương lai. Bảng inspection có 138 ô tĩnh, sáu ô head-turn chờ artwork. Source và ảnh đã được Gemini cùng model code khác tư vấn qua 9router; không phải runtime test hoặc PASS video. [ARM-POSE-REPAIR.md](ARM-POSE-REPAIR.md) ghi code, bằng chứng cuối, giới hạn còn lại và lệnh chạy. Lunge cả người theo mẫu chưa được dựng.
 
 **Lịch sử 0.16:** tay ở 0.15 tiếp tục bị người dùng loại; các snapshot cũ không phải pose đã duyệt. Đã tạo 10 pose riêng v3 (point/think/run-left/jump/spear-lunge-left cho mỗi actor), giữ cả Gemini v1/v2 bị loại để đối chiếu. Có hai lượt review ảnh Gemini thật qua 9router; review v3 vẫn chỉ ra lỗi bàn tay, silhouette và giáo, không cho phép mở production guard. Tool artwork, prompt, gallery, công việc còn thiếu và môi trường ở [AI-POSE-WORKFLOW.md](AI-POSE-WORKFLOW.md).

@@ -1,0 +1,140 @@
+{
+  "model": "ag/gemini-3.8-flash",
+  "prompt": "Review actual source and attached static frames for this user-reported arm defect, NOT runtime tests. Preserve the original warm Lila/Karo face/hair/clothes and black stick limbs/mitten hands. User requires softly drawn strokes, not hard zigzag hinges. Characters are actors in arbitrary sourced stories, not presenters. Images show source identity, bad hunt-aim/think frames, and the user spear reference. Diagnose BOTH HANDS across rest, point, think, walk, run, jump, crouch, seated, holding/aiming/thrusting/chasing with spear. Evaluate primary/secondary grip spacing relative to asymmetric source shoulders, bend polarity per arm role, front-vs-depth foreshortening, hidden face-contact hand caused by SVG z-order, severe flexion, wrist orientation, and smooth entry/recovery. Do not declare an elbow invalid simply because it is high: user reference has a raised rear elbow. Source torso is front artwork; cannot fake profile by flipping costume. Propose concrete TypeScript changes with numeric examples from the supplied source lengths, stable branch/pose trajectories, and constraints that reject unconvincing shapes even when the wrist is mathematically reachable. Do not reduce bone lengths or relax contact tolerances to hide the defect. Differentiate a useful temporary frontal pose from pending true authored body/head views and whole-body lunge. Return JSON with rootCauses, fixes, checks, limitations. Do not claim video/motion pass.",
+  "source": [
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "d6fd3ab852204648e11b64fcc2e31f070f30f96b96f35c55c18b1a70061d10a0",
+      "excerptRanges": [
+        {
+          "startLine": 59,
+          "endLine": 76
+        },
+        {
+          "startLine": 281,
+          "endLine": 362
+        },
+        {
+          "startLine": 420,
+          "endLine": 760
+        }
+      ],
+      "excerptSha256": "ac9cb83b7ced42fd5f030a64f6f6f28f97b6098bd3107c0e27475969f94cf3fa"
+    },
+    {
+      "file": "packages/animation/forest-body-art.ts",
+      "sha256": "10aeaacfc98ffcae1a578049306f0374cb507516c8518a118915c700bfa0f43a",
+      "excerptRanges": [
+        {
+          "startLine": 21,
+          "endLine": 90
+        },
+        {
+          "startLine": 122,
+          "endLine": 148
+        }
+      ],
+      "excerptSha256": "8daff5005b0e1ab87d103fb9fb64f07a36ee22fe8604fe2386873670462de08f"
+    },
+    {
+      "file": "packages/animation/source-arm.ts",
+      "sha256": "73318e3d89b87185c989c6c2e580196c3b6539d305c41bd318a45f272df40dd3",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 39
+        }
+      ],
+      "excerptSha256": "0b34c6a9d63bc84c1d4aa5d2eee79239bf95fa6551f556325f02dfffeb917a09"
+    },
+    {
+      "file": "packages/animation/forest-cutout-head.ts",
+      "sha256": "4b1502175d8958422a7d7a5aa079a5d39e503b0aed6e9ba331dcebb75a30362f",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 54
+        }
+      ],
+      "excerptSha256": "9cb3cd60ed14fa77a680968a52a622d2fb9552dafc5199659497cbbbca1b1ae6"
+    },
+    {
+      "file": "packages/animation/spear.ts",
+      "sha256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 38
+        }
+      ],
+      "excerptSha256": "e4183df46c875f808253927d950942ccf15fef6eb8c575c242b68a53044008ed"
+    },
+    {
+      "file": "packages/animation/schemas.ts",
+      "sha256": "0f4d784419cb0af679dae4e1db395263117d0f30eafffc091f33f64ca719902f",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 73
+        }
+      ],
+      "excerptSha256": "28a612a1f44f6e97759972de985b0fcfebcd837e5791e637b316837d5e8aa103"
+    },
+    {
+      "file": "packages/topics/body-workbench.ts",
+      "sha256": "23668fb954ece9313465abeab6cb7c0b46f447c56da808bf18f16bb1a762d1c6",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 151
+        }
+      ],
+      "excerptSha256": "35180b1d932abf741ca4abb6220d47a455ec418334b597e64d7fd0570d0528ef"
+    },
+    {
+      "file": "packages/animation/rig.ts",
+      "sha256": "92661b7b688999f884d2774810938a0bc607d3238cc0526e050cb68e85044da3",
+      "excerptRanges": [
+        {
+          "startLine": 1,
+          "endLine": 62
+        }
+      ],
+      "excerptSha256": "a7dbfc786dc71001d98e593dc55675fe30f76a65c4522a5499b0a8929f1afe91"
+    }
+  ],
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    },
+    {
+      "file": "docs/topics/assets/reference-spear-pose.png",
+      "sha256": "a5c5de51c742855f8dc993c1273cc27bbb35b0314ca12c3563c41d60c2fa350e"
+    },
+    {
+      "file": "docs/topics/reviews/source-hunt-aim-after-v2.png",
+      "sha256": "f13acf65c27b1e79be76ae273edc8e2482b2a84ef4cf69c6909e9a1eef6e5772"
+    },
+    {
+      "file": "docs/topics/reviews/source-spear-pair-aim-v1.png",
+      "sha256": "52f27ce7b70e548239041fdfeb463394cde729fff04a17e24ac2e903401f68fe"
+    },
+    {
+      "file": "docs/topics/reviews/arm-audit-spear-pair-pose-v1.png",
+      "sha256": "0fda59fad4615f4df85d9de9f5288f19067284c563c67c99bcd1afeaefb3c83b"
+    }
+  ],
+  "response": "```json\n{\n  \"rootCauses\": [\n    {\n      \"area\": \"Spear grip spacing & shoulder asymmetry\",\n      \"detail\": \"In packages/topics/body-workbench.ts lines 55-66, the spear calibration hardcodes primary grip at {x: 65 * direction * b, y: 60 * b} and secondaryOffset at -100 * b. Lila's and Karo's source shoulders are heavily asymmetrical in packages/animation/forest-body-art.ts (Karo left shoulder is at {x:169, y:252}, right is at {x:269, y:286}; Lila left is at {x:236, y:276}, right is at {x:294, y:294}). Because the two hands are solved from a single shoulder-relative shaft vector without compensating for the opposing shoulder's 34px vertical / lateral offset, the rear arm experiences extreme acute angles (flexionDeg reaching 112.9°–114.7° in Image 6) or crowds the front hand into the chest.\"\n    },\n    {\n      \"area\": \"Elbow bend polarity & pole assignment\",\n      \"detail\": \"In packages/animation/compiler.ts line 550, spearPole falls back to `(spear && spear.track.aim.x >= plan.root.x ? -1 : 1)` and workbench lines 64-65 force identical poles (`{primary: direction === 1 ? -1 : 1, secondary: direction === 1 ? -1 : 1}`). When holding or aiming a spear facing right (Image 4 and Image 5), forcing a downward/forward bend pole on both arms forces the rear arm to drop its elbow into a collapsed crimp against the ribs instead of opening upward and backward. The stick-figure reference (Image 3) explicitly uses a raised rear drive elbow held high above the shaft line.\"\n    },\n    {\n      \"area\": \"Z-order occlusion & SVG layering\",\n      \"detail\": \"In packages/animation/rig.ts lines 43-60, `${heldTools}` and `${bodyArmInk}${limbs}` are rendered underneath `<g id=\\\"head\\\">`. While compiler.ts lines 619-626 introduced `hand-${side}-front-slot` and `ink-arm-${side}-front-slot` specifically for `action === 'think'` to avoid the head cutout swallowing the chin-contact hand, no front slot or depth ordering exists for two-handed spear manipulation. As a result, the far arm's stroke and hand clip under the torso or head during steep spear angles, while think gestures pop abruptly because slot visibility is a binary switch (`cue?.action === 'think' ? 1 : 0`) without smooth blend across entry/exit.\"\n    },\n    {\n      \"area\": \"Severe flexion & sharp hinge rendering\",\n      \"detail\": \"In packages/animation/source-arm.ts lines 3-17, `sourceArmShape` permits flexion up to 125° for `spear-front` and 135° for `spear-rear`. At acute angles (>100°), `inkLimb` with cubic softness 0.28 creates a pinched 'zigzag hinge' rather than the organic, hand-drawn stick curve seen in original references (Images 1 and 2). Furthermore, compiler.ts line 560 inappropriately invokes `projectSourceKnee` on the planar arm, risking projective distortion while genuine depth foreshortening is absent.\"\n    },\n    {\n      \"area\": \"Frontal costume constraint vs. side lunge\",\n      \"detail\": \"The reference in Image 3 depicts a profile whole-body lunge with wide stance and rotated torso. Because Lila and Karo's rigs are bound to frontal cutout assets (`lila-cutout-v1.png` and `karo-cutout-v1.png`) with asymmetric one-shoulder fur wraps, attempting to emulate the side spear lunge by simply flipping or stretching the frontal torso creates an unconvincing anatomical mismatch and joint collision.\"\n    }\n  ],\n  \"fixes\": [\n    {\n      \"file\": \"packages/animation/source-arm.ts\",\n      \"description\": \"Tighten candidate art flexion limits and enforce shaft-relative elbow height constraints while permitting raised rear drive elbows.\",\n      \"codeSnippet\": \"// Update limits to prevent acute zigzag crimping\\nconst limits: Partial<Record<SourceArmRole, number>> = {\\n  point: 105,\\n  chin: 140,\\n  run: 115,\\n  'spear-front': 100,\\n  'spear-rear': 118,\\n};\\n\\nexport function sourceSpearPairShape(front: ArmLandmarks, rear: ArmLandmarks, shaftAngle: number) {\\n  const angle = shaftAngle * Math.PI / 180;\\n  const axis = { x: Math.cos(angle), y: Math.sin(angle) };\\n  const normal = { x: -axis.y, y: axis.x };\\n  const along = (a: Point, b: Point) => (a.x - b.x) * axis.x + (a.y - b.y) * axis.y;\\n  const perp = (a: Point, b: Point) => (a.x - b.x) * normal.x + (a.y - b.y) * normal.y;\\n\\n  const frontLength = front.upper + front.lower;\\n  const rearLength = rear.upper + rear.lower;\\n  const gripSpan = along(front.wrist, rear.wrist);\\n  // Grip span must be at least 65% of the shorter arm chain to guarantee open silhouette\\n  const minimumSpan = 0.65 * Math.min(frontLength, rearLength);\\n  const rearElbowAlong = along(rear.elbow, rear.shoulder);\\n  const rearWristAlong = along(rear.wrist, rear.shoulder);\\n\\n  if (gripSpan < minimumSpan - 0.01) {\\n    throw new Error(`needs-arm-pose: spear grips crowd both arm roles (${gripSpan.toFixed(1)} < ${minimumSpan.toFixed(1)})`);\\n  }\\n  if (rearElbowAlong > 0.01) {\\n    throw new Error('needs-arm-pose: drive elbow curls forward instead of opening behind its own shoulder');\\n  }\\n  if (rearWristAlong > rearLength * 0.35 + 0.01) {\\n    throw new Error('needs-arm-pose: both spear wrists are carried in front of the shoulders');\\n  }\\n  return { gripSpan, minimumSpan, rearElbowAlong, rearWristAlong };\\n}\"\n    },\n    {\n      \"file\": \"packages/topics/body-workbench.ts\",\n      \"description\": \"Adjust spear grip trajectory and asymmetric shoulder compensations for Lila and Karo, setting differentiated elbow poles so the rear elbow raises naturally as in Image 3.\",\n      \"codeSnippet\": \"// Recalibrate spear hold and aim parameters for frontal host frame\\nconst b = profile.appearance.bodyScale;\\nconst length = m.height * 1.25;\\nconst offset = -length * 0.16;\\n\\n// Shift grip forward and downward to open front arm to ~50°-70° flexion\\n// Karo/Lila right shoulder compensation:\\nconst shoulderOffsetCompensationY = (hand === 'right' ? -10 : 8) * b;\\nconst grip = { x: 78 * direction * b, y: (52 + shoulderOffsetCompensationY) * b };\\n\\n// Secondary offset set to -115 * b ensuring wide spacing\\nconst secondaryOffset = -115 * b;\\n\\n// Primary pole maintains lower/support curve; secondary pole lifts rear elbow upward/backward\\nconst elbowPoles = {\\n  primary: direction === 1 ? -1 : 1,\\n  secondary: direction === 1 ? 1 : -1,\\n};\"\n    },\n    {\n      \"file\": \"packages/animation/compiler.ts\",\n      \"description\": \"Remove pseudo-3D projectSourceKnee flattening on frontal arms and ensure smooth entry/exit layer opacity transitions for chin/contact gestures.\",\n      \"codeSnippet\": \"// Do not project planar arm through knee depth solver when in frontal candidate pose\\nconst projectedArm = (authoredRun && !spear) \\n  ? projectSourceKnee(shoulder, arm.end, arm.joint, lengths.upper * s, lengths.lower * s, 1) \\n  : undefined;\\n\\n// Smooth slot fading during think gesture entry/recovery to prevent SVG popping\\nif (usesReferenceBody(profile)) {\\n  for (const side of ['left', 'right'] as const) {\\n    const cue = activeGestures[side];\\n    let frontWeight = 0;\\n    if (cue?.action === 'think') {\\n      const enter = Math.min(180, (cue.endMs - cue.startMs) * 0.25);\\n      const enterProgress = clamp((t - cue.startMs) / enter);\\n      const exitProgress = clamp((cue.endMs - t) / enter);\\n      frontWeight = smooth(enterProgress) * smooth(exitProgress);\\n    }\\n    face[`hand-${side}-front-slot`] = { opacity: frontWeight };\\n    face[`hand-${side}-back-slot`] = { opacity: 1 - frontWeight };\\n    face[`ink-arm-${side}-front-slot`] = { opacity: frontWeight };\\n    face[`ink-arm-${side}-back-slot`] = { opacity: 1 - frontWeight };\\n  }\\n}\"\n    },\n    {\n      \"file\": \"packages/animation/rig.ts\",\n      \"description\": \"Add spear tool foreground layer slots in performanceSvg so hands, shaft, and forearms maintain consistent depth layering relative to the chest and head.\",\n      \"codeSnippet\": \"// Introduce tool-front and tool-back slots to properly sandwich props between torso and arms\\nconst toolSlots = body\\n  ? `<g id=\\\"tool-back\\\">${heldTools}</g>`\\n  : heldTools;\\n// Keep front arm slot above head and chest to allow forward-reaching grips without clip artifacts\"\n    }\n  ],\n  \"checks\": [\n    \"Verify that Karo and Lila spear-hold, spear-thrust, and hunt-aim maintain gripSpan >= 0.65 * min(chain) and rearElbowAlong <= 0 in armAuditWorkbench across 0ms, 1600ms, and 3000ms.\",\n    \"Verify that rear elbow flexionDeg does not exceed 118° and front elbow flexionDeg remains between 45° and 100° across all directions (-1 and 1).\",\n    \"Confirm that neither bone length (upperArm 52%, lowerArm 48%) nor contact error threshold (>0.01px for spear, >1.0px for gesture) is reduced or bypassed.\",\n    \"Inspect the think gesture between 200ms and 600ms: ensure the wrist follows the outward shoulder arc without popping through the jawline or disappearing behind the head cutout.\",\n    \"Ensure walk, run, crouch, jump, and seated lap poses compile cleanly without throwing `needs-arm-pose` shape limit errors.\"\n  ],\n  \"limitations\": [\n    \"These fixes establish a well-spaced, clean frontal candidate pose; they do NOT provide a true 3/4 or profile body view.\",\n    \"The dynamic rear-lunge pose seen in the stick-figure user reference requires authored profile costume geometry and multi-axis pelvis/torso rotation, which remain pending.\",\n    \"Static frame validation on developer workbenches does not constitute full video/motion acceptance or continuous runtime smoothness approval.\"\n  ]\n}\n```",
+  "usage": {
+    "inputTokens": 45528,
+    "outputTokens": 2700
+  },
+  "scope": "static-source-and-art-advice-only",
+  "productionAcceptance": false,
+  "createdAt": "2026-10-07T06:50:14.518Z"
+}

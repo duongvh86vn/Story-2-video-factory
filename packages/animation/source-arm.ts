@@ -14,8 +14,25 @@ export function sourceArmShape(role:SourceArmRole,shoulder:Point,elbow:Point,wri
   if(upperRatio<.7||lowerRatio<.7)throw new Error('needs-arm-pose: a drawn arm segment collapses without an authored depth view');
   return {role,flexionDeg,interiorDeg:interior,upperRatio,lowerRatio};
 }
-export const sourceArmDescription={version:'forest-arm-role-shape-1',limits,
+type ArmLandmarks={shoulder:Point;elbow:Point;wrist:Point;upper:number;lower:number};
+/** Two useful arm silhouettes are required as well as two reachable grips.
+ * These source-style guards are candidate art constraints, not biomechanical
+ * certification. A rear elbow may be raised; it must stay behind its own
+ * shoulder along the shaft axis instead of curling beside the front hand. */
+export function sourceSpearPairShape(front:ArmLandmarks,rear:ArmLandmarks,shaftAngle:number){
+  const angle=shaftAngle*Math.PI/180,axis={x:Math.cos(angle),y:Math.sin(angle)};
+  const along=(a:Point,b:Point)=>(a.x-b.x)*axis.x+(a.y-b.y)*axis.y;
+  const frontLength=front.upper+front.lower,rearLength=rear.upper+rear.lower;
+  const gripSpan=along(front.wrist,rear.wrist),minimumSpan=.6*Math.min(frontLength,rearLength);
+  const rearElbowAlong=along(rear.elbow,rear.shoulder),rearWristAlong=along(rear.wrist,rear.shoulder);
+  if(gripSpan<minimumSpan-.01)throw new Error('needs-arm-pose: spear grips crowd both arm roles in front of the torso');
+  if(rearElbowAlong>.01)throw new Error('needs-arm-pose: drive elbow curls forward instead of opening behind its own shoulder');
+  if(rearWristAlong>rearLength*.3+.01)throw new Error('needs-arm-pose: both spear wrists are carried in front of the shoulders');
+  return {gripSpan,minimumSpan,rearElbowAlong,rearWristAlong};
+}
+export const sourceArmDescription={version:'forest-arm-role-shape-2',limits,
   shapes:'fixed XYZ lengths; reject excessive role-specific flexion and projected segments below 0.7 of the original; smooth C1 ink is not anatomy acceptance',
   roles:'active clip and current posture only; future run/seat must not change idle arms',
   layer:'chin-contact ink and mitten share explicit foreground slots, each with one physical definition; inactive arms/hands keep normal layers',
+  spearPair:'at least 60% of the shorter source chain between grips; rear elbow behind its shoulder on the shaft axis and rear wrist no more than 30% of its chain forward; fixed role poles for an entry-owned track; no universal elbow-below-shoulder rule',
   productionReady:false};

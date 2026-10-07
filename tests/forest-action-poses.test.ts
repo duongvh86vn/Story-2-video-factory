@@ -5,7 +5,7 @@ import {samplePerformance,validatePerformance,compilePerformance} from '../packa
 import {ANIMATION_VERSION} from '../packages/animation/schemas.js';
 import {rigMetrics,performanceSvg} from '../packages/animation/rig.js';
 import {solveChain} from '../packages/animation/compiler.js';
-import {sourceArmShape} from '../packages/animation/source-arm.js';
+import {sourceArmShape,sourceSpearPairShape} from '../packages/animation/source-arm.js';
 import {prehistoricReadiness} from '../packages/topics/prehistoric-life.js';
 const silent={method:'segment-draft' as const,windowMs:20,intervals:[]};
 const values=(s:string)=>s.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
@@ -17,6 +17,13 @@ test('source arm guard rejects a reachable but pinched spear elbow without short
   assert.throws(()=>sourceArmShape('spear-front',shoulder,chain.joint,chain.end,60,55),/needs-arm-pose.*folds/);
   assert.ok(Math.abs(length(shoulder,chain.joint)-60)<.0001);
   assert.ok(Math.abs(length(chain.joint,chain.end)-55)<.0001);
+});
+test('source spear pair rejects two individually reachable forward hooks, while permitting a rear elbow above its shoulder',()=>{
+  const front={shoulder:{x:40,y:0},elbow:{x:75,y:30},wrist:{x:110,y:40},upper:55,lower:50};
+  const rear={shoulder:{x:0,y:0},elbow:{x:40,y:35},wrist:{x:65,y:40},upper:60,lower:55};
+  assert.throws(()=>sourceSpearPairShape(front,rear,0),/grips crowd/);
+  assert.throws(()=>sourceSpearPairShape(front,{...rear,wrist:{x:20,y:40}},0),/drive elbow curls forward/);
+  assert.doesNotThrow(()=>sourceSpearPairShape(front,{...rear,elbow:{x:-25,y:-10},wrist:{x:20,y:40}},0));
 });
 
 for(const actor of ['lila','karo'] as const){
@@ -99,14 +106,16 @@ for(const actor of ['lila','karo'] as const){
   for(const action of ['spear-thrust','spear-thrust-left'] as const)test(`${actor}/${action}: spear grips stay on one rotated shaft, fixed XYZ arms reach it and only contact reaches the aim`,()=>{
     const {plan,profile}=bodyCalibrationPlan(actor,action,'happy'),track=plan.spears![0]!,prop=plan.props[0]!,m=rigMetrics(profile);
     assert.ok(Math.abs(prop.length!/m.height-1.2)<1e-8,'calibration spear must read as a full-length tool');
-    assert.equal(prop.gripOffset!.x,-prop.length!*.25,'both hands belong near the rear of the shaft');
+    assert.ok(prop.gripOffset!.x+track.secondaryOffset> -prop.length!/2+5,'rear grip must retain wooden shaft behind it');
     const hit=samplePerformance(plan,profile,track.contactMs!,silent),ready=samplePerformance(plan,profile,track.readyMs!,silent);
     assert.ok(length(hit.props[prop.id]!.tip!,track.aim)<.0001);
     assert.ok(length(ready.props[prop.id]!.tip!,track.aim)>5);
-    assert.equal(track.secondaryOffset,-45*profile.appearance.bodyScale,'frontal mittens need distinct grips; do not crowd them on one wrist target');
     for(let t=0;t<=plan.durationMs;t+=20){
       const f=samplePerformance(plan,profile,t,silent),tool=f.props[prop.id]!,a=tool.angle!*Math.PI/180;
       assert.equal(tool.attached,true);assert.ok(f.contactError<.001);
+      const pair=f.spearGeometry![track.id]!;
+      assert.ok(pair.gripSpan>=pair.minimumSpan-.01,'both arm roles are crowded despite reachable wrists');
+      assert.ok(pair.rearElbowAlong<=.01,'drive elbow must open behind its shoulder on the shaft axis');
       const primary={x:tool.point.x+(prop.gripOffset?.x??0)*Math.cos(a),y:tool.point.y+(prop.gripOffset?.x??0)*Math.sin(a)};
       const secondary={x:primary.x+track.secondaryOffset*Math.cos(a),y:primary.y+track.secondaryOffset*Math.sin(a)};
       assert.ok(length(f.hands[track.hand],primary)<.001);assert.ok(length(f.hands[track.hand==='left'?'right':'left'],secondary)<.001);
@@ -114,7 +123,8 @@ for(const actor of ['lila','karo'] as const){
         const u=values(f.transforms['arm-'+side+'-upper']!),l=values(f.transforms['arm-'+side+'-lower']!),depth=f.armProjection![side]!.elbowDepth;
         const shoulder={x:u[0]!,y:u[1]!},elbow={x:l[0]!,y:l[1]!},bones=m.arms![side];
         assert.ok(Math.abs(bones.upper/(bones.upper+bones.lower)-.52)<1e-8,'an unmeasured source elbow must not recreate the old short upper arm');
-        assert.ok(elbow.y>shoulder.y,'held aiming elbow must stay below its shoulder, not curl above it');
+        // No universal below-shoulder rule: the user reference legitimately
+        // raises its drive elbow. Pair silhouette and exact bones are checked.
         assert.ok(Math.abs(length(shoulder,elbow,depth)-bones.upper)<.002,'physical upper arm changed');
         assert.ok(Math.abs(length(elbow,f.hands[side],depth)-bones.lower)<.002,'physical forearm changed');
       }

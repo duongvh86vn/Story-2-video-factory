@@ -37,6 +37,7 @@ import {referencePuppetSvg} from '../../packages/topics/reference-puppet.js';
 import {headWorkbench,headWorkbenchManifest} from '../../packages/topics/head-workbench.js';
 import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
 import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
+import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
 import {Moods} from '../../packages/animation/schemas.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; logger?: boolean; }
@@ -200,6 +201,12 @@ export async function buildServer(options: ServerOptions = {}) {
     .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(await poseArtWorkbench(repo)));
   app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/pose-art/:file',async(request,reply)=>{
     const asset=await poseArtImage(repo,request.params.file);
+    return reply.type(asset.type).header('Cache-Control','no-store').send(asset.bytes);
+  });
+  app.get('/api/topics/prehistoric-life/view-art',async(_request,reply)=>reply.type('text/html')
+    .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(await viewArtWorkbench(repo)));
+  app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/view-art/:file',async(request,reply)=>{
+    const asset=await viewArtImage(repo,request.params.file);
     return reply.type(asset.type).header('Cache-Control','no-store').send(asset.bytes);
   });
   app.get<{Querystring:{variant?:string}}>('/api/topics/prehistoric-life/compare',async(request,reply)=>{

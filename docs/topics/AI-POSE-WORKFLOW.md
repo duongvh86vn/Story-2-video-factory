@@ -1,5 +1,8 @@
 # Lila/Karo: bộ pose AI và sửa rig theo ảnh
 
+**Hiện hành 0.18:** kiểm silhouette cả cặp tay giáo ngoài reach/flexion: span 100*bodyScale, rear elbow ở sau vai theo trục cán, nhánh cố định suốt shot và cán gỗ còn sau grip. Cặp mới bỏ coils cũ nhưng vẫn là low frontal hold; lunge theo mẫu chưa dựng. Có chín output artwork góc đầu/thân qua 9router, chưa đăng ký/duyệt; profile phải và lưng còn thiếu. Source 0.18 có 138 ô inspection tĩnh happy, sáu head-turn bị chặn. Tổng 23 image calls thành công và 10 advice calls; không phải PASS motion/video. [Sửa tay](ARM-POSE-REPAIR.md), [góc thân/đầu và tool](AUTHORED-VIEWS.md). Giữ guard và ba luồng kịch bản / WAV / câu chuyện → kịch bản → video.
+
+Các mục 0.17 và trước đó bên dưới là lịch sử; preset 70/20/45 không còn hiện hành.
 Mốc 0.17, 07/10/2026. Người dùng tiếp tục chỉ ra tay bị gập sai ở hunt-aim và mặt bị lệch, đồng thời yêu cầu AI khác qua 9router hỗ trợ. **Chưa nghiệm thu rig hoặc video.** Bản sửa và danh sách còn thiếu hiện hành tại [ARM-POSE-REPAIR.md](ARM-POSE-REPAIR.md).
 
 ## Kết quả đã tạo thật

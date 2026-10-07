@@ -1,0 +1,30 @@
+{
+  "actor": "karo",
+  "view": "three-quarter-right",
+  "version": "v1",
+  "model": "cx/gpt-image-2",
+  "prompt": "Use case: identity-preserving animation character turnaround. Asset: ONE full-body neutral standing view on actual transparent PNG background. The attached original is the AUTHORITATIVE identity, palette and costume, not a loose inspiration. Draw Karo: warm peach/orange face, original tiny black oval eyes, broad friendly smiling mouth inside his full dark brown beard, messy short dark brown hair, original ragged brown one-shoulder tunic and separate ragged shorts with two legs, narrow plain belt, slim black ink arms/legs, black mitten silhouettes and oval black feet. Turn BOTH head and torso 45 degrees toward SCREEN RIGHT. Eyes and nose look at an imagined partner on the right, not at the camera. Both eyes are still visible with the far eye naturally smaller. The torso is truly turned with near/far shoulders, not a front torso with only a shifted face.\nPreserve exact painted line quality, original head-to-body ratio, warm saturated face and rich brown fur/hair. The limbs MUST remain single slim black drawn strokes with black mitten hands and oval feet; no flesh-coloured arms/legs, muscles, fingers, toes, boots, jewelry, fur collar, weapons or props. Exactly two arms and two legs. Neutral relaxed standing, arms resting low, both feet planted on one horizontal baseline, no walking/running/gesture. Preserve the garment's same anatomical bare shoulder and clothed shoulder when turning; DO NOT mirror the original one-shoulder garment. Preserve Lila's ponytail attachment and Karo's beard shape. Do not redesign the eyes, smile, nose, hair or belt. Smooth irregular painted outlines; no hard geometric mannequin or grey/desaturated wash.\nOne character only, no grid, no labels, no scenery, no leaf from the reference background, no title, no ground shadow, no fake checkerboard. Actual alpha background; generous empty margins with whole hair/hands/feet inside frame. This is a new authored VIEW candidate for a continuous rig, not an animated sprite or approved production asset.",
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "role": "primary-character-identity",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    }
+  ],
+  "status": "candidate-needs-identity-and-registration-review",
+  "approved": false,
+  "productionReady": false,
+  "registered": false,
+  "requestedAt": "2026-10-07T06:28:48.338Z",
+  "file": "karo-three-quarter-right-v1.png",
+  "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+  "width": 910,
+  "height": 1729,
+  "hasAlpha": true,
+  "actualTransparency": true,
+  "generatedAt": "2026-10-07T06:29:47.686Z",
+  "reviewNotes": [
+    "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+    "Hai lượt Gemini đánh giá cùng costume khác nhau; chưa kết luận anatomical side chỉ theo screen side."
+  ]
+}

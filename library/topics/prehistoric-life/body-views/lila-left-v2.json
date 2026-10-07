@@ -1,0 +1,46 @@
+{
+  "actor": "lila",
+  "view": "left",
+  "version": "v2",
+  "model": "cx/gpt-image-2",
+  "prompt": "Use case: identity-preserving animation character turnaround. Asset: ONE full-body neutral standing view on actual transparent PNG background. EDIT ONLY THE CHARACTER IN THE RIGHT PANEL. Remove its flesh-coloured upper-arm stumps: each black ink arm must connect directly at the shoulder, exactly as in the LEFT original. The small original chest/neck skin patch may remain, but no skin-coloured limb length below either shoulder. Retain the RIGHT target's exact pose, facing, hair, face, garment, belt, feet, proportions, colours and line quality. Do not rotate it again, mirror its clothes or redraw unrelated details. Return only the corrected character with actual alpha, no board. Draw Lila: warm peach/orange round face, original tiny black oval eyes, small nose and gentle smile, long dark brown messy painted hair and low side ponytail, original ragged brown one-shoulder fur dress, narrow plain braided belt, slim black ink arms/legs, black mitten silhouettes and oval black feet. Strict left PROFILE: nose, face, chest and feet point toward SCREEN LEFT. One eye visible, natural cheek and smile profile; correct ear and jaw/beard silhouette. Near and far arms separated slightly for registration, not extra limbs.\nPreserve exact painted line quality, original head-to-body ratio, warm saturated face and rich brown fur/hair. The limbs MUST remain single slim black drawn strokes with black mitten hands and oval feet; no flesh-coloured arms/legs, muscles, fingers, toes, boots, jewelry, fur collar, weapons or props. Exactly two arms and two legs. Neutral relaxed standing, arms resting low, both feet planted on one horizontal baseline, no walking/running/gesture. Preserve the garment's same anatomical bare shoulder and clothed shoulder when turning; DO NOT mirror the original one-shoulder garment. Preserve Lila's ponytail attachment and Karo's beard shape. Do not redesign the eyes, smile, nose, hair or belt. Smooth irregular painted outlines; no hard geometric mannequin or grey/desaturated wash.\nOne character only, no grid, no labels, no scenery, no leaf from the reference background, no title, no ground shadow, no fake checkerboard. Actual alpha background; generous empty margins with whole hair/hands/feet inside frame. This is a new authored VIEW candidate for a continuous rig, not an animated sprite or approved production asset.",
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "role": "primary-character-identity",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v1.png",
+      "role": "edit-target-preserve-view",
+      "sha256": "6716ca8ffca0fe0f2862b7f41fb3878a6bcf03e458d5cc028e2c4da70a75104e"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2-edit-reference.png",
+      "role": "single-image-labelled-reference-board",
+      "sha256": "b904e06b7f2231e0613aa87c2d196721a9107de9cc8859fdfabf7dcc7617b740"
+    }
+  ],
+  "status": "candidate-needs-identity-and-registration-review",
+  "approved": false,
+  "productionReady": false,
+  "registered": false,
+  "requestedAt": "2026-10-07T06:41:39.068Z",
+  "file": "lila-left-v2.png",
+  "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+  "width": 1173,
+  "height": 1341,
+  "hasAlpha": true,
+  "actualTransparency": true,
+  "generatedAt": "2026-10-07T06:42:46.394Z",
+  "editTargetFrame": {
+    "height": 1675,
+    "width": 939
+  },
+  "editFrameChanged": true,
+  "reviewNotes": [
+    "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
+    "Bản sửa đã làm nét tay đen rõ hơn; attachment đuôi tóc và tỷ lệ đầu/thân giữa góc còn phải kiểm.",
+    "Canvas output đã đổi so với edit target; không tái dùng registration cũ."
+  ]
+}
