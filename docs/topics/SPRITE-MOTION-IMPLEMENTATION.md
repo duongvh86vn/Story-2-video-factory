@@ -21,10 +21,10 @@ Kiểm chứng source của controller trên code snapshot `3ee1801` ngày 07/10
 | `npm run test:typecheck` | Exit 0 | Kiểm kiểu khai báo test; không chạy callback/assertion |
 | `npm run schemas` | Exit 0, regenerate không đổi file đã commit | Ba schema mới xuất ở `1f83b3f`, source/schema không đổi ở `3ee1801` |
 | Review từng task | Đã qua source gate sau sửa | Ancestor junction, manifest expansion, clock chung và CLI print URL |
-| Review toàn mốc cầu nối | Đang chờ gate cuối | Phạm vi mới từ `b3fcef0`; không chứng nhận toàn sản phẩm lịch sử |
+| Review toàn mốc cầu nối | Source gate ready; không có finding Critical/Important | Review độc lập `b3fcef0..e9d41f5`; không chứng nhận runtime hoặc toàn sản phẩm lịch sử |
 | Runtime/browser/video/asset Lila-Karo | NOT RUN / chưa nghiệm thu | Giao model test theo yêu cầu người dùng |
 
-Minor được giữ cho bước sau: biểu thức đếm/phát event trong player còn dày, nên tách và đặt tên biến khi nối actorScene; review task chưa thấy lỗi hành vi ở phần này.
+Minor được giữ cho bước sau: biểu thức đếm/phát event trong player còn dày, nên tách và đặt tên biến khi nối actorScene. Review từng task và toàn mốc chưa thấy lỗi hành vi ở phần này; quyết định hoãn refactor đến bước tích hợp actorScene, giữ các test ranh giới đã chuẩn bị. Đây là source candidate được bàn giao để model khác test; merge sản phẩm/nghiệm thu video vẫn chờ runtime và art evidence.
 
 ## Global Constraints
 
