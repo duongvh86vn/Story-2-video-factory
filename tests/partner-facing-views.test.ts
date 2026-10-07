@@ -12,8 +12,9 @@ import {BODY_VIEW_VERSION,REGISTERED_BODY_VIEWS,bodyViewRegistration,bodyViewReg
 import {referenceBodyAssets,referenceBodyMetrics,referenceBodyDescription} from '../packages/animation/forest-body-art.js';
 import {referenceHeadAssets,readReferenceHeadAsset} from '../packages/animation/forest-head-art.js';
 import {performanceSvg} from '../packages/animation/rig.js';
+import {cutoutHeadChin} from '../packages/animation/forest-cutout-head.js';
 import {namespaceRigSvg} from '../packages/animation/svg-namespace.js';
-import {samplePerformance,validatePerformance} from '../packages/animation/compiler.js';
+import {samplePerformance,validatePerformance,bodyPoseAnchors} from '../packages/animation/compiler.js';
 import {HUNT_ANIMATION_VERSION,type PerformancePlan} from '../packages/animation/schemas.js';
 import {performanceScene} from '../packages/animation/scene.js';
 import {secureSceneFiles,validateSceneFiles} from '../packages/scenes/security.js';
@@ -83,9 +84,10 @@ test('fixed-view mismatches, unregistered motion/expressions and speech fail in 
       {plan:{...plan,headView:view==='three-quarter-left'?'three-quarter-right' as const:'three-quarter-left' as const},error:/needs-(?:head-view|body-registration)/},
       {plan:{...plan,walks:[{startMs:300,endMs:3600,fromX:210,toX:240}]},error:/needs-view-motion/},
       {plan:{...plan,entryPosture:{pose:'crouch' as const}},error:/needs-view-motion/},
+      {plan:{...plan,gazes:[{startMs:0,endMs:4000,target:{x:80,y:120}}]},error:/needs-view-gaze/},
       {plan:{...plan,expressions:[{startMs:0,endMs:4000,mood:'angry' as const}]},error:/needs-view-expression/},
     ];
-    for(const c of cases){assert.throws(()=>validatePerformance(c.plan,profile),c.error);assert.throws(()=>samplePerformance(c.plan,profile,0,silence),c.error);}
+    for(const c of cases){assert.throws(()=>validatePerformance(c.plan,profile),c.error);assert.throws(()=>samplePerformance(c.plan,profile,0,silence),c.error);assert.throws(()=>bodyPoseAnchors(c.plan,profile,0),c.error);}
     assert.throws(()=>samplePerformance(plan,profile,1000,{...silence,method:'audio-rms',intervals:[{startMs:100,endMs:1200,level:.5}]}),/needs-view-voice-animation/);
   }
 });
@@ -94,7 +96,7 @@ test('left lunge and spear are blocked before sampling; workbench never substitu
   for(const actor of actors){
     const {profile,plan}=bodyCalibrationPlan(actor,'rest','happy',undefined,'three-quarter-left');
     const lunge:PerformancePlan={...plan,compilerVersion:HUNT_ANIMATION_VERSION,lunge:{version:'forest-planted-lunge-1',spearId:'candidate',soles:{left:{x:150,y:410},right:{x:270,y:410}},kneePoles:{left:1,right:1},advanceX:10,dropY:5,entryLeanDeg:9,contactLeanDeg:16}};
-    assert.throws(()=>validatePerformance(lunge,profile),/needs-lunge-pose/);assert.throws(()=>samplePerformance(lunge,profile,0,silence),/needs-lunge-pose/);
+    assert.throws(()=>validatePerformance(lunge,profile),/needs-lunge-pose/);assert.throws(()=>samplePerformance(lunge,profile,0,silence),/needs-lunge-pose/);assert.throws(()=>bodyPoseAnchors(lunge,profile,0),/needs-lunge-pose/);
     const spear:PerformancePlan={...plan,compilerVersion:HUNT_ANIMATION_VERSION,props:[{id:'tool',kind:'spear',origin:{x:200,y:300},length:320}]};
     assert.throws(()=>validatePerformance(spear,profile),/needs-view-tool-pose/);assert.throws(()=>samplePerformance(spear,profile,0,silence),/needs-view-tool-pose/);
     assert.throws(()=>bodyCalibrationPlan(actor,'spear-lunge','happy',undefined,'three-quarter-left'),/needs-lunge-pose/);
@@ -146,4 +148,18 @@ test('topic metadata describes registered candidates while preserving the produc
   assert.throws(()=>requireTopicProductionReady(config),/needs-art-direction/);
   assert.equal(topicNarrativeContext(config)!.version,'prehistoric-story-contract-1');
   assert.match(topicNarrativeContext(config)!.rule,/Preserve source names, meaning and dialogue/);
+});
+
+test('fixed-view think grips follow the native chin transformed by the actual rendered head',()=>{
+  for(const actor of actors)for(const view of REGISTERED_BODY_VIEWS)for(const hand of ['left','right'] as const)for(const scale of [.85,1]){
+    const {profile,plan}=bodyCalibrationPlan(actor,'think','happy',hand,view);plan.scale=scale;
+    for(const at of [800,1600,2600]){
+      const frame=samplePerformance(plan,profile,at,silence),matrix=frame.transforms.head!;
+      const values=matrix.match(/^translate\(([-\d.]+) ([-\d.]+)\) rotate\(([-\d.]+)\) scale\(([-\d.]+)\)$/);
+      assert.ok(values,'head transform must expose the actual scene attachment');
+      const [x,y,angle,k]=values.slice(1).map(Number) as [number,number,number,number],chin=cutoutHeadChin(profile,hand),a=angle*Math.PI/180;
+      const expected={x:x+k*(chin.x*Math.cos(a)-chin.y*Math.sin(a)),y:y+k*(chin.x*Math.sin(a)+chin.y*Math.cos(a))};
+      assert.ok(Math.hypot(frame.hands[hand].x-expected.x,frame.hands[hand].y-expected.y)<.05,actor+'/'+view+'/'+hand+' misplaced the grip relative to rendered chin');
+    }
+  }
 });

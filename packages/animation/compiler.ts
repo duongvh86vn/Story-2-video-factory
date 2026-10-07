@@ -84,6 +84,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
   if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending');
   if(plan.expressions.some(e=>e.mood!=='happy'))throw new Error('needs-view-expression: authored-view candidate has only its intact happy face');
+  if(plan.gazes.length)throw new Error('needs-view-gaze: explicit target gaze is not registered for the fixed authored face');
   if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
   if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'))throw new Error('needs-view-motion: this authored view has only point/chin and right-view spear candidates');
   if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
@@ -390,6 +391,8 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number){
 /** Shared body landmarks for authoring a tool target without invoking arm IK.
  * Does not advance a scene, render a video or accept the resulting pose. */
 export function bodyPoseAnchors(plan:PerformancePlan,profile:HostProfile,timeMs:number){
+  if(plan.lunge)validateBodyViewLunge(profile);
+  validateFixedBodyView(plan,profile);
   const {m,s,pelvis,lean}=bodyStateAt(plan,profile,clamp(timeMs,0,plan.durationMs));
   const shoulders=Object.fromEntries((['left','right'] as const).map(side=>{
     const p=m.shoulders?.[side]??{x:m.shoulderOffset*(side==='left'?-1:1),y:m.shoulderY-m.pelvisY};
@@ -581,9 +584,10 @@ function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture
   const headBottom=(usesCutoutHead(profile)?0:referenceBodyHeadAttachment(profile,'three-quarter-right').y)*headScale;
   const torsoTop=m.torsoTop??-92*profile.appearance.bodyScale;
   const neck=toWorld({x:m.neckX??0,y:usesBodyView(profile)?torsoTop:torsoTop-2*profile.appearance.bodyScale});
-  const head=add(neck,rotate({x:0,y:-headBottom*s},lean+(usesBodyView(profile)?0:pose.tilt*emotion.weight)));
+  const headAngle=lean+(usesBodyView(profile)?0:pose.tilt*emotion.weight);
+  const head=add(neck,rotate({x:0,y:-headBottom*s},headAngle));
   const chin=add(head,rotate(usesCutoutHead(profile)?{x:cutoutHeadChin(profile,side).x*s*headScale,y:cutoutHeadChin(profile,side).y*s*headScale}
-    :{x:m.headRadius*.3*s*(side==='left'?-1:1),y:headBottom*.85*s},lean+pose.tilt*emotion.weight));
+    :{x:m.headRadius*.3*s*(side==='left'?-1:1),y:headBottom*.85*s},headAngle));
   const aim=expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lower),active=solveChain(shoulder,aim,lengths.upper*s,lower,pole);
   if(entry.error>.001||active.error>.001)throw new Error('needs-arm-keypose: gesture-entry reference cannot reach its authored grip with fixed lengths');
   return {pole,shoulder:articulatedArmReference(entryPose,articulatedPoseFromDirections(active.upper+90,active.lower+90))};
@@ -632,7 +636,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   transforms.neck=`translate(${number(neckStart.x)} ${number(neckStart.y)}) rotate(${number(degrees(Math.atan2(neckEnd.y-neckStart.y,neckEnd.x-neckStart.x))-90)}) scale(${number(s)} ${number(distance(neckStart,neckEnd))})`;
   transforms.head=transform(head,headAngle,s*headArtScale);
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
-  const chinAt=(side:RigHand)=>add(head,rotate(usesCutoutHead(profile)?{x:cutoutHeadChin(profile,side).x*s*headArtScale,y:cutoutHeadChin(profile,side).y*s*headArtScale}:{x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},lean+pose.tilt*emotion.weight));
+  const chinAt=(side:RigHand)=>add(head,rotate(usesCutoutHead(profile)?{x:cutoutHeadChin(profile,side).x*s*headArtScale,y:cutoutHeadChin(profile,side).y*s*headArtScale}:{x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},headAngle));
   const garment=usesReferenceBody(profile)&&!usesBodyView(profile)?referenceGarmentMotion(profile):undefined,lagged=garment?bodyStateAt(plan,profile,Math.max(0,t-garment.lagMs)):undefined;
   const thighAngles:number[]=[];
   const restCloth={} as GarmentRestPose;
