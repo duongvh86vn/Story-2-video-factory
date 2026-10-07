@@ -1,0 +1,416 @@
+{
+  "version": "forest-native-view-eyes-1",
+  "fingerprint": "e3c8dbc2336be8798ad3fa1bb650ea2f5ebd466a7f9ea734b1b15380a0c7dde3",
+  "productionReady": false,
+  "approved": false,
+  "kind": "static-native-eye-controls-and-strip-readings",
+  "measurements": [
+    {
+      "actor": "lila",
+      "view": "three-quarter-right",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "width": 1173,
+      "height": 1341,
+      "eyes": [
+        {
+          "slot": "screen-left",
+          "registration": {
+            "center": {
+              "x": 675.5,
+              "y": 315
+            },
+            "rx": 12.5,
+            "ry": 20,
+            "shift": {
+              "x": 6,
+              "y": 3
+            },
+            "bounds": {
+              "x": 655,
+              "y": 292,
+              "width": 42,
+              "height": 46
+            },
+            "strip": {
+              "x": 655,
+              "y": 341,
+              "width": 42,
+              "height": 3
+            }
+          },
+          "stripPixels": 126,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            251,
+            155,
+            87
+          ],
+          "maxRGB": [
+            253,
+            159,
+            94
+          ],
+          "meanRGB": [
+            252.19,
+            157.11,
+            90.52
+          ]
+        },
+        {
+          "slot": "screen-right",
+          "registration": {
+            "center": {
+              "x": 765,
+              "y": 303.5
+            },
+            "rx": 10.5,
+            "ry": 18.5,
+            "shift": {
+              "x": 4,
+              "y": 2
+            },
+            "bounds": {
+              "x": 749,
+              "y": 281,
+              "width": 33,
+              "height": 44
+            },
+            "strip": {
+              "x": 749,
+              "y": 323,
+              "width": 33,
+              "height": 2
+            }
+          },
+          "stripPixels": 66,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            245,
+            154,
+            87
+          ],
+          "maxRGB": [
+            253,
+            163,
+            100
+          ],
+          "meanRGB": [
+            250.74,
+            158.5,
+            92.3
+          ]
+        }
+      ],
+      "caveat": "Manual region excludes neighboring ink; colour means and pixel counts do not verify seamless animation or anatomy."
+    },
+    {
+      "actor": "lila",
+      "view": "three-quarter-left",
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "width": 1024,
+      "height": 1536,
+      "eyes": [
+        {
+          "slot": "screen-left",
+          "registration": {
+            "center": {
+              "x": 363,
+              "y": 333
+            },
+            "rx": 8.5,
+            "ry": 17,
+            "shift": {
+              "x": 3,
+              "y": 2
+            },
+            "bounds": {
+              "x": 350,
+              "y": 313,
+              "width": 27,
+              "height": 40
+            },
+            "strip": {
+              "x": 350,
+              "y": 351,
+              "width": 27,
+              "height": 2
+            }
+          },
+          "stripPixels": 54,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            245,
+            159,
+            88
+          ],
+          "maxRGB": [
+            254,
+            169,
+            102
+          ],
+          "meanRGB": [
+            251.56,
+            163.61,
+            93.65
+          ]
+        },
+        {
+          "slot": "screen-right",
+          "registration": {
+            "center": {
+              "x": 432,
+              "y": 336.5
+            },
+            "rx": 11.5,
+            "ry": 18.5,
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "bounds": {
+              "x": 414,
+              "y": 314,
+              "width": 37,
+              "height": 46
+            },
+            "strip": {
+              "x": 414,
+              "y": 357,
+              "width": 37,
+              "height": 3
+            }
+          },
+          "stripPixels": 111,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            250,
+            161,
+            91
+          ],
+          "maxRGB": [
+            254,
+            168,
+            98
+          ],
+          "meanRGB": [
+            252.81,
+            164.64,
+            94.78
+          ]
+        }
+      ],
+      "caveat": "Manual region excludes neighboring ink; colour means and pixel counts do not verify seamless animation or anatomy."
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "width": 910,
+      "height": 1729,
+      "eyes": [
+        {
+          "slot": "screen-left",
+          "registration": {
+            "center": {
+              "x": 538.5,
+              "y": 349
+            },
+            "rx": 14,
+            "ry": 22,
+            "shift": {
+              "x": 6,
+              "y": 3
+            },
+            "bounds": {
+              "x": 517,
+              "y": 323,
+              "width": 43,
+              "height": 52
+            },
+            "strip": {
+              "x": 517,
+              "y": 372,
+              "width": 43,
+              "height": 3
+            }
+          },
+          "stripPixels": 129,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            244,
+            161,
+            93
+          ],
+          "maxRGB": [
+            255,
+            168,
+            107
+          ],
+          "meanRGB": [
+            251.26,
+            163.83,
+            96.58
+          ]
+        },
+        {
+          "slot": "screen-right",
+          "registration": {
+            "center": {
+              "x": 638,
+              "y": 336
+            },
+            "rx": 10.5,
+            "ry": 20,
+            "shift": {
+              "x": 4,
+              "y": 2
+            },
+            "bounds": {
+              "x": 623,
+              "y": 313,
+              "width": 31,
+              "height": 45
+            },
+            "strip": {
+              "x": 623,
+              "y": 356,
+              "width": 31,
+              "height": 2
+            }
+          },
+          "stripPixels": 62,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            244,
+            157,
+            86
+          ],
+          "maxRGB": [
+            255,
+            172,
+            106
+          ],
+          "meanRGB": [
+            250.63,
+            162.94,
+            95.68
+          ]
+        }
+      ],
+      "caveat": "Manual region excludes neighboring ink; colour means and pixel counts do not verify seamless animation or anatomy."
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "width": 910,
+      "height": 1729,
+      "eyes": [
+        {
+          "slot": "screen-left",
+          "registration": {
+            "center": {
+              "x": 333,
+              "y": 355
+            },
+            "rx": 13,
+            "ry": 23,
+            "shift": {
+              "x": 3,
+              "y": 2
+            },
+            "bounds": {
+              "x": 313,
+              "y": 329,
+              "width": 41,
+              "height": 49
+            },
+            "strip": {
+              "x": 324,
+              "y": 320,
+              "width": 25,
+              "height": 4
+            },
+            "region": "M313 329H354V368L325 378H313Z",
+            "glyph": "M337 331C346 332 348 349 343 363C340 373 333 378 328 375C321 373 319 361 322 348C325 337 330 330 337 331Z",
+            "lid": "M322 356C328 360 335 359 342 352"
+          },
+          "stripPixels": 100,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            241,
+            151,
+            87
+          ],
+          "maxRGB": [
+            246,
+            160,
+            97
+          ],
+          "meanRGB": [
+            244.06,
+            156.65,
+            93.56
+          ]
+        },
+        {
+          "slot": "screen-right",
+          "registration": {
+            "center": {
+              "x": 439,
+              "y": 362
+            },
+            "rx": 16,
+            "ry": 24,
+            "shift": {
+              "x": 7,
+              "y": 4
+            },
+            "bounds": {
+              "x": 414,
+              "y": 334,
+              "width": 50,
+              "height": 57
+            },
+            "strip": {
+              "x": 414,
+              "y": 388,
+              "width": 50,
+              "height": 3
+            }
+          },
+          "stripPixels": 150,
+          "darkPixels": 0,
+          "transparentPixels": 0,
+          "minRGB": [
+            242,
+            153,
+            94
+          ],
+          "maxRGB": [
+            246,
+            161,
+            105
+          ],
+          "meanRGB": [
+            244.2,
+            156.25,
+            97.35
+          ]
+        }
+      ],
+      "caveat": "Manual region excludes neighboring ink; colour means and pixel counts do not verify seamless animation or anatomy."
+    }
+  ]
+}

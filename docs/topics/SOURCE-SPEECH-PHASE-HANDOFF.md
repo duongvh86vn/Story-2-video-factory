@@ -1,5 +1,7 @@
 # Lila/Karo — giữ clock miệng qua điểm cắt cảnh
 
+**Lịch sử0.31:** [Mốc0.32](NATIVE-VIEW-EYES-HANDOFF.md) mở rộng source-clock/context/cache/repair cho eye-only silent actor và thêm native eye controls. Record0.31/14 NOT RUN vẫn giữ; blink phase không đồng nghĩa whole-body/head/gaze phase đã liên tục.
+
 Mốc source 0.31, 08/10/2026, tiếp nối `616aac5171420ed15602f89d4500a2bb8fe635ed` trên `codex/prehistoric-life`. Đây là phần triển khai tiếp của tool, chưa là nghiệm thu diễn xuất hoặc video. Người dùng không có API image-to-video; vẫn dùng SVG/HTML5/GSAP.
 
 Source/fixtures/docs đã push tại `d8ce672d3fdbc8470ffc6779d4d8b92b847ade35`; local/remote SHA đối chiếu trùng. Full build/test:typecheck/schema export/whitespace exit0; source re-review PASS sau ba P2 đã sửa, 14 callbacks vẫn NOT RUN. Bản ghi publication là bổ sung tài liệu, không có lượt test/render/video mới.

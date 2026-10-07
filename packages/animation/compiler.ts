@@ -19,6 +19,7 @@ import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmRef
 import {usesBodyView,registeredBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,validateBodyViewMouthActivity,bodyViewMouthDescription,BODY_VIEW_MOUTH_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS} from './body-view-mouth.js';
 import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
+import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription} from './body-view-eyes.js';
 import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
@@ -86,11 +87,15 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
     registeredBodyViewMouth(profile);
     if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-voice-animation: registered mouth needs animation2.2.13/14/15');
   }
+  if(hasBodyViewEyes(profile)){
+    registeredBodyViewEyes(profile);
+    if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-eyes: registered eyes need animation2.2.13/14/15');
+  }
   if(!usesBodyView(profile))return;
   if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
   if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending');
   if(plan.expressions.some(e=>e.mood!=='happy'))throw new Error('needs-view-expression: authored-view candidate has only its intact happy face');
-  if(plan.gazes.length)throw new Error('needs-view-gaze: explicit target gaze is not registered for the fixed authored face');
+  if(plan.gazes.length&&!hasBodyViewEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs the registered-eyes-v1 candidate');
   if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
   if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'))throw new Error('needs-view-motion: this authored view has only point/chin and right-view spear candidates');
   if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
@@ -609,7 +614,8 @@ function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gest
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity,sourceClock?:SpeechSourceClock):FrameState {
   if(plan.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
-  if(hasBodyViewSpeech(profile)&&sourceClock&&(sourceClock.ownerId!==profile.id||sourceClock.endMs-sourceClock.startMs!==plan.durationMs))throw new Error('needs-speech-phase: source owner or shot span does not match performer');
+  if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&sourceClock&&(sourceClock.ownerId!==profile.id||sourceClock.endMs-sourceClock.startMs!==plan.durationMs))throw new Error('needs-speech-phase: source owner or shot span does not match performer');
+  if(hasBodyViewEyes(profile)&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
   if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires explicit registered-mouth-v1 candidate');
   const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t);
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
@@ -768,7 +774,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     paths['head-contour']=forestHeadContour(yaw);
     transforms['face-orientation']=transform({x:0,y:0});
   }
-  const blinkPhase=(t+800+(usesReferenceBody(profile)&&profile.appearance.characterVariant==='karo'?520:0))%3500,blink=blinkPhase<140?Math.sin(Math.PI*blinkPhase/140):0;
+  const blinkClock=hasBodyViewEyes(profile)&&sourceClock?t+sourceClock.startMs:t;
+  const blinkPhase=(blinkClock+800+(usesReferenceBody(profile)&&profile.appearance.characterVariant==='karo'?520:0))%3500,blink=blinkPhase<140?Math.sin(Math.PI*blinkPhase/140):0;
   for(const [i,side] of (['left','right'] as const).entries()){
     face[`eye-${side}`]={x:gaze.x,y:gaze.y,scaleY:Math.max(.05,(1-blink)*lerp(1,pose.eyeOpen??1,emotion.weight))};
     face[`brow-${side}`]={y:pose.brow*emotion.weight,rotation:(i?-1:1)*(pose.browAngle??(emotion.mood==='concerned'?12:emotion.mood==='effort'?-12:0))*emotion.weight};
@@ -803,6 +810,20 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     if(hasBodyViewSpeech(profile)){
       const mouth=sampleBodyViewMouth(profile,activity,t,sourceClock);Object.assign(face,mouth.face);Object.assign(paths,mouth.paths);
     }else Object.assign(face,usesBodyView(profile)?{'head-view-front':{opacity:1}}:sourceFace);
+    if(hasBodyViewEyes(profile)){
+      const eyes=registeredBodyViewEyes(profile),c=registeredBodyView(profile),center={x:(eyes.eyes[0].center.x+eyes.eyes[1].center.x)/2,y:(eyes.eyes[0].center.y+eyes.eyes[1].center.y)/2};
+      const origin=add(head,rotate({x:(center.x-c.neck.x)*c.headScale*s*headArtScale,y:(center.y-c.neck.y)*c.headScale*s*headArtScale},headAngle));
+      const direction=(target:Point)=>{const local=rotate({x:target.x-origin.x,y:target.y-origin.y},-headAngle),length=Math.hypot(local.x,local.y);
+        return length?{x:local.x/length,y:local.y/length}:{x:0,y:0};};
+      let look={x:0,y:0};
+      if(spearStates[0])look=direction(spearStates[0].track.aim);
+      if(activeGesture?.target)look=mix(look,direction(activeGesture.target),gazeWeight(activeGesture));
+      if(explicitGaze){const to=direction(explicitGaze.target),forward=c.view==='three-quarter-left'?-1:1;
+        if(to.x*forward<-.01)throw new Error('needs-view-gaze: target is behind the fixed native view; author a matching view/turn');
+        look=mix(look,to,gazeWeight(explicitGaze));
+      }
+      Object.assign(face,bodyViewEyesState(eyes,look,blink).face);
+    }
     if(usesReferenceBody(profile))for(const side of ['left','right'] as const){
       const cue=activeGestures[side];
       // Use the same physical hand once in either painter slot, never a new
@@ -929,7 +950,7 @@ const isPainterSlot=(id:string)=>/^(?:hand|ink-arm)-(?:left|right)-(?:front|back
 export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,namespace='',sourceClock?:SpeechSourceClock) {
   validatePerformance(plan,profile);
   if(hasBodyViewSpeech(profile))validateBodyViewMouthActivity(activity);
-  if(hasBodyViewSpeech(profile)&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
+  if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
   const times=new Set<number>([0,plan.durationMs]);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...plan.gestures,...(plan.spears??[]),...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
@@ -964,6 +985,11 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   for(const cue of activity.intervals)for(const at of [cue.startMs,cue.endMs]){times.add(at);times.add(at-.01);}
   if(hasBodyViewSpeech(profile))for(const cue of activity.intervals)for(const at of [cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])if(at>=cue.startMs&&at<=cue.endMs)times.add(at);
   if(hasBodyViewSpeech(profile)&&sourceClock)for(const cue of sourceClock.activity.intervals)for(const at of [cue.startMs,cue.endMs,cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])times.add(at-sourceClock.startMs);
+  if(hasBodyViewEyes(profile)){
+    const offset=sourceClock?.startMs??0,phase=800+(profile.appearance.characterVariant==='karo'?520:0);
+    for(let start=Math.floor((offset+phase)/3500)*3500-phase-offset;start<=plan.durationMs;start+=3500)for(const at of [start,start+35,start+70,start+105,start+140])times.add(at);
+    for(const g of plan.gazes)for(const at of [g.startMs+140,g.endMs-140])times.add(at);
+  }
   const frameAt=(t:number)=>samplePerformance(plan,profile,t,activity,sourceClock);
   const samples=[...new Set([...times].filter(t=>t>=0&&t<=plan.durationMs).map(t=>Number(t.toFixed(4))))].sort((a,b)=>a-b).map(frameAt);
   const frames:FrameState[]=[samples[0]!];
@@ -974,6 +1000,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     let error=0;
     for(const progress of [.17,.5,.83]){
       const actual=frameAt(lerp(a.timeMs,b.timeMs,progress));
+      if(hasBodyViewEyes(profile))error=Math.max(error,bodyViewEyesMatrixError(registeredBodyViewEyes(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesBodyView(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
@@ -1039,5 +1066,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,audioVerified:false,
       clock:sourceClock?'owned original activity clock, projected to shot-local time':'supplied activity windows in shot-local time; actor ownership validated upstream',
       sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null}}:{}),
+    ...(hasBodyViewEyes(profile)?{bodyEyes:{...bodyViewEyesDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+      blinkClock:sourceClock?'source absolute time':'shot-local diagnostic time',sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null,
+      targetMethod:'bounded direction from native eye center in head-local coordinates; explicit targets behind view rejected',opticalGazeVerified:false}}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

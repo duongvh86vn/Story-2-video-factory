@@ -36,7 +36,7 @@ import {discoverNineRouter} from '../../packages/models/nine-router.js';
 import {prehistoricReadiness,prehistoricReferences} from '../../packages/topics/prehistoric-life.js';
 import {referencePuppetSvg} from '../../packages/topics/reference-puppet.js';
 import {headWorkbench,headWorkbenchManifest} from '../../packages/topics/head-workbench.js';
-import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,BODY_COLOUR_MODES,BODY_MOUTH_MODES,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
+import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,BODY_COLOUR_MODES,BODY_MOUTH_MODES,BODY_EYES_MODES,BODY_LOOK_MODES,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
 import {viewRegistrationWorkbench} from '../../packages/topics/view-registration-workbench.js';
 import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
 import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
@@ -298,14 +298,15 @@ export async function buildServer(options: ServerOptions = {}) {
     return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(headWorkbench(mood,timeMs,mouth));
   });
   app.get('/api/topics/prehistoric-life/heads/manifest',async()=>headWorkbenchManifest());
-  app.get<{Querystring:{action?:string;timeMs?:string;mood?:string;view?:string;colour?:string;mouth?:string}}>('/api/topics/prehistoric-life/body',async(request,reply)=>{
+  app.get<{Querystring:{action?:string;timeMs?:string;mood?:string;view?:string;colour?:string;mouth?:string;eyes?:string;look?:string}}>('/api/topics/prehistoric-life/body',async(request,reply)=>{
     const action=z.enum(BODY_ACTIONS).parse(request.query.action??'rest');
     const timeMs=z.coerce.number().int().min(0).max(bodyActionDuration(action)).parse(request.query.timeMs??600);
     const mood=z.enum(['neutral','happy','thinking','angry']).parse(request.query.mood??'happy');
     const view=z.enum(BODY_WORKBENCH_VIEWS).parse(request.query.view??(action==='spear-lunge'?'three-quarter-right':'source'));
     const colour=z.enum(BODY_COLOUR_MODES).parse(request.query.colour??'cutout');
     const mouth=z.enum(BODY_MOUTH_MODES).parse(request.query.mouth??'silent');
-    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood,view,colour,mouth));
+    const eyes=z.enum(BODY_EYES_MODES).parse(request.query.eyes??'native'),look=z.enum(BODY_LOOK_MODES).parse(request.query.look??'rest');
+    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood,view,colour,mouth,eyes,look));
   });
   app.get('/api/topics/prehistoric-life/body/manifest',async()=>bodyWorkbenchManifest());
   app.get('/api/topics/prehistoric-life/view-registration',async(_request,reply)=>reply.type('text/html')

@@ -101,6 +101,10 @@
               "type": "string",
               "const": "registered-mouth-v1"
             },
+            "bodyEyes": {
+              "type": "string",
+              "const": "registered-eyes-v1"
+            },
             "sourceColour": {
               "type": "string",
               "const": "original-rgb-v2"

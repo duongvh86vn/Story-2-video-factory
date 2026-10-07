@@ -13,10 +13,11 @@ export const HostProfileSchema = z.object({
     characterVariant: z.enum(['lila','karo']).optional(),
     artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
     bodyView:z.enum(['three-quarter-right','three-quarter-left']).optional(),
-    bodySpeech:z.literal('registered-mouth-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
+    bodySpeech:z.literal('registered-mouth-v1').optional(),bodyEyes:z.literal('registered-eyes-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
       if(a.artworkVersion==='forest-body-view-1'&&(!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Authored body candidate requires its actor and registered view'});
       if(a.bodyView&&a.artworkVersion!=='forest-body-view-1')ctx.addIssue({code:'custom',message:'bodyView requires the authored body candidate artwork version'});
       if(a.bodySpeech&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered mouth requires its authored actor and body view'});
+      if(a.bodyEyes&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered eyes require their authored actor and body view'});
       if(a.sourceColour&&(a.artworkVersion!=='forest-body-1'||!a.characterVariant))ctx.addIssue({code:'custom',message:'Original source colour requires the source body and its actor; authored views are separate artwork'});
     }),
   costume: z.array(z.object({joint:z.enum(['head','chest','pelvis','hand-left','hand-right']),svg:z.string().min(1).max(24000)}).strict()).max(12).optional(),
