@@ -54,14 +54,15 @@ export function motionMeasureWorksheets(measurements:Measurements,size:{width:nu
   for(let first=0;first<measurements.frames.length;first+=16){
     const selected=measurements.frames.slice(first,first+16),rows=Math.ceil(selected.length/4),width=1320,height=rows*360+64;
     const cards=selected.map((item,index)=>{
-      const x=(index%4)*330,y=Math.floor(index/4)*360+44;
+      const x=(index%4)*330,y=Math.floor(index/4)*360+44,clipId=`measure-frame-${first+index}`;
       const box=(rect:z.infer<typeof MotionRect>,color:string)=>`<rect x="${rect.x}" y="${rect.y}" width="${rect.w}" height="${rect.h}" fill="none" stroke="${color}" stroke-width="1" vector-effect="non-scaling-stroke"/>`;
       const regions=item.regions.map(region=>box(region.rect,'#2576c2')+(region.bounds?box(region.bounds,'#df2477'):'' )).join('');
       const edge=Object.entries(item.touchesEdges).filter(([,value])=>value).map(([name])=>name).join(',')||'none';
       return `<g transform="translate(${x},${y})"><text x="6" y="14">${escapeHtml(item.id)} · ${item.rect.w}×${item.rect.h}</text>
-<svg x="6" y="22" width="318" height="302" viewBox="0 0 ${item.rect.w} ${item.rect.h}" preserveAspectRatio="xMidYMid meet"><rect width="${item.rect.w}" height="${item.rect.h}" fill="#fff4dd"/>
+<svg x="6" y="22" width="318" height="302" viewBox="0 0 ${item.rect.w} ${item.rect.h}" preserveAspectRatio="xMidYMid meet" overflow="hidden"><rect width="${item.rect.w}" height="${item.rect.h}" fill="#fff4dd"/>
+<defs><clipPath id="${clipId}" clipPathUnits="userSpaceOnUse"><rect width="${item.rect.w}" height="${item.rect.h}"/></clipPath></defs><g clip-path="url(#${clipId})">
 <image href="source.png" x="${-item.rect.x}" y="${-item.rect.y}" width="${size.width}" height="${size.height}"/>
-${item.bounds?box(item.bounds,'#158646'):''}${regions}</svg>
+${item.bounds?box(item.bounds,'#158646'):''}${regions}</g></svg>
 <text x="6" y="340">Alpha ≥ ${measurements.threshold}; frame edges: ${escapeHtml(edge)}</text></g>`;
     }).join('\n');
     pages.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><style>text{font:12px sans-serif;fill:#302215}</style><rect width="100%" height="100%" fill="#f7ead0"/><text x="8" y="20">STATIC ALPHA WORKSHEET · green=frame occupancy, blue=author region, pink=region occupancy · NOT registration/anatomy/motion approval</text>${cards}</svg>\n`);

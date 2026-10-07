@@ -40,7 +40,12 @@ test('worksheet pages retain unscaled native coordinates and contain a fixed loc
   assert.equal(pages.length,2);assert.match(pages[0]!,/NOT registration\/anatomy\/motion approval/);
   assert.match(pages[0]!,/viewBox="0 0 4 4"/);assert.match(pages[0]!,/href="source.png"/);
   const markup=pages.join('');
-  assert.doesNotMatch(markup,/<script|foreignObject|\bon\w+\s*=|@import|url\s*\(/i);
+  assert.doesNotMatch(markup,/<script|foreignObject|\bon\w+\s*=|@import/i);
+  const clips=Array.from(markup.matchAll(/clip-path="url\(#(measure-frame-\d+)\)"/g),match=>match[1]);
+  assert.equal(clips.length,17);assert.equal(new Set(clips).size,17);
+  assert.equal(Array.from(markup.matchAll(/<clipPath id="measure-frame-\d+" clipPathUnits="userSpaceOnUse"><rect width="4" height="4"\/>/g)).length,17);
+  const urls=Array.from(markup.matchAll(/url\s*\(([^)]*)\)/gi),match=>match[1]);
+  assert.equal(urls.length,17);assert.ok(urls.every(url=>/^#measure-frame-\d+$/.test(url!)));
   const resources=Array.from(markup.matchAll(/\b(?:href|src)\s*=\s*["']([^"']*)["']/gi),match=>match[1]);
   assert.equal(resources.length,17);assert.ok(resources.every(resource=>resource==='source.png'));
 });
