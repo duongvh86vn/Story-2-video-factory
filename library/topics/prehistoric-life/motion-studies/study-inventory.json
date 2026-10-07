@@ -1,0 +1,139 @@
+{
+  "version": "motion-art-studies-1",
+  "topicId": "prehistoric-life",
+  "entries": [
+    {
+      "id": "lila-present-right-v1",
+      "actorId": "lila",
+      "view": "three-quarter-right",
+      "requestedDurationMs": 1200,
+      "source": "docs/topics/assets/reference-lila-full.png",
+      "editOf": null,
+      "sheet": {
+        "path": "library/topics/prehistoric-life/motion-studies/lila-present-right-v1.png",
+        "sha256": "e3bc1080a09c7aecfad7ed3492e77b3fdfb5246bf221752531f10d40024106c1",
+        "width": 1254,
+        "height": 1254,
+        "hasAlpha": true,
+        "space": "srgb",
+        "bytes": 1061600
+      },
+      "prompt": {
+        "path": "library/topics/prehistoric-life/motion-studies/lila-present-right-v1.prompt.txt",
+        "sha256": "62946d0d3dd53e04153581650afeab854a9c9ec1d696a3288dc9a371096c764e"
+      },
+      "referenceSha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "tool": "built-in image_gen",
+      "requestedLayout": {
+        "columns": 4,
+        "rows": 4,
+        "positions": 16
+      },
+      "actualFrameLayout": null,
+      "actualTimingMs": null,
+      "registeredMotionId": null,
+      "status": "candidate-needs-correction-unregistered",
+      "productionReady": false,
+      "approved": false
+    },
+    {
+      "id": "lila-present-right-v2",
+      "actorId": "lila",
+      "view": "three-quarter-right",
+      "requestedDurationMs": 1200,
+      "source": "docs/topics/assets/reference-lila-full.png",
+      "editOf": "lila-present-right-v1",
+      "sheet": {
+        "path": "library/topics/prehistoric-life/motion-studies/lila-present-right-v2.png",
+        "sha256": "25dcdc4fc67793fe0d262e0153f7d95d8636ce666dd097af91a14b89a92b6138",
+        "width": 1254,
+        "height": 1254,
+        "hasAlpha": true,
+        "space": "srgb",
+        "bytes": 1127067
+      },
+      "prompt": {
+        "path": "library/topics/prehistoric-life/motion-studies/lila-present-right-v2.prompt.txt",
+        "sha256": "b927734e56d8fcf265cca5764977ea48c6d89eaadbe1c603047d76ad5bb21705"
+      },
+      "referenceSha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "tool": "built-in image_gen",
+      "requestedLayout": {
+        "columns": 4,
+        "rows": 4,
+        "positions": 16
+      },
+      "actualFrameLayout": null,
+      "actualTimingMs": null,
+      "registeredMotionId": null,
+      "status": "candidate-needs-correction-unregistered",
+      "productionReady": false,
+      "approved": false,
+      "additionalInput": {
+        "path": "library/topics/prehistoric-life/motion-studies/lila-present-right-v1.png",
+        "sha256": "e3bc1080a09c7aecfad7ed3492e77b3fdfb5246bf221752531f10d40024106c1"
+      },
+      "staticAdvice": {
+        "path": "docs/topics/reviews/motion-atlas-static-advice-v1.json",
+        "sha256": "025948d25d1521390c1c2551c6c5a6dce9c8f3296b0553ef26b1f31f5b373bb7",
+        "model": "ag/gemini-3.8-flash",
+        "scope": "static-art-advice-only",
+        "productionAcceptance": false
+      }
+    },
+    {
+      "id": "karo-present-left-v1",
+      "actorId": "karo",
+      "view": "three-quarter-left",
+      "requestedDurationMs": 1200,
+      "source": "docs/topics/assets/reference-karo-full.png",
+      "editOf": null,
+      "sheet": {
+        "path": "library/topics/prehistoric-life/motion-studies/karo-present-left-v1.png",
+        "sha256": "c4d018c1ec01837183f2bbc81a39abd20e4f98c4670be0efb57829746ca62b09",
+        "width": 1437,
+        "height": 1095,
+        "hasAlpha": true,
+        "space": "srgb",
+        "bytes": 852943
+      },
+      "prompt": {
+        "path": "library/topics/prehistoric-life/motion-studies/karo-present-left-v1.prompt.txt",
+        "sha256": "b6645faa7eacb5ef46b092e4cc092fe2a2943f483002cc89474577c1b571ed95"
+      },
+      "referenceSha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "tool": "built-in image_gen",
+      "requestedLayout": {
+        "columns": 4,
+        "rows": 4,
+        "positions": 16
+      },
+      "actualFrameLayout": null,
+      "actualTimingMs": null,
+      "registeredMotionId": null,
+      "status": "candidate-needs-correction-unregistered",
+      "productionReady": false,
+      "approved": false,
+      "staticAdvice": {
+        "path": "docs/topics/reviews/motion-atlas-static-advice-v1.json",
+        "sha256": "025948d25d1521390c1c2551c6c5a6dce9c8f3296b0553ef26b1f31f5b373bb7",
+        "model": "ag/gemini-3.8-flash",
+        "scope": "static-art-advice-only",
+        "productionAcceptance": false
+      }
+    }
+  ],
+  "scope": "static-candidate-artwork-not-production-motion",
+  "limitations": [
+    "Requested layout and timing are not verified frame registration or playback evidence.",
+    "Actual canvases are not divisible into the requested equal grid; measure explicit frame rectangles and anchors.",
+    "No native motion, mouth variant, catalog link, approval receipt, runtime test or video acceptance is created by this inventory."
+  ],
+  "createdAt": "2026-10-07T15:07:58.503Z",
+  "controllerObservations": [
+    "Lila v1 direction insufficiently sideward; v2 is a targeted head/chest-direction edit, not an approved replacement.",
+    "AI atlas has nonuniform foot placement and subtle head/body/garment drift. Explicit per-position anchors only address frame origin, not internal anatomy or scale drift.",
+    "Gemini static advice found peak-extension stroke thinning, garment contour variation, foot spacing/ground and shoulder-anchor drift in Lila v2/Karo v1."
+  ],
+  "updatedAt": "2026-10-07T15:18:10.141Z"
+}

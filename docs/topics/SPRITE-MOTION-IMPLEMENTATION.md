@@ -50,6 +50,8 @@ API/CLI có đọc thư viện verified; Studio có form chọn khả năng và 
 
 ## Global Constraints
 
+**Actual motion studies + per-position anchors `5b283ad`:** ba PNG đối thoại Lila/Karo đã tạo bằng built-in image_gen, một lượt Gemini/9router tư vấn ảnh tĩnh còn nêu stroke/foot/hem/scale drift. [Artwork và việc cần sửa](MOTION-ART-STUDIES.md); vẫn chưa đăng ký/duyệt. Importer có optional complete `anchors[]` frame-local, không infer từ alpha hoặc đổi PNG; absent giữ shared anchor/legacy contract. Existing native player/camera/contact dùng mỗi frame anchor. Full build/typecheck/schema export exit 0; ba ca mới NOT RUN; [review source](reviews/sprite-frame-anchor-source-review-v1.md) không có findings trong phạm vi mới. Không dùng điểm neo để che head/body hoặc limb drift; final candidate, art/runtime và full product acceptance vẫn pending.
+
 **Speech foundation source (lịch sử):** `a6b62fa` có importer/loader/list mouth PNG theo exact native version và optional player rest/open trên cue/audio clock; fix `59af28e` qua focused source review hai Important. CLI/API và 24 ca NOT RUN có ở mốc đó; [review foundation](reviews/sprite-speech-source-review-v1.md) giữ findings, không phủ code mới.
 
 **Speech canonical source `3d9aab1`:** Stage/Shot yêu cầu exact variant/native, original cue/source refs, unique actor ownership và toàn cửa sổ cue có actor hiện. Canonical renderer/sources/staging/allowlist/review/cache/locks, catalog/Director và Studio selection dùng verified variants cùng narration/activity gốc. CLI/API/Studio có diagnostic rest/open preview không audio; không là voice evidence. Build/typecheck/schema export exit 0; [plan](../plans/2026-10-07-sprite-speech.md), [42 ca NOT RUN](SPRITE-SPEECH-TEST-HANDOFF.md), [review source và fix 818b036 đã giải quyết Important](reviews/sprite-speech-integration-source-review-v1.md). Thiếu/sai speech binding vẫn chặn, final candidate không mở. Chưa tạo/duyệt artwork thật, chưa nghiệm thu độ mượt hoặc ba input video; props/handoff, mixed-speaker word/subcue timing, art/motion receipts và gaze còn phải làm.
@@ -63,7 +65,7 @@ API/CLI có đọc thư viện verified; Studio có form chọn khả năng và 
 
 ## Task 1 — Nhập và lưu asset bất biến
 
-`packages/motion/schemas.ts` là contract đã tạo. Viết `packages/motion/import.ts`, xuất:
+`packages/motion/schemas.ts` là contract đã tạo. Registration có `anchor` chung bắt buộc và, từ `5b283ad`, `anchors[]` tùy chọn đủ mọi playback position (1–512), tọa độ pixel trong từng frame. Count thiếu/thừa hoặc point vượt frame phải lỗi trước publication; source/descriptor hashes giữ từng point và version thay khi sửa. Không có field mới thì contract cũ không thêm default. Viết `packages/motion/import.ts`, xuất:
 
 ```ts
 normalizeSpriteMotion(metadata: unknown, sheet: {width:number;height:number;hash:string}, registration: MotionRegistration, metadataHash:string): ActorMotion

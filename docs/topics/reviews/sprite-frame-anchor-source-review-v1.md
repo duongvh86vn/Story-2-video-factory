@@ -1,0 +1,9 @@
+# Sprite per-position anchors — source review accumulator
+
+Range `c36f0d7d66019c3c2d25bf530123425b580c726f..5b283ad0cc1b900f6f1593de1ccf28081b9e0c79`. [Plan](../../plans/2026-10-07-sprite-frame-anchors.md), [art evidence](../MOTION-ART-STUDIES.md), [runtime handoff](../SPRITE-MOTION-TEST-HANDOFF.md).
+
+Fresh controller `npm run build`, `npm run test:typecheck`, `npm run schemas` exit 0; diff check clean. Three new anchor declarations **NOT RUN**; existing 42 speech declarations also **NOT RUN**. No fixtures/callbacks/assertions, GSAP/browser/production API/CLI/model acceptance, TTS/ASR, render/MP4 acceptance executed. Separately, authorized asset authoring generated three PNG candidates with built-in image_gen and one Gemini static-art-advice call; neither is runtime or production acceptance.
+
+Read-only reviewer `01a116ed-599a-75f0-923d-0b6ea5883a5c` completed review of the exact range: **no actionable findings; scoped source PASS**. Scope: optional complete bounded anchors, old absent-field parse/hash behavior, exact atlas/strip count and per-frame bounds before immutable publication, native provenance/consumer compatibility, source test declarations, and additive `--task motion` static-review prompt with legacy prompts retained. Existing player distinguishes rect-plus-anchor combinations; stage bounds, camera, catalog/workbench framing and landmark consumers already use per-frame anchors. Controller checks were not independently rerun. Excludes approval of generated anatomy/art, actual runtime and end-to-end pipeline acceptance.
+
+Record every independent finding, severity, original trigger, fix commit and re-review here. A clean source verdict must not erase issues or serve as evidence that atlas frames are smooth, original identity is intact, or final video is usable.
