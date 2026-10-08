@@ -22,6 +22,7 @@ import {nativeDialogueDescription} from '../packages/topics/native-dialogue-cand
 import {VIEW_SOURCE_GESTURE_PROJECTION_VERSION} from '../packages/animation/view-source-gesture.js';
 import {nativeHeadIdentities,NATIVE_SUPPORTING_HEAD_BANK_VERSION} from '../packages/animation/native-head-identity.js';
 import {supportingFaceDescription} from '../packages/topics/supporting-face-candidates.js';
+import {topicCastNormalizationDescription} from '../packages/topics/cast-appearance.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -96,6 +97,7 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
   return {...measured,actor,approved:false,status:'candidate-authored-seated-folds'};
 }));
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
+  castNormalization:{...topicCastNormalizationDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/topics/cast-appearance.ts','packages/topics/prehistoric-life.ts','packages/director/acting-brief.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
   supportingCast:{...prehistoricSupportingDescription,materials:supportingMaterials,headCandidate:supportingHeadDescription,nativeFaces:supportingFaceDescription,
     codeHashes:Object.fromEntries(await Promise.all(['packages/topics/supporting-models.ts','packages/topics/supporting-workbench.ts','packages/topics/supporting-face-candidates.ts','packages/topics/prehistoric-life.ts','packages/animation/prehistoric-supporting-head.ts','packages/animation/native-head-identity.ts','packages/actors/design.ts','packages/host/schemas.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))]))),workbench:'/api/topics/prehistoric-life/supporting-actors'},

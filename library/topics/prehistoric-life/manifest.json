@@ -1,10 +1,36 @@
 {
-  "version": "forest-tribe-0.59-supporting-source-face",
+  "version": "forest-tribe-0.60-preserve-source-cast",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
   "layers": "source-body-and-head-integrated-secondary-pending",
   "motionAcceptance": "pending",
+  "castNormalization": {
+    "version": "topic-cast-source-2",
+    "sourceFields": [
+      "bodyView",
+      "bodyHeadBank",
+      "bodySpeech",
+      "bodyEyes",
+      "bodyExpressions",
+      "bodyMotion",
+      "bodySeat",
+      "bodySecondary",
+      "sourceColour"
+    ],
+    "facePaths": {
+      "fixedBodyView": "bodySpeech/bodyEyes/bodyExpressions/bodySecondary use that fixed drawing only",
+      "independentHead": "bodyHeadBank uses its own registered source-face capabilities; fixed-view facial/hair flags cannot be mixed",
+      "sharedBody": "bodyMotion/bodySeat may accompany either valid head path"
+    },
+    "rule": "Preserve explicitly selected valid own-model artwork, source faces, body views and motion controls. Canonical topic palette/proportions/costume remain fixed. Reject foreign or incomplete selections; never silently replace them with a legacy face. Validate the complete unlocked cast before committing any actor changes.",
+    "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
+    "codeHashes": {
+      "packages/topics/cast-appearance.ts": "1189cc3f579ff2e20443afb2d622fb6e4b490fa626930c06c8c853c84016cda7",
+      "packages/topics/prehistoric-life.ts": "5fa4d856c09239aa04eb8f5115597bb98b85b5d14fdf4ad7848309f2a823fb9d",
+      "packages/director/acting-brief.ts": "662a637589dd03d442b2904f9c9be2719be8ae1594f159a7d4246fe2b655452e"
+    }
+  },
   "primaryModel": "warm-skin-close-ups",
   "referencePolicy": "Supplemental detailed and white-face sheets do not replace or blend into the primary model.",
   "supportingCast": {
@@ -245,7 +271,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "7cd475ad27e9a5b8c44457ad314997b4a66f14fc4a08048f3ce1c2cc9940a78a",
+      "packages/topics/prehistoric-life.ts": "5fa4d856c09239aa04eb8f5115597bb98b85b5d14fdf4ad7848309f2a823fb9d",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
