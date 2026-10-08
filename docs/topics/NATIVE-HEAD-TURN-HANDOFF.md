@@ -2,6 +2,8 @@
 
 ## Source0.49 — bản đo riêng và phân việc9router
 
+Source commit `beef895aff69565446ddb95aae5041009b0b46cf` đã push nhánh `codex/prehistoric-life`,18 owned paths; exact local/remote SHA khớp. Kiểm cuối: build39 modules/585ms, test:typecheck exit0 (không thực thi callback), schema export exit0, static pack/hash binding exit0; diff check qua. 11 callback/runtime/browser/video vẫn NOT RUN. Nguồn hai PNG không đổi; availableBanks=0, productionReady=false/productionRig=null. Các chỉnh sửa sau commit này chỉ là tài liệu bàn giao, không đổi code.
+
 Đã thêm bàn đo cho từng PNG tại `/api/topics/prehistoric-life/head-cells`, JS `/head-cell-editor.js` và POST `/head-cell-draft/check` (cùng prefix). Không dùng vùng chia atlas cũ cho PNG riêng. Source binding có actor/file/rawSHA/material fingerprint/canvas; server đọc lại material/PNG/primary/edit source trước kiểm. Mọi điểm/viền/mask dùng pixel nguồn tuyệt đối. Crop giữ toàn bộ mực, skull nằm trong crop, mắt theo screen-left/right, socket cổ nằm trong seam và có thể nằm dưới viền mặt; điểm mặt thuộc faceContour khi đã khai báo.
 
 Kiểm polygon hữu hạn/diện tích/cạnh retrace/tự cắt/chạm; edit mask không đè protected paint; vùng mắt khuất phải có nguyên nhân và không có mask mắt nhìn thấy. Không tự đặt crop/yaw/pixelScale/landmark từ prompt hoặc canvas. JSON có thể nạp/kiểm/tải snapshot, source mismatch/stale khác PNG bị chặn và edits mới giữ khi request cũ về. Tất cả đây là source behavior **chưa chạy browser/API**; mask còn là bản đo, chưa painter activation/registration/face speech.

@@ -4,6 +4,8 @@ Mục tiêu sản phẩm vẫn là câu chuyện/kịch bản/WAV bất kỳ →
 
 ## Source0.49 — đo nguồn riêng và9router
 
+Source `beef895aff69565446ddb95aae5041009b0b46cf` đã push,18 owned paths; local/remote exactSHA khớp. Fresh build/typecheck/schema/static manifest qua; browser/callbacks/video NOT RUN. Đây là tiến độ source và phối hợp trợ lý, chưa là diễn xuất hoặc factory hoàn thành.
+
 - Bàn đo từng PNG/source-bound check/JSON import-download, source/crop/skull/face/neck/seam/mask/eye visibility/hairside. Crop không bỏ mực, polygon không tự cắt/retrace, masks không đè vùng bảo vệ. Tọa độ/yaw không tự đoán; chưa đăng ký rig, masks chưa kích hoạt speech/blink/emotion.
 - Ba lượt GPT/Gemini qua9router đã trả source/static proposals,26.132 token provider báo. GPT nhẹ thiếu kiểm/fixture, parent đã sửa trước lượt GPT review; Gemini art advice được đối chiếu lại, không biến lời dự đoán thành runtime proof. [Tool/cache/budget/phân việc](2026-10-08-nine-router-delegation.md).
 -11 callback mới chỉ khai báo, NOT RUN; toàn browser/server/scene/video tiếp tục do model của người dùng. Source checks không chứng minh diễn xuất mượt. Karo/đủ view/artwork sửa thật/adjacent correspondence và per-cell speaking còn thiếu; productionReady=false/productionRig=null.
