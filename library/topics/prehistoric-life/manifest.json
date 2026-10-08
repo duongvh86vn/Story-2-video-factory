@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.45-head-turn-authoring",
+  "version": "forest-tribe-0.46-head-source-clock",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -432,8 +432,9 @@
     "limits": [
       "requested yaw/neck alignment in a prompt is not measured source geometry",
       "current near-frontal perspective and hair/beard continuity fail static inspection",
-      "no accepted turn rig or new native head-turn runtime selection",
-      "per-cell mouth/eye/occlusion registration and complete original head-clock integration still required",
+      "no accepted turn rig or registered available bank; V1/V2 are held",
+      "source0.46 has a separately selected original head-clock/registered-cell renderer contract for future V3+ art; it is not selected by a draft or inventory",
+      "per-cell mouth/eye/occlusion registration and runtime head-clock equivalence still required",
       "single-face native source and current fixed3/4 head/body remain unchanged"
     ],
     "materials": [
@@ -1927,22 +1928,46 @@
       }
     ],
     "fingerprint": "cd974f392b36a4d9e3c4ab75d355b32df86add131a39b8b3083e2e37b915092a",
-    "codeHash": "b03d3b0d8f72870c437ad248ff93b25d919625fc134f421700c6372f56063822",
+    "codeHash": "7fdc6337fd975abacc6c67e170ed6470796c5c60cad1f44e1156c179c006d9d6",
     "landmarkCodeHash": "ad77f8e9f2656dd16ef9b08c2c35e3c8b39fd1becc8fbf8fb21dc46e868c7ee8",
     "schemaCodeHash": "b130db49fc50a106309bcb4fe13c9d9bca4d42ab72f91f1ea6f6896fd9dfce10",
     "workbenchCodeHash": "99edfbdb5f6bc3b24bbf515689713964172d0548ab642c4f38d0702a46864d87"
   },
+  "nativeHeadBank": {
+    "version": "native-head-bank-1",
+    "selection": "appearance.bodyHeadBank + performance.sourceHead",
+    "method": "registered source cell at the original discrete head clock; uniform neck attachment, native eye/chin geometry; no whole-face warp, reflection or double-face crossfade",
+    "productionReady": false,
+    "approved": false,
+    "motionVerified": false,
+    "availableBanks": [],
+    "pending": [
+      "faithful V3+ artwork and source correspondence; V1/V2 held",
+      "per-cell speech, eyes, emotions and hair/occlusion artwork capabilities",
+      "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
+      "neck overlap/painter seam masks and compatible body turns",
+      "actual head/body turn and normal-speed video review",
+      "whole arbitrary-story/script/WAV factory acceptance"
+    ],
+    "codeHashes": {
+      "packages/animation/native-head-bank.ts": "31703f87fa2d842f70c6aa925f16c90b634bd665388429eeb7207573e16933c9",
+      "packages/animation/native-head-track.ts": "e96ca04c97bb01ebf542043768565a9a151c04f83d330ebb02a1a4cc5de2f0ab",
+      "packages/animation/body-head-bank.ts": "21a39019dc8f98d6992b16f54f89cb333d1e1b25aeaa7b3b036ae42c442397b3",
+      "packages/animation/native-head-resources.ts": "0b4ed92b183127e51bf9b2ef94994165e7226ff28bf7f10aa41e6f474be8aa9f",
+      "packages/core/json-sha256.ts": "04d3524a8b3c2a053835b9bb7d4cd6218b0ece94a9ccca32768f5deab56d1eff"
+    }
+  },
   "nativeActorGaze": {
-    "version": "native-actor-gaze-source-1",
+    "version": "native-actor-gaze-source-2",
     "selection": "performance.gazes[].actorTarget={id,anchor:'eyes'}",
     "method": "complete visible original actor run; registered eye midpoint projected by the rendered physical neck/head transform, body/expression/breath clock and owned physical lunge timings; no gaze feedback or arm/tool evaluation",
-    "limits": "fixed native body/eye/expression view; behind-view targets require authored turns; no optical gaze or motion acceptance",
+    "limits": "fixed native eyes/expression source or explicitly registered selected-cell physical eye anchor; bank directional eyes/speech/emotion still unavailable; no optical gaze or motion acceptance",
     "runtimeVerified": false,
     "opticalGazeVerified": false,
     "productionReady": false,
     "approved": false,
     "handoff": "docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md",
-    "targetSourceCodeHash": "82218bc8681c5cf6c457ee2b8c3030f1f9eee6e9349883b808be31195758e654",
+    "targetSourceCodeHash": "47fe6b4729d6eac2c7a81b9835084b1acf04f93ad847d77df3ddad752e9829da",
     "physicalLungeCodeHash": "124f4fe064ceda099e1f1ecd108faf2d09910738c402463530106b2d7a1fcdfc",
     "publicationGuardCodeHash": "8529fc923e3b142c1cbc9d51dc35e4067097a9c9ec309900b8549cafdecf1eac",
     "scenePipelineCodeHash": "6da0a0608ddf6a28abf05de9788548b73b4656240354ab5ab164824a387390fb",
@@ -2534,7 +2559,7 @@
       }
     },
     "faceCompilerVersion": "forest-face-motion-10",
-    "rendererVersion": "forest-head-svg-16",
+    "rendererVersion": "forest-head-svg-17",
     "facialCalibration": {
       "eyeStretch": {
         "x": 1.25,
@@ -3042,6 +3067,23 @@
               }
             }
           }
+        },
+        "headBankCandidate": {
+          "version": "native-head-bank-1",
+          "selection": "appearance.bodyHeadBank + performance.sourceHead",
+          "method": "registered source cell at the original discrete head clock; uniform neck attachment, native eye/chin geometry; no whole-face warp, reflection or double-face crossfade",
+          "productionReady": false,
+          "approved": false,
+          "motionVerified": false,
+          "availableBanks": [],
+          "pending": [
+            "faithful V3+ artwork and source correspondence; V1/V2 held",
+            "per-cell speech, eyes, emotions and hair/occlusion artwork capabilities",
+            "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
+            "neck overlap/painter seam masks and compatible body turns",
+            "actual head/body turn and normal-speed video review",
+            "whole arbitrary-story/script/WAV factory acceptance"
+          ]
         },
         "mouthCandidate": {
           "version": "forest-fixed-view-mouth-3",
@@ -4081,7 +4123,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "ff21950b644c4f2c1da0467971d4a79e579ca8863b8dcebe7c047496748ef9b6",
+        "fingerprint": "8e827487e0f91bada41cf9e1dbc528e788511a78f78371426671d78255dc5e2b",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -4095,13 +4137,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "318c194a3b415417fac4d90ed572108328815711a987814fc9c52a92b3dd65b9",
+      "fingerprint": "01c554087ff12c66d3c8a56d0ab5aa59cb5c611003d7cdd3b0f429224b6d5f59",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "17a61a025bbbe96dc374607d68802a9e2b65185c7f4338ddc760d0b77bb4aa28",
+    "fingerprint": "128fa9c260bd25b66844c46baf8725ffdb4b2ebdc91329e580f385f91829aa6a",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -4117,15 +4159,15 @@
       "library/topics/prehistoric-life/rig-v1/head-prompts.json",
       "library/topics/prehistoric-life/rig-v1/front-prompts.json"
     ],
-    "codeHash": "3b4cabdb59d4e4872f0a1f70ba242fdccb1a1a6457dd43d68717e4bc14448588",
-    "cutoutCodeHash": "33bc1ff10fc0140e1574e83e92bfe03c411f7e1f8f596083d63819e61bcfd13e",
+    "codeHash": "3c86cf479b1862af08aca82dd000b7ce107d13b3c128c8c5f76fc01f2427b6f4",
+    "cutoutCodeHash": "75bb804b339e7884531917d50bd80f33e6a742edc14c5b7daa5e0e8c638e8ee2",
     "projectionCodeHash": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22"
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-32",
-    "rendererVersion": "forest-source-body-svg-16",
-    "fingerprint": "502e7782cb524bbd311c38cf91b7548d22afabc1a87b1de5ceba88fd294dee7c",
+    "compilerVersion": "forest-source-body-motion-33",
+    "rendererVersion": "forest-source-body-svg-17",
+    "fingerprint": "08cd8a15654bfc2af210d766c8237c4b18c1e508297547d9912b92bd47d991fa",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -4878,6 +4920,23 @@
           }
         }
       },
+      "headBankCandidate": {
+        "version": "native-head-bank-1",
+        "selection": "appearance.bodyHeadBank + performance.sourceHead",
+        "method": "registered source cell at the original discrete head clock; uniform neck attachment, native eye/chin geometry; no whole-face warp, reflection or double-face crossfade",
+        "productionReady": false,
+        "approved": false,
+        "motionVerified": false,
+        "availableBanks": [],
+        "pending": [
+          "faithful V3+ artwork and source correspondence; V1/V2 held",
+          "per-cell speech, eyes, emotions and hair/occlusion artwork capabilities",
+          "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
+          "neck overlap/painter seam masks and compatible body turns",
+          "actual head/body turn and normal-speed video review",
+          "whole arbitrary-story/script/WAV factory acceptance"
+        ]
+      },
       "mouthCandidate": {
         "version": "forest-fixed-view-mouth-3",
         "selection": "registered-mouth-v1",
@@ -5916,7 +5975,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "ff21950b644c4f2c1da0467971d4a79e579ca8863b8dcebe7c047496748ef9b6",
+      "fingerprint": "8e827487e0f91bada41cf9e1dbc528e788511a78f78371426671d78255dc5e2b",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
@@ -6464,6 +6523,23 @@
               }
             }
           }
+        },
+        "headBankCandidate": {
+          "version": "native-head-bank-1",
+          "selection": "appearance.bodyHeadBank + performance.sourceHead",
+          "method": "registered source cell at the original discrete head clock; uniform neck attachment, native eye/chin geometry; no whole-face warp, reflection or double-face crossfade",
+          "productionReady": false,
+          "approved": false,
+          "motionVerified": false,
+          "availableBanks": [],
+          "pending": [
+            "faithful V3+ artwork and source correspondence; V1/V2 held",
+            "per-cell speech, eyes, emotions and hair/occlusion artwork capabilities",
+            "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
+            "neck overlap/painter seam masks and compatible body turns",
+            "actual head/body turn and normal-speed video review",
+            "whole arbitrary-story/script/WAV factory acceptance"
+          ]
         },
         "mouthCandidate": {
           "version": "forest-fixed-view-mouth-3",
@@ -7503,7 +7579,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "ff21950b644c4f2c1da0467971d4a79e579ca8863b8dcebe7c047496748ef9b6",
+        "fingerprint": "8e827487e0f91bada41cf9e1dbc528e788511a78f78371426671d78255dc5e2b",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -7517,7 +7593,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "318c194a3b415417fac4d90ed572108328815711a987814fc9c52a92b3dd65b9",
+      "fingerprint": "01c554087ff12c66d3c8a56d0ab5aa59cb5c611003d7cdd3b0f429224b6d5f59",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -7531,20 +7607,20 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "1f91ab52213d0666454780c4ac93747a8ecc29138c735c4fe8b9042c6ed75b46",
+    "codeHash": "e298773f77bb7822efbab5f59e2287861f01ec000149e35afac6135483610c13",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
-    "compilerCodeHash": "bb77523b381bdf9e092436402256c584692386f4580e8764e7f7b7a3bc03ff2f",
+    "compilerCodeHash": "2b2c915d8ee9f9718ffe5ba8c81e3b979116fc1289786e5fc3f6cdfbc1ebcbeb",
     "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
-    "cameraCodeHash": "31205f02b2bff48d67e3a0f861558370b80d7906f453ab8146c9d5b6813680fa",
+    "cameraCodeHash": "e9bf2d4a816df18d28ddba2496fdd840bf87a4163cc82cf43825620d1c82d52a",
     "sourceBodyCodeHash": "d3b78d1283a37ea6e2470972ca33640e0bed46d1c6aa5ed8e43473ee56174e3c",
-    "actingClockCodeHash": "382774585d60aadbe48caac0ec22e1ecc470502aaeacdd32fafd2f8f0dfc00f5",
-    "actingBindingCodeHash": "a33da34e42d7896ed0ef2d60d5524fe2e9f5cc73804158bb036e395b2d4ffa0c",
+    "actingClockCodeHash": "6292738077c3a0dbef468845ccea64fb37b9c60675d51b9695d2ab0f80caf124",
+    "actingBindingCodeHash": "106f4122b39f7a670cd1ae5a68959e1f21dc96d2ebc974bfb461b5db0e7a95ba",
     "secondaryCodeHash": "baa043be6ac71977d560fe207902b6ef3ec48eaf21bb77c4c891eb9f99b39b51",
     "secondaryMotionCodeHash": "ac1434a80796836e341fd9f39c2373b38c980df10f64f8c3836c682000491f94",
-    "viewCodeHash": "b54111293e3f091684d631e5b30ce09a2f6d68f2b87b0dc075856a19a3787113",
+    "viewCodeHash": "09a1fb6013d74f07471c8416bc986b40e07b284ccde7c49ae3fc6068689b0fcf",
     "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
     "viewClothCodeHash": "cc88afd81c6063948dc2420ec7eaf543945e90bc4d05c86472696be53c8a3256",
     "viewClothGeometryCodeHash": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
@@ -8224,6 +8300,23 @@
             }
           }
         }
+      },
+      "headBankCandidate": {
+        "version": "native-head-bank-1",
+        "selection": "appearance.bodyHeadBank + performance.sourceHead",
+        "method": "registered source cell at the original discrete head clock; uniform neck attachment, native eye/chin geometry; no whole-face warp, reflection or double-face crossfade",
+        "productionReady": false,
+        "approved": false,
+        "motionVerified": false,
+        "availableBanks": [],
+        "pending": [
+          "faithful V3+ artwork and source correspondence; V1/V2 held",
+          "per-cell speech, eyes, emotions and hair/occlusion artwork capabilities",
+          "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
+          "neck overlap/painter seam masks and compatible body turns",
+          "actual head/body turn and normal-speed video review",
+          "whole arbitrary-story/script/WAV factory acceptance"
+        ]
       },
       "mouthCandidate": {
         "version": "forest-fixed-view-mouth-3",
@@ -9263,7 +9356,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "ff21950b644c4f2c1da0467971d4a79e579ca8863b8dcebe7c047496748ef9b6",
+      "fingerprint": "8e827487e0f91bada41cf9e1dbc528e788511a78f78371426671d78255dc5e2b",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,

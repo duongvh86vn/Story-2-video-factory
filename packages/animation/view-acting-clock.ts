@@ -7,8 +7,9 @@ import {rigHand} from '../core/identifiers.js';
 import {VIEW_SOURCE_GESTURE_VERSION,ViewSourceGestureSchema,validateViewGesturePiece,validateViewSourceGestureTrack} from './view-source-gesture.js';
 import {ViewExpressionSchema,normalizeViewExpressions,projectViewExpressions,VIEW_EXPRESSION_RAMP_MS} from './view-expression-track.js';
 import {validateViewSourceBody} from './view-source-body.js';
+import {NativeHeadTrackSchema,validateNativeHeadSource} from './native-head-track.js';
 
-export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-4' as const;
+export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-5' as const;
 export const VIEW_GAZE_RAMP_MS=140,VIEW_BREATH_RAMP_MS=200;
 export type ViewGaze=z.infer<typeof GazeSchema>;
 /** Renderer context only; never changes narration, persisted activity or authored clips. */
@@ -17,6 +18,7 @@ export const ViewActingClockSchema=z.object({version:z.literal(VIEW_ACTING_CLOCK
   runStartMs:z.number().int().nonnegative(),runEndMs:z.number().int().positive(),
   sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),gazes:z.array(GazeSchema),gestures:z.array(ViewSourceGestureSchema),expressions:z.array(ViewExpressionSchema).optional(),bodyMotion:BodySourceSchema.optional(),
   actorTargets:z.array(ViewGazeTargetSchema).max(8).optional(),
+  headMotion:NativeHeadTrackSchema.optional(),
 }).strict().superRefine((c,ctx)=>{
   if(c.endMs<=c.startMs||c.runStartMs>c.startMs||c.runEndMs<c.endMs)ctx.addIssue({code:'custom',message:'Invalid continuous run/shot span'});
 });
@@ -45,6 +47,7 @@ export function validateViewActingClockSource(plan:PerformancePlan,clock:ViewAct
   const parsed=ViewActingClockSchema.parse(clock),normalized=normalizeViewGazes(parsed.gazes);
   if(clock.ownerId!==plan.leadCharacterId||clock.endMs-clock.startMs!==plan.durationMs)throw new Error('needs-view-acting-phase: actor or shot span mismatch');
   validateViewSourceBody(plan,parsed.bodyMotion,clock.startMs,clock.endMs,clock.runStartMs,clock.runEndMs);
+  validateNativeHeadSource(plan,parsed.headMotion,clock.startMs,clock.endMs,clock.runStartMs,clock.runEndMs);
   if(hash(normalized)!==hash(parsed.gazes)||normalized.some(g=>g.startMs<clock.runStartMs||g.endMs>clock.runEndMs))throw new Error('needs-view-acting-phase: source gaze is not a normalized run track');
   if(plan.gazes.some(g=>g.startMs<0||g.endMs>plan.durationMs)||hash(projectViewGazes(normalized,clock.startMs,clock.endMs))!==hash(normalizeViewGazes(plan.gazes)))throw new Error('needs-view-acting-phase: authored gaze differs from source projection');
   if(parsed.expressions){
@@ -75,6 +78,8 @@ export function validateViewActingClock(plan:PerformancePlan,clock:ViewActingClo
   for(const source of sources){
     if(hash(source.performance.stage)!==hash(plan.stage))throw new Error('needs-actor-gaze: target is in another world/stage');
     for(const gaze of clock.gazes)if('actorTarget' in gaze&&gaze.actorTarget.id===source.actorId&&(gaze.startMs<source.startMs||gaze.endMs>source.endMs))throw new Error('needs-actor-gaze: target source does not cover its complete gaze window');
+    const head=source.performance.sourceHead;
+    if(head)for(const gaze of clock.gazes)if('actorTarget' in gaze&&gaze.actorTarget.id===source.actorId&&head.samples.slice(1).some(s=>{const at=head.startMs+s.atMs;return at>gaze.startMs&&at<gaze.endMs;}))throw new Error('needs-head-turn-interaction: following an eye anchor through discrete head cell changes needs a registered continuous gaze track');
   }
 }
 /** End frame of a camera cut may still be inside the same source cue. */
@@ -87,7 +92,8 @@ export function viewActingClockDescription(clock:ViewActingClock){
   return {version:clock.version,ownerId:clock.ownerId,offsetMs:clock.startMs,endMs:clock.endMs,
     runStartMs:clock.runStartMs,runEndMs:clock.runEndMs,sourceIdentityHash:clock.sourceIdentityHash,
     gazeTrackHash:hash(clock.gazes),gazeRampMs:VIEW_GAZE_RAMP_MS,breathRampMs:VIEW_BREATH_RAMP_MS,
-    ...(clock.actorTargets?.length?{actorGazeVersion:VIEW_ACTOR_GAZE_VERSION,actorTargets:clock.actorTargets.map(target=>({actorId:target.actorId,startMs:target.startMs,endMs:target.endMs,sourceIdentityHash:target.sourceIdentityHash,fingerprint:target.fingerprint,anchor:'registered native eye midpoint',method:'original physical/body/expression/breath clock; no gaze feedback',verified:false}))}:{}),
+    ...(clock.headMotion?{headSource:{version:clock.headMotion.version,sourceHash:hash(clock.headMotion),bankFingerprint:clock.headMotion.bankFingerprint,startMs:clock.headMotion.startMs,endMs:clock.headMotion.endMs,method:'explicit original discrete cell route; no yaw inference or face crossfade',verified:false}}:{}),
+    ...(clock.actorTargets?.length?{actorGazeVersion:VIEW_ACTOR_GAZE_VERSION,actorTargets:clock.actorTargets.map(target=>({actorId:target.actorId,startMs:target.startMs,endMs:target.endMs,sourceIdentityHash:target.sourceIdentityHash,fingerprint:target.fingerprint,anchor:target.profile.appearance.bodyHeadBank?'selected source head cell eye target':'registered native eye midpoint',method:'original physical/body/head/expression/breath clock; no gaze feedback',verified:false}))}:{}),
     gestureVersion:VIEW_SOURCE_GESTURE_VERSION,gestureTrackHash:hash(clock.gestures),gestureCount:clock.gestures.length,
     gestureClock:'explicit source command/window; original quintic arm phase and entry branch',
     ...(clock.expressions?{expressionTrackHash:hash(clock.expressions),sourceExpressions:clock.expressions,expressionRampMs:VIEW_EXPRESSION_RAMP_MS,expressionClock:'normalized original mood track across explicitly continuous fixed-view shots'}:{}),

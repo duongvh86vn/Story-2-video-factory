@@ -24,6 +24,8 @@ import {NativeSeatMaterialSchema} from '../../packages/topics/native-seat-art.js
 import {NativeSeatCorrespondenceSchema} from '../../packages/animation/native-seat-registration.js';
 import {ViewGazeTargetSchema} from '../../packages/animation/view-gaze-target.js';
 import {HeadTurnMaterialSchema,HeadTurnPromptSchema,HeadTurnDraftSchema,HeadTurnCheckRequestSchema} from '../../packages/topics/head-turn-schemas.js';
+import {NativeHeadBankSchema} from '../../packages/animation/native-head-bank.js';
+import {NativeHeadTrackSchema} from '../../packages/animation/native-head-track.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
@@ -45,6 +47,7 @@ export const schemaLibrary:Record<string,z.ZodTypeAny> = {
   'view-gaze-target':ViewGazeTargetSchema,
   'native-head-turn-material':HeadTurnMaterialSchema,'native-head-turn-prompt':HeadTurnPromptSchema,'native-head-turn-landmarks':HeadTurnDraftSchema,
   'native-head-turn-check':HeadTurnCheckRequestSchema,
+  'native-head-bank':NativeHeadBankSchema,'native-head-source':NativeHeadTrackSchema,
 };
 
 export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(import.meta.url))): Promise<void> {

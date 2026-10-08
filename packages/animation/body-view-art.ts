@@ -8,6 +8,8 @@ import {bodyViewExpressionsSvg,bodyViewExpressionsDescription} from './body-view
 import {hasBodyViewLocomotion,nativeClothSvg,nativeClothDescription} from './body-view-cloth.js';
 import {hasBodyViewSecondary,nativeSecondarySvg,nativeSecondaryDescription} from './body-view-secondary.js';
 import {hasBodyViewSeat,nativeSeatSvg,nativeSeatDescription} from './body-view-seat.js';
+import {hasNativeHeadBank,nativeHeadBankSvg,registeredNativeHeadBank,nativeHeadBankBounds} from './body-head-bank.js';
+import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
 export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-4';
@@ -38,9 +40,12 @@ export function bodyViewAsset(appearance:HostProfile['appearance']){
   const c=registeredBodyView({appearance});return {file:c.file,sha256:c.sha256,path:'assets/rigs/'+c.sha256+'.png'};
 }
 export function bodyViewHeadCalibration(profile:HostProfile){
-  const c=registeredBodyView(profile);return {...c,scale:c.headScale,bounds:c.headBounds};
+  const c=registeredBodyView(profile);
+  if(hasNativeHeadBank(profile)){const bank=registeredNativeHeadBank(profile);return {...c,neck:{x:0,y:0},chin:{left:{x:0,y:0},right:{x:0,y:0}},scale:1,bounds:nativeHeadBankBounds(bank)};}
+  return {...c,scale:c.headScale,bounds:c.headBounds};
 }
 export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
+  if(hasNativeHeadBank(profile))return nativeHeadBankSvg(profile,imageUrl);
   const c=registeredBodyView(profile);
   // Native eyes/mouth remain inside the same uniform attachment. Unselected
   // overlays, whole-face warp, expressions and continuous turns stay blocked.
@@ -55,7 +60,7 @@ export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sh
     torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})">${cloth?.artwork??'<g mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>'}</g>`};
 }
 export const bodyViewDescription={version:BODY_VIEW_REGISTRATION_VERSION,artworkVersion:BODY_VIEW_VERSION,
-  sources:bodyViewRegistrations,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,expressionsCandidate:bodyViewExpressionsDescription,locomotionCandidate:nativeClothDescription,seatedCandidate:nativeSeatDescription,secondaryCandidate:nativeSecondaryDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint,expressions:bodyViewExpressionsDescription.fingerprint,cloth:nativeClothDescription.fingerprint,seat:nativeSeatDescription.fingerprint,secondary:nativeSecondaryDescription.fingerprint}),
+  sources:bodyViewRegistrations,headBankCandidate:nativeHeadBankDescription,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,expressionsCandidate:bodyViewExpressionsDescription,locomotionCandidate:nativeClothDescription,seatedCandidate:nativeSeatDescription,secondaryCandidate:nativeSecondaryDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,headBank:nativeHeadBankDescription,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint,expressions:bodyViewExpressionsDescription.fingerprint,cloth:nativeClothDescription.fingerprint,seat:nativeSeatDescription.fingerprint,secondary:nativeSecondaryDescription.fingerprint}),
   status:'developer-landmark-and-layer-candidate',productionReady:false,approved:false,
   method:'fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp',
   limitations:['identity/proportion/mask review','happy fixed view by default; optional unapproved speech/eyes/expression selections','rigid garment by default; optional unapproved locomotion and separately selected seated candidate','bounded eye look only; no continuous body/head turn or optical gaze','source support clock through camera cuts is source-only; runtime equivalence remains pending','no motion acceptance']};

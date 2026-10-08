@@ -2,6 +2,7 @@ import type {HostProfile} from '../host/schemas.js';
 import type {FrameState} from './compiler.js';
 import {hash} from '../core/utils.js';
 import {usesBodyView,bodyViewHeadCalibration,bodyViewHeadSvg,bodyViewDescription} from './body-view-art.js';
+import {hasNativeHeadBank} from './body-head-bank.js';
 import {usesSourceColour,sourceColourSvg,sourceColourDescription} from './source-colour-art.js';
 
 type Actor='lila'|'karo';
@@ -23,6 +24,7 @@ export const CUTOUT_HEAD_VERSION='forest-cutout-head-2';
 export function usesCutoutHead(profile:HostProfile){return profile.appearance.artworkVersion==='forest-body-1'||usesBodyView(profile);}
 export function cutoutHeadRegistration(profile:HostProfile){return usesBodyView(profile)?bodyViewHeadCalibration(profile):cutoutHeadCalibration[profile.appearance.characterVariant!];}
 export function cutoutHeadChin(profile:HostProfile,side:'left'|'right'):Point {
+  if(hasNativeHeadBank(profile))throw new Error('needs-head-source-phase: changing head chin requires its selected original cell/time');
   const c=cutoutHeadRegistration(profile);
   return {x:(c.chin[side].x-c.neck.x)*c.scale,y:(c.chin[side].y-c.neck.y)*c.scale};
 }

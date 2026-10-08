@@ -1,8 +1,30 @@
-# Quay đầu Lila/Karo — source0.45 và phần còn thiếu
+# Quay đầu Lila/Karo — source0.46 và phần còn thiếu
 
 Cập nhật 08/10/2026. Máy không có dịch vụ image-to-video; tiếp tục SVG/HTML5/GSAP. Lila và Karo là diễn viên trong câu chuyện người dùng đưa, không phải người dẫn cố định. Ba input vẫn là kịch bản nguyên văn → TTS/clock audio thật, WAV giữ audio/clock và câu chuyện → kịch bản; SRT là luồng tương thích. EN là chính, VI/JA/KO và TTS local/HTTP/command vẫn thuộc phạm vi nghiệm thu.
 
-**Chưa có quay đầu native hoạt động trong scene.** Source0.45 tạo vật liệu và công cụ đăng ký ảnh, không phải cải tiến video đã nghiệm thu. Bốn atlas đều bị giữ lại để sửa; `productionReady=false`, `productionRig=null`, `registered=false`. Bàn đo không bật rig, không tự gán yaw từ prompt, không gọi model/TTS, không dựng video.
+**Chưa có bộ quay đầu native dùng được trong video.** Source0.46 bổ sung clock và renderer contract cho hình V3+ sẽ đăng ký; chưa có bank thực được chọn. Bốn atlas V1/V2 vẫn held, bị chặn cả theo tên file và SHA dù đổi tên; `productionReady=false`, `productionRig=null`. Bàn đo/draft không bật rig hay tự gán yaw, không gọi model/TTS hoặc dựng video.
+
+## Phần source0.46 mới
+
+`NativeHeadBankSchema` mô tả source PNG/primary/body hash, scale chung, crop/neck axis/skull/chin/eyeTarget/yaw/seam/restMood của từng cell và route rõ ràng. Geometry được khai báo/đo thủ công; fingerprint bao trọn bank, không là chứng nhận identity hoặc đọc draft landmarks tự động. `appearance.bodyHeadBank` phải đúng actor/body source; `performance.sourceHead` phải dùng cùng fingerprint/actor và complete run. Không có script hoặc model tự chuyển draft thành bank.
+
+`native-head-source-1` lưu start/end global cùng sample time relative. Mọi shot trong run continuous lặp cùng toàn bộ source; clock5 giữ offset/run/source và expressions; bank/actor/track đổi làm scene identity khác. Original-history chin lookup trước camera slice vẫn dùng đúng cell nguồn. Crop/neck-axis SVG transform đồng nhất với physical eye/chin/camera bounds; ảnh chỉ stage một lần theo hash, mỗi cell dùng SVG reference và discrete visibility, không face warp/mirror/crossfade. Body source/view vẫn phải tương thích; head bank không tự tạo body turn.
+
+Khả năng bank hiện chỉ là **hình đầu nghỉ và physical anchors**. Cả speech/directionalEyes/expressions/secondary đều false; supplied speech activity, observer gaze, nét cảm xúc không có artwork và overlay fixed-view đều bị chặn. Màu/nét/identity còn cần sửa ở artwork V3+. Seam polygon mới là metadata; painter seam masks/occlusion chưa triển khai. Chặn đổi cell giữa gesture think/chạm cằm hoặc lúc observer đang theo mắt bạn diễn (`needs-head-turn-interaction`) cho đến khi có continuous correspondence. Không đổi chuyện có thoại thành im lặng để né lỗi.
+
+Nguồn stage phải đúng SHA/PNG framing/RGBA/dimensions, primary hash và real bounded paths, không symlink; embedded renderer cũng đọc lại nguồn thay vì reuse stale cache. Đây chưa là chứng minh pixel correspondence/seam/motion. Full-face masks, speech/blink/emotion/hair, continuous contact/gaze, body turn/profile/rear, props/world/three inputs/voices/resume/final QC vẫn phải hoàn thành.
+
+17 callback mới **NOT RUN**:11 original clock,5 synthetic bank và1 JSON-SHA compatibility. Synthetic bank không có ảnh V3 thật, không được dùng như rig/approval. Model test chạy sau theo exact SHA:
+
+~~~powershell
+Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1'
+git rev-parse HEAD
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/native-head-track.test.ts tests/native-head-bank.test.ts tests/json-sha256.test.ts tests/partner-facing-views.test.ts tests/fixed-view-speech.test.ts tests/actor-gaze.test.ts
+~~~
+
+Kiểm stale owner/window/run/context, random/reverse seek, same cell ở camera cut, held/hash giả/route lỗi, bank voice/face capability/contact/gaze reject và ảnh/resource stale. Sau khi có source art thật, model test phải kiểm renderer/scene resource/cache/repair/locks/cap2MB và video60fps; mọi thứ vẫn NOT RUN. Build/schema/static manifest qua không chứng minh video mượt. [Source record0.46](reviews/native-head-source-record-v1.md).
+
+## Lịch sử authoring0.45
 
 Source commit `6e196f7ab73de111f9d0865e3fdc1346f4378f18` đã push GitHub nhánh `codex/prehistoric-life`,34 owned paths; full SHA local/remote khớp. Build/typecheck/schema/static inventory đã qua; bounded source review đóng các lỗi trong phạm vi kiểm.14 callbacks/browser/server/motion/video vẫn NOT RUN. [Evidence thực tế](reviews/native-head-turn-source-record-v1.md).
 

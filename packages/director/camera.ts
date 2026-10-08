@@ -9,6 +9,7 @@ import { sourceBodyPlan, bodyTrackOffsetMs, bodyRootAt } from '../animation/view
 import {supportMotionTimes} from '../animation/support.js';
 import {sceneSeats} from '../stage/seats.js';
 import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
+import {nativeHeadTrackTimes} from '../animation/native-head-track.js';
 import {hasBodyViewSecondary,nativeSecondaryBounds} from '../animation/body-view-secondary.js';
 import {registeredBodyView} from '../animation/body-view-art.js';
 import {hasBodyViewSeat} from '../animation/body-view-seat.js';
@@ -52,6 +53,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
   if(actingClock){
+    if(actingClock.headMotion)for(const global of nativeHeadTrackTimes(actingClock.headMotion))for(const delta of [-.01,0,.01])times.add(global-actingClock.startMs+delta);
     for(const source of actingClock.actorTargets??[])for(const at of viewGazeTargetTimes(source))times.add(at-actingClock.startMs);
     for(const g of actingClock.gestures)for(const at of [g.startMs,g.reachMs,g.recoverMs,g.endMs])times.add(at-actingClock.startMs);
     for(const g of actingClock.gazes)for(const at of [g.startMs,g.startMs+VIEW_GAZE_RAMP_MS,g.endMs-VIEW_GAZE_RAMP_MS,g.endMs])times.add(at-actingClock.startMs);

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Id, RigHandSchema } from '../core/identifiers.js';
+import {NativeHeadTrackSchema} from './native-head-track.js';
 
 export const ANIMATION_VERSION = 'performance-2.2.13';
 // Optional airborne clips use their own version; accepted grounded plans stay exact.
@@ -101,6 +102,7 @@ export const PerformancePlanSchema = z.object({
   supports:z.array(SeatSupportSchema).max(12).optional(),
   walks: z.array(WalkSchema), jumps:z.array(JumpSchema).max(16).optional(), gestures: z.array(GestureSchema),spears:z.array(SpearTrackSchema).max(8).optional(),
   sourceBody:BodySourceSchema.optional(),
+  sourceHead:NativeHeadTrackSchema.optional(),
   lunge:LungeSchema.optional(),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
   gazes: z.array(GazeSchema),

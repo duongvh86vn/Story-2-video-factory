@@ -7,11 +7,13 @@ import {validateBodySourcePlan} from './view-source-body.js';
 import {sourceBodyPlan} from './view-source-body.js';
 import {supportMotionTimes} from './support.js';
 import {PhysicalLungeClockSchema} from './lunge.js';
+import {hasNativeHeadBank,validateNativeHeadBankTrack} from './body-head-bank.js';
+import {nativeHeadTrackTimes} from './native-head-track.js';
 
-export const VIEW_ACTOR_GAZE_VERSION='native-actor-gaze-source-1' as const;
+export const VIEW_ACTOR_GAZE_VERSION='native-actor-gaze-source-2' as const;
 export const nativeActorGazeDescription={version:VIEW_ACTOR_GAZE_VERSION,selection:"performance.gazes[].actorTarget={id,anchor:'eyes'}",
   method:'complete visible original actor run; registered eye midpoint projected by the rendered physical neck/head transform, body/expression/breath clock and owned physical lunge timings; no gaze feedback or arm/tool evaluation',
-  limits:'fixed native body/eye/expression view; behind-view targets require authored turns; no optical gaze or motion acceptance',
+  limits:'fixed native eyes/expression source or explicitly registered selected-cell physical eye anchor; bank directional eyes/speech/emotion still unavailable; no optical gaze or motion acceptance',
   runtimeVerified:false,opticalGazeVerified:false,productionReady:false,approved:false};
 const SourceSchema=z.object({version:z.literal(VIEW_ACTOR_GAZE_VERSION),actorId:Id,
   startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),
@@ -20,12 +22,14 @@ export const ViewGazeTargetSchema=SourceSchema.extend({fingerprint:z.string().re
   const p=source.performance,a=source.profile;
   if(source.endMs<=source.startMs||source.endMs-source.startMs>300000||p.durationMs!==source.endMs-source.startMs)ctx.addIssue({code:'custom',message:'Invalid complete gaze target run clock'});
   if(source.actorId!==a.id||p.leadCharacterId!==a.id||p.profileHash!==a.profileHash||p.kind!==a.kind)ctx.addIssue({code:'custom',message:'Gaze target identity/profile mismatch'});
-  if(a.appearance.artworkVersion!=='forest-body-view-1'||a.appearance.bodyEyes!=='registered-eyes-v1'||a.appearance.bodyExpressions!=='registered-expressions-v1'||!a.appearance.bodyView)ctx.addIssue({code:'custom',message:'Actor eye target needs its registered native eye/body/expression view'});
+  if(a.appearance.artworkVersion!=='forest-body-view-1'||!a.appearance.bodyView||!hasNativeHeadBank(a)&&(a.appearance.bodyEyes!=='registered-eyes-v1'||a.appearance.bodyExpressions!=='registered-expressions-v1'))ctx.addIssue({code:'custom',message:'Actor eye target needs its registered native face or head cell/body source'});
   if(p.root.y!==p.stage.groundY)ctx.addIssue({code:'custom',message:'Gaze target root must use its ground anchor'});
   if(p.gazes.length||p.gestures.length||p.props.length||p.spears?.length)ctx.addIssue({code:'custom',message:'Gaze target source is physical only, without attention/arms/props'});
   if(!!p.lunge!==!!source.lungeClock||source.lungeClock&&(source.lungeClock.spearId!==p.lunge?.spearId||source.lungeClock.endMs!==p.durationMs))ctx.addIssue({code:'custom',message:'Gaze target lunge must keep its original owned physical clock'});
   if(p.sourceBody&&(p.sourceBody.startMs!==source.startMs||p.sourceBody.endMs!==source.endMs))ctx.addIssue({code:'custom',message:'Gaze target body source must cover its complete original run'});
   try{validateBodySourcePlan(p);}catch(error){ctx.addIssue({code:'custom',message:error instanceof Error?error.message:String(error)});}
+  try{validateNativeHeadBankTrack(p,a);}catch(error){ctx.addIssue({code:'custom',message:error instanceof Error?error.message:String(error)});}
+  if(p.sourceHead&&(p.sourceHead.startMs!==source.startMs||p.sourceHead.endMs!==source.endMs))ctx.addIssue({code:'custom',message:'Gaze target head source must cover its complete original run'});
   if(p.expressions.some(e=>e.startMs<0||e.endMs>p.durationMs||e.endMs<=e.startMs))ctx.addIssue({code:'custom',message:'Gaze target expression outside its run'});
   const {fingerprint,...value}=source;if(fingerprint!==hash(value))ctx.addIssue({code:'custom',message:'Gaze target source fingerprint changed'});
 });
@@ -37,6 +41,7 @@ export function viewGazeTarget(input:z.infer<typeof SourceSchema>):ViewGazeTarge
 export function viewGazeTargetTimes(source:ViewGazeTarget):number[]{
   const p=source.performance,physical=sourceBodyPlan(p),offset=p.sourceBody?.startMs??source.startMs;
   const times=[source.startMs,source.startMs+200,source.endMs-200,source.endMs,...supportMotionTimes(physical).map(t=>t+offset)];
+  if(p.sourceHead)times.push(...nativeHeadTrackTimes(p.sourceHead));
   if(source.lungeClock)for(const at of [source.lungeClock.readyMs,source.lungeClock.contactMs,source.lungeClock.recoverMs,source.lungeClock.endMs])times.push(source.startMs+at);
   for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,(clip.startMs+clip.endMs)/2])times.push(offset+at);
   for(const jump of physical.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2])times.push(offset+at);

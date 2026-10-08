@@ -1591,6 +1591,375 @@
                                       "three-quarter-left"
                                     ]
                                   },
+                                  "bodyHeadBank": {
+                                    "type": "object",
+                                    "properties": {
+                                      "version": {
+                                        "type": "string",
+                                        "const": "native-head-bank-1"
+                                      },
+                                      "id": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                      },
+                                      "actor": {
+                                        "type": "string",
+                                        "enum": [
+                                          "lila",
+                                          "karo"
+                                        ]
+                                      },
+                                      "source": {
+                                        "type": "object",
+                                        "properties": {
+                                          "file": {
+                                            "type": "string",
+                                            "pattern": "^library\\/topics\\/prehistoric-life\\/head-turn-studies\\/(lila|karo)-head-turn-v[1-9]\\d*\\.png$"
+                                          },
+                                          "sha256": {
+                                            "type": "string",
+                                            "minLength": 64,
+                                            "maxLength": 64,
+                                            "pattern": "^[a-f0-9]{64}$"
+                                          },
+                                          "width": {
+                                            "type": "integer",
+                                            "exclusiveMinimum": 0,
+                                            "maximum": 8192
+                                          },
+                                          "height": {
+                                            "type": "integer",
+                                            "exclusiveMinimum": 0,
+                                            "maximum": 8192
+                                          }
+                                        },
+                                        "required": [
+                                          "file",
+                                          "sha256",
+                                          "width",
+                                          "height"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "primary": {
+                                        "type": "object",
+                                        "properties": {
+                                          "file": {
+                                            "type": "string"
+                                          },
+                                          "sha256": {
+                                            "type": "string",
+                                            "minLength": 64,
+                                            "maxLength": 64,
+                                            "pattern": "^[a-f0-9]{64}$"
+                                          }
+                                        },
+                                        "required": [
+                                          "file",
+                                          "sha256"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "bodyViews": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "view": {
+                                              "type": "string",
+                                              "enum": [
+                                                "three-quarter-left",
+                                                "three-quarter-right"
+                                              ]
+                                            },
+                                            "sourceHash": {
+                                              "type": "string",
+                                              "minLength": 64,
+                                              "maxLength": 64,
+                                              "pattern": "^[a-f0-9]{64}$"
+                                            }
+                                          },
+                                          "required": [
+                                            "view",
+                                            "sourceHash"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "minItems": 1,
+                                        "maxItems": 2
+                                      },
+                                      "unitScale": {
+                                        "type": "number",
+                                        "minimum": 0.05,
+                                        "maximum": 2
+                                      },
+                                      "cells": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "string",
+                                              "maxLength": 96,
+                                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                            },
+                                            "crop": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                },
+                                                "y": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                },
+                                                "width": {
+                                                  "type": "integer",
+                                                  "exclusiveMinimum": 0
+                                                },
+                                                "height": {
+                                                  "type": "integer",
+                                                  "exclusiveMinimum": 0
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y",
+                                                "width",
+                                                "height"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            "neck": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "number"
+                                                },
+                                                "y": {
+                                                  "type": "number"
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            "neckTop": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "number"
+                                                },
+                                                "y": {
+                                                  "type": "number"
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            "chin": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "number"
+                                                },
+                                                "y": {
+                                                  "type": "number"
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            "eyeTarget": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "number"
+                                                },
+                                                "y": {
+                                                  "type": "number"
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            "skull": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                },
+                                                "y": {
+                                                  "type": "integer",
+                                                  "minimum": 0
+                                                },
+                                                "width": {
+                                                  "type": "integer",
+                                                  "exclusiveMinimum": 0
+                                                },
+                                                "height": {
+                                                  "type": "integer",
+                                                  "exclusiveMinimum": 0
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y",
+                                                "width",
+                                                "height"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            "yawDeg": {
+                                              "type": "number",
+                                              "minimum": -90,
+                                              "maximum": 90
+                                            },
+                                            "seam": {
+                                              "type": "array",
+                                              "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "number"
+                                                  },
+                                                  "y": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y"
+                                                ],
+                                                "additionalProperties": false
+                                              },
+                                              "minItems": 3,
+                                              "maxItems": 32
+                                            },
+                                            "restMood": {
+                                              "type": "string",
+                                              "enum": [
+                                                "neutral",
+                                                "happy"
+                                              ]
+                                            }
+                                          },
+                                          "required": [
+                                            "id",
+                                            "crop",
+                                            "neck",
+                                            "neckTop",
+                                            "chin",
+                                            "eyeTarget",
+                                            "skull",
+                                            "yawDeg",
+                                            "seam",
+                                            "restMood"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "minItems": 2,
+                                        "maxItems": 40
+                                      },
+                                      "routes": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "maxLength": 96,
+                                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                          },
+                                          "minItems": 2,
+                                          "maxItems": 40
+                                        },
+                                        "minItems": 1,
+                                        "maxItems": 40
+                                      },
+                                      "capabilities": {
+                                        "type": "object",
+                                        "properties": {
+                                          "speech": {
+                                            "type": "boolean",
+                                            "const": false
+                                          },
+                                          "directionalEyes": {
+                                            "type": "boolean",
+                                            "const": false
+                                          },
+                                          "expressions": {
+                                            "type": "boolean",
+                                            "const": false
+                                          },
+                                          "secondary": {
+                                            "type": "boolean",
+                                            "const": false
+                                          }
+                                        },
+                                        "required": [
+                                          "speech",
+                                          "directionalEyes",
+                                          "expressions",
+                                          "secondary"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "status": {
+                                        "type": "string",
+                                        "const": "engineering-source-registration"
+                                      },
+                                      "approved": {
+                                        "type": "boolean",
+                                        "const": false
+                                      },
+                                      "productionReady": {
+                                        "type": "boolean",
+                                        "const": false
+                                      },
+                                      "motionVerified": {
+                                        "type": "boolean",
+                                        "const": false
+                                      },
+                                      "fingerprint": {
+                                        "type": "string",
+                                        "minLength": 64,
+                                        "maxLength": 64,
+                                        "pattern": "^[a-f0-9]{64}$"
+                                      }
+                                    },
+                                    "required": [
+                                      "version",
+                                      "id",
+                                      "actor",
+                                      "source",
+                                      "primary",
+                                      "bodyViews",
+                                      "unitScale",
+                                      "cells",
+                                      "routes",
+                                      "capabilities",
+                                      "status",
+                                      "approved",
+                                      "productionReady",
+                                      "motionVerified",
+                                      "fingerprint"
+                                    ],
+                                    "additionalProperties": false
+                                  },
                                   "bodySpeech": {
                                     "type": "string",
                                     "enum": [
@@ -1826,6 +2195,375 @@
                                         "three-quarter-right",
                                         "three-quarter-left"
                                       ]
+                                    },
+                                    "bodyHeadBank": {
+                                      "type": "object",
+                                      "properties": {
+                                        "version": {
+                                          "type": "string",
+                                          "const": "native-head-bank-1"
+                                        },
+                                        "id": {
+                                          "type": "string",
+                                          "maxLength": 96,
+                                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                        },
+                                        "actor": {
+                                          "type": "string",
+                                          "enum": [
+                                            "lila",
+                                            "karo"
+                                          ]
+                                        },
+                                        "source": {
+                                          "type": "object",
+                                          "properties": {
+                                            "file": {
+                                              "type": "string",
+                                              "pattern": "^library\\/topics\\/prehistoric-life\\/head-turn-studies\\/(lila|karo)-head-turn-v[1-9]\\d*\\.png$"
+                                            },
+                                            "sha256": {
+                                              "type": "string",
+                                              "minLength": 64,
+                                              "maxLength": 64,
+                                              "pattern": "^[a-f0-9]{64}$"
+                                            },
+                                            "width": {
+                                              "type": "integer",
+                                              "exclusiveMinimum": 0,
+                                              "maximum": 8192
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "exclusiveMinimum": 0,
+                                              "maximum": 8192
+                                            }
+                                          },
+                                          "required": [
+                                            "file",
+                                            "sha256",
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "primary": {
+                                          "type": "object",
+                                          "properties": {
+                                            "file": {
+                                              "type": "string"
+                                            },
+                                            "sha256": {
+                                              "type": "string",
+                                              "minLength": 64,
+                                              "maxLength": 64,
+                                              "pattern": "^[a-f0-9]{64}$"
+                                            }
+                                          },
+                                          "required": [
+                                            "file",
+                                            "sha256"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "bodyViews": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "view": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "three-quarter-left",
+                                                  "three-quarter-right"
+                                                ]
+                                              },
+                                              "sourceHash": {
+                                                "type": "string",
+                                                "minLength": 64,
+                                                "maxLength": 64,
+                                                "pattern": "^[a-f0-9]{64}$"
+                                              }
+                                            },
+                                            "required": [
+                                              "view",
+                                              "sourceHash"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          "minItems": 1,
+                                          "maxItems": 2
+                                        },
+                                        "unitScale": {
+                                          "type": "number",
+                                          "minimum": 0.05,
+                                          "maximum": 2
+                                        },
+                                        "cells": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "string",
+                                                "maxLength": 96,
+                                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                              },
+                                              "crop": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "integer",
+                                                    "minimum": 0
+                                                  },
+                                                  "y": {
+                                                    "type": "integer",
+                                                    "minimum": 0
+                                                  },
+                                                  "width": {
+                                                    "type": "integer",
+                                                    "exclusiveMinimum": 0
+                                                  },
+                                                  "height": {
+                                                    "type": "integer",
+                                                    "exclusiveMinimum": 0
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y",
+                                                  "width",
+                                                  "height"
+                                                ],
+                                                "additionalProperties": false
+                                              },
+                                              "neck": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "number"
+                                                  },
+                                                  "y": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y"
+                                                ],
+                                                "additionalProperties": false
+                                              },
+                                              "neckTop": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "number"
+                                                  },
+                                                  "y": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y"
+                                                ],
+                                                "additionalProperties": false
+                                              },
+                                              "chin": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "number"
+                                                  },
+                                                  "y": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y"
+                                                ],
+                                                "additionalProperties": false
+                                              },
+                                              "eyeTarget": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "number"
+                                                  },
+                                                  "y": {
+                                                    "type": "number"
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y"
+                                                ],
+                                                "additionalProperties": false
+                                              },
+                                              "skull": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "integer",
+                                                    "minimum": 0
+                                                  },
+                                                  "y": {
+                                                    "type": "integer",
+                                                    "minimum": 0
+                                                  },
+                                                  "width": {
+                                                    "type": "integer",
+                                                    "exclusiveMinimum": 0
+                                                  },
+                                                  "height": {
+                                                    "type": "integer",
+                                                    "exclusiveMinimum": 0
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y",
+                                                  "width",
+                                                  "height"
+                                                ],
+                                                "additionalProperties": false
+                                              },
+                                              "yawDeg": {
+                                                "type": "number",
+                                                "minimum": -90,
+                                                "maximum": 90
+                                              },
+                                              "seam": {
+                                                "type": "array",
+                                                "items": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number"
+                                                    },
+                                                    "y": {
+                                                      "type": "number"
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                "minItems": 3,
+                                                "maxItems": 32
+                                              },
+                                              "restMood": {
+                                                "type": "string",
+                                                "enum": [
+                                                  "neutral",
+                                                  "happy"
+                                                ]
+                                              }
+                                            },
+                                            "required": [
+                                              "id",
+                                              "crop",
+                                              "neck",
+                                              "neckTop",
+                                              "chin",
+                                              "eyeTarget",
+                                              "skull",
+                                              "yawDeg",
+                                              "seam",
+                                              "restMood"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          "minItems": 2,
+                                          "maxItems": 40
+                                        },
+                                        "routes": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "array",
+                                            "items": {
+                                              "type": "string",
+                                              "maxLength": 96,
+                                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                            },
+                                            "minItems": 2,
+                                            "maxItems": 40
+                                          },
+                                          "minItems": 1,
+                                          "maxItems": 40
+                                        },
+                                        "capabilities": {
+                                          "type": "object",
+                                          "properties": {
+                                            "speech": {
+                                              "type": "boolean",
+                                              "const": false
+                                            },
+                                            "directionalEyes": {
+                                              "type": "boolean",
+                                              "const": false
+                                            },
+                                            "expressions": {
+                                              "type": "boolean",
+                                              "const": false
+                                            },
+                                            "secondary": {
+                                              "type": "boolean",
+                                              "const": false
+                                            }
+                                          },
+                                          "required": [
+                                            "speech",
+                                            "directionalEyes",
+                                            "expressions",
+                                            "secondary"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "status": {
+                                          "type": "string",
+                                          "const": "engineering-source-registration"
+                                        },
+                                        "approved": {
+                                          "type": "boolean",
+                                          "const": false
+                                        },
+                                        "productionReady": {
+                                          "type": "boolean",
+                                          "const": false
+                                        },
+                                        "motionVerified": {
+                                          "type": "boolean",
+                                          "const": false
+                                        },
+                                        "fingerprint": {
+                                          "type": "string",
+                                          "minLength": 64,
+                                          "maxLength": 64,
+                                          "pattern": "^[a-f0-9]{64}$"
+                                        }
+                                      },
+                                      "required": [
+                                        "version",
+                                        "id",
+                                        "actor",
+                                        "source",
+                                        "primary",
+                                        "bodyViews",
+                                        "unitScale",
+                                        "cells",
+                                        "routes",
+                                        "capabilities",
+                                        "status",
+                                        "approved",
+                                        "productionReady",
+                                        "motionVerified",
+                                        "fingerprint"
+                                      ],
+                                      "additionalProperties": false
                                     },
                                     "bodySpeech": {
                                       "type": "string",
@@ -2832,6 +3570,75 @@
                                     "startMs",
                                     "endMs",
                                     "walks"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "sourceHead": {
+                                  "type": "object",
+                                  "properties": {
+                                    "version": {
+                                      "type": "string",
+                                      "const": "native-head-source-1"
+                                    },
+                                    "id": {
+                                      "type": "string",
+                                      "maxLength": 96,
+                                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                    },
+                                    "ownerId": {
+                                      "type": "string",
+                                      "maxLength": 96,
+                                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                    },
+                                    "bankFingerprint": {
+                                      "type": "string",
+                                      "minLength": 64,
+                                      "maxLength": 64,
+                                      "pattern": "^[a-f0-9]{64}$"
+                                    },
+                                    "startMs": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "endMs": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "samples": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "atMs": {
+                                            "type": "integer",
+                                            "minimum": 0
+                                          },
+                                          "cell": {
+                                            "type": "string",
+                                            "maxLength": 96,
+                                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                          }
+                                        },
+                                        "required": [
+                                          "atMs",
+                                          "cell"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 600
+                                    }
+                                  },
+                                  "required": [
+                                    "version",
+                                    "id",
+                                    "ownerId",
+                                    "bankFingerprint",
+                                    "startMs",
+                                    "endMs",
+                                    "samples"
                                   ],
                                   "additionalProperties": false
                                 },
@@ -5187,6 +5994,75 @@
                           "startMs",
                           "endMs",
                           "walks"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "sourceHead": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "string",
+                            "const": "native-head-source-1"
+                          },
+                          "id": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "ownerId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "bankFingerprint": {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64,
+                            "pattern": "^[a-f0-9]{64}$"
+                          },
+                          "startMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "endMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "samples": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "atMs": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "cell": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                }
+                              },
+                              "required": [
+                                "atMs",
+                                "cell"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 1,
+                            "maxItems": 600
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "id",
+                          "ownerId",
+                          "bankFingerprint",
+                          "startMs",
+                          "endMs",
+                          "samples"
                         ],
                         "additionalProperties": false
                       },

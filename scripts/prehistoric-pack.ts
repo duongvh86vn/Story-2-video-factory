@@ -13,6 +13,7 @@ import {nativeSeatArtDescription,nativeSeatArtInventory} from '../packages/topic
 import {nativeSeatSurfaceInventory} from '../packages/topics/native-seat-surface-inventory.js';
 import {nativeActorGazeDescription} from '../packages/animation/view-gaze-target.js';
 import {headTurnArtDescription,headTurnInventory} from '../packages/topics/head-turn-art.js';
+import {nativeHeadBankDescription} from '../packages/animation/native-head-bank.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -70,6 +71,7 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   nativeSeatedMaterials:{...nativeSeatArtDescription,materials:nativeSeatedMaterials,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/native-seat-art.ts')))},
   nativeSeatedSurface,
   nativeHeadTurnStudies:{...headTurnArtDescription,materials:nativeHeadTurnMaterials,fingerprint:hash(nativeHeadTurnMaterials),codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-art.ts'))),landmarkCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-landmarks.ts'))),schemaCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-schemas.ts'))),workbenchCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-workbench.ts')))},
+  nativeHeadBank:{...nativeHeadBankDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/animation/native-head-bank.ts','packages/animation/native-head-track.ts','packages/animation/body-head-bank.ts','packages/animation/native-head-resources.ts','packages/core/json-sha256.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   nativeActorGaze:{...nativeActorGazeDescription,handoff:'docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md',targetSourceCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-gaze-target.ts'))),physicalLungeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/lunge.ts'))),publicationGuardCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/source-publication.ts'))),scenePipelineCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/index.ts'))),artworkTransactionCodeHash:hash(await fs.readFile(path.join(repo,'packages/director/artwork-repair.ts')))},
   nativeTracer:{version:'native-seat-tracer-2',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,
     builder:'benchmarks/native-seat-tracer.ts',builderHash:hash(await fs.readFile(path.join(repo,'benchmarks/native-seat-tracer.ts'))),exporter:'scripts/native-seat-tracer.ts',exporterHash:hash(await fs.readFile(path.join(repo,'scripts/native-seat-tracer.ts'))),handoff:'docs/topics/NATIVE-SEAT-TRACER.md'},

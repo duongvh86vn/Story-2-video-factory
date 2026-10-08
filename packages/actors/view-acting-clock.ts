@@ -15,6 +15,8 @@ import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../animation/view-gaze-tar
 import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 import {collectViewSourceBody,validateBodySourcePlan} from '../animation/view-source-body.js';
+import {hasNativeHeadBank,validateNativeHeadBankTrack} from '../animation/body-head-bank.js';
+import {collectNativeHeadTracks} from '../animation/native-head-track.js';
 
 function performer(shot:Shot,actorId:string){
   const scene=shot.cinematic?.actorScene;if(!scene)return undefined;
@@ -23,7 +25,7 @@ function performer(shot:Shot,actorId:string){
   return candidates[0];
 }
 export function actorUsesViewActingClock(profile:Pick<HostProfile,'appearance'>):boolean{
-  return usesBodyView(profile)&&(hasBodyViewSpeech(profile)||hasBodyViewEyes(profile)||hasBodyViewLocomotion(profile)||hasBodyViewSecondary(profile));
+  return usesBodyView(profile)&&(hasNativeHeadBank(profile)||hasBodyViewSpeech(profile)||hasBodyViewEyes(profile)||hasBodyViewLocomotion(profile)||hasBodyViewSecondary(profile));
 }
 /** Pure board binding. Adjacent clips only share attention/breath when their
  * cast, registered view and stage geometry agree and continuity is explicit. */
@@ -36,14 +38,17 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
   const entry=(s:Shot)=>{const a=performer(s,actorId);if(!a)return undefined;
     const p=PerformancePlanSchema.parse(a.performance);
     validateBodySourcePlan(p);
+    validateNativeHeadBankTrack(p,a.character);
+    if(p.sourceHead&&s.cinematic!.actorScene!.primary?.id===actorId&&s.host?.presence==='absent')throw new Error('needs-head-source-phase: source head actor is hidden in a declared camera slice');
     if(p.sourceBody&&s.cinematic!.actorScene!.primary?.id===actorId&&s.host?.presence==='absent')throw new Error('needs-view-body-phase: source body actor is hidden in a declared camera slice');
     if(p.leadCharacterId!==actorId||p.durationMs!==s.endMs-s.startMs)throw new Error('needs-view-acting-phase: performer does not cover its shot');
     if(normalizeViewGazes(p.gazes).some(g=>g.endMs>p.durationMs))throw new Error('needs-view-acting-phase: gaze outside authored shot');
     const scene=s.cinematic!.actorScene!,cast=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(actor=>actor.character)].sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
     return {shotId:s.id,startMs:s.startMs,endMs:s.endMs,continuity:scene.continuity??'cut',
       castHash:hash(cast.map(character=>ActorDefinitionSchema.parse(character))),geometryHash:hash({stage:p.stage,root:p.root,scale:p.scale,facing:p.facing??'front',headView:p.headView??null,kind:p.kind,profileHash:p.profileHash}),gazes:p.gazes,gestures:p.gestures,
-      ...(hasBodyViewExpressions(currentActor.character)?{expressions:p.expressions}:{}),
+      ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:p.expressions}:{}),
       sourceBody:p.sourceBody,
+      sourceHead:p.sourceHead,
       ...(hasBodyViewSecondary(currentActor.character)?{secondaryLunge:p.lunge??null}:{}),
       ...(hasBodyViewLocomotion(currentActor.character)?{locomotion:{walks:p.walks,jumps:p.jumps??[],postures:p.postures??[],entryPosture:p.entryPosture??null}}:{})};
   };
@@ -61,12 +66,14 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
   while(last+1<shots.length&&linked(last+1))last++;
   const run=entries.slice(first,last+1).map(e=>e!);
   const bodyMotion=collectViewSourceBody(run,run[0]!.startMs,run.at(-1)!.endMs);
+  const headMotion=collectNativeHeadTracks(run,run[0]!.startMs,run.at(-1)!.endMs);
   const clock:ViewActingClock={version:VIEW_ACTING_CLOCK_VERSION,ownerId:actorId,startMs:current.startMs,endMs:current.endMs,
     runStartMs:run[0]!.startMs,runEndMs:run.at(-1)!.endMs,sourceIdentityHash:hash({version:VIEW_ACTING_CLOCK_VERSION,actorId,run}),
     gazes:normalizeViewGazes(run.flatMap(e=>e.gazes.map(g=>({...g,startMs:g.startMs+e.startMs,endMs:g.endMs+e.startMs})))),
     gestures:collectViewSourceGestures(run,run[0]!.startMs,run.at(-1)!.endMs),
     ...(bodyMotion?{bodyMotion}:{}),
-    ...(hasBodyViewExpressions(currentActor.character)?{expressions:normalizeViewExpressions(run.flatMap(e=>(e.expressions??[]).map(expression=>({...expression,startMs:expression.startMs+e.startMs,endMs:expression.endMs+e.startMs}))))}:{})};
+    ...(headMotion?{headMotion}:{}),
+    ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:normalizeViewExpressions(run.flatMap(e=>(e.expressions??[]).map(expression=>({...expression,startMs:expression.startMs+e.startMs,endMs:expression.endMs+e.startMs}))))}:{})};
   validateViewActingClockSource(currentActor.performance,clock);return clock;
 }
 

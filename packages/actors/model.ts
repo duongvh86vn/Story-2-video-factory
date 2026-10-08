@@ -71,8 +71,11 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
   }
   for(const shot of board.shots){
     const c=shot.cinematic,scene=c?.actorScene;if(!c||!scene)continue;
-    for(const actor of [...(scene.primary?[{id:scene.primary.id,p:c.performance}]:[]),...scene.supporting.map(a=>({id:a.character.id,p:a.performance}))])
-      if(actor.p.sourceBody&&!actorViewActingClock(board,shot,actor.id)?.bodyMotion)throw new Error(`${shot.id}: needs-view-body-phase: original body source needs a registered actor and its complete continuous run`);
+    for(const actor of [...(scene.primary?[{id:scene.primary.id,p:c.performance}]:[]),...scene.supporting.map(a=>({id:a.character.id,p:a.performance}))]){
+      const clock=actor.p.sourceBody||actor.p.sourceHead?actorViewActingClock(board,shot,actor.id):undefined;
+      if(actor.p.sourceBody&&!clock?.bodyMotion)throw new Error(`${shot.id}: needs-view-body-phase: original body source needs a registered actor and its complete continuous run`);
+      if(actor.p.sourceHead&&!clock?.headMotion)throw new Error(`${shot.id}: needs-head-source-phase: original head source needs a registered actor and its complete continuous run`);
+    }
   }
   for(const [index,shot] of board.shots.entries()){
     const scene=shot.cinematic?.actorScene,prior=board.shots[index-1]?.cinematic?.actorScene;
@@ -119,6 +122,7 @@ export function seedActorShot(shot:Shot,base:HostProfile,rig:HostRig):void{
       performance.root={x:performance.stage.width*(.24+.48*(i+1)/(characters.length-1)),y:performance.stage.groundY};
       performance.walks=[];performance.turns=[];performance.gestures=[];performance.gazes=[];performance.props=[];
       delete performance.sourceBody;
+      delete performance.sourceHead;
       performance.entryPosture=undefined;performance.postures=[];performance.supports=[];
       return {character,performance,actions:[{type:'idle' as const,startMs:shot.startMs,endMs:shot.endMs}],speakingSegmentIds:[]};
     })};
@@ -127,6 +131,7 @@ export function seedActorShot(shot:Shot,base:HostProfile,rig:HostRig):void{
       shot.host!.actions=[{type:'idle',startMs:shot.startMs,endMs:shot.endMs}];
       c.performance.walks=[];c.performance.turns=[];c.performance.gestures=[];c.performance.gazes=[];c.performance.props=[];
       delete c.performance.sourceBody;
+      delete c.performance.sourceHead;
       c.propBindings=[];c.continuity.exit={...c.performance.root};c.continuity.facing=c.performance.facing??'front';
     }
     bindActorShot(shot,base,rig);
