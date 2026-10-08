@@ -1,5 +1,7 @@
 # Lila/Karo — biểu cảm trong câu chuyện
 
+Mốc tiếp theo0.37 có [native locomotion/cloth candidate](NATIVE-LOCOMOTION-HANDOFF.md). Phạm vi và18 test NOT RUN của0.36 dưới đây được giữ làm lịch sử; không dùng source mới làm kết quả test cho snapshot cũ.
+
 Mốc source0.36, 08/10/2026. Source `b759b572d5c87c21f26af6993078f089ad0cea63`, base `354e628064e41c469467cbd222ccc6b372feca41`, branch `codex/prehistoric-life`. Đã push GitHub và kiểm local/remote cùng SHA; đây là tiến triển source của tool chung, chưa hoàn thành mục tiêu video sản xuất. Verdict và bằng chứng ghi trong [record](reviews/native-expressions-source-review-v1.md).
 
 Full build, test:typecheck, schema export, whitespace và bounded source review đã qua; initial HOLD4P2s và các sửa được giữ trong record. Cả18 callback mới và các regression cũ liên quan chưa chạy. Không có chứng nhận mỹ thuật/chuyển động/audio/video hoặc ba input từ các check này.

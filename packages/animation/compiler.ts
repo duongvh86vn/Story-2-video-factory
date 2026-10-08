@@ -21,6 +21,7 @@ import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,bodyViewMo
 import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
+import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
 import {moodPoses,expressionPose,type ExpressionPose} from './expression-pose.js';
 import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
 import {viewSourceGestureDefinition,sourceViewGestureAt} from './view-source-gesture.js';
@@ -103,11 +104,12 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if(hasBodyViewExpressions(profile))registeredBodyViewExpressions(profile);
   if(!usesBodyView(profile))return;
   if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
-  if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending');
+  if(hasBodyViewLocomotion(profile))validateNativeLocomotion(plan,profile,registeredBodyView(profile));
+  else if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending; select registered-locomotion-v1 for the native candidate');
   if(plan.expressions.some(e=>e.mood!=='happy')&&!hasBodyViewExpressions(profile))throw new Error('needs-view-expression: authored-view candidate needs explicit registered expressions for non-happy emotions');
   if(plan.gazes.length&&!hasBodyViewEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs the registered-eyes-v1 candidate');
   if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
-  if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'))throw new Error('needs-view-motion: this authored view has only point/chin and right-view spear candidates');
+  if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'&&!(hasBodyViewLocomotion(profile)&&g.action==='react')))throw new Error('needs-view-motion: native gesture has no registered point/think/react candidate');
   if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
 }
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
@@ -408,7 +410,7 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number,actingClo
   if(supported&&walk.activation){pelvis.x+=walk.supportShiftX;pelvis.y+=walkDrop;}
   if(air)pelvis.y+=air.bodyOffsetY;
   return {m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend:supported?.bend??1,
-    kneeSeatWeight:usesBodyView(profile)?1:sourceSupported?.supportWeight??Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0)};
+    kneeSeatWeight:usesBodyView(profile)?hasBodyViewLocomotion(profile)?VIEW_CLOTH_KNEE_WEIGHT:1:sourceSupported?.supportWeight??Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0)};
 }
 /** Shared body landmarks for authoring a tool target without invoking arm IK.
  * Does not advance a scene, render a video or accept the resulting pose. */
@@ -611,7 +613,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   validateFixedBodyView(plan,profile);
   if(plan.gestures.some(g=>g.sourceSpan)&&!actingClock)throw new Error('needs-view-gesture-phase: source gesture requires its complete storyboard/run context');
   if(actingClock){
-    if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile))throw new Error('needs-view-acting-phase: select a registered native mouth/eyes candidate');
+    if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)&&!hasBodyViewLocomotion(profile))throw new Error('needs-view-acting-phase: select a registered native mouth/eyes/locomotion candidate');
     if(actingClock.ownerId!==profile.id)throw new Error('needs-view-acting-phase: actor profile mismatch');
     validateViewActingClock(plan,actingClock);
     if(hasBodyViewExpressions(profile)&&!actingClock.expressions)throw new Error('needs-view-expression-phase: selected expressions need the complete original run track');
@@ -658,7 +660,13 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   transforms.head=transform(head,headAngle,s*headArtScale);
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
   const chinAt=(side:RigHand)=>add(head,rotate(usesCutoutHead(profile)?{x:cutoutHeadChin(profile,side).x*s*headArtScale,y:cutoutHeadChin(profile,side).y*s*headArtScale}:{x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},headAngle));
-  const garment=usesReferenceBody(profile)&&!usesBodyView(profile)?referenceGarmentMotion(profile):undefined,lagged=garment?bodyStateAt(plan,profile,Math.max(0,t-garment.lagMs)):undefined;
+  const garment=usesReferenceBody(profile)&&!usesBodyView(profile)?referenceGarmentMotion(profile):undefined,viewCloth=hasBodyViewLocomotion(profile)?registeredBodyView(profile):undefined;
+  // Moving native clips cannot cross a cut. A static continuous run can still
+  // breathe/lean with its source expression track, so its cloth lag may look
+  // before the current shot; clamping at every cut would restart that lag.
+  const lagFloor=viewCloth&&actingClock?actingClock.runStartMs-actingClock.startMs:0;
+  const lagged=garment||viewCloth?bodyStateAt(plan,profile,Math.max(lagFloor,t-(viewCloth?VIEW_CLOTH_LAG_MS:garment!.lagMs)),actingClock):undefined;
+  const viewThighAngles={left:0,right:0};
   const thighAngles:number[]=[];
   const restCloth={} as GarmentRestPose;
   for(const [i,side] of (['left','right'] as const).entries()){
@@ -685,6 +693,12 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       const angle=lean+clamp((priorProjected.upper-lagged.lean-restProjected.upper)*garment.follow,-garment.maxRotation,garment.maxRotation);
       transforms[`garment-${side}`]=transform(hip,angle,s*profile.appearance.bodyScale);
       restCloth[side]={hip:{x:m.hips![side].x/profile.appearance.bodyScale,y:m.hips![side].y/profile.appearance.bodyScale},angle:angle-lean};
+    }
+    if(viewCloth&&lagged){
+      const prior=legGeometry(m,lagged.pelvis,lagged.walk.feet[side],side,s,profile.appearance.bodyScale,lagged.lean),lagLeg=solveChain(prior.hip,prior.ankle,prior.bones.upper,prior.bones.lower,pole);
+      const rest=legGeometry(m,{x:0,y:m.pelvisY*s},{x:m.footOffsets![side]*s,y:0},side,s,profile.appearance.bodyScale),restLeg=solveChain(rest.hip,rest.ankle,rest.bones.upper,rest.bones.lower,pole);
+      const priorProjected=kneeProjection(lagged,prior,lagLeg),restProjected=kneeProjection({kneeSeatWeight:VIEW_CLOTH_KNEE_WEIGHT},rest,restLeg);
+      viewThighAngles[side]=priorProjected.upper-lagged.lean-restProjected.upper;
     }
     const sourceShoulder=m.shoulders?.[side];
     const shoulder=toWorld(sourceShoulder?.x??(i?1:-1)*m.shoulderOffset,sourceShoulder?.y??m.shoulderY-m.pelvisY);
@@ -850,6 +864,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
     delete transforms['face-orientation'];
   }
+  if(viewCloth)Object.assign(face,nativeClothState(profile,viewCloth,viewThighAngles).face);
   if(usesReferenceBody(profile)&&!usesBodyView(profile)){
     const weight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,n)=>sum+n,0));
     const flex=Math.abs(thighAngles.reduce((sum,n)=>sum+n,0)/thighAngles.length-lean);
@@ -1022,6 +1037,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const progress of [.17,.5,.83]){
       const actual=frameAt(lerp(a.timeMs,b.timeMs,progress));
       if(hasBodyViewEyes(profile))error=Math.max(error,bodyViewEyesMatrixError(registeredBodyViewEyes(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
+      if(hasBodyViewLocomotion(profile))error=Math.max(error,nativeClothMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesBodyView(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
@@ -1093,5 +1109,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       targetMethod:'bounded direction from native eye center in head-local coordinates; explicit targets behind view rejected',opticalGazeVerified:false}}:{}),
     ...(hasBodyViewExpressions(profile)?{bodyExpressions:{...bodyViewExpressionsDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'complete original expression run':'shot-local diagnostic expressions',sourceTrackHash:hash(actingClock?.expressions??plan.expressions),audioVerified:false}}:{}),
+    ...(hasBodyViewLocomotion(profile)?{bodyMotion:{...nativeClothDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+      clock:'complete shot-local walk/run/jump/posture; no cut through moving native run',sourceTrackHash:hash({walks:plan.walks,jumps:plan.jumps??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),audioVerified:false}}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

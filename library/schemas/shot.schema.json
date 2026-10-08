@@ -1601,6 +1601,10 @@
                               "type": "string",
                               "const": "registered-expressions-v1"
                             },
+                            "bodyMotion": {
+                              "type": "string",
+                              "const": "registered-locomotion-v1"
+                            },
                             "sourceColour": {
                               "type": "string",
                               "const": "original-rgb-v2"
@@ -1824,6 +1828,10 @@
                               "bodyExpressions": {
                                 "type": "string",
                                 "const": "registered-expressions-v1"
+                              },
+                              "bodyMotion": {
+                                "type": "string",
+                                "const": "registered-locomotion-v1"
                               },
                               "sourceColour": {
                                 "type": "string",

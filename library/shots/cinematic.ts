@@ -8,7 +8,7 @@ import { partAnchor, type HostGeometry } from '../../packages/host/controller.js
 import type { SpeechActivity } from '../../packages/voice/schemas.js';
 import { performanceScene } from '../../packages/animation/scene.js';
 import { samplePerformance } from '../../packages/animation/compiler.js';
-import {actorViewActingClock} from '../../packages/actors/view-acting-clock.js';
+import {actorViewActingClock,actorUsesViewActingClock} from '../../packages/actors/view-acting-clock.js';
 import type {ViewActingClock} from '../../packages/animation/view-acting-clock.js';
 import {viewSourceGestureDefinition} from '../../packages/animation/view-source-gesture.js';
 import { rigMetrics } from '../../packages/animation/rig.js';
@@ -20,8 +20,6 @@ import { artLayers, customModelArt, customModelForegroundArt, customModelMotionO
 import { rendersModelLabel,rendersModelControl } from '../../packages/director/art-direction-schemas.js';
 import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../packages/actors/model.js';
 import {actorShotSpeech,narrationCueOwners,shotUsesSourceSpeechClock} from '../../packages/actors/speech-clock.js';
-import {hasBodyViewSpeech} from '../../packages/animation/body-view-mouth.js';
-import {hasBodyViewEyes} from '../../packages/animation/body-view-eyes.js';
 import {SPEECH_SOURCE_CLOCK_VERSION,windowSpeechActivity,validateSpeechActivityTrack,type SpeechSourceClock} from '../../packages/animation/speech-clock.js';
 import {buildRig} from '../../packages/host/rig.js';
 import {performanceSvg} from '../../packages/animation/rig.js';
@@ -52,7 +50,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   if(board&&shotUsesSourceSpeechClock(shot)&&!narration)throw new Error('needs-speech-phase: storyboard source phase requires narration');
   const owners=board&&shotUsesSourceSpeechClock(shot)?narrationCueOwners(board,shot,narration!):undefined;
   let primaryClock:SpeechSourceClock|undefined;
-  if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&c.actorScene?.primary!==null){
+  if(actorUsesViewActingClock(profile)&&c.actorScene?.primary!==null){
     if(c.actorScene){const projected=actorShotSpeech(activity,narration,profile.id,c.actorScene.speakingSegmentIds,shot.startMs,shot.endMs,owners?.get(profile.id)??(owners?[]:undefined));
       localActivity=projected.activity;primaryClock=projected.sourceClock;
     }else {validateSpeechActivityTrack(activity);primaryClock={version:SPEECH_SOURCE_CLOCK_VERSION,ownerId:profile.id,scope:'narration',cueIds:[],startMs:shot.startMs,endMs:shot.endMs,
@@ -78,7 +76,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     let local=actorSpeech(activity,narration,actor.speakingSegmentIds,shot.startMs,shot.endMs);
     local.intervals=local.intervals.map(interval=>({...interval,startMs:interval.startMs-shot.startMs,endMs:interval.endMs-shot.startMs}));
     let sourceClock:SpeechSourceClock|undefined;
-    if(hasBodyViewSpeech(definition)||hasBodyViewEyes(definition)){const projected=actorShotSpeech(activity,narration,definition.id,actor.speakingSegmentIds,shot.startMs,shot.endMs,owners?.get(definition.id)??(owners?[]:undefined));
+    if(actorUsesViewActingClock(definition)){const projected=actorShotSpeech(activity,narration,definition.id,actor.speakingSegmentIds,shot.startMs,shot.endMs,owners?.get(definition.id)??(owners?[]:undefined));
       local=projected.activity;sourceClock=projected.sourceClock;
     }
     const actingClock=board?actorViewActingClock(board,shot,definition.id):undefined;

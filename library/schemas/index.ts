@@ -42,6 +42,14 @@ export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(
   await fs.mkdir(directory, { recursive: true });
   for (const [name, schema] of Object.entries(schemaLibrary)) {
     const json = zodToJsonSchema(schema, { name, target: 'jsonSchema7', $refStrategy: 'none' });
-    await fs.writeFile(path.join(directory, `${name}.schema.json`), JSON.stringify(json, null, 2) + '\n');
+    const file=path.join(directory, `${name}.schema.json`),bytes=Buffer.from(JSON.stringify(json,null,2)+'\n');
+    // Re-export is byte-idempotent. Avoid opening identical large schemas for
+    // overwrite while Windows indexers/readers hold them; real read/write
+    // errors and changed or missing documents retain the ordinary failure path.
+    const existing=await fs.readFile(file).catch((error:NodeJS.ErrnoException)=>{
+      if(error.code==='ENOENT')return undefined;
+      throw error;
+    });
+    if(!existing?.equals(bytes))await fs.writeFile(file,bytes);
   }
 }

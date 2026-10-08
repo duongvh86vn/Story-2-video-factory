@@ -3,13 +3,11 @@ import {hash} from '../core/utils.js';
 import type {SpeechActivity} from '../voice/schemas.js';
 import {actorSpeech} from './model.js';
 import {SPEECH_SOURCE_CLOCK_VERSION,projectSpeechActivity,windowSpeechActivity,validateSpeechActivityTrack,validateSpeechSourceClock,type SpeechSourceClock} from '../animation/speech-clock.js';
-import {hasBodyViewSpeech} from '../animation/body-view-mouth.js';
-import {hasBodyViewEyes} from '../animation/body-view-eyes.js';
-import {actorViewActingClock} from './view-acting-clock.js';
+import {actorViewActingClock,actorUsesViewActingClock} from './view-acting-clock.js';
 
 export function shotUsesSourceSpeechClock(shot:Shot):boolean{
   const scene=shot.cinematic?.actorScene;
-  return !!scene&&[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)].some(a=>hasBodyViewSpeech(a)||hasBodyViewEyes(a));
+  return !!scene&&[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)].some(actorUsesViewActingClock);
 }
 /** Whole cue ownership only. Repeated appearances of the same actor/cue are
  * deduplicated; conflicting owners are not guessed from camera or voice. */
@@ -43,7 +41,7 @@ export function actorShotSpeech(activity:SpeechActivity,narration:Narration|unde
 export function rigSpeechInputIdentity(shot:Shot,narration:Narration,board:Storyboard){
   if(!shotUsesSourceSpeechClock(shot))return undefined;
   const owners=narrationCueOwners(board,shot,narration),scene=shot.cinematic!.actorScene!;
-  const selected=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)].filter(a=>hasBodyViewSpeech(a)||hasBodyViewEyes(a));
+  const selected=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)].filter(actorUsesViewActingClock);
   return {version:SPEECH_SOURCE_CLOCK_VERSION,narrationHash:hash(NarrationSchema.parse(narration)),owners:selected.map(a=>({actorId:a.id,cueIds:owners.get(a.id)??[]})),
     viewActing:selected.flatMap(a=>{const clock=actorViewActingClock(board,shot,a.id);return clock?[clock]:[]})};
 }

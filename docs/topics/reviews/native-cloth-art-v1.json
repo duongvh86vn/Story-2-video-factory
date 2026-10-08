@@ -1,0 +1,338 @@
+{
+  "version": "native-cloth-art-documents-1",
+  "selection": "registered-locomotion-v1",
+  "fingerprint": "21462d02c1919108770295ae685239c745bb1c2e40cf2b532b88a1d10b4c9d4c",
+  "method": "direct authored thigh angles on immutable masked garment texture; no actor/clock sampling",
+  "approved": false,
+  "productionReady": false,
+  "limitations": [
+    "unapproved art/pose/skin/ink/mesh seam quality",
+    "fixed native view; no continuous body/head turns",
+    "no native seating or new grasp/carry/tool registration",
+    "no source locomotion phase across camera cuts",
+    "hair/beard still follow head rigidly",
+    "not a fabric simulator or anatomy/motion acceptance"
+  ],
+  "documents": [
+    {
+      "actor": "lila",
+      "view": "three-quarter-right",
+      "source": {
+        "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+        "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+        "width": 1173,
+        "height": 1341
+      },
+      "binding": {
+        "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+        "width": 1173,
+        "height": 1341,
+        "left": 476,
+        "right": 760,
+        "waist": 782,
+        "bottom": 1020,
+        "split": 627
+      },
+      "files": [
+        "native-cloth-art-lila-three-quarter-right-v1.svg",
+        "native-cloth-art-lila-three-quarter-right-v1.png"
+      ],
+      "controls": [
+        {
+          "label": "Native garment",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Pinned neutral mesh",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Both thighs +14 deg",
+          "angles": {
+            "left": 14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.880294997750113
+        },
+        {
+          "label": "Both thighs -14 deg",
+          "angles": {
+            "left": -14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.8862943575432719
+        },
+        {
+          "label": "Opposing +14 / -14",
+          "angles": {
+            "left": 14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.9207974231146048
+        },
+        {
+          "label": "Opposing -14 / +14",
+          "angles": {
+            "left": -14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.6198134451504653
+        }
+      ]
+    },
+    {
+      "actor": "lila",
+      "view": "three-quarter-left",
+      "source": {
+        "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+        "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+        "width": 1024,
+        "height": 1536
+      },
+      "binding": {
+        "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+        "width": 1024,
+        "height": 1536,
+        "left": 384,
+        "right": 680,
+        "waist": 826,
+        "bottom": 1110,
+        "split": 543
+      },
+      "files": [
+        "native-cloth-art-lila-three-quarter-left-v1.svg",
+        "native-cloth-art-lila-three-quarter-left-v1.png"
+      ],
+      "controls": [
+        {
+          "label": "Native garment",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Pinned neutral mesh",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Both thighs +14 deg",
+          "angles": {
+            "left": 14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.89007209531888
+        },
+        {
+          "label": "Both thighs -14 deg",
+          "angles": {
+            "left": -14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.9028308238875293
+        },
+        {
+          "label": "Opposing +14 / -14",
+          "angles": {
+            "left": 14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.9387567001063821
+        },
+        {
+          "label": "Opposing -14 / +14",
+          "angles": {
+            "left": -14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.5864151655952138
+        }
+      ]
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "source": {
+        "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+        "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+        "width": 910,
+        "height": 1729
+      },
+      "binding": {
+        "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+        "width": 910,
+        "height": 1729,
+        "left": 316,
+        "right": 646,
+        "waist": 1023,
+        "bottom": 1290,
+        "split": 495
+      },
+      "files": [
+        "native-cloth-art-karo-three-quarter-right-v1.svg",
+        "native-cloth-art-karo-three-quarter-right-v1.png"
+      ],
+      "controls": [
+        {
+          "label": "Native garment",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Pinned neutral mesh",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Both thighs +14 deg",
+          "angles": {
+            "left": 14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.8957798580718306
+        },
+        {
+          "label": "Both thighs -14 deg",
+          "angles": {
+            "left": -14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.8731518406633384
+        },
+        {
+          "label": "Opposing +14 / -14",
+          "angles": {
+            "left": 14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.9062789530576713
+        },
+        {
+          "label": "Opposing -14 / +14",
+          "angles": {
+            "left": -14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.6313771261500559
+        }
+      ]
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "source": {
+        "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+        "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+        "width": 910,
+        "height": 1729
+      },
+      "binding": {
+        "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+        "width": 910,
+        "height": 1729,
+        "left": 328,
+        "right": 661,
+        "waist": 1052,
+        "bottom": 1322,
+        "split": 520
+      },
+      "files": [
+        "native-cloth-art-karo-three-quarter-left-v1.svg",
+        "native-cloth-art-karo-three-quarter-left-v1.png"
+      ],
+      "controls": [
+        {
+          "label": "Native garment",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Pinned neutral mesh",
+          "angles": {
+            "left": 0,
+            "right": 0
+          },
+          "influence": 1,
+          "minimumAreaRatio": 1
+        },
+        {
+          "label": "Both thighs +14 deg",
+          "angles": {
+            "left": 14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.900051163850117
+        },
+        {
+          "label": "Both thighs -14 deg",
+          "angles": {
+            "left": -14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.8830235337231284
+        },
+        {
+          "label": "Opposing +14 / -14",
+          "angles": {
+            "left": 14,
+            "right": -14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.9200274996099138
+        },
+        {
+          "label": "Opposing -14 / +14",
+          "angles": {
+            "left": -14,
+            "right": 14
+          },
+          "influence": 1,
+          "minimumAreaRatio": 0.605831545197844
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+# Native actors move through the story
+
+Previous goal turn: **progress** — source `b759b572d5c87c21f26af6993078f089ad0cea63`, publication record `0f30da0aec9c7c65dab6a31700aac95b41765406`; exact remote SHA verified. Expression code/source review progressed;18 callbacks NOT RUN. Full factory objective remains active and unfulfilled.
+
+Current source inspection: registered partner-facing bodies reject all walking/running/jumping/posture changes because their full garment is rigid. This prevents story actors from approaching, leaving, reacting with their body or moving through a setting. Implement native garment articulation and explicit locomotion selection rather than recasting every event as a standing explanation.
+
+- [x] Native garment mesh bound to each exact PNG/view, belt pinned, shared thigh influences and bounded geometric follow, original colour/ink retained. No face warp, mirrored view, image rewrite or generated acceptance. Four static documents with24 direct shape cells total; initial cracks corrected with normal-edge overlap, still unapproved.
+- [x] Common compiler source supports explicitly selected walk/run/jump and unseated stand/crouch/lean on those views using existing fixed XYZ limbs, sole contact schedules, soft ink and arm trajectories; preserve all other source/contact/final guards. Seated/turn/tool registration remains separate. Native locomotion in a continuous run across cuts is explicitly rejected until its source motion clock is registered; static run keeps original cloth lag.
+- [x] Host/cast/Shot/Storyboard/API/CLI contract, resources/cache identity, body preview selection/navigation, compiler report and model capability description share the selection, including silent motion-only actors. Source inventory refreshed without approving any rig.
+- [x]30 meaningful runtime declarations only; full build/typecheck/schema and independent source review. Two P2s (static lag boundary and wrong guard regex) resolved; separate schema byte-idempotence source follow-up PASS after Windows write failures. Runtime, fixtures, evaluators, playback/server/API/audio/video tests remain assigned to the user's model. Exact checks in review record; no runtime acceptance.
+- [ ] Publish exact owned source/docs, explicit limitations and reproducible independent test/server commands.
+
+The full requested end state remains Lila/Karo actors in the user's arbitrary stories, script verbatim / WAV original voice-clock / story→faithful script→video (+legacy SRT), EN primary/VI/JA/KO, external/local TTS, vivid environments, identity/expressions/partner gaze/props/contact/continuous turns/hair/cloth and verified final video. Keep productionReady=false and productionRig=null until artwork and real runtime evidence justify release.

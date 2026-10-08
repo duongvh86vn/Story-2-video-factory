@@ -4,11 +4,13 @@ import type {ActorDefinition} from '../actors/schemas.js';
 import {rigMetrics} from '../animation/rig.js';
 import {CAMERA_VIEWPORT} from './camera.js';
 import {actingSourceWindows} from './story-coverage.js';
+import {nativeClothDescription,hasBodyViewLocomotion} from '../animation/body-view-cloth.js';
 
 /** Generation assistance only: no authored choreography, approval or cache identity. */
 export function creativeActingBrief(beats:Beat[],narration:Narration,profile:HostProfile,lockedActors:ActorDefinition[]=[]){
   const unitProfile={...profile,appearance:{...profile.appearance,headScale:1,bodyScale:1}};
   return {
+    nativeLocomotion:{candidate:nativeClothDescription,selected:hasBodyViewLocomotion(profile),lockedActors:lockedActors.filter(hasBodyViewLocomotion).map(actor=>actor.id),rule:'Only explicitly selected registered-locomotion-v1 native actor/view can use forward walk/run, jump, stand/crouch/lean and point/think/react. Keep the entire motion and its recovery in one shot; no split native locomotion in a continuous run, no backward gait, seating, continuous turn or new prop/contact registration. Fixed head/body view must match travel direction. This candidate does not approve artwork or remove production/source/voice/final gates; unsupported obligations must be reported, never changed to narration or a pointing substitute.'},
     completeFilm:'Return a complete production design covering every canonical beat through the ending. A capability-conflict placeholder, unsupported reclassification or idle cast is not a repair of a sourced action. Cutaways and regrouped shots remain available when the accepted actors and actions are covered elsewhere in the same source window.',
     obligations:beats.filter(beat=>beat.sceneIntent?.participants.length).map(beat=>({beatId:beat.id,startMs:beat.startMs,endMs:beat.endMs,
       participants:beat.sceneIntent!.participants.map(actor=>({id:actor.id,name:actor.name,role:actor.role,identity:actor.identity})),

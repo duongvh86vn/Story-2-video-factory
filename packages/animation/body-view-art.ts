@@ -5,9 +5,10 @@ import {bodyViewLeftRegistration} from './body-view-left-registration.js';
 import {bodyViewMouthSvg,bodyViewMouthDescription} from './body-view-mouth.js';
 import {bodyViewEyesSvg,bodyViewEyesDescription} from './body-view-eyes.js';
 import {bodyViewExpressionsSvg,bodyViewExpressionsDescription} from './body-view-expressions.js';
+import {hasBodyViewLocomotion,nativeClothSvg,nativeClothDescription} from './body-view-cloth.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-2';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-3';
 export const REGISTERED_BODY_VIEWS=['three-quarter-right','three-quarter-left'] as const;
 export type RegisteredBodyView=typeof REGISTERED_BODY_VIEWS[number];
 type Point={x:number;y:number};
@@ -74,11 +75,12 @@ export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:st
 }
 export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
   const c=registeredBodyView(profile);
-  return {defs:`<defs><mask id="view-clothing-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${c.width}" height="${c.height}"><path d="${c.clothing}" fill="white" stroke="white" stroke-width="${c.inkPad*2}" stroke-linejoin="round"/></mask><image id="view-body-source" width="${c.width}" height="${c.height}" href="${imageUrl(c.file,c.sha256)}"/></defs>`,
-    torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})" mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>`};
+  const cloth=hasBodyViewLocomotion(profile)?nativeClothSvg(profile,c):undefined;
+  return {defs:`<defs><mask id="view-clothing-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${c.width}" height="${c.height}"><path d="${c.clothing}" fill="white" stroke="white" stroke-width="${c.inkPad*2}" stroke-linejoin="round"/></mask><image id="view-body-source" width="${c.width}" height="${c.height}" href="${imageUrl(c.file,c.sha256)}"/></defs>`+(cloth?.defs??''),
+    torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})">${cloth?.artwork??'<g mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>'}</g>`};
 }
 export const bodyViewDescription={version:BODY_VIEW_REGISTRATION_VERSION,artworkVersion:BODY_VIEW_VERSION,
-  sources:bodyViewRegistrations,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,expressionsCandidate:bodyViewExpressionsDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint,expressions:bodyViewExpressionsDescription.fingerprint}),
+  sources:bodyViewRegistrations,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,expressionsCandidate:bodyViewExpressionsDescription,locomotionCandidate:nativeClothDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint,expressions:bodyViewExpressionsDescription.fingerprint,cloth:nativeClothDescription.fingerprint}),
   status:'developer-landmark-and-layer-candidate',productionReady:false,approved:false,
   method:'fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp',
-  limitations:['identity/proportion/mask review','happy fixed view by default; optional unapproved speech/eyes/expression selections','rigid garment; no walking/seating/cloth follow for this view','bounded eye look only; no continuous body/head turn or optical gaze','no motion acceptance']};
+  limitations:['identity/proportion/mask review','happy fixed view by default; optional unapproved speech/eyes/expression selections','rigid garment by default; optional unapproved forward locomotion/cloth candidate, no native seating','bounded eye look only; no continuous body/head turn or optical gaze','no motion acceptance']};
