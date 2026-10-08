@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.56-native-head-dialogue",
+  "version": "forest-tribe-0.57-dialogue-acting",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -5142,30 +5142,78 @@
     "productionAcceptance": false,
     "finalExportAllowed": false,
     "builder": "benchmarks/native-seat-tracer.ts",
-    "builderHash": "79fc4153a308410af73d4907751b81cd569164e0711fb19977df4bf4bbdcaebf",
+    "builderHash": "93584e4dca31b3855d4f73485adfa1e21d27b28a6587beb909a5a0a470b7fd07",
     "exporter": "scripts/native-seat-tracer.ts",
-    "exporterHash": "a77e4a08d604afbec39686370775f3a69cac9249f645f0498c30c9d5330784b0",
+    "exporterHash": "e6a849905e79718dc349c9fc3d1f243139d95a370a79af7a6019778fd3d8afac",
     "handoff": "docs/topics/NATIVE-SEAT-TRACER.md",
     "opposingHeads": {
-      "version": "native-head-seat-tracer-1",
+      "version": "native-head-seat-tracer-2",
       "scope": "unapproved-native-head-seat-tracer",
-      "command": "npm run tracer:native-seat -- --native-heads",
-      "builderFunction": "createNativeHeadSeatTracer",
-      "selection": [
-        {
-          "actorId": "lila",
-          "view": "three-quarter-right"
-        },
-        {
-          "actorId": "karo",
-          "view": "three-quarter-left"
-        }
+      "stagings": {
+        "lila-left": [
+          {
+            "actor": "lila",
+            "view": "three-quarter-right",
+            "rootX": 380
+          },
+          {
+            "actor": "karo",
+            "view": "three-quarter-left",
+            "rootX": 850
+          }
+        ],
+        "lila-right": [
+          {
+            "actor": "lila",
+            "view": "three-quarter-left",
+            "rootX": 850
+          },
+          {
+            "actor": "karo",
+            "view": "three-quarter-right",
+            "rootX": 380
+          }
+        ]
+      },
+      "acting": [
+        "rest",
+        "listening-think"
       ],
+      "thinkingWindows": {
+        "karo": {
+          "id": "karo-listener-think",
+          "startMs": 1000,
+          "reachMs": 1700,
+          "recoverMs": 2500,
+          "endMs": 2900
+        },
+        "lila": {
+          "id": "lila-listener-think",
+          "startMs": 3200,
+          "reachMs": 3700,
+          "recoverMs": 4200,
+          "endMs": 4500
+        }
+      },
+      "default": {
+        "staging": "lila-left",
+        "acting": "rest"
+      },
+      "selection": "explicit diagnostic only; screen position selects independent matching head/body views; each actor keeps its ID, cue ownership and original physical/head/hand clocks",
       "runtimeVerified": false,
+      "artApproved": false,
+      "motionVerified": false,
       "productionAcceptance": false,
       "finalExportAllowed": false,
-      "motionVerified": false,
-      "handoff": "docs/topics/NATIVE-HEAD-DIALOGUE.md"
+      "command": "npm run tracer:native-seat -- --native-heads",
+      "builderFunction": "createNativeHeadSeatTracer",
+      "catalogCodeHash": "66572dc6dd947b838cbed0a1801ba0c542e99e14e03db3eb023669750fa0dab5",
+      "gestureProjection": {
+        "version": "native-source-gesture-projection-1",
+        "file": "packages/animation/view-source-gesture.ts",
+        "codeHash": "69f155480e51c4034ad3e99122c0b1d713d4a422733ee829c046a4f049a96b15"
+      },
+      "handoff": "docs/topics/NATIVE-DIALOGUE-ACTING.md"
     }
   },
   "references": [

@@ -16,6 +16,9 @@ import {secureSceneFiles,validateSceneFiles} from '../packages/scenes/security.j
 import {hash} from '../packages/core/utils.js';
 import type {Shot} from '../packages/core/schemas.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
+import {NATIVE_DIALOGUE_STAGINGS,nativeDialogueLayouts,nativeDialogueThinkingWindows} from '../packages/topics/native-dialogue-candidates.js';
+import {registeredBodyView} from '../packages/animation/body-view-art.js';
+import {projectViewSourceGestures} from '../packages/animation/view-source-gesture.js';
 
 type Fixture=Awaited<ReturnType<typeof createNativeHeadSeatTracer>>;
 type Actor='lila'|'karo';
@@ -34,6 +37,18 @@ function renderedEyePoint(f:Fixture,shot:Shot,id:Actor,state:ReturnType<typeof f
   const {profile}=context(f,shot,id),bank=profile.appearance.bodyHeadBank!,cell=bank.cells[0]!;
   const p=nativeHeadCellPoint(bank,cell,cell.eyeTarget),values=state.transforms.head!.match(/-?\d+(?:\.\d+)?/g)!.map(Number),[x,y,angle,scale]=values as [number,number,number,number],rad=angle*Math.PI/180;
   return {x:x+scale*(p.x*Math.cos(rad)-p.y*Math.sin(rad)),y:y+scale*(p.x*Math.sin(rad)+p.y*Math.cos(rad))};
+}
+/** Independent complete-run evaluator control; not a second renderer. */
+function wholeRun(f:Fixture):Fixture{
+  const shot=structuredClone(f.board.shots[0]!);shot.endMs=7200;shot.narrationSegmentIds=f.narration.segments.map(s=>s.id);
+  const c=shot.cinematic!,s=c.actorScene!;
+  const all=[{character:s.primary!,performance:c.performance},...s.supporting];
+  for(const actor of all){const id=actor.character.id as Actor,clock=context(f,f.board.shots[0]!,id).clock,p=actor.performance;
+    p.durationMs=7200;p.gazes=[{startMs:0,endMs:7200,actorTarget:{id:id==='lila'?'karo':'lila',anchor:'eyes'}}];
+    p.gestures=projectViewSourceGestures(clock.gestures,0,7200,0,7200);
+  }
+  s.speakingSegmentIds=['lila-cue'];s.supporting[0]!.speakingSegmentIds=['karo-cue'];
+  return {...f,board:{shots:[shot]}};
 }
 
 test('opposing native heads share the canonical seat run while old fixed-view overlays remain the default',async()=>{
@@ -112,4 +127,42 @@ test('publication refuses changed head ownership, target source or a conflicting
   const supporting=shot.cinematic!.actorScene!.supporting[0]!;supporting.speakingSegmentIds=['lila-cue'];
   assert.throws(()=>rigSpeechPublicationBinding(shot,f.narration,f.board),/conflicting actor owners/);supporting.speakingSegmentIds=[];
   assert.deepEqual(rigSpeechPublicationBinding(shot,f.narration,f.board),original);
+});
+
+test('both screen layouts bind independent matching head/body sources and keep each sourced actor identity',async()=>{
+  for(const staging of NATIVE_DIALOGUE_STAGINGS){
+    const f=await createNativeHeadSeatTracer(process.cwd(),{staging}),layout=nativeDialogueLayouts[staging];
+    assert.deepEqual(f.dialogueSelection,{staging,acting:'rest'});
+    for(const shot of f.board.shots)for(const expected of layout){
+      const c=context(f,shot,expected.actor),selected=f.headSelection.find(h=>h.actorId===expected.actor)!;
+      assert.equal(c.plan.root.x,expected.rootX);assert.equal(c.plan.facing,expected.view==='three-quarter-left'?'left':'right');
+      assert.equal(c.profile.id,expected.actor);assert.equal(c.profile.name,expected.actor);assert.equal(c.profile.appearance.bodyView,expected.view);
+      assert.equal(selected.view,expected.view);assert.equal(selected.bankFingerprint,c.plan.sourceHead!.bankFingerprint);
+      assert.equal(c.profile.appearance.bodyHeadBank!.bodyViews[0]!.sourceHash,registeredBodyView(c.profile).sha256);
+    }
+    assert.doesNotThrow(()=>validateActorCast(f.board,f.narration));assert.doesNotThrow(()=>validateStoryActingCoverage(f.board,[f.beat],f.narration));
+  }
+  await assert.rejects(createNativeHeadSeatTracer(process.cwd(),{staging:'mirror'} as never));
+  await assert.rejects(createNativeHeadSeatTracer(process.cwd(),{acting:'wave'} as never));
+});
+
+test('listener chin gestures use declared rig hands and full body/head/speech history across both layouts',async()=>{
+  for(const staging of NATIVE_DIALOGUE_STAGINGS){
+    const f=await createNativeHeadSeatTracer(process.cwd(),{staging,acting:'listening-think'}),whole=wholeRun(f),before=hash(f.board);
+    assert.match(f.narration.segments[0]!.text,/Karo listens and thinks/);assert.match(f.narration.segments[1]!.text,/Lila considers/);
+    for(const shot of f.board.shots)for(const id of ['lila','karo'] as const){
+      const c=context(f,shot,id),window=nativeDialogueThinkingWindows[id],command=c.clock.gestures[0]!;
+      assert.equal(c.clock.gestures.length,1);assert.equal(command.hand,registeredBodyView(c.profile).nearHand);
+      assert.deepEqual({id:command.id,startMs:command.startMs,reachMs:command.reachMs,recoverMs:command.recoverMs,endMs:command.endMs},window);
+      const a=context(whole,whole.board.shots[0]!,id);assert.deepEqual(c.clock.gestures,a.clock.gestures);
+      for(const globalMs of [shot.startMs,shot.startMs+.01,(shot.startMs+shot.endMs)/2,shot.endMs-.01,shot.endMs]){
+        const sliced=frame(f,shot,id,globalMs),original=frame(whole,whole.board.shots[0]!,id,globalMs);
+        for(const key of ['hands','wrists','armGeometry','transforms','paths','face','actorGaze'] as const)assert.deepEqual(sliced[key],original[key]);
+      }
+    }
+    assert.equal(hash(f.board),before);
+    const current=f.board.shots[0]!,broken=f.board.shots[2]!.cinematic!.actorScene!.supporting.find(a=>a.character.id==='karo')!.performance.gestures[0]!;
+    broken.sourceSpan!.recoverMs!+=1;
+    assert.throws(()=>rigSpeechPublicationBinding(current,f.narration,f.board),/source command changed|source gesture/);
+  }
 });

@@ -1,5 +1,7 @@
 # Diễn viên phụ / quần chúng — Cuộc sống thời tiền sử
 
+Source0.57 thêm [bố trí/cử chỉ đối thoại principal](NATIVE-DIALOGUE-ACTING.md), giữ nguyên hai mẫu và costume bindings bên dưới. Không gán head/hand/face registration của principal cho quần chúng; nhiều người cùng mẫu vẫn có ID/vai/speech ownership riêng.
+
 Source0.56 giữ cả hai mẫu bên dưới. Ca [đầu đối thoại hai diễn viên chính](NATIVE-HEAD-DIALOGUE.md) không đăng ký gaze/face/turns cho quần chúng; mỗi đầu quần chúng cần geometry và multi-actor video riêng. Trang phục rig vẫn tái sử dụng đúng Karo/Lila.
 Source0.52 · 08/10/2026. Bổ sung theo yêu cầu người dùng, giữ Lila/Karo là hai mẫu chính.
 

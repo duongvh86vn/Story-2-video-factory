@@ -18,6 +18,8 @@ import {headCellArtDescription,headCellInventory} from '../packages/topics/head-
 import {prehistoricSupportingDescription,prehistoricSupportingModels} from '../packages/topics/supporting-models.js';
 import {supportingHeadDescription} from '../packages/animation/prehistoric-supporting-head.js';
 import {HEAD_FACE_CANDIDATES,HEAD_FACE_WORKBENCH_VERSION} from '../packages/topics/head-face-candidates.js';
+import {nativeDialogueDescription} from '../packages/topics/native-dialogue-candidates.js';
+import {VIEW_SOURCE_GESTURE_PROJECTION_VERSION} from '../packages/animation/view-source-gesture.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -101,7 +103,8 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   nativeActorGaze:{...nativeActorGazeDescription,handoff:'docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md',targetSourceCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-gaze-target.ts'))),physicalLungeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/lunge.ts'))),publicationGuardCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/source-publication.ts'))),scenePipelineCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/index.ts'))),artworkTransactionCodeHash:hash(await fs.readFile(path.join(repo,'packages/director/artwork-repair.ts')))},
   nativeTracer:{version:'native-seat-tracer-2',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,
     builder:'benchmarks/native-seat-tracer.ts',builderHash:hash(await fs.readFile(path.join(repo,'benchmarks/native-seat-tracer.ts'))),exporter:'scripts/native-seat-tracer.ts',exporterHash:hash(await fs.readFile(path.join(repo,'scripts/native-seat-tracer.ts'))),handoff:'docs/topics/NATIVE-SEAT-TRACER.md',
-    opposingHeads:{version:'native-head-seat-tracer-1',scope:'unapproved-native-head-seat-tracer',command:'npm run tracer:native-seat -- --native-heads',builderFunction:'createNativeHeadSeatTracer',selection:[{actorId:'lila',view:'three-quarter-right'},{actorId:'karo',view:'three-quarter-left'}],runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,motionVerified:false,handoff:'docs/topics/NATIVE-HEAD-DIALOGUE.md'}},
+    opposingHeads:{...nativeDialogueDescription,command:'npm run tracer:native-seat -- --native-heads',builderFunction:'createNativeHeadSeatTracer',catalogCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/native-dialogue-candidates.ts'))),
+      gestureProjection:{version:VIEW_SOURCE_GESTURE_PROJECTION_VERSION,file:'packages/animation/view-source-gesture.ts',codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-source-gesture.ts')))},handoff:'docs/topics/NATIVE-DIALOGUE-ACTING.md'}},
   references,candidates:[...candidates,...headCandidates,...garmentCandidates],rejectedArtifacts:rejected,productionRig:null,
   headPack:{...headPack,prompts:['library/topics/prehistoric-life/rig-v1/head-prompts.json','library/topics/prehistoric-life/rig-v1/front-prompts.json'],codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts'))),cutoutCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-cutout-head.ts'))),projectionCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-projection.ts')))},
   bodyPack:{...bodyPack,codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-body-art.ts'))),walkCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/source-walk.ts'))),

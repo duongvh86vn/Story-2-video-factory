@@ -30,12 +30,16 @@ import {buildMaster} from '../packages/scenes/index.js';
 import {measureSpeech} from '../packages/voice/index.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
 import {createNativeSeatTracer,createNativeHeadSeatTracer,NATIVE_SEAT_TRACER_DURATION_MS,NATIVE_SEAT_TRACER_SCOPE,NATIVE_SEAT_TRACER_VERSION,NATIVE_HEAD_SEAT_TRACER_SCOPE,NATIVE_HEAD_SEAT_TRACER_VERSION} from '../benchmarks/native-seat-tracer.js';
+import {NativeDialogueSelectionSchema} from '../packages/topics/native-dialogue-candidates.js';
 
 const require=createRequire(import.meta.url),execFileAsync=promisify(execFile);
 export function nativeSeatTracerOptions(args:string[]){
-  const {values}=parseArgs({args,strict:true,allowPositionals:false,options:{validate:{type:'boolean'},frames:{type:'boolean'},render:{type:'boolean'},wav:{type:'string'},help:{type:'boolean'},'native-heads':{type:'boolean'}}});
+  const {values}=parseArgs({args,strict:true,allowPositionals:false,options:{validate:{type:'boolean'},frames:{type:'boolean'},render:{type:'boolean'},wav:{type:'string'},help:{type:'boolean'},'native-heads':{type:'boolean'},staging:{type:'string'},acting:{type:'string'}}});
   if(values.wav&&(!path.isAbsolute(values.wav)||path.extname(values.wav).toLowerCase()!=='.wav'))throw new Error('--wav requires an absolute path to an existing WAV file');
-  return {validate:!!(values.validate||values.frames||values.render),frames:!!values.frames,render:!!values.render,wav:values.wav,help:!!values.help,...(values['native-heads']?{nativeHeads:true as const}:{})};
+  const explicitDialogue=values.staging!==undefined||values.acting!==undefined;
+  if(explicitDialogue&&!values['native-heads'])throw new Error('--staging/--acting require --native-heads; legacy tracer is unchanged');
+  const dialogue=explicitDialogue?NativeDialogueSelectionSchema.parse({...(values.staging!==undefined?{staging:values.staging}:{}),...(values.acting!==undefined?{acting:values.acting}:{})}):undefined;
+  return {validate:!!(values.validate||values.frames||values.render),frames:!!values.frames,render:!!values.render,wav:values.wav,help:!!values.help,...(values['native-heads']?{nativeHeads:true as const}:{}),...(dialogue?{dialogue}:{})};
 }
 export type NativeSeatTracerOptions=ReturnType<typeof nativeSeatTracerOptions>;
 
@@ -65,7 +69,7 @@ export function checkNativeSeatTracerMedia(result:ProbeResult,hasAudio:boolean):
   return errors;
 }
 type TracerReport={scope:string;version:string;sourceSHA:string|null;trackedSourceDirty:boolean|null;productionAcceptance:false;finalExportAllowed:false;motionAccepted:false;phonemeLipSync:false;status:'exporting'|'exported'|'failed';phase:string;
-  checks:Record<string,{status:'PASS'|'FAIL'|'NOT RUN';detail?:unknown}>;shots:unknown[];resources:unknown[];audio:unknown;headSelection?:unknown;error?:string;outputRoot:string;elapsedMs?:number};
+  checks:Record<string,{status:'PASS'|'FAIL'|'NOT RUN';detail?:unknown}>;shots:unknown[];resources:unknown[];audio:unknown;headSelection?:unknown;dialogueSelection?:unknown;error?:string;outputRoot:string;elapsedMs?:number};
 
 export async function exportNativeSeatTracer(repo:string,options:NativeSeatTracerOptions):Promise<string>{
   if(options.help)throw new Error('Help does not export a tracer');
@@ -79,8 +83,9 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
   const save=()=>writeJson(path.join(root,'tracer-report.json'),JSON.parse(redact(JSON.stringify({...report,elapsedMs:Math.round(performance.now()-started)}))));
   await save();
   try{
-    const f=options.nativeHeads?await createNativeHeadSeatTracer(repo):createNativeSeatTracer(),{config,board,beat,profile,rig,narration}=f;
+    const f=options.nativeHeads?await createNativeHeadSeatTracer(repo,options.dialogue??{}):createNativeSeatTracer(),{config,board,beat,profile,rig,narration}=f;
     if('headSelection' in f)report.headSelection=f.headSelection;
+    if('dialogueSelection' in f)report.dialogueSelection=f.dialogueSelection;
     report.checks.canonical={status:'PASS',detail:{storyboardHash:hash(board),narrationHash:hash(narration),headMode:options.nativeHeads?'explicit-opposing-bank3':'legacy-fixed-view'}};
     let activity:SpeechActivity={method:'segment-draft',windowMs:20,intervals:[]};
     if(options.wav){
@@ -138,6 +143,16 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
       report.phase='snapshots';await save();
       const times=new Set([0,299,300,600,899,900,1200,1799,1800,2399,2400,2500,2999,3000,3799,3800,4200,4499,4500,4599,4600,4799,4800,5600,6599,6600,7199]);
       for(const at of supportMotionTimes(sourceBodyPlan(board.shots[0]!.cinematic!.performance)))for(const delta of [-1,0,1])if(at+delta>=0&&at+delta<narration.durationMs)times.add(Math.round(at+delta));
+      // Inspect the authored source hand phases, including ones not coincident
+      // with a camera cut or body support event. This only chooses snapshot
+      // seeks; it does not round or modify any source gesture clock.
+      const firstShot=board.shots[0]!,scene=firstShot.cinematic!.actorScene!;
+      for(const id of [scene.primary!.id,...scene.supporting.map(a=>a.character.id)]){
+        const clock=actorViewActingClock(board,firstShot,id);
+        for(const gesture of clock?.gestures??[])for(const at of [gesture.startMs,gesture.reachMs,gesture.recoverMs,gesture.endMs])for(const delta of [-1,0,1]){
+          const seek=Math.round(at+delta);if(seek>=0&&seek<narration.durationMs)times.add(seek);
+        }
+      }
       const frames=[...times].sort((a,b)=>a-b).map(timeMs=>({timeMs,output:`previews/at-${timeMs}.png`}));
       await engine.snapshots({project:'scenes',frames});
       await writeJson(await outputPath(root,'previews/manifest.json'),{scope:f.scope,productionAcceptance:false,seekOrderVerified:false,frames});
@@ -164,7 +179,7 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
 
 async function main(){
   const options=nativeSeatTracerOptions(process.argv.slice(2));
-  if(options.help){process.stdout.write('npm run tracer:native-seat -- [--native-heads] [--validate] [--frames] [--render] [--wav "ABSOLUTE.wav"]\nDefault exports an unapproved silent SRT tracer with legacy fixed-view overlays. --native-heads explicitly selects Lila right and Karo left bank3 sources for the same canonical body/cast/camera. No synthetic speech; silent without WAV. Media/browser/ffmpeg execution is opt-in. Fresh runtime folder per invocation; never final/DONE.\n');return;}
+  if(options.help){process.stdout.write('npm run tracer:native-seat -- [--native-heads [--staging lila-left|lila-right] [--acting rest|listening-think]] [--validate] [--frames] [--render] [--wav "ABSOLUTE.wav"]\nDefault exports an unapproved silent SRT tracer with legacy fixed-view overlays. --native-heads selects independent matching bank3 head/body views. Staging means screen position; it never mirrors artwork. Optional listening-think keeps original hand clocks across camera cuts. No synthetic speech; silent without WAV. Media/browser/ffmpeg execution is opt-in. Fresh runtime folder per invocation; never final/DONE.\n');return;}
   const root=await exportNativeSeatTracer(await findRepoRoot(),options);
   process.stdout.write(JSON.stringify({scope:options.nativeHeads?NATIVE_HEAD_SEAT_TRACER_SCOPE:NATIVE_SEAT_TRACER_SCOPE,outputRoot:root,report:path.join(root,'tracer-report.json'),productionAcceptance:false,finalExportAllowed:false})+'\n');
 }

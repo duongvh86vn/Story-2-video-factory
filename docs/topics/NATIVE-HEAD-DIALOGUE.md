@@ -1,5 +1,7 @@
 # Hai diễn viên đối thoại với đầu nguồn riêng — source0.56
 
+**Hiện hành0.57:** hai bố trí màn hình độc lập và optional cử chỉ người nghe có original hand clock. [Hướng dẫn0.57, môi trường/lệnh test và giới hạn](NATIVE-DIALOGUE-ACTING.md). Các mô tả/check/review/callback-count0.56 bên dưới là lịch sử; default0.56 vẫn tương thích, không phải kết quả nghiệm thu0.57.
+
 Đây là đường kiểm chứng source, chưa phải video được nghiệm thu. Tool vẫn phục vụ câu chuyện/kịch bản/WAV bất kỳ. Hai mẫu quần chúng nam đầu trọc/nữ có tóc và trang phục Karo/Lila giữ theo [SUPPORTING-ACTORS.md](SUPPORTING-ACTORS.md).
 
 ## Đã viết source

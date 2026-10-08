@@ -13,8 +13,9 @@ import {headTurnArtDescription} from './head-turn-art.js';
 import {nativeHeadBankDescription} from '../animation/native-head-bank.js';
 import {headCellArtDescription} from './head-cell-art.js';
 import {prehistoricSupportingModel,prehistoricSupportingDescription,type PrehistoricSupportingModel} from './supporting-models.js';
+import {NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_DIALOGUE_STAGINGS,NATIVE_DIALOGUE_ACTING} from './native-dialogue-candidates.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.56-native-head-dialogue';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.57-dialogue-acting';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -57,7 +58,9 @@ export function topicContext(config:FactoryConfig) {
       nativeSeatedSurface:nativeSeatDescription,
       nativeActorGaze:{...nativeActorGazeDescription,handoff:'docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md'},
       nativeTracer:{version:'native-seat-tracer-2',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,handoff:'docs/topics/NATIVE-SEAT-TRACER.md',
-        opposingHeads:{version:'native-head-seat-tracer-1',scope:'unapproved-native-head-seat-tracer',command:'npm run tracer:native-seat -- --native-heads',selection:'explicit Lila three-quarter-right and Karo three-quarter-left bank3; same canonical physical run and factory renderer; no fixed-view face/hair overlays or automatic production selection',runtimeVerified:false,artApproved:false,motionVerified:false,handoff:'docs/topics/NATIVE-HEAD-DIALOGUE.md'}},
+        opposingHeads:{version:NATIVE_HEAD_SEAT_TRACER_VERSION,scope:'unapproved-native-head-seat-tracer',command:'npm run tracer:native-seat -- --native-heads',stagings:NATIVE_DIALOGUE_STAGINGS,acting:NATIVE_DIALOGUE_ACTING,
+          selection:'explicit independent matching head/body sources for either screen layout; same canonical physical run/factory renderer, original source-owned listener hands, no fixed-view face/hair overlays or automatic production selection',
+          storyPolicy:'Diagnostic timings, cue text and layout are not production story defaults. Derive production actions and speakers from the supplied story/script/WAV.',runtimeVerified:false,artApproved:false,motionVerified:false,handoff:'docs/topics/NATIVE-DIALOGUE-ACTING.md'}},
       nativeSourceClock:{version:BODY_SOURCE_VERSION,selection:'performance.sourceBody',rule:'Complete original body tracks are replicated identically across an explicit continuous run with the same native actor/view/stage/root/scale. Inner motion times are relative to the source global start. Camera slices retain root/foot/arm/cloth and seat contact/occupancy phase; sourceBody.supports owns fixed world seats, all local physical tracks including supports are empty. No inferred continuity or new body/head turns.',verified:false,approved:false},
       walk:referenceBodyDescription().walkMotion,
       actions:referenceBodyDescription().actionMotion,

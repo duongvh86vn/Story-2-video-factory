@@ -1,3 +1,6 @@
+# Source-only dialogue acting review input
+benchmarks/native-seat-tracer.ts; SHA256 93584e4dca31b3855d4f73485adfa1e21d27b28a6587beb909a5a0a470b7fd07
+```ts
 /** Candidate diagnostic only. Calling this builder evaluates native plans/camera;
  * implementation agents must not invoke it while runtime tests are delegated. */
 import {ConfigSchema} from '../packages/core/config.js';
@@ -131,3 +134,41 @@ export async function createNativeHeadSeatTracer(repo:string,input:Partial<Nativ
   ] as const).map(({actorId,view,candidate})=>({actorId,view,definitionFile:candidate.definitionFile,definitionHash:candidate.definitionHash,bankFingerprint:candidate.bank.fingerprint,
     sourceFile:candidate.bank.source.file,sourceSHA256:candidate.bank.source.sha256,artApproved:false,motionVerified:false}))};
 }
+
+```
+Binding source lines25-40; original SHA256 7c2248f42cdaa221d6c1da639d44040a6ba87d761710f50059e92778e2f396b8
+```ts
+export function shotPerformer(shot:Shot,base:HostProfile,rig:HostRig):{profile:HostProfile;rig:HostRig}{
+  const actor=shot.cinematic?.actorScene?.primary;
+  if(!actor)return {profile:base,rig};
+  const profile=actorProfile(actor,base);return {profile,rig:buildRig(profile)};
+}
+/** Derived renderer identity follows the cast definition, never the seed presenter. */
+export function bindActorShot(shot:Shot,base:HostProfile,rig:HostRig):void{
+  const scene=shot.cinematic?.actorScene;if(!scene)return;
+  const performer=shotPerformer(shot,base,rig),c=shot.cinematic!,p=c.performance;
+  c.leadCharacterId=performer.profile.id;p.leadCharacterId=performer.profile.id;
+  p.profileHash=performer.profile.profileHash;p.kind=performer.profile.kind;p.id=shot.id;
+  shot.host={...shot.host!,id:performer.profile.id,profileVersion:performer.profile.version,rigHash:performer.rig.rigHash,
+    presence:scene.primary?'beside-model':'absent'};
+  for(const actor of scene.supporting){const definition=actorProfile(actor.character);actor.performance.profileHash=definition.profileHash;
+    actor.performance.leadCharacterId=definition.id;actor.performance.kind=definition.kind;actor.performance.id=shot.id;}
+}
+```
+CLI options excerpt; original SHA256 33a55778e5f7843cd9bfda7451a42e3bc3e588708e8143c2797ad75d647e7e57
+```ts
+
+const require=createRequire(import.meta.url),execFileAsync=promisify(execFile);
+export function nativeSeatTracerOptions(args:string[]){
+  const {values}=parseArgs({args,strict:true,allowPositionals:false,options:{validate:{type:'boolean'},frames:{type:'boolean'},render:{type:'boolean'},wav:{type:'string'},help:{type:'boolean'},'native-heads':{type:'boolean'},staging:{type:'string'},acting:{type:'string'}}});
+  if(values.wav&&(!path.isAbsolute(values.wav)||path.extname(values.wav).toLowerCase()!=='.wav'))throw new Error('--wav requires an absolute path to an existing WAV file');
+  const explicitDialogue=values.staging!==undefined||values.acting!==undefined;
+  if(explicitDialogue&&!values['native-heads'])throw new Error('--staging/--acting require --native-heads; legacy tracer is unchanged');
+  const dialogue=explicitDialogue?NativeDialogueSelectionSchema.parse({...(values.staging!==undefined?{staging:values.staging}:{}),...(values.acting!==undefined?{acting:values.acting}:{})}):undefined;
+  return {validate:!!(values.validate||values.frames||values.render),frames:!!values.frames,render:!!values.render,wav:values.wav,help:!!values.help,...(values['native-heads']?{nativeHeads:true as const}:{}),...(dialogue?{dialogue}:{})};
+}
+export type NativeSeatTracerOptions=ReturnType<typeof nativeSeatTracerOptions>;
+
+/** Exclusive fresh destination. No existing project or server is modified. */
+export async function reserveNativeSeatTracerRoot(repo:string){
+```

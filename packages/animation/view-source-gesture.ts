@@ -5,6 +5,7 @@ import {GestureSourceSpanSchema,PointSchema,type Gesture} from './schemas.js';
 import {articulatedGestureWindow} from './arm-trajectory.js';
 
 export const VIEW_SOURCE_GESTURE_VERSION='native-source-gesture-1' as const;
+export const VIEW_SOURCE_GESTURE_PROJECTION_VERSION='native-source-gesture-projection-1' as const;
 export const ViewSourceGestureSchema=z.object({id:Id,action:z.enum(['point','think']),hand:RigHandSchema,target:PointSchema.optional(),elbowPole:z.enum(['rest','reach']).optional(),
   startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),reachMs:z.number().finite().nonnegative(),recoverMs:z.number().finite().nonnegative(),
 }).strict().superRefine((g,ctx)=>{
@@ -50,6 +51,27 @@ export function collectViewSourceGestures(entries:readonly {startMs:number;endMs
   validateViewSourceGestureTrack(track,runStartMs,runEndMs);
   for(const entry of entries)for(const g of entry.gestures)if(!g.sourceSpan&&track.some(source=>source.hand===rigHand(g)&&g.startMs+entry.startMs<source.endMs&&g.endMs+entry.startMs>source.startMs))throw new Error('needs-view-gesture-phase: ordinary clip conflicts with the source-owned hand in the run');
   return track;
+}
+/** Project the original hand commands into one shot without restarting their
+ * approach/hold/recovery. An empty projection still validates the full source
+ * track, so a cut cannot hide conflicting or incomplete hand ownership. */
+export function projectViewSourceGestures(track:readonly ViewSourceGesture[],shotStartMs:number,shotEndMs:number,runStartMs:number,runEndMs:number):Gesture[]{
+  if(![shotStartMs,shotEndMs,runStartMs,runEndMs].every(t=>Number.isSafeInteger(t)&&t>=0)||
+    runEndMs<=runStartMs||shotEndMs<=shotStartMs||shotStartMs<runStartMs||shotEndMs>runEndMs)throw new Error('needs-view-gesture-phase: invalid source projection clock');
+  validateViewSourceGestureTrack(track,runStartMs,runEndMs);
+  return track.flatMap(source=>{
+    // SourceSpan explicit events use integer milliseconds, but its existing
+    // default ramps may be fractional. Preserve those exact defaults by
+    // omission, never round/restart them at a cut.
+    const defaults=articulatedGestureWindow({startMs:source.startMs,endMs:source.endMs});
+    if((!Number.isSafeInteger(source.reachMs)&&source.reachMs!==defaults.reachMs)||(!Number.isSafeInteger(source.recoverMs)&&source.recoverMs!==defaults.recoverMs))throw new Error('needs-view-gesture-phase: source events cannot be represented by the original gesture span');
+    const start=Math.max(source.startMs,shotStartMs),end=Math.min(source.endMs,shotEndMs);
+    if(end<=start)return [];
+    const piece:Gesture={id:source.id,action:source.action,hand:source.hand,startMs:start-shotStartMs,endMs:end-shotStartMs,
+      ...(source.target?{target:{...source.target}}:{}),...(source.elbowPole?{elbowPole:source.elbowPole}:{}),
+      sourceSpan:{id:source.id,startMs:source.startMs,endMs:source.endMs,...(Number.isSafeInteger(source.reachMs)?{reachMs:source.reachMs}:{}),...(Number.isSafeInteger(source.recoverMs)?{recoverMs:source.recoverMs}:{})}};
+    validateViewGesturePiece(piece,shotStartMs,shotEndMs);return [piece];
+  });
 }
 /** Full original window/time, with a separate body-entry reference in shot-local space. */
 export function sourceViewGestureAt(track:readonly ViewSourceGesture[],absoluteTimeMs:number,hand:RigHand):Gesture|undefined{
