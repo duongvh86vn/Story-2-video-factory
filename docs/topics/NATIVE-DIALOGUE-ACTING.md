@@ -1,5 +1,7 @@
 # Bố trí đối thoại và cử chỉ người nghe — source0.57
 
+Source0.58 đổi riêng nam phụ sang ảnh không râu v2, nữ phụ giữ nguyên; xem [diễn viên phụ](SUPPORTING-ACTORS.md). Hai principal head/body và source dialogue timings trong tài liệu0.57 này không đổi. Kết quả kiểm dưới là lịch sử0.57, không thay nghiệm thu bản mới.
+
 Chuyển tiếp từ [source0.56](NATIVE-HEAD-DIALOGUE.md), cùng renderer/cast/body/head/speech/source-clock của factory. Đây là source diagnostic, **chưa có nghiệm thu runtime, anatomy hoặc độ mượt**. Full tool vẫn phải nhận story/script/WAV bất kỳ và ra video có giọng/subtitle/QC; các preset dưới không phải kịch bản hay bố cục mặc định của sản phẩm.
 
 ## Hai bố trí độc lập

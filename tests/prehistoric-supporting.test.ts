@@ -16,6 +16,7 @@ import {cutoutHeadRegistration} from '../packages/animation/forest-cutout-head.j
 import {referenceHeadAssets} from '../packages/animation/forest-head-art.js';
 import {referenceBodyAssets} from '../packages/animation/forest-body-art.js';
 import {supportingActorImage,supportingActorManifest,supportingActorWorkbench} from '../packages/topics/supporting-workbench.js';
+import {actorVisualFingerprint,castDesignAdvisories} from '../packages/actors/design.js';
 
 test('supporting templates keep their own head and exact matching main costume; foreign native registrations fail',()=>{
   for(const m of Object.values(prehistoricSupportingModels)){
@@ -59,4 +60,32 @@ test('supporting image endpoint rejects arbitrary paths and bytes that differ fr
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'supporting-model-test-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
   const m=prehistoricSupportingModels['prehistoric-male-bald'];await fs.mkdir(path.dirname(path.join(root,m.file)),{recursive:true});await fs.writeFile(path.join(root,m.file),'not-an-image');
   await assert.rejects(supportingActorImage(root,path.basename(m.file)),/changed/);
+});
+
+test('clean-faced male revision supersedes beard source while female and original body costumes stay unchanged',async()=>{
+  const male=prehistoricSupportingModels['prehistoric-male-bald'],female=prehistoricSupportingModels['prehistoric-female-haired'];
+  assert.equal(male.hair,'bald');assert.equal(male.beard,'none');
+  const meta=JSON.parse(await fs.readFile(male.file.replace(/\.png$/,'.json'),'utf8'));
+  assert.equal(hash(await fs.readFile(meta.supersedes.file)),meta.supersedes.sha256);
+  assert.notEqual(male.sha256,meta.supersedes.sha256);
+  await assert.rejects(supportingActorImage(process.cwd(),path.basename(meta.supersedes.file)),/Unknown/);
+  assert.equal(female.sha256,'4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7');
+  for(const model of [male,female]){
+    const appearance=supportingTopicAppearance(model.id),profile=HostProfileSchema.parse({...topicPreviewProfile(model.bodyTemplate),id:'extra-'+model.bodyTemplate,appearance});
+    const head=supportingHeadSvg(profile,(_file,sha)=>'assets/rigs/'+sha+'.png');
+    assert.ok(head.includes(model.sha256));assert.ok(!head.includes(meta.supersedes.sha256));
+    assert.deepEqual(referenceBodyAssets(appearance),referenceBodyAssets(topicAppearance(model.bodyTemplate)));
+  }
+  assert.ok(supportingActorWorkbench().includes('male-bald-v2.png'));
+  assert.ok(!supportingActorWorkbench().includes('male-bald-v1.png'));
+});
+
+test('cast feedback distinguishes supporting heads from principals without redesigning intentional shared-model extras',()=>{
+  const make=(id:string,appearance:ReturnType<typeof topicAppearance>)=>({id,name:id,role:'sourced role',identity:'illustrative' as const,kind:'stick-man' as const,sourceRefs:[{kind:'narration' as const,segmentId:'cue',quote:'sourced role'}],appearance});
+  const karo=make('karo',topicAppearance('karo')),male=make('villager-a',supportingTopicAppearance('prehistoric-male-bald')),male2={...male,id:'villager-b',name:'B'};
+  const lila=make('lila',topicAppearance('lila')),female=make('villager-c',supportingTopicAppearance('prehistoric-female-haired'));
+  const board={shots:[{id:'cast-shot',cinematic:{actorScene:{primary:karo,supporting:[male,male2,lila,female].map(character=>({character}))}}}]} as unknown as Storyboard,before=hash(board);
+  assert.notEqual(actorVisualFingerprint(karo),actorVisualFingerprint(male));assert.notEqual(actorVisualFingerprint(lila),actorVisualFingerprint(female));
+  const issues=castDesignAdvisories(board);assert.equal(issues.length,1);assert.deepEqual(issues[0]!.actorIds,['villager-a','villager-b']);
+  assert.equal(issues[0]!.severity,'medium');assert.match(issues[0]!.repair,/Deliberate resemblance/);assert.equal(hash(board),before);
 });

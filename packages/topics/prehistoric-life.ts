@@ -15,7 +15,7 @@ import {headCellArtDescription} from './head-cell-art.js';
 import {prehistoricSupportingModel,prehistoricSupportingDescription,type PrehistoricSupportingModel} from './supporting-models.js';
 import {NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_DIALOGUE_STAGINGS,NATIVE_DIALOGUE_ACTING} from './native-dialogue-candidates.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.57-dialogue-acting';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.58-supporting-clean-face';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

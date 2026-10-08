@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.57-dialogue-acting",
+  "version": "forest-tribe-0.58-supporting-clean-face",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -8,16 +8,16 @@
   "primaryModel": "warm-skin-close-ups",
   "referencePolicy": "Supplemental detailed and white-face sheets do not replace or blend into the primary model.",
   "supportingCast": {
-    "version": "prehistoric-supporting-1",
+    "version": "prehistoric-supporting-2",
     "templates": {
       "prehistoric-male-bald": {
         "id": "prehistoric-male-bald",
-        "label": "Quần chúng nam đầu trọc",
+        "label": "Quần chúng nam không tóc, không râu",
         "bodyTemplate": "karo",
         "hair": "bald",
-        "beard": "short-dark-brown",
-        "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
-        "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+        "beard": "none",
+        "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+        "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
         "width": 910,
         "height": 1728,
         "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
@@ -52,12 +52,12 @@
     "materials": [
       {
         "id": "prehistoric-male-bald",
-        "label": "Quần chúng nam đầu trọc",
+        "label": "Quần chúng nam không tóc, không râu",
         "bodyTemplate": "karo",
         "hair": "bald",
-        "beard": "short-dark-brown",
-        "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
-        "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+        "beard": "none",
+        "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+        "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
         "width": 910,
         "height": 1728,
         "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume.",
@@ -86,16 +86,16 @@
       }
     ],
     "headCandidate": {
-      "version": "prehistoric-supporting-head-1",
+      "version": "prehistoric-supporting-head-2",
       "models": {
         "prehistoric-male-bald": {
           "id": "prehistoric-male-bald",
-          "label": "Quần chúng nam đầu trọc",
+          "label": "Quần chúng nam không tóc, không râu",
           "bodyTemplate": "karo",
           "hair": "bald",
-          "beard": "short-dark-brown",
-          "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
-          "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+          "beard": "none",
+          "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+          "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
           "width": 910,
           "height": 1728,
           "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
@@ -117,17 +117,17 @@
         "prehistoric-male-bald": {
           "scale": 0.25,
           "neck": {
-            "x": 485,
-            "y": 630
+            "x": 475,
+            "y": 593
           },
           "chin": {
             "left": {
-              "x": 451,
-              "y": 564
+              "x": 445,
+              "y": 525
             },
             "right": {
               "x": 619,
-              "y": 558
+              "y": 534
             }
           },
           "eyes": [
@@ -141,17 +141,17 @@
             }
           ],
           "mouth": {
-            "x": 559,
-            "y": 463
+            "x": 545,
+            "y": 445
           },
           "bounds": {
             "left": 264,
             "right": 762,
             "top": 117,
-            "bottom": 635
+            "bottom": 620
           },
-          "clip": "M264 117H762V530L672 586L599 635L537 615L485 631L416 582L325 533L264 440Z",
-          "mouthCover": "M484 442Q561 433 635 441L636 482Q563 515 484 482Z",
+          "clip": "M264 117H762V535L640 555L560 569V592L535 620H408L383 600L387 575L429 539L353 505L264 440Z",
+          "mouthCover": "M453 405Q475 400 493 423Q550 447 629 421L637 467Q548 483 454 447Z",
           "mouthColor": "#FFAA64"
         },
         "prehistoric-female-haired": {
@@ -202,9 +202,10 @@
       "face": "Native closed happy smile remains in silence. Existing provisional local blink/round/frown/activity overlays use each model source coordinates. Not registered bank3 face, verified gaze, phonemes or accepted motion."
     },
     "codeHashes": {
-      "packages/topics/supporting-models.ts": "67db6a856cfe991d19af2be079438166ed33d952ffe54df3ce445adaf8d087c7",
+      "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "2c0ce89a9acf581eabcab667af7320ff0cda95b51386ad02799d379da80ecb1f",
-      "packages/animation/prehistoric-supporting-head.ts": "9faa98ee18e40e2e4efb4596c35d04dc9bdf8eedf9bc28d5b8df5b9de61a6f4c",
+      "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
+      "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
       "packages/host/schemas.ts": "3f194a8b532c60b2bf00afa5b3a7753b11a2c180c2c3ad101e8b136ee2d9455c"
     },
     "workbench": "/api/topics/prehistoric-life/supporting-actors"
@@ -6009,16 +6010,16 @@
         }
       },
       "supporting": {
-        "version": "prehistoric-supporting-head-1",
+        "version": "prehistoric-supporting-head-2",
         "models": {
           "prehistoric-male-bald": {
             "id": "prehistoric-male-bald",
-            "label": "Quần chúng nam đầu trọc",
+            "label": "Quần chúng nam không tóc, không râu",
             "bodyTemplate": "karo",
             "hair": "bald",
-            "beard": "short-dark-brown",
-            "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
-            "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+            "beard": "none",
+            "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+            "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
             "width": 910,
             "height": 1728,
             "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
@@ -6040,17 +6041,17 @@
           "prehistoric-male-bald": {
             "scale": 0.25,
             "neck": {
-              "x": 485,
-              "y": 630
+              "x": 475,
+              "y": 593
             },
             "chin": {
               "left": {
-                "x": 451,
-                "y": 564
+                "x": 445,
+                "y": 525
               },
               "right": {
                 "x": 619,
-                "y": 558
+                "y": 534
               }
             },
             "eyes": [
@@ -6064,17 +6065,17 @@
               }
             ],
             "mouth": {
-              "x": 559,
-              "y": 463
+              "x": 545,
+              "y": 445
             },
             "bounds": {
               "left": 264,
               "right": 762,
               "top": 117,
-              "bottom": 635
+              "bottom": 620
             },
-            "clip": "M264 117H762V530L672 586L599 635L537 615L485 631L416 582L325 533L264 440Z",
-            "mouthCover": "M484 442Q561 433 635 441L636 482Q563 515 484 482Z",
+            "clip": "M264 117H762V535L640 555L560 569V592L535 620H408L383 600L387 575L429 539L353 505L264 440Z",
+            "mouthCover": "M453 405Q475 400 493 423Q550 447 629 421L637 467Q548 483 454 447Z",
             "mouthColor": "#FFAA64"
           },
           "prehistoric-female-haired": {
@@ -7489,13 +7490,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "d2028efe93d31892aeddbcbbf33c30de77f1e077bb357e2b92114b35add96dc9",
+      "fingerprint": "6bff829c255663cadd8040dd0aaa1f11a11cb600c1190263f71c9d20f4f62024",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "0f5d8728f35d5ae43df137032994f70391bbb279b21840fdd811f2918800c3d1",
+    "fingerprint": "c3acccaa2b8d4a3f5e6948e7cbb810b343ae02bb02bd4756594879b0ef266434",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -7519,7 +7520,7 @@
     "version": "forest-body-1",
     "compilerVersion": "forest-source-body-motion-36",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "62077a7220c5fbcc6d9b8f723a9967da349268f853025bb3117c29344522a8e6",
+    "fingerprint": "086bcf759a5d96250a2e6823f80378b2abd17bebd8cae04a54205905beb89410",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -9593,16 +9594,16 @@
         }
       },
       "supporting": {
-        "version": "prehistoric-supporting-head-1",
+        "version": "prehistoric-supporting-head-2",
         "models": {
           "prehistoric-male-bald": {
             "id": "prehistoric-male-bald",
-            "label": "Quần chúng nam đầu trọc",
+            "label": "Quần chúng nam không tóc, không râu",
             "bodyTemplate": "karo",
             "hair": "bald",
-            "beard": "short-dark-brown",
-            "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
-            "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+            "beard": "none",
+            "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+            "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
             "width": 910,
             "height": 1728,
             "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
@@ -9624,17 +9625,17 @@
           "prehistoric-male-bald": {
             "scale": 0.25,
             "neck": {
-              "x": 485,
-              "y": 630
+              "x": 475,
+              "y": 593
             },
             "chin": {
               "left": {
-                "x": 451,
-                "y": 564
+                "x": 445,
+                "y": 525
               },
               "right": {
                 "x": 619,
-                "y": 558
+                "y": 534
               }
             },
             "eyes": [
@@ -9648,17 +9649,17 @@
               }
             ],
             "mouth": {
-              "x": 559,
-              "y": 463
+              "x": 545,
+              "y": 445
             },
             "bounds": {
               "left": 264,
               "right": 762,
               "top": 117,
-              "bottom": 635
+              "bottom": 620
             },
-            "clip": "M264 117H762V530L672 586L599 635L537 615L485 631L416 582L325 533L264 440Z",
-            "mouthCover": "M484 442Q561 433 635 441L636 482Q563 515 484 482Z",
+            "clip": "M264 117H762V535L640 555L560 569V592L535 620H408L383 600L387 575L429 539L353 505L264 440Z",
+            "mouthCover": "M453 405Q475 400 493 423Q550 447 629 421L637 467Q548 483 454 447Z",
             "mouthColor": "#FFAA64"
           },
           "prehistoric-female-haired": {
@@ -11073,7 +11074,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "d2028efe93d31892aeddbcbbf33c30de77f1e077bb357e2b92114b35add96dc9",
+      "fingerprint": "6bff829c255663cadd8040dd0aaa1f11a11cb600c1190263f71c9d20f4f62024",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",

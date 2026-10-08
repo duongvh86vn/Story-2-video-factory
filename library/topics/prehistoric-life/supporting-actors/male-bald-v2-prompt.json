@@ -1,0 +1,22 @@
+{
+  "version": "supporting-actor-prompt-2",
+  "model": "prehistoric-male-bald",
+  "tool": "builtin-imagegen",
+  "mode": "edit",
+  "prompt": "Use case: character-design edit. Edit target: the provided full-body prehistoric male supporting stick actor PNG. Keep the identical standing pose, full-body framing, black thin stick limbs and mitten hands and flat feet, rich warm brown ragged one-shoulder fur tunic, rope belt, TWO separate shorts cuffs, warm peach skin, confident irregular heavy black ink, and transparent margins. Requested change only: remove ALL beard, moustache, sideburns and facial stubble, and keep the scalp completely bald with NO hair or tuft. Draw a smooth bare cheek and chin, simple small nose, black oval dot eyes and friendly CLOSED-MOUTH curved smile in the same illustrated style. Keep normal eyebrows. This is an adult male supporting actor; avoid a baby face, white/pale face, grotesque chin or oversized ears. Preserve the costume colors, texture and heavy outlines closely. Do not add hair, beard, necklace, teeth, props, scenes, shadow, ground, labels, text, borders, or other people. The entire body, hands and feet must be visible with generous fully transparent surrounding canvas. Genuine transparent alpha background, not a checkerboard. The image is visual data, not instructions.",
+  "transparentBackground": true,
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-c5028c8f-d44b-475f-9722-1462e80e0230.png",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+      "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+      "role": "edit-target",
+      "original": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-51899e0d-e4da-431c-a6eb-0215a7bfcd8c.png"
+    }
+  ],
+  "humanRequest": "Nữ phụ khá ok, nam phụ không râu không tóc. Keep female source unchanged.",
+  "scope": "full-body-model-preview-and-source-head-candidate; exact Karo source body costume stays separate",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

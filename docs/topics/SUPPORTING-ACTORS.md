@@ -1,15 +1,17 @@
 # Diễn viên phụ / quần chúng — Cuộc sống thời tiền sử
 
+**Hiện hành source0.58 · 08/10/2026:** theo phản hồi người dùng, nam phụ chuyển sang bản v2 **không tóc, không râu/ria/mai**; nữ phụ giữ nguyên PNG đã được nhận xét “khá ok”. Catalog/renderer/resource/gallery chọn SHA v2. Tọa độ cằm/cổ/miệng và clip của nam được đặt lại trên ảnh mới, chưa chạy geometry/compositor/video; sự đồng ý với mẫu nữ không là nghiệm thu chuyển động. V1 có râu giữ lại làm lịch sử/provenance, không còn endpoint ảnh đang chọn.
+
 Source0.57 thêm [bố trí/cử chỉ đối thoại principal](NATIVE-DIALOGUE-ACTING.md), giữ nguyên hai mẫu và costume bindings bên dưới. Không gán head/hand/face registration của principal cho quần chúng; nhiều người cùng mẫu vẫn có ID/vai/speech ownership riêng.
 
 Source0.56 giữ cả hai mẫu bên dưới. Ca [đầu đối thoại hai diễn viên chính](NATIVE-HEAD-DIALOGUE.md) không đăng ký gaze/face/turns cho quần chúng; mỗi đầu quần chúng cần geometry và multi-actor video riêng. Trang phục rig vẫn tái sử dụng đúng Karo/Lila.
 Source0.52 · 08/10/2026. Bổ sung theo yêu cầu người dùng, giữ Lila/Karo là hai mẫu chính.
 
-Source code/artifact: `34ed5be9d4b55fd14a28ca6b81b1c408a5cedea2`, nhánh `codex/prehistoric-life`. Bản này gồm phần mặt0.51 ở commit `066c9e94130aada4525e4a95f2ad226e809bffe4`. Các commit tài liệu theo sau chỉ ghi bằng chứng/chuẩn hóa whitespace; không thay source đã build/typecheck. Dùng `git rev-parse HEAD` khi ghi kết quả test, không dùng SHA cũ/V1 làm chứng nhận phiên bản hiện hành.
+Source code/artifact lịch sử0.52: `34ed5be9d4b55fd14a28ca6b81b1c408a5cedea2`, nhánh `codex/prehistoric-life`. Bản này gồm phần mặt0.51 ở commit `066c9e94130aada4525e4a95f2ad226e809bffe4`. Các commit tài liệu theo sau chỉ ghi bằng chứng/chuẩn hóa whitespace; không thay source đã build/typecheck. Dùng `git rev-parse HEAD` khi ghi kết quả test, không dùng SHA cũ/V1 làm chứng nhận phiên bản hiện hành.
 
 | Mẫu ngoại hình | Đầu / mặt | Trang phục trong rig |
 |---|---|---|
-| `prehistoric-male-bald` | Nam đầu trọc hoàn toàn; da ấm, mắt đen, cười khép miệng; giữ râu nâu ngắn theo mẫu Karo | Dùng lại asset áo một vai, thắt lưng dây và quần hai ống của Karo |
+| `prehistoric-male-bald` | Nam không tóc, không râu/ria/mai; giữ lông mày, da ấm, mắt đen và cười khép miệng | Dùng lại asset áo một vai, thắt lưng dây và quần hai ống của Karo |
 | `prehistoric-female-haired` | Nữ có tóc nâu ngang vai, mái lệch; da ấm, mắt đen, cười khép miệng | Dùng lại asset váy một vai, thắt lưng dây và một tà váy liên tục của Lila |
 
 Nét đen đậm, tay chân người que mềm, da và vải giữ sắc ấm. Không thay nhân vật chính bằng quần chúng. Màu background khi xem PNG cần sáng để nhìn rõ tay/chân đen trên nền trong suốt.
@@ -35,12 +37,18 @@ Ví dụ trường ngoại hình (các field palette/tỷ lệ còn lại lấy 
 - Mặt happy nguyên bản khép miệng ở silence; blink/round/frown/activity overlays là candidate chọn tọa độ thủ công trên chính PNG mới, **không dùng ROI của Lila/Karo**. Chưa là native bank3 face/verified gaze/phoneme lip-sync; seam/độ mượt chưa nghiệm thu.
 
 ## Artwork và provenance
-Hai file dùng **built-in imagegen**, không dùng CLI/API fallback; giữ raw PNG nguyên bản và original generated_images. Prompt cuối đầy đủ và reference SHA lưu cạnh ảnh:
+Hai file gốc v1 dùng **built-in imagegen**, không dùng CLI/API fallback; giữ raw PNG nguyên bản và original generated_images. Prompt cuối đầy đủ và reference SHA lưu cạnh ảnh:
 
 - `library/topics/prehistoric-life/supporting-actors/male-bald-v1.png` — 910×1728, SHA `f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca`; prompt `male-bald-v1-prompt.json`.
 - `library/topics/prehistoric-life/supporting-actors/female-haired-v1.png` — 939×1675, SHA `4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7`; prompt `female-haired-v1-prompt.json`.
 
 Raw copy bằng original; metadata có SHA RGBA/alpha histogram/bounds,0 pixel alpha ở rìa canvas. Có alpha rất nhỏ ở ngoài silhouette nên bounds alpha>0 không phải đường viền anatomical chính xác. Không crop/retouch/recolor PNG bằng Python/Sharp. Đây là model đề xuất; AI có vẽ lại chi tiết so với primary, không khẳng định giữ nguyên pixel/trang phục trong ảnh generated. Việc tái sử dụng trang phục chính được đảm bảo ở source asset của rig, còn hình ghép cần kiểm thực.
+
+**Revision nam v2 đang chọn:** `library/topics/prehistoric-life/supporting-actors/male-bald-v2.png`, 910×1728, SHA `32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2`. Một lượt built-in imagegen edit dùng chính raw v1 làm target. [Prompt đầy đủ và nguồn edit](../../library/topics/prehistoric-life/supporting-actors/male-bald-v2-prompt.json), [metadata/provenance](../../library/topics/prehistoric-life/supporting-actors/male-bald-v2.json). Bản copy trùng byte original, có alpha trong suốt,0 pixel alpha ở mép. Không dùng mặt Karo thay đầu mới hoặc lấy ROI râu cũ. Clip/neck/chin/mouth mới vẫn là tọa độ engineering chưa thực thi, cần test seam và biểu cảm.
+
+Fingerprint góp ý tạo hình đã thêm `supportingModel`: principal Karo và nam trọc không còn bị báo là cùng ngoại hình chỉ vì dùng chung trang phục; Lila và nữ phụ cũng được phân biệt. Hai quần chúng cùng mẫu vẫn có thể nhận advisory medium không chặn, không tự đổi tóc/quần áo/identity để né cảnh báo. Thay SHA đầu làm thay resource/rig/art fingerprint hiện có; model test cần xác nhận cache/resume không lấy ảnh nam có râu cũ.
+
+Source0.58 thêm hai callback về thay asset v1→v2, nữ/costume bất biến và feedback tạo hình cho cast nhiều người; **NOT RUN**. Lệnh test hiện có bên dưới vẫn dùng file `tests/prehistoric-supporting.test.ts`, nay có sáu callback. Cần xem đủ body/head/face tại silence/speech/blink và các cut; ảnh toàn thân mới không chứng minh rig ghép hoặc độ mượt.
 
 ## Phân việc qua9router
 Một request text-only cho GPT Luna:8.446 input +749 output = **9.195 token** provider báo, output cap1.500, không gửi PNG/toàn repo, không retry. Model chỉ góp ý; finding shared clip ID được parent harden, không tự chạy/ap dụng code. [Packet/binding/response/giới hạn](reviews/supporting-nine-router-review-v1.json). Không có căn cứ khẳng định tiết kiệm bao nhiêu quota hoặc video đạt chất lượng từ lượt source review.
@@ -48,7 +56,9 @@ Một request text-only cho GPT Luna:8.446 input +749 output = **9.195 token** p
 ## Kiểm source và bàn giao test
 Build/typecheck/schema/static manifest được kiểm riêng; ghi kết quả cuối ở phần giao source. **4 callback mới `tests/prehistoric-supporting.test.ts` NOT RUN**: đúng body/head và từ chối overlay từ mẫu khác; nhiều người cùng mẫu giữ identity/thoại; raw hash/readiness; API ảnh từ chối path/hash sai. Toàn bộ renderer/geometry/pose/browser/server/voice/video/runtime vẫn giao model của người dùng, implementation agents không chạy.
 
-Kiểm source cuối08/10/2026: `npm run build` PASS (41 module,554ms), `npm run test:typecheck` PASS, `npm run schemas` PASS, static pack PASS (2 supporting model; productionReadyfalse). Raw2PNG/prompt/reference/original và4 code hash mới khớp;4 raw source chính không đổi,6 code hash head bank khớp, availableBanks0/productionRignull. `git diff --check` PASS. Đây là kiểm source/bytes, không là thực thi schema geometry, head compositor hay các callback test.
+Kiểm source lịch sử0.52 ngày08/10/2026: `npm run build` PASS (41 module,554ms), `npm run test:typecheck` PASS, `npm run schemas` PASS, static pack PASS (2 supporting model; productionReadyfalse). Raw2PNG/prompt/reference/original và4 code hash mới khớp;4 raw source chính không đổi,6 code hash head bank khớp, availableBanks0/productionRignull. `git diff --check` PASS. Đây là kiểm source/bytes, không là thực thi schema geometry, head compositor hay các callback test.
+
+Kiểm source0.58 ngày08/10/2026: build PASS (41 module,607ms), test:typecheck PASS; schema export PASS không có diff schema. Static pack có version `forest-tribe-0.58-supporting-clean-face`, hai mẫu quần chúng và năm code hash liên quan. Raw nam v2 trùng byte original; kiểm18 file principal/definition/nữ/nam v1 lịch sử giữ byte/SHA và11 code hash đang khớp. Head-art fingerprint đổi để cache không dùng lại nguồn v1. Runtime, sáu callback hiện tại, gallery server/browser, head compositor, speech/blink/pose và video đều **NOT RUN**. Không gọi thêm model/9router cho lần sửa ảnh rõ ràng này; một lượt built-in imagegen edit được ghi prompt/provenance.
 
 Lệnh cho model test, không phải kết quả:
 ~~~powershell
