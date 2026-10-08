@@ -59,8 +59,10 @@ Task3 source candidate uses seat surface2/support clock1/body compiler31, option
 
 **Interfaces:** API/CLI/cast consume the shared optional appearance field and sourceBody supports. Diagnostic Studio exposes explicit seat selection and preserves it in links. Model brief describes physical seat/contact/ownership and actual unsupported angles instead of inventing motion.
 
-- [ ] Complete source delivery: exact registered material/geometry/support fingerprints are integrated in existing source/cache/repair/manifest and schema export. Run final build/typecheck/static checks and publish only owned paths with exact GitHub SHA. Task3 already declares canonical scene/security/camera/role tracer; actual frames/video/audio/resume, left mesh cost and scene cap still need user-model execution. These checks prove only source/static artifacts.
-- [ ] Seek bounded read-only source advice under existing9router authorization if available; record unavailable/quota/timeout as no verdict, never PASS. Publish only owned paths to `codex/prehistoric-life`, verify exact GitHub SHA, deliver test/server/environment commands and all remaining full-product obligations.
+- [x] Source delivery0.42: exact registered material/geometry/support fingerprints integrated in existing source/cache/repair/manifest and exported schemas. Final build/typecheck/static checks exit0 and28 owned paths published `90879b5d9bfb36451dfafe454818346a2742e04a`, exact GitHub match511309/834e7a exit0. Canonical scene/security/camera/role tracer declared; **actual frames/video/audio/resume, left mesh cost and scene cap NOT RUN/unaccepted**. These checks prove only source/static artifacts.
+- [x] Two bounded read-only reviews by Schrodinger, then closed; camera fit/optional supporting array/top-level camera fixture addressed, stage relocation acknowledged. No third verdict or runtime PASS. No9router calls in this turn. Handoff/record have environment/test/server commands and full-product obligations; checked code remains unaccepted for production/video.
+
+Plan tasks1–4 have source/artifact delivery, not acceptance of their motion or the full factory. Reusable tracer media export plus actual user-model tests and all acceptance requirements below remain open; **do not mark the full goal complete**.
 
 ## Acceptance still required
 

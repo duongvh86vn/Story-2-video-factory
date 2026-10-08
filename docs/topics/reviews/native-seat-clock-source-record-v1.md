@@ -19,7 +19,16 @@
 - Earlier typecheck406791 exit1 found wrong camera export and report union in new tests, corrected. Buildce362a/typecheck3e6173 exit1 found optional supporting array in broadened camera condition, corrected before final source checks. Initial successful checks do not supersede these failures/fixes; final handles above cover delivered code.
 - Schrodinger `01a119c5-568a-73f0-b811-f139324d40b1` performed two bounded source-only reviews, then closed. First found single-actor seat camera fit and canonical stage mismatch. Parent widened fit; stage relocation was already corrected while review was in flight and acknowledged in follow-up. Follow-up found optional supporting.map and missing top-level camera metadata in regression fixture; both corrected. No additional support-clock findings in examined scope; **no third independent verdict, aggregate PASS or runtime/video acceptance**. No9router/model-generation/media calls in this implementation turn.
 
-Final manifest cameraCodeHash c53385 exit0 matches the actual camera.ts SHA256:479b0f50efdf8a404984b959dbfef347ede83d847f89db2cd22c5b8d2f031532. Publication SHA and exact GitHub comparison are recorded after actual push. All27 seating callbacks remain NOT RUN; `productionReady=false`, `productionRig=null`; goal full factory active/unfinished.
+Final manifest cameraCodeHash c53385 exit0 matches the actual camera.ts SHA256:479b0f50efdf8a404984b959dbfef347ede83d847f89db2cd22c5b8d2f031532.
+
+Source/artifact commit45035b `90879b5d9bfb36451dfafe454818346a2742e04a`,28 owned paths. Push211865 exit0. Exact comparison511309/834e7a exit0:
+
+```text
+90879b5d9bfb36451dfafe454818346a2742e04a
+90879b5d9bfb36451dfafe454818346a2742e04a	refs/heads/codex/prehistoric-life
+```
+
+Docs-only follow-up records publication; it does not change checked source. All27 seating callbacks remain NOT RUN; `productionReady=false`, `productionRig=null`; goal full factory active/unfinished.
 
 ## Remaining
 

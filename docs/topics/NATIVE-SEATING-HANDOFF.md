@@ -2,7 +2,7 @@
 
 Mốc **0.42, 08/10/2026**, nhánh `codex/prehistoric-life`, tiếp tục từ `ec61d0e379642966ec158a7e299267e402b6f360`. Source thêm **`performance.sourceBody.supports`** cho native Lila/Karo đã chọn `bodySeat='registered-seated-v1'` và registered locomotion. Ghế, chân chuẩn bị/trụ, hông/contact, vải và lịch sử tóc đọc cùng clock gốc qua camera và đổi vai primary/supporting. Đây là source candidate, **chưa có kết quả runtime hoặc video nghiệm thu**.7 callback source-clock mới,12 callback surface và8 callback material **NOT RUN** bởi implementation agent. [Plan](../plans/2026-10-08-native-seating.md), [record hiện hành](reviews/native-seat-clock-source-record-v1.md); [record0.41](reviews/native-seat-surface-source-record-v1.md) là lịch sử.
 
-Mốc0.41 đã push source/artifact `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 file đúng scope. Các check của0.41 không chứng minh các sửa đổi0.42. Record0.42 ghi kiểm tra mới, review và SHA thực tế sau khi xuất bản; không dùng kết quả V1 hoặc source build để nhận là video đã đạt.
+Source/artifact0.42 đã push tại `90879b5d9bfb36451dfafe454818346a2742e04a`,28 file đúng scope. Exact SHA local/remote khớp (511309/834e7a exit0); final build/typecheck/schema/static inventory thành công. [Record0.42](reviews/native-seat-clock-source-record-v1.md) ghi review/failures/corrections và raw handles; docs-only follow-up không thay code đã kiểm. Không dùng kết quả V1 hoặc source build để nhận là video đã đạt.
 
 ## Đã có trong source
 
