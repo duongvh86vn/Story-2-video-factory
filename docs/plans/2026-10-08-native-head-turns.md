@@ -1,8 +1,12 @@
-# Native head turns — source0.50, 08/10/2026
+# Native head turns — source0.51, 08/10/2026
 
 Mục tiêu sản phẩm vẫn là câu chuyện/kịch bản/WAV bất kỳ → hai diễn viên đúng mẫu, diễn mượt trong bối cảnh màu sống động → video có giọng/phụ đề/QC. Không thay bằng người dẫn cố định hoặc bài máy móc. Không có image-to-video API trên máy; dùng authored raster/native SVG + HTML5/GSAP. Toàn runtime/test/render do model của người dùng.
 
-## Source0.50 — nguồn đầu ở góc ảnh mẫu
+## Source0.51 — nối mặt riêng với nguồn và clock
+
+Painter SVG local mouth/eyes + bank3 nguồn cụ thể đã viết vào renderer/compiler/resource/fingerprint/clock. Karo có plate miệng khép, Lila giữ smileV2 ở aperture0. Có hai definition hình học thủ công chưa schema/runtime/visual acceptance; bank chưa tự chọn. Một cell unknown-angle không thay thế mục tiêu quay đầu, expressions/secondary/turns/contact/body/props/full3input/voice/resumeQC vẫn mở. [Contract](2026-10-08-native-head-face.md), [source/ảnh/giới hạn/lệnh test](../topics/NATIVE-HEAD-FACE-HANDOFF.md). 8 callback mới NOT RUN; không có final được duyệt.
+
+## Lịch sử source0.50 — nguồn đầu ở góc ảnh mẫu
 
 - Có Lila và Karo V1/V2 tách đầu từ primary, giữ màu da ấm/nét mặt/tóc/râu. V2 bỏ lọn tóc kéo ngang và cổ thừa; thay đổi pixel/canvas nên cần bản đo riêng, không dùng lại tọa độ V1. Chưa được duyệt hoặc đăng ký.
 - `requestedYawDeg:null` là giữ góc nguồn chưa đo, không phải chính diện 0°. Static authoring đọc mọi PNG canonical và giữ metadata cũ nguyên byte; nguồn mới phải bằng raw output imagegen đã lưu. Runtime API chỉ đọc nguồn trong repo.

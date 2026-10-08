@@ -1,0 +1,26 @@
+{
+  "version": "native-face-plate-prompt-1",
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: precise-object-edit. Edit target image1 is the unapproved Karo source-angle V2 head, not a new character design. Produce a separate closed-mouth REST expression asset for this same 2D stickman actor. Make ONLY the open smiling mouth become a small relaxed CLOSED smile. Remove the white teeth, dark open aperture and tongue; replace ONLY that interior/lip opening with a natural closed-mouth shape and consistent warm brown beard/lip colours. Preserve moustache silhouette and ragged beard outer contour, eye positions/shapes, brows, nose, ear, thick irregular black ink, warm peach skin, hair every spike, exact source viewing angle/tilt, framing, relative scale and transparent background. Do not rotate or redesign the face. Do not add a neck or clothes. Keep original 1201x1309 canvas if possible, complete head and alpha background. No palette desaturation, no labels, no extra facial features. This will be used ONLY as a registered local mouth patch over the original head, so mouth position and surrounding hair/beard texture must match the edit target. No eyes/nose/hair edits. Return true RGBA transparency, not checkerboard.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+      "role": "edit-target"
+    }
+  ],
+  "identitySource": {
+    "file": "docs/topics/assets/reference-karo-full.png",
+    "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+    "role": "inherited-primary-through-edit-target",
+    "sentToImageTool": false
+  },
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-a6701eb3-4d5a-47d2-8a20-ec3edf79137a.png",
+  "requestedYawDeg": null,
+  "scope": "local-mouth-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

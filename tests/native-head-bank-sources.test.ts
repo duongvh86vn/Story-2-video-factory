@@ -261,7 +261,7 @@ test('version 2 fingerprint binds every image, fixed scale, cell binding, geomet
     {...b,cells:b.cells.map(c=>({...c,eyeTarget:{...c.eyeTarget,x:c.eyeTarget.x+1}}))},
     {...b,cells:b.cells.map(c=>({...c,seam:c.seam.map(p=>({...p,x:p.x+1}))}))},
     {...b,cells:b.cells.map(c=>({...c,skull:{...c.skull,width:c.skull.width+1}}))},
-    {...b,cells:b.cells.map(c=>({...c,yawDeg:c.yawDeg+1}))},
+    {...b,cells:b.cells.map(c=>({...c,yawDeg:c.yawDeg!+1}))},
     {...b,unitScale:.31},
     {...b,routes:[['cell-1','cell-0'],['cell-0','cell-1']]},
   ];

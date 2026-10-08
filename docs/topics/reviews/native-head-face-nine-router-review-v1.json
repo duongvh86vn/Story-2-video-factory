@@ -1,0 +1,248 @@
+{
+  "version": "native-head-face-nine-router-review-1",
+  "scope": "source-static-advice-only",
+  "calls": [
+    {
+      "id": "gpt-source-face-painter",
+      "model": "cx/gpt-5.6-luna",
+      "purpose": "source-code-proposal",
+      "status": "proposal-not-applied",
+      "slot": 1,
+      "fingerprint": "7aecf7c94a09d05f4089f119665feda5826670972059fe5d8bdd97766264db97",
+      "proposalSha256": "0dd8b195f7b0f8f57edf6ffd3211efb79cef35fca4a254f7bdf66659c9b9ce59",
+      "sources": [
+        {
+          "file": "docs/plans/2026-10-08-native-head-face.md",
+          "sha256": "b934c37e16b588b663eaf6feff8b6373feaa0628d1977dc3e0b0c6066f36a29e"
+        },
+        {
+          "file": "packages/topics/head-cell-landmarks.ts",
+          "sha256": "1074787d9b3dab8fae8f156ea5d72eb5fd9d982c1078e4bf843501e210436972"
+        },
+        {
+          "file": "packages/animation/body-view-mouth.ts",
+          "sha256": "4be5c1f6c6cf807b44e15ae90813a9430bc78cae2a5d98e98571ff4187c9a7b7"
+        },
+        {
+          "file": "packages/animation/body-view-eyes.ts",
+          "sha256": "7256553dcd977818599001cb993a487e25e540e69792aa1781720c8773b34b87"
+        }
+      ],
+      "references": [],
+      "usage": {
+        "promptTokens": 11494,
+        "completionTokens": 3516,
+        "totalTokens": 15010
+      },
+      "notAppliedReason": "type error regionBounds, overlaps own eye glyph, incomplete SVG/state painter; parent wrote module manually"
+    },
+    {
+      "id": "gemini-rest-mouth-advice",
+      "model": "ag/gemini-3.8-flash-low",
+      "purpose": "static-art-advice",
+      "status": "proposal-not-applied",
+      "slot": 2,
+      "fingerprint": "391f8fbe0da22d0a89980da71f6ee9a6a3bd2b4bfe93024fc8a22b8ddc7c5d95",
+      "proposalSha256": "9d18bc5102b3372e7d3a0017609ade98ca8e6fd26e6282f4a74f87472b3ddd96",
+      "sources": [],
+      "references": [
+        {
+          "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+          "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-source-angle-v1.png",
+          "sha256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb"
+        }
+      ],
+      "usage": {
+        "promptTokens": 4640,
+        "completionTokens": 394,
+        "totalTokens": 5034
+      },
+      "response": {
+        "preserved": [
+          "Hair silhouette, strands, and internal texture across crown and perimeter",
+          "Eye placements, shapes, and pupil fills",
+          "Eyebrows and forehead contouring",
+          "Left ear silhouette and interior shading",
+          "Overall head tilt and outer contour lines",
+          "Upper nose bridge and primary cheek skin fill tones"
+        ],
+        "visibleDifferences": [
+          "Oral cavity: open smiling mouth with visible teeth and tongue replaced by closed slight smile line",
+          "Lip perimeter: light-toned lower lip/chin highlight removed in favor of continuous beard fill",
+          "Moustache/beard area below nose: adjusted stroke geometry and interior dark brown fill replacing oral aperture void",
+          "Chin beard interior: slight texture and brushwork stroke variance directly underneath lower mouth line"
+        ],
+        "mouthPatchRisks": [
+          "Beard fill discontinuity: subtle stroke and hue variations in brown paint around x550..910 y765..940 may create visible seams against base V2 beard",
+          "Upper lip/nose base junction: dark contour line along lower nose boundary must align exactly to avoid doubled or broken ink strokes",
+          "Left/right mouth corner stroke transitions: line endings of closed smile could exhibit aliasing or step offsets against original cheek-to-beard border",
+          "Texture feathering: hard polygon edges at boundary will reveal painted brushwork differences in the beard mass"
+        ],
+        "limits": [
+          "No runtime rendering, alpha blending, or automated seam-carving verified",
+          "Coordinate bounding box x550..910 y765..940 is an unverified rough polygon approximation",
+          "Pixel identity, production approval, and temporal playback stability are not evaluated"
+        ]
+      }
+    },
+    {
+      "id": "gpt-source-face-review",
+      "model": "cx/gpt-5.6-sol",
+      "purpose": "source-only-review",
+      "status": "proposal-not-applied",
+      "slot": 3,
+      "fingerprint": "fc9716794c544ebdfe454329827feaf58c4591c4d94fb20e50821673ffe2de4f",
+      "proposalSha256": "1f9e70075b22192552ba62fe40868319dfe9423dcc8aa5ebefc3dd1a1d810218",
+      "sources": [
+        {
+          "file": "packages/animation/native-head-face.ts",
+          "sha256": "eaf58b65816740239ec4e938afe2eb059b50e72be01ce4fd0971cfdd6eef8835"
+        },
+        {
+          "file": "packages/animation/native-head-bank.ts",
+          "sha256": "4a78e578d1a2c10f696e3654fe5de0faabf25e3ec62438a8e49e9b4481e92b62"
+        },
+        {
+          "file": "packages/animation/body-head-bank.ts",
+          "sha256": "0250ba0c3af730b286acfce92b2746b5ae4ac78e29a1695fc9756403d1d334ac"
+        },
+        {
+          "file": "docs/topics/reviews/native-face-compiler-excerpts-v1.md",
+          "sha256": "200e88565a266e71b69b11be23b667bfb8f02a7eaa57ac6d4d6585a364cfb2d9"
+        }
+      ],
+      "references": [],
+      "usage": {
+        "promptTokens": 15044,
+        "completionTokens": 2869,
+        "totalTokens": 17913
+      },
+      "response": {
+        "findings": [
+          {
+            "file": "packages/animation/native-head-face.ts",
+            "reason": "For a native-rim mouth, the closed-mouth plate is visible at rest, but the generated aperture, teeth, and tongue are also rendered at aperture=0. The aperture collapses to the top curve while retaining a nonzero stroke, so Karo's zero/rest state is not solely the registered closed plate and can acquire an artificial dark seam.",
+            "suggestion": "Add stable child selectors for generated mouth ink and set their opacity to 0 at aperture=0, ramping only after opening begins; keep the closed plate visible beneath them. Alternatively emit a truly empty aperture path at zero and ensure teeth/tongue are hidden, not merely degenerate."
+          },
+          {
+            "file": "packages/animation/native-head-face.ts",
+            "reason": "Mouth geometry validation bounds the aperture control points but does not validate the actual teeth and tongue control points produced by mouthPaths. Those paths use tangent-derived and depth-derived coordinates that can leave mouth.region and be silently clipped, breaking registered path correspondence even though schema validation succeeds.",
+            "suggestion": "Use one shared path-construction routine for validation and rendering, evaluate its aperture/teeth/tongue control points at the extrema needed over amount 0..1, and require every generated control point plus stroke allowance to remain inside mouth.region."
+          },
+          {
+            "file": "packages/animation/native-head-face.ts",
+            "reason": "Strip bounds are checked by passing rectangle corners to within(), whose upper bounds are strict. A valid strip ending exactly at source or crop width/height is rejected because its right/bottom geometric corner equals the boundary.",
+            "suggestion": "Validate rectangles directly with x>=bounds.x, y>=bounds.y, x+width<=bounds.x+bounds.width, and y+height<=bounds.y+bounds.height. Retain half-open tests for sampled points separately."
+          },
+          {
+            "file": "packages/animation/native-head-bank.ts",
+            "reason": "Bank3 permits a partial set of cells to contain face registrations while both capabilities are false. nativeHeadBankSvg still emits those overlays, and native-rim mouth layers default visible, while the compiler does not call nativeHeadBankFacialState unless both capabilities are true. This creates rendered face patches with no corresponding clock/state path.",
+            "suggestion": "Require either no cell.face entries or complete face registration for every cell. If partial engineering registrations must remain representable, prevent nativeHeadBankSvg from rendering them unless the matching capability is enabled and define an explicit source-identical inactive baseline."
+          },
+          {
+            "file": "packages/animation/body-head-bank.ts",
+            "reason": "nativeHeadBankFacialState emits state only for cells having face data, while the stated stable-selector guarantee is unconditional. This becomes observable for currently permitted partial bank3 registrations and leaves emitted SVG selectors absent from frame state.",
+            "suggestion": "After forbidding partial registrations, assert completeness before producing facial state. Otherwise emit explicit baseline state and unchanged path values for every facial selector present in the SVG."
+          },
+          {
+            "file": "docs/topics/reviews/native-face-compiler-excerpts-v1.md",
+            "reason": "The supplied adaptive face-error excerpt imports nativeHeadFaceMatrixError indirectly through nativeHeadBankFacialError in the source module, but shows no call to nativeHeadBankFacialError in faceError. Consequently nonlinear look/blink matrices can be interpolated only at ordinary frame times without the native-face-specific correspondence bound.",
+            "suggestion": "In faceError, when hasNativeHeadBank(profile) and facial capabilities are active, call nativeHeadBankFacialError(bank,a.face,b.face,actual.face,progress) and convert its source-pixel result using the same final display-scale tolerance convention used by the other native matrix checks."
+          },
+          {
+            "file": "packages/animation/native-head-bank.ts",
+            "reason": "Capabilities are derived only from face-field completeness, not from successful availability of the actual render/clock path. A bank can therefore advertise speech and directionalEyes solely because every cell has geometry, even though capability use also requires owned narration/acting clocks and compiler integration that are outside the bank fingerprint.",
+            "suggestion": "Keep geometry completeness as a schema invariant, but represent render/compiler support as an explicitly versioned capability contract or compiler-version gate tied to the bank definition. Do not treat face presence alone as proof that the source-clock path is supported."
+          }
+        ],
+        "limits": [
+          "No face registration JSON or source imagery was supplied, so actor-specific coordinates, source hashes, closed-plate alignment, polygon correspondence, and Karo rest appearance cannot be verified.",
+          "Only exact-hash compiler excerpts were supplied, not the complete compiler. The absence of nativeHeadBankFacialError is established only for the shown faceError ranges; code outside those excerpts cannot be assessed.",
+          "No execution, rendering, tests, API access, or runtime acceptance was performed.",
+          "Bank3 one-cell unknown yaw was reviewed as an intentionally fixed source angle, not as a turn; no finding requests inferred yaw or a route.",
+          "Legacy bank1/bank2 canonical fingerprints cannot be recomputed here. The visible version-1 field-presence guards and legacy face/capability prohibition remain materially important and should be preserved."
+        ]
+      }
+    },
+    {
+      "id": "gpt-source-face-review-fixes",
+      "model": "cx/gpt-5.6-sol",
+      "purpose": "source-only-review",
+      "status": "proposal-not-applied",
+      "slot": 4,
+      "fingerprint": "2d5cdfbf2d570495c826c8bc4207a563b345199c6e61c6299d76b79b9e078f6f",
+      "proposalSha256": "6b82f7a0820ef82eaa2b50366c715713cfaf346e1f231c990f80d3a988c0917e",
+      "sources": [
+        {
+          "file": "packages/animation/native-head-face.ts",
+          "sha256": "739dba84c31cd8d48c67860024caae1f6a6a3940aa1df99f31ee151936aae9f5"
+        },
+        {
+          "file": "packages/animation/native-head-bank.ts",
+          "sha256": "482301ddc4e96a64cd5e4c5f1b874f6547341840d86c48aabb0f93cbfa5b9945"
+        },
+        {
+          "file": "packages/animation/body-head-bank.ts",
+          "sha256": "735f60f921543cc86dfc0c1e60f1e07509ab74d00228e344aa22efa3081c6e42"
+        },
+        {
+          "file": "docs/topics/reviews/native-face-compiler-excerpts-v1.md",
+          "sha256": "fe0bb17a5c2a46f16e84e404545f1f51aee5a14d3a808d20fa91826e69089af2"
+        }
+      ],
+      "references": [],
+      "usage": {
+        "promptTokens": 15438,
+        "completionTokens": 1113,
+        "totalTokens": 16551
+      },
+      "response": {
+        "findings": [
+          {
+            "file": "packages/animation/body-head-bank.ts",
+            "reason": "nativeHeadBankFacialError validates only eye transform matrices. It does not measure interpolation error for the aperture, teeth, and tongue path coordinates. Once mouth-generated opacity saturates, the generic opacity refinement cannot bound nonlinear aperture changes between compiled frames, so intermediate mouth geometry can diverge from nativeHeadFaceState even though endpoint geometry is registered.",
+            "suggestion": "Extend the native facial interpolation error to compare interpolated mouth path coordinates against the evaluator-produced wanted paths for every cell, scaled by nativeHeadPixelScale, or carry the bounded aperture value in NativeFaceState and compute the corresponding control-point interpolation error directly."
+          },
+          {
+            "file": "docs/topics/reviews/native-face-compiler-excerpts-v1.md",
+            "reason": "The face refinement limit expression `key==='rotation'||key==='x'||key==='y'?.02:.002` applies the conditional operator only to the `key==='y'` branch. For rotation and x it evaluates to boolean `true`, which is coerced to 1, making their error tolerance 50 times looser than the intended 0.02.",
+            "suggestion": "Parenthesize the key test: `const limit=(key==='rotation'||key==='x'||key==='y')?.02:.002;`."
+          }
+        ],
+        "limits": []
+      }
+    }
+  ],
+  "reportedTokens": 54508,
+  "parentAssessment": {
+    "art": "Gemini confirms closedmouth with local beard/lip/texture difference and possible patch seams, not accepted compositor/video",
+    "reviewFixes": [
+      "Generated mouth ink hidden at aperture0; patch rest remains",
+      "Shared aperture/teeth/tongue controls validate0/1 hull with stroke bounds",
+      "Strip rectangle edge inclusive",
+      "Bank3 allcellface mandatory, state rejects incomplete capabilities"
+    ],
+    "reviewClaimsNotBugs": [
+      {
+        "claim": "Missing native facial matrix error",
+        "evidence": "Compiler exact source call was present at current line1149; initial excerpt gap omitted it. Corrected excerpt includes it."
+      },
+      {
+        "claim": "Missing mouth path interpolation bound",
+        "evidence": "Existing compiler refine loop compares ALL a.paths including native-face mouth aperture/teeth/tongue at .17/.5/.83; review excerpt stopped before that loop. Test now also checks midpoint against full evaluator, NOT RUN."
+      },
+      {
+        "claim": "Boolean precedence weakens x/rotation tolerance",
+        "evidence": "Conditional operator has lower precedence than ||; original expression already groups the three key tests. Explicit parentheses added for readability, not a verified tolerance bug."
+      }
+    ],
+    "unreviewed": "Raw registration JSON geometry, source images/neck/body fit, full compiler beyond excerpts and final parent edits not independently reviewed or executed"
+  },
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "runtime": "NOT RUN, solely human model"
+}

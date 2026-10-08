@@ -13,7 +13,7 @@ import {nativeHeadTrackTimes} from './native-head-track.js';
 export const VIEW_ACTOR_GAZE_VERSION='native-actor-gaze-source-2' as const;
 export const nativeActorGazeDescription={version:VIEW_ACTOR_GAZE_VERSION,selection:"performance.gazes[].actorTarget={id,anchor:'eyes'}",
   method:'complete visible original actor run; registered eye midpoint projected by the rendered physical neck/head transform, body/expression/breath clock and owned physical lunge timings; no gaze feedback or arm/tool evaluation',
-  limits:'fixed native eyes/expression source or explicitly registered selected-cell physical eye anchor; bank directional eyes/speech/emotion still unavailable; no optical gaze or motion acceptance',
+  limits:'fixed native eyes/expression source or explicitly registered selected-cell physical eye anchor; bank3 local directional eyes/speech are unaccepted source candidates, emotion and continuous gaze across cell changes unavailable; no optical gaze or motion acceptance',
   runtimeVerified:false,opticalGazeVerified:false,productionReady:false,approved:false};
 const SourceSchema=z.object({version:z.literal(VIEW_ACTOR_GAZE_VERSION),actorId:Id,
   startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),

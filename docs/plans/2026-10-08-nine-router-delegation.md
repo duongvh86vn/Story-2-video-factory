@@ -1,6 +1,14 @@
-# Phân việc triển khai qua 9router — source0.50
+# Phân việc triển khai qua 9router — source0.51
 
-## Lượt mới source0.50
+## Lượt mới source0.51 và cách kiểm soát quota
+
+Batch `head-face-051` hoàn tất4 request thực: Luna đề xuất code15.010 token, Gemini đối chiếu Karo mouth plate5.034, Sol review17.913 và review tiếp16.551. Tổng **54.508 token** provider báo. [Report có SHA và giới hạn](../topics/reviews/native-head-face-nine-router-review-v1.json). Đề xuất Luna không được áp dụng; parent viết lại. Một số finding Sol đúng và đã sửa; các finding thiếu matrix/path refinement và precedence được parent bác sau đọc source đầy đủ. Không coi số request hoặc ý kiến đồng thuận là bằng chứng chất lượng/quota tiết kiệm.
+
+Các lượt tiếp theo chia phần độc lập: GPT nhẹ viết module nhỏ theo contract; Gemini đối chiếu ít ảnh đúng nguồn; GPT mạnh review geometry/shared contracts khi thật sự cần. Parent tích hợp, kiểm nguồn/identity/clock/contact/final gates và quyết định. Runtime vẫn dành cho model test của người dùng. Yêu cầu mới về quần chúng nam đầu trọc/nữ có tóc là hai mẫu riêng, tái sử dụng trang phục Karo/Lila, không đổi hai nhân vật chính.
+
+Mỗi task chỉ gửi đoạn/file liên quan và yêu cầu kết quả ngắn có finding + vị trí + giới hạn. Ưu tiên output1.000–2.000 token cho review, chỉ tăng cho module cụ thể; không dùng trần12.000 mặc định. Không gọi lại cùng dữ liệu, không để nhiều model viết cùng file hoặc luân phiên review toàn bộ repo. Cache/lock và tối đa6 HTTP request mỗi batch vẫn áp dụng; không retry tự động. Dừng hoặc thu hẹp task khi phản hồi thiếu dữ liệu/sai, thay vì lặp prompt lớn. Ghi token thực và phần được dùng/bị bác; chưa có dữ liệu đủ để khẳng định phần trăm tiết kiệm quota.
+
+## Lịch sử source0.50
 
 Ba request thực trong batch `head-cell-050` đã hoàn tất: Gemini đối chiếu primary với V1 (7.669 token), GPT review hẹp ba file source (7.172), Gemini đối chiếu V1/V2 sau sửa (7.052). Tổng **21.893 token** provider báo. [Report bound nguồn và ảnh](../topics/reviews/primary-angle-heads-nine-router-review-v1.json), [kết quả tạo hình và giới hạn](../topics/reviews/primary-angle-heads-source-record-v1.md).
 
@@ -55,7 +63,7 @@ Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-
 node --import tsx scripts/dev-nine-router.ts --task runtime/dev-agents/source-review/review-small-module.json
 ~~~
 
-Source allowlist: TS dưới packages/tests/apps/scripts, MD dưới docs/plans hoặc docs/topics; từng file64KB, tổng source55.000 ký tự. PNG allowlist hiện hẹp: primary Lila/Karo và từng head-cell cùng repo, tối đa4 ảnh8MiB/ảnh. Không upload toàn repo, key, env, runtime người dùng hoặc dữ liệu ngoài allowlist. Packet/proposal runtime bị gitignore; báo cáo đã kiểm và source sở hữu mới được commit. Tool không cài thêm SDK/service và không cần image-to-video API.
+Source allowlist: TS dưới packages/tests/apps/scripts, MD dưới docs/plans hoặc docs/topics; từng file64KB, tổng source55.000 ký tự. PNG allowlist hiện hẹp: primary Lila/Karo, từng head-cell và head-face-plate cùng repo, tối đa4 ảnh8MiB/ảnh. Không upload toàn repo, key, env, runtime người dùng hoặc dữ liệu ngoài allowlist. Packet/proposal runtime bị gitignore; báo cáo đã kiểm và source sở hữu mới được commit. Tool không cài thêm SDK/service và không cần image-to-video API.
 
 ## Tạo hình còn phải sửa thật
 

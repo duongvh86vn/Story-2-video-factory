@@ -1,0 +1,366 @@
+{
+  "version": "native-head-bank-3",
+  "id": "lila-source-face-v1",
+  "actor": "lila",
+  "source": {
+    "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+    "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+    "width": 1167,
+    "height": 1347,
+    "pixelScale": 0.1516
+  },
+  "primary": {
+    "file": "docs/topics/assets/reference-lila-full.png",
+    "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+  },
+  "bodyViews": [
+    {
+      "view": "three-quarter-right",
+      "sourceHash": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9"
+    }
+  ],
+  "unitScale": 1,
+  "cells": [
+    {
+      "id": "source-angle",
+      "sourceId": "primary",
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1167,
+        "height": 1347
+      },
+      "neck": {
+        "x": 637,
+        "y": 815
+      },
+      "neckTop": {
+        "x": 637,
+        "y": 780
+      },
+      "chin": {
+        "x": 730,
+        "y": 757
+      },
+      "eyeTarget": {
+        "x": 800.5,
+        "y": 500
+      },
+      "skull": {
+        "x": 260,
+        "y": 180,
+        "width": 770,
+        "height": 600
+      },
+      "yawDeg": null,
+      "seam": [
+        {
+          "x": 600,
+          "y": 770
+        },
+        {
+          "x": 680,
+          "y": 770
+        },
+        {
+          "x": 680,
+          "y": 860
+        },
+        {
+          "x": 600,
+          "y": 860
+        }
+      ],
+      "restMood": "happy",
+      "face": {
+        "version": "native-head-face-1",
+        "source": {
+          "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+          "width": 1167,
+          "height": 1347
+        },
+        "mouth": {
+          "kind": "skin-strip",
+          "region": [
+            {
+              "x": 637,
+              "y": 600
+            },
+            {
+              "x": 879,
+              "y": 600
+            },
+            {
+              "x": 872,
+              "y": 680
+            },
+            {
+              "x": 818,
+              "y": 712
+            },
+            {
+              "x": 637,
+              "y": 712
+            }
+          ],
+          "top": [
+            {
+              "x": 667,
+              "y": 628
+            },
+            {
+              "x": 716,
+              "y": 682
+            },
+            {
+              "x": 810,
+              "y": 685
+            },
+            {
+              "x": 855,
+              "y": 638
+            }
+          ],
+          "depth": 32,
+          "lift": 14,
+          "stroke": 6,
+          "strip": {
+            "x": 669,
+            "y": 585,
+            "width": 134,
+            "height": 9
+          }
+        },
+        "eyes": {
+          "screen-left": {
+            "center": {
+              "x": 704,
+              "y": 512
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 666,
+                "y": 468
+              },
+              {
+                "x": 743,
+                "y": 468
+              },
+              {
+                "x": 743,
+                "y": 556
+              },
+              {
+                "x": 666,
+                "y": 556
+              }
+            ],
+            "glyph": [
+              {
+                "x": 689,
+                "y": 477
+              },
+              {
+                "x": 716.5,
+                "y": 477
+              },
+              {
+                "x": 729,
+                "y": 494.5
+              },
+              {
+                "x": 729,
+                "y": 529.5
+              },
+              {
+                "x": 716.5,
+                "y": 547
+              },
+              {
+                "x": 691.5,
+                "y": 547
+              },
+              {
+                "x": 679,
+                "y": 529.5
+              },
+              {
+                "x": 679,
+                "y": 494.5
+              }
+            ],
+            "lid": [
+              {
+                "x": 679,
+                "y": 512
+              },
+              {
+                "x": 694,
+                "y": 518
+              },
+              {
+                "x": 714,
+                "y": 518
+              },
+              {
+                "x": 729,
+                "y": 512
+              }
+            ],
+            "strip": {
+              "x": 674,
+              "y": 562,
+              "width": 62,
+              "height": 8
+            },
+            "stroke": 4
+          },
+          "screen-right": {
+            "center": {
+              "x": 897,
+              "y": 488
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 861,
+                "y": 445
+              },
+              {
+                "x": 935,
+                "y": 445
+              },
+              {
+                "x": 935,
+                "y": 533
+              },
+              {
+                "x": 861,
+                "y": 533
+              }
+            ],
+            "glyph": [
+              {
+                "x": 883.2,
+                "y": 455
+              },
+              {
+                "x": 908.5,
+                "y": 455
+              },
+              {
+                "x": 920,
+                "y": 471.5
+              },
+              {
+                "x": 920,
+                "y": 504.5
+              },
+              {
+                "x": 908.5,
+                "y": 521
+              },
+              {
+                "x": 885.5,
+                "y": 521
+              },
+              {
+                "x": 874,
+                "y": 504.5
+              },
+              {
+                "x": 874,
+                "y": 471.5
+              }
+            ],
+            "lid": [
+              {
+                "x": 874,
+                "y": 488
+              },
+              {
+                "x": 887.8,
+                "y": 494
+              },
+              {
+                "x": 906.2,
+                "y": 494
+              },
+              {
+                "x": 920,
+                "y": 488
+              }
+            ],
+            "strip": {
+              "x": 877,
+              "y": 550,
+              "width": 45,
+              "height": 8
+            },
+            "stroke": 4
+          }
+        },
+        "protectedContours": [
+          [
+            {
+              "x": 827,
+              "y": 527
+            },
+            {
+              "x": 875,
+              "y": 527
+            },
+            {
+              "x": 875,
+              "y": 591
+            },
+            {
+              "x": 827,
+              "y": 591
+            }
+          ],
+          [
+            {
+              "x": 858,
+              "y": 369
+            },
+            {
+              "x": 950,
+              "y": 369
+            },
+            {
+              "x": 950,
+              "y": 425
+            },
+            {
+              "x": 858,
+              "y": 425
+            }
+          ]
+        ],
+        "status": "engineering-face-registration",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      }
+    }
+  ],
+  "routes": [],
+  "capabilities": {
+    "speech": true,
+    "directionalEyes": true,
+    "expressions": false,
+    "secondary": false
+  },
+  "status": "engineering-source-registration",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

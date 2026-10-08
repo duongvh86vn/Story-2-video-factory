@@ -1,4 +1,8 @@
-# Quay đầu Lila/Karo — source0.50 và phần còn thiếu
+# Quay đầu Lila/Karo — source0.51 và phần còn thiếu
+
+## Source0.51 — nối miệng/mắt theo từng nguồn
+
+Đã viết source-face painter và bank3/compiler/owned-clock/resource integration; có Karo closed-mouth plate chỉ lấy vùng miệng, cùng hai definition tọa độ thủ công. Definition chưa được thực thi schema/compositor/runtime, không tự chọn bank. Một source angle null không là quay đầu. Bank1/2 giữ false capabilities; expressions/secondary/continuous-contact/head-turn/final guards chưa mở. [Bàn giao riêng, giới hạn, môi trường và 8 callback NOT RUN](NATIVE-HEAD-FACE-HANDOFF.md). Full tool ba input/giọng/diễn xuất/video/QC vẫn chưa hoàn thành.
 
 ## Source0.50 — giữ nét mặt và góc của ảnh mẫu
 

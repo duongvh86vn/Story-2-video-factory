@@ -17,7 +17,7 @@ import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
 import {usesBodyView,registeredBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
-import {hasNativeHeadBank,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace} from './body-head-bank.js';
+import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace,nativeHeadBankFacialState,nativeHeadBankFacialError} from './body-head-bank.js';
 import {nativeHeadSources} from './native-head-bank.js';
 import {nativeHeadTrackTimes} from './native-head-track.js';
 import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,bodyViewMouthLevel,validateBodyViewMouthActivity,bodyViewMouthDescription,BODY_VIEW_MOUTH_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS} from './body-view-mouth.js';
@@ -115,6 +115,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
     registeredBodyViewEyes(profile);
     if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-eyes: registered eyes need animation2.2.13/14/15');
   }
+  if((hasNativeHeadSpeech(profile)||hasNativeHeadEyes(profile))&&![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-head-face-registration: source-face interpolation requires animation2.2.13/14/15');
   if(hasBodyViewExpressions(profile))registeredBodyViewExpressions(profile);
   if(hasBodyViewSecondary(profile)){
     registeredNativeSecondary(profile,registeredBodyView(profile));
@@ -126,14 +127,14 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if(hasBodyViewLocomotion(profile))validateNativeLocomotion(sourceBodyPlan(plan),profile,registeredBodyView(profile));
   else if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending; select registered-locomotion-v1 for the native candidate');
   if(!hasNativeHeadBank(profile)&&plan.expressions.some(e=>e.mood!=='happy')&&!hasBodyViewExpressions(profile))throw new Error('needs-view-expression: authored-view candidate needs explicit registered expressions for non-happy emotions');
-  if(plan.gazes.length&&!hasBodyViewEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs the registered-eyes-v1 candidate');
+  if(plan.gazes.length&&!hasBodyViewEyes(profile)&&!hasNativeHeadEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs its registered fixed-view or source-cell eyes');
   if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
   if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'&&!(hasBodyViewLocomotion(profile)&&g.action==='react')))throw new Error('needs-view-motion: native gesture has no registered point/think/react candidate');
   if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
 }
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
   PerformancePlanSchema.parse(plan);
-  if(plan.gazes.some(g=>'actorTarget' in g)&&(!usesBodyView(profile)||!hasBodyViewEyes(profile)))throw new Error('needs-actor-gaze: actor references require the registered native eye/body candidate');
+  if(plan.gazes.some(g=>'actorTarget' in g)&&(!usesBodyView(profile)||!hasBodyViewEyes(profile)&&!hasNativeHeadEyes(profile)))throw new Error('needs-actor-gaze: actor references require the registered native eye/body candidate');
   if(plan.sourceBody){validateFixedBodyView(plan,profile);validatePerformance(sourceBodyPlan(plan),profile);}
   validateReferenceHead(profile,[plan.headView,...(plan.headTurns??[]).map(turn=>turn.direction)]);
   if(usesReferenceBody(profile)&&plan.turns?.length)throw new Error('needs-body-view: source body v1 has a fixed authored torso; full body turns require side/rear artwork.');
@@ -690,8 +691,9 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&sourceClock&&(sourceClock.ownerId!==profile.id||sourceClock.endMs-sourceClock.startMs!==plan.durationMs))throw new Error('needs-speech-phase: source owner or shot span does not match performer');
   if(hasBodyViewEyes(profile)&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
-  if(hasNativeHeadBank(profile)&&(activity.intervals.length||sourceClock?.activity.intervals.length))throw new Error('needs-head-turn-voice: cell-specific speech artwork is not registered; no silent fallback over supplied narration');
-  if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires an explicit registered mouth candidate');
+  if(hasNativeHeadBank(profile)&&(activity.intervals.length||sourceClock?.activity.intervals.length)&&!hasNativeHeadSpeech(profile))throw new Error('needs-head-turn-voice: cell-specific speech artwork is not registered; no silent fallback over supplied narration');
+  if(hasNativeHeadSpeech(profile)){validateBodyViewMouthActivity(activity);if(!sourceClock)throw new Error('needs-speech-phase: source-cell speech requires the complete owned narration clock');validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);}
+  if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile)&&!hasNativeHeadSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires an explicit registered mouth candidate');
   const t=clamp(time,0,plan.durationMs),{physical,m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight,seatProgress}=bodyStateAt(plan,profile,t,actingClock);
   const resolvedGesture=(side:RigHand)=>{
     const source=actingClock?sourceViewGestureAt(actingClock.gestures,t+actingClock.startMs,side):undefined,gesture=source??gestureAt(plan,t,side);
@@ -845,14 +847,15 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   const activeGestures={right:gestureStates.right.gesture,left:gestureStates.left.gesture};
   const activeGesture=activeGestures.right?.target?activeGestures.right:activeGestures.left??activeGestures.right;
-  const sourceGaze=actingClock&&hasBodyViewEyes(profile)?sourceViewGazeAt(actingClock,t):undefined;
-  const gazeCue=actingClock&&hasBodyViewEyes(profile)?sourceGaze:plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
+  const nativeEyes=hasBodyViewEyes(profile)||hasNativeHeadEyes(profile);
+  const sourceGaze=actingClock&&nativeEyes?sourceViewGazeAt(actingClock,t):undefined;
+  const gazeCue=actingClock&&nativeEyes?sourceGaze:plan.gazes.find(g=>t>=g.startMs&&t<g.endMs);
   let actorGaze:FrameState['actorGaze'];
   const gazeTarget=()=>{
     if(!gazeCue)return undefined;if('target' in gazeCue)return gazeCue.target;
-    if(!actingClock||!usesBodyView(profile)||!hasBodyViewEyes(profile))throw new Error('needs-actor-gaze: dynamic eye target requires its complete storyboard/native context');
+    if(!actingClock||!usesBodyView(profile)||!nativeEyes)throw new Error('needs-actor-gaze: dynamic eye target requires its complete storyboard/native context');
     const target=actingClock.actorTargets?.find(source=>source.actorId===gazeCue.actorTarget.id);if(!target)throw new Error('needs-actor-gaze: missing complete target source');
-    const point=sourceActorEyeAnchor(target,t+actingClock.startMs);actorGaze={targetActorId:target.actorId,target:point,origin:nativeEyeOrigin(profile,headState,s)};return point;
+    const point=sourceActorEyeAnchor(target,t+actingClock.startMs);actorGaze={targetActorId:target.actorId,target:point,origin:nativeEyeOrigin(profile,headState,s,{plan,timeMs:t,clock:actingClock})};return point;
   };
   const resolvedTarget=gazeTarget(),explicitGaze=gazeCue&&resolvedTarget?{startMs:gazeCue.startMs,endMs:gazeCue.endMs,target:resolvedTarget}:undefined;
   const gazeOffset=(target:Point)=>{const angle=Math.atan2(target.y-head.y,target.x-head.x);return {x:Math.cos(angle)*3,y:Math.sin(angle)*2};};
@@ -873,7 +876,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     paths['head-contour']=forestHeadContour(yaw);
     transforms['face-orientation']=transform({x:0,y:0});
   }
-  const blinkClock=hasBodyViewEyes(profile)&&(sourceClock||actingClock)?t+(sourceClock?.startMs??actingClock!.startMs):t;
+  const blinkClock=nativeEyes&&(sourceClock||actingClock)?t+(sourceClock?.startMs??actingClock!.startMs):t;
   const blinkPhase=(blinkClock+800+(usesReferenceBody(profile)&&profile.appearance.characterVariant==='karo'?520:0))%3500,blink=blinkPhase<140?Math.sin(Math.PI*blinkPhase/140):0;
   for(const [i,side] of (['left','right'] as const).entries()){
     face[`eye-${side}`]={x:gaze.x,y:gaze.y,scaleY:Math.max(.05,(1-blink)*lerp(1,pose.eyeOpen??1,emotion.weight))};
@@ -895,6 +898,13 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
       const {bank,cell}=nativeHeadBankCell(plan,profile,t,actingClock);
       for(const id of Object.keys(face))delete face[id];
       Object.assign(face,nativeHeadBankFace(bank,cell.id));
+      if(bank.capabilities.speech&&bank.capabilities.directionalEyes){
+        const origin=nativeEyeOrigin(profile,headState,s,{plan,timeMs:t,clock:actingClock!});
+        const direction=(target:Point)=>{const local=rotate({x:target.x-origin.x,y:target.y-origin.y},-headAngle),length=Math.hypot(local.x,local.y);return length?{x:local.x/length,y:local.y/length}:{x:0,y:0};};
+        let look={x:0,y:0};if(spearStates[0])look=direction(spearStates[0].track.aim);if(activeGesture?.target)look=mix(look,direction(activeGesture.target),activeGestureWeight);
+        if(explicitGaze){const to=direction(explicitGaze.target),forward=registeredBodyView(profile).view==='three-quarter-left'?-1:1;if(to.x*forward<-.01)throw new Error('needs-head-turn-eyes: target is behind the registered source/body view');look=mix(look,to,explicitGazeWeight(explicitGaze));}
+        const state=nativeHeadBankFacialState(bank,{aperture:bodyViewMouthLevel(activity,t,sourceClock),blink,look});Object.assign(face,state.face);Object.assign(paths,state.paths);
+      }
     }else{
     const look=explicitGaze??activeGesture;
     const bodyHead=usesReferenceBody(profile);
@@ -1070,8 +1080,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
   if(plan.sourceHead&&!actingClock)throw new Error('needs-head-source-phase: source head requires its complete storyboard/run context');
   validatePerformance(plan,profile);
-  if(hasBodyViewSpeech(profile))validateBodyViewMouthActivity(activity);
-  if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
+  if(hasBodyViewSpeech(profile)||hasNativeHeadSpeech(profile))validateBodyViewMouthActivity(activity);
+  if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile)||hasNativeHeadSpeech(profile)||hasNativeHeadEyes(profile))&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
   if(actingClock)validateViewActingClock(plan,actingClock);
   const times=new Set<number>([0,plan.durationMs]);
   if(actingClock?.headMotion)for(const global of nativeHeadTrackTimes(actingClock.headMotion))for(const delta of [-.01,0,.01])times.add(global-actingClock.startMs+delta);
@@ -1111,9 +1121,9 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   }
   // Audio RMS is a sampled signal: its boundaries are explicit, without blending across silence.
   for(const cue of activity.intervals)for(const at of [cue.startMs,cue.endMs]){times.add(at);times.add(at-.01);}
-  if(hasBodyViewSpeech(profile))for(const cue of activity.intervals)for(const at of [cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])if(at>=cue.startMs&&at<=cue.endMs)times.add(at);
-  if(hasBodyViewSpeech(profile)&&sourceClock)for(const cue of sourceClock.activity.intervals)for(const at of [cue.startMs,cue.endMs,cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])times.add(at-sourceClock.startMs);
-  if(hasBodyViewEyes(profile)){
+  if(hasBodyViewSpeech(profile)||hasNativeHeadSpeech(profile))for(const cue of activity.intervals)for(const at of [cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])if(at>=cue.startMs&&at<=cue.endMs)times.add(at);
+  if((hasBodyViewSpeech(profile)||hasNativeHeadSpeech(profile))&&sourceClock)for(const cue of sourceClock.activity.intervals)for(const at of [cue.startMs,cue.endMs,cue.startMs+BODY_VIEW_MOUTH_ATTACK_MS,cue.endMs-BODY_VIEW_MOUTH_RELEASE_MS,(cue.startMs+cue.endMs)/2])times.add(at-sourceClock.startMs);
+  if(hasBodyViewEyes(profile)||hasNativeHeadEyes(profile)){
     const offset=sourceClock?.startMs??actingClock?.startMs??0,phase=800+(profile.appearance.characterVariant==='karo'?520:0);
     for(let start=Math.floor((offset+phase)/3500)*3500-phase-offset;start<=plan.durationMs;start+=3500)for(const at of [start,start+35,start+70,start+105,start+140])times.add(at);
     for(const g of plan.gazes)for(const at of [g.startMs+140,g.endMs-140])times.add(at);
@@ -1136,6 +1146,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const progress of [.17,.5,.83]){
       const actual=frameAt(lerp(a.timeMs,b.timeMs,progress));
       if(hasBodyViewEyes(profile))error=Math.max(error,bodyViewEyesMatrixError(registeredBodyViewEyes(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
+      if(hasNativeHeadEyes(profile))error=Math.max(error,nativeHeadBankFacialError(registeredNativeHeadBank(profile),a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(hasBodyViewSeat(profile))error=Math.max(error,nativeSeatMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
       else if(hasBodyViewLocomotion(profile))error=Math.max(error,nativeClothMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
       if(hasBodyViewSecondary(profile))error=Math.max(error,nativeSecondaryMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
@@ -1150,7 +1161,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
         const to=b.face[id]!,wanted=actual.face[id]!;
         for(const key of ['opacity','scaleX','scaleY','rotation','x','y'] as const){
           if(from[key]===undefined||to[key]===undefined||wanted[key]===undefined)continue;
-          const limit=key==='rotation'||key==='x'||key==='y'?.02:.002;
+          const limit=(key==='rotation'||key==='x'||key==='y')?.02:.002;
           error=Math.max(error,Math.abs(lerp(from[key]!,to[key]!,progress)-wanted[key]!)/limit);
         }
       }
@@ -1193,7 +1204,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     }
   }
   return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===HUNT_ANIMATION_VERSION?HUNT_ANIMATION_VERSION:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
-    ...(hasNativeHeadBank(profile)?{nativeHeadBank:{fingerprint:registeredNativeHeadBank(profile).fingerprint,sources:nativeHeadSources(registeredNativeHeadBank(profile)),sourceTrack:plan.sourceHead,method:'discrete authored cells on the original run clock; uniform registered pixel-scale and neck-axis attachment per source; no face crossfade',capabilities:registeredNativeHeadBank(profile).capabilities,approved:false,productionReady:false,motionVerified:false}}:{}),
+    ...(hasNativeHeadBank(profile)?{nativeHeadBank:{fingerprint:registeredNativeHeadBank(profile).fingerprint,sources:nativeHeadSources(registeredNativeHeadBank(profile)),sourceTrack:plan.sourceHead,method:'authored cells on the original run clock; uniform registered pixel-scale and neck-axis attachment, local source-face masks; single unknown-angle cell is fixed, no face crossfade',capabilities:registeredNativeHeadBank(profile).capabilities,
+      ...(hasNativeHeadSpeech(profile)?{sourceFace:{version:'native-head-face-1',activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null,blinkClock:'original absolute clock',phonemeLipSync:false,audioVerified:false,opticalGazeVerified:false}}:{}),approved:false,productionReady:false,motionVerified:false}}:{}),
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile,plan))),interpolationGapLimitPx:.2,interpolationIncludes:['bones/cuff','spear palms/shared shaft','tip during contact hold'],selectedClips:selectedClips(plan),
