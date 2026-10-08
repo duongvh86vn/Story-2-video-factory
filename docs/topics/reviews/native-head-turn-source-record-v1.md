@@ -36,4 +36,4 @@ No test callbacks, source/body compiler/evaluator/sampler, browser/server/API pi
 
 ## Publication
 
-Pending exact owned34-path source commit, push and local/remote SHA verification. Unrelated untracked files and protected D:/github checkout retained. See NATIVE-HEAD-TURN-HANDOFF.md for startup on8861, test commands and remaining implementation.
+Source commit `6e196f7ab73de111f9d0865e3fdc1346f4378f18`,34 owned paths, aaeb61; push c88b2f exit0 to GitHub branch codex/prehistoric-life. Full SHA local/remote exact verification succeeded; tracked/staged source clean. Source0.45 includes all code/assets/schema described above; this publication follow-up edits documentation only. Unrelated untracked files and protected D:/github checkout retained. See NATIVE-HEAD-TURN-HANDOFF.md for startup on8861, test commands and remaining implementation. Full product goal remains active/unfinished.

@@ -4,6 +4,8 @@ Cập nhật 08/10/2026. Máy không có dịch vụ image-to-video; tiếp tụ
 
 **Chưa có quay đầu native hoạt động trong scene.** Source0.45 tạo vật liệu và công cụ đăng ký ảnh, không phải cải tiến video đã nghiệm thu. Bốn atlas đều bị giữ lại để sửa; `productionReady=false`, `productionRig=null`, `registered=false`. Bàn đo không bật rig, không tự gán yaw từ prompt, không gọi model/TTS, không dựng video.
 
+Source commit `6e196f7ab73de111f9d0865e3fdc1346f4378f18` đã push GitHub nhánh `codex/prehistoric-life`,34 owned paths; full SHA local/remote khớp. Build/typecheck/schema/static inventory đã qua; bounded source review đóng các lỗi trong phạm vi kiểm.14 callbacks/browser/server/motion/video vẫn NOT RUN. [Evidence thực tế](reviews/native-head-turn-source-record-v1.md).
+
 ## Đã triển khai trong source
 
 - Bốn PNG bất biến: Lila/Karo V1 và V2, mỗi ảnh16 ô. Bản gốc generated_images được giữ; prompt, thứ tự input, SHA256 nguồn/đích và phạm vi sửa được lưu riêng.
