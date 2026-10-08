@@ -6,9 +6,9 @@ import {bodyViewRegistrations} from './body-view-registration.js';
 export const NATIVE_HEAD_BANK_VERSION='native-head-bank-1' as const;
 const Sha=z.string().length(64).regex(/^[a-f0-9]{64}$/),Point=z.object({x:z.number().finite(),y:z.number().finite()}).strict();
 const Rect=z.object({x:z.number().int().nonnegative(),y:z.number().int().nonnegative(),width:z.number().int().positive(),height:z.number().int().positive()}).strict();
-const held=new Set(['fe9181633b8bdbb28c334d62a9c81d33c35cf9624ae35849c11850445b1d0b87','1893e4c02fa8f3cd089436536d33e85d6ad3656643b7674f844f3a8e707220e0','965d9fb0f4e800144612bb4e3cd6ec6b482dad483c894980aea6fc61bbb4aaaf','035b9d42e3825b311b25b155ddfd646416f806b2ab9f28086aa706eb16295a4f']);
+const held=new Set(['fe9181633b8bdbb28c334d62a9c81d33c35cf9624ae35849c11850445b1d0b87','1893e4c02fa8f3cd089436536d33e85d6ad3656643b7674f844f3a8e707220e0','965d9fb0f4e800144612bb4e3cd6ec6b482dad483c894980aea6fc61bbb4aaaf','035b9d42e3825b311b25b155ddfd646416f806b2ab9f28086aa706eb16295a4f','9946191d25bdb10c9729ba77e7112d66f4171a1dcec6b6ab55fdf05a794fdb21']);
 /** An explicit engineering source registration, distinct from the incomplete
- * landmark draft, artistic approval or production rig. V1/V2 studies cannot
+ * landmark draft, artistic approval or production rig. Held studies cannot
  * enter this contract, even under a renamed path. */
 export const NativeHeadBankDefinitionSchema=z.object({version:z.literal(NATIVE_HEAD_BANK_VERSION),id:Id,actor:z.enum(['lila','karo']),
   source:z.object({file:z.string().regex(/^library\/topics\/prehistoric-life\/head-turn-studies\/(lila|karo)-head-turn-v[1-9]\d*\.png$/),sha256:Sha,width:z.number().int().positive().max(8192),height:z.number().int().positive().max(8192)}).strict(),
@@ -23,7 +23,7 @@ export const NativeHeadBankDefinitionSchema=z.object({version:z.literal(NATIVE_H
   status:z.literal('engineering-source-registration'),approved:z.literal(false),productionReady:z.literal(false),motionVerified:z.literal(false),
 }).strict().superRefine((b,ctx)=>{
   const fail=(message:string)=>ctx.addIssue({code:'custom',message});
-  if(held.has(b.source.sha256)||/head-turn-v[12]\.png$/.test(b.source.file))fail('Held V1/V2 head art cannot be registered as a turn bank');
+  if(held.has(b.source.sha256)||/head-turn-v[12]\.png$/.test(b.source.file)||b.actor==='lila'&&/head-turn-v3\.png$/.test(b.source.file))fail('Held head art cannot be registered as a turn bank');
   if(!b.source.file.includes('/'+b.actor+'-head-turn-')||b.primary.file!==`docs/topics/assets/reference-${b.actor}-full.png`)fail('Head bank source and identity must belong to the same actor');
   const primaryHashes={lila:'85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce',karo:'7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2'};
   if(b.primary.sha256!==primaryHashes[b.actor])fail('Head bank primary source changed');
@@ -59,4 +59,4 @@ export function nativeHeadBank(input:z.infer<typeof NativeHeadBankDefinitionSche
 export const nativeHeadBankDescription={version:NATIVE_HEAD_BANK_VERSION,selection:'appearance.bodyHeadBank + performance.sourceHead',
   method:'registered source cell at the original discrete head clock; uniform neck attachment, native eye/chin geometry; no whole-face warp, reflection or double-face crossfade',
   productionReady:false,approved:false,motionVerified:false,availableBanks:[],
-  pending:['faithful V3+ artwork and source correspondence; V1/V2 held','per-cell speech, eyes, emotions and hair/occlusion artwork capabilities','continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked','neck overlap/painter seam masks and compatible body turns','actual head/body turn and normal-speed video review','whole arbitrary-story/script/WAV factory acceptance']};
+  pending:['faithful artwork and source correspondence; Lila V1-V3 and Karo V1-V2 held','per-cell speech, eyes, emotions and hair/occlusion artwork capabilities','continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked','neck overlap/painter seam masks and compatible body turns','actual head/body turn and normal-speed video review','whole arbitrary-story/script/WAV factory acceptance']};

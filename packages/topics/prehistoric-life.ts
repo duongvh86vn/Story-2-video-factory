@@ -12,7 +12,7 @@ import {nativeActorGazeDescription} from '../animation/view-gaze-target.js';
 import {headTurnArtDescription} from './head-turn-art.js';
 import {nativeHeadBankDescription} from '../animation/native-head-bank.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.46-head-source-clock';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.47-held-art-continuity';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

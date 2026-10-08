@@ -1,0 +1,37 @@
+{
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: identity-preserve. Asset type: production character head-turn source study, not a scene or video. The supplied image is the PRIMARY identity/design reference of Lila. Create a fresh genuinely transparent RGBA square 4 by 4 head-turn atlas with sixteen individual hand-drawn heads of EXACTLY this woman; no lettering, labels, grid, background, decorations or body. The head model must remain the source's round warm orange-peach face, small neat black oval eyes, small bent-line nose, CLOSED gentle happy smile, coarse dark brown hair shapes and black ink outline. Keep the source's long loose tied ponytail, its attachment and asymmetric fringe on the same physical side of the head throughout the rotation; hair must rotate/occlude gradually behind the skull, NEVER flip or switch sides suddenly near front. Do not redesign into a cute new character, white face or short spiky-haired bob. Hair silhouettes remain long and flow below the head as in the primary image. Draw a small dark neck attachment separately recognizable below the face, with no shoulders/costume. Every head has the same skull height and neck-tip registration, same eye-line, lighting, vivid warm colors and line weight; spacious transparent margins around all hair at every cell edge. Layout sixteen equally spaced cells, row-major left-to-right then next row. Show one coherent SMALL-STEP rotation from nose toward viewer RIGHT at +45 degrees to frontal and then nose toward viewer LEFT at -45 degrees: intended yaw sequence 45,39,33,27 / 21,15,9,3 / -3,-9,-15,-21 / -27,-33,-39,-45. Each neighboring drawing is a visibly distinct six-degree intermediate perspective. Especially cells7,8,9,10 must retain both eyes with gradual nose/cheek/ear/pony-tail visibility, avoiding an abrupt mirrored portrait or duplicate angles. Row changes do not reset the turn. Cell13 is MORE left-facing than12; do not reverse perspective at row4. Draw real perspective views without stretching, mirroring, facial mesh deformation, crossfades or duplicated whole heads. Aim for readable native cartoon animation model consistency and source fidelity, not photorealism. Requested canvas 2048 square, all sixteen heads comfortably inside their own cells, real transparent alpha preserved.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-fafb3e6b-6141-46e4-ab6c-1d111e491c01.png",
+  "requestedYawDeg": [
+    45,
+    39,
+    33,
+    27,
+    21,
+    15,
+    9,
+    3,
+    -3,
+    -9,
+    -15,
+    -21,
+    -27,
+    -33,
+    -39,
+    -45
+  ],
+  "requestedRepairCells": [],
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

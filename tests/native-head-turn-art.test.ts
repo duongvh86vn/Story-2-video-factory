@@ -23,9 +23,9 @@ async function withArtCopy(run:(root:string)=>Promise<void>){
     await run(root);
   }finally{await fs.rm(root,{recursive:true,force:true});}
 }
-test('measured head material inventory retains all64 unregistered source cells',async()=>{
+test('measured head material inventory retains all80 held source cells including Lila V3',async()=>{
   const materials=await headTurnInventory(repo);
-  assert.equal(materials.length,4);assert.equal(materials.reduce((n,m)=>n+m.cells.length,0),64);
+  assert.deepEqual(materials.map(m=>m.file),['karo-head-turn-v1.png','karo-head-turn-v2.png','lila-head-turn-v1.png','lila-head-turn-v2.png','lila-head-turn-v3.png']);assert.equal(materials.reduce((n,m)=>n+m.cells.length,0),80);
   for(const m of materials){assert.equal(m.width,1254);assert.equal(m.height,1254);assert.equal(m.registered,false);assert.equal(m.productionReady,false);assert.equal(m.yawMeasured,false);assert.ok(m.transparentPixels>0);}
 });
 test('odd canvas partition uses original integer pixels without resizing or gaps',()=>{

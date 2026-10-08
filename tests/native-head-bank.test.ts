@@ -15,7 +15,7 @@ import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../packages/animation/view
 import sharp from 'sharp';
 
 function bank():NativeHeadBank{return nativeHeadBank({version:'native-head-bank-1',id:'synthetic-head-bank',actor:'lila',
-  source:{file:'library/topics/prehistoric-life/head-turn-studies/lila-head-turn-v3.png',sha256:'b'.repeat(64),width:400,height:200},
+  source:{file:'library/topics/prehistoric-life/head-turn-studies/lila-head-turn-v4.png',sha256:'b'.repeat(64),width:400,height:200},
   primary:{file:'docs/topics/assets/reference-lila-full.png',sha256:'85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce'},
   bodyViews:[{view:'three-quarter-right',sourceHash:bodyViewRegistrations.lila['three-quarter-right'].sha256}],unitScale:.3,
   cells:[0,200].map((x,i)=>({id:'cell-'+i,crop:{x,y:0,width:200,height:200},neck:{x:x+100,y:180},neckTop:{x:x+100,y:150},chin:{x:x+105,y:145},eyeTarget:{x:x+110,y:100},skull:{x:x+40,y:30,width:120,height:110},yawDeg:10-i*5,seam:[{x:x+90,y:150},{x:x+110,y:150},{x:x+100,y:180}],restMood:'happy'})),
@@ -31,8 +31,8 @@ function fixture(){
 test('held art, false compatibility, forged geometry fingerprint and fixed-view overlays cannot enter a bank',()=>{
   const b=bank();const {fingerprint,...definition}=b;
   assert.equal(fingerprint,hash(definition));
-  for(const sha256 of ['fe9181633b8bdbb28c334d62a9c81d33c35cf9624ae35849c11850445b1d0b87','1893e4c02fa8f3cd089436536d33e85d6ad3656643b7674f844f3a8e707220e0'])assert.throws(()=>nativeHeadBank({...definition,source:{...b.source,sha256}}),/Held/);
-  assert.throws(()=>nativeHeadBank({...definition,source:{...b.source,file:b.source.file.replace('v3','v2')}}),/Held/);
+  for(const sha256 of ['fe9181633b8bdbb28c334d62a9c81d33c35cf9624ae35849c11850445b1d0b87','1893e4c02fa8f3cd089436536d33e85d6ad3656643b7674f844f3a8e707220e0','9946191d25bdb10c9729ba77e7112d66f4171a1dcec6b6ab55fdf05a794fdb21'])assert.throws(()=>nativeHeadBank({...definition,source:{...b.source,sha256}}),/Held/);
+  for(const v of ['v2','v3'])assert.throws(()=>nativeHeadBank({...definition,source:{...b.source,file:b.source.file.replace('v4',v)}}),/Held/);
   assert.throws(()=>nativeHeadBank({...definition,bodyViews:[{...b.bodyViews[0]!,sourceHash:'c'.repeat(64)}]}),/compatibility/);
   assert.throws(()=>NativeHeadBankSchema.parse({...b,cells:b.cells.map(c=>({...c,chin:{...c.chin,x:c.chin.x+1}}))}),/fingerprint/);
   const p=profile(b);assert.throws(()=>HostProfileSchema.parse({...p,appearance:{...p.appearance,bodyEyes:'registered-eyes-v1'}}),/fixed-view/);

@@ -8,11 +8,16 @@ import {HEAD_TURN_FOLDER,HEAD_TURN_MATERIAL_VERSION,HeadTurnMaterialSchema,HeadT
 // Static PNG/RGBA metadata and provenance only. Immutable material records;
 // no tests, landmarks inferred from prompts, motion, browser or renderer.
 const repo=await findRepoRoot();
-for(const actor of ['lila','karo'] as const)for(const version of [1,2]){
+const studies=[{actor:'lila' as const,versions:[1,2,3]},{actor:'karo' as const,versions:[1,2]}];
+for(const {actor,versions} of studies)for(const version of versions){
   const file=`${actor}-head-turn-v${version}.png`,promptFile=headTurnPromptPath(file),promptBytes=await readHeadTurnSource(repo,promptFile),prompt=HeadTurnPromptSchema.parse(JSON.parse(promptBytes.toString('utf8')));
   await validateHeadTurnPromptSources(repo,actor,file,prompt);
   const bytes=await readHeadTurnSource(repo,`${HEAD_TURN_FOLDER}/${file}`),measured=await measureHeadTurnPng(bytes);
-  const findings=actor==='lila'?[
+  const findings=actor==='lila'&&version===3?[
+    {cells:[8,9,10],note:'V3 primary-only authoring still jumps the ponytail/tie/fringe side near front between9 and10; continuity remains rejected by parent static inspection.'},
+    {cells:[1,2,3,4,5,6,7,11,12,13,14,15,16],note:'Similar-angle perspective clusters remain; intended6degree samples are not sixteen distinct measured yaw views. Do not infer actual yaw from the prompt.'},
+    {cells:[1,16],note:'Neck stub is more visible but native-body overlap and painter ownership are unregistered; ponytail remains shorter than the primary long-hair silhouette.'},
+  ]:actor==='lila'?[
     {cells:[8,9,10],note:version===1?'V1 source consultation: near-frontal to left-facing hair/ponytail/fringe change is abrupt; anatomical side and occlusion need redrawing.':'V2 parent static inspection: targeted repair still changes near-frontal hair/ponytail/fringe abruptly; anatomical side and occlusion remain unresolved.'},
     {cells:[1,16],note:'Ponytail proportions are not yet faithful to the longer primary/native-body hair silhouette; neck/body seam and skull scale need independent source landmarks.'},
     {cells:[1,2,3,4,9,10,11,12,13,14],note:'Perspective clusters and possibly nonmonotonic13→14 views; requested yaw is not measured or approved.'},
