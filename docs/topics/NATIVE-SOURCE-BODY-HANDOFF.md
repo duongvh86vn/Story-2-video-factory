@@ -1,6 +1,6 @@
 # Lila/Karo — chuyển động gốc xuyên các cảnh
 
-Source0.38,08/10/2026; base `1ac765e2f0e297c823cf0618dbe629eb934b9785`, branch codex/prehistoric-life. Source/publication SHA và check/review thực tế ở [record](reviews/native-source-body-source-review-v1.md). Đây là code ứng viên, chưa có playback/video được nghiệm thu.28 callback mới NOT RUN; test runtime tiếp tục giao model của người dùng.
+Source0.38,08/10/2026; base `1ac765e2f0e297c823cf0618dbe629eb934b9785`, branch codex/prehistoric-life. Source commit `0a7c2fb2cea20f77d0f5af67cf73b81557096976` đã push và đối chiếu khớp SHA trên GitHub. Build/typecheck/schema export qua; review mã nguồn có phạm vi đã qua sau khi sửa hai P2. Bằng chứng ở [record](reviews/native-source-body-source-review-v1.md). Đây là code ứng viên, chưa có playback/video được nghiệm thu.28 callback mới NOT RUN; test runtime tiếp tục giao model của người dùng.
 
 ## Thay đổi
 
