@@ -3,12 +3,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {hash} from '../packages/core/utils.js';
-import {NarrationSchema,StoryboardSchema,type Storyboard,type Shot,type Beat} from '../packages/core/schemas.js';
+import {NarrationSchema,type Storyboard,type Shot} from '../packages/core/schemas.js';
 import {ActorDefinitionSchema,ActorSceneSchema} from '../packages/actors/schemas.js';
-import {actorProfile,bindActorShot,validateActorCast} from '../packages/actors/model.js';
+import {actorProfile,validateActorCast} from '../packages/actors/model.js';
 import {actorViewActingClock} from '../packages/actors/view-acting-clock.js';
 import {rigSpeechPublicationBinding,assertRigSpeechPublicationBinding,narrationCueOwners} from '../packages/actors/speech-clock.js';
-import {BODY_SOURCE_VERSION,BodySourceSchema,type PerformancePlan} from '../packages/animation/schemas.js';
+import {BODY_SOURCE_VERSION,BodySourceSchema} from '../packages/animation/schemas.js';
 import {sourceBodyPlan,bodyRootAt} from '../packages/animation/view-source-body.js';
 import {seatOccupancy,supportMotionTimes} from '../packages/animation/support.js';
 import {sceneSeats,shotSeatOccupancy} from '../packages/stage/seats.js';
@@ -16,7 +16,7 @@ import {samplePerformance,compilePerformance,validatePerformance} from '../packa
 import {bodyCalibrationPlan} from '../packages/topics/body-workbench.js';
 import {rigMetrics} from '../packages/animation/rig.js';
 import {legGeometry} from '../packages/animation/body-geometry.js';
-import {BODY_VIEW_SEAT_SELECTION,nativeSeatDescription} from '../packages/animation/body-view-seat.js';
+import {nativeSeatDescription} from '../packages/animation/body-view-seat.js';
 import {cameraHostBounds,planCamera,validateCamera,cameraMatrixAt,CAMERA_VIEWPORT} from '../packages/director/camera.js';
 import {validateCinematicShot} from '../packages/director/index.js';
 import {validateStoryActingCoverage} from '../packages/director/story-coverage.js';
@@ -25,20 +25,11 @@ import {eventPreviewTimes} from '../packages/review/index.js';
 import {renderCinematic} from '../library/shots/cinematic.js';
 import {actorRigResourcePaths} from '../packages/actors/rig-resources.js';
 import {secureSceneFiles,validateSceneFiles} from '../packages/scenes/security.js';
-import {creativeFixture} from './creative-fixture.js';
-import {temporary} from './support.js';
+import {createNativeSeatTracer,nativeSeatPhysicalActor as physicalActor} from '../benchmarks/native-seat-tracer.js';
 
 const silence={method:'segment-draft' as const,windowMs:20,intervals:[]};
 type Actor='lila'|'karo';type View='three-quarter-left'|'three-quarter-right';
 const defaultCuts=[0,615,1400,2400,3900,4500,5300,7200];
-function physicalActor(actor:Actor,view:View,scale=1,rootX?:number){
-  const f=bodyCalibrationPlan(actor,view==='three-quarter-left'?'sit-walk-left':'sit-walk-right','happy',undefined,view,'cutout','registered-rest-mouth-v1','registered-eyes-v1','rest','registered-expressions-v1','registered-locomotion-v1','registered-secondary-v1',BODY_VIEW_SEAT_SELECTION);
-  const p=f.plan,oldX=p.root.x,oldY=p.root.y,newX=rootX??oldX,newY=rootX===undefined?oldY:540;p.scale=scale;p.root={x:newX,y:newY};if(rootX!==undefined)p.stage={width:1280,height:720,groundY:newY};
-  for(const seat of p.supports??[]){seat.id=actor+'-log';seat.center={x:newX+(seat.center.x-oldX)*scale,y:newY+(seat.center.y-oldY)*scale};seat.width*=scale;if(seat.backHeight!==undefined)seat.backHeight*=scale;}
-  for(const pose of p.postures??[])if(pose.supportId)pose.supportId=actor+'-log';
-  for(const walk of p.walks){walk.fromX=newX+(walk.fromX-oldX)*scale;walk.toX=newX+(walk.toX-oldX)*scale;}
-  return f;
-}
 function nativeRun(actor:Actor='lila',view:View='three-quarter-right',cuts=defaultCuts,scale=1){
   const prepared=physicalActor(actor,view,scale),base=prepared.plan,start=1000,end=start+base.durationMs;
   const narration=NarrationSchema.parse({mode:'wav',durationMs:end,segments:[{id:'cue',startMs:start,endMs:end,text:'The two actors sit, talk, stand and walk.'}]});
@@ -125,24 +116,8 @@ test('single-actor framing fits the whole source seat including its shadow and b
   for(const t of [0,p.durationMs]){const matrix=cameraMatrixAt(camera,p.stage,p.durationMs,t);assert.ok((seat.center.x-seat.width*.6-2)*matrix.scale+matrix.x>=1280*CAMERA_VIEWPORT.left-.001);assert.ok((seat.center.x+seat.width*.6+2)*matrix.scale+matrix.x<=1280*CAMERA_VIEWPORT.right+.001);}
 });
 
-async function canonicalPair(root:string){
-  const seed=await creativeFixture(root);seed.config.presentation.character_mode='actors';const first='Lila and Karo sit down together. Lila talks while Karo listens.',last='Karo replies. They stand and walk together.',text=first+' '+last,narration=NarrationSchema.parse({mode:'script',durationMs:7200,segments:[{id:'lila-cue',startMs:0,endMs:3000,text:first},{id:'karo-cue',startMs:3000,endMs:7200,text:last}]});
-  const refs=narration.segments.map(cue=>({kind:'narration' as const,segmentId:cue.id,quote:cue.text}));
-  const templates=([['lila','three-quarter-right',380],['karo','three-quarter-left',850]] as const).map(([actor,view,rootX])=>{const f=physicalActor(actor,view,.8,rootX);return {character:ActorDefinitionSchema.parse({id:actor,name:actor,role:'illustration',kind:'stick-man',identity:'illustrative',appearance:f.profile.appearance,sourceRefs:refs}),plan:f.plan};});
-  const intent={participants:templates.map(({character})=>({id:character.id,name:character.name,role:character.role,identity:character.identity,sourceRefs:refs})),action:text,objective:text,sourceRefs:refs,acting:templates.flatMap(({character})=>[
-    {participantId:character.id,kind:'posture' as const,statement:first,sourceRefs:[refs[0]!]},{participantId:character.id,kind:'posture' as const,statement:last,sourceRefs:[refs[1]!]},{participantId:character.id,kind:'locomotion' as const,movement:'walk' as const,statement:last,sourceRefs:[refs[1]!]}
-  ])};
-  const cuts=[0,900,2400,3800,4800,7200],shots=cuts.slice(0,-1).map((startMs,i)=>{const endMs=cuts[i+1]!,shot=structuredClone(seed.shot),c=shot.cinematic!;shot.id='native-seat-canonical-'+i;shot.startMs=startMs;shot.endMs=endMs;shot.beatIds=['seat-beat'];shot.narrationSegmentIds=narration.segments.filter(cue=>cue.startMs<endMs&&cue.endMs>startMs).map(cue=>cue.id);shot.subject=shot.visualDescription=text;shot.sourceRefs=refs;shot.textOnScreen=null;shot.assetNeeds=[];shot.visualization={type:'event-sequence',modelId:'seated-actors',parts:[],relations:[],events:[],provenance:'visualization',fidelity:'conceptual',sceneIntent:intent};
-    const actors=templates.map(({character,plan})=>{const p=structuredClone(plan);p.id=shot.id;p.durationMs=endMs-startMs;p.sourceBody={version:BODY_SOURCE_VERSION,id:character.id+'-complete-seat',startMs:0,endMs:7200,walks:p.walks,postures:p.postures,supports:p.supports,entryPosture:p.entryPosture};p.walks=[];p.jumps=[];p.postures=[];p.supports=[];delete p.entryPosture;p.expressions=[];return {character,performance:p,actions:[{type:'idle' as const,startMs,endMs}],speakingSegmentIds:shot.narrationSegmentIds!.filter(id=>id===character.id+'-cue')};});
-    const lead=i%2,primary=actors[lead]!,other=actors[1-lead]!;c.shotId=shot.id;c.sourceRefs=refs;c.sceneIntent=intent;c.setting='camp';c.models=[];c.propBindings=[];delete c.attentionPartId;c.performance=primary.performance;c.actorScene=ActorSceneSchema.parse({primary:primary.character,speakingSegmentIds:primary.speakingSegmentIds,continuity:i?'continuous':'cut',supporting:[other]});c.continuity={entry:bodyRootAt(c.performance,startMs,0),exit:bodyRootAt(c.performance,startMs,c.performance.durationMs),facing:c.performance.facing!,carriedProps:[],models:[]};
-    c.artDirection={origin:'authored',brief:'Two forest actors in a vivid green clearing. Physical seats and camera share the same world.',useEnvironment:false,palette:{background:'#53AFDE',surface:'#F2BF66',ink:'#24180D',accent:'#D57423'},showHeading:false,layers:[{id:'forest',plane:'background',role:'decoration',svg:'<rect width="1280" height="720" fill="#53AFDE"/><path d="M0 380Q200 280 410 350T850 340T1280 320V720H0Z" fill="#3F7D32"/><path d="M0 540Q600 495 1280 540V720H0Z" fill="#D5A259"/>',keyframes:[{atMs:0,x:0,y:0,scale:1,rotation:0,opacity:1}]}],models:[]};bindActorShot(shot,seed.profile,seed.rig);shot.host!.actions=primary.actions;return shot;
-  });const board=StoryboardSchema.parse({shots});
-  for(const shot of board.shots){const c=shot.cinematic!,scene=c.actorScene!,profile=actorProfile(scene.primary!);c.camera=planCamera(c.performance,profile,{framing:'wide',movement:'locked',actingClock:actorViewActingClock(board,shot,profile.id),supporting:scene.supporting.map(actor=>({performance:actor.performance,profile:actorProfile(actor.character),actingClock:actorViewActingClock(board,shot,actor.character.id)}))});shot.camera={shotSize:c.camera.framing,movement:c.camera.movement,angle:'eye-level'};}
-  return {...seed,narration,board,beat:{id:'seat-beat',startMs:0,endMs:7200,sceneIntent:intent} as Beat};
-}
-
-test('canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes',async t=>{
-  const f=await canonicalPair(await temporary(t));assert.doesNotThrow(()=>validateActorCast(f.board,f.narration));assert.doesNotThrow(()=>validateStoryActingCoverage(f.board,[f.beat],f.narration));assert.deepEqual([...narrationCueOwners(f.board,f.board.shots[0]!,f.narration)],[['lila',['lila-cue']],['karo',['karo-cue']]]);
+test('canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes',()=>{
+  const f=createNativeSeatTracer();assert.doesNotThrow(()=>validateActorCast(f.board,f.narration));assert.doesNotThrow(()=>validateStoryActingCoverage(f.board,[f.beat],f.narration));assert.deepEqual([...narrationCueOwners(f.board,f.board.shots[0]!,f.narration)],[['lila',['lila-cue']],['karo',['karo-cue']]]);
   for(const shot of f.board.shots){assert.doesNotThrow(()=>validateCinematicShot(shot,f.profile,f.config,f.board));const c=shot.cinematic!,profile=actorProfile(c.actorScene!.primary!),clock=actorViewActingClock(f.board,shot,profile.id)!;assert.doesNotThrow(()=>validateCamera(shot,profile,clock));assert.equal(sceneSeats(shot).length,2);
     for(const matrix of [cameraMatrixAt(c.camera,c.performance.stage,c.performance.durationMs,0),cameraMatrixAt(c.camera,c.performance.stage,c.performance.durationMs,c.performance.durationMs)])for(const seat of sceneSeats(shot)){const bottom=(c.performance.stage.groundY+9)*matrix.scale+matrix.y;assert.ok(bottom<=720*CAMERA_VIEWPORT.bottom+.001);assert.ok((seat.center.y-(seat.backHeight??0)-2)*matrix.scale+matrix.y>=720*CAMERA_VIEWPORT.top-.001);}
     const result=renderCinematic(shot,f.profile,f.rig,silence,f.config,undefined,f.narration,undefined,undefined,f.board),files=secureSceneFiles(result.files);assert.deepEqual(validateSceneFiles(files,shot,f.config.workflow.max_scene_bytes,actorRigResourcePaths(shot,f.profile),f.config.rendering.final),[]);assert.deepEqual(result.report.actors.map(actor=>actor.actorId).sort(),['karo','lila']);assert.ok('phonemeLipSync' in result.report);assert.equal(result.report.phonemeLipSync,false);const html=files.files.find(file=>file.path==='index.html')!.content;for(const id of ['lila-log','karo-log'])assert.equal(html.split('data-seat-id="'+id+'"').length-1,1);

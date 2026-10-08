@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.42-native-source-seat-candidate",
+  "version": "forest-tribe-0.43-native-seat-tracer-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -418,6 +418,19 @@
       "no continuous body/head turns or new tool grasp registration",
       "no physical cloth simulation or accepted final video"
     ]
+  },
+  "nativeTracer": {
+    "version": "native-seat-tracer-1",
+    "scope": "unapproved-native-seat-motion-tracer",
+    "command": "npm run tracer:native-seat",
+    "runtimeVerified": false,
+    "productionAcceptance": false,
+    "finalExportAllowed": false,
+    "builder": "benchmarks/native-seat-tracer.ts",
+    "builderHash": "c242a51fd4e22687ed58f7bed35fa23871164e1940158fcef4e41e6e48cda914",
+    "exporter": "scripts/native-seat-tracer.ts",
+    "exporterHash": "d47a0183fe58bb6b98040b7f23ee403300b6b87044fa5ce97f0177692f31cafc",
+    "handoff": "docs/topics/NATIVE-SEAT-TRACER.md"
   },
   "references": [
     {

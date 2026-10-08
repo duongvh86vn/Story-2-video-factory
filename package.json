@@ -17,6 +17,7 @@
     "animation:serve": "tsx scripts/animation-player.ts",
     "cinematic:preview": "tsx scripts/cinematic-preview.ts",
     "test:render": "tsx scripts/acceptance-render.ts",
+    "tracer:native-seat": "tsx scripts/native-seat-tracer.ts",
     "test:cinematic-inputs": "tsx scripts/acceptance-v22.ts",
     "test:typecheck": "tsc -p tsconfig.tests.json",
     "cli": "tsx apps/cli/index.ts",

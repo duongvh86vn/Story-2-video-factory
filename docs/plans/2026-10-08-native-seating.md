@@ -62,7 +62,9 @@ Task3 source candidate uses seat surface2/support clock1/body compiler31, option
 - [x] Source delivery0.42: exact registered material/geometry/support fingerprints integrated in existing source/cache/repair/manifest and exported schemas. Final build/typecheck/static checks exit0 and28 owned paths published `90879b5d9bfb36451dfafe454818346a2742e04a`, exact GitHub match511309/834e7a exit0. Canonical scene/security/camera/role tracer declared; **actual frames/video/audio/resume, left mesh cost and scene cap NOT RUN/unaccepted**. These checks prove only source/static artifacts.
 - [x] Two bounded read-only reviews by Schrodinger, then closed; camera fit/optional supporting array/top-level camera fixture addressed, stage relocation acknowledged. No third verdict or runtime PASS. No9router calls in this turn. Handoff/record have environment/test/server commands and full-product obligations; checked code remains unaccepted for production/video.
 
-Plan tasks1–4 have source/artifact delivery, not acceptance of their motion or the full factory. Reusable tracer media export plus actual user-model tests and all acceptance requirements below remain open; **do not mark the full goal complete**.
+Task4 bổ sung0.43: reusable canonical tại `benchmarks/native-seat-tracer.ts`, không dùng fixture host/máy móc; test và exporter dùng cùng builder. `scripts/native-seat-tracer.ts`/`npm run tracer:native-seat` xuất scene/master/subtitle/report và tùy chọn validate/frame/draft60fps/WAV diagnostic, giữ source/byte cap/hash/gate. Scene security4 nhận bounded open garment contour để không chặn đường viền đúng từ compiler; thêm2 callback guard và3 callback exporter declarations NOT RUN. Xem [hướng dẫn](../topics/NATIVE-SEAT-TRACER.md) và [record](../topics/reviews/native-seat-tracer-source-record-v1.md). Implementation chưa chạy tool hoặc tạo media; sản phẩm chưa nghiệm thu.
+
+Plan tasks1–4 have source/artifact delivery, not acceptance of their motion or the full factory. Actual user-model tracer tests/media plus all acceptance requirements below remain open; **do not mark the full goal complete**.
 
 ## Acceptance still required
 

@@ -18,6 +18,7 @@
     "scripts/prehistoric-view-art.ts",
     "scripts/prehistoric-pack.ts",
     "scripts/native-seat-correspondence.ts",
+    "scripts/native-seat-tracer.ts",
     "scripts/cloth-contour-geometry.ts"
   ]
 }

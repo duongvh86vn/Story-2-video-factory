@@ -4,6 +4,7 @@ import { SceneFilesSchema } from '../core/schemas.js';
 
 export const SCENE_CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'";
 export const SCENE_FILENAMES = ['index.html','style.css','scene.js'] as const;
+export const SCENE_SECURITY_VERSION = 4;
 const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','svgOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
 const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','image','use','filter','fecolormatrix','script']);
 
@@ -28,8 +29,8 @@ function validTransform(value:string):boolean {
 function validBakedCurve(value:string):boolean {
   const numeric='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
   const point=numeric+'\\s+'+numeric,cubic='C'+point+'\\s+'+point+'\\s+'+point;
-  const curve=new RegExp('^M'+point+'(?:\\s+'+cubic+'){2,9}$'),polygon=new RegExp('^M'+point+'(?:L'+point+'){2,95}Z$');
-  return value.length<=4096&&(curve.test(value)||polygon.test(value))
+  const curve=new RegExp('^M'+point+'(?:\\s+'+cubic+'){2,9}$'),polyline=new RegExp('^M'+point+'(?:L'+point+'){2,95}Z?$');
+  return value.length<=4096&&(curve.test(value)||polyline.test(value))
     &&(value.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/g)??[]).every(number=>Number.isFinite(Number(number))&&Math.abs(Number(number))<=100000);
 }
 function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
@@ -39,7 +40,7 @@ function plainValue(node: ts.Expression, keys?: Set<string>): boolean {
   if (ts.isObjectLiteralExpression(node)) return node.properties.every(property=>{
     if (!ts.isPropertyAssignment(property) || !(ts.isIdentifier(property.name)||ts.isStringLiteral(property.name))) return false;
     const key=property.name.text;
-    // Literal transforms and finite baked cubic/closed polygon paths. No resource/style/
+    // Literal transforms and bounded finite baked cubic/open or closed polygon paths. No resource/style/
     // event mutation and no arbitrary AttrPlugin fields.
     if(key==='attr') return ts.isObjectLiteralExpression(property.initializer) && property.initializer.properties.length>=1 && property.initializer.properties.length<=2 && property.initializer.properties.every(p=>{
       if(!ts.isPropertyAssignment(p)||!(ts.isIdentifier(p.name)||ts.isStringLiteral(p.name)))return false;
