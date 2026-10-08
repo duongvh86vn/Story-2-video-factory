@@ -42,7 +42,9 @@ import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-work
 import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
 import {headTurnWorkbench,headTurnImage,headTurnEditorScript} from '../../packages/topics/head-turn-workbench.js';
 import {headTurnInventory,headTurnMaterial} from '../../packages/topics/head-turn-art.js';
-import {headCellArtDescription,headCellInventory,headCellMaterial} from '../../packages/topics/head-cell-art.js';
+import {headCellArtDescription,headCellInventory,headCellMaterial,HeadCellFileSchema} from '../../packages/topics/head-cell-art.js';
+import {HeadCellCheckRequestSchema,checkBoundHeadCellDraft} from '../../packages/topics/head-cell-landmarks.js';
+import {headCellWorkbench,headCellEditorScript} from '../../packages/topics/head-cell-workbench.js';
 import {HeadTurnCheckRequestSchema,HeadTurnFileSchema} from '../../packages/topics/head-turn-schemas.js';
 import {checkBoundHeadTurnDraft} from '../../packages/topics/head-turn-landmarks.js';
 import {Moods} from '../../packages/animation/schemas.js';
@@ -341,6 +343,14 @@ export async function buildServer(options: ServerOptions = {}) {
   });
   app.get('/api/topics/prehistoric-life/head-turn-art/inventory',async()=>headTurnInventory(repo));
   app.get('/api/topics/prehistoric-life/head-cells/inventory',async(_request,reply)=>reply.header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send({...headCellArtDescription,materials:await headCellInventory(repo)}));
+  app.get<{Querystring:{file?:string}}>('/api/topics/prehistoric-life/head-cells',async(request,reply)=>reply.type('text/html').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff')
+    .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'")
+    .send(await headCellWorkbench(repo,HeadCellFileSchema.optional().parse(request.query.file))));
+  app.get('/api/topics/prehistoric-life/head-cell-editor.js',async(_request,reply)=>reply.type('application/javascript').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(headCellEditorScript));
+  app.post('/api/topics/prehistoric-life/head-cell-draft/check',{bodyLimit:200*1024},async(request,reply)=>{
+    const body=HeadCellCheckRequestSchema.parse(request.body),{record}=await headCellMaterial(repo,body.source.file);
+    return reply.header('Cache-Control','no-store').send(checkBoundHeadCellDraft(body,record));
+  });
   app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/head-cells/:file',async(request,reply)=>{
     const {bytes}=await headCellMaterial(repo,request.params.file);
     return reply.type('image/png').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(bytes);

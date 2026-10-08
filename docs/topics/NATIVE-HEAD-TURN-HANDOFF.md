@@ -1,10 +1,28 @@
-# Quay đầu Lila/Karo — source0.48 và phần còn thiếu
+# Quay đầu Lila/Karo — source0.49 và phần còn thiếu
+
+## Source0.49 — bản đo riêng và phân việc9router
+
+Đã thêm bàn đo cho từng PNG tại `/api/topics/prehistoric-life/head-cells`, JS `/head-cell-editor.js` và POST `/head-cell-draft/check` (cùng prefix). Không dùng vùng chia atlas cũ cho PNG riêng. Source binding có actor/file/rawSHA/material fingerprint/canvas; server đọc lại material/PNG/primary/edit source trước kiểm. Mọi điểm/viền/mask dùng pixel nguồn tuyệt đối. Crop giữ toàn bộ mực, skull nằm trong crop, mắt theo screen-left/right, socket cổ nằm trong seam và có thể nằm dưới viền mặt; điểm mặt thuộc faceContour khi đã khai báo.
+
+Kiểm polygon hữu hạn/diện tích/cạnh retrace/tự cắt/chạm; edit mask không đè protected paint; vùng mắt khuất phải có nguyên nhân và không có mask mắt nhìn thấy. Không tự đặt crop/yaw/pixelScale/landmark từ prompt hoặc canvas. JSON có thể nạp/kiểm/tải snapshot, source mismatch/stale khác PNG bị chặn và edits mới giữ khi request cũ về. Tất cả đây là source behavior **chưa chạy browser/API**; mask còn là bản đo, chưa painter activation/registration/face speech.
+
+11 callback mới (8 geometry +3 workbench/API) **DECLARED ONLY, NOT RUN**. Build/typecheck/schema export và static pack qua; không là video acceptance. Ba lượt9router GPT/Gemini source/static consultation thực đã hoàn tất,26.132 token provider báo; code đề xuất được parent sửa/review trước tích hợp. [Phân việc và tool](../plans/2026-10-08-nine-router-delegation.md), [review bound source/ảnh](reviews/head-cell-nine-router-review-v1.json). Chưa có bank thực; productionReady=false/productionRig=null.
+
+Model test chạy thêm theo exact source SHA, **implementation chưa chạy lệnh này**:
+
+~~~powershell
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/head-cell-landmarks.test.ts tests/head-cell-workbench.test.ts tests/head-cell-art.test.ts
+~~~
+
+Browser checklist chưa thực thi:375×812,760×900,1280×800; ảnh/reference/labels/focus/nooverflow; pixel mapping sau resize; crop/skull/face/seam/masks; thiếu field/invalidpolygon; download/import round-trip đúng source; stale/mismatch/oversize/edited-during-import; CSP/MIME/no-store; không sửa thư viện/flags. Tạo hình0.48 vẫn chưa đạt: nét quá đều, hình mặt/cổ/tóc trôi giữa PNG. Phải sửa chính artwork, làm Karo và đủ per-cell speech/blink/emotion/seam/gaze/body/props/full3input/voice/resume/QC; không coi bàn đo là diễn viên/video hoàn thành.
+
+## Lịch sử source0.48
 
 Mốc0.48: bank2 nhận nhiều PNG, từng cell buộc sourceId và fixed pixelScale; raw-source staging/SVG/physical mắt-cằm/camera cùng registration. Hai PNG Lila riêng đã có hồ sơ nguồn/alpha, **chưa duyệt, chưa đăng ký**. Góc0°/8° là yêu cầu trong prompt. Chưa có bank/video được bật; speech/eyes/expressions/secondary vẫn false, productionReady=false/productionRig=null. [Nguồn, review, kiểm source và việc còn thiếu](reviews/native-head-cells-source-record-v1.md).
 
 Source0.48 `e9b4293cca4df37399adb657794e0a576dbb3d19` đã push nhánh `codex/prehistoric-life`,35 owned paths; exact local/remote SHA khớp. Build/typecheck/schema/static inventory/manifest qua;26 callback mới và toàn runtime/video **NOT RUN**. Các con số này không là nghiệm thu độ mượt hoặc identity.
 
-API chỉ đọc mới: `/api/topics/prehistoric-life/head-cells/inventory` và `/api/topics/prehistoric-life/head-cells/lila-head-front-v1.png` hoặc `lila-head-near-right-v1.png`. Reader kiểm raw PNG/đo alpha/provenance/primary/edit source trước trả bytes; inventory/API không bật rig. Bàn đo atlas cũ không nhận các PNG mới; công cụ đo riêng/cell masks và actual registration còn phải làm.
+API chỉ đọc mới: `/api/topics/prehistoric-life/head-cells/inventory` và `/api/topics/prehistoric-life/head-cells/lila-head-front-v1.png` hoặc `lila-head-near-right-v1.png`. Reader kiểm raw PNG/đo alpha/provenance/primary/edit source trước trả bytes; inventory/API không bật rig. Bàn đo atlas cũ không nhận các PNG mới;0.49 bổ sung bàn đo riêng, actual registration/cell capabilities vẫn còn phải làm.
 
 Model test chạy thêm lệnh sau trong đúng C worktree, ghi exact SHA và kết quả; implementation **chưa chạy**:
 
@@ -100,7 +118,7 @@ $env:STUDIO_PROJECTS_ROOT='C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-
 npm run studio
 ~~~
 
-Mở `http://127.0.0.1:8861/api/topics/prehistoric-life/head-turn-art`; Ctrl+C dừng instance trong terminal đó. Server mặc định8787 nếu không đặt STUDIO_PORT. Nếu chọn8850, người dùng phải dùng đúng terminal/instance đang có hoặc tự dừng trước; implementation không dừng process.
+Mở `http://127.0.0.1:8861/api/topics/prehistoric-life/head-cells` để đo PNG riêng0.49, hoặc `/api/topics/prehistoric-life/head-turn-art` để xem atlas cũ; Ctrl+C dừng instance trong terminal đó. Server mặc định8787 nếu không đặt STUDIO_PORT. Nếu chọn8850, người dùng phải dùng đúng terminal/instance đang có hoặc tự dừng trước; implementation không dừng process.
 
 ## Model test chạy — NOT RUN
 

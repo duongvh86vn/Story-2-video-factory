@@ -1,0 +1,236 @@
+{
+  "version": "head-cell-nine-router-review-1",
+  "scope": "source-and-static-art-consultation-only",
+  "calls": [
+    {
+      "id": "gpt-head-landmarks",
+      "model": "cx/gpt-5.6-luna",
+      "purpose": "source-code-proposal",
+      "status": "proposal-not-applied",
+      "slot": 1,
+      "fingerprint": "f264ebfb572cd49fa4f10a94e3fac6e05ea3d6224ed5a29fe09eb3387d0de8d4",
+      "proposalSha256": "0ed0675c98af557d5ee74d4b48c78499d24bf74591b67262acff5cdd7cde01b2",
+      "sources": [
+        {
+          "file": "packages/topics/head-cell-art.ts",
+          "sha256": "342cba6b8c62bcc1d8225a91a3e02066c2ac083fc47a8640736ce90109b960ec"
+        },
+        {
+          "file": "packages/core/utils.ts",
+          "sha256": "d1717d624f703481d1dc7d139888f2c1417f790f38b73fb4ead9e1536ad092f5"
+        }
+      ],
+      "references": [],
+      "usage": {
+        "promptTokens": 5115,
+        "completionTokens": 4026,
+        "totalTokens": 9141
+      },
+      "createdAt": "2026-10-08T08:46:08.785Z",
+      "response": {
+        "disposition": "proposal corrected by integrator; raw proposed source not auto-applied",
+        "gaps": [
+          "duplicate weaker filename schema",
+          "missing crop and eye source bounds",
+          "polygon degeneracy/reversal gaps",
+          "invalid synthetic alpha fixture",
+          "incomplete test cases"
+        ]
+      }
+    },
+    {
+      "id": "gemini-head-fidelity",
+      "model": "ag/gemini-3.8-flash-low",
+      "purpose": "static-art-advice",
+      "status": "proposal-not-applied",
+      "slot": 2,
+      "fingerprint": "2a634b01744419f887254ab827a1ccd9dbe5de67c79a48bbc90d163aedda050c",
+      "proposalSha256": "cc878c7c392039092d81ba6abd087b112ddf965be1eec3932eee3d8e717d7438",
+      "sources": [],
+      "references": [
+        {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+          "sha256": "9fe7c077165da2483af272f0ec70a9e01fb3e467203e46ee8019af23a104e552"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png",
+          "sha256": "299a47ecbb78536f314884159c7a3c2736d8b166715f74b20d41412c7d0e9c57"
+        }
+      ],
+      "usage": {
+        "promptTokens": 5852,
+        "completionTokens": 1378,
+        "totalTokens": 7230
+      },
+      "createdAt": "2026-10-08T08:46:52.096Z",
+      "response": {
+        "observations": [
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+            "feature": "Face shape and proportions",
+            "visibleDifference": "The head contour is rendered as an overly wide, circular dome rather than the soft, organic egg-oval seen in reference-lila-full.png.",
+            "impact": "Distorts the youthful, delicate character appeal and looks like a rigid template rather than hand-drawn animation art."
+          },
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+            "feature": "Facial features layout",
+            "visibleDifference": "Nose is centered and mouth is rendered as a symmetrical centered curve, while reference features have a distinct asymmetric, spontaneous gesture.",
+            "impact": "Flattens character expression and weakens fidelity to original expressive charm."
+          },
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+            "feature": "Neck geometry and termination",
+            "visibleDifference": "Neck stub is truncated with an abrupt, thick curved contour directly under the chin with heavy self-shading not present on reference.",
+            "impact": "Guarantees a visible seam and alignment artifact when compositing or attaching to the stick body."
+          },
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png",
+            "feature": "Hair mass and tie placement relative to skull rotation",
+            "visibleDifference": "The entire hair silhouette, including outer spikes, crown volume, ponytail bunch, and tie band, is virtually identical in geometry to the front cell rather than rotating in perspective with the skull.",
+            "impact": "Hair appears pasted on as a static 2D cut-out layer while only internal facial features shifted, breaking 3D form coherence."
+          },
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png",
+            "feature": "Right cheek contour and jawline",
+            "visibleDifference": "The right cheek outline remains broad and circular instead of following the natural silhouette compression of a 3/4 turn towards screen-right.",
+            "impact": "Facial plane looks warped and unanchored; jaw weight fails to match reference 3/4 angle."
+          },
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png",
+            "feature": "Neck attachment axis",
+            "visibleDifference": "The neck column does not shift its balance axis backwards to support the rotated head center-of-gravity.",
+            "impact": "Causes severe floating-head effect and torso detachment risks."
+          },
+          {
+            "target": "both head cells",
+            "feature": "Linework and ink texture",
+            "visibleDifference": "Inking exhibits uniform digital taper and smooth vector-like borders compared to the heavy, irregular, slightly textured ink lines of reference-lila-full.png.",
+            "impact": "Clashes with raw storybook line art aesthetic established in the primary reference."
+          },
+          {
+            "target": "both head cells",
+            "feature": "Ponytail tie and bundle dynamics",
+            "visibleDifference": "Hair tie band is rendered with two neat gold/yellow loops resting high on the side, whereas reference shows a looser, organic fiber cord lower down with hair draping downward over the shoulder.",
+            "impact": "Ponytail bundle hangs unnaturally high and conflicts with torso draping."
+          }
+        ],
+        "recommendedCorrections": [
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png",
+            "action": "Redraw hair volume and ponytail base to track skull perspective: shift root mass and occlude far-side clumps naturally as the head turns right.",
+            "priority": "High"
+          },
+          {
+            "target": "both head cells",
+            "action": "Redraw neck attachment as an open, unbordered connection guide matching the exact thickness and entry point of the reference stick-figure neck line.",
+            "priority": "High"
+          },
+          {
+            "target": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+            "action": "Adjust chin and jaw contour to reduce circular fullness; introduce subtle hand-drawn asymmetry to mouth and eyes to restore character beauty.",
+            "priority": "Medium"
+          },
+          {
+            "target": "both head cells",
+            "action": "Replace smooth clean outlines with heavy, slightly textured, variable-weight black ink consistent with primary full-body illustration.",
+            "priority": "Medium"
+          },
+          {
+            "target": "both head cells",
+            "action": "Re-tune skin tone fill to match the specific warm peachy-tan flat value of the reference, removing gradient neck shading.",
+            "priority": "Low"
+          }
+        ],
+        "measurementRequirements": [
+          "Define clear boundary coordinates for neck-to-torso socket intersection without baked bottom stroke lines.",
+          "Verify eye spacing, vertical eye-line placement, and nose-to-mouth ratio relative to reference cranial height.",
+          "Ensure consistent ponytail cord anchor point relative to the ear across rotations."
+        ],
+        "avoid": [
+          "Reusing static hair silhouette across different rotational angles.",
+          "Hard-line capping the bottom of the neck in isolated head cells.",
+          "Symmetrical or stiff mechanical feature placement.",
+          "Smooth digital airbrushing or uncharacteristic neck shadows not present in source style."
+        ],
+        "limits": [
+          "Static review based solely on provided 2D PNG assets.",
+          "No assumptions made regarding downstream rig architecture, deformation systems, or runtime acceptance criteria."
+        ]
+      }
+    },
+    {
+      "id": "gpt-landmarks-review",
+      "model": "cx/gpt-5.6-sol",
+      "purpose": "source-only-review",
+      "status": "proposal-not-applied",
+      "slot": 3,
+      "fingerprint": "80d0bd19d632ac1ff175a13cceec97e4966eb841baf2ae9b9e962f4565dcad33",
+      "proposalSha256": "2659fb16a5aaf78e86b5c5e39057bf74e5cf5f41092ba7f357d0b97673cd5daf",
+      "sources": [
+        {
+          "file": "packages/topics/head-cell-landmarks.ts",
+          "sha256": "cebf409ca3ccdd9f15fcd45c748b4f6248cf778caedaa70be64d2432f77c0c6f"
+        },
+        {
+          "file": "tests/head-cell-landmarks.test.ts",
+          "sha256": "ffc8257705e3eecae4f313d8eb8cb8f8995c4f67968cfb76dd0198c0454164f4"
+        },
+        {
+          "file": "packages/topics/head-cell-art.ts",
+          "sha256": "342cba6b8c62bcc1d8225a91a3e02066c2ac083fc47a8640736ce90109b960ec"
+        }
+      ],
+      "references": [],
+      "usage": {
+        "promptTokens": 8411,
+        "completionTokens": 1350,
+        "totalTokens": 9761
+      },
+      "createdAt": "2026-10-08T08:51:57.494Z",
+      "response": {
+        "findings": [],
+        "limits": [
+          "Source-only review of the three provided files and declared test definitions; no tests or code were executed.",
+          "The synthetic material fixture is valid under the provided HeadCellMaterialSchema by inspection: dimensions and histogram total are 10000, transparent/visible/opaque/partial counts agree with the histogram, and visibleBounds is finite and within the source.",
+          "Finite source and crop constraints cover supplied landmarks, visible-eye centers, all declared polygons, protected contours, and both eye edit masks. Crop containment of material.visibleBounds is checked against the exactly bound material.",
+          "Polygon validation rejects zero-length edges, negligible zero area, collinear reversals, non-adjacent crossings, and non-adjacent touching; protected-paint overlap includes containment, crossing, and boundary contact.",
+          "Draft source identity is compared exactly against the parsed material across actor, file, source SHA-256, material fingerprint, width, and height. Bound requests additionally require the displayed binding and draft binding to match.",
+          "Neck and neckTop are not required to be inside faceContour. The neck socket is instead checked against seam when a seam is supplied.",
+          "Ponytail-side ownership is actor-specific: Lila cannot use not-applicable, while Karo cannot claim a ponytail side; completeness still requires a declared value.",
+          "Edit masks are checked for non-overlap with protectedContours, including touching boundaries.",
+          "All draft and result production-state flags remain literal false even when landmark measurements are complete. No art approval, registration, motion acceptance, or runtime acceptance was inferred."
+        ]
+      }
+    }
+  ],
+  "totalReportedTokens": 26132,
+  "parentImagesInspected": [
+    "docs/topics/assets/reference-lila-full.png",
+    "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+    "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png"
+  ],
+  "artConclusion": "unapproved; regular ink/face shape/neck seam/hair correspondence need actual correction; agent severity predictions are not runtime evidence",
+  "testsExecuted": false,
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "postReviewFormatting": [
+    {
+      "file": "packages/topics/head-cell-landmarks.ts",
+      "reviewedSha256": "cebf409ca3ccdd9f15fcd45c748b4f6248cf778caedaa70be64d2432f77c0c6f",
+      "formattedSha256": "1074787d9b3dab8fae8f156ea5d72eb5fd9d982c1078e4bf843501e210436972",
+      "onlyChange": "removed extra blank line at EOF; integrator inspected source"
+    },
+    {
+      "file": "tests/head-cell-landmarks.test.ts",
+      "reviewedSha256": "ffc8257705e3eecae4f313d8eb8cb8f8995c4f67968cfb76dd0198c0454164f4",
+      "formattedSha256": "7518e56e4ecc7e260e1d3f7652de7584f739dcd7dd44ad65dfa8d6bcbea4b898",
+      "onlyChange": "removed extra blank line at EOF; integrator inspected source"
+    }
+  ]
+}

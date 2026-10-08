@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.48-individual-head-sources",
+  "version": "forest-tribe-0.49-head-cell-measurement",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -2958,6 +2958,9 @@
     ],
     "fingerprint": "558b412e99430ecaf457026679435686a9aa79f61d2cf95688c466f148e0c6ea",
     "codeHash": "342cba6b8c62bcc1d8225a91a3e02066c2ac083fc47a8640736ce90109b960ec",
+    "landmarkCodeHash": "1074787d9b3dab8fae8f156ea5d72eb5fd9d982c1078e4bf843501e210436972",
+    "workbenchCodeHash": "149d820a17f244ab29c679b0471421c5b475cd13a0407b6e68df5d4900d507bd",
+    "workbench": "/api/topics/prehistoric-life/head-cells",
     "inventory": "library/topics/prehistoric-life/head-cells/inventory-v1.json"
   },
   "nativeActorGaze": {

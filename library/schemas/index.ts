@@ -27,6 +27,7 @@ import {HeadTurnMaterialSchema,HeadTurnPromptSchema,HeadTurnDraftSchema,HeadTurn
 import {NativeHeadBankSchema} from '../../packages/animation/native-head-bank.js';
 import {NativeHeadTrackSchema} from '../../packages/animation/native-head-track.js';
 import {HeadCellPromptSchema,HeadCellMaterialSchema} from '../../packages/topics/head-cell-art.js';
+import {HeadCellDraftSchema,HeadCellCheckRequestSchema} from '../../packages/topics/head-cell-landmarks.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
@@ -50,6 +51,7 @@ export const schemaLibrary:Record<string,z.ZodTypeAny> = {
   'native-head-turn-check':HeadTurnCheckRequestSchema,
   'native-head-bank':NativeHeadBankSchema,'native-head-source':NativeHeadTrackSchema,
   'native-head-cell-prompt':HeadCellPromptSchema,'native-head-cell-material':HeadCellMaterialSchema,
+  'native-head-cell-landmarks':HeadCellDraftSchema,'native-head-cell-check':HeadCellCheckRequestSchema,
 };
 
 export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(import.meta.url))): Promise<void> {

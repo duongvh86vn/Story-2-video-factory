@@ -20,6 +20,7 @@
     "scripts/native-seat-correspondence.ts",
     "scripts/native-seat-tracer.ts",
     "scripts/head-turn-inventory.ts",
+    "scripts/dev-nine-router.ts",
     "scripts/cloth-contour-geometry.ts"
   ]
 }
