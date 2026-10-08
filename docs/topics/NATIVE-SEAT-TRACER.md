@@ -1,5 +1,7 @@
 # Chạy ca hai diễn viên ngồi–đứng–đi
 
+Hiện hành0.44/tracer2: cùng canonical bên dưới có **mutual actor gaze** theo original physical eye source; không dùng static root hoặc gaze feedback. [Contract, source guards và nghiệm thu gaze](NATIVE-ACTOR-GAZE-HANDOFF.md). Clock4/body compiler32, target/body/expression thay đổi phải invalidate publication. Chưa chạy builder/test/tracer/media. Phần mô tả0.43 bên dưới là lịch sử exporter, các lệnh vẫn dùng cho tracer2.
+
 Mốc source0.43: tool xuất ca canonical dùng chung với `tests/native-source-seat.test.ts`, không bootstrap project máy móc hoặc gọi model. Implementation **chưa chạy** builder, tracer, test, trình duyệt, frame, FFmpeg hoặc render video. Source/typecheck thành công không chứng minh chuyển động đẹp, đúng giải phẫu hoặc giống video mẫu. Cả chủ đề vẫn `productionReady=false`, `productionRig=null`.
 
 Ca7.2 giây dùng Lila ở góc3/4 hướng phải, Karo ở góc3/4 hướng trái, hai ghế riêng trong cùng world,5 camera slice và thay primary/supporting. Ngồi300–1800ms, giữ đến3000ms, đứng3000–4500ms, đi4600–6600ms; phần cuối giữ pose. Mọi shot lặp nguyên source run. Các nhân vật diễn trong câu chuyện, không có presenter hoặc mô hình giải thích máy móc. Đây là ca đo cơ thể/trang phục/camera, chưa là một câu chuyện hoàn chỉnh hay mẫu mặc định cho tool tổng quát.
@@ -18,7 +20,7 @@ Các lệnh dưới là hướng dẫn **NOT RUN**, dành cho model test của n
 Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1'
 git rev-parse HEAD
 git status --short
-node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/scene-baked-path.test.ts tests/native-seat-tracer.test.ts tests/native-source-seat.test.ts
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/actor-gaze.test.ts tests/scene-baked-path.test.ts tests/native-seat-tracer.test.ts tests/native-source-seat.test.ts
 npm run tracer:native-seat -- --validate --frames --render
 ```
 

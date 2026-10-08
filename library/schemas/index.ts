@@ -22,6 +22,7 @@ import {SpriteSpeechScheduleSchema} from '../../packages/motion/speech-clock.js'
 import {MotionMeasureLayoutSchema} from '../../packages/motion/measure.js';
 import {NativeSeatMaterialSchema} from '../../packages/topics/native-seat-art.js';
 import {NativeSeatCorrespondenceSchema} from '../../packages/animation/native-seat-registration.js';
+import {ViewGazeTargetSchema} from '../../packages/animation/view-gaze-target.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary = {
@@ -40,6 +41,7 @@ export const schemaLibrary = {
   'actor-motion-measure-layout':MotionMeasureLayoutSchema,
   'native-seat-material':NativeSeatMaterialSchema,
   'native-seat-correspondence':NativeSeatCorrespondenceSchema,
+  'view-gaze-target':ViewGazeTargetSchema,
 };
 
 export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(import.meta.url))): Promise<void> {

@@ -1,6 +1,8 @@
 # Lila/Karo — trang phục ngồi native
 
-Hiện hành **0.43, source candidate:** [Công cụ xuất tracer và lệnh test/media](NATIVE-SEAT-TRACER.md) dùng một canonical chung với test, hai actor/camp/ghế riêng/5 camera slice. Scene security4 nhận viền SVG hở bounded; WAV diagnostic giữ bytes và clock, không có giọng mặc định. Implementation chưa gọi builder/tracer/test/browser/audio/video. Exporter không tạo final/DONE hoặc duyệt production. [Record0.43](reviews/native-seat-tracer-source-record-v1.md). Mốc0.42 bên dưới là lịch sử source-clock.
+Hiện hành **0.44, source candidate:** [Ánh nhìn theo bạn diễn](NATIVE-ACTOR-GAZE-HANDOFF.md) nối original physical eye target vào clock4/body compiler32/tracer2. Thêm8 callback NOT RUN; art/anatomy/motion và mọi media vẫn chưa nghiệm thu. Phần0.43 bên dưới giữ lịch sử exporter.
+
+Lịch sử **0.43, source candidate:** [Công cụ xuất tracer và lệnh test/media](NATIVE-SEAT-TRACER.md) dùng một canonical chung với test, hai actor/camp/ghế riêng/5 camera slice. Scene security4 nhận viền SVG hở bounded; WAV diagnostic giữ bytes và clock, không có giọng mặc định. Implementation chưa gọi builder/tracer/test/browser/audio/video. Exporter không tạo final/DONE hoặc duyệt production. [Record0.43](reviews/native-seat-tracer-source-record-v1.md). Mốc0.42 bên dưới là lịch sử source-clock.
 
 Source0.43 đã publish `cb445581aeb8847bb6cd006fd38dc7870e73e8d9`,20 owned paths; build/typecheck và static manifest hashes exit0, push/exact GitHub SHA khớp. Đây là bàn giao source để model test chạy, chưa có frame/video/test runtime cho tracer.
 

@@ -9,8 +9,10 @@ import {hasBodyViewEyes} from '../animation/body-view-eyes.js';
 import {hasBodyViewExpressions} from '../animation/body-view-expressions.js';
 import {hasBodyViewLocomotion} from '../animation/body-view-cloth.js';
 import {hasBodyViewSecondary} from '../animation/body-view-secondary.js';
-import {normalizeViewExpressions} from '../animation/view-expression-track.js';
-import {VIEW_ACTING_CLOCK_VERSION,normalizeViewGazes,validateViewActingClock,type ViewActingClock} from '../animation/view-acting-clock.js';
+import {normalizeViewExpressions,projectViewExpressions} from '../animation/view-expression-track.js';
+import {VIEW_ACTING_CLOCK_VERSION,normalizeViewGazes,validateViewActingClock,validateViewActingClockSource,type ViewActingClock} from '../animation/view-acting-clock.js';
+import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../animation/view-gaze-target.js';
+import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 import {collectViewSourceBody,validateBodySourcePlan} from '../animation/view-source-body.js';
 
@@ -25,7 +27,7 @@ export function actorUsesViewActingClock(profile:Pick<HostProfile,'appearance'>)
 }
 /** Pure board binding. Adjacent clips only share attention/breath when their
  * cast, registered view and stage geometry agree and continuity is explicit. */
-export function actorViewActingClock(board:Storyboard,current:Shot,actorId:string):ViewActingClock|undefined{
+function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string):ViewActingClock|undefined{
   const currentActor=performer(current,actorId);if(!currentActor||!actorUsesViewActingClock(currentActor.character))return undefined;
   const shots=board.shots.filter(s=>s.id!==current.id).concat(current).sort((a,b)=>a.startMs-b.startMs);
   if(new Set(shots.map(s=>s.id)).size!==shots.length)throw new Error('needs-view-acting-phase: duplicate storyboard shot');
@@ -65,5 +67,38 @@ export function actorViewActingClock(board:Storyboard,current:Shot,actorId:strin
     gestures:collectViewSourceGestures(run,run[0]!.startMs,run.at(-1)!.endMs),
     ...(bodyMotion?{bodyMotion}:{}),
     ...(hasBodyViewExpressions(currentActor.character)?{expressions:normalizeViewExpressions(run.flatMap(e=>(e.expressions??[]).map(expression=>({...expression,startMs:expression.startMs+e.startMs,endMs:expression.endMs+e.startMs}))))}:{})};
-  validateViewActingClock(currentActor.performance,clock);return clock;
+  validateViewActingClockSource(currentActor.performance,clock);return clock;
+}
+
+/** Resolve complete source actors once without recursively evaluating their
+ * attention. A and B may look at one another; neither gaze moves a body. */
+export function actorViewActingClock(board:Storyboard,current:Shot,actorId:string):ViewActingClock|undefined{
+  const clock=actorViewActingClockSource(board,current,actorId);if(!clock)return undefined;
+  const owner=performer(current,actorId)!,references=[...new Set(clock.gazes.flatMap(g=>'actorTarget' in g?[g.actorTarget.id]:[]))];
+  if(references.includes(actorId))throw new Error('needs-actor-gaze: actor cannot look at itself');
+  if(references.length){
+    clock.actorTargets=references.sort().map(id=>{
+      const target=performer(current,id);if(!target)throw new Error('needs-actor-gaze: target actor is missing from the current cast');
+      const raw=actorViewActingClockSource(board,current,id);
+      if(!raw?.expressions)throw new Error('needs-actor-gaze: target needs its complete registered body/eye/expression run');
+      if(hash(target.performance.stage)!==hash(owner.performance.stage))throw new Error('needs-actor-gaze: target is in another world/stage');
+      for(const gaze of clock.gazes.filter(g=>'actorTarget' in g&&g.actorTarget.id===id)){
+        if(gaze.startMs<raw.runStartMs||gaze.endMs>raw.runEndMs)throw new Error('needs-actor-gaze: target run does not cover the gaze');
+        for(const shot of board.shots.filter(s=>s.id!==current.id).concat(current).filter(s=>s.startMs<gaze.endMs&&s.endMs>gaze.startMs)){
+          if(!performer(shot,id)||shot.cinematic?.actorScene?.primary?.id===id&&shot.host?.presence==='absent')throw new Error('needs-actor-gaze: target is missing or hidden during the gaze');
+        }
+      }
+      // Use one original run entry, never slice fps/id or other shot metadata.
+      const first=board.shots.filter(s=>s.id!==current.id).concat(current).find(s=>s.startMs===raw.runStartMs);
+      const original=first&&performer(first,id);if(!original)throw new Error('needs-actor-gaze: missing original target run entry');
+      const p=structuredClone(original.performance);p.id=id;p.fps=60;p.durationMs=raw.runEndMs-raw.runStartMs;
+      const thrust=p.lunge&&p.spears?.find(s=>s.id===p.lunge!.spearId);
+      if(p.lunge&&(!thrust||thrust.action!=='thrust'||thrust.readyMs===undefined||thrust.contactMs===undefined||thrust.recoverMs===undefined))throw new Error('needs-actor-gaze: lunge target lost its owned original thrust clock');
+      const lungeClock=thrust?{spearId:thrust.id,readyMs:thrust.readyMs!,contactMs:thrust.contactMs!,recoverMs:thrust.recoverMs!,endMs:thrust.endMs}:undefined;
+      p.expressions=projectViewExpressions(raw.expressions,raw.runStartMs,raw.runEndMs);p.gazes=[];p.gestures=[];p.props=[];p.spears=[];
+      return viewGazeTarget({version:VIEW_ACTOR_GAZE_VERSION,actorId:id,startMs:raw.runStartMs,endMs:raw.runEndMs,sourceIdentityHash:raw.sourceIdentityHash,profile:actorProfile(target.character),performance:p,...(lungeClock?{lungeClock}:{})});
+    });
+    clock.sourceIdentityHash=hash({sourceIdentityHash:clock.sourceIdentityHash,actorTargets:clock.actorTargets.map(s=>({actorId:s.actorId,fingerprint:s.fingerprint}))});
+  }
+  validateViewActingClock(owner.performance,clock);return clock;
 }

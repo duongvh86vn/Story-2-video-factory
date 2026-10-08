@@ -15,6 +15,7 @@ import {hasBodyViewSeat} from '../animation/body-view-seat.js';
 import {pathCoordinates} from '../animation/ink-limb.js';
 import {SECONDARY_MOTION_DELAYS_MS} from '../animation/view-secondary-motion.js';
 import { CameraSchema, type CinematicCamera } from './schemas.js';
+import {viewGazeTargetTimes} from '../animation/view-gaze-target.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
 import { cinematicActionGroups } from './actions.js';
 
@@ -51,6 +52,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
   if(actingClock){
+    for(const source of actingClock.actorTargets??[])for(const at of viewGazeTargetTimes(source))times.add(at-actingClock.startMs);
     for(const g of actingClock.gestures)for(const at of [g.startMs,g.reachMs,g.recoverMs,g.endMs])times.add(at-actingClock.startMs);
     for(const g of actingClock.gazes)for(const at of [g.startMs,g.startMs+VIEW_GAZE_RAMP_MS,g.endMs-VIEW_GAZE_RAMP_MS,g.endMs])times.add(at-actingClock.startMs);
     for(const clip of actingClock.expressions??[]){

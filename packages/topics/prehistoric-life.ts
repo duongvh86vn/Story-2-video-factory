@@ -8,8 +8,9 @@ import {bodyViewDescription} from '../animation/body-view-art.js';
 import {BODY_SOURCE_VERSION} from '../animation/schemas.js';
 import {nativeSeatArtDescription} from './native-seat-art.js';
 import {nativeSeatDescription} from '../animation/body-view-seat.js';
+import {nativeActorGazeDescription} from '../animation/view-gaze-target.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.43-native-seat-tracer-candidate';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.44-actor-gaze-candidate';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -47,7 +48,8 @@ export function topicContext(config:FactoryConfig) {
       nativeSecondary:bodyViewDescription.secondaryCandidate,
       nativeSeatedMaterials:nativeSeatArtDescription,
       nativeSeatedSurface:nativeSeatDescription,
-      nativeTracer:{version:'native-seat-tracer-1',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,handoff:'docs/topics/NATIVE-SEAT-TRACER.md'},
+      nativeActorGaze:{...nativeActorGazeDescription,handoff:'docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md'},
+      nativeTracer:{version:'native-seat-tracer-2',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,handoff:'docs/topics/NATIVE-SEAT-TRACER.md'},
       nativeSourceClock:{version:BODY_SOURCE_VERSION,selection:'performance.sourceBody',rule:'Complete original body tracks are replicated identically across an explicit continuous run with the same native actor/view/stage/root/scale. Inner motion times are relative to the source global start. Camera slices retain root/foot/arm/cloth and seat contact/occupancy phase; sourceBody.supports owns fixed world seats, all local physical tracks including supports are empty. No inferred continuity or new body/head turns.',verified:false,approved:false},
       walk:referenceBodyDescription().walkMotion,
       actions:referenceBodyDescription().actionMotion,

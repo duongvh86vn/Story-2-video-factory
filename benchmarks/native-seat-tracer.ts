@@ -15,7 +15,7 @@ import {planCamera} from '../packages/director/camera.js';
 import type {ArtDirection} from '../packages/director/art-direction-schemas.js';
 import type {SceneIntent} from '../packages/explainer/schemas.js';
 
-export const NATIVE_SEAT_TRACER_VERSION='native-seat-tracer-1';
+export const NATIVE_SEAT_TRACER_VERSION='native-seat-tracer-2';
 export const NATIVE_SEAT_TRACER_SCOPE='unapproved-native-seat-motion-tracer';
 export const NATIVE_SEAT_TRACER_CUTS=[0,900,2400,3800,4800,7200] as const;
 export const NATIVE_SEAT_TRACER_DURATION_MS=7200;
@@ -66,7 +66,8 @@ export function createNativeSeatTracer(){
     const actors=templates.map(({character,plan})=>{
       const p=structuredClone(plan);p.id=id;p.durationMs=endMs-startMs;
       p.sourceBody={version:BODY_SOURCE_VERSION,id:character.id+'-complete-seat',startMs:0,endMs:7200,walks:p.walks,postures:p.postures,supports:p.supports,entryPosture:p.entryPosture};
-      p.walks=[];p.jumps=[];p.postures=[];p.supports=[];delete p.entryPosture;p.gestures=[];p.gazes=[];p.expressions=[];
+      p.walks=[];p.jumps=[];p.postures=[];p.supports=[];delete p.entryPosture;p.gestures=[];p.expressions=[];
+      p.gazes=[{startMs:0,endMs:p.durationMs,actorTarget:{id:character.id==='lila'?'karo':'lila',anchor:'eyes'}}];
       return {character,performance:p,actions:[{type:'idle' as const,startMs,endMs}],speakingSegmentIds:segments.filter(cue=>cue===character.id+'-cue')};
     });
     const primary=actors[i%2]!,other=actors[1-i%2]!,p=primary.performance;

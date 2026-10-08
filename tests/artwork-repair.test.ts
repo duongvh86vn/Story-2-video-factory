@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test, { type TestContext } from 'node:test';
 import { creativeFixture } from './creative-fixture.js';
-import { NarrationSchema, StoryboardSchema, type AssetManifest, type Shot } from '../packages/core/schemas.js';
+import { NarrationSchema, ShotSchema, StoryboardSchema, type AssetManifest, type Shot } from '../packages/core/schemas.js';
 import { exists, hash, readJson, walk, writeJson } from '../packages/core/utils.js';
 import { ModelRouter } from '../packages/models/registry.js';
 import { repairCinematicArtwork, persistCinematicArtworkRepair, recoverCinematicArtworkTransactions } from '../packages/director/artwork-repair.js';
@@ -367,6 +367,33 @@ test('artwork repair: final scene publication failure preserves the previous acc
   assert.deepEqual(await snapshot(f),metadataBefore,'accepted artwork metadata must not advance if final scene publication fails');
   assert.deepEqual(await sceneSnapshot(f),sceneBefore,'publication failure must not leave old validated:true beside mixed scene sources');
   assert.deepEqual(f.board,original);
+});
+
+// NOT RUN: added with actor-gaze source0.44; user's model executes callbacks.
+test('repair publication normalizes appended optional performance fields before after-guard hash comparison',async t=>{
+  const f=await fixture(t),repaired=structuredClone(f.shot);delete repaired.cinematic!.performance.postures;repaired.cinematic!.performance.postures=[];
+  repaired.cinematic!.artDirection=revised(f);const normalized=ShotSchema.parse(repaired),attempt=path.join(f.root,'work/attempts/normalized-repair.json');
+  assert.notEqual(JSON.stringify(repaired),JSON.stringify(normalized),'fixture must exercise field ordering');
+  await writeJson(attempt,{status:'domain-validated',result:normalized,runtimeValidation:'passed'});
+  await persistCinematicArtworkRepair(f.root,f.config,f.shot,repaired,attempt);
+  const board=await readJson(path.join(f.root,'work/storyboard.json'),StoryboardSchema);assert.deepEqual(board.shots[0],normalized);
+  assert.equal((await readJson<{status:string}>(attempt)).status,'accepted');
+});
+
+test('repair outer failure receipt preserves a concurrent edit to its protected attempt file',async t=>{
+  const f=await fixture(t),repaired=ShotSchema.parse({...f.shot,cinematic:{...f.shot.cinematic!,artDirection:revised(f)}}),attempt=path.join(f.root,'work/attempts/protected-repair.json');
+  await writeJson(attempt,{status:'domain-validated',result:repaired,runtimeValidation:'passed'});
+  const html=path.join(f.root,`scenes/${f.shot.id}/index.html`);await fs.mkdir(path.dirname(html),{recursive:true});await fs.writeFile(html,'previous scene');
+  const rename=fs.rename.bind(fs),separate='user edited attempt receipt';let injected=false;
+  t.mock.method(fs,'rename',async(from:Parameters<typeof fs.rename>[0],to:Parameters<typeof fs.rename>[1])=>{
+    if(!injected&&path.resolve(String(to))===path.resolve(html)){injected=true;await fs.writeFile(attempt,separate);throw Object.assign(new Error('INJECTED-REPAIR-PUBLISH-FAILURE'),{code:'EIO'});}
+    return rename(from,to);
+  });
+  await assert.rejects(persistCinematicArtworkRepair(f.root,f.config,f.shot,repaired,attempt,new Map([[`scenes/${f.shot.id}/index.html`,'candidate scene']])),/preserved separate edits/);
+  assert.equal(injected,true);assert.equal(await fs.readFile(attempt,'utf8'),separate);assert.equal(await fs.readFile(html,'utf8'),'previous scene');
+  const failures=(await walk(path.join(f.root,'work/artwork-transactions'))).filter(file=>path.basename(file).startsWith('publication-failure-'));
+  assert.equal(failures.length,1);assert.equal((await readJson<{status:string}>(failures[0]!)).status,'commit-failed');
+  await assert.rejects(recoverCinematicArtworkTransactions(f.root),/manual recovery required/);
 });
 
 test('artwork repair: failed commit rolls back atomically and resumes the saved validated candidate without another provider call [P1 regression]', async t => {

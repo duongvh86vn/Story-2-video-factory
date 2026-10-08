@@ -1,3 +1,4 @@
+import type {Gaze} from '../packages/animation/schemas.js';
 // NOT RUN by controller. Runtime declarations for the user's test model.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -81,7 +82,7 @@ test('only explicit eye selection permits front-hemisphere gaze; expression/turn
     plan.gazes=[{startMs:300,endMs:3600,target:{x:210+forward*150,y:100}}];assert.doesNotThrow(()=>samplePerformance(plan,profile,900,silence));
     const plain=bodyCalibrationPlan(actor,'rest','happy',undefined,view);plain.plan.gazes=structuredClone(plan.gazes);
     assert.throws(()=>samplePerformance(plain.plan,plain.profile,900,silence),/needs-view-gaze/);
-    plan.gazes[0]!.target.x=210-forward*150;assert.throws(()=>samplePerformance(plan,profile,900,silence),/behind the fixed native view/);plan.gazes=[];
+    fixedGazeTarget(plan.gazes[0]!).x=210-forward*150;assert.throws(()=>samplePerformance(plan,profile,900,silence),/behind the fixed native view/);plan.gazes=[];
     assert.throws(()=>samplePerformance({...plan,expressions:[{startMs:0,endMs:4000,mood:'angry'}]},profile,900,silence),/needs-view-expression/);
     assert.throws(()=>samplePerformance({...plan,walks:[{startMs:0,endMs:2000,fromX:210,toX:250}]},profile,900,silence),/needs-view-motion/);
     assert.throws(()=>samplePerformance(plan,profile,900,{...silence,intervals:[{startMs:500,endMs:1000,level:.5}]}),/needs-view-voice-animation/);
@@ -94,10 +95,10 @@ test('head-local pupil direction follows the native eye origin and is invariant 
     plan.gazes=[{startMs:0,endMs:3500,target:{x:210+forward*160,y:120}}];const at=900,f=samplePerformance(plan,profile,at,silence),head=numbers(f.transforms.head!);
     const angle=head[2]!*Math.PI/180,scale=head[3]!,center={x:(eyes.eyes[0].center.x+eyes.eyes[1].center.x)/2,y:(eyes.eyes[0].center.y+eyes.eyes[1].center.y)/2};
     const native={x:(center.x-c.neck.x)*c.headScale*scale,y:(center.y-c.neck.y)*c.headScale*scale},origin={x:head[0]!+Math.cos(angle)*native.x-Math.sin(angle)*native.y,y:head[1]!+Math.sin(angle)*native.x+Math.cos(angle)*native.y};
-    const delta={x:plan.gazes[0]!.target.x-origin.x,y:plan.gazes[0]!.target.y-origin.y},m=numbers(f.face['view-eye-screen-left-glyph']!.attr!.transform as string),look={x:m[4]!/eyes.eyes[0].shift.x,y:m[5]!/eyes.eyes[0].shift.y};
+    const delta={x:fixedGazeTarget(plan.gazes[0]!).x-origin.x,y:fixedGazeTarget(plan.gazes[0]!).y-origin.y},m=numbers(f.face['view-eye-screen-left-glyph']!.attr!.transform as string),look={x:m[4]!/eyes.eyes[0].shift.x,y:m[5]!/eyes.eyes[0].shift.y};
     const local={x:Math.cos(angle)*delta.x+Math.sin(angle)*delta.y,y:-Math.sin(angle)*delta.x+Math.cos(angle)*delta.y},length=Math.hypot(local.x,local.y);
     assert.ok(Math.abs(look.x-local.x/length)<.002);assert.ok(Math.abs(look.y-local.y/length)<.002);
-    const moved=structuredClone(plan);moved.root.x+=30;moved.root.y+=10;moved.stage.groundY+=10;moved.gazes[0]!.target.x+=30;moved.gazes[0]!.target.y+=10;
+    const moved=structuredClone(plan);moved.root.x+=30;moved.root.y+=10;moved.stage.groundY+=10;fixedGazeTarget(moved.gazes[0]!).x+=30;fixedGazeTarget(moved.gazes[0]!).y+=10;
     assert.deepEqual(eyeFace(samplePerformance(moved,profile,at,silence)),eyeFace(f));
   }
 });
@@ -163,3 +164,5 @@ test('eye readiness stays candidate-only and does not approve source identity/ac
   const config=ConfigSchema.parse({topic:{id:'prehistoric-life'}});assert.equal(topicContext(config)!.readiness.productionReady,false);assert.equal(bodyViewEyesDescription.approved,false);
   assert.throws(()=>requireTopicProductionReady(config),/needs-art-direction/);
 });
+
+function fixedGazeTarget(gaze:Gaze){assert.ok('target' in gaze);return gaze.target;}

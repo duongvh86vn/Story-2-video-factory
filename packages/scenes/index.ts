@@ -16,7 +16,8 @@ import { visualAssetPath } from './assets.js';
 import { ffmpeg } from '../audio/ffmpeg.js';
 import { renderExplainer } from '../../library/shots/explainer.js';
 import { renderCinematic } from '../../library/shots/cinematic.js';
-import {shotUsesSourceSpeechClock,rigSpeechInputIdentity,rigSpeechPublicationBinding} from '../actors/speech-clock.js';
+import {shotUsesSourceSpeechClock,rigSpeechInputIdentity,rigSpeechPublicationBinding,type RigSpeechPublicationBinding} from '../actors/speech-clock.js';
+import {nativeSceneSourceGuard} from './source-publication.js';
 import {sceneLabelIdentity} from '../../library/shots/scene-labels.js';
 import { ANIMATION_VERSION } from '../animation/schemas.js';
 import { DIRECTION_VERSION } from '../director/schemas.js';
@@ -210,14 +211,14 @@ async function validateCandidate(root:string,config:FactoryConfig,shot:Shot,dir:
   if(!runtime.pass&&!runtime.errors.length)runtime.errors.push('Runtime validation failed without diagnostics');
   return {files:written,errors:runtime.errors};
 }
-async function hostGeometryPublication(root:string,config:FactoryConfig,shot:Shot,board?:Storyboard):Promise<Map<string,string>>{
+async function hostGeometryPublication(root:string,config:FactoryConfig,shot:Shot,board?:Storyboard,narration?:Narration):Promise<Map<string,string>>{
   const pending=new Map<string,string>();
   if(!shot.host)return pending;
   const {profile,rig}=await loadHost(root),activity=await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema);
   const add=(name:string,value:unknown)=>pending.set(`scenes/${shot.id}/${name}`,JSON.stringify(value,null,2)+'\n');
   if(shot.cinematic){
     const motions=await loadSpriteSceneMotions(root,shot),speech=await loadSpriteSceneSpeech(root,shot,motions);
-    const rendered=renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),await readJson(path.join(root,'work/narration.json'),NarrationSchema),motions,speech,await sourceSpeechBoard(root,shot,board));
+    const rendered=renderCinematic(shot,profile,rig,activity,config,await cinematicBackground(root,shot),narration??await readJson(path.join(root,'work/narration.json'),NarrationSchema),motions,speech,await sourceSpeechBoard(root,shot,board));
     add('host-geometry.json',rendered.geometry);
     add('performance-report.json','kind' in rendered.geometry?rendered.report:{...rendered.report,rigHash:rendered.geometry.rigHash});
   }else{
@@ -226,13 +227,16 @@ async function hostGeometryPublication(root:string,config:FactoryConfig,shot:Sho
   }
   return pending;
 }
-async function refreshHostGeometry(root:string,config:FactoryConfig,shot:Shot,board?:Storyboard):Promise<void>{
-  const pending=await hostGeometryPublication(root,config,shot,board);
-  if(pending.size)await publishSceneRevision(root,pending);
+async function refreshHostGeometry(root:string,config:FactoryConfig,shot:Shot,board?:Storyboard,narration?:Narration,binding?:RigSpeechPublicationBinding,record?:SceneRecord):Promise<void>{
+  const pending=await hostGeometryPublication(root,config,shot,board,narration);
+  if(record)pending.set(`scenes/${shot.id}/scene.json`,JSON.stringify(record,null,2)+'\n');
+  if(pending.size)await publishSceneRevision(root,pending,undefined,nativeSceneSourceGuard(root,shot,binding));
 }
 async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,shot:Shot,characters:CharacterBible,manifest:AssetManifest,options:{force?:boolean;issues?:ReviewIssue[];state:Locks;board?:Storyboard}):Promise<void> {
   const dir=await outputPath(root,`scenes/${shot.id}`), isLocked=lockedShot(options.state,shot);
-  const phaseBoard=await sourceSpeechBoard(root,shot,options.board);
+  const sourceBoard=await sourceSpeechBoard(root,shot,options.board),phaseBoard=sourceBoard&&structuredClone(sourceBoard);
+  const narrated=shot.cinematic?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
+  const sourceBinding=phaseBoard&&narrated?rigSpeechPublicationBinding(shot,narrated,phaseBoard):undefined;
   const complete=await Promise.all(SCENE_FILENAMES.map(name=>exists(path.join(dir,name))));
   if(isLocked && complete.some(Boolean) && !complete.every(Boolean)) throw new Error(`Locked shot ${shot.id} has an incomplete scene; unlock or restore its approved scene`);
   if(isLocked && options.issues?.length) {await persistAttempt(root,shot,0,'locked',undefined,['High issue requires manual repair: scene is locked']);return;}
@@ -252,20 +256,19 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
         await persistAttempt(root,shot,0,'revalidate',files,validation.errors);
         if(!validation.pass) throw new Error(`${shot.id}: locked scene validation failed: ${validation.errors.join('\n')}`);
       }
-      await refreshHostGeometry(root,config,shot,phaseBoard);return;
+      await refreshHostGeometry(root,config,shot,phaseBoard,narrated,sourceBinding);return;
     }
     // A manual scene source edit is retained and revalidated before any regeneration.
     if(changed && !options.force && !options.issues?.length) {
       const validation=await validateCandidate(root,config,shot,dir,files,staged.refs,phaseBoard);
       await persistAttempt(root,shot,0,'source-edit',validation.files,validation.errors);
-      if(!validation.errors.length) {await writeJson(recordFile,{...record,shotId:shot.id,inputHash,sourceHash:sourceHash(validation.files),validated:true});await refreshHostGeometry(root,config,shot,phaseBoard);return;}
+      if(!validation.errors.length) {await refreshHostGeometry(root,config,shot,phaseBoard,narrated,sourceBinding,{...record,shotId:shot.id,inputHash,sourceHash:sourceHash(validation.files),validated:true} as SceneRecord);return;}
     }
   }
   const recipe=selectRecipe(shot), style=getStyle(config), dimensions=config.rendering.final;
   const explainer=config.content.mode==='narrated-explainer';
   const host=explainer?await loadHost(root):undefined, activity=explainer?await readJson(path.join(root,'work/speech-activity.json'),ActivitySchema):undefined;
   const background=shot.cinematic?await cinematicBackground(root,shot):undefined;
-  const narrated=shot.cinematic?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
   const spriteMotions=await loadSpriteSceneMotions(root,shot);
   const spriteSpeech=await loadSpriteSceneSpeech(root,shot,spriteMotions);
   const trustedExplainer=(simplified=false)=>{if(!host||!activity)throw new Error('Host/voice artifacts required');return shot.cinematic?renderCinematic(shot,host.profile,host.rig,activity,config,background,narrated,spriteMotions,spriteSpeech,phaseBoard):renderExplainer(shot,host.profile,host.rig,activity,style,dimensions.width,dimensions.height,simplified,config.project.language);};
@@ -290,7 +293,7 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   }
   const maxRepairs=Math.min(3,config.retry.scene_repair);
   let pendingArtworkShot=shot;
-  let acceptedArtworkRepair:{shot:Shot;attemptFile:string}|undefined;
+  let acceptedArtworkRepair:{shot:Shot;attemptFile:string;sourceBoard?:Storyboard;speechBinding?:RigSpeechPublicationBinding}|undefined;
   for(let attempt=1;!valid && attempt<=maxRepairs;attempt++) {
     if(shot.cinematic?.artDirection){
       if(isLocked||router.isMock('storyboard'))break;
@@ -299,13 +302,15 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
         const repaired=await repairCinematicArtwork(root,config,router,pendingArtworkShot,errors,phaseBoard);
         repairAttempt=repaired.attemptFile;
         const repairedMotions=await loadSpriteSceneMotions(root,repaired.shot),repairedSpeech=await loadSpriteSceneSpeech(root,repaired.shot,repairedMotions);
-        const files=renderCinematic(repaired.shot,host!.profile,host!.rig,activity!,config,background,narrated,repairedMotions,repairedSpeech,await sourceSpeechBoard(root,repaired.shot,options.board)).files;
-        const checked=await validateCandidate(root,config,repaired.shot,dir,files,staged.refs,options.board);
+        const repairedSource=await sourceSpeechBoard(root,repaired.shot,phaseBoard),repairedBoard=repairedSource&&structuredClone(repairedSource);
+        const speechBinding=repairedBoard&&narrated?rigSpeechPublicationBinding(repaired.shot,narrated,repairedBoard):undefined;
+        const files=renderCinematic(repaired.shot,host!.profile,host!.rig,activity!,config,background,narrated,repairedMotions,repairedSpeech,repairedBoard).files;
+        const checked=await validateCandidate(root,config,repaired.shot,dir,files,staged.refs,repairedBoard);
         candidate=checked.files;errors=checked.errors;valid=!errors.length;
         if(valid){
           const attempt=await readJson<Record<string,unknown>>(repaired.attemptFile);
           await writeJson(repaired.attemptFile,{...attempt,runtimeValidation:'passed'});
-          acceptedArtworkRepair=repaired;
+          acceptedArtworkRepair={...repaired,sourceBoard:repairedBoard,speechBinding};
         }else {pendingArtworkShot=repaired.shot;await rejectCinematicArtworkRepair(repaired.attemptFile,errors);}
       }catch(error){valid=false;errors=[redact(error instanceof Error?error.message:String(error))];
         if(repairAttempt){const saved=await readJson<Record<string,unknown>>(repairAttempt);if(saved.runtimeValidation!=='passed')await rejectCinematicArtworkRepair(repairAttempt,errors);}
@@ -334,17 +339,16 @@ async function compileShot(root:string,config:FactoryConfig,router:ModelRouter,s
   }
   if(!valid || !candidate) throw new Error(`${shot.id}: recipe fallback failed validation: ${errors.join('\n')}`);
   const acceptedShot=acceptedArtworkRepair?.shot??shot;
-  inputHash=await inputIdentity(root,config,acceptedShot,characters,staged.hashes,gsap,options.board);
-  const publication=await hostGeometryPublication(root,config,acceptedShot,options.board);
+  const publicationBoard=acceptedArtworkRepair?.sourceBoard??phaseBoard;
+  inputHash=await inputIdentity(root,config,acceptedShot,characters,staged.hashes,gsap,publicationBoard);
+  const publication=await hostGeometryPublication(root,config,acceptedShot,publicationBoard,narrated);
   for(const file of candidate.files)publication.set(`scenes/${shot.id}/${file.path}`,file.content);
   const output:SceneRecord={shotId:shot.id,inputHash,sourceHash:sourceHash(candidate),assetHashes:staged.hashes,renderer:'hyperframes',version:HYPERFRAMES_VERSION,recipeId:recipe?.id??'custom',fallback,validated:true,notes:candidate.notes};
   publication.set(`scenes/${shot.id}/scene.json`,JSON.stringify(output,null,2)+'\n');
   if(acceptedArtworkRepair){
-    const acceptedBoard=await sourceSpeechBoard(root,acceptedShot,options.board);
-    const speechBinding=acceptedBoard&&narrated?rigSpeechPublicationBinding(acceptedShot,narrated,acceptedBoard):undefined;
-    await persistCinematicArtworkRepair(root,config,shot,acceptedArtworkRepair.shot,acceptedArtworkRepair.attemptFile,publication,speechBinding);
+    await persistCinematicArtworkRepair(root,config,shot,acceptedArtworkRepair.shot,acceptedArtworkRepair.attemptFile,publication,acceptedArtworkRepair.speechBinding);
     Object.assign(shot,acceptedArtworkRepair.shot);
-  }else await publishSceneRevision(root,publication);
+  }else await publishSceneRevision(root,publication,undefined,nativeSceneSourceGuard(root,acceptedShot,sourceBinding));
 }
 export async function buildScenes(projectRoot:string,config:FactoryConfig,router:ModelRouter,storyboard:Storyboard,characters:CharacterBible,assets:AssetManifest,options?:{shotIds?:string[];force?:boolean}):Promise<void> {
   await recoverCinematicArtworkTransactions(projectRoot);

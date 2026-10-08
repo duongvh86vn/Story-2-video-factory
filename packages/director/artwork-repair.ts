@@ -3,7 +3,7 @@ import { promises as fs } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { FactoryConfig } from '../core/config.js';
-import { BeatSchema, NarrationSchema, StoryboardSchema, type Shot, type Storyboard } from '../core/schemas.js';
+import { BeatSchema, NarrationSchema, ShotSchema, StoryboardSchema, type Shot, type Storyboard } from '../core/schemas.js';
 import { exists, hash, readJson, writeAtomic, writeJson, walk } from '../core/utils.js';
 import type { ModelRouter } from '../models/registry.js';
 import { loadHost } from '../host/index.js';
@@ -63,7 +63,8 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
     repaired.cinematic!.artDirection!.origin='model';
     const candidate=normalizeCreativeSourceRefs({shots:[repaired]},narration).shots[0]!;
     candidate.cinematic!.sourceRefs=candidate.sourceRefs!;
-    return candidate;
+    // The same canonical field order must reach rendering, binding and disk.
+    return ShotSchema.parse(candidate);
   };
   const persist=(value:unknown)=>writeJson(attemptFile,JSON.parse(redact(JSON.stringify(value))));
   // Revalidate completed designs against current source before spending another
@@ -96,6 +97,7 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
 
 /** Commit only after the repaired plan has passed the actual browser scene validation. */
 export async function persistCinematicArtworkRepair(root:string,config:FactoryConfig,previous:Shot,repaired:Shot,attemptFile:string,scenePublication:ReadonlyMap<string,string>=new Map(),speechBinding?:RigSpeechPublicationBinding):Promise<void> {
+  previous=ShotSchema.parse(previous);repaired=ShotSchema.parse(repaired);
   const boardFile=path.join(root,'work/storyboard.json'),board=await readJson(boardFile,StoryboardSchema);
   const index=board.shots.findIndex(s=>s.id===previous.id);
   if(index<0||hash(board.shots[index])!==hash(previous))throw new Error(`${previous.id}: storyboard changed during artwork repair`);
@@ -139,26 +141,48 @@ export async function persistCinematicArtworkRepair(root:string,config:FactoryCo
   try{
     // Long validation/staging must not silently overwrite a sibling edit made
     // after the accepted source identity was checked above.
-    if(hash(await readJson(boardFile,StoryboardSchema))!==originalHash)throw new Error(`${previous.id}: storyboard changed during artwork repair publication`);
-    assertRigSpeechPublicationBinding(repaired,await readJson(path.join(root,'work/narration.json'),NarrationSchema),board,speechBinding);
-    await publishSceneRevision(root,pending,stagedRoot);
+    const validateSource=async(phase:'before'|'after')=>{
+      const actual=await readJson(boardFile,StoryboardSchema);
+      if(hash(actual)!==(phase==='before'?originalHash:hash(board)))throw new Error(`${previous.id}: storyboard changed during artwork repair publication`);
+      assertRigSpeechPublicationBinding(repaired,await readJson(path.join(root,'work/narration.json'),NarrationSchema),board,speechBinding);
+    };
+    await publishSceneRevision(root,pending,stagedRoot,validateSource);
   }catch(error){
-    await writeJson(attemptFile,{...attempt,status:'commit-failed',result:repaired,runtimeValidation:'passed',commitError:String(error)});
+    // The attempt is part of the protected transaction. A separate receipt
+    // cannot erase an edit that the publisher just preserved during rollback.
+    await writeJson(path.join(stagedRoot,'publication-failure-'+randomUUID()+'.json'),{status:'commit-failed',attempt:path.relative(root,attemptFile).split(path.sep).join('/'),result:repaired,runtimeValidation:'passed',commitError:String(error)});
     throw error;
   }
 }
 
 /** A durable revision includes every accepted scene byte and its metadata. */
-export async function publishSceneRevision(root:string,pending:ReadonlyMap<string,string>,stagedRoot=path.join(root,'work/artwork-transactions',randomUUID())):Promise<void>{
+export async function publishSceneRevision(root:string,pending:ReadonlyMap<string,string>,stagedRoot=path.join(root,'work/artwork-transactions',randomUUID()),validateSource?:(phase:'before'|'after')=>Promise<void>):Promise<void>{
+  await validateSource?.('before');
   const entries=await Promise.all([...pending].map(async ([relative,next])=>{const file=await outputPath(root,relative);return {relative,next,previous:await exists(file)?await fs.readFile(file,'utf8'):null};}));
   const journalFile=path.join(stagedRoot,'journal.json');
   await writeJson(journalFile,{status:'committing',entries});
+  const written:TransactionEntry[]=[];
   try{
-    for(const entry of entries)await writeAtomic(await outputPath(root,entry.relative),entry.next);
+    await validateSource?.('before');
+    for(const entry of entries){
+      const file=await outputPath(root,entry.relative),current=await exists(file)?await fs.readFile(file,'utf8'):null;
+      if(current!==entry.previous)throw new Error(`Scene publication interrupted by a separate edit: ${entry.relative}`);
+      await writeAtomic(file,entry.next);written.push(entry);
+    }
+    await validateSource?.('after');
     await writeJson(journalFile,{status:'committed',entries});
   }catch(error){
-    for(const entry of entries)await restoreTransactionEntry(root,entry);
-    await writeJson(journalFile,{status:'rolled-back',entries,error:String(error)});
+    // Do not restore entries we never wrote, or overwrite a separate edit
+    // made after our own write (especially the canonical storyboard).
+    const conflicts:string[]=[];
+    for(const entry of [...written].reverse()){
+      try{const file=await outputPath(root,entry.relative),current=await exists(file)?await fs.readFile(file,'utf8'):null;
+        if(current===entry.next)await restoreTransactionEntry(root,entry);
+        else if(current!==entry.previous)conflicts.push(entry.relative);
+      }catch(rollbackError){conflicts.push(entry.relative+': '+String(rollbackError));}
+    }
+    await writeJson(journalFile,{status:conflicts.length?'rollback-conflict':'rolled-back',entries,error:String(error),rollbackConflicts:conflicts});
+    if(conflicts.length)throw new Error(`Scene rollback preserved separate edits; manual recovery required: ${conflicts.join(', ')}; ${String(error)}`);
     throw error;
   }
 }
@@ -171,7 +195,9 @@ async function restoreTransactionEntry(root:string,entry:TransactionEntry):Promi
 /** A killed process cannot leave half of a storyboard bundle accepted on resume. */
 export async function recoverCinematicArtworkTransactions(root:string):Promise<void>{
   for(const file of (await walk(path.join(root,'work/artwork-transactions'))).filter(file=>path.basename(file)==='journal.json')){
-    const journal=await readJson<{status:string;entries:TransactionEntry[]}>(file);if(journal.status!=='committing')continue;
+    const journal=await readJson<{status:string;entries:TransactionEntry[]}>(file);
+    if(journal.status==='rollback-conflict')throw new Error(`Scene transaction has preserved separate edits; manual recovery required: ${file}`);
+    if(journal.status!=='committing')continue;
     for(const entry of journal.entries){const target=await outputPath(root,entry.relative),current=await exists(target)?await fs.readFile(target,'utf8'):null;
       if(current!==entry.previous&&current!==entry.next)throw new Error(`Artwork transaction interrupted by a separate edit: ${entry.relative}`);
     }

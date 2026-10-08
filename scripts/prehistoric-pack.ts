@@ -11,6 +11,7 @@ import {viewArtInventory} from '../packages/topics/view-art-workbench.js';
 import {bodyViewDescription} from '../packages/animation/body-view-art.js';
 import {nativeSeatArtDescription,nativeSeatArtInventory} from '../packages/topics/native-seat-art.js';
 import {nativeSeatSurfaceInventory} from '../packages/topics/native-seat-surface-inventory.js';
+import {nativeActorGazeDescription} from '../packages/animation/view-gaze-target.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -66,7 +67,8 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
   nativeSeatedMaterials:{...nativeSeatArtDescription,materials:nativeSeatedMaterials,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/native-seat-art.ts')))},
   nativeSeatedSurface,
-  nativeTracer:{version:'native-seat-tracer-1',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,
+  nativeActorGaze:{...nativeActorGazeDescription,handoff:'docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md',targetSourceCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-gaze-target.ts'))),physicalLungeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/lunge.ts'))),publicationGuardCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/source-publication.ts'))),scenePipelineCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/index.ts'))),artworkTransactionCodeHash:hash(await fs.readFile(path.join(repo,'packages/director/artwork-repair.ts')))},
+  nativeTracer:{version:'native-seat-tracer-2',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,
     builder:'benchmarks/native-seat-tracer.ts',builderHash:hash(await fs.readFile(path.join(repo,'benchmarks/native-seat-tracer.ts'))),exporter:'scripts/native-seat-tracer.ts',exporterHash:hash(await fs.readFile(path.join(repo,'scripts/native-seat-tracer.ts'))),handoff:'docs/topics/NATIVE-SEAT-TRACER.md'},
   references,candidates:[...candidates,...headCandidates,...garmentCandidates],rejectedArtifacts:rejected,productionRig:null,
   headPack:{...headPack,prompts:['library/topics/prehistoric-life/rig-v1/head-prompts.json','library/topics/prehistoric-life/rig-v1/front-prompts.json'],codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts'))),cutoutCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-cutout-head.ts'))),projectionCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-projection.ts')))},

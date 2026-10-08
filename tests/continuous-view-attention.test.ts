@@ -1,3 +1,4 @@
+import type {Gaze} from '../packages/animation/schemas.js';
 // NOT RUN by controller. Behavioral declarations for the user's test model.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -71,7 +72,7 @@ test('declared continuous native views share one original attention cue and dete
   for(const actor of ['lila','karo'] as const)for(const view of ['three-quarter-left','three-quarter-right'] as const){
     const f=clockFixture(actor,view),a=f.shots[0]!,b=f.shots[1]!,p=a.cinematic!.performance,q=b.cinematic!.performance,profile=actorProfile(a.cinematic!.actorScene!.primary!);
     const ca=actorViewActingClock(f.board,a,actor)!,cb=actorViewActingClock(f.board,b,actor)!;
-    assert.deepEqual(ca.gazes,[{startMs:1000,endMs:5500,target:p.gazes[0]!.target}]);assert.equal(ca.sourceIdentityHash,cb.sourceIdentityHash);
+    assert.deepEqual(ca.gazes,[{startMs:1000,endMs:5500,target:fixedGazeTarget(p.gazes[0]!)}]);assert.equal(ca.sourceIdentityHash,cb.sourceIdentityHash);
     const first=samplePerformance(p,profile,p.durationMs,silence,undefined,ca),second=samplePerformance(q,profile,0,silence,undefined,cb);
     assert.deepEqual(nativeState(first),nativeState(second));assert.notEqual(second.transforms.head,samplePerformance(q,profile,0,silence).transforms.head,'local boundary reset is visible in the diagnostic');
     const whole={...p,durationMs:4500,gazes:[{...p.gazes[0]!,endMs:4500}],expressions:[{startMs:0,endMs:4500,mood:'happy' as const}]},cw={...ca,endMs:5500};
@@ -84,8 +85,8 @@ test('explicit cuts, real gaze gaps and target changes retain their own boundari
   const cut=actorViewActingClock(f.board,a,'lila')!;assert.equal(cut.runEndMs,a.endMs);assert.equal(cut.gazes[0]!.endMs,a.endMs);
   b.cinematic!.actorScene!.continuity='continuous';b.cinematic!.performance.gazes[0]!.startMs=100;
   let c=actorViewActingClock(f.board,a,'lila')!;assert.equal(c.gazes.length,2);assert.equal(sourceViewGazeAt(c,a.endMs-a.startMs),undefined);
-  b.cinematic!.performance.gazes[0]!.startMs=0;b.cinematic!.performance.gazes[0]!.target.y+=40;c=actorViewActingClock(f.board,a,'lila')!;
-  assert.equal(c.gazes.length,2);assert.notDeepEqual(c.gazes[0]!.target,c.gazes[1]!.target);
+  b.cinematic!.performance.gazes[0]!.startMs=0;fixedGazeTarget(b.cinematic!.performance.gazes[0]!).y+=40;c=actorViewActingClock(f.board,a,'lila')!;
+  assert.equal(c.gazes.length,2);assert.notDeepEqual(fixedGazeTarget(c.gazes[0]!),fixedGazeTarget(c.gazes[1]!));
 });
 
 test('continuous run rejects incompatible time, cast/view/stage/scale/profile and malformed nonlocal tracks',()=>{
@@ -104,7 +105,7 @@ test('continuous run rejects incompatible time, cast/view/stage/scale/profile an
 test('cache/repair binding follows neighboring attention/run inputs and actual repaired shot, with stable schema serialization',()=>{
   const f=clockFixture(),a=f.shots[0]!,binding=rigSpeechPublicationBinding(a,f.narration,f.board)!,initial=rigSpeechInputIdentity(a,f.narration,f.board)!;
   assert.equal(initial.viewActing.length,2);
-  const sibling=structuredClone(f.shots[1]!);sibling.cinematic!.performance.gazes[0]!.target.y+=40;
+  const sibling=structuredClone(f.shots[1]!);fixedGazeTarget(sibling.cinematic!.performance.gazes[0]!).y+=40;
   assert.notEqual(hash(initial),hash(rigSpeechInputIdentity(a,f.narration,{shots:[a,sibling]})));
   assert.throws(()=>assertRigSpeechPublicationBinding(a,f.narration,{shots:[a,sibling]},binding),/changed before repair publication/);
   const repaired=structuredClone(a);repaired.cinematic!.performance.gazes[0]!.startMs=100;const replacement=rigSpeechPublicationBinding(repaired,f.narration,f.board)!;
@@ -164,3 +165,5 @@ test('canonical paired performers use the same board-derived breath/gaze clock t
     assert.deepEqual(validateSceneFiles(secureSceneFiles(rendered.files),shot,2000000,assets,base.config.rendering.final),[]);
   }
 });
+
+function fixedGazeTarget(gaze:Gaze){assert.ok('target' in gaze);return gaze.target;}

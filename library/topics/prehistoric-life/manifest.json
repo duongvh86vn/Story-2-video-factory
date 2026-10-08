@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.43-native-seat-tracer-candidate",
+  "version": "forest-tribe-0.44-actor-gaze-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -419,15 +419,31 @@
       "no physical cloth simulation or accepted final video"
     ]
   },
+  "nativeActorGaze": {
+    "version": "native-actor-gaze-source-1",
+    "selection": "performance.gazes[].actorTarget={id,anchor:'eyes'}",
+    "method": "complete visible original actor run; registered eye midpoint projected by the rendered physical neck/head transform, body/expression/breath clock and owned physical lunge timings; no gaze feedback or arm/tool evaluation",
+    "limits": "fixed native body/eye/expression view; behind-view targets require authored turns; no optical gaze or motion acceptance",
+    "runtimeVerified": false,
+    "opticalGazeVerified": false,
+    "productionReady": false,
+    "approved": false,
+    "handoff": "docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md",
+    "targetSourceCodeHash": "82218bc8681c5cf6c457ee2b8c3030f1f9eee6e9349883b808be31195758e654",
+    "physicalLungeCodeHash": "124f4fe064ceda099e1f1ecd108faf2d09910738c402463530106b2d7a1fcdfc",
+    "publicationGuardCodeHash": "8529fc923e3b142c1cbc9d51dc35e4067097a9c9ec309900b8549cafdecf1eac",
+    "scenePipelineCodeHash": "6da0a0608ddf6a28abf05de9788548b73b4656240354ab5ab164824a387390fb",
+    "artworkTransactionCodeHash": "a28b6f878682b906b70372405a3bd494886cd623d022eca9c3ab40a4e238d385"
+  },
   "nativeTracer": {
-    "version": "native-seat-tracer-1",
+    "version": "native-seat-tracer-2",
     "scope": "unapproved-native-seat-motion-tracer",
     "command": "npm run tracer:native-seat",
     "runtimeVerified": false,
     "productionAcceptance": false,
     "finalExportAllowed": false,
     "builder": "benchmarks/native-seat-tracer.ts",
-    "builderHash": "c242a51fd4e22687ed58f7bed35fa23871164e1940158fcef4e41e6e48cda914",
+    "builderHash": "a4ab29f14642d2062d76dda5e83a70341d7cb6e209e3680ae3f8fe415be8f000",
     "exporter": "scripts/native-seat-tracer.ts",
     "exporterHash": "d47a0183fe58bb6b98040b7f23ee403300b6b87044fa5ce97f0177692f31cafc",
     "handoff": "docs/topics/NATIVE-SEAT-TRACER.md"
@@ -2594,9 +2610,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-31",
+    "compilerVersion": "forest-source-body-motion-32",
     "rendererVersion": "forest-source-body-svg-16",
-    "fingerprint": "7d0febbddb31137a317396b97d703f30e09bf0c0df9504ec91f2c35859b40072",
+    "fingerprint": "502e7782cb524bbd311c38cf91b7548d22afabc1a87b1de5ceba88fd294dee7c",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -6002,17 +6018,17 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "2a188baccfa5387352546c42259fa8bf1622352abd8629580b843ac654b138d4",
+    "codeHash": "1f91ab52213d0666454780c4ac93747a8ecc29138c735c4fe8b9042c6ed75b46",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
-    "compilerCodeHash": "ac75addf20aaea6bf3f0c4eb77fac501a8e33aea54ed027066120e2bf2d331c9",
+    "compilerCodeHash": "cf4286680b7282c434a1de8106d0dbe691e9387a9772d99fe8c13b10cfee5f02",
     "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
-    "cameraCodeHash": "479b0f50efdf8a404984b959dbfef347ede83d847f89db2cd22c5b8d2f031532",
+    "cameraCodeHash": "31205f02b2bff48d67e3a0f861558370b80d7906f453ab8146c9d5b6813680fa",
     "sourceBodyCodeHash": "d3b78d1283a37ea6e2470972ca33640e0bed46d1c6aa5ed8e43473ee56174e3c",
-    "actingClockCodeHash": "d578ba8bd5f3d201699aa96ab063c8a62560f5ce5727a98ea466f87bb0618e80",
-    "actingBindingCodeHash": "dc1175c222b43c090570d28fc7f9c40c09d2072968d44a3251d6ef3d1a02b5bc",
+    "actingClockCodeHash": "382774585d60aadbe48caac0ec22e1ecc470502aaeacdd32fafd2f8f0dfc00f5",
+    "actingBindingCodeHash": "a33da34e42d7896ed0ef2d60d5524fe2e9f5cc73804158bb036e395b2d4ffa0c",
     "secondaryCodeHash": "baa043be6ac71977d560fe207902b6ef3ec48eaf21bb77c4c891eb9f99b39b51",
     "secondaryMotionCodeHash": "ac1434a80796836e341fd9f39c2373b38c980df10f64f8c3836c682000491f94",
     "viewCodeHash": "b54111293e3f091684d631e5b30ce09a2f6d68f2b87b0dc075856a19a3787113",
@@ -6022,7 +6038,7 @@
     "viewSeatCodeHash": "34883a38ae6121bb3f77c267d20f51d41209143c0955295e77caac3fffdd702a",
     "viewSeatRegistrationCodeHash": "48b77839b52e2275b68d1bb0a0ea0aeed102add0194a6b4fc3550f548d485142",
     "viewSeatCorrespondenceHash": "89df68c15f5c359f3b9421fce0ac2c5309d259a2e6fe469991e20592f03d48af",
-    "lungeCodeHash": "3d54c801e6a7143b61eb660e7670ab9c5ecd84d575cd852e6db4b8ba0f2afe24",
+    "lungeCodeHash": "124f4fe064ceda099e1f1ecd108faf2d09910738c402463530106b2d7a1fcdfc",
     "handCodeHash": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1"
   },
   "poseArtwork": {

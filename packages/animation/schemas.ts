@@ -18,6 +18,11 @@ export const Moods = [...LEGACY_MOODS, ...STORY_MOODS] as const;
 const Time = z.number().int().nonnegative();
 export const PointSchema = z.object({ x: z.number().finite(), y: z.number().finite() }).strict();
 const Interval = { startMs: Time, endMs: Time };
+export const GazeSchema=z.union([
+  z.object({...Interval,target:PointSchema}).strict(),
+  z.object({...Interval,actorTarget:z.object({id:Id,anchor:z.literal('eyes')}).strict()}).strict(),
+]);
+export type Gaze=z.infer<typeof GazeSchema>;
 export const WalkSchema = z.object({ ...Interval, fromX: z.number().finite(), toX: z.number().finite(),gait:z.enum(['walk','run']).optional() }).strict();
 export const JumpSchema=z.object({...Interval,takeoffMs:Time,landingMs:Time,height:z.number().finite().positive(),tuck:z.number().finite().min(0).max(.5).optional()}).strict();
 export const FacingSchema=z.enum(['front','left','right']);
@@ -98,7 +103,7 @@ export const PerformancePlanSchema = z.object({
   sourceBody:BodySourceSchema.optional(),
   lunge:LungeSchema.optional(),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
-  gazes: z.array(z.object({ ...Interval, target: PointSchema }).strict()),
+  gazes: z.array(GazeSchema),
   props: z.array(z.object({ id: Id, origin: PointSchema, destination: PointSchema.optional(), gripOffset: PointSchema.optional(), attachedTo:z.enum(['left-hand','right-hand']).optional(),kind:z.enum(['generic','spear']).optional(),length:z.number().finite().min(50).max(600).optional() }).strict().superRefine((prop,ctx)=>{
     if(prop.kind!=='spear'&&(prop.length??0)>200)ctx.addIssue({code:'custom',path:['length'],message:'Only a spear has the extended 600-unit shaft range.'});
   })),

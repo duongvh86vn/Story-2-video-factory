@@ -2987,39 +2987,81 @@
                           "gazes": {
                             "type": "array",
                             "items": {
-                              "type": "object",
-                              "properties": {
-                                "startMs": {
-                                  "type": "integer",
-                                  "minimum": 0
-                                },
-                                "endMs": {
-                                  "type": "integer",
-                                  "minimum": 0
-                                },
-                                "target": {
+                              "anyOf": [
+                                {
                                   "type": "object",
                                   "properties": {
-                                    "x": {
-                                      "type": "number"
+                                    "startMs": {
+                                      "type": "integer",
+                                      "minimum": 0
                                     },
-                                    "y": {
-                                      "type": "number"
+                                    "endMs": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "target": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number"
+                                        },
+                                        "y": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
                                     }
                                   },
                                   "required": [
-                                    "x",
-                                    "y"
+                                    "startMs",
+                                    "endMs",
+                                    "target"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "startMs": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "endMs": {
+                                      "type": "integer",
+                                      "minimum": 0
+                                    },
+                                    "actorTarget": {
+                                      "type": "object",
+                                      "properties": {
+                                        "id": {
+                                          "type": "string",
+                                          "maxLength": 96,
+                                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                        },
+                                        "anchor": {
+                                          "type": "string",
+                                          "const": "eyes"
+                                        }
+                                      },
+                                      "required": [
+                                        "id",
+                                        "anchor"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "startMs",
+                                    "endMs",
+                                    "actorTarget"
                                   ],
                                   "additionalProperties": false
                                 }
-                              },
-                              "required": [
-                                "startMs",
-                                "endMs",
-                                "target"
-                              ],
-                              "additionalProperties": false
+                              ]
                             }
                           },
                           "props": {
@@ -5300,39 +5342,81 @@
                 "gazes": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "startMs": {
-                        "type": "integer",
-                        "minimum": 0
-                      },
-                      "endMs": {
-                        "type": "integer",
-                        "minimum": 0
-                      },
-                      "target": {
+                    "anyOf": [
+                      {
                         "type": "object",
                         "properties": {
-                          "x": {
-                            "type": "number"
+                          "startMs": {
+                            "type": "integer",
+                            "minimum": 0
                           },
-                          "y": {
-                            "type": "number"
+                          "endMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "target": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number"
+                              },
+                              "y": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
-                          "x",
-                          "y"
+                          "startMs",
+                          "endMs",
+                          "target"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "startMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "endMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "actorTarget": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "maxLength": 96,
+                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                              },
+                              "anchor": {
+                                "type": "string",
+                                "const": "eyes"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "anchor"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "startMs",
+                          "endMs",
+                          "actorTarget"
                         ],
                         "additionalProperties": false
                       }
-                    },
-                    "required": [
-                      "startMs",
-                      "endMs",
-                      "target"
-                    ],
-                    "additionalProperties": false
+                    ]
                   }
                 },
                 "props": {
