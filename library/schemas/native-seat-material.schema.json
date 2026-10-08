@@ -1,0 +1,266 @@
+{
+  "$ref": "#/definitions/native-seat-material",
+  "definitions": {
+    "native-seat-material": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "native-seat-material-1"
+        },
+        "actor": {
+          "type": "string",
+          "enum": [
+            "lila",
+            "karo"
+          ]
+        },
+        "file": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "hasAlpha": {
+          "type": "boolean",
+          "const": true
+        },
+        "alphaThreshold": {
+          "type": "number",
+          "const": 8
+        },
+        "transparentPixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "opaquePixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "alphaBands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "max": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pixels": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "min",
+              "max",
+              "pixels"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 8,
+          "maxItems": 8
+        },
+        "tiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "view": {
+                "type": "string",
+                "enum": [
+                  "three-quarter-right",
+                  "three-quarter-left"
+                ]
+              },
+              "facing": {
+                "type": "string",
+                "enum": [
+                  "right",
+                  "left"
+                ]
+              },
+              "region": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "y": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height"
+                ],
+                "additionalProperties": false
+              },
+              "visibleBounds": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "y": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height"
+                ],
+                "additionalProperties": false
+              },
+              "nonzeroAlphaPixels": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "id",
+              "view",
+              "facing",
+              "region",
+              "visibleBounds",
+              "nonzeroAlphaPixels"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "primary-character-identity",
+                  "native-three-quarter-right",
+                  "native-three-quarter-left",
+                  "legacy-seated-construction-reference"
+                ]
+              }
+            },
+            "required": [
+              "file",
+              "sha256",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "promptFile": {
+          "type": "string"
+        },
+        "shape": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "const": "candidate-material-unregistered"
+        },
+        "approved": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionReady": {
+          "type": "boolean",
+          "const": false
+        },
+        "registered": {
+          "type": "boolean",
+          "const": false
+        },
+        "motionVerified": {
+          "type": "boolean",
+          "const": false
+        },
+        "limits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "version",
+        "actor",
+        "file",
+        "sha256",
+        "width",
+        "height",
+        "hasAlpha",
+        "alphaThreshold",
+        "transparentPixels",
+        "opaquePixels",
+        "alphaBands",
+        "tiles",
+        "references",
+        "promptFile",
+        "shape",
+        "status",
+        "approved",
+        "productionReady",
+        "registered",
+        "motionVerified",
+        "limits"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

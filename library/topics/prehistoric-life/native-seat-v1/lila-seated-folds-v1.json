@@ -1,0 +1,127 @@
+{
+  "version": "native-seat-material-1",
+  "actor": "lila",
+  "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+  "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+  "width": 2172,
+  "height": 724,
+  "hasAlpha": true,
+  "alphaThreshold": 8,
+  "transparentPixels": 1027828,
+  "opaquePixels": 1411,
+  "alphaBands": [
+    {
+      "min": 1,
+      "max": 7,
+      "pixels": 11379
+    },
+    {
+      "min": 8,
+      "max": 63,
+      "pixels": 3299
+    },
+    {
+      "min": 64,
+      "max": 127,
+      "pixels": 2260
+    },
+    {
+      "min": 128,
+      "max": 191,
+      "pixels": 2365
+    },
+    {
+      "min": 192,
+      "max": 239,
+      "pixels": 3100
+    },
+    {
+      "min": 240,
+      "max": 249,
+      "pixels": 10720
+    },
+    {
+      "min": 250,
+      "max": 254,
+      "pixels": 510166
+    },
+    {
+      "min": 255,
+      "max": 255,
+      "pixels": 1411
+    }
+  ],
+  "tiles": [
+    {
+      "id": "lila-native-seat-right",
+      "view": "three-quarter-right",
+      "facing": "right",
+      "region": {
+        "x": 0,
+        "y": 0,
+        "width": 1086,
+        "height": 724
+      },
+      "visibleBounds": {
+        "x": 105,
+        "y": 87,
+        "width": 825,
+        "height": 557
+      },
+      "nonzeroAlphaPixels": 268300
+    },
+    {
+      "id": "lila-native-seat-left",
+      "view": "three-quarter-left",
+      "facing": "left",
+      "region": {
+        "x": 1086,
+        "y": 0,
+        "width": 1086,
+        "height": 724
+      },
+      "visibleBounds": {
+        "x": 1274,
+        "y": 84,
+        "width": 797,
+        "height": 564
+      },
+      "nonzeroAlphaPixels": 265021
+    }
+  ],
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "role": "native-three-quarter-right"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "role": "native-three-quarter-left"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
+      "sha256": "9db3501a16c1c4d4f36b504cbea99ad7b52a3eb855bd656029ff7d3f73c451c2",
+      "role": "legacy-seated-construction-reference"
+    }
+  ],
+  "promptFile": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1-prompt.json",
+  "shape": "one continuous draped skirt; no shorts or cuff openings",
+  "status": "candidate-material-unregistered",
+  "approved": false,
+  "productionReady": false,
+  "registered": false,
+  "motionVerified": false,
+  "limits": [
+    "Static atlas tiles are not pose/UV/bone/support registration or continuous motion.",
+    "Colour, identity, fold perspective, seam/cuff/hem quality and alpha compositing need visual acceptance.",
+    "Most painted pixels have alpha250–254; preserve source bytes and render a single opaque common surface beneath interior material blends.",
+    "No automatic profile selection, production approval, final output, anatomy or video claim."
+  ]
+}

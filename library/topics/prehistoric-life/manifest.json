@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.39-native-secondary-candidate",
+  "version": "forest-tribe-0.40-native-seat-material-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -7,6 +7,294 @@
   "motionAcceptance": "pending",
   "primaryModel": "warm-skin-close-ups",
   "referencePolicy": "Supplemental detailed and white-face sheets do not replace or blend into the primary model.",
+  "nativeSeatedMaterials": {
+    "version": "native-seat-material-1",
+    "fingerprint": "6c501c83b77df0c9b1898ba4143bbb2b30531b906a8b3a7998a5bd9188f2d444",
+    "actors": [
+      "lila",
+      "karo"
+    ],
+    "views": [
+      "three-quarter-right",
+      "three-quarter-left"
+    ],
+    "materialCount": 2,
+    "tileCount": 4,
+    "purpose": "separate native seated lower-garment fold materials; primary faces, hair, torso and belts stay on their original layers",
+    "sourcePolicy": "exact PNG bytes and primary/native/construction reference hashes; requested independent view tiles, no code reflection; generated perspective/identity compliance still needs visual review",
+    "alphaPolicy": "transparent source pixels are retained; most painted alpha is250–254; common surface must stay opaque beneath internal material blending",
+    "selection": null,
+    "registered": false,
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "pending": [
+      "semantic standing/seated UV/contour correspondence and original support contact",
+      "native sit/rise/walk plus original camera-run clock",
+      "colour/identity/seam/cuff/hem acceptance and normal-speed video"
+    ],
+    "materials": [
+      {
+        "version": "native-seat-material-1",
+        "actor": "lila",
+        "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+        "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+        "width": 2172,
+        "height": 724,
+        "hasAlpha": true,
+        "alphaThreshold": 8,
+        "transparentPixels": 1027828,
+        "opaquePixels": 1411,
+        "alphaBands": [
+          {
+            "min": 1,
+            "max": 7,
+            "pixels": 11379
+          },
+          {
+            "min": 8,
+            "max": 63,
+            "pixels": 3299
+          },
+          {
+            "min": 64,
+            "max": 127,
+            "pixels": 2260
+          },
+          {
+            "min": 128,
+            "max": 191,
+            "pixels": 2365
+          },
+          {
+            "min": 192,
+            "max": 239,
+            "pixels": 3100
+          },
+          {
+            "min": 240,
+            "max": 249,
+            "pixels": 10720
+          },
+          {
+            "min": 250,
+            "max": 254,
+            "pixels": 510166
+          },
+          {
+            "min": 255,
+            "max": 255,
+            "pixels": 1411
+          }
+        ],
+        "tiles": [
+          {
+            "id": "lila-native-seat-right",
+            "view": "three-quarter-right",
+            "facing": "right",
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 1086,
+              "height": 724
+            },
+            "visibleBounds": {
+              "x": 105,
+              "y": 87,
+              "width": 825,
+              "height": 557
+            },
+            "nonzeroAlphaPixels": 268300
+          },
+          {
+            "id": "lila-native-seat-left",
+            "view": "three-quarter-left",
+            "facing": "left",
+            "region": {
+              "x": 1086,
+              "y": 0,
+              "width": 1086,
+              "height": 724
+            },
+            "visibleBounds": {
+              "x": 1274,
+              "y": 84,
+              "width": 797,
+              "height": 564
+            },
+            "nonzeroAlphaPixels": 265021
+          }
+        ],
+        "references": [
+          {
+            "file": "docs/topics/assets/reference-lila-full.png",
+            "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+            "role": "primary-character-identity"
+          },
+          {
+            "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+            "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+            "role": "native-three-quarter-right"
+          },
+          {
+            "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+            "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+            "role": "native-three-quarter-left"
+          },
+          {
+            "file": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
+            "sha256": "9db3501a16c1c4d4f36b504cbea99ad7b52a3eb855bd656029ff7d3f73c451c2",
+            "role": "legacy-seated-construction-reference"
+          }
+        ],
+        "promptFile": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1-prompt.json",
+        "shape": "one continuous draped skirt; no shorts or cuff openings",
+        "status": "candidate-material-unregistered",
+        "approved": false,
+        "productionReady": false,
+        "registered": false,
+        "motionVerified": false,
+        "limits": [
+          "Static atlas tiles are not pose/UV/bone/support registration or continuous motion.",
+          "Colour, identity, fold perspective, seam/cuff/hem quality and alpha compositing need visual acceptance.",
+          "Most painted pixels have alpha250–254; preserve source bytes and render a single opaque common surface beneath interior material blends.",
+          "No automatic profile selection, production approval, final output, anatomy or video claim."
+        ],
+        "promptSha256": "a3215fe8a1da0ece89e9868c2e200fe844892d56a0ada367e292989694c3002a",
+        "productionAllowed": false
+      },
+      {
+        "version": "native-seat-material-1",
+        "actor": "karo",
+        "file": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1.png",
+        "sha256": "411980eb6d11c6d2a31e3419efb4f264ea82d4095b837a90ea210eca88d5eeed",
+        "width": 1774,
+        "height": 887,
+        "hasAlpha": true,
+        "alphaThreshold": 8,
+        "transparentPixels": 1113950,
+        "opaquePixels": 963,
+        "alphaBands": [
+          {
+            "min": 1,
+            "max": 7,
+            "pixels": 17512
+          },
+          {
+            "min": 8,
+            "max": 63,
+            "pixels": 2457
+          },
+          {
+            "min": 64,
+            "max": 127,
+            "pixels": 1610
+          },
+          {
+            "min": 128,
+            "max": 191,
+            "pixels": 1630
+          },
+          {
+            "min": 192,
+            "max": 239,
+            "pixels": 2039
+          },
+          {
+            "min": 240,
+            "max": 249,
+            "pixels": 5344
+          },
+          {
+            "min": 250,
+            "max": 254,
+            "pixels": 428033
+          },
+          {
+            "min": 255,
+            "max": 255,
+            "pixels": 963
+          }
+        ],
+        "tiles": [
+          {
+            "id": "karo-native-seat-right",
+            "view": "three-quarter-right",
+            "facing": "right",
+            "region": {
+              "x": 0,
+              "y": 0,
+              "width": 887,
+              "height": 887
+            },
+            "visibleBounds": {
+              "x": 75,
+              "y": 234,
+              "width": 750,
+              "height": 474
+            },
+            "nonzeroAlphaPixels": 223943
+          },
+          {
+            "id": "karo-native-seat-left",
+            "view": "three-quarter-left",
+            "facing": "left",
+            "region": {
+              "x": 887,
+              "y": 0,
+              "width": 887,
+              "height": 887
+            },
+            "visibleBounds": {
+              "x": 979,
+              "y": 232,
+              "width": 730,
+              "height": 476
+            },
+            "nonzeroAlphaPixels": 218133
+          }
+        ],
+        "references": [
+          {
+            "file": "docs/topics/assets/reference-karo-full.png",
+            "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+            "role": "primary-character-identity"
+          },
+          {
+            "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+            "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+            "role": "native-three-quarter-right"
+          },
+          {
+            "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+            "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+            "role": "native-three-quarter-left"
+          },
+          {
+            "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v2.png",
+            "sha256": "f6082a8c6c92dbeaf80b94c0ec9f985f2cf0ba2e4cf00f826d621d4f90db7e8d",
+            "role": "legacy-seated-construction-reference"
+          }
+        ],
+        "promptFile": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1-prompt.json",
+        "shape": "short trousers; two separate ragged outlined cuff openings",
+        "status": "candidate-material-unregistered",
+        "approved": false,
+        "productionReady": false,
+        "registered": false,
+        "motionVerified": false,
+        "limits": [
+          "Static atlas tiles are not pose/UV/bone/support registration or continuous motion.",
+          "Colour, identity, fold perspective, seam/cuff/hem quality and alpha compositing need visual acceptance.",
+          "Most painted pixels have alpha250–254; preserve source bytes and render a single opaque common surface beneath interior material blends.",
+          "No automatic profile selection, production approval, final output, anatomy or video claim."
+        ],
+        "promptSha256": "83669d5ca29a3bd7390b1295be984d185014357698be1328961190b1389b573b",
+        "productionAllowed": false
+      }
+    ],
+    "codeHash": "7bcdf8ab25902dde09161139fa4f420672be88159dde3c66b4011a285d901f5f"
+  },
   "references": [
     {
       "file": "docs/topics/assets/reference-lila-full.png",

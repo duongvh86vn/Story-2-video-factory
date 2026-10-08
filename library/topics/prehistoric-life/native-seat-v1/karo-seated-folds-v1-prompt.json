@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "intent": "native-seated-fold-material",
+  "prompt": "Use case: precise-object-edit, animation garment material.\nAsset: a single transparent PNG atlas with TWO independent seated shorts views for Karo, generous clear margins and a wide empty gap. Left tile faces SCREEN RIGHT at the same 45-degree three-quarter angle as reference 2; right tile faces SCREEN LEFT at the same 45-degree angle as reference 3. Equal garment scale and waist height.\nInput roles: reference 1 is the user's original primary Karo identity, costume, saturated warm brown colours and thick irregular hand-painted black ink. References 2 and 3 are the existing native right/left view targets, especially short ragged trousers, tie belt position, near/far shape and ochre brown material. Reference 4 is the legacy seated-cloth construction/layout target; preserve its clearly separated TWO CUFF OPENINGS but adapt to the native views independently, not a mirror or redesign.\nCreate new folds that fit the native right and left three-quarter sitting poses. Each tile shows ONLY the SHORT TROUSERS below the belt, hip and thigh fabric. Short top overlap at waist for attachment behind unchanged upper costume. NO belt, tunic, torso, head, beard, skin, hands, legs, feet, furniture or scenery. Both thighs project naturally toward the facing direction from seated hips, with the nearer thigh/cuff foreground and farther thigh/cuff slightly smaller and offset in height/depth. Both legs of the shorts must be separate, with a readable crotch fold and TWO DISTINCT RAGGED BLACK OUTLINED CUFF OPENINGS. Opening interiors have dark brown cavity shading, not black blobs hiding the boundaries; each cuff has a complete irregular dark ink edge. Shorts end on upper thighs, not knees. Keep the original primitive rough short fur cloth and tiny irregular dark marks, broad hand-painted folds and saturated warm wood/ochre brown colours. Original outline thickness/contrast all around the whole silhouette, no grey/pale wash, shiny leather armour, trousers redesign or fuzzy collar.\nIndependently draw both native views with actual near/far folds, asymmetric wear marks and openings; DO NOT mirror or duplicate a tile. Keep the full contour inside each tile and cleanly separated. No titles, labels, text, borders, shadows, fake checkerboard or background fill. Genuine alpha transparency. NEW unapproved native seated fold material for a continuous rig; not an animation strip or production approval.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "primary-character-identity"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "role": "native-three-quarter-right"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "role": "native-three-quarter-left"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/karo-seated-garment-v2.png",
+      "sha256": "f6082a8c6c92dbeaf80b94c0ec9f985f2cf0ba2e4cf00f826d621d4f90db7e8d",
+      "role": "legacy-seated-construction-reference"
+    }
+  ],
+  "generatedArtifact": "exec-7bedde3f-18d3-4f40-a097-bbd174c8a3bf.png",
+  "recordedAt": "2026-10-08T03:09:26Z",
+  "imageEditing": "Built-in imagegen only; copied generated PNG unchanged into the workspace. No originals overwritten.",
+  "approved": false,
+  "productionReady": false,
+  "registered": false,
+  "runtimeVerified": false
+}

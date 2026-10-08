@@ -9,6 +9,7 @@ import {referenceBodyDescription} from '../packages/animation/forest-body-art.js
 import {poseArtInventory} from '../packages/topics/pose-art-workbench.js';
 import {viewArtInventory} from '../packages/topics/view-art-workbench.js';
 import {bodyViewDescription} from '../packages/animation/body-view-art.js';
+import {nativeSeatArtDescription,nativeSeatArtInventory} from '../packages/topics/native-seat-art.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -39,6 +40,7 @@ const viewEvidence=await Promise.all(viewStudies.map(async study=>{
   if(measured.sha256!==study.sha256||measured.width!==study.width||measured.height!==study.height)throw new Error('Authored view metadata changed: '+study.file);
   return {...study,...measured,productionAllowed:false};
 }));
+const nativeSeatedMaterials=await nativeSeatArtInventory(repo);
 const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
 const headReview=await fs.readFile(path.join(repo,headReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;headPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const headReviewCurrent=headReview?.headPackFingerprint===headPack.fingerprint;
@@ -60,6 +62,7 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
 }));
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
+  nativeSeatedMaterials:{...nativeSeatArtDescription,materials:nativeSeatedMaterials,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/native-seat-art.ts')))},
   references,candidates:[...candidates,...headCandidates,...garmentCandidates],rejectedArtifacts:rejected,productionRig:null,
   headPack:{...headPack,prompts:['library/topics/prehistoric-life/rig-v1/head-prompts.json','library/topics/prehistoric-life/rig-v1/front-prompts.json'],codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts'))),cutoutCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-cutout-head.ts'))),projectionCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-projection.ts')))},
   bodyPack:{...bodyPack,codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-body-art.ts'))),walkCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/source-walk.ts'))),

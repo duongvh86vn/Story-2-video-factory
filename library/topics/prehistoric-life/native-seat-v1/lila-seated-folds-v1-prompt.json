@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "intent": "native-seated-fold-material",
+  "prompt": "Use case: precise-object-edit, animation garment material.\nAsset: a single transparent PNG atlas with TWO independent seated lower-dress views for Lila, generous clear margins and a wide empty gap. Left tile faces SCREEN RIGHT at the same 45-degree three-quarter angle as reference 2; right tile faces SCREEN LEFT at the same 45-degree angle as reference 3. Equal garment scale and waist height.\nInput roles: reference 1 is the user's original primary Lila identity, costume, rich warm brown colours and strong irregular hand-painted black ink. References 2 and 3 are existing native right/left view targets, especially belt/cloth colour, asymmetric near/far form and ragged single skirt. Reference 4 is the legacy seated-cloth construction/layout target, not permission to mirror or adopt a new costume.\nCreate new seated folds that fit those native views. Each tile shows ONLY the lower skirt from just below the thin belt/waist to its ragged hem. A short upper overlap flap above the lap is allowed to attach behind the unchanged upper dress; NO belt, torso, head, skin, hair, hands, legs, feet, chair or scenery. Both thighs extend toward the tile's facing direction while the hips sit back; the dress remains ONE continuous draped skirt covering both thighs, with the near fold and subtly offset farther hem readable. Do not turn Lila's skirt into shorts or pants; no crotch gap or two cuff openings. Preserve the main reference's rough natural garment, original black painted contour, tiny dark fur marks and broad painterly folds, warm deep brown material and controlled amber light, clear local dark shading. Preserve consistent perspective, plausible drape, thickness and outline all around the hem. Rich colours, no grey or pale wash, no shiny satin, leather armour or fluffy fur redesign.\nIndependently draw the two three-quarter views with their actual near/far folds; DO NOT reflect, duplicate or mirror one tile. Keep the whole outline inside its tile and cleanly separated. No titles, labels, text, borders, ground shadow, fake checkerboard or background fill. Genuine alpha transparency. This is a NEW unapproved seated native material candidate to be registered into a continuous rig, not a sprite-frame animation or video.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "role": "native-three-quarter-right"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "role": "native-three-quarter-left"
+    },
+    {
+      "file": "library/topics/prehistoric-life/rig-v1/lila-seated-garment-v1.png",
+      "sha256": "9db3501a16c1c4d4f36b504cbea99ad7b52a3eb855bd656029ff7d3f73c451c2",
+      "role": "legacy-seated-construction-reference"
+    }
+  ],
+  "generatedArtifact": "exec-5cab52ca-a604-439f-82d4-ee77f97b94a8.png",
+  "recordedAt": "2026-10-08T03:09:26Z",
+  "imageEditing": "Built-in imagegen only; copied generated PNG unchanged into the workspace. No originals overwritten.",
+  "approved": false,
+  "productionReady": false,
+  "registered": false,
+  "runtimeVerified": false
+}

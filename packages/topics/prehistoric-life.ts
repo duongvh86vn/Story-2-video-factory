@@ -6,8 +6,9 @@ import {FOREST_HEAD_VIEWS,referenceHeadDescription} from '../animation/forest-he
 import {referenceBodyDescription,referenceBodyMetrics} from '../animation/forest-body-art.js';
 import {bodyViewDescription} from '../animation/body-view-art.js';
 import {BODY_SOURCE_VERSION} from '../animation/schemas.js';
+import {nativeSeatArtDescription} from './native-seat-art.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.39-native-secondary-candidate';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.40-native-seat-material-candidate';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -43,6 +44,7 @@ export function topicContext(config:FactoryConfig) {
     bodyMotion:{pack:referenceBodyDescription().fingerprint,compiler:referenceBodyDescription().compilerVersion,
       nativeCandidate:bodyViewDescription.locomotionCandidate,
       nativeSecondary:bodyViewDescription.secondaryCandidate,
+      nativeSeatedMaterials:nativeSeatArtDescription,
       nativeSourceClock:{version:BODY_SOURCE_VERSION,selection:'performance.sourceBody',rule:'Complete original body tracks are replicated identically across an explicit continuous run with the same native actor/view/stage/root/scale. Inner motion times are relative to the source global start. Camera slices retain root/foot/arm/cloth phase; local body tracks are empty. No inferred continuity or new body/head turns.',verified:false,approved:false},
       walk:referenceBodyDescription().walkMotion,
       actions:referenceBodyDescription().actionMotion,
