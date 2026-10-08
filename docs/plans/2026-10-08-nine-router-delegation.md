@@ -1,4 +1,12 @@
-# Phân việc triển khai qua 9router — source0.49
+# Phân việc triển khai qua 9router — source0.50
+
+## Lượt mới source0.50
+
+Ba request thực trong batch `head-cell-050` đã hoàn tất: Gemini đối chiếu primary với V1 (7.669 token), GPT review hẹp ba file source (7.172), Gemini đối chiếu V1/V2 sau sửa (7.052). Tổng **21.893 token** provider báo. [Report bound nguồn và ảnh](../topics/reviews/primary-angle-heads-nine-router-review-v1.json), [kết quả tạo hình và giới hạn](../topics/reviews/primary-angle-heads-source-record-v1.md).
+
+Response ảnh V2 chỉ 68 output token; parent phải đối chiếu riêng, không coi là chứng nhận giữ nguyên pixel/identity/seam/motion. GPT không được cung cấp raw PNG/metadata để xác nhận chúng. Không model nào thực thi code/test hoặc tự sửa repo. Bốn lượt built-in imagegen tạo V1/V2 riêng, không nằm trong số token 9router trên. Batch ID tối đa 64 ký tự chữ thường/số/gạch ngang, không dùng dấu chấm; packet sai tên bị chặn trước API.
+
+## Lịch sử source0.49
 
 9router đang chạy local ở `http://127.0.0.1:20128/v1`. Ba lượt inference thực đã hoàn tất ngày08/10/2026. Danh sách model GET200 là discovery; các response dưới mới là bằng chứng model đã nhận việc. Không có runtime/video được chạy.
 
@@ -47,7 +55,7 @@ Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-
 node --import tsx scripts/dev-nine-router.ts --task runtime/dev-agents/source-review/review-small-module.json
 ~~~
 
-Source allowlist: TS dưới packages/tests/apps, MD dưới docs/plans hoặc docs/topics; từng file64KB, tổng source55.000 ký tự. PNG allowlist hiện hẹp: primary Lila/Karo và từng head-cell cùng repo, tối đa4 ảnh8MiB/ảnh. Không upload toàn repo, key, env, runtime người dùng hoặc dữ liệu ngoài allowlist. Packet/proposal runtime bị gitignore; báo cáo đã kiểm và source sở hữu mới được commit. Tool không cài thêm SDK/service và không cần image-to-video API.
+Source allowlist: TS dưới packages/tests/apps/scripts, MD dưới docs/plans hoặc docs/topics; từng file64KB, tổng source55.000 ký tự. PNG allowlist hiện hẹp: primary Lila/Karo và từng head-cell cùng repo, tối đa4 ảnh8MiB/ảnh. Không upload toàn repo, key, env, runtime người dùng hoặc dữ liệu ngoài allowlist. Packet/proposal runtime bị gitignore; báo cáo đã kiểm và source sở hữu mới được commit. Tool không cài thêm SDK/service và không cần image-to-video API.
 
 ## Tạo hình còn phải sửa thật
 

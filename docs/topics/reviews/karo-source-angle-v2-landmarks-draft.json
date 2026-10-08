@@ -1,0 +1,52 @@
+{
+  "version": "native-head-cell-landmarks-1",
+  "source": {
+    "actor": "karo",
+    "file": "karo-head-source-angle-v2.png",
+    "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+    "materialFingerprint": "69418283cdd9a0dac654a65e9a121f912bf8dbe589498845558faf74481aebf3",
+    "width": 1201,
+    "height": 1309
+  },
+  "coordinates": "absolute-source-pixels",
+  "crop": {
+    "x": 0,
+    "y": 0,
+    "width": 1201,
+    "height": 1309
+  },
+  "nose": {
+    "x": 813,
+    "y": 674
+  },
+  "mouth": {
+    "x": 750,
+    "y": 844
+  },
+  "chin": {
+    "x": 709,
+    "y": 1103
+  },
+  "eyes": {
+    "screen-left": {
+      "visible": true,
+      "center": {
+        "x": 603,
+        "y": 589
+      }
+    },
+    "screen-right": {
+      "visible": true,
+      "center": {
+        "x": 870,
+        "y": 565
+      }
+    }
+  },
+  "review": "unreviewed",
+  "notes": "Partial MANUAL approximate pixel points from direct PNG inspection, NOT RUN in editor/API or accepted geometry. Full original canvas intentionally retained. Eye/nose/mouth/chin need visual adjustment on exactly this PNG. Neck/skull/face contours/seam/masks/body compatibility/yaw/pixelScale/hair side still missing; no angle or pose is inferred.",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false
+}

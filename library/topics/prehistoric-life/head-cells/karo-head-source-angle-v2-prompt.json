@@ -1,0 +1,25 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: precise-object-edit / identity-preserve. Image1 is the edit target: isolated source-angle Karo head. Image2 is primary character identity only. Make exactly ONE targeted cleanup on image1: remove the small brown/orange neck nub hanging beneath the lowest beard contour. The bottom should finish with the original ragged dark beard/chin edge, with transparent space below it; no painted skin tube, neck cap, stub, collar, or new hanging tip. The separate body rig supplies its own neck beneath the beard. Keep ALL other image1 features unchanged as closely as possible: original tilted/turned orientation, dot eyes, brows, nose, warm orange-peach face, wide friendly open tooth-band smile, tongue aperture, moustache, ears, complete messy hair and beard, their exact proportions/placement/colors and heavy irregular hand-painted ink. Do NOT force frontal, mirror, enlarge beard, move mouth, invent expression or redesign. Single SAME-angle head only, true transparency and margin; no body/clothes/text/panel/labels/shadow. Remove ONLY protruding neck nub, preserve full beard edge.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v1.png",
+      "sha256": "7aaaf2ddc6c1019b5b8428cf50f1bd0255f6a6cbfaf561c510bbc0006a22eb6d",
+      "role": "edit-target"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-03f24fea-b96d-4ba8-a29d-8b1c090662af.png",
+  "requestedYawDeg": null,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

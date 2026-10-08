@@ -1,0 +1,52 @@
+{
+  "version": "native-head-cell-landmarks-1",
+  "source": {
+    "actor": "lila",
+    "file": "lila-head-source-angle-v2.png",
+    "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+    "materialFingerprint": "7ff0a8f5ae9638027ba89ded3562f8397e6a63cbb21b47bff8a37b847bebdcf0",
+    "width": 1167,
+    "height": 1347
+  },
+  "coordinates": "absolute-source-pixels",
+  "crop": {
+    "x": 0,
+    "y": 0,
+    "width": 1167,
+    "height": 1347
+  },
+  "nose": {
+    "x": 851,
+    "y": 558
+  },
+  "mouth": {
+    "x": 751,
+    "y": 649
+  },
+  "chin": {
+    "x": 730,
+    "y": 757
+  },
+  "eyes": {
+    "screen-left": {
+      "visible": true,
+      "center": {
+        "x": 703,
+        "y": 511
+      }
+    },
+    "screen-right": {
+      "visible": true,
+      "center": {
+        "x": 895,
+        "y": 488
+      }
+    }
+  },
+  "review": "unreviewed",
+  "notes": "Partial MANUAL approximate pixel points from direct PNG inspection, NOT RUN in editor/API or accepted geometry. Full original canvas intentionally retained. Eye/nose/mouth/chin need visual adjustment on exactly this PNG. Neck/skull/face contours/seam/masks/body compatibility/yaw/pixelScale/hair side still missing; no angle or pose is inferred.",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false
+}

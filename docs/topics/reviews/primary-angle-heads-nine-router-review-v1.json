@@ -1,0 +1,202 @@
+{
+  "version": "primary-angle-heads-nine-router-review-1",
+  "scope": "source-and-static-art-advice-only",
+  "calls": [
+    {
+      "id": "gemini-primary-angle-art",
+      "model": "ag/gemini-3.8-flash-low",
+      "purpose": "static-art-advice",
+      "status": "proposal-not-applied",
+      "slot": 1,
+      "fingerprint": "758346433d0bb0de6664501747dd5debeef81648edc4f3ea1139af7630a96d48",
+      "proposalSha256": "74b4cb9ef732cb4797b69ead15d88eda66d22b3a25c09a181fb92c86055748da",
+      "sources": [],
+      "references": [
+        {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v1.png",
+          "sha256": "a98424e76e08daa67561d9ccc8fa8a2685c3dd3b1e66c4d35e9b5105b7fc5986"
+        },
+        {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v1.png",
+          "sha256": "7aaaf2ddc6c1019b5b8428cf50f1bd0255f6a6cbfaf561c510bbc0006a22eb6d"
+        }
+      ],
+      "usage": {
+        "promptTokens": 7061,
+        "completionTokens": 608,
+        "totalTokens": 7669
+      },
+      "createdAt": "2026-10-08T09:23:52.315Z",
+      "response": {
+        "actors": [
+          {
+            "actor": "Lila",
+            "preserved": [
+              "Three-quarter viewing orientation facing viewer's right matches primary reference angle",
+              "Low ponytail tied with yellow-brown band physically located on viewer's left side",
+              "Dot eye shape, curved brow stroke, arched closed smile, and rounded small nose hook",
+              "Warm peach skin tone and dark brown hair palette with heavy black outlines"
+            ],
+            "differences": [
+              {
+                "feature": "hair silhouette and crown strand",
+                "visibleEvidence": "Image 2 features an exaggerated horizontal strand extending along the top right contour, and the volume of spikes along the top crown is denser and slightly more flared than in Image 1",
+                "necessaryCorrection": "Trim back the elongated top whip strand to match the rounded silhouette and spike count of the primary reference"
+              },
+              {
+                "feature": "neck stem termination",
+                "visibleEvidence": "Image 2 shows a severed black stick-neck fragment below the chin line cut off as an isolated head cell",
+                "necessaryCorrection": "Ensure the base of the neck matches the attachment geometry and line thickness of the original stick-figure torso without jagged isolation artifacts"
+              }
+            ],
+            "sourceAngleConclusion": "Strong structural match to original primary angle and facial feature placement without forced frontality"
+          },
+          {
+            "actor": "Karo",
+            "preserved": [
+              "Three-quarter head orientation facing viewer's right matches primary reference angle",
+              "Open laughing mouth aperture showing upper teeth band and tongue, surrounded by full dark brown beard and mustache",
+              "Thick black arched eyebrows, dot eyes, curved nose profile, and visible round left ear",
+              "Warm tan face tone and rough textured hair outline styling"
+            ],
+            "differences": [
+              {
+                "feature": "bottom neck nub",
+                "visibleEvidence": "Image 4 shows an exposed brown/black flesh/neck nub protruding directly below the bottom point of the beard",
+                "necessaryCorrection": "Remove or adjust the protruding neck nub stroke at the bottom beard contour so it cleanly matches the bearded chin contact point with the stick neck in Image 3"
+              },
+              {
+                "feature": "beard mustache contour and tooth aperture proportion",
+                "visibleEvidence": "In Image 4, the mustache upper line dips lower across the mouth and the mouth aperture opening is slightly wider relative to the cheeks than in Image 3",
+                "necessaryCorrection": "Slightly tighten the mustache boundary and align mouth opening scale with the exact curve proportions of Image 3 reference"
+              },
+              {
+                "feature": "right ear visibility",
+                "visibleEvidence": "Image 4 exposes a sliver of the viewer's right ear tip through the beard hair on the far right edge, which is not prominent in Image 1",
+                "necessaryCorrection": "Tuck or shade the far-side ear element to match primary hair occlusion"
+              }
+            ],
+            "sourceAngleConclusion": "Preserves original orientation and facial expression; requires cleanup of the bottom neck nub artifact and fine silhouette alignment"
+          }
+        ],
+        "remaining": [
+          "Clean removal of isolated neck cutoffs/nubs on both head cells for seamless torso compositing",
+          "Verification of outline weight consistency along perimeter hair strokes against primary assets"
+        ],
+        "limits": [
+          "Static PNG evaluation only; no runtime registration, seam blending, skeletal rigging, or motion acceptance can be established from isolated stills",
+          "No numerical yaw angles measured or asserted; comparisons strictly bound to visual reference in provided images"
+        ]
+      }
+    },
+    {
+      "id": "gpt-angle-provenance-review",
+      "model": "cx/gpt-5.6-sol",
+      "purpose": "source-only-review",
+      "status": "proposal-not-applied",
+      "slot": 2,
+      "fingerprint": "57a388eae8e460f7af45898da63d4ae42034c8ba92aa8a0864fdd1b950610d7b",
+      "proposalSha256": "8baf9da8389a01a24b5a8d250f8b343d840ee2992ceb7d12e87a049e6fd787dc",
+      "sources": [
+        {
+          "file": "packages/topics/head-cell-art.ts",
+          "sha256": "c81f76c1f4d9587123d2147f3507792dc427073c8b65961cfb166c15ab73927a"
+        },
+        {
+          "file": "scripts/head-cell-inventory.ts",
+          "sha256": "1540f16d587937cc62d04da852e78a7abe6bc1c2a4127df2a35f1fa77baded9e"
+        },
+        {
+          "file": "tests/head-cell-art.test.ts",
+          "sha256": "88cba4ad5b3506e796964af38d1509542a01c2e37ecb8eb3b56135e2afda31d8"
+        }
+      ],
+      "references": [],
+      "usage": {
+        "promptTokens": 6467,
+        "completionTokens": 705,
+        "totalTokens": 7172
+      },
+      "createdAt": "2026-10-08T09:23:32.064Z",
+      "response": {
+        "findings": [],
+        "limits": [
+          "Source-only review; no execution, tests, fixtures, compiler, filesystem inspection, callbacks, samplers, browser, API, voice, or video were used.",
+          "The declared four PNG files, JSON records, prompts, generated originals, and reference-image bytes were not supplied, so their actual hashes, dimensions, alpha metadata, null/zero values, and exact-byte identity cannot be independently verified.",
+          "No image identity, visual quality, requested or measured motion, yaw, registration, approval, production readiness, or runtime acceptance is inferred.",
+          "Within the supplied source, requestedYawDeg is explicitly required and nullable; null is kept distinct from 0, existing finite values are not rewritten, both new primary-angle actors remain unregistered/unapproved, runtime readers do not read generatedOriginal, and new authoring records require a bounded non-linked generated_images PNG whose bytes exactly equal the repository PNG."
+        ]
+      }
+    },
+    {
+      "id": "gemini-primary-angle-cleanup",
+      "model": "ag/gemini-3.8-flash-low",
+      "purpose": "static-art-advice",
+      "status": "proposal-not-applied",
+      "slot": 3,
+      "fingerprint": "6ce5097ebad0cd00b9b460bf3eeed8a322714ec882d1ed1a37311d5e0515cd34",
+      "proposalSha256": "179b455a875cb4384991746535ab8e7fb47ce371a03c2bf99e561f1bff48b644",
+      "sources": [],
+      "references": [
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v1.png",
+          "sha256": "a98424e76e08daa67561d9ccc8fa8a2685c3dd3b1e66c4d35e9b5105b7fc5986"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+          "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v1.png",
+          "sha256": "7aaaf2ddc6c1019b5b8428cf50f1bd0255f6a6cbfaf561c510bbc0006a22eb6d"
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+          "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23"
+        }
+      ],
+      "usage": {
+        "promptTokens": 6984,
+        "completionTokens": 68,
+        "totalTokens": 7052
+      },
+      "createdAt": "2026-10-08T09:33:23.027Z",
+      "response": {
+        "actors": [
+          {
+            "actor": "Lila",
+            "targetedChangeObserved": true,
+            "unintendedVisibleChanges": [],
+            "remaining": []
+          },
+          {
+            "actor": "Karo",
+            "targetedChangeObserved": true,
+            "unintendedVisibleChanges": [],
+            "remaining": []
+          }
+        ],
+        "limits": [
+          "Static visual comparison only; no registration, pixel identity, yaw approval, or runtime acceptance inferred."
+        ]
+      }
+    }
+  ],
+  "totalReportedTokens": 21893,
+  "parentAssessment": "Source-angle head candidates closer to primary appearance by direct visual inspection; v2 crown/neck-nub cleanup observed; all image geometry needs independent current-source review. Minimal68token Gemini v2 response does not prove unchanged features/pixels or body/seam/motion acceptance.",
+  "originalVsEdit": "PNG files differ in bytes and v2 dimensions by1px; never reuse v1 geometry or infer angle.",
+  "manualDrafts": "Partial approximate current-v2 eye/nose/mouth/chin points, unreviewed, missing neck/skull/contours/masks/yaw/pixelScale/hairside, editor/API NOT RUN",
+  "runtime": false,
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false
+}

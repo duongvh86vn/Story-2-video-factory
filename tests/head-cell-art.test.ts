@@ -19,12 +19,13 @@ async function withArtCopy(run:(root:string)=>Promise<void>){
   }finally{assert.equal(path.dirname(root),parent);assert.ok(path.basename(root).startsWith('head-cell-art-'));await fs.rm(root,{recursive:true,force:true});}
 }
 
-test('individual raw PNG inventory binds the two unapproved sources and their actual alpha',async()=>{
+test('individual raw PNG inventory preserves the original two immutable sources after adding source-angle art',async()=>{
   const materials=await headCellInventory(repo);
-  assert.deepEqual(materials.map(m=>m.file),[front,side]);
-  assert.deepEqual(materials.map(m=>m.sha256),['9fe7c077165da2483af272f0ec70a9e01fb3e467203e46ee8019af23a104e552','299a47ecbb78536f314884159c7a3c2736d8b166715f74b20d41412c7d0e9c57']);
-  assert.deepEqual(materials.map(m=>m.requestedYawDeg),[0,8]);
-  for(const m of materials){
+  const originals=materials.filter(m=>[front,side].includes(m.file));
+  assert.deepEqual(originals.map(m=>m.file),[front,side]);
+  assert.deepEqual(originals.map(m=>m.sha256),['9fe7c077165da2483af272f0ec70a9e01fb3e467203e46ee8019af23a104e552','299a47ecbb78536f314884159c7a3c2736d8b166715f74b20d41412c7d0e9c57']);
+  assert.deepEqual(originals.map(m=>m.requestedYawDeg),[0,8]);
+  for(const m of originals){
     assert.equal(m.width,1024);assert.equal(m.height,1536);assert.equal(m.edgePixels,0);
     assert.equal(m.opaquePixels,0);assert.ok(m.partialPixels>0&&m.transparentPixels>0);
     assert.equal(m.alphaHistogram.reduce((a,n)=>a+n,0),m.width*m.height);
@@ -32,6 +33,47 @@ test('individual raw PNG inventory binds the two unapproved sources and their ac
     for(const key of ['approved','registered','productionReady','motionVerified','yawMeasured'] as const)assert.equal(m[key],false);
   }
   assert.equal(headCellArtDescription.availableBanks.length,0);
+});
+
+// New source0.50 declarations only; original orientation is not a measured yaw.
+test('both primary-angle originals retain raw provenance and never become implicit front views',async()=>{
+  const names=['karo-head-source-angle-v1.png','lila-head-source-angle-v1.png'];
+  const expectedHashes=['7aaaf2ddc6c1019b5b8428cf50f1bd0255f6a6cbfaf561c510bbc0006a22eb6d','a98424e76e08daa67561d9ccc8fa8a2685c3dd3b1e66c4d35e9b5105b7fc5986'];
+  const materials=(await headCellInventory(repo)).filter(m=>names.includes(m.file));
+  assert.deepEqual(materials.map(m=>m.file),names);assert.deepEqual(materials.map(m=>m.sha256),expectedHashes);
+  assert.deepEqual(materials.map(m=>[m.width,m.height]),[[1202,1309],[1167,1348]]);
+  for(const m of materials){
+    assert.equal(m.requestedYawDeg,null);assert.equal(m.yawMeasured,false);assert.equal(m.edgePixels,0);assert.ok(m.transparentPixels>0);
+    const prompt=HeadCellPromptSchema.parse(JSON.parse((await readHeadCellSource(repo,m.promptFile)).toString('utf8')));
+    assert.equal(prompt.requestedYawDeg,null);assert.equal(prompt.referenceImages.length,1);
+    assert.equal(prompt.referenceImages[0]!.file,`docs/topics/assets/reference-${m.actor}-full.png`);
+    for(const key of ['approved','registered','productionReady','motionVerified'] as const)assert.equal(m[key],false);
+    assert.equal(HeadCellMaterialSchema.safeParse({...m,requestedYawDeg:undefined}).success,false);
+    assert.equal(HeadCellPromptSchema.safeParse({...prompt,requestedYawDeg:undefined}).success,false);
+    const {record}=await headCellMaterial(repo,m.file);
+    assert.equal(hash(record),hash(m));
+  }
+});
+test('primary-angle source and prompt disagreement is rejected rather than filling zero',async()=>{
+  await withArtCopy(async root=>{
+    const file='karo-head-source-angle-v1.png',{record}=await headCellMaterial(root,file);
+    await fs.writeFile(path.join(root,HEAD_CELL_FOLDER,file.slice(0,-4)+'.json'),JSON.stringify({...record,requestedYawDeg:0}));
+    await assert.rejects(headCellMaterial(root,file),/ownership differs/);
+  });
+});
+
+test('cleanup revisions remain bound to their own PNG and original actor plus previous edit source',async()=>{
+  const expected={lila:'05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298',karo:'d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23'};
+  for(const actor of ['lila','karo'] as const){
+    const {record}=await headCellMaterial(repo,actor+'-head-source-angle-v2.png');
+    assert.equal(record.sha256,expected[actor]);assert.equal(record.requestedYawDeg,null);assert.equal(record.registered,false);assert.equal(record.edgePixels,0);
+    assert.equal(record.references.length,2);
+    assert.equal(record.references.find(r=>r.role==='edit-target')!.file,HEAD_CELL_FOLDER+'/'+actor+'-head-source-angle-v1.png');
+    await withArtCopy(async root=>{
+      await fs.appendFile(path.join(root,HEAD_CELL_FOLDER,actor+'-head-source-angle-v1.png'),'changed');
+      await assert.rejects(headCellMaterial(root,record.file),/reference changed/);
+    });
+  }
 });
 
 test('PNG/prompt/material paths reject newline, foreign source, traversal and noncanonical filenames before reading',async()=>{

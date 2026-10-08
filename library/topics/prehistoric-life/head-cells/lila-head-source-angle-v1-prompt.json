@@ -1,0 +1,20 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: background-extraction / identity-preserve. Image1 is the exact primary Lila artwork to preserve. Make ONE isolated cutout of her existing HEAD, ALL long ragged dark brown hair and low side-tied ponytail, and just the original narrow dark neck attachment, on genuine transparent background. Preserve the ORIGINAL face orientation, tilt, proportions, small oval eyes, eyebrows, bent-line nose and gentle CLOSED smile exactly as closely as possible; do NOT turn her frontal, level her head, center her nose, enlarge her eyes, round her jaw or beautify/redesign. Copy the reference's warm saturated peach-orange skin and rough heavy uneven black ink/paint strokes, not clean even vector outlines. Her face is an organic asymmetric oval in this drawing, not a perfect round circle. Keep her original messy fringe, full long loosely tied hair silhouette and brown fiber tie; the entire hanging hair remains below her chin, on the same physical side. Remove ONLY beige paper, decorative leaf, torso, clothing, arms/legs and any text. Keep the neck a short original black attachment with no new peach neck cylinder, no thick rounded neck cap, no baked garment collar or bottom border. One head only, not a sheet, no new expression and no alternate character. Keep all hair tips with10% transparent margin so no ink touches any canvas edge. No shadow/background/panel/border/letters/markers; true alpha. This is a source-angle asset, NOT a newly rotated0degree view. No eyes or mouth overlay borrowed from another drawing.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-905cec5c-0b17-47e5-9e7e-c055def7a3da.png",
+  "requestedYawDeg": null,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

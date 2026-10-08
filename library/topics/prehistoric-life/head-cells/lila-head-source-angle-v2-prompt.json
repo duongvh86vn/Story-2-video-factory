@@ -1,0 +1,25 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: precise-object-edit / identity-preserve. Image1 is the edit target: isolated Lila source-angle head. Image2 is primary character identity only. Make exactly ONE targeted cleanup on image1: remove the very long horizontal whip-like brown strand along the top-right silhouette; end the crown strands as ordinary short messy uneven hair wisps, following image2. Keep the rest of image1's ORIGINAL angled face, warm colors, black dot eyes, eyebrow shapes, bent-line nose, closed smile, organic jaw, full long loose side ponytail and tie, all remaining hair/neck positions and artwork proportions unchanged as closely as possible. Do NOT turn the head frontal, redesign face, add expression, relocate features or change the ponytail. Preserve heavy irregular hand-painted black ink, coarse dark brown hair texture. No new objects, torso, clothes, leaves, text, panel, labels or shadow. Single same-angle head, genuine transparent background with empty margin all around. Do not remove or shorten the long hanging ponytail; remove ONLY exaggerated upper-right horizontal crown whip.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v1.png",
+      "sha256": "a98424e76e08daa67561d9ccc8fa8a2685c3dd3b1e66c4d35e9b5105b7fc5986",
+      "role": "edit-target"
+    },
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-cccb66a0-7349-4fd8-8933-5064bf0a250b.png",
+  "requestedYawDeg": null,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

@@ -8,8 +8,10 @@ export const HEAD_CELL_FOLDER='library/topics/prehistoric-life/head-cells';
 export const HeadCellFileSchema=z.string().max(90).regex(/^(lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\d*\.png$(?![\s\S])/);
 const Sha=z.string().length(64).regex(/^[a-f0-9]{64}$/),Count=z.number().int().nonnegative();
 const Ref=z.object({file:z.string().max(250),sha256:Sha,role:z.enum(['primary-character-identity','edit-target'])}).strict();
+// Null is an explicit source-angle-preservation request, never an inferred0°.
+// No default is supplied; existing finite-angle records keep identical bytes.
 export const HeadCellPromptSchema=z.object({version:z.literal('native-head-cell-prompt-1'),actor:z.enum(['lila','karo']),provider:z.literal('builtin-imagegen'),
-  prompt:z.string().min(1).max(24000),referenceImages:z.array(Ref).min(1).max(2),generatedOriginal:z.string().min(1).max(4096),requestedYawDeg:z.number().finite().min(-90).max(90),
+  prompt:z.string().min(1).max(24000),referenceImages:z.array(Ref).min(1).max(2),generatedOriginal:z.string().min(1).max(4096),requestedYawDeg:z.number().finite().min(-90).max(90).nullable(),
   scope:z.literal('static-art-authoring-only'),approved:z.literal(false),registered:z.literal(false),productionReady:z.literal(false),runtimeVerified:z.literal(false),
 }).strict().superRefine((p,ctx)=>{
   const primary=p.referenceImages.filter(r=>r.role==='primary-character-identity'),edit=p.referenceImages.filter(r=>r.role==='edit-target');
@@ -22,7 +24,7 @@ export const HeadCellMaterialSchema=z.object({version:z.literal('native-head-cel
   transparentPixels:Count,visiblePixels:z.number().int().positive(),opaquePixels:Count,partialPixels:Count,edgePixels:Count,
   alphaHistogram:z.array(Count).length(256),pixelSha256:Sha,
   visibleBounds:z.object({x:Count,y:Count,width:z.number().int().positive(),height:z.number().int().positive()}).strict(),
-  requestedYawDeg:z.number().finite().min(-90).max(90),yawMeasured:z.literal(false),findings:z.array(z.string().min(1).max(2000)).min(1).max(20),
+  requestedYawDeg:z.number().finite().min(-90).max(90).nullable(),yawMeasured:z.literal(false),findings:z.array(z.string().min(1).max(2000)).min(1).max(20),
   status:z.literal('unreviewed-source-candidate'),approved:z.literal(false),registered:z.literal(false),productionReady:z.literal(false),motionVerified:z.literal(false),
 }).strict().superRefine((m,ctx)=>{
   const fail=(message:string)=>ctx.addIssue({code:'custom',message});
@@ -81,4 +83,4 @@ export async function headCellInventory(repo:string){
   const files=(await fs.readdir(folder)).filter(file=>HeadCellFileSchema.safeParse(file.replace(/\.json$/,'.png')).success&&file.endsWith('.json')&&!file.endsWith('-prompt.json')).sort();
   return Promise.all(files.map(async file=>(await headCellMaterial(repo,file.replace(/\.json$/,'.png'))).record));
 }
-export const headCellArtDescription={version:'native-head-cell-material-1',method:'individual original PNGs with immutable raw RGBA/provenance measurement; requested yaw is not registration',registered:false,approved:false,productionReady:false,motionVerified:false,availableBanks:[],pending:['identity and adjacent-view correspondence','source neck/eye/chin/mouth/seam/mask registrations','full speech/emotion/body turn and normal-speed whole-factory acceptance']};
+export const headCellArtDescription={version:'native-head-cell-material-1',method:'individual original PNGs with immutable raw RGBA/provenance measurement; explicit angle request or null preserving primary orientation, never inferred registration',registered:false,approved:false,productionReady:false,motionVerified:false,availableBanks:[],pending:['identity and adjacent-view correspondence','source neck/eye/chin/mouth/seam/mask registrations','full speech/emotion/body turn and normal-speed whole-factory acceptance']};

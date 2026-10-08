@@ -6,15 +6,38 @@ import {fileURLToPath} from 'node:url';
 import {buildServer} from '../apps/server/index.js';
 import {headCellMaterial,headCellInventory} from '../packages/topics/head-cell-art.js';
 import {headCellWorkbench} from '../packages/topics/head-cell-workbench.js';
-import {headCellDraft,headCellSourceBinding} from '../packages/topics/head-cell-landmarks.js';
+import {headCellDraft,headCellSourceBinding,checkBoundHeadCellDraft} from '../packages/topics/head-cell-landmarks.js';
+import {promises as fs} from 'node:fs';
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 test('workbench binds one whole PNG and original reference without atlas geometry or inferred angles',async()=>{
   const html=await headCellWorkbench(repo,'lila-head-near-right-v1.png');
   assert.ok(html.includes('viewBox="0 0 1024 1536"'));
   assert.ok(html.includes('/api/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png'));
-  assert.ok(html.includes('reference-lila-full.png'));assert.ok(html.includes('Karo chưa có'));
+  assert.ok(html.includes('reference-lila-full.png'));
   await assert.rejects(headCellWorkbench(repo,'karo-head-front-v1.png'),/No such/);
   await assert.rejects(headCellWorkbench(repo,'lila-head-front-v1.png\n'));
+});
+test('source-angle pages keep each actor identity and explicitly unknown angle, with no unavailable-Karo label',async()=>{
+  for(const actor of ['lila','karo']){
+    const html=await headCellWorkbench(repo,actor+'-head-source-angle-v1.png');
+    assert.ok(html.includes('reference-'+actor+'-full.png'));assert.ok(html.includes('Giữ góc ảnh gốc; chưa đo góc.'));
+    assert.equal(html.includes('Karo chưa có'),false);
+    const {record}=await headCellMaterial(repo,actor+'-head-source-angle-v1.png'),draft=headCellDraft(record);
+    assert.equal(record.requestedYawDeg,null);assert.equal(draft.yawDeg,undefined);assert.equal(draft.source.actor,actor);
+    assert.equal(draft.eyes,undefined);assert.equal(draft.mouth,undefined);assert.equal(draft.registered,false);
+  }
+});
+test('partial manual v2 calibration stays incomplete, raw-source-bound and unregistered',async()=>{
+  for(const actor of ['lila','karo']){
+    const draft=JSON.parse(await fs.readFile(path.join(repo,'docs/topics/reviews/'+actor+'-source-angle-v2-landmarks-draft.json'),'utf8'));
+    const {record}=await headCellMaterial(repo,actor+'-head-source-angle-v2.png');
+    const result=checkBoundHeadCellDraft({source:headCellSourceBinding(record),draft},record);
+    assert.equal(result.landmarksComplete,false);assert.equal(result.productionReady,false);assert.equal(result.registered,false);
+    assert.ok(result.pending.some(p=>p.reason.includes('yawDeg')));assert.ok(result.pending.some(p=>p.reason.includes('neck')));
+    assert.ok(result.pending.some(p=>p.reason.includes('Edit')||p.reason.includes('edit mask')));
+    assert.equal(result.draft.yawDeg,undefined);assert.equal(result.draft.pixelScale,undefined);assert.equal(result.draft.review,'unreviewed');
+    assert.throws(()=>checkBoundHeadCellDraft({source:headCellSourceBinding(record),draft:{...draft,source:{...draft.source,file:actor+'-head-source-angle-v1.png'}}},record));
+  }
 });
 test('source-bound draft API serves protected MIME/CSP and preserves blank incomplete draft',async()=>{
   const app=await buildServer({repoRoot:repo,logger:false});

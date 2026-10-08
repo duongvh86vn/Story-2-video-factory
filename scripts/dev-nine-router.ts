@@ -34,7 +34,7 @@ for(const file of [process.env.STORY_FACTORY_ENV_FILE,path.join(repo,'.env'),'D:
 const key=process.env.MODEL_GATEWAY_KEY?.trim();if(!key)throw new Error('MODEL_GATEWAY_KEY is not configured; key values are never logged');
 async function readAllowed(file:string,image=false){
   if(image?!/^(?:docs\/topics\/assets\/reference-(?:lila|karo)-full|library\/topics\/prehistoric-life\/head-cells\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\d*)\.png$(?![\s\S])/.test(file)
-    :!/^(?:(?:packages|tests|apps)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*\.ts|docs\/(?:plans|topics)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.md)$(?![\s\S])/.test(file))throw new Error('Unapproved dev-agent input');
+    :!/^(?:(?:packages|tests|apps|scripts)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*\.ts|docs\/(?:plans|topics)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.md)$(?![\s\S])/.test(file))throw new Error('Unapproved dev-agent input');
   return boundedRead(path.resolve(repo,file),image?8*1024*1024:64000);
 }
 const sources=await Promise.all(packet.sources.map(async file=>{const bytes=await readAllowed(file);return {file,sha256:hash(bytes),text:bytes.toString('utf8')};}));

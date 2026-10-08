@@ -1,8 +1,16 @@
-# Native head turns — source0.49, 08/10/2026
+# Native head turns — source0.50, 08/10/2026
 
 Mục tiêu sản phẩm vẫn là câu chuyện/kịch bản/WAV bất kỳ → hai diễn viên đúng mẫu, diễn mượt trong bối cảnh màu sống động → video có giọng/phụ đề/QC. Không thay bằng người dẫn cố định hoặc bài máy móc. Không có image-to-video API trên máy; dùng authored raster/native SVG + HTML5/GSAP. Toàn runtime/test/render do model của người dùng.
 
-## Source0.49 — đo nguồn riêng và9router
+## Source0.50 — nguồn đầu ở góc ảnh mẫu
+
+- Có Lila và Karo V1/V2 tách đầu từ primary, giữ màu da ấm/nét mặt/tóc/râu. V2 bỏ lọn tóc kéo ngang và cổ thừa; thay đổi pixel/canvas nên cần bản đo riêng, không dùng lại tọa độ V1. Chưa được duyệt hoặc đăng ký.
+- `requestedYawDeg:null` là giữ góc nguồn chưa đo, không phải chính diện 0°. Static authoring đọc mọi PNG canonical và giữ metadata cũ nguyên byte; nguồn mới phải bằng raw output imagegen đã lưu. Runtime API chỉ đọc nguồn trong repo.
+- Có hai draft V2 với điểm mặt ước lượng, bound đúng PNG; thiếu cổ/sọ/viền/masks/góc/tỷ lệ. Bước tiếp theo là đo và nối body tương thích, rồi author góc lân cận/capability speech/gaze/emotion/seam; không biến nguồn đầu nghỉ thành bank nói chuyện bằng cách bỏ guard.
+- Ba request 9router thực, 21.893 token provider báo; GPT source review và Gemini ảnh tĩnh, parent kiểm lại. Build/typecheck/schema/static inventory qua; 5 callback mới và runtime/video NOT RUN. 6 nguồn riêng/5 atlas held/0 bank dùng được, productionReady=false/productionRig=null.
+- [Nguồn và việc tiếp theo](../topics/reviews/primary-angle-heads-source-record-v1.md), [bàn giao](../topics/NATIVE-HEAD-TURN-HANDOFF.md). Full story/script/WAV, EN/VI/JA/KO/local external TTS, cả diễn viên và video/QC vẫn là mục tiêu.
+
+## Lịch sử source0.49 — đo nguồn riêng và9router
 
 Source `beef895aff69565446ddb95aae5041009b0b46cf` đã push,18 owned paths; local/remote exactSHA khớp. Fresh build/typecheck/schema/static manifest qua; browser/callbacks/video NOT RUN. Đây là tiến độ source và phối hợp trợ lý, chưa là diễn xuất hoặc factory hoàn thành.
 

@@ -1,6 +1,14 @@
-# Quay đầu Lila/Karo — source0.49 và phần còn thiếu
+# Quay đầu Lila/Karo — source0.50 và phần còn thiếu
 
-## Source0.49 — bản đo riêng và phân việc9router
+## Source0.50 — giữ nét mặt và góc của ảnh mẫu
+
+Đã thêm bốn PNG đầu Lila/Karo V1/V2, giữ góc của ảnh mẫu thay vì ép về chính diện. V2 bỏ lọn tóc đỉnh kéo ngang của Lila và phần cổ thừa dưới râu Karo. Tất cả là nguồn tạo hình **chưa duyệt, chưa đăng ký**; chưa đổi đầu trong renderer hoặc chứng minh chuyển động. Góc chưa biết được lưu rõ là `requestedYawDeg:null`, không tự gán thành 0°.
+
+Hai bản đo sơ bộ V2 dùng đúng source SHA/canvas/material fingerprint, chỉ có điểm mặt ước lượng; cổ/sọ/viền/masks/góc/tỷ lệ còn thiếu. Không lấy tọa độ V1 hay ROI từ ảnh toàn thân đặt lên V2. [Ảnh, review, bản đo, lệnh test và việc còn thiếu](reviews/primary-angle-heads-source-record-v1.md).
+
+Ba lượt hỗ trợ qua 9router đã hoàn tất: Gemini đối chiếu ảnh và GPT kiểm source, tổng 21.893 token do provider báo. Response Gemini lần sửa cuối rất ngắn, không chứng minh giữ nguyên từng nét hoặc đạt seam/motion. Parent kiểm lại; proposal không tự thực thi. Build/typecheck/schema/static inventory qua; 5 callback mới và toàn runtime/video **NOT RUN**, tiếp tục giao model của người dùng. Hiện 6 nguồn đầu riêng, 5 atlas held, availableBanks=0, productionReady=false/productionRig=null. Full ba input, giọng và diễn xuất vẫn chưa hoàn thành.
+
+## Lịch sử source0.49 — bản đo riêng và phân việc9router
 
 Source commit `beef895aff69565446ddb95aae5041009b0b46cf` đã push nhánh `codex/prehistoric-life`,18 owned paths; exact local/remote SHA khớp. Kiểm cuối: build39 modules/585ms, test:typecheck exit0 (không thực thi callback), schema export exit0, static pack/hash binding exit0; diff check qua. 11 callback/runtime/browser/video vẫn NOT RUN. Nguồn hai PNG không đổi; availableBanks=0, productionReady=false/productionRig=null. Các chỉnh sửa sau commit này chỉ là tài liệu bàn giao, không đổi code.
 

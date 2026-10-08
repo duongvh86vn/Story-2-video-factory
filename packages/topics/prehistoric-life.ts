@@ -13,7 +13,7 @@ import {headTurnArtDescription} from './head-turn-art.js';
 import {nativeHeadBankDescription} from '../animation/native-head-bank.js';
 import {headCellArtDescription} from './head-cell-art.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.49-head-cell-measurement';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.50-primary-angle-heads';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

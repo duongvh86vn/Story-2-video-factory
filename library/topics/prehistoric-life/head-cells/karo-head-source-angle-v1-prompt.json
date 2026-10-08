@@ -1,0 +1,20 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: background-extraction / identity-preserve. Image1 is the exact primary Karo artwork to preserve. Make ONE isolated cutout of the existing prehistoric man's HEAD, complete dark messy spiky brown hair, ears, moustache and rounded ragged full beard, with a short original narrow black neck attachment, on genuine transparent background. Preserve his ORIGINAL slightly turned face orientation and tilt; do NOT force front/symmetry or change eye spacing, brows, bent nose, wide friendly open smile with its original teeth and warm skin aperture. Preserve all expression details and the source's saturated warm orange-peach face, dark layered brown beard/hair, rough heavy uneven black storybook ink, coarse paint shading. Do not polish into smooth vector art, enlarge beard or teeth, add eyelashes, make skin pale, change hairstyle or make a different man. Remove ONLY beige paper, text, torso/clothes, limbs and unrelated background. Keep the neck a short original dark attachment beneath beard, no new skin-colored tube or collar/baked neckline cap. Keep full hair/beard silhouette and all stray tips inside10% transparent margins; no ink touches canvas edges. ONE head, not atlas/character sheet, no labels/arrows/markers/shadow. Preserve source angle, not a newly invented0degree front view. True transparent alpha.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-ce073011-210f-45c7-9716-7c757ad46484.png",
+  "requestedYawDeg": null,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

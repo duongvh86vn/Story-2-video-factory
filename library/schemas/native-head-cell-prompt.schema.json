@@ -63,9 +63,16 @@
           "maxLength": 4096
         },
         "requestedYawDeg": {
-          "type": "number",
-          "minimum": -90,
-          "maximum": 90
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "scope": {
           "type": "string",
