@@ -74,3 +74,14 @@ After the last review corrections, actual terminal results:
 - `git diff --check`:a58b97/a6597f, exit0; Windows CRLF normalization warnings only. a6597f SHA256 output retained original atlas hashes `A8D005D62C046044466684BFE1CA59C84608AABC6BBCFA52E6CE67556828AB02` and `411980EB6D11C6D2A31E3419EFB4F264EA82D4095B837A90EA210ECA88D5EEED`.
 
 These checks cover source/static artifacts only.12 newly declared runtime cases and all art/pose/normal-speed video acceptance remain NOT RUN; productionReady=false and the full goal stays unfinished.
+
+## Publication
+
+Source/artifact commit9c9063: `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 explicit owned paths; cached diff/check7b557c exit0. Push5fd004 exit0. Exact local/remote verificationb185b9 exit0:
+
+```text
+09a09f9d38021d01ba73b873ec2a253d15faea18
+09a09f9d38021d01ba73b873ec2a253d15faea18 refs/heads/codex/prehistoric-life
+```
+
+Local/remote lines copied from tool output; second separator was a tab. Tracked/staged diff output empty. Unrelated untracked user art/diagnostics retained and excluded. A docs-only follow-up records this SHA; it does not alter the checked source. Task3/4 and the full factory remain pending, with all runtime callbacks NOT RUN.

@@ -2,6 +2,8 @@
 
 Mốc **0.41, 08/10/2026**, nhánh `codex/prehistoric-life`, tiếp tục từ `4ff12ddfa216344a86fbd907d92550bfc001cc13`. Đã viết source cho lựa chọn **`appearance.bodySeat='registered-seated-v1'`** ở cả hai actor × hai góc3/4. Đây là ứng viên **một shot**, chưa có kết quả runtime hoặc video nghiệm thu.12 callback mới và8 callback material cũ **NOT RUN** bởi implementation agent. [Plan](../plans/2026-10-08-native-seating.md), [record source](reviews/native-seat-surface-source-record-v1.md).
 
+Source/artifact đã push tại `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 file đúng scope; exact SHA local/remote khớp. Build/typecheck/schema/metadata checks thành công, source review hai lượt đã nhận và sửa lỗi. Không có runtime/video verdict; docs-only follow-up không thay source đã kiểm.
+
 ## Đã có trong source
 
 - Profile/cast dùng cùng appearance contract, bắt buộc native actor/view và `bodyMotion='registered-locomotion-v1'`. Không chọn `bodySeat` thì guard ngồi native vẫn chặn. CLI/canonical kế thừa schema chung; default production rig không đổi.
