@@ -1,5 +1,23 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": { "noEmit": true },
-  "include": ["tests/**/*.ts", "scripts/acceptance-asr.ts", "scripts/acceptance-render.ts", "scripts/animation-preview.ts", "scripts/animation-player.ts", "scripts/cinematic-preview.ts", "scripts/garment-correspondence.ts", "scripts/forest-motion-fixture.ts", "scripts/prehistoric-pose-art.ts", "scripts/prehistoric-pose-review.ts", "scripts/prehistoric-arm-review.ts", "scripts/prehistoric-view-art.ts", "scripts/prehistoric-pack.ts"]
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "tests/**/*.ts",
+    "scripts/acceptance-asr.ts",
+    "scripts/acceptance-render.ts",
+    "scripts/animation-preview.ts",
+    "scripts/animation-player.ts",
+    "scripts/cinematic-preview.ts",
+    "scripts/garment-correspondence.ts",
+    "scripts/forest-motion-fixture.ts",
+    "scripts/prehistoric-pose-art.ts",
+    "scripts/prehistoric-pose-review.ts",
+    "scripts/prehistoric-arm-review.ts",
+    "scripts/prehistoric-view-art.ts",
+    "scripts/prehistoric-pack.ts",
+    "scripts/native-seat-correspondence.ts",
+    "scripts/cloth-contour-geometry.ts"
+  ]
 }

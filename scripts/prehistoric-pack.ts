@@ -10,6 +10,7 @@ import {poseArtInventory} from '../packages/topics/pose-art-workbench.js';
 import {viewArtInventory} from '../packages/topics/view-art-workbench.js';
 import {bodyViewDescription} from '../packages/animation/body-view-art.js';
 import {nativeSeatArtDescription,nativeSeatArtInventory} from '../packages/topics/native-seat-art.js';
+import {nativeSeatSurfaceInventory} from '../packages/topics/native-seat-surface-inventory.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -41,6 +42,7 @@ const viewEvidence=await Promise.all(viewStudies.map(async study=>{
   return {...study,...measured,productionAllowed:false};
 }));
 const nativeSeatedMaterials=await nativeSeatArtInventory(repo);
+const nativeSeatedSurface=await nativeSeatSurfaceInventory(repo);
 const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
 const headReview=await fs.readFile(path.join(repo,headReviewFile),'utf8').then(text=>JSON.parse(text) as {scope:string;appliesTo:string;headPackFingerprint:string;result:{pass:boolean}}).catch(()=>undefined);
 const headReviewCurrent=headReview?.headPackFingerprint===headPack.fingerprint;
@@ -63,13 +65,15 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
   nativeSeatedMaterials:{...nativeSeatArtDescription,materials:nativeSeatedMaterials,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/native-seat-art.ts')))},
+  nativeSeatedSurface,
   references,candidates:[...candidates,...headCandidates,...garmentCandidates],rejectedArtifacts:rejected,productionRig:null,
   headPack:{...headPack,prompts:['library/topics/prehistoric-life/rig-v1/head-prompts.json','library/topics/prehistoric-life/rig-v1/front-prompts.json'],codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-art.ts'))),cutoutCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-cutout-head.ts'))),projectionCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-head-projection.ts')))},
   bodyPack:{...bodyPack,codeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-body-art.ts'))),walkCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/source-walk.ts'))),
     runCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/running.ts'))),spearCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/spear.ts'))),armShapeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/source-arm.ts'))),compilerCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/compiler.ts'))),rigCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/rig.ts'))),cameraCodeHash:hash(await fs.readFile(path.join(repo,'packages/director/camera.ts'))),
     sourceBodyCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-source-body.ts'))),actingClockCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-acting-clock.ts'))),actingBindingCodeHash:hash(await fs.readFile(path.join(repo,'packages/actors/view-acting-clock.ts'))),
     secondaryCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-secondary.ts'))),secondaryMotionCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-secondary-motion.ts'))),
-    viewCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-art.ts'))),viewContourCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-contours.ts'))),viewClothCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-cloth.ts'))),viewClothGeometryCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-cloth-geometry.ts'))),lungeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/lunge.ts'))),handCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-hand.ts')))},
+    viewCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-art.ts'))),viewContourCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-contours.ts'))),viewClothCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-cloth.ts'))),viewClothGeometryCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-cloth-geometry.ts'))),
+    viewSeatCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/body-view-seat.ts'))),viewSeatRegistrationCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/native-seat-registration.ts'))),viewSeatCorrespondenceHash:hash(await fs.readFile(path.join(repo,'library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json'))),lungeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/lunge.ts'))),handCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/forest-hand.ts')))},
   poseArtwork:{scope:'static-artwork-only',inventory:'library/topics/prehistoric-life/pose-studies/inspection-v1.json',generatedImageCalls:14,staticVisionAdviceCalls:2,
     evidence:poseEvidence,approved:false,productionReady:false,generatedPosesIntegratedAsProductionRig:false,
     reviews:['docs/topics/reviews/gemini-pose-advice-v1.json','docs/topics/reviews/gemini-pose-advice-v3.json'],workflow:'docs/topics/AI-POSE-WORKFLOW.md'},

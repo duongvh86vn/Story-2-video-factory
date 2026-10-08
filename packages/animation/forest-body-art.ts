@@ -11,14 +11,15 @@ import {sourceArmDescription} from './source-arm.js';
 import {sourceArmTrajectoryDescription} from './arm-trajectory.js';
 import {usesSourceColour,sourceColourAssets,sourceColourSvg,sourceColourDescription} from './source-colour-art.js';
 import {usesBodyView,bodyViewMetrics,bodyViewAsset,bodyViewClothingSvg,bodyViewDescription} from './body-view-art.js';
+import {nativeSeatAssets} from './body-view-seat.js';
 import {lungeDescription} from './lunge.js';
 import {forestHandRegistration,forestHandMetrics,forestWristChainTotal,forestHandDescription} from './forest-hand.js';
 type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-29';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-15';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-30';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-16';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -104,7 +105,7 @@ export function referenceBodyHeadAttachment(profile:HostProfile,view:ReferenceHe
 export function referenceBodyAssets(appearance:HostProfile['appearance']){
   if(appearance.artworkVersion!==FOREST_BODY_VERSION&&appearance.artworkVersion!=='forest-body-view-1')return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
-  const source=bodies[actor];return [...(usesSourceColour(appearance)?sourceColourAssets(appearance):[{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'}]),...(usesBodyView({appearance})?[bodyViewAsset(appearance),...bodyViewRestMouthAssets(appearance)]:seatedGarmentAssets(appearance))];
+  const source=bodies[actor];return [...(usesSourceColour(appearance)?sourceColourAssets(appearance):[{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'}]),...(usesBodyView({appearance})?[bodyViewAsset(appearance),...bodyViewRestMouthAssets(appearance),...nativeSeatAssets(appearance)]:seatedGarmentAssets(appearance))];
 }
 export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');

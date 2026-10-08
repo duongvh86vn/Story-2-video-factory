@@ -52,7 +52,7 @@ export const nativeSeatArtDescription=Object.freeze({version:NATIVE_SEAT_MATERIA
   sourcePolicy:'exact PNG bytes and primary/native/construction reference hashes; requested independent view tiles, no code reflection; generated perspective/identity compliance still needs visual review',
   alphaPolicy:'transparent source pixels are retained; most painted alpha is250–254; common surface must stay opaque beneath internal material blending',
   selection:null,registered:false,approved:false,productionReady:false,motionVerified:false,
-  pending:['semantic standing/seated UV/contour correspondence and original support contact','native sit/rise/walk plus original camera-run clock','colour/identity/seam/cuff/hem acceptance and normal-speed video']});
+  pending:['material record alone is not pose selection; optional separate native-seat surface registration is a source candidate','original support ownership and seated camera-run clock','colour/identity/seam/cuff/hem acceptance and normal-speed video']});
 
 /** Reads hashes and static PNG alpha metadata only. Does not execute any
  * pose/body/renderer helper or rewrite image bytes. Missing/stale art fails. */

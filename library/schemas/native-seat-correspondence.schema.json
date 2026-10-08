@@ -1,0 +1,2047 @@
+{
+  "$ref": "#/definitions/native-seat-correspondence",
+  "definitions": {
+    "native-seat-correspondence": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "native-seat-correspondence-1"
+        },
+        "status": {
+          "type": "string",
+          "const": "candidate-geometry"
+        },
+        "approved": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionReady": {
+          "type": "boolean",
+          "const": false
+        },
+        "motionVerified": {
+          "type": "boolean",
+          "const": false
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actors": {
+          "type": "object",
+          "properties": {
+            "lila": {
+              "type": "object",
+              "properties": {
+                "material": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "width": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    },
+                    "height": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "sha256",
+                    "width",
+                    "height"
+                  ],
+                  "additionalProperties": false
+                },
+                "primary": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "role": {
+                      "type": "string",
+                      "const": "primary-character-identity"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "sha256",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                },
+                "views": {
+                  "type": "object",
+                  "properties": {
+                    "three-quarter-right": {
+                      "type": "object",
+                      "properties": {
+                        "standing": {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string"
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "pelvis": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "bodyScale": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "waist": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "sha256",
+                            "width",
+                            "height",
+                            "pelvis",
+                            "bodyScale",
+                            "waist"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "tileId": {
+                          "type": "string"
+                        },
+                        "region": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "y": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y",
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "seatWaist": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "waist": {
+                          "type": "object",
+                          "properties": {
+                            "left": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "right": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "left",
+                            "right"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "uv": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "outline": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "target": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "pieces": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "rest": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "seat": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "target": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "rest",
+                              "seat",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 400
+                        },
+                        "minimumTriangleArea": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "seatScale": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "standing",
+                        "tileId",
+                        "region",
+                        "seatWaist",
+                        "waist",
+                        "uv",
+                        "outline",
+                        "pieces",
+                        "minimumTriangleArea",
+                        "seatScale"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "three-quarter-left": {
+                      "type": "object",
+                      "properties": {
+                        "standing": {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string"
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "pelvis": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "bodyScale": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "waist": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "sha256",
+                            "width",
+                            "height",
+                            "pelvis",
+                            "bodyScale",
+                            "waist"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "tileId": {
+                          "type": "string"
+                        },
+                        "region": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "y": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y",
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "seatWaist": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "waist": {
+                          "type": "object",
+                          "properties": {
+                            "left": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "right": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "left",
+                            "right"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "uv": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "outline": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "target": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "pieces": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "rest": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "seat": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "target": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "rest",
+                              "seat",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 400
+                        },
+                        "minimumTriangleArea": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "seatScale": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "standing",
+                        "tileId",
+                        "region",
+                        "seatWaist",
+                        "waist",
+                        "uv",
+                        "outline",
+                        "pieces",
+                        "minimumTriangleArea",
+                        "seatScale"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "three-quarter-right",
+                    "three-quarter-left"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "material",
+                "primary",
+                "views"
+              ],
+              "additionalProperties": false
+            },
+            "karo": {
+              "type": "object",
+              "properties": {
+                "material": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "width": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    },
+                    "height": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "sha256",
+                    "width",
+                    "height"
+                  ],
+                  "additionalProperties": false
+                },
+                "primary": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "role": {
+                      "type": "string",
+                      "const": "primary-character-identity"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "sha256",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                },
+                "views": {
+                  "type": "object",
+                  "properties": {
+                    "three-quarter-right": {
+                      "type": "object",
+                      "properties": {
+                        "standing": {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string"
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "pelvis": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "bodyScale": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "waist": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "sha256",
+                            "width",
+                            "height",
+                            "pelvis",
+                            "bodyScale",
+                            "waist"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "tileId": {
+                          "type": "string"
+                        },
+                        "region": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "y": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y",
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "seatWaist": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "waist": {
+                          "type": "object",
+                          "properties": {
+                            "left": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "right": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "left",
+                            "right"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "uv": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "outline": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "target": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "pieces": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "rest": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "seat": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "target": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "rest",
+                              "seat",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 400
+                        },
+                        "minimumTriangleArea": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "seatScale": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "standing",
+                        "tileId",
+                        "region",
+                        "seatWaist",
+                        "waist",
+                        "uv",
+                        "outline",
+                        "pieces",
+                        "minimumTriangleArea",
+                        "seatScale"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "three-quarter-left": {
+                      "type": "object",
+                      "properties": {
+                        "standing": {
+                          "type": "object",
+                          "properties": {
+                            "file": {
+                              "type": "string"
+                            },
+                            "sha256": {
+                              "type": "string",
+                              "pattern": "^[a-f0-9]{64}$"
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "pelvis": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "bodyScale": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "waist": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "file",
+                            "sha256",
+                            "width",
+                            "height",
+                            "pelvis",
+                            "bodyScale",
+                            "waist"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "tileId": {
+                          "type": "string"
+                        },
+                        "region": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "y": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "width": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y",
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "seatWaist": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "waist": {
+                          "type": "object",
+                          "properties": {
+                            "left": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "right": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "left",
+                            "right"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "uv": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 16,
+                              "maxItems": 16
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "outline": {
+                          "type": "object",
+                          "properties": {
+                            "rest": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "seat": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            },
+                            "target": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number"
+                                  },
+                                  "y": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 50,
+                              "maxItems": 50
+                            }
+                          },
+                          "required": [
+                            "rest",
+                            "seat",
+                            "target"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "pieces": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "rest": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "seat": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "target": {
+                                "type": "array",
+                                "minItems": 3,
+                                "maxItems": 3,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number"
+                                      },
+                                      "y": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "rest",
+                              "seat",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 400
+                        },
+                        "minimumTriangleArea": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "seatScale": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "standing",
+                        "tileId",
+                        "region",
+                        "seatWaist",
+                        "waist",
+                        "uv",
+                        "outline",
+                        "pieces",
+                        "minimumTriangleArea",
+                        "seatScale"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "three-quarter-right",
+                    "three-quarter-left"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "material",
+                "primary",
+                "views"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "lila",
+            "karo"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "approved",
+        "productionReady",
+        "motionVerified",
+        "method",
+        "actors"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

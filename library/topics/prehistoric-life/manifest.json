@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.40-native-seat-material-candidate",
+  "version": "forest-tribe-0.41-native-seat-surface-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -29,8 +29,8 @@
     "productionReady": false,
     "motionVerified": false,
     "pending": [
-      "semantic standing/seated UV/contour correspondence and original support contact",
-      "native sit/rise/walk plus original camera-run clock",
+      "material record alone is not pose selection; optional separate native-seat surface registration is a source candidate",
+      "original support ownership and seated camera-run clock",
       "colour/identity/seam/cuff/hem acceptance and normal-speed video"
     ],
     "materials": [
@@ -293,7 +293,131 @@
         "productionAllowed": false
       }
     ],
-    "codeHash": "7bcdf8ab25902dde09161139fa4f420672be88159dde3c66b4011a285d901f5f"
+    "codeHash": "1b2cc10b379280f457e35061ab8da331dce225365d4afc3ef230f2d717d36224"
+  },
+  "nativeSeatedSurface": {
+    "version": "native-view-seat-1",
+    "selection": "registered-seated-v1",
+    "status": "candidate-source-registration",
+    "file": "library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json",
+    "sha256": "89df68c15f5c359f3b9421fce0ac2c5309d259a2e6fe469991e20592f03d48af",
+    "fingerprint": "e9f63557b538db57308e5c97765a0c5a6e1007ea465d5345823691e011d37b77",
+    "registrationFingerprint": "5a2a6297457d20e4fa8915da0ec9e48a3c1b6c51550a97f20fc40d0305a9f265",
+    "bindings": {
+      "lila": {
+        "material": {
+          "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+          "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+          "width": 2172,
+          "height": 724
+        },
+        "primary": {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+          "role": "primary-character-identity"
+        },
+        "views": {
+          "three-quarter-right": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+              "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+              "width": 1173,
+              "height": 1341,
+              "pelvis": {
+                "x": 627,
+                "y": 742
+              },
+              "bodyScale": 0.27154471544715447,
+              "waist": 782
+            },
+            "tileId": "lila-native-seat-right",
+            "triangles": 48,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 3.98703234362992
+          },
+          "three-quarter-left": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+              "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+              "width": 1024,
+              "height": 1536,
+              "pelvis": {
+                "x": 543,
+                "y": 786
+              },
+              "bodyScale": 0.253030303030303,
+              "waist": 826
+            },
+            "tileId": "lila-native-seat-left",
+            "triangles": 222,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 0.01668678769603993
+          }
+        }
+      },
+      "karo": {
+        "material": {
+          "file": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1.png",
+          "sha256": "411980eb6d11c6d2a31e3419efb4f264ea82d4095b837a90ea210eca88d5eeed",
+          "width": 1774,
+          "height": 887
+        },
+        "primary": {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+          "role": "primary-character-identity"
+        },
+        "views": {
+          "three-quarter-right": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+              "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+              "width": 910,
+              "height": 1729,
+              "pelvis": {
+                "x": 475,
+                "y": 983
+              },
+              "bodyScale": 0.17606382978723406,
+              "waist": 1023
+            },
+            "tileId": "karo-native-seat-right",
+            "triangles": 48,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 1.375464947676994
+          },
+          "three-quarter-left": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+              "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+              "width": 910,
+              "height": 1729,
+              "pelvis": {
+                "x": 494,
+                "y": 1012
+              },
+              "bodyScale": 0.17513227513227514,
+              "waist": 1052
+            },
+            "tileId": "karo-native-seat-left",
+            "triangles": 226,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 0.09526695715834421
+          }
+        }
+      }
+    },
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "productionAllowed": false,
+    "limitations": [
+      "native seat art/UV/ink/cuff/identity and normal-speed motion await review",
+      "single-shot physical supports; continuous source support ownership remains a separate pending integration",
+      "native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged",
+      "no continuous body/head turns or new tool grasp registration",
+      "no physical cloth simulation or accepted final video"
+    ]
   },
   "references": [
     {
@@ -1137,7 +1261,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-3",
+        "version": "forest-view-registration-4",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -2122,7 +2246,7 @@
           "limitations": [
             "unapproved art/pose/skin/ink/mesh seam quality",
             "fixed native view; no continuous body/head turns",
-            "no native seating or new grasp/carry/tool registration",
+            "native seating requires separate registered-seated-v1; new grasp/carry/tool registration is pending",
             "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
             "hair/beard rigid by default; explicit registered-secondary-v1 is an unapproved separate native candidate",
             "not a fabric simulator or anatomy/motion acceptance"
@@ -2130,6 +2254,130 @@
           "approved": false,
           "productionReady": false,
           "physicalSimulation": false
+        },
+        "seatedCandidate": {
+          "version": "native-view-seat-1",
+          "selection": "registered-seated-v1",
+          "fingerprint": "e9f63557b538db57308e5c97765a0c5a6e1007ea465d5345823691e011d37b77",
+          "correspondence": "library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json",
+          "bindings": {
+            "lila": {
+              "material": {
+                "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+                "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+                "width": 2172,
+                "height": 724
+              },
+              "primary": {
+                "file": "docs/topics/assets/reference-lila-full.png",
+                "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+                "role": "primary-character-identity"
+              },
+              "views": {
+                "three-quarter-right": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+                    "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+                    "width": 1173,
+                    "height": 1341,
+                    "pelvis": {
+                      "x": 627,
+                      "y": 742
+                    },
+                    "bodyScale": 0.27154471544715447,
+                    "waist": 782
+                  },
+                  "tileId": "lila-native-seat-right",
+                  "triangles": 48,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 3.98703234362992
+                },
+                "three-quarter-left": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+                    "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+                    "width": 1024,
+                    "height": 1536,
+                    "pelvis": {
+                      "x": 543,
+                      "y": 786
+                    },
+                    "bodyScale": 0.253030303030303,
+                    "waist": 826
+                  },
+                  "tileId": "lila-native-seat-left",
+                  "triangles": 222,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 0.01668678769603993
+                }
+              }
+            },
+            "karo": {
+              "material": {
+                "file": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1.png",
+                "sha256": "411980eb6d11c6d2a31e3419efb4f264ea82d4095b837a90ea210eca88d5eeed",
+                "width": 1774,
+                "height": 887
+              },
+              "primary": {
+                "file": "docs/topics/assets/reference-karo-full.png",
+                "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+                "role": "primary-character-identity"
+              },
+              "views": {
+                "three-quarter-right": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+                    "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+                    "width": 910,
+                    "height": 1729,
+                    "pelvis": {
+                      "x": 475,
+                      "y": 983
+                    },
+                    "bodyScale": 0.17606382978723406,
+                    "waist": 1023
+                  },
+                  "tileId": "karo-native-seat-right",
+                  "triangles": 48,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 1.375464947676994
+                },
+                "three-quarter-left": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+                    "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+                    "width": 910,
+                    "height": 1729,
+                    "pelvis": {
+                      "x": 494,
+                      "y": 1012
+                    },
+                    "bodyScale": 0.17513227513227514,
+                    "waist": 1052
+                  },
+                  "tileId": "karo-native-seat-left",
+                  "triangles": 226,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 0.09526695715834421
+                }
+              }
+            }
+          },
+          "status": "registered-geometric-candidate",
+          "approved": false,
+          "productionReady": false,
+          "motionVerified": false,
+          "waist": "original upper torso/belt stays native; shared waist row pinned",
+          "surface": "one opaque fill and exterior outline; only internal standing/seated material blends; preserve PNG bytes/alpha",
+          "clock": "actual physical support transfer, original bone chains and sole offsets; fixed matching native view only",
+          "limitations": [
+            "native seat art/UV/ink/cuff/identity and normal-speed motion await review",
+            "single-shot physical supports; continuous source support ownership remains a separate pending integration",
+            "native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged",
+            "no continuous body/head turns or new tool grasp registration",
+            "no physical cloth simulation or accepted final video"
+          ]
         },
         "secondaryCandidate": {
           "version": "native-view-secondary-1",
@@ -2290,7 +2538,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "d718d13ab605dd595f9da3b7434b3c21023e76c4617674dc1958d124c19bfc21",
+        "fingerprint": "26b30ecaee5066fe70792a4c2ceebd0f09028181eb1f5082a01a70b240579112",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -2298,18 +2546,19 @@
         "limitations": [
           "identity/proportion/mask review",
           "happy fixed view by default; optional unapproved speech/eyes/expression selections",
-          "rigid garment by default; optional unapproved forward locomotion/cloth candidate, no native seating",
+          "rigid garment by default; optional unapproved locomotion and separately selected single-shot seated candidate",
           "bounded eye look only; no continuous body/head turn or optical gaze",
+          "native seated supports through camera cuts remain pending",
           "no motion acceptance"
         ]
       },
-      "fingerprint": "622d42b631fd086a4289217364e9adadb60d7810f8bcd0dd7560f4cb96ee4b78",
+      "fingerprint": "e6bb69dd2390fc0244cc77fb6b0edbe2b28d04728084e4dbba0556af6c9633cf",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "7a5dc9b57ac084b1528115f11dfafd147bafcc6dc9102238759fe4f6bdc7f013",
+    "fingerprint": "ffb295a10f5278145bb7a4c0b953cff82899a9f2ed9877ab55ab7c59fcb6cb78",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -2331,9 +2580,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-29",
-    "rendererVersion": "forest-source-body-svg-15",
-    "fingerprint": "927a921f744f17b27866dbf462d8b27f947ff5b26184a45d46d9526b70e61f80",
+    "compilerVersion": "forest-source-body-motion-30",
+    "rendererVersion": "forest-source-body-svg-16",
+    "fingerprint": "ef4939781436dc3143276e1abf301c62ba94015167520a45e76cdb6bff553e4d",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -2846,7 +3095,7 @@
       "repairPrompt": "library/topics/prehistoric-life/rig-v1/karo-cuffs-v2-prompt.json"
     },
     "authoredViews": {
-      "version": "forest-view-registration-3",
+      "version": "forest-view-registration-4",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -3831,7 +4080,7 @@
         "limitations": [
           "unapproved art/pose/skin/ink/mesh seam quality",
           "fixed native view; no continuous body/head turns",
-          "no native seating or new grasp/carry/tool registration",
+          "native seating requires separate registered-seated-v1; new grasp/carry/tool registration is pending",
           "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
           "hair/beard rigid by default; explicit registered-secondary-v1 is an unapproved separate native candidate",
           "not a fabric simulator or anatomy/motion acceptance"
@@ -3839,6 +4088,130 @@
         "approved": false,
         "productionReady": false,
         "physicalSimulation": false
+      },
+      "seatedCandidate": {
+        "version": "native-view-seat-1",
+        "selection": "registered-seated-v1",
+        "fingerprint": "e9f63557b538db57308e5c97765a0c5a6e1007ea465d5345823691e011d37b77",
+        "correspondence": "library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json",
+        "bindings": {
+          "lila": {
+            "material": {
+              "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+              "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+              "width": 2172,
+              "height": 724
+            },
+            "primary": {
+              "file": "docs/topics/assets/reference-lila-full.png",
+              "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+              "role": "primary-character-identity"
+            },
+            "views": {
+              "three-quarter-right": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+                  "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+                  "width": 1173,
+                  "height": 1341,
+                  "pelvis": {
+                    "x": 627,
+                    "y": 742
+                  },
+                  "bodyScale": 0.27154471544715447,
+                  "waist": 782
+                },
+                "tileId": "lila-native-seat-right",
+                "triangles": 48,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 3.98703234362992
+              },
+              "three-quarter-left": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+                  "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+                  "width": 1024,
+                  "height": 1536,
+                  "pelvis": {
+                    "x": 543,
+                    "y": 786
+                  },
+                  "bodyScale": 0.253030303030303,
+                  "waist": 826
+                },
+                "tileId": "lila-native-seat-left",
+                "triangles": 222,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 0.01668678769603993
+              }
+            }
+          },
+          "karo": {
+            "material": {
+              "file": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1.png",
+              "sha256": "411980eb6d11c6d2a31e3419efb4f264ea82d4095b837a90ea210eca88d5eeed",
+              "width": 1774,
+              "height": 887
+            },
+            "primary": {
+              "file": "docs/topics/assets/reference-karo-full.png",
+              "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+              "role": "primary-character-identity"
+            },
+            "views": {
+              "three-quarter-right": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+                  "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+                  "width": 910,
+                  "height": 1729,
+                  "pelvis": {
+                    "x": 475,
+                    "y": 983
+                  },
+                  "bodyScale": 0.17606382978723406,
+                  "waist": 1023
+                },
+                "tileId": "karo-native-seat-right",
+                "triangles": 48,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 1.375464947676994
+              },
+              "three-quarter-left": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+                  "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+                  "width": 910,
+                  "height": 1729,
+                  "pelvis": {
+                    "x": 494,
+                    "y": 1012
+                  },
+                  "bodyScale": 0.17513227513227514,
+                  "waist": 1052
+                },
+                "tileId": "karo-native-seat-left",
+                "triangles": 226,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 0.09526695715834421
+              }
+            }
+          }
+        },
+        "status": "registered-geometric-candidate",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false,
+        "waist": "original upper torso/belt stays native; shared waist row pinned",
+        "surface": "one opaque fill and exterior outline; only internal standing/seated material blends; preserve PNG bytes/alpha",
+        "clock": "actual physical support transfer, original bone chains and sole offsets; fixed matching native view only",
+        "limitations": [
+          "native seat art/UV/ink/cuff/identity and normal-speed motion await review",
+          "single-shot physical supports; continuous source support ownership remains a separate pending integration",
+          "native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged",
+          "no continuous body/head turns or new tool grasp registration",
+          "no physical cloth simulation or accepted final video"
+        ]
       },
       "secondaryCandidate": {
         "version": "native-view-secondary-1",
@@ -3999,7 +4372,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "d718d13ab605dd595f9da3b7434b3c21023e76c4617674dc1958d124c19bfc21",
+      "fingerprint": "26b30ecaee5066fe70792a4c2ceebd0f09028181eb1f5082a01a70b240579112",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
@@ -4007,8 +4380,9 @@
       "limitations": [
         "identity/proportion/mask review",
         "happy fixed view by default; optional unapproved speech/eyes/expression selections",
-        "rigid garment by default; optional unapproved forward locomotion/cloth candidate, no native seating",
+        "rigid garment by default; optional unapproved locomotion and separately selected single-shot seated candidate",
         "bounded eye look only; no continuous body/head turn or optical gaze",
+        "native seated supports through camera cuts remain pending",
         "no motion acceptance"
       ]
     },
@@ -4307,7 +4681,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-3",
+        "version": "forest-view-registration-4",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -5292,7 +5666,7 @@
           "limitations": [
             "unapproved art/pose/skin/ink/mesh seam quality",
             "fixed native view; no continuous body/head turns",
-            "no native seating or new grasp/carry/tool registration",
+            "native seating requires separate registered-seated-v1; new grasp/carry/tool registration is pending",
             "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
             "hair/beard rigid by default; explicit registered-secondary-v1 is an unapproved separate native candidate",
             "not a fabric simulator or anatomy/motion acceptance"
@@ -5300,6 +5674,130 @@
           "approved": false,
           "productionReady": false,
           "physicalSimulation": false
+        },
+        "seatedCandidate": {
+          "version": "native-view-seat-1",
+          "selection": "registered-seated-v1",
+          "fingerprint": "e9f63557b538db57308e5c97765a0c5a6e1007ea465d5345823691e011d37b77",
+          "correspondence": "library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json",
+          "bindings": {
+            "lila": {
+              "material": {
+                "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+                "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+                "width": 2172,
+                "height": 724
+              },
+              "primary": {
+                "file": "docs/topics/assets/reference-lila-full.png",
+                "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+                "role": "primary-character-identity"
+              },
+              "views": {
+                "three-quarter-right": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+                    "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+                    "width": 1173,
+                    "height": 1341,
+                    "pelvis": {
+                      "x": 627,
+                      "y": 742
+                    },
+                    "bodyScale": 0.27154471544715447,
+                    "waist": 782
+                  },
+                  "tileId": "lila-native-seat-right",
+                  "triangles": 48,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 3.98703234362992
+                },
+                "three-quarter-left": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+                    "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+                    "width": 1024,
+                    "height": 1536,
+                    "pelvis": {
+                      "x": 543,
+                      "y": 786
+                    },
+                    "bodyScale": 0.253030303030303,
+                    "waist": 826
+                  },
+                  "tileId": "lila-native-seat-left",
+                  "triangles": 222,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 0.01668678769603993
+                }
+              }
+            },
+            "karo": {
+              "material": {
+                "file": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1.png",
+                "sha256": "411980eb6d11c6d2a31e3419efb4f264ea82d4095b837a90ea210eca88d5eeed",
+                "width": 1774,
+                "height": 887
+              },
+              "primary": {
+                "file": "docs/topics/assets/reference-karo-full.png",
+                "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+                "role": "primary-character-identity"
+              },
+              "views": {
+                "three-quarter-right": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+                    "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+                    "width": 910,
+                    "height": 1729,
+                    "pelvis": {
+                      "x": 475,
+                      "y": 983
+                    },
+                    "bodyScale": 0.17606382978723406,
+                    "waist": 1023
+                  },
+                  "tileId": "karo-native-seat-right",
+                  "triangles": 48,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 1.375464947676994
+                },
+                "three-quarter-left": {
+                  "standing": {
+                    "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+                    "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+                    "width": 910,
+                    "height": 1729,
+                    "pelvis": {
+                      "x": 494,
+                      "y": 1012
+                    },
+                    "bodyScale": 0.17513227513227514,
+                    "waist": 1052
+                  },
+                  "tileId": "karo-native-seat-left",
+                  "triangles": 226,
+                  "outlineVertices": 50,
+                  "minimumTriangleArea": 0.09526695715834421
+                }
+              }
+            }
+          },
+          "status": "registered-geometric-candidate",
+          "approved": false,
+          "productionReady": false,
+          "motionVerified": false,
+          "waist": "original upper torso/belt stays native; shared waist row pinned",
+          "surface": "one opaque fill and exterior outline; only internal standing/seated material blends; preserve PNG bytes/alpha",
+          "clock": "actual physical support transfer, original bone chains and sole offsets; fixed matching native view only",
+          "limitations": [
+            "native seat art/UV/ink/cuff/identity and normal-speed motion await review",
+            "single-shot physical supports; continuous source support ownership remains a separate pending integration",
+            "native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged",
+            "no continuous body/head turns or new tool grasp registration",
+            "no physical cloth simulation or accepted final video"
+          ]
         },
         "secondaryCandidate": {
           "version": "native-view-secondary-1",
@@ -5460,7 +5958,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "d718d13ab605dd595f9da3b7434b3c21023e76c4617674dc1958d124c19bfc21",
+        "fingerprint": "26b30ecaee5066fe70792a4c2ceebd0f09028181eb1f5082a01a70b240579112",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -5468,12 +5966,13 @@
         "limitations": [
           "identity/proportion/mask review",
           "happy fixed view by default; optional unapproved speech/eyes/expression selections",
-          "rigid garment by default; optional unapproved forward locomotion/cloth candidate, no native seating",
+          "rigid garment by default; optional unapproved locomotion and separately selected single-shot seated candidate",
           "bounded eye look only; no continuous body/head turn or optical gaze",
+          "native seated supports through camera cuts remain pending",
           "no motion acceptance"
         ]
       },
-      "fingerprint": "622d42b631fd086a4289217364e9adadb60d7810f8bcd0dd7560f4cb96ee4b78",
+      "fingerprint": "e6bb69dd2390fc0244cc77fb6b0edbe2b28d04728084e4dbba0556af6c9633cf",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -5487,23 +5986,26 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "8080923b4aa3bb3d5a9d45b7fc9dfc212bcd8116b09614c7d82e4b74073a4503",
+    "codeHash": "df1eb24a12acda2f3e410badf930486d6a39d60cde4993168978b5da0eb4a5d1",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
-    "compilerCodeHash": "4966bc6b0a345df3ce30ff27660234ccbca387f7e19cfc683c38f472b6387863",
+    "compilerCodeHash": "6f4b0450a2de9c245a7aed34fa7d57ca383207e7f28c1653f3094684d17d9108",
     "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
-    "cameraCodeHash": "db1310ce365ea0603d38410e1c74291c7d820534868398411673db2669ad8207",
+    "cameraCodeHash": "e78f224e3e8392eca8c8a848cf7e1fa7218dab5c7957609a06f49083c0a2b45d",
     "sourceBodyCodeHash": "ddd589dafc0287250c0e3a4fa520c83cdd676b07d4653c728af2dde92ab1ba9e",
     "actingClockCodeHash": "36426b626c8c42430bbf2931191f7cfdf1d0e9063414c22a9850e922ee7820bb",
     "actingBindingCodeHash": "dc1175c222b43c090570d28fc7f9c40c09d2072968d44a3251d6ef3d1a02b5bc",
     "secondaryCodeHash": "baa043be6ac71977d560fe207902b6ef3ec48eaf21bb77c4c891eb9f99b39b51",
     "secondaryMotionCodeHash": "ac1434a80796836e341fd9f39c2373b38c980df10f64f8c3836c682000491f94",
-    "viewCodeHash": "71709836850db049032a4d10108a87769f907022af6fda502b12a7bb38c54f91",
+    "viewCodeHash": "3df5235493f8bba450d9e0707107213711dc9250a68a9bcfbd5cee43b69bcdd5",
     "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
-    "viewClothCodeHash": "f5e8dea4f98318339ae2d73474fceb10188c2fa5a4792d21e5ed780f82fe2845",
+    "viewClothCodeHash": "cc88afd81c6063948dc2420ec7eaf543945e90bc4d05c86472696be53c8a3256",
     "viewClothGeometryCodeHash": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
+    "viewSeatCodeHash": "c5eace7308adbc7843756adba0d9a48afa51c0e9a3b85a534ea1a1e09e6baf12",
+    "viewSeatRegistrationCodeHash": "48b77839b52e2275b68d1bb0a0ea0aeed102add0194a6b4fc3550f548d485142",
+    "viewSeatCorrespondenceHash": "89df68c15f5c359f3b9421fce0ac2c5309d259a2e6fe469991e20592f03d48af",
     "lungeCodeHash": "3d54c801e6a7143b61eb660e7670ab9c5ecd84d575cd852e6db4b8ba0f2afe24",
     "handCodeHash": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1"
   },
@@ -5938,7 +6440,7 @@
     "registered": false,
     "registrationFlagScope": "all artwork approved/registered for production: false; raw generation metadata remains immutable",
     "engineeringRegistrations": {
-      "version": "forest-view-registration-3",
+      "version": "forest-view-registration-4",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -6923,7 +7425,7 @@
         "limitations": [
           "unapproved art/pose/skin/ink/mesh seam quality",
           "fixed native view; no continuous body/head turns",
-          "no native seating or new grasp/carry/tool registration",
+          "native seating requires separate registered-seated-v1; new grasp/carry/tool registration is pending",
           "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
           "hair/beard rigid by default; explicit registered-secondary-v1 is an unapproved separate native candidate",
           "not a fabric simulator or anatomy/motion acceptance"
@@ -6931,6 +7433,130 @@
         "approved": false,
         "productionReady": false,
         "physicalSimulation": false
+      },
+      "seatedCandidate": {
+        "version": "native-view-seat-1",
+        "selection": "registered-seated-v1",
+        "fingerprint": "e9f63557b538db57308e5c97765a0c5a6e1007ea465d5345823691e011d37b77",
+        "correspondence": "library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json",
+        "bindings": {
+          "lila": {
+            "material": {
+              "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+              "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+              "width": 2172,
+              "height": 724
+            },
+            "primary": {
+              "file": "docs/topics/assets/reference-lila-full.png",
+              "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+              "role": "primary-character-identity"
+            },
+            "views": {
+              "three-quarter-right": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+                  "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+                  "width": 1173,
+                  "height": 1341,
+                  "pelvis": {
+                    "x": 627,
+                    "y": 742
+                  },
+                  "bodyScale": 0.27154471544715447,
+                  "waist": 782
+                },
+                "tileId": "lila-native-seat-right",
+                "triangles": 48,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 3.98703234362992
+              },
+              "three-quarter-left": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+                  "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+                  "width": 1024,
+                  "height": 1536,
+                  "pelvis": {
+                    "x": 543,
+                    "y": 786
+                  },
+                  "bodyScale": 0.253030303030303,
+                  "waist": 826
+                },
+                "tileId": "lila-native-seat-left",
+                "triangles": 222,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 0.01668678769603993
+              }
+            }
+          },
+          "karo": {
+            "material": {
+              "file": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1.png",
+              "sha256": "411980eb6d11c6d2a31e3419efb4f264ea82d4095b837a90ea210eca88d5eeed",
+              "width": 1774,
+              "height": 887
+            },
+            "primary": {
+              "file": "docs/topics/assets/reference-karo-full.png",
+              "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+              "role": "primary-character-identity"
+            },
+            "views": {
+              "three-quarter-right": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+                  "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+                  "width": 910,
+                  "height": 1729,
+                  "pelvis": {
+                    "x": 475,
+                    "y": 983
+                  },
+                  "bodyScale": 0.17606382978723406,
+                  "waist": 1023
+                },
+                "tileId": "karo-native-seat-right",
+                "triangles": 48,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 1.375464947676994
+              },
+              "three-quarter-left": {
+                "standing": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+                  "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+                  "width": 910,
+                  "height": 1729,
+                  "pelvis": {
+                    "x": 494,
+                    "y": 1012
+                  },
+                  "bodyScale": 0.17513227513227514,
+                  "waist": 1052
+                },
+                "tileId": "karo-native-seat-left",
+                "triangles": 226,
+                "outlineVertices": 50,
+                "minimumTriangleArea": 0.09526695715834421
+              }
+            }
+          }
+        },
+        "status": "registered-geometric-candidate",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false,
+        "waist": "original upper torso/belt stays native; shared waist row pinned",
+        "surface": "one opaque fill and exterior outline; only internal standing/seated material blends; preserve PNG bytes/alpha",
+        "clock": "actual physical support transfer, original bone chains and sole offsets; fixed matching native view only",
+        "limitations": [
+          "native seat art/UV/ink/cuff/identity and normal-speed motion await review",
+          "single-shot physical supports; continuous source support ownership remains a separate pending integration",
+          "native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged",
+          "no continuous body/head turns or new tool grasp registration",
+          "no physical cloth simulation or accepted final video"
+        ]
       },
       "secondaryCandidate": {
         "version": "native-view-secondary-1",
@@ -7091,7 +7717,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "d718d13ab605dd595f9da3b7434b3c21023e76c4617674dc1958d124c19bfc21",
+      "fingerprint": "26b30ecaee5066fe70792a4c2ceebd0f09028181eb1f5082a01a70b240579112",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
@@ -7099,8 +7725,9 @@
       "limitations": [
         "identity/proportion/mask review",
         "happy fixed view by default; optional unapproved speech/eyes/expression selections",
-        "rigid garment by default; optional unapproved forward locomotion/cloth candidate, no native seating",
+        "rigid garment by default; optional unapproved locomotion and separately selected single-shot seated candidate",
         "bounded eye look only; no continuous body/head turn or optical gaze",
+        "native seated supports through camera cuts remain pending",
         "no motion acceptance"
       ]
     },

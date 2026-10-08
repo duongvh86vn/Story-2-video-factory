@@ -1605,6 +1605,10 @@
                               "type": "string",
                               "const": "registered-locomotion-v1"
                             },
+                            "bodySeat": {
+                              "type": "string",
+                              "const": "registered-seated-v1"
+                            },
                             "bodySecondary": {
                               "type": "string",
                               "const": "registered-secondary-v1"
@@ -1836,6 +1840,10 @@
                               "bodyMotion": {
                                 "type": "string",
                                 "const": "registered-locomotion-v1"
+                              },
+                              "bodySeat": {
+                                "type": "string",
+                                "const": "registered-seated-v1"
                               },
                               "bodySecondary": {
                                 "type": "string",

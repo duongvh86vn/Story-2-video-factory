@@ -9,6 +9,8 @@ import { sourceBodyPlan, bodyTrackOffsetMs, bodyRootAt } from '../animation/view
 import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
 import {hasBodyViewSecondary,nativeSecondaryBounds} from '../animation/body-view-secondary.js';
 import {registeredBodyView} from '../animation/body-view-art.js';
+import {hasBodyViewSeat} from '../animation/body-view-seat.js';
+import {pathCoordinates} from '../animation/ink-limb.js';
 import {SECONDARY_MOTION_DELAYS_MS} from '../animation/view-secondary-motion.js';
 import { CameraSchema, type CinematicCamera } from './schemas.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
@@ -79,6 +81,13 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     }
     include(head,{x:local.left,y:local.top});include(head,{x:local.right,y:local.bottom});
     const body={...local};
+    if(hasBodyViewSeat(profile)){
+      const contour=frame.paths?.['view-seat-contour'],chest=/^translate\(([-\d.]+) ([-\d.]+)\) rotate\(([-\d.]+)\) scale\(([-\d.]+)\)$/.exec(frame.transforms.chest!);
+      if(!contour||!chest)throw new Error('needs-view-seat: camera cannot measure the shared garment contour');
+      const c=registeredBodyView(profile),points=pathCoordinates(contour),a=Number(chest[3])*Math.PI/180,scale=Number(chest[4])*c.bodyScale;
+      for(let i=0;i<points.length;i+=2){const dx=(points[i]!-c.pelvis.x)*scale,dy=(points[i+1]!-c.pelvis.y)*scale;
+        include(body,{x:Number(chest[1])+dx*Math.cos(a)-dy*Math.sin(a),y:Number(chest[2])+dx*Math.sin(a)+dy*Math.cos(a)},c.inkPad*scale/2);}
+    }
     for(const foot of Object.values(frame.feet)){
       const pad=(profile.kind==='mini-robot'?6:stroke)*p.scale;
       include(feet,{x:foot.x-9*p.scale,y:foot.y},pad);include(feet,{x:foot.x+9*p.scale,y:foot.y},pad);

@@ -20,8 +20,8 @@
   "productionReady": false,
   "motionVerified": false,
   "pending": [
-    "semantic standing/seated UV/contour correspondence and original support contact",
-    "native sit/rise/walk plus original camera-run clock",
+    "material record alone is not pose selection; optional separate native-seat surface registration is a source candidate",
+    "original support ownership and seated camera-run clock",
     "colour/identity/seam/cuff/hem acceptance and normal-speed video"
   ],
   "materials": [
@@ -284,5 +284,129 @@
       "productionAllowed": false
     }
   ],
+  "surfaceCandidate": {
+    "version": "native-view-seat-1",
+    "selection": "registered-seated-v1",
+    "status": "candidate-source-registration",
+    "file": "library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json",
+    "sha256": "89df68c15f5c359f3b9421fce0ac2c5309d259a2e6fe469991e20592f03d48af",
+    "fingerprint": "e9f63557b538db57308e5c97765a0c5a6e1007ea465d5345823691e011d37b77",
+    "registrationFingerprint": "5a2a6297457d20e4fa8915da0ec9e48a3c1b6c51550a97f20fc40d0305a9f265",
+    "bindings": {
+      "lila": {
+        "material": {
+          "file": "library/topics/prehistoric-life/native-seat-v1/lila-seated-folds-v1.png",
+          "sha256": "a8d005d62c046044466684bfe1ca59c84608aabc6bbcfa52e6ce67556828ab02",
+          "width": 2172,
+          "height": 724
+        },
+        "primary": {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+          "role": "primary-character-identity"
+        },
+        "views": {
+          "three-quarter-right": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+              "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+              "width": 1173,
+              "height": 1341,
+              "pelvis": {
+                "x": 627,
+                "y": 742
+              },
+              "bodyScale": 0.27154471544715447,
+              "waist": 782
+            },
+            "tileId": "lila-native-seat-right",
+            "triangles": 48,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 3.98703234362992
+          },
+          "three-quarter-left": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+              "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+              "width": 1024,
+              "height": 1536,
+              "pelvis": {
+                "x": 543,
+                "y": 786
+              },
+              "bodyScale": 0.253030303030303,
+              "waist": 826
+            },
+            "tileId": "lila-native-seat-left",
+            "triangles": 222,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 0.01668678769603993
+          }
+        }
+      },
+      "karo": {
+        "material": {
+          "file": "library/topics/prehistoric-life/native-seat-v1/karo-seated-folds-v1.png",
+          "sha256": "411980eb6d11c6d2a31e3419efb4f264ea82d4095b837a90ea210eca88d5eeed",
+          "width": 1774,
+          "height": 887
+        },
+        "primary": {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+          "role": "primary-character-identity"
+        },
+        "views": {
+          "three-quarter-right": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+              "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+              "width": 910,
+              "height": 1729,
+              "pelvis": {
+                "x": 475,
+                "y": 983
+              },
+              "bodyScale": 0.17606382978723406,
+              "waist": 1023
+            },
+            "tileId": "karo-native-seat-right",
+            "triangles": 48,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 1.375464947676994
+          },
+          "three-quarter-left": {
+            "standing": {
+              "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+              "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+              "width": 910,
+              "height": 1729,
+              "pelvis": {
+                "x": 494,
+                "y": 1012
+              },
+              "bodyScale": 0.17513227513227514,
+              "waist": 1052
+            },
+            "tileId": "karo-native-seat-left",
+            "triangles": 226,
+            "outlineVertices": 50,
+            "minimumTriangleArea": 0.09526695715834421
+          }
+        }
+      }
+    },
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "productionAllowed": false,
+    "limitations": [
+      "native seat art/UV/ink/cuff/identity and normal-speed motion await review",
+      "single-shot physical supports; continuous source support ownership remains a separate pending integration",
+      "native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged",
+      "no continuous body/head turns or new tool grasp registration",
+      "no physical cloth simulation or accepted final video"
+    ]
+  },
   "productionRig": null
 }
