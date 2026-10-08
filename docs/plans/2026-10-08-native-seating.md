@@ -16,6 +16,8 @@ User's test delegation overrides skill red/green execution steps: author meaning
 
 Previous turn was progress:0.39 source `91207f9bc0c5bd53d951ab9a98d6988f1d0bd27f`, docs `6767b1287dea6a27e8258e5ab61b2eb71cb4a282`, both exact remote matches.23 new callbacks remain NOT RUN. Full factory goal remains active and unfinished. Durable criteria/evidence live outside Git at `C:/Users/Duongvh-pc/.codex/tmp/story-factory-native-seat-state.json`.
 
+Task1 source/artifact snapshot published as `42f409c9136a43fc891a90df2f9469118c020470`,21 owned files; push7ceae1 exit0 and exact local/remote verificationd69679 exit0. Source build/types/schema/static inventories passed;8 callbacks and independent visual/runtime review remain NOT RUN. Tasks2–4 remain open; no native seated scene or factory completion implied.
+
 ---
 
 ### Task 1: Native fold materials and immutable registration

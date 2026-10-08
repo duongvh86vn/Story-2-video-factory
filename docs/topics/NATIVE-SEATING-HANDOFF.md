@@ -2,6 +2,8 @@
 
 Mốc0.40 material-only,08/10/2026, base `6767b1287dea6a27e8258e5ab61b2eb71cb4a282`, nhánh `codex/prehistoric-life`. Đây là **bước1 trong [plan native seating](../plans/2026-10-08-native-seating.md)**. Có ảnh nếp vải, sidecar và inventory mới; **chưa có pose/UV/support registration hoặc chuyển động ngồi native dùng được**.8 callback test mới NOT RUN. [Record source và kiểm tra](reviews/native-seat-material-source-record-v1.md).
 
+Source/artifact đã push `42f409c9136a43fc891a90df2f9469118c020470`,21 file đúng scope; SHA local/remote khớp. Build/test:typecheck/schema export và static inventories thành công. Không có verdict review độc lập hoặc test runtime; đây là bàn giao source/material.
+
 ## Asset đã lưu
 
 Built-in `imagegen` tạo hai atlas mới, mỗi atlas có hai tile: bên trái atlas cho view3/4 nhìn phải, bên phải atlas cho view3/4 nhìn trái. Prompt dùng ảnh toàn thân da ấm chính của người dùng, cả hai standing native view và atlas ngồi cũ làm tham chiếu cấu trúc. Không dùng các bảng mặt trắng/ủng/cổ lông bổ trợ để thay model chính. PNG output được copy nguyên bytes từ thư mục generated_images vào dự án; các ảnh gốc và asset cũ giữ nguyên. Có đúng2 call tạo ảnh, không có call sửa lại hoặc AI review trong mốc này.
