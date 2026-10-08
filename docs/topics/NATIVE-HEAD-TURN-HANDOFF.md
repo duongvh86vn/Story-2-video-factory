@@ -2,6 +2,8 @@
 
 ## Source0.50 — giữ nét mặt và góc của ảnh mẫu
 
+Source `cf1b9031e415fda76a6283e328df3f1bb30b8a38` đã push nhánh `codex/prehistoric-life`, 32 file thuộc phần triển khai này; local/remote exact SHA khớp. Build/typecheck/schema/static inventory/hash qua theo record; runtime/video NOT RUN. Phần cập nhật sau commit này chỉ là tài liệu.
+
 Đã thêm bốn PNG đầu Lila/Karo V1/V2, giữ góc của ảnh mẫu thay vì ép về chính diện. V2 bỏ lọn tóc đỉnh kéo ngang của Lila và phần cổ thừa dưới râu Karo. Tất cả là nguồn tạo hình **chưa duyệt, chưa đăng ký**; chưa đổi đầu trong renderer hoặc chứng minh chuyển động. Góc chưa biết được lưu rõ là `requestedYawDeg:null`, không tự gán thành 0°.
 
 Hai bản đo sơ bộ V2 dùng đúng source SHA/canvas/material fingerprint, chỉ có điểm mặt ước lượng; cổ/sọ/viền/masks/góc/tỷ lệ còn thiếu. Không lấy tọa độ V1 hay ROI từ ảnh toàn thân đặt lên V2. [Ảnh, review, bản đo, lệnh test và việc còn thiếu](reviews/primary-angle-heads-source-record-v1.md).

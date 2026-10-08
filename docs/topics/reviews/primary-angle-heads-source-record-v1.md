@@ -2,6 +2,8 @@
 
 Mục tiêu vẫn là **câu chuyện/kịch bản/WAV bất kỳ → hai diễn viên kể và diễn đúng nội dung → video có giọng, màu sống động, phụ đề và QC**. EN là chính; VI/JA/KO, TTS external/local và resume/locks còn trong phạm vi. Bản này sửa nguồn mặt/tóc/râu; chưa là video được nghiệm thu, bank hoặc rig sản xuất.
 
+Source commit `cf1b9031e415fda76a6283e328df3f1bb30b8a38` đã push nhánh `codex/prehistoric-life`: 32 file thuộc phần triển khai này, local/remote SHA khớp. Các cập nhật bàn giao sau commit chỉ sửa tài liệu. Runtime/video chưa chạy; đây không phải tuyên bố hoàn thành sản phẩm.
+
 ## Ảnh đã làm
 
 Dùng **built-in imagegen**, không qua CLI/API ảnh khác. V1 tách đầu ở góc của primary, không ép chính diện; V2 sửa riêng lọn tóc đỉnh Lila và cổ thừa dưới râu Karo. Giữ cả V1/V2 và original generated_images; PNG trong repo là copy byte-identical của output từng lượt, **không phải pixel-identical với ảnh gốc hoặc V1**. Không raster crop/resize/paint lại bằng Python/Sharp.
