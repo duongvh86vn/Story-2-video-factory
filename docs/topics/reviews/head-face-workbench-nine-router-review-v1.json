@@ -1,0 +1,96 @@
+{
+  "version": "head-face-workbench-source-review-1",
+  "sourceOnly": true,
+  "packetOutputSha256": "444bbb744488a3e6c692bb9a3be31f56cf23156e961a34085670a7391c433867",
+  "proposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [
+        {
+          "file": "packages/topics/head-face-workbench.ts; packages/animation/scene.ts; docs/topics/reviews/head-face-workbench-api-excerpt-v1.md",
+          "issue": "The generated scene contains an inline script, but the preview response CSP blocks inline scripts.",
+          "evidence": "performanceScene() emits <script>window.__timelines=window.__timelines||{};</script>. The preview route sets script-src 'self' without 'unsafe-inline' or a nonce. The injected PREVIEW_BRIDGE is external, but the inline scene script is still blocked.",
+          "fix": "Remove the inline initialization from the generated scene or serve it through the existing external scene script; do not weaken the CSP."
+        },
+        {
+          "file": "packages/topics/head-face-workbench.ts",
+          "issue": "The parent workbench HTML embeds actor and selection values directly into attributes and URL strings after parsing, without HTML/URL escaping.",
+          "evidence": "headFaceWorkbench() interpolates start, base, and selected values into data-face-base, iframe-related markup, image hrefs, and form options. Current enums constrain these values, but the same function constructs URLs containing query-sensitive path data and does not use URL encoding or HTML escaping at the output boundary.",
+          "fix": "Construct preview/reference URLs with URL/path encoding and escape all interpolated HTML attribute and text values before returning the document."
+        },
+        {
+          "file": "packages/topics/head-face-workbench.ts",
+          "issue": "The opaque sandbox resource policy is inconsistent with the generated scene's resource loading: the document CSP allows img-src 'self', while the sandboxed frame has an opaque origin and the generated markup loads image resources as same-origin-looking relative paths.",
+          "evidence": "The iframe uses sandbox=\"allow-scripts\". performanceScene() emits image URLs such as resource paths, and headFacePreviewFile() serves the frame with img-src 'self'. An opaque-origin document does not satisfy a same-origin CSP source expression for its own origin, so image loads can be blocked even though the parent route is same-origin.",
+          "fix": "Use an explicit CSP-compatible resource policy for the opaque frame, such as serving the required images through permitted URLs with a matching CSP source, while retaining the opaque sandbox and revision query binding."
+        }
+      ],
+      "limits": [
+        "No claims are made about runtime behavior beyond the exact source shown; source implementations for nativeHeadResources/readNativeHeadSource and the compiler were not provided.",
+        "No approval, production, artistic, video-factory, or deferred-feature conclusions are included."
+      ]
+    },
+    "usage": {
+      "promptTokens": 7704,
+      "completionTokens": 1016,
+      "totalTokens": 8720
+    },
+    "model": "cx/gpt-5.6-luna",
+    "purpose": "source-only-review",
+    "fingerprint": "a98c07fe5867fcdec0920f8b89d1e86a6ad4bcfa49819bc3c49938517092e40f",
+    "slot": 1,
+    "prompt": "Review at most 3 concrete correctness defects in the new read-only head-face workbench. It must reuse performanceScene/compiler, bind every HTML/JS/image to the same raw source/clock revision, preserve original gestures/gaze/expression/head/speech phase in a camera slice, use the existing opaque-sandbox PREVIEW_BRIDGE, and keep all approval/production flags false. No new video factory is claimed. Report only demonstrable issues from these exact sources (not missing features explicitly deferred). Pay attention to URL query binding, CSP and opaque-frame resource loads, source validation/cache, sourceSpan projection and readiness race. No execution/tools/tests/callbacks. Compact JSON {findings:[{file,issue,evidence,fix}],limits:[...]}. No code rewrite or artistic acceptance.",
+    "sources": [
+      {
+        "file": "packages/topics/head-face-workbench.ts",
+        "sha256": "3b305bafa21ec01065cd488b308167dd656dfebb1ff7411a25efdf8c81c6cac0"
+      },
+      {
+        "file": "packages/animation/scene.ts",
+        "sha256": "02a8b7a1836aa7baf32413728a1b82fa91cad23d95b813a9a7cd605c1b645bba"
+      },
+      {
+        "file": "apps/server/preview.ts",
+        "sha256": "0384e0431a3e25cfcb652aff04663cf1080ad6e4bffcd85d4f60d2a0d30a9457"
+      },
+      {
+        "file": "docs/topics/reviews/head-face-workbench-api-excerpt-v1.md",
+        "sha256": "b023951f70ac32b4f63abc714d25e9961b4dfa47ff1ef9f32a3c04f63d977ec5"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-08T11:09:36.613Z"
+  },
+  "parentAssessment": {
+    "finding1": "Not demonstrated: the submitted source explicitly removes the inline initialization before returning index.html; scene.js performs the initialization externally.",
+    "finding2": "Not demonstrated for this contract: every interpolated selection is a fixed parsed enum or numeric0/2000/4000. No user-controlled string reaches HTML or URLs. Future schema widening would require encoding.",
+    "finding3": "Not demonstrated by the current CSP specification: header CSP self-origin is set from response URL origin, separate from the iframe sandbox opaque document origin. Browser compatibility still needs the user model to test.",
+    "primarySources": [
+      "https://www.w3.org/TR/CSP/#parse-response-csp",
+      "https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-sandbox"
+    ],
+    "integration": "No proposal automatically applied; no CSP relaxation, new allowed origin or iframe allow-same-origin added.",
+    "runtime": "NOT RUN; user model exclusively",
+    "finalWorkbenchCodeSha256": "3b305bafa21ec01065cd488b308167dd656dfebb1ff7411a25efdf8c81c6cac0",
+    "excerptNormalization": {
+      "file": "docs/topics/reviews/head-face-workbench-api-excerpt-v1.md",
+      "rawInputCopy": "runtime/dev-agents/head-face-workbench-v1/review-api-input.md",
+      "reviewedSHA": "b023951f70ac32b4f63abc714d25e9961b4dfa47ff1ef9f32a3c04f63d977ec5",
+      "deliveredSHA": "8519a8edf0fba2d5f532ebd717ef7302895b75050eabf71873ab277b9afae95f",
+      "operation": "CRLF normalized to LF for portable Git checkout. Proposal.sources retains immutable exact original request SHA; raw input retained locally."
+    }
+  },
+  "usage": {
+    "promptTokens": 7704,
+    "completionTokens": 1016,
+    "totalTokens": 8720
+  },
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

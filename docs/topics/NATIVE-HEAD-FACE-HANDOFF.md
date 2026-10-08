@@ -1,5 +1,7 @@
 # Mặt Lila/Karo theo nguồn riêng — source0.51, 08/10/2026
 
+Bản0.53 đã thêm [trang xem mặt trên thân bằng compiler hiện hành](HEAD-FACE-WORKBENCH.md). Các kết quả/giới hạn0.51 dưới đây là lịch sử; trang mới cũng chưa được model triển khai chạy runtime. Definition không tự được duyệt hoặc chọn trong production.
+
 Mục tiêu vẫn là câu chuyện/kịch bản/WAV bất kỳ → hai diễn viên đúng mẫu, diễn mượt → video có giọng/phụ đề/QC. EN chính, VI/JA/KO, TTS local/HTTP/command và resume/locks không thay đổi. Đây là phần nối mặt theo source, **chưa phải video hoặc factory được nghiệm thu**.
 
 Source0.51 được lưu tại `066c9e94130aada4525e4a95f2ad226e809bffe4`; phần quần chúng0.52 kế tiếp nằm trong [SUPPORTING-ACTORS.md](SUPPORTING-ACTORS.md). Các kết quả source dưới đây thuộc0.51, không thay nghiệm thu runtime của0.52 hoặc toàn factory.

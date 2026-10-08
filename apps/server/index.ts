@@ -46,6 +46,7 @@ import {headCellArtDescription,headCellInventory,headCellMaterial,HeadCellFileSc
 import {HeadCellCheckRequestSchema,checkBoundHeadCellDraft} from '../../packages/topics/head-cell-landmarks.js';
 import {headCellWorkbench,headCellEditorScript} from '../../packages/topics/head-cell-workbench.js';
 import {supportingActorWorkbench,supportingActorManifest,supportingActorImage} from '../../packages/topics/supporting-workbench.js';
+import {HeadFaceSelectionSchema,headFaceWorkbench,headFacePreviewFile,headFacePlayerScript} from '../../packages/topics/head-face-workbench.js';
 import {HeadTurnCheckRequestSchema,HeadTurnFileSchema} from '../../packages/topics/head-turn-schemas.js';
 import {checkBoundHeadTurnDraft} from '../../packages/topics/head-turn-landmarks.js';
 import {Moods} from '../../packages/animation/schemas.js';
@@ -292,6 +293,17 @@ export async function buildServer(options: ServerOptions = {}) {
   app.get('/api/topics',async()=>({topics:[{id:'prehistoric-life',name:'Cuộc sống thời tiền sử',cast:['Lila','Karo'],supportingCast:supportingActorManifest(),visualAcceptance:'pending',readiness:prehistoricReadiness,inputModes:['script','wav','story'],preview:'/api/topics/prehistoric-life/preview',compare:'/api/topics/prehistoric-life/compare'}]}));
   app.get('/api/topics/prehistoric-life/supporting-actors',async(_request,reply)=>reply.type('text/html').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(supportingActorWorkbench()));
   app.get('/api/topics/prehistoric-life/supporting-actors/manifest',async()=>supportingActorManifest());
+  app.get('/api/topics/prehistoric-life/head-faces',async(request,reply)=>reply.type('text/html').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff')
+    .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; frame-src 'self'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'")
+    .send(headFaceWorkbench(HeadFaceSelectionSchema.parse(request.query))));
+  app.get('/api/topics/prehistoric-life/head-face-player.js',async(_request,reply)=>reply.type('application/javascript').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(headFacePlayerScript));
+  app.get<{Params:{actor:string;action:string;look:string;slice:string;'*':string}}>('/api/topics/prehistoric-life/head-face-preview/:actor/:action/:look/:slice/*',async(request,reply)=>{
+    const {actor,action,look,slice}=request.params;
+    const {revision}=z.object({revision:z.string().regex(/^[a-f0-9]{64}$/).optional()}).strict().parse(request.query);
+    const result=await headFacePreviewFile(repo,HeadFaceSelectionSchema.parse({actor,action,look,slice}),request.params['*'],revision);
+    return reply.type(result.type).header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff')
+      .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; base-uri 'none'; form-action 'none'").send(result.bytes);
+  });
   app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/supporting-actors/:file',async(request,reply)=>reply.type('image/png').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(await supportingActorImage(repo,request.params.file)));
   app.get<{Params:{topic:string};Querystring:{light?:string}}>('/api/topics/:topic/preview',async(request,reply)=>{
     z.literal('prehistoric-life').parse(request.params.topic);const light=z.enum(['day','sunset','night']).default('day').parse(request.query.light);

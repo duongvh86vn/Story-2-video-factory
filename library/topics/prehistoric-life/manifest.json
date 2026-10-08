@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.52-supporting-cast",
+  "version": "forest-tribe-0.53-face-workbench",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -2597,7 +2597,16 @@
     "productionReady": false,
     "approved": false,
     "motionVerified": false,
-    "handoff": "docs/topics/NATIVE-HEAD-FACE-HANDOFF.md"
+    "handoff": "docs/topics/NATIVE-HEAD-FACE-HANDOFF.md",
+    "inspection": {
+      "version": "native-head-face-workbench-1",
+      "url": "/api/topics/prehistoric-life/head-faces",
+      "codeHash": "3b305bafa21ec01065cd488b308167dd656dfebb1ff7411a25efdf8c81c6cac0",
+      "handoff": "docs/topics/HEAD-FACE-WORKBENCH.md",
+      "runtimeVerified": false,
+      "audioPresent": false,
+      "productionReady": false
+    }
   },
   "nativeHeadCells": {
     "version": "native-head-cell-material-1",

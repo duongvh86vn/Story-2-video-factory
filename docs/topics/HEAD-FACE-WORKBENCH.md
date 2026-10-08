@@ -1,0 +1,53 @@
+# Đối chiếu mặt trên thân — source0.53
+
+Trang dành cho người dùng/model test kiểm mặt source0.51 trên đúng thân native. Dàn diễn viên chính và quần chúng0.52 vẫn giữ nguyên. Mục tiêu cuối vẫn là story/script/WAV bất kỳ → diễn xuất đúng nội dung → video có giọng và QC; trang này không thay video nghiệm thu.
+
+## Phạm vi triển khai
+
+- Nạp đúng hai definition `lila-source-face-v1.json` / `karo-source-face-v1.json`, kiểm schema, fingerprint và byte/hash nguồn; không nhận path hay bank tùy ý từ HTTP.
+- Ghép source head, closed rest patch Karo, thân/quần áo, miệng và mắt bằng `performanceScene`/compiler/SVG hiện hành. Không viết renderer hoặc easing thứ hai cho preview.
+- Có rest/point/think, hướng mắt trong góc đã đăng ký, full clock0–4000ms và camera slice2000–4000ms dùng cùng original acting/head/gesture/speech clock. Tua dùng GSAP timeline đã compile.
+- Preflight binding/report trước khi nạp iframe; HTML/JS/CSS/PNG có revision từ profile/plan/original clock/resource SHA. Mỗi request kiểm source lại trước khi dùng cache tối đa4 scene text (mỗi scene≤2MB). Thay source giữa các request phải chặn, không trộn asset cũ/mới. Không cache image hoặc frame array.
+- Speech activity là tín hiệu chẩn đoán cố định, **không có audio**, không gọi model/TTS/ASR, không ghi project/lock/approval. Không gọi đây là phoneme lip-sync.
+- Lỗi geometry/source/compile phải hiện là lỗi, không đổi sang đầu cũ hoặc ảnh thay thế. Chưa cung cấp góc trái/profile/rear hay quần chúng directional face.
+
+## Môi trường và bàn giao
+
+Node≥22.13; dependency GSAP hiện có; chạy source mới ở C worktree. CheckoutD và server8850 không tự nhận source này.
+
+```powershell
+Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1'
+git rev-parse HEAD
+$env:STUDIO_PORT='8861'
+$env:STUDIO_PROJECTS_ROOT='C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/head-face-studio-projects'
+npm run studio
+```
+
+Mở `http://127.0.0.1:8861/api/topics/prehistoric-life/head-faces`. Ctrl+C dừng server trong terminal đó. Model triển khai không chạy server, compiler, sampler, browser hay test callback; chỉ kiểm build/typecheck/source theo phân công của người dùng.
+
+Model test cần kiểm schema geometry trước; full/slice tại cùng absolute time phải có face/path/hand giống nhau, kể cả seek đảo/ngẫu nhiên và ở speech/blink/gesture boundaries. Kiểm cả hai actor: identity/hair/beard, neck/body scale, mask/strip/răng/lưỡi, không double ink/ghost/seam, source nguồn không đổi. Kiểm HTTP MIME/CSP/không cache, nguồn sửa/path lạ bị chặn và giới hạn scene2MB. Ghi exact SHA, command, PASS/FAIL/NOT RUN, log, ảnh ghép và video60fps/normal speed; không lấy gallery hoặc build làm bằng chứng motion.
+
+4 callback trong `tests/head-face-workbench.test.ts` đã khai báo, **NOT RUN**: so evaluator full/slice và seek đảo/ngẫu nhiên ở speech/gesture boundaries; source/revision/file/scene generator; actor/path/source tamper; API MIME/CSP/binding/readiness flags. Dành cho model test:
+
+```powershell
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/head-face-workbench.test.ts tests/native-head-face.test.ts tests/native-head-bank-sources.test.ts tests/prehistoric-supporting.test.ts
+```
+
+## Review source qua9router
+
+Một request GPT Luna,7.704 input +1.016 output = **8.720 token** provider báo; output cap1.500,4 nguồn text, không gửi ảnh/toàn repo, không retry hay chạy code. [Packet hash, nguồn, response và đánh giá](reviews/head-face-workbench-nine-router-review-v1.json).
+
+Hai finding inline-script/unescaped selection không là lỗi đã chứng minh: code gửi review đã xóa inline initializer, và selection là enum/number strict. Finding opaque iframe/CSP chưa được chứng minh: thuật toán header CSP lấy self-origin từ response URL origin ([CSP3 §2.2.2](https://www.w3.org/TR/CSP/#parse-response-csp)), còn sandbox tạo opaque document origin ([HTML sandbox](https://html.spec.whatwg.org/multipage/iframe-embed-object.html#attr-iframe-sandbox)). Đây là đối chiếu đặc tả/source, **không là xác nhận browser chạy đúng**. Không thêm allow-same-origin hay nới CSP theo suy đoán của reviewer. Model test vẫn phải kiểm network, console, ảnh, script, bridge và timeline thực.
+
+`productionReady=false`, `productionRig=null`, `availableBanks=[]` giữ nguyên. Đủ views, expressions, tóc/cloth/props/contact, world day/sunset/night, ba input, EN/VI/JA/KO/TTS local-external/resume/final còn phải hoàn thành và nghiệm thu. Runtime của phần mới: **NOT RUN**.
+
+## Kiểm source ngày08/10/2026
+
+- `npm run build`: PASS, core/Studio typecheck và Vite41 module557ms.
+- `npm run test:typecheck`: PASS; chỉ typecheck, không gọi callback.
+- `npm run schemas`: PASS; các contract JSON không đổi trong bản này.
+- `node --import tsx scripts/prehistoric-pack.ts`: static inventory PASS,6 reference/12 candidate/6 head/2 garment/7 rejected, productionReadyfalse. Không chạy schema geometry definition hoặc compiler.
+- Raw4head V1/V2 và2quần chúng khớp original;6 file lịch sử/4source chính/2face definition giữ nguyên. Manifest6bank code hash/4supporting code hash/new workbench code hash khớp.4input review đối chiếu raw SHA; excerpt giao Git đã chuẩn hóa CRLF→LF, giữ raw input riêng và ghi cả reviewed/delivered SHA trong report.
+- Checker cũ0.52 ban đầu từ chối đúng version0.53 mới; đổi literal expected version trong checker rồi PASS, không bỏ invariant/source guard trong sản phẩm.
+
+Các kiểm trên không chứng minh renderer chạy được, face registration hợp lệ khi thực thi, browser tải được asset hay video đẹp/mượt. Source test mới và video vẫn **NOT RUN**. Chỉ dùng exact SHA từ checkoutC/GitHub branch `codex/prehistoric-life` để ghi báo cáo; không dùng test V1/checkoutD/server8850 để chứng nhận bản này.
