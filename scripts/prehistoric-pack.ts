@@ -17,10 +17,10 @@ import {nativeHeadBankDescription} from '../packages/animation/native-head-bank.
 import {headCellArtDescription,headCellInventory} from '../packages/topics/head-cell-art.js';
 import {prehistoricSupportingDescription,prehistoricSupportingModels} from '../packages/topics/supporting-models.js';
 import {supportingHeadDescription} from '../packages/animation/prehistoric-supporting-head.js';
-import {HEAD_FACE_CANDIDATES,HEAD_FACE_WORKBENCH_VERSION} from '../packages/topics/head-face-candidates.js';
+import {HEAD_FACE_CANDIDATES,HEAD_FACE_EXPRESSION_CANDIDATES,HEAD_FACE_WORKBENCH_VERSION} from '../packages/topics/head-face-candidates.js';
 import {nativeDialogueDescription} from '../packages/topics/native-dialogue-candidates.js';
 import {VIEW_SOURCE_GESTURE_PROJECTION_VERSION} from '../packages/animation/view-source-gesture.js';
-import {nativeHeadIdentities,NATIVE_SUPPORTING_HEAD_BANK_VERSION} from '../packages/animation/native-head-identity.js';
+import {nativeHeadIdentities,NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION} from '../packages/animation/native-head-identity.js';
 import {supportingFaceDescription} from '../packages/topics/supporting-face-candidates.js';
 import {topicCastNormalizationDescription} from '../packages/topics/cast-appearance.js';
 
@@ -63,11 +63,12 @@ const nativeHeadTurnMaterials=await headTurnInventory(repo);
 const nativeHeadCellMaterials=await headCellInventory(repo);
 // Read static definition bytes only; do not evaluate a compiler, face state,
 // geometry schema or registration while inventorying authoring artifacts.
-const nativeFaceDefinitions=await Promise.all(HEAD_FACE_CANDIDATES.map(async entry=>{
+const nativeFaceDefinitions=await Promise.all([...HEAD_FACE_CANDIDATES,...HEAD_FACE_EXPRESSION_CANDIDATES].map(async entry=>{
   const {actor,view,id,file,headFile}=entry,identity=nativeHeadIdentities[actor];
   const bytes=await fs.readFile(path.join(repo,file)),definition=JSON.parse(bytes.toString('utf8'));
   if(definition.actor!==actor||definition.id!==id||definition.bodyViews.length!==1||definition.bodyViews[0].view!==view||definition.source.file!=='library/topics/prehistoric-life/head-cells/'+headFile)throw new Error('Face definition catalog/body view differs');
-  if(definition.version!==(identity.supporting?NATIVE_SUPPORTING_HEAD_BANK_VERSION:'native-head-bank-3')||definition.primary.file!==identity.primary.file||definition.primary.sha256!==identity.primary.sha256||definition.approved!==false||definition.productionReady!==false||definition.motionVerified!==false)throw new Error('Face definition model/version/readiness differs');
+  const emotions=HEAD_FACE_EXPRESSION_CANDIDATES.some(c=>c.id===id);
+  if(definition.version!==(emotions?NATIVE_EMOTION_HEAD_BANK_VERSION:identity.supporting?NATIVE_SUPPORTING_HEAD_BANK_VERSION:'native-head-bank-3')||definition.primary.file!==identity.primary.file||definition.primary.sha256!==identity.primary.sha256||definition.approved!==false||definition.productionReady!==false||definition.motionVerified!==false)throw new Error('Face definition model/version/readiness differs');
   if('sha256' in entry&&(definition.source.sha256!==entry.sha256||definition.source.width!==entry.width||definition.source.height!==entry.height))throw new Error('Supporting head source differs from current catalog');
   const primary=await describe(identity.primary.file);if(primary.sha256!==identity.primary.sha256)throw new Error('Face primary image changed');
   const sources=await Promise.all([definition.source,...(definition.additionalSources??[])].map(async(source:{file:string;sha256:string;width:number;height:number})=>{
@@ -105,7 +106,7 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   nativeSeatedSurface,
   nativeHeadTurnStudies:{...headTurnArtDescription,materials:nativeHeadTurnMaterials,fingerprint:hash(nativeHeadTurnMaterials),codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-art.ts'))),landmarkCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-landmarks.ts'))),schemaCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-schemas.ts'))),workbenchCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-workbench.ts')))},
   nativeHeadBank:{...nativeHeadBankDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/animation/native-head-bank.ts','packages/animation/native-head-identity.ts','packages/animation/native-head-track.ts','packages/animation/body-head-bank.ts','packages/animation/native-head-resources.ts','packages/animation/native-head-face.ts','packages/core/json-sha256.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
-  nativeHeadFaces:{version:'native-head-face-1',definitions:nativeFaceDefinitions,selection:'explicit bank3 principals or bank4 own supporting model only after user-model geometry/runtime review; no automatic selection',availableBanks:[],productionReady:false,approved:false,motionVerified:false,handoff:'docs/topics/NATIVE-HEAD-FACE-HANDOFF.md',
+  nativeHeadFaces:{version:'native-head-face-2',definitions:nativeFaceDefinitions,selection:'explicit bank3 principal, bank4 supporting or bank5 own registered emotions only after user-model geometry/runtime review; no automatic selection',availableBanks:[],productionReady:false,approved:false,motionVerified:false,handoff:'docs/topics/NATIVE-SOURCE-FACE-EMOTIONS.md',
     inspection:{version:HEAD_FACE_WORKBENCH_VERSION,url:'/api/topics/prehistoric-life/head-faces',codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-face-workbench.ts'))),catalogCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-face-candidates.ts'))),sourceLoaderCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-face-source.ts'))),handoff:'docs/topics/HEAD-FACE-WORKBENCH.md',runtimeVerified:false,audioPresent:false,productionReady:false}},
   nativeHeadCells:{...headCellArtDescription,materials:nativeHeadCellMaterials,fingerprint:hash(nativeHeadCellMaterials),codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-cell-art.ts'))),landmarkCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-cell-landmarks.ts'))),workbenchCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-cell-workbench.ts'))),workbench:'/api/topics/prehistoric-life/head-cells',inventory:'library/topics/prehistoric-life/head-cells/inventory-v1.json'},
   nativeActorGaze:{...nativeActorGazeDescription,handoff:'docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md',targetSourceCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-gaze-target.ts'))),physicalLungeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/lunge.ts'))),publicationGuardCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/source-publication.ts'))),scenePipelineCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/index.ts'))),artworkTransactionCodeHash:hash(await fs.readFile(path.join(repo,'packages/director/artwork-repair.ts')))},

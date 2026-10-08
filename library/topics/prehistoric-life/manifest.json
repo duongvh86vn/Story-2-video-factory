@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.60-preserve-source-cast",
+  "version": "forest-tribe-0.61-source-face-emotions",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -27,8 +27,8 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "1189cc3f579ff2e20443afb2d622fb6e4b490fa626930c06c8c853c84016cda7",
-      "packages/topics/prehistoric-life.ts": "5fa4d856c09239aa04eb8f5115597bb98b85b5d14fdf4ad7848309f2a823fb9d",
-      "packages/director/acting-brief.ts": "662a637589dd03d442b2904f9c9be2719be8ae1594f159a7d4246fe2b655452e"
+      "packages/topics/prehistoric-life.ts": "6c287aceaff49400322012a82317c9840c9c786f76e2393ecbd1b1a4b97ed571",
+      "packages/director/acting-brief.ts": "13b83bdb5f0aae438d1a297b2eb52f411ab3025163070cd4cc04404392122337"
     }
   },
   "primaryModel": "warm-skin-close-ups",
@@ -271,11 +271,11 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "5fa4d856c09239aa04eb8f5115597bb98b85b5d14fdf4ad7848309f2a823fb9d",
+      "packages/topics/prehistoric-life.ts": "6c287aceaff49400322012a82317c9840c9c786f76e2393ecbd1b1a4b97ed571",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
-      "packages/animation/native-head-identity.ts": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894",
+      "packages/animation/native-head-identity.ts": "e030d64a6096a2838b04f806860dfa419e481182b55aa99d260f194b5e106b53",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
-      "packages/host/schemas.ts": "4d5997d8651f4f907d28b02d77e4285f4155e1b153c44a3068dd8c1545c177a1"
+      "packages/host/schemas.ts": "d3e2f21e569ab7ae56ee1067a0f1780af180c60d2898354d244a3ae62e9ba1a6"
     },
     "workbench": "/api/topics/prehistoric-life/supporting-actors"
   },
@@ -2585,7 +2585,8 @@
       "native-head-bank-1",
       "native-head-bank-2",
       "native-head-bank-3",
-      "native-head-bank-4"
+      "native-head-bank-4",
+      "native-head-bank-5"
     ],
     "modelIdentities": {
       "lila": {
@@ -2632,25 +2633,26 @@
     "availableBanks": [],
     "pending": [
       "faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held",
-      "bank3 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
-      "emotions and secondary hair/occlusion artwork capabilities",
+      "bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
+      "bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending",
+      "secondary hair/occlusion artwork capabilities",
       "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
       "neck overlap/painter seam masks and compatible body turns",
       "actual head/body turn and normal-speed video review",
       "whole arbitrary-story/script/WAV factory acceptance"
     ],
     "codeHashes": {
-      "packages/animation/native-head-bank.ts": "6250a4ba019866be5a2a7e0ef1ff423faa4af263bd62e819fdf54eecf1d7e5ef",
-      "packages/animation/native-head-identity.ts": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894",
+      "packages/animation/native-head-bank.ts": "ed533e3742f693103ea62b406d8821e8b1c76facd357c37849870c3116410de9",
+      "packages/animation/native-head-identity.ts": "e030d64a6096a2838b04f806860dfa419e481182b55aa99d260f194b5e106b53",
       "packages/animation/native-head-track.ts": "e96ca04c97bb01ebf542043768565a9a151c04f83d330ebb02a1a4cc5de2f0ab",
-      "packages/animation/body-head-bank.ts": "7264c2511cec22beeaaae4b15a25601d507d5dd5884c1aedf15c3ab178a0f1ce",
+      "packages/animation/body-head-bank.ts": "430464d97447c393582e5f667eb9f6454827f27ecde198b933a4296006bfca05",
       "packages/animation/native-head-resources.ts": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461",
-      "packages/animation/native-head-face.ts": "739dba84c31cd8d48c67860024caae1f6a6a3940aa1df99f31ee151936aae9f5",
+      "packages/animation/native-head-face.ts": "3b629586aff75bc3446cf159d62617ed75c3119b2bac4cdbcd922d4db5ac0846",
       "packages/core/json-sha256.ts": "04d3524a8b3c2a053835b9bb7d4cd6218b0ece94a9ccca32768f5deab56d1eff"
     }
   },
   "nativeHeadFaces": {
-    "version": "native-head-face-1",
+    "version": "native-head-face-2",
     "definitions": [
       {
         "actor": "lila",
@@ -2845,20 +2847,154 @@
         "approved": false,
         "productionReady": false,
         "motionVerified": false
+      },
+      {
+        "actor": "lila",
+        "view": "three-quarter-left",
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v1.json",
+        "sha256": "193dfa7e2706d2844dd982051978143393d765958bb3c97407f971b00da30177",
+        "primary": {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+          "width": 430,
+          "height": 766,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "lila",
+        "sources": [
+          {
+            "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+            "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+            "width": 1168,
+            "height": 1347,
+            "hasAlpha": true
+          }
+        ],
+        "status": "unvalidated-engineering-definition",
+        "geometryValidation": "NOT RUN",
+        "selected": false,
+        "registered": false,
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      },
+      {
+        "actor": "lila",
+        "view": "three-quarter-right",
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v1.json",
+        "sha256": "e0179ec0f199d8ad48fa9efbfb6e5972de0ac66824abb671b0259ac9a6b4f79a",
+        "primary": {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+          "width": 430,
+          "height": 766,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "lila",
+        "sources": [
+          {
+            "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+            "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+            "width": 1167,
+            "height": 1347,
+            "hasAlpha": true
+          }
+        ],
+        "status": "unvalidated-engineering-definition",
+        "geometryValidation": "NOT RUN",
+        "selected": false,
+        "registered": false,
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      },
+      {
+        "actor": "karo",
+        "view": "three-quarter-left",
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v1.json",
+        "sha256": "b3f973990bd49e2ae23675fb21b5daa614ef7d3e7aa5013f4123a2dff49aee96",
+        "primary": {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+          "width": 377,
+          "height": 716,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "karo",
+        "sources": [
+          {
+            "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+            "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410",
+            "width": 1312,
+            "height": 1199,
+            "hasAlpha": true
+          },
+          {
+            "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-left-dialogue-v2.png",
+            "sha256": "1d439730677e66f9017f2763768470ffa61125f597bf1b496804406ae94b4b95",
+            "width": 1312,
+            "height": 1199,
+            "hasAlpha": true
+          }
+        ],
+        "status": "unvalidated-engineering-definition",
+        "geometryValidation": "NOT RUN",
+        "selected": false,
+        "registered": false,
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      },
+      {
+        "actor": "karo",
+        "view": "three-quarter-right",
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v1.json",
+        "sha256": "eb0d48c888dff442b997bc1a94a2d870fe9f5d09079119961d784d4221b017a8",
+        "primary": {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+          "width": 377,
+          "height": 716,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "karo",
+        "sources": [
+          {
+            "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+            "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+            "width": 1201,
+            "height": 1309,
+            "hasAlpha": true
+          },
+          {
+            "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-source-angle-v1.png",
+            "sha256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb",
+            "width": 1201,
+            "height": 1309,
+            "hasAlpha": true
+          }
+        ],
+        "status": "unvalidated-engineering-definition",
+        "geometryValidation": "NOT RUN",
+        "selected": false,
+        "registered": false,
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
       }
     ],
-    "selection": "explicit bank3 principals or bank4 own supporting model only after user-model geometry/runtime review; no automatic selection",
+    "selection": "explicit bank3 principal, bank4 supporting or bank5 own registered emotions only after user-model geometry/runtime review; no automatic selection",
     "availableBanks": [],
     "productionReady": false,
     "approved": false,
     "motionVerified": false,
-    "handoff": "docs/topics/NATIVE-HEAD-FACE-HANDOFF.md",
+    "handoff": "docs/topics/NATIVE-SOURCE-FACE-EMOTIONS.md",
     "inspection": {
-      "version": "native-head-face-workbench-4",
+      "version": "native-head-face-workbench-5",
       "url": "/api/topics/prehistoric-life/head-faces",
-      "codeHash": "7569bac80061391c7663ea4ecf6bc89ac8b2d6c4102eed8b6dff3d3c9ccb0090",
-      "catalogCodeHash": "52bbaeef73bc71d1a4c71c4a492657f1b158ae0eaba533c383ae06b6ef05254c",
-      "sourceLoaderCodeHash": "20ec9b0071e8b35a20aa5eef64d0f234047f873b78c17dd654ed139d1b8a2d9e",
+      "codeHash": "f26cca480ad8a11598e35a122e3103861d03e77117ce01bdea1c209b4ff3b235",
+      "catalogCodeHash": "82dd1af2e254a7f89678db6b4782ccb5eeb48be229b0489d5f885dbafabd643c",
+      "sourceLoaderCodeHash": "7091655e4e21a70c861724685ab6e7df2284a82a2f95203f1a465389c2ba2295",
       "handoff": "docs/topics/HEAD-FACE-WORKBENCH.md",
       "runtimeVerified": false,
       "audioPresent": false,
@@ -5344,12 +5480,12 @@
     "productionAcceptance": false,
     "finalExportAllowed": false,
     "builder": "benchmarks/native-seat-tracer.ts",
-    "builderHash": "93584e4dca31b3855d4f73485adfa1e21d27b28a6587beb909a5a0a470b7fd07",
+    "builderHash": "31d07a231119f666acec7d1aff9c42464998cab9bafbef9cf761594fe69a0594",
     "exporter": "scripts/native-seat-tracer.ts",
-    "exporterHash": "e6a849905e79718dc349c9fc3d1f243139d95a370a79af7a6019778fd3d8afac",
+    "exporterHash": "9b1459dd8abdfd3afe2fe98f59faed6028cfd75f32d8539343393b2546ae3a87",
     "handoff": "docs/topics/NATIVE-SEAT-TRACER.md",
     "opposingHeads": {
-      "version": "native-head-seat-tracer-2",
+      "version": "native-head-seat-tracer-3",
       "scope": "unapproved-native-head-seat-tracer",
       "stagings": {
         "lila-left": [
@@ -5379,7 +5515,8 @@
       },
       "acting": [
         "rest",
-        "listening-think"
+        "listening-think",
+        "emotional-reactions"
       ],
       "thinkingWindows": {
         "karo": {
@@ -5397,6 +5534,42 @@
           "endMs": 4500
         }
       },
+      "expressionWindows": {
+        "lila": [
+          {
+            "startMs": 300,
+            "endMs": 2600,
+            "mood": "excited"
+          },
+          {
+            "startMs": 2700,
+            "endMs": 4450,
+            "mood": "concerned"
+          },
+          {
+            "startMs": 4600,
+            "endMs": 6200,
+            "mood": "relieved"
+          }
+        ],
+        "karo": [
+          {
+            "startMs": 300,
+            "endMs": 2100,
+            "mood": "curious"
+          },
+          {
+            "startMs": 2200,
+            "endMs": 3850,
+            "mood": "surprised"
+          },
+          {
+            "startMs": 4000,
+            "endMs": 6250,
+            "mood": "confident"
+          }
+        ]
+      },
       "default": {
         "staging": "lila-left",
         "acting": "rest"
@@ -5409,7 +5582,7 @@
       "finalExportAllowed": false,
       "command": "npm run tracer:native-seat -- --native-heads",
       "builderFunction": "createNativeHeadSeatTracer",
-      "catalogCodeHash": "66572dc6dd947b838cbed0a1801ba0c542e99e14e03db3eb023669750fa0dab5",
+      "catalogCodeHash": "96b96a45e28d746a8edc06ffbdbfa2a52143d1ca04acc25f8fad540dcd745437",
       "gestureProjection": {
         "version": "native-source-gesture-projection-1",
         "file": "packages/animation/view-source-gesture.ts",
@@ -6623,7 +6796,8 @@
             "native-head-bank-1",
             "native-head-bank-2",
             "native-head-bank-3",
-            "native-head-bank-4"
+            "native-head-bank-4",
+            "native-head-bank-5"
           ],
           "modelIdentities": {
             "lila": {
@@ -6670,8 +6844,9 @@
           "availableBanks": [],
           "pending": [
             "faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held",
-            "bank3 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
-            "emotions and secondary hair/occlusion artwork capabilities",
+            "bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
+            "bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending",
+            "secondary hair/occlusion artwork capabilities",
             "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
             "neck overlap/painter seam masks and compatible body turns",
             "actual head/body turn and normal-speed video review",
@@ -7716,7 +7891,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
+        "fingerprint": "295d7e95dcdecd6099da75e297a90b709fef9d7c4708edff56454d60ec52c7e9",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -7730,13 +7905,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "457b6a2fce37d3ab0f22682ad89f13ffb8dbd03aedd9d3f4807601662c5e0930",
+      "fingerprint": "8bee504451044cd47278cbfa1d010989e86624800a663d1f478906d635d3e5d4",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "6d125320bd4f37dcdb9c2ac403aee5cc514e5e1f06e80734d234dda687970d68",
+    "fingerprint": "f3c3a5418696d3afd0749a768c29f00d8561ce7d04cf3db13871ba771826bb4d",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -7760,7 +7935,7 @@
     "version": "forest-body-1",
     "compilerVersion": "forest-source-body-motion-36",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "fd3e1d77c395b48159d9014297d1b03a08f02f32a624466bad3c8c070a3728e1",
+    "fingerprint": "ce89b8724a23e39dd3395c81864cdb230201cdc52995687027a84e4762206ffe",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -8520,7 +8695,8 @@
           "native-head-bank-1",
           "native-head-bank-2",
           "native-head-bank-3",
-          "native-head-bank-4"
+          "native-head-bank-4",
+          "native-head-bank-5"
         ],
         "modelIdentities": {
           "lila": {
@@ -8567,8 +8743,9 @@
         "availableBanks": [],
         "pending": [
           "faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held",
-          "bank3 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
-          "emotions and secondary hair/occlusion artwork capabilities",
+          "bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
+          "bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending",
+          "secondary hair/occlusion artwork capabilities",
           "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
           "neck overlap/painter seam masks and compatible body turns",
           "actual head/body turn and normal-speed video review",
@@ -9613,7 +9790,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
+      "fingerprint": "295d7e95dcdecd6099da75e297a90b709fef9d7c4708edff56454d60ec52c7e9",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
@@ -10285,7 +10462,8 @@
             "native-head-bank-1",
             "native-head-bank-2",
             "native-head-bank-3",
-            "native-head-bank-4"
+            "native-head-bank-4",
+            "native-head-bank-5"
           ],
           "modelIdentities": {
             "lila": {
@@ -10332,8 +10510,9 @@
           "availableBanks": [],
           "pending": [
             "faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held",
-            "bank3 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
-            "emotions and secondary hair/occlusion artwork capabilities",
+            "bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
+            "bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending",
+            "secondary hair/occlusion artwork capabilities",
             "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
             "neck overlap/painter seam masks and compatible body turns",
             "actual head/body turn and normal-speed video review",
@@ -11378,7 +11557,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
+        "fingerprint": "295d7e95dcdecd6099da75e297a90b709fef9d7c4708edff56454d60ec52c7e9",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -11392,7 +11571,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "457b6a2fce37d3ab0f22682ad89f13ffb8dbd03aedd9d3f4807601662c5e0930",
+      "fingerprint": "8bee504451044cd47278cbfa1d010989e86624800a663d1f478906d635d3e5d4",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -11411,7 +11590,7 @@
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
-    "compilerCodeHash": "87745642f06ff31266d7a584a4e4ceba6381704d029e67a199911a5113088e3f",
+    "compilerCodeHash": "696e91d9ec94cf1daf8f7a6b283188bafe93320c00da7cdfa0f97f0e3cb92d48",
     "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
     "cameraCodeHash": "e9bf2d4a816df18d28ddba2496fdd840bf87a4163cc82cf43825620d1c82d52a",
     "sourceBodyCodeHash": "d3b78d1283a37ea6e2470972ca33640e0bed46d1c6aa5ed8e43473ee56174e3c",
@@ -12107,7 +12286,8 @@
           "native-head-bank-1",
           "native-head-bank-2",
           "native-head-bank-3",
-          "native-head-bank-4"
+          "native-head-bank-4",
+          "native-head-bank-5"
         ],
         "modelIdentities": {
           "lila": {
@@ -12154,8 +12334,9 @@
         "availableBanks": [],
         "pending": [
           "faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held",
-          "bank3 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
-          "emotions and secondary hair/occlusion artwork capabilities",
+          "bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending",
+          "bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending",
+          "secondary hair/occlusion artwork capabilities",
           "continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked",
           "neck overlap/painter seam masks and compatible body turns",
           "actual head/body turn and normal-speed video review",
@@ -13200,7 +13381,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
+      "fingerprint": "295d7e95dcdecd6099da75e297a90b709fef9d7c4708edff56454d60ec52c7e9",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,

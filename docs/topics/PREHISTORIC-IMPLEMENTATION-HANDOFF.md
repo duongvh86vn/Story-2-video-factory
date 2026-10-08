@@ -1,5 +1,7 @@
 # Bàn giao source WIP — Cuộc sống thời tiền sử
 
+Cập nhật hiện hành source0.61: [biểu cảm trên nguồn đầu riêng và handoff test](NATIVE-SOURCE-FACE-EMOTIONS.md). Bank5/face2 được chọn tường minh cho bốn góc Lila/Karo; bank1–4, mặt quần chúng, trang phục và narration không bị thay. Toàn luồng story/script/WAV → video vẫn chưa nghiệm thu; test runtime/geometry/video giao riêng cho model của người dùng. Các mục phiên bản thấp hơn bên dưới là lịch sử.
+
 **Hiện hành0.60 — 08/10/2026:** production cast normalization giữ principal native selections thay vì reset forest-body-1; supporting bank4 dùng cùng helper. Validate cả unlocked cast trước mutation, giữ identity/evidence/thoại/source clocks và actor locks. Brief phân biệt đúng capabilities theo phiên bản nguồn. [Lỗi source, triển khai, lệnh/environment/handoff](TOPIC-CAST-SOURCE-HANDOFF.md). Chín callback NOT RUN, không nới geometry/source/face/contact/final guards hoặc bật rig chưa nghiệm thu.
 
 **Lịch sử0.59 — 08/10/2026:** quần chúng có contract bank4 riêng cho đầu nam trái không tóc/không râu và đầu nữ phải, ghép nguồn costume Karo/Lila tương ứng. Native face/resource/catalog/identity/clock guards dùng chung, normalizer không trả về đầu legacy, workbench cùng renderer hỗ trợ mẫu explicit. Hai đầu raw và JSON tọa độ vẫn là ứng viên chưa chạy geometry; bảy callback mới NOT RUN. [Source, commands, môi trường và bàn giao](SUPPORTING-NATIVE-HEAD.md). Full tool/input/voice/acting/world/resume/final/QC còn chờ nghiệm thu; productionReady=false/productionRig=null/availableBanks[].

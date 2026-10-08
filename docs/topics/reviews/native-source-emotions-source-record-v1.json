@@ -1,0 +1,402 @@
+{
+  "version": "native-source-emotions-source-record-1",
+  "sourceVersion": "forest-tribe-0.61-source-face-emotions",
+  "precedingSourceSHA": "af3e6bbf213eadd2ae9fb289adde6c3c8bb1028b",
+  "scope": "Source/build/types/export/static-manifest/immutable-byte/raw-RGBA checks only. NO geometry, callback, rig/clock/fixture/builder/compiler/sampler/server/browser/model pipeline/voice/media runtime.",
+  "previousGoalTurn": "no-progress (re-displayed already implemented supporting male; no new authoritative state)",
+  "currentGoalTurn": "progress (source-owned face2 emotion contract, compiler/painter, owned registrations, canonical actor integration and handoff)",
+  "checks": {
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "39368 / terminal b2ffcd",
+      "studioModules": 42,
+      "viteMs": 565
+    },
+    "testTypecheck": {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "15812 / terminal 0c1ee4",
+      "callbacksExecuted": 0
+    },
+    "schemaExport": {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "789795",
+      "changedSchemas": [
+        "library/schemas/host-profile.schema.json",
+        "library/schemas/native-head-bank.schema.json",
+        "library/schemas/native-head-face.schema.json",
+        "library/schemas/shot.schema.json",
+        "library/schemas/storyboard.schema.json",
+        "library/schemas/view-acting-clock.schema.json",
+        "library/schemas/view-gaze-target.schema.json"
+      ]
+    },
+    "staticManifest": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "cb0b55",
+      "definitions": 10,
+      "ownEmotionDefinitions": 4,
+      "verifiedCodeHashes": [
+        {
+          "file": "packages/topics/cast-appearance.ts",
+          "sha256": "1189cc3f579ff2e20443afb2d622fb6e4b490fa626930c06c8c853c84016cda7"
+        },
+        {
+          "file": "packages/topics/prehistoric-life.ts",
+          "sha256": "6c287aceaff49400322012a82317c9840c9c786f76e2393ecbd1b1a4b97ed571"
+        },
+        {
+          "file": "packages/director/acting-brief.ts",
+          "sha256": "13b83bdb5f0aae438d1a297b2eb52f411ab3025163070cd4cc04404392122337"
+        },
+        {
+          "file": "packages/topics/supporting-models.ts",
+          "sha256": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1"
+        },
+        {
+          "file": "packages/topics/supporting-workbench.ts",
+          "sha256": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b"
+        },
+        {
+          "file": "packages/topics/supporting-face-candidates.ts",
+          "sha256": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558"
+        },
+        {
+          "file": "packages/topics/prehistoric-life.ts",
+          "sha256": "6c287aceaff49400322012a82317c9840c9c786f76e2393ecbd1b1a4b97ed571"
+        },
+        {
+          "file": "packages/animation/prehistoric-supporting-head.ts",
+          "sha256": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044"
+        },
+        {
+          "file": "packages/animation/native-head-identity.ts",
+          "sha256": "e030d64a6096a2838b04f806860dfa419e481182b55aa99d260f194b5e106b53"
+        },
+        {
+          "file": "packages/actors/design.ts",
+          "sha256": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d"
+        },
+        {
+          "file": "packages/host/schemas.ts",
+          "sha256": "d3e2f21e569ab7ae56ee1067a0f1780af180c60d2898354d244a3ae62e9ba1a6"
+        },
+        {
+          "file": "packages/animation/native-head-bank.ts",
+          "sha256": "ed533e3742f693103ea62b406d8821e8b1c76facd357c37849870c3116410de9"
+        },
+        {
+          "file": "packages/animation/native-head-identity.ts",
+          "sha256": "e030d64a6096a2838b04f806860dfa419e481182b55aa99d260f194b5e106b53"
+        },
+        {
+          "file": "packages/animation/native-head-track.ts",
+          "sha256": "e96ca04c97bb01ebf542043768565a9a151c04f83d330ebb02a1a4cc5de2f0ab"
+        },
+        {
+          "file": "packages/animation/body-head-bank.ts",
+          "sha256": "430464d97447c393582e5f667eb9f6454827f27ecde198b933a4296006bfca05"
+        },
+        {
+          "file": "packages/animation/native-head-resources.ts",
+          "sha256": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461"
+        },
+        {
+          "file": "packages/animation/native-head-face.ts",
+          "sha256": "3b629586aff75bc3446cf159d62617ed75c3119b2bac4cdbcd922d4db5ac0846"
+        },
+        {
+          "file": "packages/core/json-sha256.ts",
+          "sha256": "04d3524a8b3c2a053835b9bb7d4cd6218b0ece94a9ccca32768f5deab56d1eff"
+        }
+      ]
+    },
+    "rawPixels": {
+      "record": "docs/topics/reviews/native-source-emotions-raw-strips-v2.json",
+      "readOnly": true,
+      "strips": 12,
+      "darkPixelsRgbSumBelow160": 0,
+      "colourSeamVerified": false
+    },
+    "sourceReview": {
+      "calls": 1,
+      "model": "cx/gpt-5.6-luna",
+      "usage": {
+        "promptTokens": 15825,
+        "completionTokens": 1258,
+        "totalTokens": 17083
+      },
+      "record": "docs/topics/reviews/native-source-emotions-source-review-v1.json",
+      "scope": "source-only; no autoapply or runtime"
+    }
+  },
+  "sourceFiles": [
+    {
+      "file": "packages/animation/native-head-face.ts",
+      "sha256": "3b629586aff75bc3446cf159d62617ed75c3119b2bac4cdbcd922d4db5ac0846"
+    },
+    {
+      "file": "packages/animation/native-head-bank.ts",
+      "sha256": "ed533e3742f693103ea62b406d8821e8b1c76facd357c37849870c3116410de9"
+    },
+    {
+      "file": "packages/animation/native-head-identity.ts",
+      "sha256": "e030d64a6096a2838b04f806860dfa419e481182b55aa99d260f194b5e106b53"
+    },
+    {
+      "file": "packages/animation/body-head-bank.ts",
+      "sha256": "430464d97447c393582e5f667eb9f6454827f27ecde198b933a4296006bfca05"
+    },
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "696e91d9ec94cf1daf8f7a6b283188bafe93320c00da7cdfa0f97f0e3cb92d48"
+    },
+    {
+      "file": "packages/host/schemas.ts",
+      "sha256": "d3e2f21e569ab7ae56ee1067a0f1780af180c60d2898354d244a3ae62e9ba1a6"
+    },
+    {
+      "file": "packages/topics/prehistoric-life.ts",
+      "sha256": "6c287aceaff49400322012a82317c9840c9c786f76e2393ecbd1b1a4b97ed571"
+    },
+    {
+      "file": "packages/director/acting-brief.ts",
+      "sha256": "13b83bdb5f0aae438d1a297b2eb52f411ab3025163070cd4cc04404392122337"
+    },
+    {
+      "file": "packages/topics/head-face-candidates.ts",
+      "sha256": "82dd1af2e254a7f89678db6b4782ccb5eeb48be229b0489d5f885dbafabd643c"
+    },
+    {
+      "file": "packages/topics/head-face-source.ts",
+      "sha256": "7091655e4e21a70c861724685ab6e7df2284a82a2f95203f1a465389c2ba2295"
+    },
+    {
+      "file": "packages/topics/head-face-workbench.ts",
+      "sha256": "f26cca480ad8a11598e35a122e3103861d03e77117ce01bdea1c209b4ff3b235"
+    },
+    {
+      "file": "packages/topics/native-dialogue-candidates.ts",
+      "sha256": "96b96a45e28d746a8edc06ffbdbfa2a52143d1ca04acc25f8fad540dcd745437"
+    },
+    {
+      "file": "benchmarks/native-seat-tracer.ts",
+      "sha256": "31d07a231119f666acec7d1aff9c42464998cab9bafbef9cf761594fe69a0594"
+    },
+    {
+      "file": "scripts/native-seat-tracer.ts",
+      "sha256": "9b1459dd8abdfd3afe2fe98f59faed6028cfd75f32d8539343393b2546ae3a87"
+    },
+    {
+      "file": "scripts/prehistoric-pack.ts",
+      "sha256": "9b6e378c1bd4080a005044da3822164e9068e32346527734d138c7e326e235ed"
+    },
+    {
+      "file": "apps/server/index.ts",
+      "sha256": "299880497d977bbcaa2e8822223523fe67c8bbcc9259b98074720773c56729af"
+    },
+    {
+      "file": "tests/native-source-emotions.test.ts",
+      "sha256": "d9b442ae2b414c39c9f045f13dba857a2570830009240248ffc53e8516352b72"
+    }
+  ],
+  "unchangedSourceFiles": [
+    {
+      "file": "docs/topics/assets/prehistoric-character-sheet.png",
+      "sha256": "fba84558ae2c253d9be0f67f6787673d96b9718d9e1b186d8fd105f693d8fe51"
+    },
+    {
+      "file": "docs/topics/assets/reference-expressions.png",
+      "sha256": "fbc6c963252786216689c48a3c7fb09dd258eb6ae0d43b9d777d57587fb69094"
+    },
+    {
+      "file": "docs/topics/assets/reference-forest-tribe-detailed.png",
+      "sha256": "732efaceb02f186e3c5467b7bc61bd13309290a095ff305842bc59bdf4fc2dc2"
+    },
+    {
+      "file": "docs/topics/assets/reference-forest-tribe-stick.png",
+      "sha256": "6d867ea606ac35dd08c12caaaf38da01feb8340cb3899ffa0949eb2343473164"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    },
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "docs/topics/assets/reference-palette.png",
+      "sha256": "bef24980d1fea40180a20705793d3f7aebb0b6c8d8a80c342040e5a11d58a665"
+    },
+    {
+      "file": "docs/topics/assets/reference-spear-pose.png",
+      "sha256": "a5c5de51c742855f8dc993c1273cc27bbb35b0314ca12c3563c41d60c2fa350e"
+    },
+    {
+      "file": "docs/topics/assets/user-hunt-aim-arm-feedback.png",
+      "sha256": "ed589d048cbbc13a1af531574d306598d16bb5e3302734ae8b5fba2899fc4dd2"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+      "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-left-tile-v1.png",
+      "sha256": "8bebcdd782963731ee3c3ae6c7a594ca864db649286028b0428d41c8a1c8cc2f"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-right-tile-v1.png",
+      "sha256": "4eb6bb39b353bee9938ed0f6f41b4a16390143e5bb7ba6e628afa660beb79511"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v1.png",
+      "sha256": "6716ca8ffca0fe0f2862b7f41fb3878a6bcf03e458d5cc028e2c4da70a75104e"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2-edit-reference.png",
+      "sha256": "b904e06b7f2231e0613aa87c2d196721a9107de9cc8859fdfabf7dcc7617b740"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+      "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v1.png",
+      "sha256": "935715ed6c3cab5112af6b63311f8d9b38b9db2add9de6f9a5a40d9845d4e04a"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2-edit-reference.png",
+      "sha256": "b4343ca60d7c58178cef1bb32bd0c38d901aa2a56ba310a0786761de486584ff"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v1.png",
+      "sha256": "517f5db63095e6942a04ee14ac1c4e60f6dbe31cf11cb9eb30cca015a032acb9"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2-edit-reference.png",
+      "sha256": "6cd33726df9db5538fe4491b758aaa53d506ea72fb58d7de114393a7bc1aedff"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+      "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v1.png",
+      "sha256": "7aaaf2ddc6c1019b5b8428cf50f1bd0255f6a6cbfaf561c510bbc0006a22eb6d"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+      "sha256": "9fe7c077165da2483af272f0ec70a9e01fb3e467203e46ee8019af23a104e552"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+      "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png",
+      "sha256": "299a47ecbb78536f314884159c7a3c2736d8b166715f74b20d41412c7d0e9c57"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v1.png",
+      "sha256": "a98424e76e08daa67561d9ccc8fa8a2685c3dd3b1e66c4d35e9b5105b7fc5986"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+      "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1.png",
+      "sha256": "7ab9bcd21fa122a711af6797c81f7d127b369de0588ea37306e53898eeeb7a58"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1.png",
+      "sha256": "8308c768b762c00b8d9aba4a1ed37f225c1c4b507591e51823778cca5091b674"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-left-dialogue-v1.png",
+      "sha256": "1f84f61a4bf5e69c45903626df91517091013f16aa3bbc5bec52aa14609227b2"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-left-dialogue-v2.png",
+      "sha256": "1d439730677e66f9017f2763768470ffa61125f597bf1b496804406ae94b4b95"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-source-angle-v1.png",
+      "sha256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb"
+    },
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+      "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+    },
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+      "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca"
+    },
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+      "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-face-v1.json",
+      "sha256": "42aa9da4aab32592f2cd76b564001d550c51647497a18a355bc07f0782723146"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json",
+      "sha256": "2a9be1bf907aafc4948a0d3d4355d4e2c5657dc3a37fc95428354753f71cdc9d"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-face-v1.json",
+      "sha256": "69f0e8352392ba78416c0000e595fe913246014ebf6b71382aa2833c76541640"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/karo-source-face-v1.json",
+      "sha256": "8d1dee8c1e693b0ffafdd6ee1b641f8be2650931bb446c6b6fe9ba244e40137b"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/supporting-male-left-face-v1.json",
+      "sha256": "3c6cbe904b041cb8ad30cbc06a46b580ed0c8dd9753a4c68117f5fdc34097ddf"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/supporting-female-right-face-v1.json",
+      "sha256": "26a3807a15e055507653dad09474869dda91841736ab73828d1ed89705d09708"
+    }
+  ],
+  "declaredCallbacks": 11,
+  "runtime": {
+    "geometry": "NOT RUN",
+    "callbacks": "NOT RUN",
+    "factoryCompile": "NOT RUN",
+    "browser": "NOT RUN",
+    "sourceFaceArt": "NOT REVIEWED",
+    "normalSpeedVideo": "NOT RUN",
+    "threeInputsVoicesFinalResume": "NOT RUN"
+  },
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "fullGoalComplete": false
+}

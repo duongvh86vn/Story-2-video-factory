@@ -614,7 +614,8 @@
                               "native-head-bank-1",
                               "native-head-bank-2",
                               "native-head-bank-3",
-                              "native-head-bank-4"
+                              "native-head-bank-4",
+                              "native-head-bank-5"
                             ]
                           },
                           "id": {
@@ -947,7 +948,10 @@
                                   "properties": {
                                     "version": {
                                       "type": "string",
-                                      "const": "native-head-face-1"
+                                      "enum": [
+                                        "native-head-face-1",
+                                        "native-head-face-2"
+                                      ]
                                     },
                                     "source": {
                                       "type": "object",
@@ -1657,6 +1661,508 @@
                                       "minItems": 1,
                                       "maxItems": 8
                                     },
+                                    "emotions": {
+                                      "type": "object",
+                                      "properties": {
+                                        "mouth": {
+                                          "type": "object",
+                                          "properties": {
+                                            "flat": {
+                                              "type": "array",
+                                              "minItems": 4,
+                                              "maxItems": 4,
+                                              "items": [
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                }
+                                              ]
+                                            },
+                                            "frown": {
+                                              "type": "array",
+                                              "minItems": 4,
+                                              "maxItems": 4,
+                                              "items": [
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                }
+                                              ]
+                                            },
+                                            "repair": {
+                                              "type": "object",
+                                              "properties": {
+                                                "sourceId": {
+                                                  "type": "string",
+                                                  "maxLength": 96,
+                                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                                },
+                                                "source": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "sha256": {
+                                                      "type": "string",
+                                                      "pattern": "^[a-f0-9]{64}$"
+                                                    },
+                                                    "width": {
+                                                      "type": "integer",
+                                                      "exclusiveMinimum": 0,
+                                                      "maximum": 8192
+                                                    },
+                                                    "height": {
+                                                      "type": "integer",
+                                                      "exclusiveMinimum": 0,
+                                                      "maximum": 8192
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "sha256",
+                                                    "width",
+                                                    "height"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                "strip": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "width": {
+                                                      "type": "number",
+                                                      "exclusiveMinimum": 0
+                                                    },
+                                                    "height": {
+                                                      "type": "number",
+                                                      "exclusiveMinimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y",
+                                                    "width",
+                                                    "height"
+                                                  ],
+                                                  "additionalProperties": false
+                                                }
+                                              },
+                                              "required": [
+                                                "sourceId",
+                                                "source",
+                                                "strip"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          },
+                                          "required": [
+                                            "flat",
+                                            "frown",
+                                            "repair"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "brows": {
+                                          "type": "object",
+                                          "properties": {
+                                            "screen-left": {
+                                              "type": "object",
+                                              "properties": {
+                                                "center": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                "region": {
+                                                  "type": "array",
+                                                  "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "x": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      },
+                                                      "y": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "x",
+                                                      "y"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  "minItems": 3,
+                                                  "maxItems": 32
+                                                },
+                                                "glyph": {
+                                                  "type": "array",
+                                                  "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "x": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      },
+                                                      "y": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "x",
+                                                      "y"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  "minItems": 3,
+                                                  "maxItems": 32
+                                                },
+                                                "strip": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "width": {
+                                                      "type": "number",
+                                                      "exclusiveMinimum": 0
+                                                    },
+                                                    "height": {
+                                                      "type": "number",
+                                                      "exclusiveMinimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y",
+                                                    "width",
+                                                    "height"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                "up": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 80
+                                                },
+                                                "down": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 80
+                                                },
+                                                "tiltDeg": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 30
+                                                }
+                                              },
+                                              "required": [
+                                                "center",
+                                                "region",
+                                                "glyph",
+                                                "strip",
+                                                "up",
+                                                "down",
+                                                "tiltDeg"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            "screen-right": {
+                                              "type": "object",
+                                              "properties": {
+                                                "center": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                "region": {
+                                                  "type": "array",
+                                                  "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "x": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      },
+                                                      "y": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "x",
+                                                      "y"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  "minItems": 3,
+                                                  "maxItems": 32
+                                                },
+                                                "glyph": {
+                                                  "type": "array",
+                                                  "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "x": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      },
+                                                      "y": {
+                                                        "type": "number",
+                                                        "minimum": 0
+                                                      }
+                                                    },
+                                                    "required": [
+                                                      "x",
+                                                      "y"
+                                                    ],
+                                                    "additionalProperties": false
+                                                  },
+                                                  "minItems": 3,
+                                                  "maxItems": 32
+                                                },
+                                                "strip": {
+                                                  "type": "object",
+                                                  "properties": {
+                                                    "x": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "y": {
+                                                      "type": "number",
+                                                      "minimum": 0
+                                                    },
+                                                    "width": {
+                                                      "type": "number",
+                                                      "exclusiveMinimum": 0
+                                                    },
+                                                    "height": {
+                                                      "type": "number",
+                                                      "exclusiveMinimum": 0
+                                                    }
+                                                  },
+                                                  "required": [
+                                                    "x",
+                                                    "y",
+                                                    "width",
+                                                    "height"
+                                                  ],
+                                                  "additionalProperties": false
+                                                },
+                                                "up": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 80
+                                                },
+                                                "down": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 80
+                                                },
+                                                "tiltDeg": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 30
+                                                }
+                                              },
+                                              "required": [
+                                                "center",
+                                                "region",
+                                                "glyph",
+                                                "strip",
+                                                "up",
+                                                "down",
+                                                "tiltDeg"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          },
+                                          "required": [
+                                            "screen-left",
+                                            "screen-right"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      "required": [
+                                        "mouth",
+                                        "brows"
+                                      ],
+                                      "additionalProperties": false
+                                    },
                                     "status": {
                                       "type": "string",
                                       "const": "engineering-face-registration"
@@ -1729,8 +2235,7 @@
                                 "type": "boolean"
                               },
                               "expressions": {
-                                "type": "boolean",
-                                "const": false
+                                "type": "boolean"
                               },
                               "secondary": {
                                 "type": "boolean",

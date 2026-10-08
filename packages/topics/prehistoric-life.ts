@@ -15,11 +15,11 @@ import {headCellArtDescription} from './head-cell-art.js';
 import {prehistoricSupportingModel,prehistoricSupportingDescription,type PrehistoricSupportingModel} from './supporting-models.js';
 import {NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_DIALOGUE_STAGINGS,NATIVE_DIALOGUE_ACTING} from './native-dialogue-candidates.js';
 import {HostProfileSchema} from '../host/schemas.js';
-import {NATIVE_SUPPORTING_HEAD_BANK_VERSION} from '../animation/native-head-identity.js';
+import {isSupportingNativeHeadVersion} from '../animation/native-head-identity.js';
 import {supportingFaceDescription} from './supporting-face-candidates.js';
 import {normalizeTopicActorAppearance,topicCastNormalizationDescription} from './cast-appearance.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.60-preserve-source-cast';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.61-source-face-emotions';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -50,8 +50,8 @@ export function supportingTopicAppearance(model:PrehistoricSupportingModel):Acto
  * resetting it to a legacy face. No bank, view or motion is inferred here. */
 export function supportingNativeTopicAppearance(input:ActorDefinition['appearance']):ActorDefinition['appearance']{
   const a=HostProfileSchema.shape.appearance.parse(input);
-  if(!a.supportingModel||a.artworkVersion!=='forest-body-view-1'||!a.bodyView||a.bodyHeadBank?.version!==NATIVE_SUPPORTING_HEAD_BANK_VERSION||a.bodyHeadBank.actor!==a.supportingModel)
-    throw new Error('needs-supporting-head-registration: explicit own-model bank4 and compatible body view required');
+  if(!a.supportingModel||a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.bodyHeadBank||!isSupportingNativeHeadVersion(a.bodyHeadBank.version)||a.bodyHeadBank.actor!==a.supportingModel)
+    throw new Error('needs-supporting-head-registration: explicit own-model bank4/5 and compatible body view required');
   return normalizeTopicActorAppearance(a.supportingModel,supportingTopicAppearance(a.supportingModel),a);
 }
 export function topicContext(config:FactoryConfig) {

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { Id, RigHandSchema } from '../core/identifiers.js';
 import {NativeHeadBankSchema} from '../animation/native-head-bank.js';
 import {PREHISTORIC_SUPPORTING_MODELS,prehistoricSupportingModel} from '../topics/supporting-models.js';
-import {NATIVE_SUPPORTING_HEAD_BANK_VERSION,nativeHeadIdentityMatches} from '../animation/native-head-identity.js';
+import {isSupportingNativeHeadVersion,nativeHeadIdentityMatches} from '../animation/native-head-identity.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker'] as const;
@@ -22,8 +22,8 @@ export const HostProfileSchema = z.object({
       if(a.supportingModel){
         const matchingCostume=a.characterVariant===prehistoricSupportingModel(a.supportingModel).bodyTemplate;
         const legacy=a.artworkVersion==='forest-body-1'&&!a.bodyView&&!a.bodyHeadBank&&!a.bodyMotion&&!a.bodySeat;
-        const native=a.artworkVersion==='forest-body-view-1'&&!!a.bodyView&&a.bodyHeadBank?.version===NATIVE_SUPPORTING_HEAD_BANK_VERSION&&a.bodyHeadBank.actor===a.supportingModel;
-        if(!matchingCostume||!legacy&&!native||a.bodySpeech||a.bodyEyes||a.bodyExpressions||a.bodySecondary||a.sourceColour)ctx.addIssue({code:'custom',message:'Supporting model requires its matching source costume and own version 4 head; principal/fixed-view face and hair registrations cannot be reused'});
+        const native=a.artworkVersion==='forest-body-view-1'&&!!a.bodyView&&!!a.bodyHeadBank&&isSupportingNativeHeadVersion(a.bodyHeadBank.version)&&a.bodyHeadBank.actor===a.supportingModel;
+        if(!matchingCostume||!legacy&&!native||a.bodySpeech||a.bodyEyes||a.bodyExpressions||a.bodySecondary||a.sourceColour)ctx.addIssue({code:'custom',message:'Supporting model requires its matching source costume and own version 4/5 head; principal/fixed-view face and hair registrations cannot be reused'});
       }
       if(a.artworkVersion==='forest-body-view-1'&&(!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Authored body candidate requires its actor and registered view'});
       if(a.bodyView&&a.artworkVersion!=='forest-body-view-1')ctx.addIssue({code:'custom',message:'bodyView requires the authored body candidate artwork version'});

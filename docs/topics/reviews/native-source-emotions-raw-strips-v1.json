@@ -1,0 +1,245 @@
+{
+  "version": "native-source-emotions-raw-strips-1",
+  "scope": "Raw unchanged PNG bytes/ROI RGBA only; no schema/geometry/render/state/clock invoked",
+  "reads": [
+    {
+      "definition": "karo-left-emotions-v1.json",
+      "samples": [
+        {
+          "purpose": "brow-screen-left",
+          "sourceId": "primary",
+          "sourceSHA256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410",
+          "strip": {
+            "x": 432,
+            "y": 510,
+            "width": 30,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 253,
+          "maxAlpha": 253,
+          "minRgbSum": 513,
+          "maxRgbSum": 523,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "brow-screen-right",
+          "sourceId": "primary",
+          "sourceSHA256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410",
+          "strip": {
+            "x": 675,
+            "y": 550,
+            "width": 25,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 252,
+          "maxAlpha": 253,
+          "minRgbSum": 513,
+          "maxRgbSum": 524,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "emotion-mouth",
+          "sourceId": "closed-rest-left",
+          "sourceSHA256": "1d439730677e66f9017f2763768470ffa61125f597bf1b496804406ae94b4b95",
+          "strip": {
+            "x": 447,
+            "y": 812,
+            "width": 139,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 4,
+          "transparentPixels": 0,
+          "minAlpha": 252,
+          "maxAlpha": 253,
+          "minRgbSum": 156,
+          "maxRgbSum": 220,
+          "colourSeamVerified": false
+        }
+      ]
+    },
+    {
+      "definition": "karo-right-emotions-v1.json",
+      "samples": [
+        {
+          "purpose": "brow-screen-left",
+          "sourceId": "primary",
+          "sourceSHA256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+          "strip": {
+            "x": 673,
+            "y": 514,
+            "width": 40,
+            "height": 8
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 252,
+          "maxAlpha": 253,
+          "minRgbSum": 513,
+          "maxRgbSum": 524,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "brow-screen-right",
+          "sourceId": "primary",
+          "sourceSHA256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+          "strip": {
+            "x": 969,
+            "y": 522,
+            "width": 19,
+            "height": 8
+          },
+          "darkPixelsRgbSumBelow160": 19,
+          "transparentPixels": 0,
+          "minAlpha": 252,
+          "maxAlpha": 253,
+          "minRgbSum": 0,
+          "maxRgbSum": 528,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "emotion-mouth",
+          "sourceId": "rest-mouth",
+          "sourceSHA256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb",
+          "strip": {
+            "x": 665,
+            "y": 868,
+            "width": 133,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 252,
+          "maxAlpha": 253,
+          "minRgbSum": 179,
+          "maxRgbSum": 211,
+          "colourSeamVerified": false
+        }
+      ]
+    },
+    {
+      "definition": "lila-left-emotions-v1.json",
+      "samples": [
+        {
+          "purpose": "brow-screen-left",
+          "sourceId": "primary",
+          "sourceSHA256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+          "strip": {
+            "x": 381,
+            "y": 426,
+            "width": 24,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 252,
+          "maxAlpha": 252,
+          "minRgbSum": 520,
+          "maxRgbSum": 530,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "brow-screen-right",
+          "sourceId": "primary",
+          "sourceSHA256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+          "strip": {
+            "x": 550,
+            "y": 492,
+            "width": 30,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 252,
+          "maxAlpha": 253,
+          "minRgbSum": 521,
+          "maxRgbSum": 531,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "emotion-mouth",
+          "sourceId": "primary",
+          "sourceSHA256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+          "strip": {
+            "x": 371,
+            "y": 575,
+            "width": 78,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 251,
+          "maxAlpha": 252,
+          "minRgbSum": 522,
+          "maxRgbSum": 535,
+          "colourSeamVerified": false
+        }
+      ]
+    },
+    {
+      "definition": "lila-right-emotions-v1.json",
+      "samples": [
+        {
+          "purpose": "brow-screen-left",
+          "sourceId": "primary",
+          "sourceSHA256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+          "strip": {
+            "x": 747,
+            "y": 432,
+            "width": 25,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 253,
+          "maxAlpha": 253,
+          "minRgbSum": 502,
+          "maxRgbSum": 508,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "brow-screen-right",
+          "sourceId": "primary",
+          "sourceSHA256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+          "strip": {
+            "x": 955,
+            "y": 449,
+            "width": 15,
+            "height": 7
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 253,
+          "maxAlpha": 253,
+          "minRgbSum": 510,
+          "maxRgbSum": 518,
+          "colourSeamVerified": false
+        },
+        {
+          "purpose": "emotion-mouth",
+          "sourceId": "primary",
+          "sourceSHA256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+          "strip": {
+            "x": 669,
+            "y": 585,
+            "width": 134,
+            "height": 9
+          },
+          "darkPixelsRgbSumBelow160": 0,
+          "transparentPixels": 0,
+          "minAlpha": 253,
+          "maxAlpha": 253,
+          "minRgbSum": 507,
+          "maxRgbSum": 520,
+          "colourSeamVerified": false
+        }
+      ]
+    }
+  ],
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

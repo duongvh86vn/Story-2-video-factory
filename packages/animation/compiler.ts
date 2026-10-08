@@ -99,6 +99,7 @@ function overlaps(items: Array<{startMs:number;endMs:number}>, label:string, dur
 function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if(profile.appearance.supportingModel&&!hasNativeHeadBank(profile)&&(plan.gazes.length||plan.turns?.length||plan.headTurns?.length))throw new Error('needs-supporting-views: supporting head currently has one source orientation; target gaze and turns require its own registrations');
   validateNativeHeadBankTrack(plan,profile);
+  if(hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.expressions&&!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-head-expression-phase: source emotions require the current original acting-clock compiler');
   if(plan.sourceBody){
     if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate');
     validateBodySourcePlan(plan);
@@ -531,13 +532,13 @@ function blendExpression(a:ExpressionPose,b:ExpressionPose,weight:number):Expres
     smile:lerp(a.smile,b.smile,weight),round:lerp(a.round,b.round,weight),lid:lerp(a.lid,b.lid,weight),
     frown:lerp(a.frown,b.frown,weight),browAngle:lerp(a.browAngle,b.browAngle,weight),eyeOpen:lerp(a.eyeOpen,b.eyeOpen,weight)};
 }
-function expressionAt(plan:PerformancePlan,time:number,actingClock?:ViewActingClock) {
+function expressionAt(plan:PerformancePlan,time:number,actingClock?:ViewActingClock,restMood:Mood='neutral') {
   if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion)){
     const legacy=moodAt(plan,time);return {...legacy,pose:moodPoses[legacy.mood]};
   }
   const at=actingClock?time+actingClock.startMs:time;
-  const ranges=actingClock?.expressions??expressionRanges(plan),index=ranges.findIndex(clip=>at>=clip.startMs&&at<clip.endMs),neutral=expressionPose('neutral');
-  if(index<0)return {mood:'neutral' as const,weight:0,pose:neutral};
+  const ranges=actingClock?.expressions??expressionRanges(plan),index=ranges.findIndex(clip=>at>=clip.startMs&&at<clip.endMs),neutral=expressionPose(restMood);
+  if(index<0)return {mood:restMood,weight:0,pose:neutral};
   const clip=ranges[index]!,previous=ranges[index-1],next=ranges[index+1],window=expressionBlendMs(clip);
   const from=previous?.endMs===clip.startMs?expressionPose(previous.mood):neutral;
   let pose=blendExpression(from,expressionPose(clip.mood),smooth((at-clip.startMs)/window));
@@ -904,7 +905,10 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
         const direction=(target:Point)=>{const local=rotate({x:target.x-origin.x,y:target.y-origin.y},-headAngle),length=Math.hypot(local.x,local.y);return length?{x:local.x/length,y:local.y/length}:{x:0,y:0};};
         let look={x:0,y:0};if(spearStates[0])look=direction(spearStates[0].track.aim);if(activeGesture?.target)look=mix(look,direction(activeGesture.target),activeGestureWeight);
         if(explicitGaze){const to=direction(explicitGaze.target),forward=registeredBodyView(profile).view==='three-quarter-left'?-1:1;if(to.x*forward<-.01)throw new Error('needs-head-turn-eyes: target is behind the registered source/body view');look=mix(look,to,explicitGazeWeight(explicitGaze));}
-        const state=nativeHeadBankFacialState(bank,{aperture:bodyViewMouthLevel(activity,t,sourceClock),blink,look});Object.assign(face,state.face);Object.assign(paths,state.paths);
+        const p=bank.capabilities.expressions?expressionAt(plan,t,actingClock,cell.restMood).pose:undefined,rest=expressionPose(cell.restMood);
+        const emotion=p?{brow:clamp((p.brow-rest.brow)/8,-1,1),tilt:clamp(((p.browAngle??0)-rest.browAngle)/30,-1,1),smile:p.smile,frown:p.frown??0,round:p.round,
+          closure:clamp(p.lid-rest.lid+Math.max(0,1-(p.eyeOpen??1)),0,.8)}:undefined;
+        const state=nativeHeadBankFacialState(bank,{aperture:bodyViewMouthLevel(activity,t,sourceClock),blink,look,...(emotion?{emotion}:{})});Object.assign(face,state.face);Object.assign(paths,state.paths);
       }
     }else{
     const look=explicitGaze??activeGesture;
@@ -1076,6 +1080,8 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile,plan:Per
 // Painter ownership changes at authored gesture boundaries, not as a fade
 // between duplicate appearances of the same physical arm or hand.
 const isPainterSlot=(id:string)=>/^(?:hand|ink-arm)-(?:left|right)-(?:front|back)-slot$/.test(id);
+const isNativeFacePainterSlot=(profile:HostProfile,id:string)=>profile.appearance.bodyHeadBank?.capabilities.expressions===true&&
+  /^native-face-\d+-(?:mouth-(?:layer|generated|emotion-repair)|eyes-layer|brow-screen-(?:left|right)-layer)$/.test(id);
 
 export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,namespace='',sourceClock?:SpeechSourceClock,actingClock?:ViewActingClock) {
   if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
@@ -1155,7 +1161,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
         // Audio activity is intentionally stepped at its own explicit boundaries.
-        if(id==='mouth-talk'||isPainterSlot(id))continue;
+        if(id==='mouth-talk'||isPainterSlot(id)||isNativeFacePainterSlot(profile,id))continue;
         // Authored-view swaps and voice-gated mouth selection are discrete. Eye
         // and brow interpolation is still checked against the pure evaluator.
         if(usesReferenceHead(profile)&&(id.startsWith('head-view-')||id.startsWith('mouth-')))continue;
@@ -1195,7 +1201,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const [id,value] of Object.entries(f.face))if(!i||JSON.stringify(value)!==JSON.stringify(frames[i-1]!.face[id])){
       if(!usesReferenceHead(profile)){calls.push(`tl.${method}(${selector(id)},${JSON.stringify({...value,...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);continue;}
       const voiceChange=i&&Object.keys(f.face).some(key=>key.startsWith('mouth-talk-')&&f.face[key]!.opacity!==frames[i-1]!.face[key]!.opacity);
-      const discrete=isPainterSlot(id)||id.startsWith('head-view-')||id.startsWith('mouth-talk-')||id.startsWith('mouth-')&&voiceChange;
+      const discrete=isPainterSlot(id)||isNativeFacePainterSlot(profile,id)||id.startsWith('head-view-')||id.startsWith('mouth-talk-')||id.startsWith('mouth-')&&voiceChange;
       const attrs={...value.attr,...(value.x!==undefined||value.y!==undefined||value.rotation!==undefined||value.scaleX!==undefined||value.scaleY!==undefined?
         {transform:`translate(${number(value.x??0)} ${number(value.y??0)}) rotate(${number(value.rotation??0)}) scale(${number(value.scaleX??1)} ${number(value.scaleY??1)})`}:{})};
       // SVG matrices are local to the fixed feature anchor. GSAP's CSS transform
@@ -1206,7 +1212,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   }
   return {js:calls.join('\n'),frames,report:{compilerVersion:plan.compilerVersion===HUNT_ANIMATION_VERSION?HUNT_ANIMATION_VERSION:plan.compilerVersion===AIRBORNE_ANIMATION_VERSION?AIRBORNE_ANIMATION_VERSION:ANIMATION_VERSION,planHash:hash(plan),profileHash:profile.profileHash,
     ...(hasNativeHeadBank(profile)?{nativeHeadBank:{fingerprint:registeredNativeHeadBank(profile).fingerprint,sources:nativeHeadSources(registeredNativeHeadBank(profile)),sourceTrack:plan.sourceHead,method:'authored cells on the original run clock; uniform registered pixel-scale and neck-axis attachment, local source-face masks; single unknown-angle cell is fixed, no face crossfade',capabilities:registeredNativeHeadBank(profile).capabilities,
-      ...(hasNativeHeadSpeech(profile)?{sourceFace:{version:'native-head-face-1',activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null,blinkClock:'original absolute clock',phonemeLipSync:false,audioVerified:false,opticalGazeVerified:false}}:{}),approved:false,productionReady:false,motionVerified:false}}:{}),
+      ...(hasNativeHeadSpeech(profile)?{sourceFace:{versions:[...new Set(registeredNativeHeadBank(profile).cells.map(c=>c.face!.version))],version:registeredNativeHeadBank(profile).capabilities.expressions?'native-head-face-2':'native-head-face-1',activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null,blinkClock:'original absolute clock',
+        ...(registeredNativeHeadBank(profile).capabilities.expressions?{expressionClock:'complete original actor expressions; return to this cell rest mood',browInterpolation:'own glyph matrices included in source-pixel refinement',expressionVerified:false}:{}),phonemeLipSync:false,audioVerified:false,opticalGazeVerified:false}}:{}),approved:false,productionReady:false,motionVerified:false}}:{}),
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile,plan))),interpolationGapLimitPx:.2,interpolationIncludes:['bones/cuff','spear palms/shared shaft','tip during contact hold'],selectedClips:selectedClips(plan),

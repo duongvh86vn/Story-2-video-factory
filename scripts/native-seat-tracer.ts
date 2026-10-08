@@ -34,11 +34,12 @@ import {NativeDialogueSelectionSchema} from '../packages/topics/native-dialogue-
 
 const require=createRequire(import.meta.url),execFileAsync=promisify(execFile);
 export function nativeSeatTracerOptions(args:string[]){
-  const {values}=parseArgs({args,strict:true,allowPositionals:false,options:{validate:{type:'boolean'},frames:{type:'boolean'},render:{type:'boolean'},wav:{type:'string'},help:{type:'boolean'},'native-heads':{type:'boolean'},staging:{type:'string'},acting:{type:'string'}}});
+  const {values}=parseArgs({args,strict:true,allowPositionals:false,options:{validate:{type:'boolean'},frames:{type:'boolean'},render:{type:'boolean'},wav:{type:'string'},help:{type:'boolean'},'native-heads':{type:'boolean'},staging:{type:'string'},acting:{type:'string'},face:{type:'string'}}});
   if(values.wav&&(!path.isAbsolute(values.wav)||path.extname(values.wav).toLowerCase()!=='.wav'))throw new Error('--wav requires an absolute path to an existing WAV file');
-  const explicitDialogue=values.staging!==undefined||values.acting!==undefined;
+  const explicitDialogue=values.staging!==undefined||values.acting!==undefined||values.face!==undefined;
   if(explicitDialogue&&!values['native-heads'])throw new Error('--staging/--acting require --native-heads; legacy tracer is unchanged');
-  const dialogue=explicitDialogue?NativeDialogueSelectionSchema.parse({...(values.staging!==undefined?{staging:values.staging}:{}),...(values.acting!==undefined?{acting:values.acting}:{})}):undefined;
+  const dialogue=explicitDialogue?NativeDialogueSelectionSchema.parse({...(values.staging!==undefined?{staging:values.staging}:{}),...(values.acting!==undefined?{acting:values.acting}:{}),...(values.face!==undefined?{face:values.face}:{})}):undefined;
+  if(dialogue?.acting==='emotional-reactions'&&dialogue.face!=='expressions')throw new Error('--acting emotional-reactions requires explicit --face expressions');
   return {validate:!!(values.validate||values.frames||values.render),frames:!!values.frames,render:!!values.render,wav:values.wav,help:!!values.help,...(values['native-heads']?{nativeHeads:true as const}:{}),...(dialogue?{dialogue}:{})};
 }
 export type NativeSeatTracerOptions=ReturnType<typeof nativeSeatTracerOptions>;
@@ -86,7 +87,7 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
     const f=options.nativeHeads?await createNativeHeadSeatTracer(repo,options.dialogue??{}):createNativeSeatTracer(),{config,board,beat,profile,rig,narration}=f;
     if('headSelection' in f)report.headSelection=f.headSelection;
     if('dialogueSelection' in f)report.dialogueSelection=f.dialogueSelection;
-    report.checks.canonical={status:'PASS',detail:{storyboardHash:hash(board),narrationHash:hash(narration),headMode:options.nativeHeads?'explicit-opposing-bank3':'legacy-fixed-view'}};
+    report.checks.canonical={status:'PASS',detail:{storyboardHash:hash(board),narrationHash:hash(narration),headMode:options.nativeHeads?(options.dialogue?.face==='expressions'?'explicit-opposing-bank5-emotions':'explicit-opposing-bank3'):'legacy-fixed-view'}};
     let activity:SpeechActivity={method:'segment-draft',windowMs:20,intervals:[]};
     if(options.wav){
       report.phase='diagnostic-wav';await save();
@@ -179,7 +180,7 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
 
 async function main(){
   const options=nativeSeatTracerOptions(process.argv.slice(2));
-  if(options.help){process.stdout.write('npm run tracer:native-seat -- [--native-heads [--staging lila-left|lila-right] [--acting rest|listening-think]] [--validate] [--frames] [--render] [--wav "ABSOLUTE.wav"]\nDefault exports an unapproved silent SRT tracer with legacy fixed-view overlays. --native-heads selects independent matching bank3 head/body views. Staging means screen position; it never mirrors artwork. Optional listening-think keeps original hand clocks across camera cuts. No synthetic speech; silent without WAV. Media/browser/ffmpeg execution is opt-in. Fresh runtime folder per invocation; never final/DONE.\n');return;}
+  if(options.help){process.stdout.write('npm run tracer:native-seat -- [--native-heads [--staging lila-left|lila-right] [--acting rest|listening-think|emotional-reactions] [--face speech-eyes|expressions]] [--validate] [--frames] [--render] [--wav "ABSOLUTE.wav"]\nDefault exports an unapproved silent SRT tracer with legacy fixed-view overlays. --native-heads selects independent matching bank3 head/body views. Staging means screen position; it never mirrors artwork. Optional listening-think keeps original hand clocks across camera cuts. Explicit --face expressions selects own bank5 registrations; emotional-reactions keeps both original reaction clocks through the same canonical factory renderer. No synthetic speech; silent without WAV. Media/browser/ffmpeg execution is opt-in. Fresh runtime folder per invocation; never final/DONE.\n');return;}
   const root=await exportNativeSeatTracer(await findRepoRoot(),options);
   process.stdout.write(JSON.stringify({scope:options.nativeHeads?NATIVE_HEAD_SEAT_TRACER_SCOPE:NATIVE_SEAT_TRACER_SCOPE,outputRoot:root,report:path.join(root,'tracer-report.json'),productionAcceptance:false,finalExportAllowed:false})+'\n');
 }

@@ -1,5 +1,7 @@
 # Diễn viên phụ / quần chúng — Cuộc sống thời tiền sử
 
+Cập nhật hiện hành source0.61: [biểu cảm trên nguồn đầu riêng và handoff test](NATIVE-SOURCE-FACE-EMOTIONS.md). Bank5/face2 được chọn tường minh cho bốn góc Lila/Karo; bank1–4, mặt quần chúng, trang phục và narration không bị thay. Toàn luồng story/script/WAV → video vẫn chưa nghiệm thu; test runtime/geometry/video giao riêng cho model của người dùng. Các mục phiên bản thấp hơn bên dưới là lịch sử.
+
 **Hiện hành source0.60 · 08/10/2026:** raw nam v2 không tóc/râu và nữ v1/own head candidates/costume không đổi. Normalization dùng chung với principal, giữ bank4/view/motion và person IDs/speaker/source clocks, từ chối nguồn sai trước khi sửa cast. [Source, test và chờ nghiệm thu](TOPIC-CAST-SOURCE-HANDOFF.md). Không gán overlay principal vào đầu quần chúng hoặc tự mở production.
 
 **Lịch sử source0.59 · 08/10/2026:** nam toàn thân v2 đầu trọc, không râu/ria/mai và nữ toàn thân v1 giữ nguyên. Bổ sung đầu trái nam/đầu phải nữ riêng cho bank4 explicit; body/costume vẫn Karo/Lila. Native face/eye/speech/clock/normalizer/workbench dùng chung engine, không mượn đăng ký principal. [Nguồn, trạng thái, lệnh test/server](SUPPORTING-NATIVE-HEAD.md). Hai JSON face là tọa độ thủ công chưa chạy geometry; thiếu góc phải nam/trái nữ và chuyển góc liên tục. Bảy callback mới NOT RUN, không tự chọn production hoặc nghiệm thu motion từ PNG. Phần triển khai source0.52–0.58 dưới đây là lịch sử legacy.

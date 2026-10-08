@@ -3,7 +3,7 @@ import type {PerformancePlan} from './schemas.js';
 import type {ViewActingClock} from './view-acting-clock.js';
 import {NativeHeadBankSchema,nativeHeadSources,nativeHeadSourceForCell,nativeHeadPixelScale,type NativeHeadBank} from './native-head-bank.js';
 import {NativeHeadTrackSchema,nativeHeadCellAt,validateNativeHeadSource} from './native-head-track.js';
-import {nativeHeadFaceSvg,nativeHeadFaceState,nativeHeadFaceMatrixError,type NativeFaceState} from './native-head-face.js';
+import {nativeHeadFaceSvg,nativeHeadFaceState,nativeHeadFaceMatrixError,type NativeFaceState,type NativeFaceEmotion} from './native-head-face.js';
 import {nativeHeadIdentityMatches,isNativeHeadFaceVersion} from './native-head-identity.js';
 
 export function hasNativeHeadBank(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyHeadBank!==undefined;}
@@ -26,7 +26,7 @@ export function validateNativeHeadBankTrack(plan:PerformancePlan,profile:Pick<Ho
     if(i&&!permitted.has(track.samples[i-1]!.cell+'\0'+sample.cell))throw new Error('needs-head-turn-registration: head route skips an authored transition');
   }
   if(plan.gazes.length&&!bank.capabilities.directionalEyes)throw new Error('needs-head-turn-eyes: cell-specific directional eyes/occlusion are not registered');
-  if(plan.expressions.some(e=>e.mood!=='neutral'&&!bank.cells.every(c=>c.restMood===e.mood)))throw new Error('needs-head-turn-expression: cell-specific emotional artwork is not registered');
+  if(!bank.capabilities.expressions&&plan.expressions.some(e=>e.mood!=='neutral'&&!bank.cells.every(c=>c.restMood===e.mood)))throw new Error('needs-head-turn-expression: cell-specific emotional artwork is not registered');
 }
 export function nativeHeadBankCell(plan:PerformancePlan,profile:Pick<HostProfile,'appearance'>,timeMs:number,clock?:ViewActingClock){
   if(!Number.isFinite(timeMs)||timeMs<0||timeMs>plan.durationMs)throw new Error('needs-head-source-phase: head seek is outside the local shot');
@@ -64,8 +64,9 @@ export function nativeHeadBankFace(bank:NativeHeadBank,cellId:string){
   return Object.fromEntries(bank.cells.map((cell,i)=>['head-view-bank-'+i,{opacity:cell.id===cellId?1:0}]));
 }
 /** Every cell retains stable path/selector keys across discrete view changes. */
-export function nativeHeadBankFacialState(bank:NativeHeadBank,input:{aperture:number;blink:number;look:{x:number;y:number}}):NativeFaceState{
-  if(!isNativeHeadFaceVersion(bank.version)||!bank.capabilities.speech||!bank.capabilities.directionalEyes||bank.cells.some(c=>!c.face))throw new Error('needs-head-face-registration: complete source-face bank3/4 capabilities required');
+export function nativeHeadBankFacialState(bank:NativeHeadBank,input:{aperture:number;blink:number;look:{x:number;y:number};emotion?:NativeFaceEmotion}):NativeFaceState{
+  if(!isNativeHeadFaceVersion(bank.version)||!bank.capabilities.speech||!bank.capabilities.directionalEyes||bank.cells.some(c=>!c.face))throw new Error('needs-head-face-registration: complete source-face bank3/4/5 capabilities required');
+  if(input.emotion&&!bank.capabilities.expressions)throw new Error('needs-head-turn-expression: explicit bank5 emotions required');
   const face:NativeFaceState['face']={},paths:Record<string,string>={};
   for(const [i,cell] of bank.cells.entries())if(cell.face){const a=-nativeHeadCellAngle(cell)*Math.PI/180,look={x:input.look.x*Math.cos(a)-input.look.y*Math.sin(a),y:input.look.x*Math.sin(a)+input.look.y*Math.cos(a)};
     const state=nativeHeadFaceState(cell.face,{...input,look},'native-face-'+i);Object.assign(face,state.face);Object.assign(paths,state.paths);
@@ -84,7 +85,8 @@ export function nativeHeadBankSvg(profile:HostProfile,imageUrl:(file:string,sha:
     return `<image id="native-head-bank-source-${i}" width="${s.width}" height="${s.height}" href="${url}"/>`;
   }).join('');
   return `<g data-head-bank="${bank.fingerprint}" stroke="none"><defs>${images}${bank.cells.map((c,i)=>`<clipPath id="native-head-bank-clip-${i}" clipPathUnits="userSpaceOnUse"><rect x="${c.crop.x}" y="${c.crop.y}" width="${c.crop.width}" height="${c.crop.height}"/></clipPath>`).join('')}</defs>${bank.cells.map((c,i)=>{
-    const imageId='native-head-bank-source-'+sourceIndex.get(nativeHeadSourceForCell(bank,c).id)!,rest=c.face?.mouth.rest,restId=rest?'native-head-bank-source-'+sourceIndex.get(rest.sourceId)!:undefined;
-    return `<g id="head-view-bank-${i}" opacity="0"><g transform="scale(${nativeHeadPixelScale(bank,c)}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><use href="#${imageId}"/>${c.face?nativeHeadFaceSvg(c.face,imageId,'native-face-'+i,restId):''}</g></g>`;
+    const imageId='native-head-bank-source-'+sourceIndex.get(nativeHeadSourceForCell(bank,c).id)!,rest=c.face?.mouth.rest,restId=rest?'native-head-bank-source-'+sourceIndex.get(rest.sourceId)!:undefined,
+      emotionId=c.face?.emotions?'native-head-bank-source-'+sourceIndex.get(c.face.emotions.mouth.repair.sourceId)!:undefined;
+    return `<g id="head-view-bank-${i}" opacity="0"><g transform="scale(${nativeHeadPixelScale(bank,c)}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><use href="#${imageId}"/>${c.face?nativeHeadFaceSvg(c.face,imageId,'native-face-'+i,restId,emotionId):''}</g></g>`;
   }).join('')}</g>`;
 }

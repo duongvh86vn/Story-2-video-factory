@@ -1,59 +1,41 @@
-/** Candidate diagnostic only. Calling this builder evaluates native plans/camera;
- * implementation agents must not invoke it while runtime tests are delegated. */
-import {ConfigSchema} from '../packages/core/config.js';
-import {BeatSchema,NarrationSchema,ShotSchema,StoryboardSchema} from '../packages/core/schemas.js';
-import {ActorDefinitionSchema,ActorSceneSchema} from '../packages/actors/schemas.js';
-import {actorProfile,bindActorShot} from '../packages/actors/model.js';
-import {actorViewActingClock} from '../packages/actors/view-acting-clock.js';
-import {BODY_SOURCE_VERSION} from '../packages/animation/schemas.js';
-import {BODY_VIEW_SEAT_SELECTION} from '../packages/animation/body-view-seat.js';
-import {bodyRootAt} from '../packages/animation/view-source-body.js';
-import {bodyCalibrationPlan} from '../packages/topics/body-workbench.js';
-import {buildRig} from '../packages/host/rig.js';
-import {DIRECTION_VERSION} from '../packages/director/schemas.js';
-import {planCamera} from '../packages/director/camera.js';
-import type {ArtDirection} from '../packages/director/art-direction-schemas.js';
-import type {SceneIntent} from '../packages/explainer/schemas.js';
-import {headFaceCandidate} from '../packages/topics/head-face-source.js';
-import type {NativeHeadBank} from '../packages/animation/native-head-bank.js';
-import {NATIVE_HEAD_SOURCE_VERSION} from '../packages/animation/native-head-track.js';
-import {registeredBodyView} from '../packages/animation/body-view-art.js';
-import {projectViewSourceGestures,type ViewSourceGesture} from '../packages/animation/view-source-gesture.js';
-import {NativeDialogueSelectionSchema,nativeDialogueLayouts,nativeDialogueThinkingWindows,nativeDialogueExpressionWindows,NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_HEAD_SEAT_TRACER_SCOPE,type NativeDialogueSelection} from '../packages/topics/native-dialogue-candidates.js';
-import {projectViewExpressions} from '../packages/animation/view-expression-track.js';
+# Native source emotion review excerpts
 
-export const NATIVE_SEAT_TRACER_VERSION='native-seat-tracer-2';
-export const NATIVE_SEAT_TRACER_SCOPE='unapproved-native-seat-motion-tracer';
-export {NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_HEAD_SEAT_TRACER_SCOPE} from '../packages/topics/native-dialogue-candidates.js';
-export const NATIVE_SEAT_TRACER_CUTS=[0,900,2400,3800,4800,7200] as const;
-export const NATIVE_SEAT_TRACER_DURATION_MS=7200;
-export type NativeSeatActor='lila'|'karo';
-export type NativeSeatView='three-quarter-left'|'three-quarter-right';
+Source-only frozen data; no runtime execution or registration acceptance. Original clock and full-story factory remain mandatory.
 
-/** Same original physical run for assertions and the media exporter. */
-export function nativeSeatPhysicalActor(actor:NativeSeatActor,view:NativeSeatView,scale=1,rootX?:number){
-  const f=bodyCalibrationPlan(actor,view==='three-quarter-left'?'sit-walk-left':'sit-walk-right','happy',undefined,view,'cutout','registered-rest-mouth-v1','registered-eyes-v1','rest','registered-expressions-v1','registered-locomotion-v1','registered-secondary-v1',BODY_VIEW_SEAT_SELECTION);
-  const p=f.plan,oldX=p.root.x,oldY=p.root.y,newX=rootX??oldX,newY=rootX===undefined?oldY:540;
-  p.scale=scale;p.root={x:newX,y:newY};if(rootX!==undefined)p.stage={width:1280,height:720,groundY:newY};
-  for(const seat of p.supports??[]){seat.id=actor+'-log';seat.center={x:newX+(seat.center.x-oldX)*scale,y:newY+(seat.center.y-oldY)*scale};seat.width*=scale;if(seat.backHeight!==undefined)seat.backHeight*=scale;}
-  for(const pose of p.postures??[])if(pose.supportId)pose.supportId=actor+'-log';
-  for(const walk of p.walks){walk.fromX=newX+(walk.fromX-oldX)*scale;walk.toX=newX+(walk.toX-oldX)*scale;}
-  return f;
+## packages/animation/compiler.ts
+
+Source SHA256: c6899b8d9eeb51e6f2ef9a10ebf787836ba5700c47e3526672c33abb94ec4e57
+
+```ts
+function expressionAt(plan:PerformancePlan,time:number,actingClock?:ViewActingClock,restMood:Mood='neutral') {
+  if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion)){
+    const legacy=moodAt(plan,time);return {...legacy,pose:moodPoses[legacy.mood]};
+  }
+  const at=actingClock?time+actingClock.startMs:time;
+  const ranges=actingClock?.expressions??expressionRanges(plan),index=ranges.findIndex(clip=>at>=clip.startMs&&at<clip.endMs),neutral=expressionPose(restMood);
+  if(index<0)return {mood:restMood,weight:0,pose:neutral};
+  const clip=ranges[index]!,previous=ranges[index-1],next=ranges[index+1],window=expressionBlendMs(clip);
+  const from=previous?.endMs===clip.startMs?expressionPose(previous.mood):neutral;
+  let pose=blendExpression(from,expressionPose(clip.mood),smooth((at-clip.startMs)/window));
+  // Adjacent reactions blend directly after the new cue begins. Actual gaps and
+  // the end of the last clip still recover to neutral without extending clocks.
+  if(next?.startMs!==clip.endMs)pose=blendExpression(neutral,pose,smooth((clip.endMs-at)/window));
+  return {mood:clip.mood,weight:1,pose};
 }
 
-function forestDirection():ArtDirection{
-  const keyframes=[{atMs:0,x:0,y:0,scale:1,rotation:0,opacity:1}];
-  return {origin:'authored',brief:'Two forest actors facing each other in a vivid green clearing. The same two physical seats remain in world space through every camera cut. Diagnostic illustration; reference and video quality have not been accepted.',useEnvironment:false,
-    palette:{background:'#53AFDE',surface:'#F2BF66',ink:'#24180D',accent:'#D57423'},showHeading:false,models:[],layers:[
-      {id:'sky',plane:'background',coordinateSpace:'frame',role:'decoration',keyframes,svg:'<defs><linearGradient id="sky-light" x2="0" y2="1"><stop stop-color="#43A3D9"/><stop offset="1" stop-color="#B8E5EB"/></linearGradient></defs><rect width="1280" height="720" fill="url(#sky-light)"/><circle cx="1030" cy="120" r="65" fill="#FFD77A"/><path d="M130 145Q150 105 180 137Q210 86 246 136Q300 110 330 155H120Z" fill="#EFF8EE"/><path d="M700 195Q730 152 760 174Q788 132 821 175Q850 152 884 199H690Z" fill="#D5F0ED"/><path d="M0 370L180 230L350 365L530 210L740 378L950 245L1280 390V720H0Z" fill="#629FA9"/>'},
-      {id:'clearing',plane:'background',coordinateSpace:'world',role:'decoration',keyframes,svg:'<path d="M0 370Q150 285 330 360T700 350T1030 350T1280 320V720H0Z" fill="#3F7D32"/><path d="M0 482Q200 370 430 457T870 448T1280 458V720H0Z" fill="#619338"/><path d="M0 540Q600 495 1280 540V720H0Z" fill="#D5A259"/><path d="M0 600Q470 550 1280 630V720H0Z" fill="#E6B76A"/>'},
-      {id:'trees',plane:'midground',role:'decoration',keyframes,svg:'<path d="M60 540L85 240L122 220L136 540Z" fill="#80502D" stroke="#392819" stroke-width="4"/><path d="M109 365L25 268M112 310L202 244" stroke="#694021" stroke-width="18" stroke-linecap="round"/><path d="M0 178Q44 105 104 164Q150 92 211 179Q249 206 218 255Q126 294 10 249Z" fill="#285E2F" stroke="#234A26" stroke-width="4"/><path d="M1170 540L1153 280L1190 263L1214 540Z" fill="#8C5731" stroke="#392819" stroke-width="4"/><path d="M1177 367L1103 295M1180 344L1251 265" stroke="#71472A" stroke-width="16" stroke-linecap="round"/><path d="M1060 218Q1075 166 1130 181Q1177 128 1234 173Q1270 149 1280 195V287Q1150 321 1060 270Z" fill="#397337" stroke="#28552B" stroke-width="4"/>'},
-      {id:'near-leaves',plane:'foreground',role:'decoration',keyframes,svg:'<path d="M0 640Q50 610 89 627Q59 660 11 653M10 684Q70 652 110 676Q76 707 10 707M1184 678Q1210 637 1280 643V680Q1221 703 1184 678Z" fill="#2D6533" stroke="#234828" stroke-width="3"/>'},
-    ]};
-}
+        const p=bank.capabilities.expressions?expressionAt(plan,t,actingClock,cell.restMood).pose:undefined,rest=expressionPose(cell.restMood);
+        const emotion=p?{brow:clamp((p.brow-rest.brow)/8,-1,1),tilt:clamp(((p.browAngle??0)-rest.browAngle)/30,-1,1),smile:p.smile,frown:p.frown??0,round:p.round,
+          closure:clamp(p.lid-rest.lid+Math.max(0,1-(p.eyeOpen??1)),0,.8)}:undefined;
+        const state=nativeHeadBankFacialState(bank,{aperture:bodyViewMouthLevel(activity,t,sourceClock),blink,look,...(emotion?{emotion}:{})});Object.assign(face,state.face);Object.assign(paths,state.paths);
+      }
 
-/** Fixed cue clock is a labelled silent SRT draft, not invented script/TTS timing.
- * No model, provider, server, fixture bootstrap or file writes are performed here. */
+```
+
+## benchmarks/native-seat-tracer.ts
+
+Source SHA256: 31d07a231119f666acec7d1aff9c42464998cab9bafbef9cf761594fe69a0594
+
+```ts
 function buildNativeSeatTracer(heads?:Record<NativeSeatActor,NativeHeadBank>,selection:NativeDialogueSelection={staging:'lila-left',acting:'rest'}){
   const config=ConfigSchema.parse({project:{name:'Native seat motion tracer',language:'en'},input:{mode:'srt'},presentation:{mode:'story-cinematic',character_mode:'actors',actor_renderer:'rig'},
     rendering:{draft:{width:1280,height:720,fps:60,quality:'looks'},final:{width:1280,height:720,fps:60,quality:'delivery'}},captions:{mode:'burned',font:'Arial',font_size:20}});
@@ -136,3 +118,39 @@ export async function createNativeHeadSeatTracer(repo:string,input:Partial<Nativ
   ] as const).map(({actorId,view,candidate})=>({actorId,view,definitionFile:candidate.definitionFile,definitionHash:candidate.definitionHash,bankFingerprint:candidate.bank.fingerprint,
     sourceFile:candidate.bank.source.file,sourceSHA256:candidate.bank.source.sha256,artApproved:false,motionVerified:false}))};
 }
+
+```
+
+## packages/animation/body-head-bank.ts
+
+Source SHA256: 5ddb5dd3c5052778bb7f14cfa8df312503d2f3733d63c889491fadc41aec92aa
+
+```ts
+export function nativeHeadBankFacialState(bank:NativeHeadBank,input:{aperture:number;blink:number;look:{x:number;y:number};emotion?:NativeFaceEmotion}):NativeFaceState{
+  if(!isNativeHeadFaceVersion(bank.version)||!bank.capabilities.speech||!bank.capabilities.directionalEyes||bank.cells.some(c=>!c.face))throw new Error('needs-head-face-registration: complete source-face bank3/4 capabilities required');
+  if(input.emotion&&!bank.capabilities.expressions)throw new Error('needs-head-turn-expression: explicit bank5 emotions required');
+  const face:NativeFaceState['face']={},paths:Record<string,string>={};
+  for(const [i,cell] of bank.cells.entries())if(cell.face){const a=-nativeHeadCellAngle(cell)*Math.PI/180,look={x:input.look.x*Math.cos(a)-input.look.y*Math.sin(a),y:input.look.x*Math.sin(a)+input.look.y*Math.cos(a)};
+    const state=nativeHeadFaceState(cell.face,{...input,look},'native-face-'+i);Object.assign(face,state.face);Object.assign(paths,state.paths);
+  }return {face,paths};
+}
+export function nativeHeadBankFacialError(bank:NativeHeadBank,from:NativeFaceState['face'],to:NativeFaceState['face'],wanted:NativeFaceState['face'],progress:number){
+  let error=0;for(const [i,cell] of bank.cells.entries())if(cell.face)error=Math.max(error,nativeHeadFaceMatrixError(cell.face,'native-face-'+i,from,to,wanted,progress)*nativeHeadPixelScale(bank,cell));return error;
+}
+/** Every exact source asset is drawn once, then referenced by its cell crop and
+ * uniform attachment. No anatomical labels or coordinates are mirrored. */
+export function nativeHeadBankSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
+  const bank=registeredNativeHeadBank(profile),sources=nativeHeadSources(bank),sourceIndex=new Map(sources.map((s,i)=>[s.id,i]));
+  const images=sources.map((s,i)=>{
+    const url=imageUrl(s.file,s.sha256);
+    if(url!=='assets/rigs/'+s.sha256+'.png'&&!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(url))throw new Error('Unapproved native head bank image URL');
+    return `<image id="native-head-bank-source-${i}" width="${s.width}" height="${s.height}" href="${url}"/>`;
+  }).join('');
+  return `<g data-head-bank="${bank.fingerprint}" stroke="none"><defs>${images}${bank.cells.map((c,i)=>`<clipPath id="native-head-bank-clip-${i}" clipPathUnits="userSpaceOnUse"><rect x="${c.crop.x}" y="${c.crop.y}" width="${c.crop.width}" height="${c.crop.height}"/></clipPath>`).join('')}</defs>${bank.cells.map((c,i)=>{
+    const imageId='native-head-bank-source-'+sourceIndex.get(nativeHeadSourceForCell(bank,c).id)!,rest=c.face?.mouth.rest,restId=rest?'native-head-bank-source-'+sourceIndex.get(rest.sourceId)!:undefined,
+      emotionId=c.face?.emotions?'native-head-bank-source-'+sourceIndex.get(c.face.emotions.mouth.repair.sourceId)!:undefined;
+    return `<g id="head-view-bank-${i}" opacity="0"><g transform="scale(${nativeHeadPixelScale(bank,c)}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><use href="#${imageId}"/>${c.face?nativeHeadFaceSvg(c.face,imageId,'native-face-'+i,restId,emotionId):''}</g></g>`;
+  }).join('')}</g>`;
+}
+
+```
