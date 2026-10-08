@@ -7,6 +7,9 @@ import { validateViewActingClock, VIEW_GAZE_RAMP_MS, VIEW_BREATH_RAMP_MS, type V
 import { VIEW_EXPRESSION_RAMP_MS } from '../animation/view-expression-track.js';
 import { sourceBodyPlan, bodyTrackOffsetMs, bodyRootAt } from '../animation/view-source-body.js';
 import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
+import {hasBodyViewSecondary,nativeSecondaryBounds} from '../animation/body-view-secondary.js';
+import {registeredBodyView} from '../animation/body-view-art.js';
+import {SECONDARY_MOTION_DELAYS_MS} from '../animation/view-secondary-motion.js';
 import { CameraSchema, type CinematicCamera } from './schemas.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
 import { cinematicActionGroups } from './actions.js';
@@ -28,16 +31,17 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
   if(actingClock)validateViewActingClock(p,actingClock);
   const physical=sourceBodyPlan(p),motionOffset=p.sourceBody?bodyTrackOffsetMs(p,actingClock!.startMs):0;
   const times=new Set<number>([0,p.durationMs]);
+  const secondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
   for(let ms=0;ms<p.durationMs;ms+=1000/p.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])]){
-    for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at+motionOffset);
+    for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)secondaryTime(at+motionOffset);
   }
   for(const clip of [...(p.spears??[]),...p.gestures,...(p.turns??[]),...p.expressions]){
-    for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
+    for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)secondaryTime(at);
   }
-  for(const jump of physical.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])times.add(at+motionOffset);
-  for(const clip of physical.postures??[])times.add((clip.startMs+clip.endMs)/2+motionOffset);
-  for(const clip of p.spears??[])for(const at of [clip.readyMs,clip.contactMs,clip.recoverMs])if(at!==undefined)times.add(at);
+  for(const jump of physical.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])secondaryTime(at+motionOffset);
+  for(const clip of physical.postures??[])secondaryTime((clip.startMs+clip.endMs)/2+motionOffset);
+  for(const clip of p.spears??[])for(const at of [clip.readyMs,clip.contactMs,clip.recoverMs])if(at!==undefined)secondaryTime(at);
   for(const g of p.gestures){if(g.contactMs!==undefined)times.add(g.contactMs);if(g.releaseMs!==undefined)times.add(g.releaseMs);if(g.landingMs!==undefined)times.add(g.landingMs);
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
@@ -46,9 +50,9 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     for(const g of actingClock.gazes)for(const at of [g.startMs,g.startMs+VIEW_GAZE_RAMP_MS,g.endMs-VIEW_GAZE_RAMP_MS,g.endMs])times.add(at-actingClock.startMs);
     for(const clip of actingClock.expressions??[]){
       const window=Math.min(VIEW_EXPRESSION_RAMP_MS,(clip.endMs-clip.startMs)/2);
-      for(const at of [clip.startMs,clip.startMs+window,clip.endMs-window,clip.endMs])times.add(at-actingClock.startMs);
+      for(const at of [clip.startMs,clip.startMs+window,clip.endMs-window,clip.endMs])secondaryTime(at-actingClock.startMs);
     }
-    for(const at of [actingClock.runStartMs,actingClock.runStartMs+VIEW_BREATH_RAMP_MS,actingClock.runEndMs-VIEW_BREATH_RAMP_MS,actingClock.runEndMs])times.add(at-actingClock.startMs);
+    for(const at of [actingClock.runStartMs,actingClock.runStartMs+VIEW_BREATH_RAMP_MS,actingClock.runEndMs-VIEW_BREATH_RAMP_MS,actingClock.runEndMs])secondaryTime(at-actingClock.startMs);
   }
   const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
   for(const time of [...times].filter(at=>Number.isFinite(at)&&at>=0&&at<=p.durationMs)){
@@ -62,7 +66,8 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     const x=Number(match[1]),y=Number(match[2]),angle=Number(match[3])*Math.PI/180,scale=Number(match[4]),local=emptyBounds();
     if(usesCutoutHead(profile)){
       const c=cutoutHeadRegistration(profile);
-      for(const px of [c.bounds.left,c.bounds.right])for(const py of [c.bounds.top,c.bounds.bottom]){
+      const headBounds=hasBodyViewSecondary(profile)?nativeSecondaryBounds(profile,registeredBodyView(profile),frame.face):c.bounds;
+      for(const px of [headBounds.left,headBounds.right])for(const py of [headBounds.top,headBounds.bottom]){
         const dx=(px-c.neck.x)*c.scale,dy=(py-c.neck.y)*c.scale;
         include(local,{x:x+(dx*Math.cos(angle)-dy*Math.sin(angle))*scale,y:y+(dx*Math.sin(angle)+dy*Math.cos(angle))*scale});
       }

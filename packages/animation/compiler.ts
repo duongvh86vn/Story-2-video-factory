@@ -22,6 +22,8 @@ import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSource
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
 import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
+import {hasBodyViewSecondary,registeredNativeSecondary,nativeSecondaryState,nativeSecondaryMatrixError,nativeSecondaryDescription} from './body-view-secondary.js';
+import {sampleSecondaryMotion,SECONDARY_MOTION_DELAYS_MS} from './view-secondary-motion.js';
 import {moodPoses,expressionPose,type ExpressionPose} from './expression-pose.js';
 import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
 import {viewSourceGestureDefinition,sourceViewGestureAt} from './view-source-gesture.js';
@@ -107,6 +109,10 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
     if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-eyes: registered eyes need animation2.2.13/14/15');
   }
   if(hasBodyViewExpressions(profile))registeredBodyViewExpressions(profile);
+  if(hasBodyViewSecondary(profile)){
+    registeredNativeSecondary(profile,registeredBodyView(profile));
+    if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-secondary: registered secondary motion requires animation2.2.13/14/15');
+  }
   if(!usesBodyView(profile))return;
   if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
   if(hasBodyViewLocomotion(profile))validateNativeLocomotion(sourceBodyPlan(plan),profile,registeredBodyView(profile));
@@ -623,7 +629,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
   if(plan.gestures.some(g=>g.sourceSpan)&&!actingClock)throw new Error('needs-view-gesture-phase: source gesture requires its complete storyboard/run context');
   if(actingClock){
-    if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)&&!hasBodyViewLocomotion(profile))throw new Error('needs-view-acting-phase: select a registered native mouth/eyes/locomotion candidate');
+    if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)&&!hasBodyViewLocomotion(profile)&&!hasBodyViewSecondary(profile))throw new Error('needs-view-acting-phase: select a registered native mouth/eyes/locomotion/secondary candidate');
     if(actingClock.ownerId!==profile.id)throw new Error('needs-view-acting-phase: actor profile mismatch');
     validateViewActingClock(plan,actingClock);
     if(hasBodyViewExpressions(profile)&&!actingClock.expressions)throw new Error('needs-view-expression-phase: selected expressions need the complete original run track');
@@ -874,6 +880,15 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     delete transforms['face-orientation'];
   }
   if(viewCloth)Object.assign(face,nativeClothState(profile,viewCloth,viewThighAngles).face);
+  if(hasBodyViewSecondary(profile)){
+    const c=registeredBodyView(profile);registeredNativeSecondary(profile,c);
+    const offset=actingClock?.startMs??0,startMs=actingClock?.runStartMs??0,endMs=actingClock?.runEndMs??plan.durationMs;
+    const control=sampleSecondaryMotion({timeMs:t+offset,startMs,endMs,scale:c.headScale*s*headArtScale,sample:at=>{
+      const state=bodyStateAt(plan,profile,at-offset,actingClock),neck=add(state.pelvis,rotate({x:state.m.neckX!*state.s,y:state.m.torsoTop!*state.s},state.lean));
+      return {...neck,angle:state.lean};
+    }});
+    Object.assign(face,nativeSecondaryState(profile,c,control).face);
+  }
   if(usesReferenceBody(profile)&&!usesBodyView(profile)){
     const weight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,n)=>sum+n,0));
     const flex=Math.abs(thighAngles.reduce((sum,n)=>sum+n,0)/thighAngles.length-lean);
@@ -993,14 +1008,15 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   if(actingClock)validateViewActingClock(plan,actingClock);
   const times=new Set<number>([0,plan.durationMs]);
   const physical=sourceBodyPlan(plan),motionOffset=plan.sourceBody?plan.sourceBody.startMs-actingClock!.startMs:0;
-  const addMotionTime=(at:number)=>{times.add(at+motionOffset);if(hasBodyViewLocomotion(profile))times.add(at+motionOffset+VIEW_CLOTH_LAG_MS);};
-  if(plan.sourceBody)for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)addMotionTime(at);
+  const addSecondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
+  const addMotionTime=(at:number)=>{addSecondaryTime(at+motionOffset);if(hasBodyViewLocomotion(profile))times.add(at+motionOffset+VIEW_CLOTH_LAG_MS);};
+  if(plan.sourceBody||hasBodyViewSecondary(profile))for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)addMotionTime(at);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...plan.gestures,...(plan.spears??[]),...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
   if([HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion))for(const clip of expressionRanges(plan)){
-    const window=expressionBlendMs(clip);times.add(clip.startMs+window);times.add(clip.endMs-window);
+    const window=expressionBlendMs(clip);for(const at of [clip.startMs,clip.startMs+window,clip.endMs-window,clip.endMs])addSecondaryTime(at);
   }
   for(const jump of physical.jumps??[])for(const at of [jump.startMs,jump.takeoffMs,jump.landingMs,jump.endMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])for(const near of [at-.01,at,at+.01])addMotionTime(near);
   for(const g of plan.gestures.filter(g=>g.action==='drop')){times.add(g.landingMs!);times.add(g.landingMs!-.01);times.add(g.landingMs!+.01);}
@@ -1010,7 +1026,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     const window=articulatedGestureWindow(gesture);
     for(const at of [window.reachMs,window.recoverMs])for(const near of [at-.01,at,at+.01])times.add(near);
   }
-  for(const g of plan.spears??[])for(const at of [g.readyMs,g.contactMs,g.recoverMs])if(at!==undefined)for(const near of [at-.01,at,at+.01])times.add(near);
+  for(const g of plan.spears??[])for(const at of [g.startMs,g.readyMs,g.contactMs,g.recoverMs,g.endMs])if(at!==undefined)for(const near of [at-.01,at,at+.01])addSecondaryTime(near);
   for(const g of plan.gestures.filter(g=>g.action==='carry')){
     if(!enteringCarry(g))times.add(g.contactMs!+CARRY_TRANSITION_MS);
     if(g.releaseMs!==undefined)times.add(g.releaseMs-CARRY_TRANSITION_MS);
@@ -1034,10 +1050,10 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const g of plan.gazes)for(const at of [g.startMs+140,g.endMs-140])times.add(at);
   }
   if(actingClock){
-    if(hasBodyViewExpressions(profile))for(const clip of actingClock.expressions??[]){const window=expressionBlendMs(clip);for(const at of [clip.startMs,clip.startMs+window,clip.endMs-window,clip.endMs])times.add(at-actingClock.startMs);}
+    if(hasBodyViewExpressions(profile))for(const clip of actingClock.expressions??[]){const window=expressionBlendMs(clip);for(const at of [clip.startMs,clip.startMs+window,clip.endMs-window,clip.endMs])addSecondaryTime(at-actingClock.startMs);}
     for(const g of actingClock.gestures)for(const at of [g.startMs,g.reachMs,g.recoverMs,g.endMs])for(const near of [at-.01,at,at+.01])times.add(near-actingClock.startMs);
     for(const g of actingClock.gazes)for(const at of [g.startMs,g.startMs+VIEW_GAZE_RAMP_MS,g.endMs-VIEW_GAZE_RAMP_MS,g.endMs])times.add(at-actingClock.startMs);
-    for(const at of [actingClock.runStartMs,actingClock.runStartMs+VIEW_BREATH_RAMP_MS,actingClock.runEndMs-VIEW_BREATH_RAMP_MS,actingClock.runEndMs])times.add(at-actingClock.startMs);
+    for(const at of [actingClock.runStartMs,actingClock.runStartMs+VIEW_BREATH_RAMP_MS,actingClock.runEndMs-VIEW_BREATH_RAMP_MS,actingClock.runEndMs])addSecondaryTime(at-actingClock.startMs);
   }
   const frameAt=(t:number)=>samplePerformance(plan,profile,t,activity,sourceClock,actingClock);
   const samples=[...new Set([...times].filter(t=>t>=0&&t<=plan.durationMs).map(t=>Number(t.toFixed(4))))].sort((a,b)=>a-b).map(frameAt);
@@ -1051,6 +1067,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       const actual=frameAt(lerp(a.timeMs,b.timeMs,progress));
       if(hasBodyViewEyes(profile))error=Math.max(error,bodyViewEyesMatrixError(registeredBodyViewEyes(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(hasBodyViewLocomotion(profile))error=Math.max(error,nativeClothMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
+      if(hasBodyViewSecondary(profile))error=Math.max(error,nativeSecondaryMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesBodyView(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
@@ -1122,6 +1139,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       targetMethod:'bounded direction from native eye center in head-local coordinates; explicit targets behind view rejected',opticalGazeVerified:false}}:{}),
     ...(hasBodyViewExpressions(profile)?{bodyExpressions:{...bodyViewExpressionsDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'complete original expression run':'shot-local diagnostic expressions',sourceTrackHash:hash(actingClock?.expressions??plan.expressions),audioVerified:false}}:{}),
+    ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+      clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),
     ...(hasBodyViewLocomotion(profile)?{bodyMotion:{...nativeClothDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:plan.sourceBody?'complete original body tracks through explicitly continuous camera slices':'complete shot-local walk/run/jump/posture; moving cuts require explicit sourceBody',sourceTrackHash:hash(plan.sourceBody??{walks:plan.walks,jumps:plan.jumps??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};

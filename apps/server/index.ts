@@ -36,7 +36,7 @@ import {discoverNineRouter} from '../../packages/models/nine-router.js';
 import {prehistoricReadiness,prehistoricReferences} from '../../packages/topics/prehistoric-life.js';
 import {referencePuppetSvg} from '../../packages/topics/reference-puppet.js';
 import {headWorkbench,headWorkbenchManifest} from '../../packages/topics/head-workbench.js';
-import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,BODY_COLOUR_MODES,BODY_MOUTH_MODES,BODY_EYES_MODES,BODY_LOOK_MODES,BODY_EXPRESSION_MODES,BODY_MOTION_MODES,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
+import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,BODY_COLOUR_MODES,BODY_MOUTH_MODES,BODY_EYES_MODES,BODY_LOOK_MODES,BODY_EXPRESSION_MODES,BODY_MOTION_MODES,BODY_SECONDARY_MODES,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
 import {viewRegistrationWorkbench} from '../../packages/topics/view-registration-workbench.js';
 import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
 import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
@@ -298,7 +298,7 @@ export async function buildServer(options: ServerOptions = {}) {
     return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(headWorkbench(mood,timeMs,mouth));
   });
   app.get('/api/topics/prehistoric-life/heads/manifest',async()=>headWorkbenchManifest());
-  app.get<{Querystring:{action?:string;timeMs?:string;mood?:string;view?:string;colour?:string;mouth?:string;eyes?:string;look?:string;expressions?:string;motion?:string}}>('/api/topics/prehistoric-life/body',async(request,reply)=>{
+  app.get<{Querystring:{action?:string;timeMs?:string;mood?:string;view?:string;colour?:string;mouth?:string;eyes?:string;look?:string;expressions?:string;motion?:string;secondary?:string}}>('/api/topics/prehistoric-life/body',async(request,reply)=>{
     const action=z.enum(BODY_ACTIONS).parse(request.query.action??'rest');
     const timeMs=z.coerce.number().int().min(0).max(bodyActionDuration(action)).parse(request.query.timeMs??600);
     const mood=z.enum(Moods).parse(request.query.mood??'happy');
@@ -308,7 +308,8 @@ export async function buildServer(options: ServerOptions = {}) {
     const eyes=z.enum(BODY_EYES_MODES).parse(request.query.eyes??'native'),look=z.enum(BODY_LOOK_MODES).parse(request.query.look??'rest');
     const expressions=z.enum(BODY_EXPRESSION_MODES).parse(request.query.expressions??'native');
     const motion=z.enum(BODY_MOTION_MODES).parse(request.query.motion??'rigid');
-    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood,view,colour,mouth,eyes,look,expressions,motion));
+    const secondary=z.enum(BODY_SECONDARY_MODES).parse(request.query.secondary??'rigid');
+    return reply.type('text/html').header('Content-Security-Policy',"default-src 'none'; img-src data:; style-src 'unsafe-inline'; form-action 'self'").send(bodyWorkbench(action,timeMs,mood,view,colour,mouth,eyes,look,expressions,motion,secondary));
   });
   app.get('/api/topics/prehistoric-life/body/manifest',async()=>bodyWorkbenchManifest());
   app.get('/api/topics/prehistoric-life/view-registration',async(_request,reply)=>reply.type('text/html')

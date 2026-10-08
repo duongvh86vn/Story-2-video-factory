@@ -17,8 +17,8 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-28';
-export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-14';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-29';
+export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-15';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
   karo:{upper:rect(100,240,230,219),left:'M100 450H215L223 482L214 570H100Z',right:'M215 450H330V570H214L223 482Z',follow:1,maxRotation:90},
@@ -140,7 +140,7 @@ export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,c
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through the projected hidden IK joint; source knee depth preserves physical XYZ lengths',softness:.28,anatomicalGuarantee:false},
-  secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered provisional source overlays',hair:'registered cutout follows the head rigidly; independent ponytail/fringe follow pending',
+  secondaryMotion:{breath:'bounded continuous body lean',blink:'actor-staggered provisional source overlays',hair:'rigid by default; explicit registered-secondary-v1 native candidate adds source-texture ponytail/crest/lower-beard meshes, pinned seams and original-run causal head follow; face and hair ties stay rigid; no full hair simulation, collision or motion/art acceptance',
     clothing:'all source body plans use one opaque shared cloth surface with a pinned waist and blended 100ms thigh follow below it, limited to 22 degrees; seat plans also use semantic UV correspondences through seated/rising, fading thigh follow into the seated pose; source/authored fold materials share that surface; legacy independently rotating panels are hidden to avoid opening a waist gap during ordinary walking; inverted triangles block evaluation; no fabric simulation or motion acceptance'},
   inferredAnatomy:{knees:'not visible in source; thigh/shin ratio approximately 52/48, original per-side total lengths preserved',
     elbows:'not visible in source; upper/forearm ratio 52/48 inferred after independent cuff/palm registration migration; new physical wrist chains and cuff-to-grip segments remain constant in every pose; frontal spear/run use full planar lengths with role-specific flexion guards; authored depth arms remain pending',

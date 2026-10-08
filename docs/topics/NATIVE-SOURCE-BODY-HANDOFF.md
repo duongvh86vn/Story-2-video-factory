@@ -1,5 +1,7 @@
 # Lila/Karo — chuyển động gốc xuyên các cảnh
 
+Mốc source0.38. Phần tiếp0.39 bổ sung [tóc/râu theo original head history](NATIVE-SECONDARY-MOTION-HANDOFF.md); sourceBody và các giới hạn physical/source/final ở tài liệu này vẫn áp dụng. Cả hai mốc chưa runtime/video acceptance.
+
 Source0.38,08/10/2026; base `1ac765e2f0e297c823cf0618dbe629eb934b9785`, branch codex/prehistoric-life. Source commit `0a7c2fb2cea20f77d0f5af67cf73b81557096976` đã push và đối chiếu khớp SHA trên GitHub. Build/typecheck/schema export qua; review mã nguồn có phạm vi đã qua sau khi sửa hai P2. Bằng chứng ở [record](reviews/native-source-body-source-review-v1.md). Đây là code ứng viên, chưa có playback/video được nghiệm thu.28 callback mới NOT RUN; test runtime tiếp tục giao model của người dùng.
 
 ## Thay đổi

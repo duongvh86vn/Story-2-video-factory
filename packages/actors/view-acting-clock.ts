@@ -8,6 +8,7 @@ import {hasBodyViewSpeech} from '../animation/body-view-mouth.js';
 import {hasBodyViewEyes} from '../animation/body-view-eyes.js';
 import {hasBodyViewExpressions} from '../animation/body-view-expressions.js';
 import {hasBodyViewLocomotion} from '../animation/body-view-cloth.js';
+import {hasBodyViewSecondary} from '../animation/body-view-secondary.js';
 import {normalizeViewExpressions} from '../animation/view-expression-track.js';
 import {VIEW_ACTING_CLOCK_VERSION,normalizeViewGazes,validateViewActingClock,type ViewActingClock} from '../animation/view-acting-clock.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
@@ -20,7 +21,7 @@ function performer(shot:Shot,actorId:string){
   return candidates[0];
 }
 export function actorUsesViewActingClock(profile:Pick<HostProfile,'appearance'>):boolean{
-  return usesBodyView(profile)&&(hasBodyViewSpeech(profile)||hasBodyViewEyes(profile)||hasBodyViewLocomotion(profile));
+  return usesBodyView(profile)&&(hasBodyViewSpeech(profile)||hasBodyViewEyes(profile)||hasBodyViewLocomotion(profile)||hasBodyViewSecondary(profile));
 }
 /** Pure board binding. Adjacent clips only share attention/breath when their
  * cast, registered view and stage geometry agree and continuity is explicit. */
@@ -41,12 +42,14 @@ export function actorViewActingClock(board:Storyboard,current:Shot,actorId:strin
       castHash:hash(cast.map(character=>ActorDefinitionSchema.parse(character))),geometryHash:hash({stage:p.stage,root:p.root,scale:p.scale,facing:p.facing??'front',headView:p.headView??null,kind:p.kind,profileHash:p.profileHash}),gazes:p.gazes,gestures:p.gestures,
       ...(hasBodyViewExpressions(currentActor.character)?{expressions:p.expressions}:{}),
       sourceBody:p.sourceBody,
+      ...(hasBodyViewSecondary(currentActor.character)?{secondaryLunge:p.lunge??null}:{}),
       ...(hasBodyViewLocomotion(currentActor.character)?{locomotion:{walks:p.walks,jumps:p.jumps??[],postures:p.postures??[],entryPosture:p.entryPosture??null}}:{})};
   };
   const entries=shots.map(entry);
   const linked=(i:number)=>{
     if(i<=0||shots[i]!.cinematic?.actorScene?.continuity!=='continuous')return false;
     const a=entries[i-1],b=entries[i];
+    if([a,b].some(e=>e?.secondaryLunge))throw new Error('needs-view-secondary-phase: a shot-local lunge cannot share secondary history across a continuous camera cut; its complete original body/tool track is not registered');
     if([a,b].some(e=>e?.locomotion&&(e.locomotion.walks.length||e.locomotion.jumps.length||e.locomotion.postures.length||e.locomotion.entryPosture)))throw new Error('needs-view-locomotion-cut: shot-local native motion cannot cross a cut; declare the identical complete sourceBody on every shot in the continuous run');
     if(!a||!b||a.endMs!==b.startMs||a.castHash!==b.castHash||a.geometryHash!==b.geometryHash)throw new Error('needs-view-acting-phase: declared continuous native actor changed clock, cast/view or geometry');
     return true;
