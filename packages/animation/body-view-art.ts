@@ -68,7 +68,7 @@ export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:st
   const c=registeredBodyView(profile);
   // Native eyes/mouth remain inside the same uniform attachment. Unselected
   // overlays, whole-face warp, expressions and continuous turns stay blocked.
-  const url=imageUrl(c.file,c.sha256),source={sha256:c.sha256,width:c.width,height:c.height,url},mouth=bodyViewMouthSvg(profile,source),eyes=bodyViewEyesSvg(profile,source);
+  const url=imageUrl(c.file,c.sha256),source={sha256:c.sha256,width:c.width,height:c.height,url},mouth=bodyViewMouthSvg(profile,source,imageUrl),eyes=bodyViewEyesSvg(profile,source);
   return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath></defs><g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#source-head-clip)"><image width="${c.width}" height="${c.height}" href="${url}"/>${mouth}${eyes}</g></g></g>`;
 }
 export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){

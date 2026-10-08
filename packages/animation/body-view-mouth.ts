@@ -2,13 +2,14 @@ import type {HostProfile} from '../host/schemas.js';
 import type {SpeechActivity} from '../voice/schemas.js';
 import {hash} from '../core/utils.js';
 import {SPEECH_SOURCE_CLOCK_VERSION,SPEECH_ENVELOPE_ATTACK_MS,SPEECH_ENVELOPE_RELEASE_MS,validateSpeechActivityTrack,validateSpeechSourceClock,type SpeechSourceClock} from './speech-clock.js';
+import {hasBodyViewRestSpeech,registeredBodyViewRestMouth,bodyViewRestMouthSvg,bodyViewRestMouthDescription} from './body-view-rest-mouth.js';
 
 export const BODY_VIEW_SPEECH_VERSION='registered-mouth-v1' as const;
-export const BODY_VIEW_MOUTH_VERSION='forest-fixed-view-mouth-2';
+export const BODY_VIEW_MOUTH_VERSION='forest-fixed-view-mouth-3';
 type Point={x:number;y:number};
 type Mouth={sourceHash:string;sourceSize:readonly [number,number];kind:'skin-strip'|'native-rim';bounds:{x:number;y:number;width:number;height:number};
   clip:string;top:readonly [Point,Point,Point,Point];depth:number;lift:number;stroke:number;
-  strip?:{x:number;y:number;width:number;height:number};interior?:string};
+  strip?:{x:number;y:number;width:number;height:number};interior?:string;curvedTeeth?:boolean};
 /** Manual native-pixel mouth regions, not inferred new facial landmarks.
  * Lila's bare cheek strip restores only the old smile; Karo's native outer
  * lip/moustache/beard stay outside the interior patch. All remain unapproved. */
@@ -36,14 +37,15 @@ const clamp=(x:number)=>Math.max(0,Math.min(1,x));
 const ease=(x:number)=>{const t=clamp(x);return t*t*t*(t*(t*6-15)+10);};
 const point=(p:Point)=>`${Number(p.x.toFixed(4))} ${Number(p.y.toFixed(4))}`;
 const closed=(p:readonly Point[])=>`M${point(p[0]!)} C${point(p[1]!)} ${point(p[2]!)} ${point(p[3]!)} C${point(p[4]!)} ${point(p[5]!)} ${point(p[0]!)}`;
-export function hasBodyViewSpeech(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodySpeech===BODY_VIEW_SPEECH_VERSION;}
+export function hasBodyViewSpeech(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodySpeech===BODY_VIEW_SPEECH_VERSION||hasBodyViewRestSpeech(profile);}
 export function registeredBodyViewMouth(profile:Pick<HostProfile,'appearance'>,sourceHash?:string):Mouth{
   const a=profile.appearance;
   if(!hasBodyViewSpeech(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-voice-animation: mouth candidate requires its registered actor/body view');
   const c=bodyViewMouthRegistration[a.characterVariant]?.[a.bodyView];
   if(!c)throw new Error('needs-view-voice-animation: mouth actor/view is not registered');
   if(sourceHash!==undefined&&c.sourceHash!==sourceHash)throw new Error('needs-view-voice-animation: mouth coordinates do not match the native view image');
-  return c;
+  const rest=registeredBodyViewRestMouth(profile,sourceHash);
+  return rest?{...c,clip:rest.speechClip,top:rest.top,depth:rest.depth,lift:rest.lift,stroke:rest.stroke,curvedTeeth:true}:c;
 }
 /** Pure shape authoring. No audio, actor pose evaluation or playback. */
 export function bodyViewMouthPaths(c:Mouth,amount:number):Record<string,string>{
@@ -51,23 +53,30 @@ export function bodyViewMouthPaths(c:Mouth,amount:number):Record<string,string>{
   const [l,a,b,r]=c.top,u={...a,y:a.y-c.lift*amount},v={...b,y:b.y-c.lift*amount};
   const interior=closed([l,u,v,r,{...v,y:v.y+c.depth*amount},{...u,y:u.y+c.depth*amount}]);
   const span=r.x-l.x,y=(l.y+r.y)/2+4,thickness=c.kind==='native-rim'?10:5;
-  const teeth=closed([{x:l.x+span*.09,y},{x:l.x+span*.32,y:y+5},{x:l.x+span*.68,y:y+5},{x:r.x-span*.09,y},
-    {x:l.x+span*.68,y:y+5+thickness},{x:l.x+span*.32,y:y+5+thickness}]);
+  // Resting smiles have a curved upper contour, not a horizontal top rim.
+  // Keep teeth inside that actual contour instead of clipping them away on
+  // the left view or leaving a detached white rectangle on the right view.
+  const bezier=(t:number)=>({x:(1-t)**3*l.x+3*(1-t)**2*t*u.x+3*(1-t)*t*t*v.x+t**3*r.x,y:(1-t)**3*l.y+3*(1-t)**2*t*u.y+3*(1-t)*t*t*v.y+t**3*r.y});
+  const derivative=(t:number)=>({x:3*(1-t)**2*(u.x-l.x)+6*(1-t)*t*(v.x-u.x)+3*t*t*(r.x-v.x),y:3*(1-t)**2*(u.y-l.y)+6*(1-t)*t*(v.y-u.y)+3*t*t*(r.y-v.y)});
+  const tl=bezier(.12),tr=bezier(.88),dl=derivative(.12),dr=derivative(.88),ta={x:tl.x+dl.x*.76/3,y:tl.y+dl.y*.76/3},tb={x:tr.x-dr.x*.76/3,y:tr.y-dr.y*.76/3};
+  const teeth=c.curvedTeeth?closed([tl,ta,tb,tr,{...tb,y:tb.y+Math.min(8,c.depth*amount*.38)},{...ta,y:ta.y+Math.min(8,c.depth*amount*.38)}])
+    :closed([{x:l.x+span*.09,y},{x:l.x+span*.32,y:y+5},{x:l.x+span*.68,y:y+5},{x:r.x-span*.09,y},{x:l.x+span*.68,y:y+5+thickness},{x:l.x+span*.32,y:y+5+thickness}]);
   const tongueY=(u.y+v.y)/2+c.depth*amount*.64;
   const tongue=closed([{x:l.x+span*.32,y:tongueY},{x:l.x+span*.4,y:tongueY-5},{x:l.x+span*.6,y:tongueY-5},{x:l.x+span*.68,y:tongueY},
     {x:l.x+span*.6,y:tongueY+7},{x:l.x+span*.4,y:tongueY+7}]);
   return {'view-mouth-interior':interior,'view-mouth-teeth':teeth,'view-mouth-tongue':tongue};
 }
-export function bodyViewMouthSvg(profile:Pick<HostProfile,'appearance'>,source:{sha256:string;width:number;height:number;url:string}):string{
+export function bodyViewMouthSvg(profile:Pick<HostProfile,'appearance'>,source:{sha256:string;width:number;height:number;url:string},imageUrl?:(file:string,sha:string)=>string):string{
   if(!hasBodyViewSpeech(profile))return '';
   const c=registeredBodyViewMouth(profile,source.sha256),p=bodyViewMouthPaths(c,0),q=c.bounds;
   if(source.url!=='assets/rigs/'+c.sourceHash+'.png'&&!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(source.url))throw new Error('Unapproved mouth image URL');
   if(source.width!==c.sourceSize[0]||source.height!==c.sourceSize[1])throw new Error('Invalid mouth source dimensions');
+  const rest=registeredBodyViewRestMouth(profile,source.sha256),plate=bodyViewRestMouthSvg(profile,source,imageUrl);
   // The same immutable image supplies a clean cheek strip. Only this clip is
   // reconstructed; source eyes/nose/hair and the original happy image remain.
-  const repair=c.strip?`<svg x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" viewBox="${c.strip.x} ${c.strip.y} ${c.strip.width} ${c.strip.height}" preserveAspectRatio="none"><image width="${source.width}" height="${source.height}" href="${source.url}"/></svg>`
+  const repair=rest?'':c.strip?`<svg x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" viewBox="${c.strip.x} ${c.strip.y} ${c.strip.width} ${c.strip.height}" preserveAspectRatio="none"><image width="${source.width}" height="${source.height}" href="${source.url}"/></svg>`
     :`<path d="${c.clip}" fill="${c.interior}"/>`;
-  return `<defs><clipPath id="view-mouth-region"><path d="${c.clip}"/></clipPath><clipPath id="view-mouth-aperture"><use href="#view-mouth-interior"/></clipPath></defs><g id="view-mouth-layer" opacity="0" clip-path="url(#view-mouth-region)" data-mouth-artwork="${BODY_VIEW_MOUTH_VERSION}">${repair}<path id="view-mouth-interior" d="${p['view-mouth-interior']}" fill="#211008" stroke="#160B05" stroke-width="${c.stroke}" stroke-linejoin="round"/><g clip-path="url(#view-mouth-aperture)"><path id="view-mouth-teeth" d="${p['view-mouth-teeth']}" fill="#FFF8E9"/><path id="view-mouth-tongue" d="${p['view-mouth-tongue']}" fill="#B3471F"/></g></g>`;
+  return `${plate}<defs><clipPath id="view-mouth-region"><path d="${c.clip}"/></clipPath><clipPath id="view-mouth-aperture"><use href="#view-mouth-interior"/></clipPath></defs><g id="view-mouth-layer" opacity="${rest?1:0}" clip-path="url(#view-mouth-region)" data-mouth-artwork="${BODY_VIEW_MOUTH_VERSION}">${repair}<path id="view-mouth-interior" d="${p['view-mouth-interior']}" fill="#211008" stroke="#160B05" stroke-width="${c.stroke}" stroke-linejoin="round"/><g clip-path="url(#view-mouth-aperture)"><path id="view-mouth-teeth" d="${p['view-mouth-teeth']}" fill="#FFF8E9"/><path id="view-mouth-tongue" d="${p['view-mouth-tongue']}" fill="#B3471F"/></g></g>`;
 }
 export const BODY_VIEW_MOUTH_ATTACK_MS=SPEECH_ENVELOPE_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS=SPEECH_ENVELOPE_RELEASE_MS;
 export function validateBodyViewMouthActivity(activity:SpeechActivity):void{
@@ -102,10 +111,11 @@ export function bodyViewMouthLevel(activity:SpeechActivity,timeMs:number,sourceC
 }
 export function sampleBodyViewMouth(profile:Pick<HostProfile,'appearance'>,activity:SpeechActivity,timeMs:number,sourceClock?:SpeechSourceClock){
   const c=registeredBodyViewMouth(profile),amount=bodyViewMouthLevel(activity,timeMs,sourceClock);
-  return {paths:bodyViewMouthPaths(c,amount),face:{'head-view-front':{opacity:1},'view-mouth-layer':{opacity:ease(amount/.08)}}};
+  return {paths:bodyViewMouthPaths(c,amount),face:{'head-view-front':{opacity:1},'view-mouth-layer':{opacity:registeredBodyViewRestMouth(profile)?1:ease(amount/.08)}}};
 }
 export const bodyViewMouthDescription={version:BODY_VIEW_MOUTH_VERSION,selection:BODY_VIEW_SPEECH_VERSION,
-  registrations:bodyViewMouthRegistration,fingerprint:hash({version:BODY_VIEW_MOUTH_VERSION,bodyViewMouthRegistration,sourceClock:SPEECH_SOURCE_CLOCK_VERSION,attackMs:BODY_VIEW_MOUTH_ATTACK_MS,releaseMs:BODY_VIEW_MOUTH_RELEASE_MS}),
-  method:'bounded native-coordinate mouth-only SVG; Lila aperture, Karo native grin with inner teeth/tongue; original happy image during silence; source-window envelope',
+  selections:[BODY_VIEW_SPEECH_VERSION,bodyViewRestMouthDescription.selection],restMouth:bodyViewRestMouthDescription,
+  registrations:bodyViewMouthRegistration,fingerprint:hash({version:BODY_VIEW_MOUTH_VERSION,bodyViewMouthRegistration,restMouth:bodyViewRestMouthDescription.fingerprint,sourceClock:SPEECH_SOURCE_CLOCK_VERSION,attackMs:BODY_VIEW_MOUTH_ATTACK_MS,releaseMs:BODY_VIEW_MOUTH_RELEASE_MS}),
+  method:'bounded native-coordinate mouth-only SVG/source-window envelope; legacy selection restores original happy image in silence; explicit rest selection keeps Karo closed-mouth plate and zero-aperture contour, Lila native closed smile',
   synchronization:'audio-activity-or-labelled-segment-draft',phonemeLipSync:false,productionReady:false,approved:false,
   limitations:['native mouth/skin-strip/outer-rim artistic review','happy fixed view only','no phonemes/prosody inference','actor-owned cue and real audio verification remain upstream','no motion/video acceptance']};

@@ -631,7 +631,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   }
   if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&sourceClock&&(sourceClock.ownerId!==profile.id||sourceClock.endMs-sourceClock.startMs!==plan.durationMs))throw new Error('needs-speech-phase: source owner or shot span does not match performer');
   if(hasBodyViewEyes(profile)&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
-  if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires explicit registered-mouth-v1 candidate');
+  if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires an explicit registered mouth candidate');
   const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight}=bodyStateAt(plan,profile,t,actingClock);
   const resolvedGesture=(side:RigHand)=>{
     const source=actingClock?sourceViewGestureAt(actingClock.gestures,t+actingClock.startMs,side):undefined,gesture=source??gestureAt(plan,t,side);
@@ -1093,7 +1093,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       availableViews:usesBodyView(profile)?[registeredBodyView(profile).view]:usesCutoutHead(profile)?['source-orientation']:referenceHeadDescription().views,turnRendering:usesBodyView(profile)?'fixed-authored-body-view-candidate':usesCutoutHead(profile)?'registered-cutout-source-orientation':'stepped-authored-views-with-front',fullBodyReplacement:usesReferenceBody(profile),productionAcceptance:false}}:{}),
     ...(usesReferenceBody(profile)?{bodyArtwork:referenceBodyDescription()}:{}),
     ...(actingClock?{viewActingPhase:viewActingClockDescription(actingClock)}:{}),
-    ...(hasBodyViewSpeech(profile)?{bodySpeech:{...bodyViewMouthDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+    ...(hasBodyViewSpeech(profile)?{bodySpeech:{...bodyViewMouthDescription,selection:profile.appearance.bodySpeech!,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,audioVerified:false,
       clock:sourceClock?'owned original activity clock, projected to shot-local time':'supplied activity windows in shot-local time; actor ownership validated upstream',
       sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null}}:{}),

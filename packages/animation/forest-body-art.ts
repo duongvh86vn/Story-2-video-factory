@@ -1,4 +1,5 @@
 import type {HostProfile} from '../host/schemas.js';
+import {bodyViewRestMouthAssets} from './body-view-rest-mouth.js';
 import type {RigHand} from '../core/identifiers.js';
 import {hash} from '../core/utils.js';
 import {referenceImageUrl,referenceHeadDescription,type ReferenceHeadView} from './forest-head-art.js';
@@ -16,7 +17,7 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-24';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-25';
 export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-13';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
@@ -103,7 +104,7 @@ export function referenceBodyHeadAttachment(profile:HostProfile,view:ReferenceHe
 export function referenceBodyAssets(appearance:HostProfile['appearance']){
   if(appearance.artworkVersion!==FOREST_BODY_VERSION&&appearance.artworkVersion!=='forest-body-view-1')return [];
   const actor=appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');
-  const source=bodies[actor];return [...(usesSourceColour(appearance)?sourceColourAssets(appearance):[{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'}]),...(usesBodyView({appearance})?[bodyViewAsset(appearance)]:seatedGarmentAssets(appearance))];
+  const source=bodies[actor];return [...(usesSourceColour(appearance)?sourceColourAssets(appearance):[{file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png'}]),...(usesBodyView({appearance})?[bodyViewAsset(appearance),...bodyViewRestMouthAssets(appearance)]:seatedGarmentAssets(appearance))];
 }
 export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
   const actor=profile.appearance.characterVariant;if(!actor)throw new Error('Reference body actor variant missing.');

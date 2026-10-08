@@ -1,0 +1,42 @@
+{
+  "version": "native-rest-mouth-generation-1",
+  "base": "664137c012f24ed5b9987b6131f50abae2252d24",
+  "provider": "built-in image_gen",
+  "approved": false,
+  "productionReady": false,
+  "policy": "Original source PNGs unchanged. Only separate tile PNGs registered inside bounded SVG native mouth ROIs; no full generated character replaces source. Native tile dimensions retained; placement uses uniform scale, not bitmap resampling. Static document only; runtime/video acceptance NOT RUN.",
+  "acceptedCandidates": [
+    {
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-left-tile-v1.png",
+      "reference": "docs/topics/reviews/native-rest-mouth-edit-reference-left-v1.png",
+      "prompt": "Use case: precise-object-edit. Edit target: this rectangular CLOSE-UP of only the mouth and surrounding dark-brown moustache/beard of Karo, an orange-faced prehistoric cartoon man. The frame is a fixed native pixel region for his three-quarter-LEFT face. Close the currently open smiling mouth into a relaxed CLOSED-lip warm smile. Replace the dark mouth cavity, white teeth and tongue with the appropriate orange lip and brown beard so no open cavity or teeth remain. Draw a single gentle thin dark curved CLOSED mouth line; this must be a relaxed closed smile, not a large orange opening. Keep all framing, moustache outline, surrounding beard texture, colour and lighting unchanged, and keep both mouth corner landmarks and the outline at the exact original pixel positions. Change only the mouth cavity/lips as necessary. Preserve the 640x448 rectangular canvas with NO new face, head, body, eyes, nose, text, objects, background, crop, resizing, border or mirroring. The whole tile including edges must remain filled with the same beard/skin pixels as the input; match the input edges, there is no transparent border in this close-up. This will be inserted only into the matching region of the original image; seams or moved corners are not acceptable.",
+      "originalOutput": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-e4e9be5b-95e0-4279-a627-fc8e8e913bb8.png",
+      "selection": "candidate only; closed smile line present; seam/texture/line alignment pending"
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-right-tile-v1.png",
+      "reference": "docs/topics/reviews/native-rest-mouth-edit-reference-right-v1.png",
+      "prompt": "Use case: precise-object-edit. Edit target: this rectangular CLOSE-UP of only the mouth and surrounding dark-brown moustache/beard of Karo, an orange-faced prehistoric cartoon man. The frame is a fixed native pixel region for his three-quarter-RIGHT face. Close the currently open smiling mouth into a relaxed CLOSED-lip warm smile. Replace the dark mouth cavity, white teeth and tongue with the appropriate orange lip and brown beard so no open cavity or teeth remain. Draw a single gentle thin dark curved CLOSED mouth line; this must be a relaxed closed smile, not a large orange opening. Keep all framing, moustache outline, surrounding beard texture, colour and lighting unchanged, and keep both mouth corner landmarks and the outline at the exact original pixel positions. Change only the mouth cavity/lips as necessary. Preserve the 640x448 rectangular canvas with NO new face, head, body, eyes, nose, text, objects, background, crop, resizing, border or mirroring. The whole tile including edges must remain filled with the same beard/skin pixels as the input; match the input edges, there is no transparent border in this close-up. This will be inserted only into the matching region of the original image; seams or moved corners are not acceptable.",
+      "originalOutput": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-cec8df26-6cf7-43eb-925c-ae15267cec9d.png",
+      "selection": "candidate fill plate only; missing closed smile contour supplied by same zero-aperture SVG; seam/texture/contour pending"
+    }
+  ],
+  "rejectedFullVariants": [
+    {
+      "view": "three-quarter-right",
+      "prompt": "Use case: precise-object-edit / identity-preserve. Edit target: the attached transparent Karo three-quarter-right PNG, a warm orange-faced prehistoric cartoon man with dark brown hair and beard, ragged brown one-shoulder clothing. Primary request: close ONLY his currently open smiling mouth into a relaxed, warm CLOSED-lip smile at exactly the same location. Hide all teeth, tongue and black open mouth cavity; the closed mouth is a gentle thin dark curved smile between the moustache and beard, with subtle natural orange lip and brown beard texture. This is the rest/silent mouth asset for animation, NOT a new character design. Keep the entire rest of the source image and its composition, scale, facial landmarks, exact eyes, eyebrows, nose, moustache, ear, hair/beard silhouette and colour, clothing, outline thickness, transparent alpha unchanged. In particular do not move or resize the head or touch the nose/eyes. Keep 910 by 1729 pixel canvas if possible and identical transparent margins; no cropping, mirroring, palette change, desaturation, new objects, text or background. Mouth closed and no exposed teeth is the only visual edit.",
+      "originalOutput": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-faa9d4f2-e9ba-4f8b-bf65-ac7c98ed5faa.png",
+      "reason": "Added arms/legs outside requested mouth; 910x1728 rather than910x1729. Not registered or referenced by renderer."
+    },
+    {
+      "view": "three-quarter-left",
+      "prompt": "Use case: precise-object-edit / identity-preserve. Edit target: the attached transparent Karo three-quarter-left PNG, a warm orange-faced prehistoric cartoon man with dark brown hair and beard, ragged brown one-shoulder clothing. Primary request: close ONLY his currently open smiling mouth into a relaxed, warm CLOSED-lip smile at exactly the same location. Hide all teeth, tongue and black open mouth cavity; the closed mouth is a gentle thin dark curved smile between the moustache and beard, with subtle natural orange lip and brown beard texture. This is the rest/silent mouth asset for animation, NOT a new character design. Keep the entire rest of the source image and its composition, scale, facial landmarks, exact eyes, eyebrows, nose, moustache, ear, hair/beard silhouette and colour, clothing, outline thickness, transparent alpha unchanged. In particular do not move or resize the head or touch the nose/eyes. The source is a cropped torso cutout with NO arms/legs; do NOT add or complete any limbs, and keep all currently transparent empty pixels transparent. Keep 910 by 1729 pixel canvas if possible and identical transparent margins; no cropping, mirroring, palette change, desaturation, new objects, text or background. Mouth closed and no exposed teeth is the only visual edit.",
+      "originalOutput": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-dbf1ccf9-bbb3-42cf-90e0-f6c1f53a7632.png",
+      "reason": "Face/body landmarks shifted; do not use or affine-warp whole face. Not registered or referenced by renderer."
+    }
+  ]
+}

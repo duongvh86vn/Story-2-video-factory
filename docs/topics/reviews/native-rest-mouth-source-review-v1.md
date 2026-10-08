@@ -1,0 +1,17 @@
+# Native resting mouth — source/artifact record
+
+Base `664137c012f24ed5b9987b6131f50abae2252d24`, 08/10/2026. Scope: explicit rest-speech selection, native mouth-region tile/clip, source activity/ownership clock, exact resources/staging fingerprints, canonical/cache/repair/workbench and NOT RUN declarations. No runtime, anatomical, artwork or production acceptance.
+
+## Actual authoring/check evidence
+
+- Built-in imagegen4 outputs with original referenced images; full prompts/output paths/selection reasons in rest-mouth-generation-v1.json. Two whole-body edits rejected and not registered; two independent native-mouth tile candidates persisted without bitmap resampling. Original reference/native source PNGs not modified. Original native dimensions910×1729 and two tile dimensions1500×1049/read hashes recorded by static document script.
+- Pure native SVG artwork document script exit0. Direct original vs authored aperture0/.55/1 figures inspected. First static figure exposed teeth clipped away in left view; new rest teeth follow analytic upper Bézier subcurve. Rebuilt static figure exit0; no actor/audio/time/animation evaluator. Seam/texture/contour/identity still pending; static document is not a sampled clip or approval.
+- Initial build:core after base integration exit0.
+- Initial test:typecheck exit1 for declaration-only missing Walk.fromX; corrected to actual typed contract. Fresh full build exit0 (core/studio TypeScript + Vite) and test:typecheck exit0; after the role-prefix declaration fix, fresh test:typecheck exit0 again. Nine callbacks NOT RUN.
+- Schema export exit0; shared appearance enum adds rest selection in host-profile/Shot/Storyboard. Narration/speech activity/source clock contract unchanged. Whitespace exit0; reviewer/publication pending.
+
+## Independent source review
+
+Hilbert `01a11712-4d23-7202-800c-1918d2b3d2ba` resumed for read-only bounded review of source and all9 declarations. Initial verdict **HOLD — one P2**, retained here. Role-dependent SVG ID assertion at native-rest-mouth.test.ts:130 always expected actor-karo-view-rest-mouth-plate; canonical primary uses unprefixed IDs, while only supporting actors use actor-id prefix. The second shot made Karo primary, so the test would reject valid renderer output. Fix at line131: derive the expected prefix from the actual primary and require exactly one rest plate ID, keeping duplicate-ID/resource checks. Follow-up **bounded source PASS**: previous P2 resolved, no new verified P1/P2 in the focused fix. All9 callbacks NOT RUN; no runtime/artwork/production acceptance. No callbacks, fixtures, evaluator, compiler/renderer execution, browser/GSAP/API/model/TTS/ASR/audio/video allowed for reviewer. Prior0.34 findings and resolutions retained in its own record.
+
+productionReady=false/productionRig=null and all final source/identity/voice/target/sync gates remain. [Full handoff and model test commands](../NATIVE-REST-MOUTH-HANDOFF.md). Source SHA pending publication.

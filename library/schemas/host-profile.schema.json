@@ -99,7 +99,10 @@
             },
             "bodySpeech": {
               "type": "string",
-              "const": "registered-mouth-v1"
+              "enum": [
+                "registered-mouth-v1",
+                "registered-rest-mouth-v1"
+              ]
             },
             "bodyEyes": {
               "type": "string",

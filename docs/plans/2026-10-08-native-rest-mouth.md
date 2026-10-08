@@ -1,0 +1,14 @@
+# Native resting mouth and speech transitions
+
+Previous goal turn: **progress** — source hand continuity plus creative/repair context fixes published in source44b221f and documentation664137c, local/remote matched, full build/test:typecheck/schema/source review passed. Thirteen callbacks NOT RUN. Full three-input/story-actor/visual objective remains unfinished.
+
+**Problem:** Native Karo source artwork keeps a toothy open smile during silence because the speech overlay disappears. The fixed-view guard also still permits only happy expressions. A narration factory needs a real resting mouth, ownership-correct speech transitions and subsequently full acting expressions; source checkpoints do not certify those visually.
+
+**This implementation:** Author two Karo closed-mouth native artwork candidates from the exact registered right/left PNGs with built-in imagegen. Preserve original PNGs. Register only a tightly bounded native mouth ROI, with explicit image/source hashes, dimensions, uniform alignment and no eyes/nose/head warp. A new opt-in speech selection must retain an opaque resting mouth through silence and layer the existing audio-activity aperture on it during speech. Lila can retain her actual native closed smile. Keep legacy selected/default artwork behavior unchanged, whole-cue speech ownership/source clock and continuous attention/hand context shared. No phoneme/contact/identity/production claim. Unsupported art/alignment must fail rather than substitute a generic face or mirrored view.
+
+- [x] Generate, inspect and persist separate two-view rest-mouth candidates, prompt/provenance and static registrations. Two full-body edits rejected; two mouth tile candidates only. Static SVG shape documents/measurements are not motion/art approval.
+- [x] Implement opt-in native resting speech art and exact registered resources/fingerprints through head/compiler/canonical/staging/cache/repair/preview paths. Preserve original audio/words/clock and all final gates.
+- [x] Declare9 NOT RUN regressions for silence/ownership, start/end/silence gaps/cuts/random seek, views/native resource integrity and legacy/default behavior. Full build/test:typecheck/schema/whitespace exit0; initial source review HOLD one P2, fixed role-prefix declaration, follow-up source PASS. No callback/runtime executed.
+- [ ] Publish owned source/assets/docs only; retain bounded reviewer findings and exact SHA, test/model commands and environment. ProductionReady=false/productionRig=null.
+
+Still required: full neutral/emotion/brow expression bank and identity/seam approval, body/head turn inbetweens, soft walk/run/jump/seating/cloth/hair, honest prop/spear contact, rich environments, and actual arbitrary-story production from script/WAV/story→script (+SRT), EN primary/VI/JA/KO and external/local TTS. Runtime/visual acceptance remains assigned to the user's test model. No image-to-video API exists; use the existing native SVG/HTML5/GSAP renderer.

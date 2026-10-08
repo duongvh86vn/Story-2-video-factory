@@ -1,0 +1,123 @@
+{
+  "version": "forest-native-rest-mouth-1",
+  "kind": "static-native-png-measurements-and-svg-artwork-document",
+  "approved": false,
+  "productionReady": false,
+  "fingerprint": "6c6a1c78c0a21266313c760f8cc6e9a4ba84dab1aab516010e47323ea9fb91f1",
+  "measurements": [
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "width": 910,
+      "height": 1729,
+      "channels": 4,
+      "hasAlpha": true
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-right-tile-v1.png",
+      "sha256": "4eb6bb39b353bee9938ed0f6f41b4a16390143e5bb7ba6e628afa660beb79511",
+      "width": 1500,
+      "height": 1049,
+      "channels": 3,
+      "hasAlpha": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "width": 910,
+      "height": 1729,
+      "channels": 4,
+      "hasAlpha": true
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-left-tile-v1.png",
+      "sha256": "8bebcdd782963731ee3c3ae6c7a594ca864db649286028b0428d41c8a1c8cc2f",
+      "width": 1500,
+      "height": 1049,
+      "channels": 3,
+      "hasAlpha": false
+    }
+  ],
+  "registrations": {
+    "three-quarter-right": {
+      "sourceHash": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "sourceSize": [
+        910,
+        1729
+      ],
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-right-tile-v1.png",
+      "sha256": "4eb6bb39b353bee9938ed0f6f41b4a16390143e5bb7ba6e628afa660beb79511",
+      "width": 1500,
+      "height": 1049,
+      "x": 500,
+      "y": 432,
+      "scale": 0.10666666666666667,
+      "clip": "M506 440C534 432 622 432 651 441C659 470 657 511 633 531C597 541 540 541 512 523C501 501 501 462 506 440Z",
+      "speechClip": "M522 448C543 441 610 441 638 445C652 452 651 480 639 503C614 527 566 530 535 510C517 492 513 465 522 448Z",
+      "top": [
+        {
+          "x": 535,
+          "y": 463
+        },
+        {
+          "x": 560,
+          "y": 482
+        },
+        {
+          "x": 608,
+          "y": 479
+        },
+        {
+          "x": 632,
+          "y": 460
+        }
+      ],
+      "depth": 24,
+      "lift": 8,
+      "stroke": 3
+    },
+    "three-quarter-left": {
+      "sourceHash": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "sourceSize": [
+        910,
+        1729
+      ],
+      "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-left-tile-v1.png",
+      "sha256": "8bebcdd782963731ee3c3ae6c7a594ca864db649286028b0428d41c8a1c8cc2f",
+      "width": 1500,
+      "height": 1049,
+      "x": 310,
+      "y": 440,
+      "scale": 0.10666666666666667,
+      "clip": "M316 445C345 441 438 442 463 449C469 479 465 527 442 542C407 549 351 548 324 528C312 507 312 465 316 445Z",
+      "speechClip": "M326 455C343 450 425 453 447 456C460 468 458 499 436 521C405 543 355 538 329 514C314 496 315 469 326 455Z",
+      "top": [
+        {
+          "x": 334,
+          "y": 467
+        },
+        {
+          "x": 356,
+          "y": 494.5
+        },
+        {
+          "x": 418,
+          "y": 494.5
+        },
+        {
+          "x": 442,
+          "y": 466
+        }
+      ],
+      "depth": 24,
+      "lift": 8,
+      "stroke": 3
+    }
+  },
+  "limitations": [
+    "Tile colour/texture/mask seams and left slit alignment need visual approval.",
+    "Right closed contour is authored SVG over the generated fill plate.",
+    "Only happy fixed views; not a full neutral/emotion/head-turn bank.",
+    "Audio activity only, never phoneme lip-sync or verified motion."
+  ]
+}
