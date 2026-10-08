@@ -9,7 +9,7 @@ Current source evidence: native head SVG renders one rigid image; hair/beard are
 - [x] Integrate selection into profile/schema, renderer/compiler, camera bounds, canonical source/cache/repair, authoring brief and diagnostic Studio controls. Keep final gates and default artwork intact.
 - [x] Author23 meaningful regression declarations, all NOT RUN; read source, build/typecheck/export schemas, and record every actual failure/fix. Parent source inspection is not an independent reviewer verdict.
 - [ ] Independent bounded source review: reviewer exhausted quota; one9router source-advice request timed out120s without verdict. No independent SOURCE PASS.
-- [ ] Publish exact owned files and verify GitHub SHA. Deliver environment, test/server commands and remaining quality obligations to the user's test model.
+- [x] Publish28 exact owned files as `91207f9bc0c5bd53d951ab9a98d6988f1d0bd27f`; push61da39 exit0 and local/remote verificationa97b27 matched exactly. Deliver environment, test/server commands and remaining quality obligations in the handoff MD. No independent source verdict or runtime acceptance claimed.
 
 No image-to-video service is required. No runtime/test/fixture/helper/sampler/renderer/browser/TTS/ASR/audio/video/MP4 execution by implementation agents. Source reads/edits, build/typecheck/schema export and existing PNG hash/metadata are permitted. One source-only9router consultation was attempted under the user's agent authorization; timeout, no advice returned. Pure authored SVG geometry documents are separate from motion acceptance.
 

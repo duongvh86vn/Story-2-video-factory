@@ -2,6 +2,8 @@
 
 Ứng viên source0.39,08/10/2026, base `d609a6b615694f644782e3820d323d1764cdd716`, nhánh `codex/prehistoric-life`. [Record kiểm tra/review/publication](reviews/native-secondary-source-review-v1.md). Chưa có ảnh diễn xuất hoặc video0.39 được nghiệm thu.23 callback mới (12 temporal +11 geometry/integration) **NOT RUN**; test runtime tiếp tục giao model của người dùng.
 
+Source đã push: `91207f9bc0c5bd53d951ab9a98d6988f1d0bd27f`,28 file đúng scope; SHA local và remote khớp chính xác. Build/test:typecheck thành công; review độc lập chưa có verdict. MD này bàn giao phần source để test, không xác nhận thành phẩm.
+
 ## Phần đã viết
 
 Trước đây tóc/râu native đi cứng theo đầu. Optional `appearance.bodySecondary='registered-secondary-v1'` bổ sung vùng tóc chỏm/đuôi tóc Lila hoặc chỏm tóc/râu dưới Karo. Có đăng ký riêng cho hai actor × hai góc3/4, ràng buộc exact PNG hash/kích thước; không mirror hoặc vẽ lại ảnh. Mặt, mắt, mũi, miệng và dây buộc tóc giữ lớp tĩnh. Bỏ field tiếp tục dùng artwork rigid; chọn tóc/râu không tự chọn mắt/miệng/biểu cảm hoặc body locomotion.
