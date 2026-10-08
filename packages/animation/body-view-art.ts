@@ -4,6 +4,7 @@ import {bodyViewClothingContours} from './body-view-contours.js';
 import {bodyViewLeftRegistration} from './body-view-left-registration.js';
 import {bodyViewMouthSvg,bodyViewMouthDescription} from './body-view-mouth.js';
 import {bodyViewEyesSvg,bodyViewEyesDescription} from './body-view-eyes.js';
+import {bodyViewExpressionsSvg,bodyViewExpressionsDescription} from './body-view-expressions.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
 export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-2';
@@ -68,8 +69,8 @@ export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:st
   const c=registeredBodyView(profile);
   // Native eyes/mouth remain inside the same uniform attachment. Unselected
   // overlays, whole-face warp, expressions and continuous turns stay blocked.
-  const url=imageUrl(c.file,c.sha256),source={sha256:c.sha256,width:c.width,height:c.height,url},mouth=bodyViewMouthSvg(profile,source,imageUrl),eyes=bodyViewEyesSvg(profile,source);
-  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath></defs><g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#source-head-clip)"><image width="${c.width}" height="${c.height}" href="${url}"/>${mouth}${eyes}</g></g></g>`;
+  const url=imageUrl(c.file,c.sha256),source={sha256:c.sha256,width:c.width,height:c.height,url},mouth=bodyViewMouthSvg(profile,source,imageUrl),eyes=bodyViewEyesSvg(profile,source),expressions=bodyViewExpressionsSvg(profile,source,imageUrl);
+  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath></defs><g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#source-head-clip)"><image width="${c.width}" height="${c.height}" href="${url}"/>${mouth}${eyes}${expressions}</g></g></g>`;
 }
 export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
   const c=registeredBodyView(profile);
@@ -77,7 +78,7 @@ export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sh
     torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})" mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>`};
 }
 export const bodyViewDescription={version:BODY_VIEW_REGISTRATION_VERSION,artworkVersion:BODY_VIEW_VERSION,
-  sources:bodyViewRegistrations,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint}),
+  sources:bodyViewRegistrations,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,expressionsCandidate:bodyViewExpressionsDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint,expressions:bodyViewExpressionsDescription.fingerprint}),
   status:'developer-landmark-and-layer-candidate',productionReady:false,approved:false,
   method:'fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp',
-  limitations:['identity/proportion/mask review','happy fixed view; speech/eyes require explicit unapproved mouth/eye candidates','rigid garment; no walking/seating/cloth follow for this view','bounded eye look only; no continuous body/head turn or optical gaze','no motion acceptance']};
+  limitations:['identity/proportion/mask review','happy fixed view by default; optional unapproved speech/eyes/expression selections','rigid garment; no walking/seating/cloth follow for this view','bounded eye look only; no continuous body/head turn or optical gaze','no motion acceptance']};

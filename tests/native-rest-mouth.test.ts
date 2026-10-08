@@ -27,6 +27,7 @@ import {renderCinematic} from '../library/shots/cinematic.js';
 import {repairCinematicArtwork} from '../packages/director/artwork-repair.js';
 import {ModelRouter} from '../packages/models/registry.js';
 import {creativeFixture} from './creative-fixture.js';
+import {passiveActorFixtureEvents} from './native-actor-fixture.js';
 import {temporary} from './support.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
 
@@ -110,7 +111,7 @@ async function pairedFixture(root:string){
   const base=await creativeFixture(root),narration=NarrationSchema.parse(base.narration);
   const definitions=(['lila','karo'] as const).map((actor,i)=>{const {profile}=candidate(actor,i?'three-quarter-left':'three-quarter-right');return ActorDefinitionSchema.parse({id:actor,name:actor,kind:'stick-man',role:'illustration',identity:'illustrative',appearance:profile.appearance,sourceRefs:base.shot.sourceRefs});});
   const shots=[[0,2500],[2500,5000]].map(([startMs,endMs],i)=>{
-    const shot=structuredClone(base.shot),c=shot.cinematic!;shot.id='rest-mouth-cut-'+i;shot.startMs=startMs!;shot.endMs=endMs!;c.shotId=shot.id;c.propBindings=[];c.artDirection=structuredClone(base.artDirection);shot.visualization!.events=[];
+    const shot=structuredClone(base.shot),c=shot.cinematic!;shot.id='rest-mouth-cut-'+i;shot.startMs=startMs!;shot.endMs=endMs!;c.shotId=shot.id;c.propBindings=[];c.artDirection=structuredClone(base.artDirection);shot.visualization!.events=passiveActorFixtureEvents(shot,base.narration);
     for(const layer of c.artDirection.layers)for(const frame of layer.keyframes)frame.atMs=frame.atMs/2;
     const tracks=definitions.map((character,index)=>{const {plan}=candidate(character.id as 'lila'|'karo',index?'three-quarter-left':'three-quarter-right');plan.durationMs=2500;plan.expressions[0]!.endMs=2500;plan.stage={width:1280,height:720,groundY:540};plan.root={x:index?800:380,y:540};plan.scale=.8;return {character,performance:plan,actions:[{type:'idle' as const,startMs:shot.startMs,endMs:shot.endMs}],speakingSegmentIds:index?['cue']:[]};});
     const primary=tracks[i]!,support=tracks[1-i]!;c.performance=primary.performance;c.actorScene=ActorSceneSchema.parse({primary:primary.character,speakingSegmentIds:primary.speakingSegmentIds,continuity:i?'continuous':'cut',supporting:[support]});

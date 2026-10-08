@@ -20,6 +20,7 @@ import {secureSceneFiles,validateSceneFiles} from '../packages/scenes/security.j
 import {schemaLibrary} from '../library/schemas/index.js';
 import {persistCinematicArtworkRepair} from '../packages/director/artwork-repair.js';
 import {creativeFixture} from './creative-fixture.js';
+import {passiveActorFixtureEvents} from './native-actor-fixture.js';
 import {temporary} from './support.js';
 
 const n:Narration=NarrationSchema.parse({mode:'wav',durationMs:7000,words:[],segments:[
@@ -206,7 +207,7 @@ test('disk repair acceptance preserves accepted files when a sibling cue owner c
   // not request a model, browser or full story/factual/render acceptance here.
   const shots=[[1000,3600,'lila-line'],[3800,6000,'karo-line']].map(([start,end,cue],i)=>{
     const s=structuredClone(f.shot),c=s.cinematic!;s.id='publication-'+i;c.shotId=s.id;s.startMs=start as number;s.endMs=end as number;s.narrationSegmentIds=[cue as string];
-    s.visualization!.events=[];c.propBindings=[];
+    s.visualization!.events=passiveActorFixtureEvents(s,n);c.propBindings=[];
     const plans=(['lila','karo'] as const).map((actor,index)=>{const {plan}=candidate(actor,s.endMs-s.startMs);plan.stage={width:1280,height:720,groundY:540};plan.root={x:index?800:380,y:540};plan.scale=.8;return plan;});
     c.performance=plans[0]!;c.actorScene=ActorSceneSchema.parse({primary:definition('lila','lila-line'),speakingSegmentIds:[cue],supporting:[{character:definition('karo','karo-line'),performance:plans[1],actions:[],speakingSegmentIds:[]}]});
     bindActorShot(s,f.profile,f.rig);return s;
@@ -233,7 +234,7 @@ test('canonical paired scenes use the same board phase for primary/supporting ac
   const f=await creativeFixture(await temporary(t)),definitions=[definition('lila','lila-line'),definition('karo','karo-line')];
   const shots=[[1000,2500],[2500,6000]].map(([start,end],i)=>{
     const s=structuredClone(f.shot),c=s.cinematic!;s.id='source-cut-'+i;c.shotId=s.id;s.startMs=start!;s.endMs=end!;
-    s.narrationSegmentIds=i?['lila-line','karo-line']:['lila-line'];s.visualization!.events=[];c.propBindings=[];
+    s.narrationSegmentIds=i?['lila-line','karo-line']:['lila-line'];s.visualization!.events=passiveActorFixtureEvents(s,n);c.propBindings=[];
     const plans=definitions.map((d,index)=>{
       const {plan}=candidate(d.id as 'lila'|'karo',end!-start!);plan.id=s.id;plan.stage={width:1280,height:720,groundY:540};plan.root={x:index?800:380,y:540};plan.scale=.8;return plan;
     });

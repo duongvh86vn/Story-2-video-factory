@@ -22,6 +22,7 @@ import {schemaLibrary} from '../library/schemas/index.js';
 import {ConfigSchema} from '../packages/core/config.js';
 import {requireTopicProductionReady,topicContext} from '../packages/topics/prehistoric-life.js';
 import {creativeFixture} from './creative-fixture.js';
+import {passiveActorFixtureEvents} from './native-actor-fixture.js';
 import {temporary} from './support.js';
 
 const silence:SpeechActivity={method:'segment-draft',windowMs:20,intervals:[]};
@@ -146,7 +147,7 @@ test('canonical paired performers use the same board-derived breath/gaze clock t
     c.actorScene.primary!.appearance.bodySpeech=BODY_VIEW_SPEECH_VERSION;c.actorScene.speakingSegmentIds=['cue'];
     if(i){const karo=c.actorScene.supporting[0]!,lila={character:c.actorScene.primary!,performance:c.performance,actions:[],speakingSegmentIds:['cue']};
       c.actorScene.primary=karo.character;c.performance=karo.performance;c.actorScene.speakingSegmentIds=[];c.actorScene.supporting=[lila];}
-    s.visualization!.events=[];c.propBindings=[];c.camera={...c.camera,focus:'ensemble',framing:'wide',movement:'locked',startScale:1,endScale:1,anchor:{x:640,y:360}};
+    s.visualization!.events=passiveActorFixtureEvents(s,f.narration);c.propBindings=[];c.camera={...c.camera,focus:'ensemble',framing:'wide',movement:'locked',startScale:1,endScale:1,anchor:{x:640,y:360}};
     bindActorShot(s,base.profile,base.rig);c.continuity={...c.continuity,entry:{...c.performance.root},exit:{...c.performance.root},facing:c.performance.facing??'front',carriedProps:[]};
     s.camera={...s.camera,shotSize:c.camera.framing,movement:c.camera.movement};s.host!.actions=[{type:'idle',startMs:s.startMs,endMs:s.endMs}];
     for(const actor of c.actorScene.supporting)actor.actions=[{type:'idle',startMs:s.startMs,endMs:s.endMs}];return s;

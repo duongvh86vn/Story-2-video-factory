@@ -146,6 +146,49 @@
             ],
             "additionalProperties": false
           }
+        },
+        "expressions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "mood": {
+                "type": "string",
+                "enum": [
+                  "neutral",
+                  "curious",
+                  "thinking",
+                  "concerned",
+                  "effort",
+                  "surprised",
+                  "understanding",
+                  "confident",
+                  "happy",
+                  "sad",
+                  "angry",
+                  "afraid",
+                  "excited",
+                  "disappointed",
+                  "relieved",
+                  "tired"
+                ]
+              }
+            },
+            "required": [
+              "startMs",
+              "endMs",
+              "mood"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [

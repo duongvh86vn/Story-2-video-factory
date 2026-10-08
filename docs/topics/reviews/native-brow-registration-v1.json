@@ -1,0 +1,276 @@
+{
+  "kind": "static-native-png-ink-measurements",
+  "approved": false,
+  "animationEvaluated": false,
+  "threshold": {
+    "rBelow": 75,
+    "gBelow": 50,
+    "bBelow": 35,
+    "alphaAbove": 200
+  },
+  "dilationPixels": 2,
+  "measurements": [
+    {
+      "actor": "lila",
+      "view": "three-quarter-left",
+      "screenSlot": "screen-left",
+      "source": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "size": [
+        1024,
+        1536
+      ],
+      "roi": [
+        345,
+        275,
+        40,
+        32
+      ],
+      "seed": [
+        363,
+        290
+      ],
+      "polygon": null,
+      "inkPixels": 141,
+      "maskHash": "22c3b1b93b485a1fd3b01fac46dd159fb1aaf447ee0de1dca69813ad199c4bf6"
+    },
+    {
+      "actor": "lila",
+      "view": "three-quarter-left",
+      "screenSlot": "screen-right",
+      "source": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+      "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+      "size": [
+        1024,
+        1536
+      ],
+      "roi": [
+        425,
+        272,
+        55,
+        35
+      ],
+      "seed": [
+        445,
+        286
+      ],
+      "polygon": null,
+      "inkPixels": 320,
+      "maskHash": "fd599ddcc238352f7d21d018894d263fce9167ef65449f2a6e34347aadb565be"
+    },
+    {
+      "actor": "lila",
+      "view": "three-quarter-right",
+      "screenSlot": "screen-left",
+      "source": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "size": [
+        1173,
+        1341
+      ],
+      "roi": [
+        626,
+        248,
+        65,
+        50
+      ],
+      "seed": [
+        661,
+        269
+      ],
+      "polygon": [
+        [
+          634,
+          292
+        ],
+        [
+          644,
+          274
+        ],
+        [
+          662,
+          257
+        ],
+        [
+          680,
+          258
+        ],
+        [
+          686,
+          266
+        ],
+        [
+          678,
+          274
+        ],
+        [
+          660,
+          279
+        ],
+        [
+          648,
+          288
+        ],
+        [
+          639,
+          296
+        ]
+      ],
+      "inkPixels": 485,
+      "maskHash": "2701115343ee2b06e41ce1ae3f857386970cbdb9596cab44ccab41745b1ab0fd"
+    },
+    {
+      "actor": "lila",
+      "view": "three-quarter-right",
+      "screenSlot": "screen-right",
+      "source": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+      "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+      "size": [
+        1173,
+        1341
+      ],
+      "roi": [
+        733,
+        241,
+        50,
+        45
+      ],
+      "seed": [
+        758,
+        256
+      ],
+      "polygon": null,
+      "inkPixels": 258,
+      "maskHash": "a95f79b2cd050073cbc4bbf029687a190c1538143347d8e39e9865f65f3553df"
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "screenSlot": "screen-left",
+      "source": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "size": [
+        910,
+        1729
+      ],
+      "roi": [
+        305,
+        276,
+        60,
+        50
+      ],
+      "seed": [
+        336,
+        298
+      ],
+      "polygon": null,
+      "inkPixels": 677,
+      "maskHash": "b2e5528e17c8b00f714186e55342834da8d0bed19d0a61c9e8eb929d2f92ecac"
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-left",
+      "screenSlot": "screen-right",
+      "source": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+      "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+      "size": [
+        910,
+        1729
+      ],
+      "roi": [
+        416,
+        276,
+        90,
+        64
+      ],
+      "seed": [
+        450,
+        304
+      ],
+      "polygon": null,
+      "inkPixels": 1322,
+      "maskHash": "163a5b16226c469270c8b807c30d0d0edf0b5085657635c7e50913a5d5f2d91e"
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "screenSlot": "screen-left",
+      "source": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "size": [
+        910,
+        1729
+      ],
+      "roi": [
+        476,
+        260,
+        93,
+        77
+      ],
+      "seed": [
+        522,
+        290
+      ],
+      "polygon": null,
+      "inkPixels": 1317,
+      "maskHash": "bdea063a2838422df30eac28eda6962585f30969547e0fefe5d6fd4eb0907bb5"
+    },
+    {
+      "actor": "karo",
+      "view": "three-quarter-right",
+      "screenSlot": "screen-right",
+      "source": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+      "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+      "size": [
+        910,
+        1729
+      ],
+      "roi": [
+        599,
+        260,
+        60,
+        50
+      ],
+      "seed": [
+        626,
+        278
+      ],
+      "polygon": [
+        [
+          607,
+          269
+        ],
+        [
+          628,
+          266
+        ],
+        [
+          643,
+          278
+        ],
+        [
+          653,
+          298
+        ],
+        [
+          651,
+          306
+        ],
+        [
+          637,
+          295
+        ],
+        [
+          622,
+          290
+        ],
+        [
+          608,
+          287
+        ]
+      ],
+      "inkPixels": 577,
+      "maskHash": "a6449e0e51f192779820042d262a276dee0462f33354317286144e56236f420f"
+    }
+  ]
+}

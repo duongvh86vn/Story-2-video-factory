@@ -4,6 +4,7 @@ import {hash} from '../core/utils.js';
 import {PointSchema,type PerformancePlan} from './schemas.js';
 import {rigHand} from '../core/identifiers.js';
 import {VIEW_SOURCE_GESTURE_VERSION,ViewSourceGestureSchema,validateViewGesturePiece,validateViewSourceGestureTrack} from './view-source-gesture.js';
+import {ViewExpressionSchema,normalizeViewExpressions,projectViewExpressions,VIEW_EXPRESSION_RAMP_MS} from './view-expression-track.js';
 
 export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-2' as const;
 export const VIEW_GAZE_RAMP_MS=140,VIEW_BREATH_RAMP_MS=200;
@@ -13,7 +14,7 @@ export type ViewGaze=z.infer<typeof GazeSchema>;
 export const ViewActingClockSchema=z.object({version:z.literal(VIEW_ACTING_CLOCK_VERSION),ownerId:Id,
   startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),
   runStartMs:z.number().int().nonnegative(),runEndMs:z.number().int().positive(),
-  sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),gazes:z.array(GazeSchema),gestures:z.array(ViewSourceGestureSchema),
+  sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),gazes:z.array(GazeSchema),gestures:z.array(ViewSourceGestureSchema),expressions:z.array(ViewExpressionSchema).optional(),
 }).strict().superRefine((c,ctx)=>{
   if(c.endMs<=c.startMs||c.runStartMs>c.startMs||c.runEndMs<c.endMs)ctx.addIssue({code:'custom',message:'Invalid continuous run/shot span'});
 });
@@ -40,6 +41,11 @@ export function validateViewActingClock(plan:PerformancePlan,clock:ViewActingClo
   if(clock.ownerId!==plan.leadCharacterId||clock.endMs-clock.startMs!==plan.durationMs)throw new Error('needs-view-acting-phase: actor or shot span mismatch');
   if(hash(normalized)!==hash(parsed.gazes)||normalized.some(g=>g.startMs<clock.runStartMs||g.endMs>clock.runEndMs))throw new Error('needs-view-acting-phase: source gaze is not a normalized run track');
   if(plan.gazes.some(g=>g.startMs<0||g.endMs>plan.durationMs)||hash(projectViewGazes(normalized,clock.startMs,clock.endMs))!==hash(normalizeViewGazes(plan.gazes)))throw new Error('needs-view-acting-phase: authored gaze differs from source projection');
+  if(parsed.expressions){
+    const expressions=normalizeViewExpressions(parsed.expressions);
+    if(hash(expressions)!==hash(parsed.expressions)||expressions.some(e=>e.startMs<clock.runStartMs||e.endMs>clock.runEndMs))throw new Error('needs-view-expression-phase: source expression is not a normalized run track');
+    if(plan.expressions.some(e=>e.startMs<0||e.endMs>plan.durationMs)||hash(projectViewExpressions(expressions,clock.startMs,clock.endMs))!==hash(normalizeViewExpressions(plan.expressions)))throw new Error('needs-view-expression-phase: authored expression differs from source projection');
+  }
   validateViewSourceGestureTrack(parsed.gestures,clock.runStartMs,clock.runEndMs);
   if(parsed.gestures.length&&(plan.props.length||plan.spears?.length||plan.lunge))throw new Error('needs-view-gesture-phase: source point/think run cannot own prop or spear geometry');
   const pieces=plan.gestures.filter(g=>g.sourceSpan);
@@ -64,6 +70,7 @@ export function viewActingClockDescription(clock:ViewActingClock){
     gazeTrackHash:hash(clock.gazes),gazeRampMs:VIEW_GAZE_RAMP_MS,breathRampMs:VIEW_BREATH_RAMP_MS,
     gestureVersion:VIEW_SOURCE_GESTURE_VERSION,gestureTrackHash:hash(clock.gestures),gestureCount:clock.gestures.length,
     gestureClock:'explicit source command/window; original quintic arm phase and entry branch',
+    ...(clock.expressions?{expressionTrackHash:hash(clock.expressions),sourceExpressions:clock.expressions,expressionRampMs:VIEW_EXPRESSION_RAMP_MS,expressionClock:'normalized original mood track across explicitly continuous fixed-view shots'}:{}),
     sourceGestures:clock.gestures.map(g=>({id:g.id,hand:g.hand,action:g.action,startMs:g.startMs,endMs:g.endMs,reachMs:g.reachMs,recoverMs:g.recoverMs,target:g.target??null})),
     wholeBodyActionContinuous:false,opticalGazeVerified:false,approved:false};
 }

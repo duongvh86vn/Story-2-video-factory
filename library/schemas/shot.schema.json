@@ -1597,6 +1597,10 @@
                               "type": "string",
                               "const": "registered-eyes-v1"
                             },
+                            "bodyExpressions": {
+                              "type": "string",
+                              "const": "registered-expressions-v1"
+                            },
                             "sourceColour": {
                               "type": "string",
                               "const": "original-rgb-v2"
@@ -1816,6 +1820,10 @@
                               "bodyEyes": {
                                 "type": "string",
                                 "const": "registered-eyes-v1"
+                              },
+                              "bodyExpressions": {
+                                "type": "string",
+                                "const": "registered-expressions-v1"
                               },
                               "sourceColour": {
                                 "type": "string",

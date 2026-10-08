@@ -25,6 +25,7 @@ import {ConfigSchema} from '../packages/core/config.js';
 import {requireTopicProductionReady,topicContext} from '../packages/topics/prehistoric-life.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
 import {creativeFixture} from './creative-fixture.js';
+import {passiveActorFixtureEvents} from './native-actor-fixture.js';
 import {temporary} from './support.js';
 import {modelExitParts} from '../packages/director/props.js';
 import {createCreativeStoryboard} from '../packages/director/creative.js';
@@ -160,7 +161,7 @@ async function canonicalFixture(root:string,complete=false){
     const idle=[{type:'idle' as const,startMs:s.startMs,endMs:s.endMs}];
     c.actorScene.supporting=[{character,performance:kp,actions:idle,speakingSegmentIds:[]}];s.host!.actions=lilaActions;
     if(i){const lila={character:c.actorScene.primary!,performance:c.performance,actions:lilaActions,speakingSegmentIds:['cue']};c.actorScene.primary=character;c.performance=kp;c.actorScene.speakingSegmentIds=[];c.actorScene.supporting=[lila];s.host!.actions=idle;}
-    s.visualization!.events=[];c.propBindings=[];c.artDirection=structuredClone(base.artDirection);
+    s.visualization!.events=passiveActorFixtureEvents(s,f.narration);c.propBindings=[];c.artDirection=structuredClone(base.artDirection);
     for(const layer of c.artDirection.layers)for(const frame of layer.keyframes)frame.atMs=frame.atMs*c.performance.durationMs/5000;
     c.camera={...c.camera,focus:'ensemble',framing:'wide',movement:'locked',startScale:1,endScale:1,anchor:{x:640,y:360}};bindActorShot(s,base.profile,base.rig);
     c.continuity={...c.continuity,entry:{...c.performance.root},exit:{...c.performance.root},facing:c.performance.facing??'front',carriedProps:[],models:modelExitParts(s).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))};s.camera={...s.camera,shotSize:c.camera.framing,movement:c.camera.movement};return s;

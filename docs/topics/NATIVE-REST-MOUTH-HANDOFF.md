@@ -1,5 +1,7 @@
 # Lila/Karo — miệng khép khi im lặng
 
+**Mốc tiếp theo 0.36:** [Biểu cảm native và original run clock](NATIVE-EXPRESSIONS-HANDOFF.md). Mốc0.35 bên dưới là lịch sử source, không là nghiệm thu video.
+
 Mốc source0.35, 08/10/2026; base `664137c012f24ed5b9987b6131f50abae2252d24`, branch `codex/prehistoric-life`. Mốc trước có source hand continuity và sửa creative/repair context; không có runtime/visual acceptance. Mục tiêu đầy đủ của sản phẩm vẫn chưa hoàn thành.
 
 Source checks hiện tại: full build, test:typecheck, schema export và whitespace exit0. Independent source review ban đầu HOLD một P2 ở assertion prefix khi đổi vai actor; đã sửa và follow-up bounded source PASS. Chín callback mới NOT RUN; không có runtime/artwork/production acceptance. Source `939887249d342b4af5bcabfff153e1a90e9c2ae0` đã push lên `codex/prehistoric-life`; SHA local/remote khớp, tracked tree sạch. Mốc này chỉ là tiến triển source, chưa hoàn thành mục tiêu sản phẩm.
