@@ -229,7 +229,7 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
     return;
   }
   if(hash(c.continuity.entry)!==hash(bodyRootAt(p,shot.startMs,0))||Math.abs(c.continuity.exit.x-bodyRootAt(p,shot.startMs,p.durationMs).x)>.01||c.continuity.exit.y!==p.stage.groundY)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
-  validatePropBindings(shot);
+  if(validateWorld)validatePropBindings(shot);
   if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
   const exitFacing=[...(p.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??p.facing??'front';
   if(c.continuity.facing!==exitFacing)throw new Error(`${shot.id}: cinematic facing disagrees with turn exit`);
@@ -237,7 +237,7 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   validatePerformance(p,profile);
   if(sourceBodyPlan(p).supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);
   sceneSeats(shot);
-  validateCamera(shot,profile,actingClock);
+  validateCamera(shot,profile,actingClock,{worldShot:clockSourceShot,board});
   if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile,actingClock);
   for(const actor of c.actorScene?.supporting??[]){
     const actorDefinition=actorProfile(actor.character,profile);

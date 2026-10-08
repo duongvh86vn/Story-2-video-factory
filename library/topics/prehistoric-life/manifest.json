@@ -1,10 +1,38 @@
 {
-  "version": "forest-tribe-0.63-source-head-follow",
+  "version": "forest-tribe-0.64-actor-prop-owners",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
   "layers": "source-body-and-head-integrated-secondary-pending",
   "motionAcceptance": "pending",
+  "actorPropOwnership": {
+    "version": "actor-prop-ownership-1",
+    "bindingVersion": "bound-model-motion-2.2.3",
+    "field": "cinematic.propBindings[].ownerId",
+    "identity": "actual visible story-person ID, not rig/model identity",
+    "selection": "explicit supporting owner; omission retains primary/presenter only",
+    "motion": "one completed in-shot pickup/carry/drop per sourced entity and one hand owner; different people can manipulate different entities concurrently",
+    "history": "actual own compiled shot clock/scale for glyph, label, foreground, relation, effects, camera envelope, exit and report",
+    "pending": [
+      "real geometry/render/runtime/film acceptance",
+      "cross-person handoff, shared ownership and cross-cut carried source clock",
+      "native authored-view tool/contact poses and full art/motion acceptance"
+    ],
+    "runtimeVerified": false,
+    "productionAcceptance": false,
+    "codeHashes": {
+      "packages/director/props.ts": "b5b8e064c34c4bac08b941416df0c262ab4165d13fc22c66ddc60fdbf66ae82b",
+      "packages/director/prop-motion.ts": "d0351cb4e010eb3bddd2818cf9bfb9f94f1c091a45fa6ff350865f3bc4b62cc2",
+      "packages/director/camera.ts": "399bc3a0ecd5894a00de3025a355ec0a115ebaee5ab8d66036e27f866fc67e30",
+      "packages/director/index.ts": "65aff5f300494a660271e9227f38506d0bb305a96fd5f59cfe1c4d411c84629e",
+      "packages/director/schemas.ts": "97d8decca75479d380ec437291b8bd5e6d72ff8cf0075698bf5a800cdc7774c7",
+      "packages/director/acting-brief.ts": "e20437c343416f4a851c26c84de8cb7641c4d22e47c1edfb4bd5ef0a0fea4f57",
+      "library/shots/cinematic.ts": "d760272c6efe69a4b7ad9ba6aabb10f851974b06e8472d71bdfe59df7a4ffc76",
+      "library/shots/cinematic-models.ts": "1e87d63790cd8129358d2490b894349122a01da5914d03c70c336cc08ebc4de1",
+      "library/prompts/creative-director.md": "ebcddd62382a1641ae6fee0967dee58c5042b81642955081282b8a1bed831b08",
+      "apps/server/cinematic.ts": "ee9b45f5909b68a6a732705130bb767d6207618bd2dcf8962fb5ee7c0ffa49fa"
+    }
+  },
   "castNormalization": {
     "version": "topic-cast-source-2",
     "sourceFields": [
@@ -27,8 +55,8 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "1189cc3f579ff2e20443afb2d622fb6e4b490fa626930c06c8c853c84016cda7",
-      "packages/topics/prehistoric-life.ts": "5311175402aeab5a4bf52e044e0c020c0b01e9fc077750fe4a800f652610460b",
-      "packages/director/acting-brief.ts": "099c585c5609d3dc9eb36578ab570d3e636daa1a2cf5cf7dd87c23b1720df2c3"
+      "packages/topics/prehistoric-life.ts": "62efc0d43da5099d5c21c462ac270e79495a3fa40594640c2b65ee8cf61ff89c",
+      "packages/director/acting-brief.ts": "e20437c343416f4a851c26c84de8cb7641c4d22e47c1edfb4bd5ef0a0fea4f57"
     }
   },
   "primaryModel": "warm-skin-close-ups",
@@ -271,7 +299,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "5311175402aeab5a4bf52e044e0c020c0b01e9fc077750fe4a800f652610460b",
+      "packages/topics/prehistoric-life.ts": "62efc0d43da5099d5c21c462ac270e79495a3fa40594640c2b65ee8cf61ff89c",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
@@ -12073,7 +12101,7 @@
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
     "compilerCodeHash": "1c89e049ef14cd4bdc1876fb93a5c46025cfccd642ae02692e748a7c62276060",
     "rigCodeHash": "eb08afaed13540d3a545265521b0c2aff5331243531977293312a5fd5684ee7a",
-    "cameraCodeHash": "e9bf2d4a816df18d28ddba2496fdd840bf87a4163cc82cf43825620d1c82d52a",
+    "cameraCodeHash": "399bc3a0ecd5894a00de3025a355ec0a115ebaee5ab8d66036e27f866fc67e30",
     "sourceBodyCodeHash": "d3b78d1283a37ea6e2470972ca33640e0bed46d1c6aa5ed8e43473ee56174e3c",
     "actingClockCodeHash": "6292738077c3a0dbef468845ccea64fb37b9c60675d51b9695d2ab0f80caf124",
     "actingBindingCodeHash": "b5fc56a68d7650ee9100b6f64d3958ad0e2719ddc41a25315c2b77fbe7eaaba7",

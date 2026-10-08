@@ -1,0 +1,199 @@
+{
+  "version": "actor-prop-owners-source-record-1",
+  "sourceVersion": "forest-tribe-0.64-actor-prop-owners",
+  "precedingSourceSHA": "ce0a01a909cae452f3559ec0a6144c46b10946d9",
+  "scope": "source build/typecheck/schema export/static inventory only; full story/script/WAV factory/art/voice/film unaccepted",
+  "checks": [
+    {
+      "command": "npm run build",
+      "startChunk": "fc0406",
+      "session": 47931,
+      "completionChunk": "4b75e9",
+      "exitCode": 0,
+      "scope": "intermediate source check; later source additions required final checks"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "eb805b",
+      "session": 42016,
+      "completionChunk": "891322",
+      "exitCode": 0,
+      "callbacksExecuted": 0,
+      "scope": "intermediate source check"
+    },
+    {
+      "command": "npm run schemas",
+      "chunk": "f34fd3",
+      "exitCode": 0,
+      "instanceGeometryInvoked": false
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "008d30",
+      "session": 4276,
+      "completionChunk": "e35380",
+      "exitCode": 0,
+      "viteModules": 46
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "208c2f",
+      "session": 69397,
+      "completionChunk": "cd4ce4",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "a276cb",
+      "exitCode": 0,
+      "compilerInvoked": false,
+      "geometryInvoked": false
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "c32394",
+      "session": 67684,
+      "completionChunk": "df93ef",
+      "exitCode": 0,
+      "viteModules": 46,
+      "reason": "Final check after namespace guard and removal of fabricated actor-story support stands."
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "ac748e",
+      "session": 54525,
+      "completionChunk": "98dd06",
+      "exitCode": 0,
+      "callbacksDeclared": 11,
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "e5e43b",
+      "exitCode": 0,
+      "compilerInvoked": false,
+      "geometryInvoked": false
+    },
+    {
+      "command": "Static raw-byte/manifest inspection and git diff --check",
+      "chunk": "df71c5",
+      "exitCode": 0,
+      "geometryInvoked": false,
+      "callbacksExecuted": 0
+    }
+  ],
+  "static": {
+    "unchangedTrackedPNGs": 95,
+    "unchangedHeadDefinitions": 18,
+    "nativeCompilerUnchanged": true,
+    "nativeCompilerSHA256": "1c89e049ef14cd4bdc1876fb93a5c46025cfccd642ae02692e748a7c62276060",
+    "newManifestCodeHashes": 10,
+    "declaredCallbacks": 11,
+    "executedCallbacks": 0,
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "fullGoalComplete": false
+  },
+  "sourceReview": {
+    "file": "docs/topics/reviews/actor-prop-owners-source-review-v1.json",
+    "frozenInputs": "docs/topics/reviews/actor-prop-owners-review-inputs-v1.md",
+    "calls": 1,
+    "model": "ag/gemini-3.8-flash-low",
+    "usage": {
+      "promptTokens": 16694,
+      "completionTokens": 829,
+      "totalTokens": 17523
+    },
+    "startChunk": "82ae2f",
+    "helperSession": 25590,
+    "completionChunk": "4f8ff2",
+    "exitCode": 0,
+    "scope": "source-only partial source/excerpt review; no auto-apply or runtime/art approval"
+  },
+  "toolingFailures": [
+    {
+      "chunk": "940554",
+      "kind": "source packet preparation only",
+      "reason": "Initial review excerpt budget exceeded55000chars. Narrowed before any model call/reservation; final packet43292chars."
+    },
+    {
+      "chunk": "ca6adb",
+      "kind": "static Git byte read only",
+      "reason": "git show PNG exceeded default Node child-process output buffer. Retried static reads with64MB maxBuffer; no image modification/geometry/runtime occurred."
+    }
+  ],
+  "codeHashes": {
+    "apps/server/cinematic.ts": "ee9b45f5909b68a6a732705130bb767d6207618bd2dcf8962fb5ee7c0ffa49fa",
+    "docs/topics/ACTOR-PROP-OWNERS-HANDOFF.md": "f76ab81716e2c7515503947402f230e0497ae47b5b1877d0c20423746abfab36",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md": "15e0ca75e38db57494dd0fa40a16fabf37d81764067a9ffdd69f1bf88af4775c",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md": "9a5af57d03f500d0d7aff36f31fddc09520245a697f40c0657fda6c76f681d65",
+    "docs/topics/SUPPORTING-ACTORS.md": "4dacc6b72c80861cd3df01a1606edd73c4257b1775df814f42232eb97421415c",
+    "docs/topics/reviews/actor-prop-owners-review-inputs-v1.md": "2ff356f10925099cac1c8fe646399efe09de74d8327c0586e0ec5364cef2ac56",
+    "docs/topics/reviews/actor-prop-owners-source-review-v1.json": "4baa2e8a710ad4731b3da2b54d14a1be76d27278fb815cfb7c31287714411bb1",
+    "library/prompts/creative-director.md": "ebcddd62382a1641ae6fee0967dee58c5042b81642955081282b8a1bed831b08",
+    "library/schemas/shot.schema.json": "6a6dec1de59a235bb8c43aaabcb93413ea4b30a496ea388e8959d7982bd3fb83",
+    "library/schemas/storyboard.schema.json": "76ab59197815d142e8b6139d5f0f4a9d57e45f7f41fbf62801b24d494bb28088",
+    "library/shots/cinematic-models.ts": "1e87d63790cd8129358d2490b894349122a01da5914d03c70c336cc08ebc4de1",
+    "library/shots/cinematic.ts": "d760272c6efe69a4b7ad9ba6aabb10f851974b06e8472d71bdfe59df7a4ffc76",
+    "library/topics/prehistoric-life/manifest.json": "e87393b93f151704ac8d250d4d9586eb92e417928a46fc0f9c6256233a5b7f0e",
+    "packages/director/acting-brief.ts": "e20437c343416f4a851c26c84de8cb7641c4d22e47c1edfb4bd5ef0a0fea4f57",
+    "packages/director/camera.ts": "399bc3a0ecd5894a00de3025a355ec0a115ebaee5ab8d66036e27f866fc67e30",
+    "packages/director/index.ts": "65aff5f300494a660271e9227f38506d0bb305a96fd5f59cfe1c4d411c84629e",
+    "packages/director/prop-motion.ts": "d0351cb4e010eb3bddd2818cf9bfb9f94f1c091a45fa6ff350865f3bc4b62cc2",
+    "packages/director/props.ts": "b5b8e064c34c4bac08b941416df0c262ab4165d13fc22c66ddc60fdbf66ae82b",
+    "packages/director/schemas.ts": "97d8decca75479d380ec437291b8bd5e6d72ff8cf0075698bf5a800cdc7774c7",
+    "packages/topics/prehistoric-life.ts": "62efc0d43da5099d5c21c462ac270e79495a3fa40594640c2b65ee8cf61ff89c",
+    "scripts/prehistoric-pack.ts": "5e464d6950d70442b96ca5b473df4601c89d77a15d0f7db3575d8f2172c3b67c",
+    "tests/actor-owned-props.test.ts": "401a8e308850799ba95037e96b7c3be30751a948bc997f8e66cdad115c291b06"
+  },
+  "ownedPaths": [
+    "apps/server/cinematic.ts",
+    "docs/topics/ACTOR-PROP-OWNERS-HANDOFF.md",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/actor-prop-owners-review-inputs-v1.md",
+    "docs/topics/reviews/actor-prop-owners-source-record-v1.json",
+    "docs/topics/reviews/actor-prop-owners-source-review-v1.json",
+    "library/prompts/creative-director.md",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/shots/cinematic-models.ts",
+    "library/shots/cinematic.ts",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/director/acting-brief.ts",
+    "packages/director/camera.ts",
+    "packages/director/index.ts",
+    "packages/director/prop-motion.ts",
+    "packages/director/props.ts",
+    "packages/director/schemas.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/actor-owned-props.test.ts"
+  ],
+  "geometry": "NOT RUN",
+  "tests": "NOT RUN",
+  "renderer": "NOT RUN",
+  "server": "NOT RUN",
+  "browser": "NOT RUN",
+  "video": "NOT RUN",
+  "audio": "NOT RUN",
+  "fullFactory": "NOT ACCEPTED",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "pending": [
+    "real own-person prop geometry, renderer/GSAP seeks, support/contact/scale/labels/foreground/effects/relations/camera and normal-speed video acceptance",
+    "cross-person handoff, shared ownership and carried prop clock through cuts",
+    "native grasp/carry/drop/tool poses and source-faithful complete head/body views/continuous turns/face/neck/hair/costume/soft limbs/ground contact",
+    "vivid day/sunset/night and supporting own views/emotions",
+    "arbitrary story to script, exact script, original WAV and legacy SRT",
+    "EN primary plus VI/JA/KO external/local voices/ASR",
+    "resume/rebuild/locks and immutable source/narration/audio ownership",
+    "actual final MP4/audio/subtitle/QC acceptance"
+  ]
+}

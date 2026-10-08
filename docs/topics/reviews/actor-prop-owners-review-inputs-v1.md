@@ -1,67 +1,16 @@
-import type { FactoryConfig } from '../../packages/core/config.js';
-import type { SceneFiles, Shot,Narration,Storyboard } from '../../packages/core/schemas.js';
-import { escapeHtml,hash } from '../../packages/core/utils.js';
-import {rigHand} from '../../packages/core/identifiers.js';
-import {cinematicActionGroups} from '../../packages/director/actions.js';
-import type { HostProfile, HostRig } from '../../packages/host/schemas.js';
-import { partAnchor, type HostGeometry } from '../../packages/host/controller.js';
-import type { SpeechActivity } from '../../packages/voice/schemas.js';
-import { performanceScene } from '../../packages/animation/scene.js';
-import { samplePerformance } from '../../packages/animation/compiler.js';
-import {actorViewActingClock,actorUsesViewActingClock} from '../../packages/actors/view-acting-clock.js';
-import type {ViewActingClock} from '../../packages/animation/view-acting-clock.js';
-import {viewSourceGestureDefinition} from '../../packages/animation/view-source-gesture.js';
-import { rigMetrics } from '../../packages/animation/rig.js';
-import { ANIMATION_VERSION } from '../../packages/animation/schemas.js';
-import { validateCinematicShot } from '../../packages/director/index.js';
-import { cinematicModel, cinematicRelations } from './cinematic-models.js';
-import { CAMERA_VIEWPORT, cameraMatrixAt, cameraTimeline, cameraModelLabel, cameraEnvironmentBounds, validateCamera } from '../../packages/director/camera.js';
-import { artLayers, customModelArt, customModelForegroundArt, customModelMotionOrigin, MODEL_FOREGROUND_VERSION } from '../../packages/director/art-direction.js';
-import { rendersModelLabel,rendersModelControl } from '../../packages/director/art-direction-schemas.js';
-import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../packages/actors/model.js';
-import {actorShotSpeech,narrationCueOwners,shotUsesSourceSpeechClock} from '../../packages/actors/speech-clock.js';
-import {SPEECH_SOURCE_CLOCK_VERSION,windowSpeechActivity,validateSpeechActivityTrack,type SpeechSourceClock} from '../../packages/animation/speech-clock.js';
-import {buildRig} from '../../packages/host/rig.js';
-import {performanceSvg} from '../../packages/animation/rig.js';
-import {namespaceRigSvg} from '../../packages/animation/svg-namespace.js';
-import {compilePerformance} from '../../packages/animation/compiler.js';
-import {PROP_BINDING_VERSION,boundProp} from '../../packages/director/props.js';
-import {compiledPropFrames} from '../../packages/director/prop-motion.js';
-import {sceneSeats,SEAT_SUPPORT_VERSION} from '../../packages/stage/seats.js';
-import {sceneLabels} from './scene-labels.js';
-import {renderSpriteScene} from '../../packages/motion/scene.js';
-import type {ActorMotion} from '../../packages/motion/schemas.js';
+# Frozen source excerpts — actor prop owners v1
 
-function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w:number,h:number):string{
-  return part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
-}
+Source data only; never executed. Runtime/tests/native art are unverified. Compiler blocks native gesture modes without registered poses; cross-cut/contact/final gates stay active.
 
-function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,board?:Storyboard):{
-  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;propId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[]};
-} {
-  ({profile,rig}=shotPerformer(shot,profile,rig));
-  validateCinematicShot(shot,profile,config,board);
-  const c=shot.cinematic!,p=c.performance,v=shot.visualization!,{width,height}=p.stage;
-  const sceneText=sceneLabels(config.project.language);
-  const art=c.artDirection,palette=art?.palette??{background:'#F3DDAA',surface:'#FFF3DB',ink:'#201A15',accent:'#F4CD68'};
-  const planes={background:artLayers(shot,'background','frame'),worldBackground:artLayers(shot,'background','world'),midground:artLayers(shot,'midground'),foreground:artLayers(shot,'foreground'),overlay:artLayers(shot,'overlay')};
-  const speech=c.actorScene?actorSpeech(activity,narration,c.actorScene.speakingSegmentIds,shot.startMs,shot.endMs):activity;
-  let localActivity:SpeechActivity={...speech,intervals:speech.intervals.filter(a=>a.startMs<shot.endMs&&a.endMs>shot.startMs)
-    .map(a=>({...a,startMs:Math.max(0,a.startMs-shot.startMs),endMs:Math.min(p.durationMs,a.endMs-shot.startMs)}))};
-  if(board&&shotUsesSourceSpeechClock(shot)&&!narration)throw new Error('needs-speech-phase: storyboard source phase requires narration');
-  const owners=board&&shotUsesSourceSpeechClock(shot)?narrationCueOwners(board,shot,narration!):undefined;
-  let primaryClock:SpeechSourceClock|undefined;
-  if(actorUsesViewActingClock(profile)&&c.actorScene?.primary!==null){
-    if(c.actorScene){const projected=actorShotSpeech(activity,narration,profile.id,c.actorScene.speakingSegmentIds,shot.startMs,shot.endMs,owners?.get(profile.id)??(owners?[]:undefined));
-      localActivity=projected.activity;primaryClock=projected.sourceClock;
+## library/shots/cinematic.ts [57..151] full SHA eb7e69cf0048f6a5507dcbe250e3a19240aad9757c6f496f9897fbd30661e2d2
+
+```ts
     }else {validateSpeechActivityTrack(activity);primaryClock={version:SPEECH_SOURCE_CLOCK_VERSION,ownerId:profile.id,scope:'narration',cueIds:[],startMs:shot.startMs,endMs:shot.endMs,
       sourceActivityHash:hash(activity),activity:windowSpeechActivity(activity,shot.startMs,shot.endMs)};}
   }
   const primaryActingClock=board?actorViewActingClock(board,shot,profile.id):undefined;
   const performerSpeech=new Map<string,{activity:SpeechActivity;sourceClock?:SpeechSourceClock;actingClock?:ViewActingClock}>([[profile.id,{activity:localActivity,sourceClock:primaryClock,actingClock:primaryActingClock}]]);
-  // Story scenery owns the actual rock/table/floor. Do not add a fabricated
-  // mechanical stand under every carried basket or bowl in an actor story.
-  const supports=c.actorScene?[]:c.propBindings.length?c.propBindings.flatMap(binding=>{
+  const supports=c.propBindings.length?c.propBindings.flatMap(binding=>{
     const part=v.parts.find(part=>part.id===binding.partId)!,{prop,performance:ownerPlan}=boundProp(shot,binding);
     // A dropped object has no invented table underneath its held entry or floor landing.
     // Authored scenery supplies any actual narrated support.
@@ -151,36 +100,11 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
       for(const [index,target] of hotTargets.entries())calls.push(`tl.set(${target},{opacity:${e.state==='hot'?1:0}},${start});tl.set(${coldTargets[index]},{opacity:${e.state==='cold'?1:0}},${start});`);
     }
     if(e.motion==='rotate')for(const motionTarget of motionTargets)calls.push(`tl.to(${motionTarget},{rotation:120,duration:${span},ease:"none"},${start});`);
-    if(e.motion==='translate')for(const motionTarget of motionTargets)calls.push(`tl.to(${motionTarget},{x:${width*.018},duration:${span/2},ease:"sine.inOut"},${start});tl.to(${motionTarget},{x:0,duration:${span/2},ease:"sine.inOut"},${start+span/2});`);
-    if(e.motion==='pulse')for(const motionTarget of motionTargets)calls.push(`tl.to(${motionTarget},{opacity:.4,duration:${span/2}},${start});tl.to(${motionTarget},{opacity:1,duration:${span/2}},${start+span/2});`);
-  }
-  const operations=actorActions(shot).filter(a=>a.type==='operate-model'&&rendersModelControl(shot,a.target!.partId)&&!c.propBindings.some(b=>b.partId===a.target?.partId));
-  const gated=new Map<string,typeof v.events>();
-  for(const partId of new Set(operations.map(a=>a.target!.partId))){
-    const explicit=v.events.filter(e=>e.contactRequired&&(e.contactActorId||e.contactHands)&&(e.contactPartId??e.targetId)===partId);
-    if(explicit.length)gated.set(partId,explicit);
-  }
-  // Keep original action order and generated calls for unchanged single-hand scenes.
-  for(const action of operations.filter(a=>!gated.has(a.target!.partId))){
-    const i=v.parts.findIndex(part=>part.id===action.target!.partId);
-    calls.push(`tl.set(${selector(`#object-${i} .control-turn`)},{svgOrigin:"0 0"},0);tl.to(${selector(`#object-${i} .control-turn`)},{rotation:65,duration:.12,ease:"sine.inOut"},${(action.contactMs!-shot.startMs)/1000});`);
-  }
-  for(const [partId,explicit] of gated){
-    const i=v.parts.findIndex(part=>part.id===partId);
-    // An explicit two-hand/actor requirement also owns the control's visual response.
-    const times=[...new Set(explicit.map(e=>e.startMs))].sort((a,b)=>a-b);
-    calls.push(`tl.set(${selector(`#object-${i} .control-turn`)},{svgOrigin:"0 0"},0);`);
-    for(const time of times)calls.push(`tl.to(${selector(`#object-${i} .control-turn`)},{rotation:65,duration:.12,ease:"sine.inOut"},${(time-shot.startMs)/1000});`);
-  }
-  calls.push(...cameraTimeline(c.camera,p,`${scope} .camera-rig`));
-  if(background){
-    const first=cameraMatrixAt(c.camera,p.stage,p.durationMs,0),last=cameraMatrixAt(c.camera,p.stage,p.durationMs,p.durationMs);
-    calls.push(`tl.set(${selector('.environment')},${JSON.stringify({x:first.x,y:first.y,scale:first.scale,transformOrigin:'0 0',immediateRender:true})},0);`);
-    if(JSON.stringify(first)!==JSON.stringify(last))calls.push(`tl.to(${selector('.environment')},${JSON.stringify({x:last.x,y:last.y,scale:last.scale,duration:p.durationMs/1000,ease:'sine.inOut'})},0);`);
-  }
-  const files:SceneFiles={...result.files,files:result.files.files.map(file=>{
-    if(file.path==='index.html'){
-      const heading=sceneText.heading;
+```
+
+## library/shots/cinematic.ts [182..194] full SHA eb7e69cf0048f6a5507dcbe250e3a19240aad9757c6f496f9897fbd30661e2d2
+
+```ts
       const clip=`${shot.id}.camera-viewport`,top=height*CAMERA_VIEWPORT.top,bottom=height*CAMERA_VIEWPORT.bottom;
       const title=art?.showHeading===false?'':`<rect x="0" y="0" width="${width}" height="${top}" fill="${palette.background}"/><rect x="0" y="${bottom}" width="${width}" height="${height-bottom}" fill="${palette.background}"/><rect x="${width*.033}" y="${height*.032}" width="${width*.38}" height="${height*.085}" rx="10" fill="${palette.surface}"/><text x="${width*.045}" y="${height*.07}" font-family="${escapeHtml(sceneText.fontFamily)}" font-size="${height*.028}" fill="${palette.ink}">${heading[v.type]}</text><text x="${width*.045}" y="${height*.102}" font-family="${escapeHtml(sceneText.fontFamily)}" font-size="${height*.017}" fill="${palette.ink}">${escapeHtml(sceneText.setting)}</text>`;
       const foreground=planes.foreground.html||(!art?`<path d="M${width*.82} ${height*.78}Q${width*.90} ${height*.75} ${width} ${height*.77}V${height}H${width*.82}Z" fill="#644931" opacity=".18"/>`:'');
@@ -194,19 +118,11 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
       else if(c.actorScene?.primary)authored=authored.replace('<g id="performer"',`<g data-actor-id="${escapeHtml(c.actorScene.primary.id)}" id="performer"`);
       return {...file,content:authored};
     }
-    if(file.path==='scene.js')return {...file,content:`${file.content}\n${calls.join('\n')}`};
-    if(file.path==='style.css'&&background){const bounds=cameraEnvironmentBounds(c.camera,p.stage,p.durationMs);return {...file,content:`${file.content}\n${scope} .environment{left:${bounds.left}px;top:${bounds.top}px;width:${bounds.width}px;height:${bounds.height}px;}`};}
-    return file;
-  }),notes:[`${p.compilerVersion}; story-cinematic; illustration`, `Speech activity: ${activity.method}; no phoneme lip-sync.`]};
-  const geometry:HostGeometry={controllerVersion:p.compilerVersion,profileHash:profile.profileHash,rigHash:rig.rigHash,shotId:shot.id,
-    hostHeightRatio:rigMetrics(profile).height*p.scale/height,interactions:[]};
-  const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity,sourceClock:primaryClock,actingClock:primaryActingClock}]),
-    ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,
-      activity:performerSpeech.get(actor.character.id)!.activity,sourceClock:performerSpeech.get(actor.character.id)!.sourceClock,actingClock:performerSpeech.get(actor.character.id)!.actingClock}))];
-  for(const performer of performers)for(const {action:a,gestures} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs))if(a.target)for(const [index,g] of gestures.entries()){
-    const target=index===1?a.secondTarget!:a.target;
-    const sourceGesture=g.sourceSpan?viewSourceGestureDefinition(g):undefined;
-    const reach=sourceGesture?Math.max(g.startMs,Math.min(g.endMs,sourceGesture.reachMs-shot.startMs)):g.contactMs??Math.min(g.endMs-1,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
+```
+
+## library/shots/cinematic.ts [208..225] full SHA eb7e69cf0048f6a5507dcbe250e3a19240aad9757c6f496f9897fbd30661e2d2
+
+```ts
     const f=samplePerformance(performer.performance,performer.profile,reach,performer.activity,performer.sourceClock,performer.actingClock),anchor=g.target!,handSide=rigHand(g),hand=f.hands[handSide];
     geometry.interactions.push({actorId:performer.id,handSide,type:a.type,startMs:g.startMs+shot.startMs,reachMs:Math.round(reach)+shot.startMs,endMs:g.endMs+shot.startMs,partId:target.partId,
       target:anchor,hand,errorPx:Math.hypot(hand.x-anchor.x,hand.y-anchor.y),root:f.root,gaze:anchor,
@@ -225,12 +141,153 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration):ReturnType<typeof renderRigCinematic>;
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background:string|undefined,narration:Narration|undefined,motions:ReadonlyMap<string,ActorMotion>|undefined,speech?:ReadonlyMap<string,import('../../packages/motion/speech-schemas.js').ActorSpeech>,board?:Storyboard):ReturnType<typeof renderRigCinematic>|ReturnType<typeof renderSpriteScene>;
 export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,motions?:ReadonlyMap<string,ActorMotion>,speech?:ReadonlyMap<string,import('../../packages/motion/speech-schemas.js').ActorSpeech>,board?:Storyboard){
-  const cast=shot.cinematic?.actorScene,renderer=config.presentation.actor_renderer;
-  if(renderer==='rig'&&shot.cinematic?.spriteStage)throw new Error(`${shot.id}: rig selection cannot render an image-motion stage`);
-  if(renderer==='sprite'&&(cast?.primary||cast?.supporting.length)&&!shot.cinematic?.spriteStage)throw new Error(`${shot.id}: needs-motion-library: image motion cannot fall back to skeletal actors`);
-  if(shot.cinematic?.spriteStage){
-    if(!motions)throw new Error(`${shot.id}: needs-sprite-motion-context: canonical rendering requires verified sprite descriptors`);
-    return renderSpriteScene(shot,profile,config,motions,background,narration,activity,speech);
+```
+
+## library/shots/cinematic-models.ts [50..74] full SHA 1e87d63790cd8129358d2490b894349122a01da5914d03c70c336cc08ebc4de1
+
+```ts
+  return `<path class="arrowhead" d="M${tip.x} ${tip.y}L${tip.x-dx*size-dy*size*.45} ${tip.y-dy*size+dx*size*.45}L${tip.x-dx*size+dy*size*.45} ${tip.y-dy*size-dx*size*.45}Z" fill="#765438"/>`;
+};
+
+/** Directed relations use arrowheads; compare and part-of do not imply causality. */
+export function cinematicRelations(shot:Shot,width:number,height:number,frames?:PropMotionFrame[]) {
+  const v=shot.visualization!,html:string[]=[],calls:string[]=[],scope=`[data-composition-id="${shot.id}"]`;
+  const bindings=shot.cinematic?.propBindings??[];
+  const centerAt=(part:Part,time:number)=>{
+    const binding=bindings.find(binding=>binding.partId===part.id);
+    if(!binding||!frames?.length)return point(part.x*width,part.y*height);
+    let low=0,high=frames.length-1;
+    while(low<high){const middle=Math.floor((low+high)/2);if(frames[middle]!.timeMs<time)low=middle+1;else high=middle;}
+    const right=frames[low]!,left=frames[Math.max(0,low-1)]!,a=left.props[binding.propId]?.point,b=right.props[binding.propId]?.point;
+    if(!a||!b)throw new Error(`${shot.id}: relation lacks compiled prop ${binding.propId}`);
+    const mix=left.timeMs===right.timeMs?0:Math.max(0,Math.min(1,(time-left.timeMs)/(right.timeMs-left.timeMs)));
+    return point(a.x+(b.x-a.x)*mix,a.y+(b.y-a.y)*mix);
+  };
+  const geometryAt=(a:Part,b:Part,time:number)=>{
+    const ca=centerAt(a,time),cb=centerAt(b,time),dx=cb.x-ca.x,dy=cb.y-ca.y,length=Math.hypot(dx,dy);
+    if(length<1)throw new Error(`${shot.id}: relation endpoints overlap during model motion at ${time}ms`);
+    const ux=dx/length,uy=dy/length,radius=(part:Part)=>Math.min(part.width*width*.53/Math.max(.001,Math.abs(ux)),part.height*height*.53/Math.max(.001,Math.abs(uy)));
+    const start=point(ca.x+ux*radius(a),ca.y+uy*radius(a)),end=point(cb.x-ux*radius(b),cb.y-uy*radius(b));
+    return {start,end,control:point((start.x+end.x)/2,Math.min(start.y,end.y)-height*.055)};
+  };
+  const curvePoint=(g:ReturnType<typeof geometryAt>,t:number)=>point((1-t)**2*g.start.x+2*(1-t)*t*g.control.x+t*t*g.end.x,(1-t)**2*g.start.y+2*(1-t)*t*g.control.y+t*t*g.end.y);
+```
+
+## library/shots/cinematic-models.ts [127..139] full SHA 1e87d63790cd8129358d2490b894349122a01da5914d03c70c336cc08ebc4de1
+
+```ts
+    const explicit=v.events.some(e=>e.targetId===r.to&&e.motion!=='none'&&e.startMs<event.endMs&&e.endMs>event.startMs+span*1000);
+    if(!explicit&&['wheel','gear'].includes(b.kind))calls.push(`tl.to(${motion},{rotation:100,duration:${remaining},ease:"none"},${begin+span});`);
+    else if(!explicit&&b.kind==='engine')calls.push(`tl.to(${motion},{opacity:.3,duration:${remaining/2},ease:"sine.inOut"},${begin+span});tl.to(${motion},{opacity:1,duration:${remaining/2},ease:"sine.inOut"},${begin+span+remaining/2});`);
+    }
   }
-  return renderRigCinematic(shot,profile,rig,activity,config,background,narration,board);
+  return {html:html.join(''),calls};
 }
+
+
+```
+
+## packages/director/camera.ts [203..237] full SHA 399bc3a0ecd5894a00de3025a355ec0a115ebaee5ab8d66036e27f866fc67e30
+
+```ts
+
+/** Geometric envelopes cover both transform endpoints, bounded pan and the complete locomotion path. */
+export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:{worldShot:Shot;board?:Storyboard}) {
+  const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera requires canonical cinematic data`);
+  const camera=CameraSchema.parse(c.camera),p=c.performance,{width,height,groundY}=p.stage;
+  const fail=(message:string):never=>{throw new Error(`${shot.id}: camera ${message}`);};
+  if(shot.camera.angle!=='eye-level')fail('supports only eye-level 2D framing; other angles require a different renderer.');
+  if(camera.anchor.x<0||camera.anchor.x>width||camera.anchor.y<0||camera.anchor.y>height)fail('anchor must be inside the world stage.');
+  const delta=camera.endScale-camera.startScale;
+  if(camera.movement==='push-in'&&delta<=0||camera.movement==='pull-out'&&delta>=0||['locked','pan-left','pan-right'].includes(camera.movement)&&delta!==0)fail('movement contradicts its start/end scale.');
+  const bounds=cameraHostBounds(p,profile,actingClock),worldRatio=bounds.ratio.max;
+  const matrices=[cameraMatrixAt(camera,p.stage,p.durationMs,0),cameraMatrixAt(camera,p.stage,p.durationMs,p.durationMs)];
+  const inView=(point:Point,padX=0,padY=padX)=>matrices.every(matrix=>{
+    const screen=cameraPoint(point,matrix);
+    return screen.x-padX*matrix.scale>=width*CAMERA_VIEWPORT.left-.01&&screen.x+padX*matrix.scale<=width*CAMERA_VIEWPORT.right+.01&&
+      screen.y-padY*matrix.scale>=height*CAMERA_VIEWPORT.top-.01&&screen.y+padY*matrix.scale<=height*CAMERA_VIEWPORT.bottom+.01;
+  });
+  const boundsInView=(b:Bounds)=>inView({x:b.left,y:b.top})&&inView({x:b.right,y:b.bottom});
+  const worldShot=context?.worldShot??shot,world=worldShot.cinematic!,ownerBounds=new Map<string,ReturnType<typeof cameraHostBounds>>();
+  const movingBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
+    const binding=world.propBindings.find(b=>b.partId===part.id);
+    let motion:Bounds|undefined;
+    if(binding){
+      const owner=boundProp(worldShot,binding);
+      if(!ownerBounds.has(owner.id)){
+        const definition=owner.character?actorProfile(owner.character):profile;
+        const clock=context?.board?actorViewActingClock(context.board,worldShot,owner.id):owner.id===profile.id?actingClock:undefined;
+        ownerBounds.set(owner.id,cameraHostBounds(owner.performance,definition,clock));
+      }
+      motion=ownerBounds.get(owner.id)!.props[binding.propId];
+      if(!motion)fail(`bound model ${part.id} has no motion envelope from its real owner.`);
+    }
+    return motion??{left:part.x*width,right:part.x*width,top:part.y*height,bottom:part.y*height};
+  };
+  const modelBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
+```
+
+## packages/director/index.ts [227..249] full SHA 65aff5f300494a660271e9227f38506d0bb305a96fd5f59cfe1c4d411c84629e
+
+```ts
+    validateSpriteScenePlan(shot);
+    if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
+    return;
+  }
+  if(hash(c.continuity.entry)!==hash(bodyRootAt(p,shot.startMs,0))||Math.abs(c.continuity.exit.x-bodyRootAt(p,shot.startMs,p.durationMs).x)>.01||c.continuity.exit.y!==p.stage.groundY)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
+  if(validateWorld)validatePropBindings(shot);
+  if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
+  const exitFacing=[...(p.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??p.facing??'front';
+  if(c.continuity.facing!==exitFacing)throw new Error(`${shot.id}: cinematic facing disagrees with turn exit`);
+  if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
+  validatePerformance(p,profile);
+  if(sourceBodyPlan(p).supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);
+  sceneSeats(shot);
+  validateCamera(shot,profile,actingClock,{worldShot:clockSourceShot,board});
+  if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile,actingClock);
+  for(const actor of c.actorScene?.supporting??[]){
+    const actorDefinition=actorProfile(actor.character,profile);
+    validateCinematicActorShot({...shot,host:{...shot.host!,id:actorDefinition.id,rigHash:shot.host!.rigHash,actions:actor.actions},
+      cinematic:{...c,leadCharacterId:actorDefinition.id,performance:actor.performance,propBindings:[],
+        continuity:{...c.continuity,entry:bodyRootAt(actor.performance,shot.startMs,0),exit:bodyRootAt(actor.performance,shot.startMs,actor.performance.durationMs),facing:actor.performance.turns?.at(-1)?.direction??actor.performance.facing??'front'},
+        actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config,false,board,clockSourceShot);
+  }
+  const consumed=new Set<string>();
+```
+
+## packages/animation/compiler.ts [129..138] full SHA 1c89e049ef14cd4bdc1876fb93a5c46025cfccd642ae02692e748a7c62276060
+
+```ts
+  if(!usesBodyView(profile))return;
+  if(plan.headTurns?.length)throw new Error('needs-head-turn-registration: authored head cells still need continuity repair, source landmarks and original head-clock registration; see /api/topics/prehistoric-life/head-turn-art');
+  if(plan.headView!==registeredBodyView(profile).view||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
+  if(hasBodyViewLocomotion(profile))validateNativeLocomotion(sourceBodyPlan(plan),profile,registeredBodyView(profile));
+  else if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending; select registered-locomotion-v1 for the native candidate');
+  if(!hasNativeHeadBank(profile)&&plan.expressions.some(e=>e.mood!=='happy')&&!hasBodyViewExpressions(profile))throw new Error('needs-view-expression: authored-view candidate needs explicit registered expressions for non-happy emotions');
+  if(plan.gazes.length&&!hasBodyViewEyes(profile)&&!hasNativeHeadEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs its registered fixed-view or source-cell eyes');
+  if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
+  if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'&&!(hasBodyViewLocomotion(profile)&&g.action==='react')))throw new Error('needs-view-motion: native gesture has no registered point/think/react candidate');
+  if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
+```
+
+## apps/server/cinematic.ts [33..49] full SHA ee9b45f5909b68a6a732705130bb767d6207618bd2dcf8962fb5ee7c0ffa49fa
+
+```ts
+  }
+  for (const [i, shot] of board.shots.entries()) {
+    const c = shot.cinematic;
+    if (!c) throw new ApiError(422, `${shot.id}: cinematic plan is missing. Replan in story-cinematic mode.`, 'CINEMATIC_INVALID');
+    try{validateArtDirection(shot);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
+    const unsupported = (message: string): never => { throw new ApiError(422, `${shot.id}: ${message}`, 'CINEMATIC_UNSUPPORTED'); };
+    if (shot.camera.angle !== 'eye-level') unsupported('The cinematic camera supports only eye-level 2D framing; other angles require a different renderer.');
+    if (c.continuity.carriedProps.length) unsupported('Carried props are not supported by the current cinematic clips.');
+    if (shot.host?.presence !== 'beside-model'&&!(c.actorScene?.primary===null&&shot.host?.presence==='absent')) unsupported('Absent performance requires an explicit mechanism-only actor scene.');
+    const performances=[c.performance,...(c.actorScene?.supporting.map(actor=>actor.performance)??[])];
+    if (performances.reduce((count,p)=>count+p.props.length,0)!==c.propBindings.length || performances.some(p=>p.gestures.some(g => !CINEMATIC_CLIPS.includes(g.action)))) {
+      unsupported('Animated props need a sourced model binding. Unsupported clips and cross-cut carry require a production continuity plan.');
+    }
+    try{validatePropBindings(shot);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
+    const old = previous?.shots.find(s => s.id === shot.id)?.cinematic;
+    if(old&&old.artDirection?.useEnvironment!==c.artDirection?.useEnvironment&&old.environmentAssetId)unsupported('Changing the background asset source requires production replanning; preserve the environment setting during direct edits.');
+    if (old && (old.setting !== c.setting || old.environmentAssetId !== c.environmentAssetId)) unsupported('Environment changes require replanning through the production asset resolver; direct environment replacement is not supported.');
+```

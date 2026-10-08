@@ -4,6 +4,7 @@ import sharp from 'sharp';
 import {findRepoRoot} from '../packages/core/config.js';
 import {hash,writeJson,exists} from '../packages/core/utils.js';
 import {PREHISTORIC_TOPIC_VERSION,prehistoricReadiness,prehistoricReferences} from '../packages/topics/prehistoric-life.js';
+import {ACTOR_PROP_OWNERSHIP_DESCRIPTION} from '../packages/director/props.js';
 import {referenceHeadDescription} from '../packages/animation/forest-head-art.js';
 import {referenceBodyDescription} from '../packages/animation/forest-body-art.js';
 import {poseArtInventory} from '../packages/topics/pose-art-workbench.js';
@@ -99,6 +100,7 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
   return {...measured,actor,approved:false,status:'candidate-authored-seated-folds'};
 }));
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
+  actorPropOwnership:{...ACTOR_PROP_OWNERSHIP_DESCRIPTION,codeHashes:Object.fromEntries(await Promise.all(['packages/director/props.ts','packages/director/prop-motion.ts','packages/director/camera.ts','packages/director/index.ts','packages/director/schemas.ts','packages/director/acting-brief.ts','library/shots/cinematic.ts','library/shots/cinematic-models.ts','library/prompts/creative-director.md','apps/server/cinematic.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   castNormalization:{...topicCastNormalizationDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/topics/cast-appearance.ts','packages/topics/prehistoric-life.ts','packages/director/acting-brief.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
   supportingCast:{...prehistoricSupportingDescription,materials:supportingMaterials,headCandidate:supportingHeadDescription,nativeFaces:supportingFaceDescription,

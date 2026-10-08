@@ -4,9 +4,10 @@ import { escapeHtml } from '../../packages/core/utils.js';
 import { fold } from '../../packages/explainer/plan.js';
 import { steamComponentLabels } from '../../packages/explainer/configurations.js';
 import { component } from './explainer.js';
-import type {FrameState} from '../../packages/animation/compiler.js';
+import type {PropMotionFrame} from '../../packages/director/prop-motion.js';
+import {boundProp} from '../../packages/director/props.js';
 
-export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.1';
+export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.2';
 type Part=NonNullable<Shot['visualization']>['parts'][number];
 export interface ModelIllustration {svg:string;motionAnchors:Array<{selector:string;x:number;y:number}>;}
 
@@ -50,7 +51,7 @@ const arrow=(tip:{x:number;y:number},from:{x:number;y:number},size:number)=>{
 };
 
 /** Directed relations use arrowheads; compare and part-of do not imply causality. */
-export function cinematicRelations(shot:Shot,width:number,height:number,frames?:FrameState[]) {
+export function cinematicRelations(shot:Shot,width:number,height:number,frames?:PropMotionFrame[]) {
   const v=shot.visualization!,html:string[]=[],calls:string[]=[],scope=`[data-composition-id="${shot.id}"]`;
   const bindings=shot.cinematic?.propBindings??[];
   const centerAt=(part:Part,time:number)=>{
@@ -122,7 +123,7 @@ export function cinematicRelations(shot:Shot,width:number,height:number,frames?:
     const targetIndex=v.parts.findIndex(p=>p.id===r.to),effect=JSON.stringify(`${scope} #object-${targetIndex} .energy-effect`),remaining=(event.endMs-event.startMs)/1000-span;
     calls.push(`tl.to(${effect},{opacity:.55,duration:${remaining/2},ease:"sine.inOut"},${begin+span});tl.to(${effect},{opacity:0,duration:${remaining/2},ease:"sine.inOut"},${begin+span+remaining/2});`);
     const binding=shot.cinematic?.propBindings.find(binding=>binding.partId===r.to);
-    const motion=JSON.stringify(`${scope} ${binding?`#prop-${binding.propId}`:`#object-${targetIndex}`} .motion`);
+    const motion=JSON.stringify(`${scope} ${binding?`[id=${JSON.stringify(boundProp(shot,binding).svgId)}]`:`#object-${targetIndex}`} .motion`);
     const explicit=v.events.some(e=>e.targetId===r.to&&e.motion!=='none'&&e.startMs<event.endMs&&e.endMs>event.startMs+span*1000);
     if(!explicit&&['wheel','gear'].includes(b.kind))calls.push(`tl.to(${motion},{rotation:100,duration:${remaining},ease:"none"},${begin+span});`);
     else if(!explicit&&b.kind==='engine')calls.push(`tl.to(${motion},{opacity:.3,duration:${remaining/2},ease:"sine.inOut"},${begin+span});tl.to(${motion},{opacity:1,duration:${remaining/2},ease:"sine.inOut"},${begin+span+remaining/2});`);

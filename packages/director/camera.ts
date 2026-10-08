@@ -1,4 +1,4 @@
-import type { Shot } from '../core/schemas.js';
+import type { Shot,Storyboard } from '../core/schemas.js';
 import type { HostProfile } from '../host/schemas.js';
 import type { PerformancePlan, Point } from '../animation/schemas.js';
 import { rigMetrics } from '../animation/rig.js';
@@ -19,6 +19,9 @@ import { CameraSchema, type CinematicCamera } from './schemas.js';
 import {viewGazeTargetTimes} from '../animation/view-gaze-target.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
 import { cinematicActionGroups } from './actions.js';
+import {boundProp} from './props.js';
+import {actorProfile} from '../actors/model.js';
+import {actorViewActingClock} from '../actors/view-acting-clock.js';
 
 export const CAMERA_VIEWPORT={left:.04,right:.96,top:.14,bottom:.80,centerY:.46,pan:.025} as const;
 export interface CameraMatrix { scale:number; x:number; y:number; }
@@ -199,7 +202,7 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
 }
 
 /** Geometric envelopes cover both transform endpoints, bounded pan and the complete locomotion path. */
-export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock) {
+export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:{worldShot:Shot;board?:Storyboard}) {
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera requires canonical cinematic data`);
   const camera=CameraSchema.parse(c.camera),p=c.performance,{width,height,groundY}=p.stage;
   const fail=(message:string):never=>{throw new Error(`${shot.id}: camera ${message}`);};
@@ -215,8 +218,20 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       screen.y-padY*matrix.scale>=height*CAMERA_VIEWPORT.top-.01&&screen.y+padY*matrix.scale<=height*CAMERA_VIEWPORT.bottom+.01;
   });
   const boundsInView=(b:Bounds)=>inView({x:b.left,y:b.top})&&inView({x:b.right,y:b.bottom});
+  const worldShot=context?.worldShot??shot,world=worldShot.cinematic!,ownerBounds=new Map<string,ReturnType<typeof cameraHostBounds>>();
   const movingBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
-    const binding=c.propBindings.find(b=>b.partId===part.id),motion=binding&&bounds.props[binding.propId];
+    const binding=world.propBindings.find(b=>b.partId===part.id);
+    let motion:Bounds|undefined;
+    if(binding){
+      const owner=boundProp(worldShot,binding);
+      if(!ownerBounds.has(owner.id)){
+        const definition=owner.character?actorProfile(owner.character):profile;
+        const clock=context?.board?actorViewActingClock(context.board,worldShot,owner.id):owner.id===profile.id?actingClock:undefined;
+        ownerBounds.set(owner.id,cameraHostBounds(owner.performance,definition,clock));
+      }
+      motion=ownerBounds.get(owner.id)!.props[binding.propId];
+      if(!motion)fail(`bound model ${part.id} has no motion envelope from its real owner.`);
+    }
     return motion??{left:part.x*width,right:part.x*width,top:part.y*height,bottom:part.y*height};
   };
   const modelBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{

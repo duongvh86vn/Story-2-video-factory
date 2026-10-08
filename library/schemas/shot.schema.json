@@ -1071,7 +1071,7 @@
             },
             "producer": {
               "type": "string",
-              "const": "story-direction-2.2.31"
+              "const": "story-direction-2.2.32"
             },
             "shotId": {
               "type": "string",
@@ -7830,6 +7830,11 @@
                     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
                   },
                   "partId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "ownerId": {
                     "type": "string",
                     "maxLength": 96,
                     "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"

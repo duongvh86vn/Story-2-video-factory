@@ -7,6 +7,7 @@ import { hash } from '../../packages/core/utils.js';
 import { ApiError } from './security.js';
 import { validateModelContinuity, CINEMATIC_CLIPS } from '../../packages/director/index.js';
 import { validateArtDirection } from '../../packages/director/art-direction.js';
+import {validatePropBindings} from '../../packages/director/props.js';
 
 // This schema is for inspection only. Production and edits still use current literals.
 const inspectionSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -38,9 +39,11 @@ export function validateCinematicEdit(board: Storyboard, config: FactoryConfig, 
     if (shot.camera.angle !== 'eye-level') unsupported('The cinematic camera supports only eye-level 2D framing; other angles require a different renderer.');
     if (c.continuity.carriedProps.length) unsupported('Carried props are not supported by the current cinematic clips.');
     if (shot.host?.presence !== 'beside-model'&&!(c.actorScene?.primary===null&&shot.host?.presence==='absent')) unsupported('Absent performance requires an explicit mechanism-only actor scene.');
-    if (c.performance.props.length!==c.propBindings.length || c.performance.gestures.some(g => !CINEMATIC_CLIPS.includes(g.action))) {
+    const performances=[c.performance,...(c.actorScene?.supporting.map(actor=>actor.performance)??[])];
+    if (performances.reduce((count,p)=>count+p.props.length,0)!==c.propBindings.length || performances.some(p=>p.gestures.some(g => !CINEMATIC_CLIPS.includes(g.action)))) {
       unsupported('Animated props need a sourced model binding. Unsupported clips and cross-cut carry require a production continuity plan.');
     }
+    try{validatePropBindings(shot);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
     const old = previous?.shots.find(s => s.id === shot.id)?.cinematic;
     if(old&&old.artDirection?.useEnvironment!==c.artDirection?.useEnvironment&&old.environmentAssetId)unsupported('Changing the background asset source requires production replanning; preserve the environment setting during direct edits.');
     if (old && (old.setting !== c.setting || old.environmentAssetId !== c.environmentAssetId)) unsupported('Environment changes require replanning through the production asset resolver; direct environment replacement is not supported.');

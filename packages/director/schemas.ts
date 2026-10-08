@@ -6,7 +6,7 @@ import { ArtDirectionSchema } from './art-direction-schemas.js';
 import {ActorSceneSchema} from '../actors/schemas.js';
 import {SpriteStageSchema} from '../motion/stage-schemas.js';
 
-export const DIRECTION_VERSION='story-direction-2.2.31';
+export const DIRECTION_VERSION='story-direction-2.2.32';
 export const CINEMATIC_PLAN_FILES=['story-direction.json','stage-plan.json','performance-plan.json','camera-plan.json','creative-direction-report.json','actor-cast.json','actor-timeline.json'] as const;
 export const CINEMATIC_EXPORT_FILES=[...CINEMATIC_PLAN_FILES,'environment-provenance.json','performance-report.json','animation-library.json'] as const;
 export const CinematicModelSchema=z.object({partId:Id,variant:z.enum(['conceptual','historical-note','vehicle-feature-schematic','three-wheel-group','electric-vehicle-schematic','combustion-vehicle-schematic','electric-motor','combustion-engine','steam-old','steam-split']),sourceRefs:z.array(SourceRefSchema).min(1)}).strict();
@@ -33,7 +33,7 @@ export const CinematicPlanSchema=z.object({
   spriteStage:SpriteStageSchema.optional(),
   sceneIntent:SceneIntentSchema.optional(),
   models:z.array(CinematicModelSchema),
-  propBindings:z.array(z.object({propId:Id,partId:Id,role:z.literal('illustrative-model'),sourceRefs:z.array(SourceRefSchema).min(1)}).strict()).default([]),
+  propBindings:z.array(z.object({propId:Id,partId:Id,ownerId:Id.optional(),role:z.literal('illustrative-model'),sourceRefs:z.array(SourceRefSchema).min(1)}).strict()).default([]),
   continuity:z.object({entry:PointSchema,exit:PointSchema,facing:z.enum(['front','left','right']),carriedProps:z.array(Id),
     models:z.array(z.object({partId:Id,x:z.number().finite(),y:z.number().finite(),width:z.number().positive(),height:z.number().positive()})).default([])}).strict(),
   camera:CameraSchema,
