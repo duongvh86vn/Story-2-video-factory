@@ -5,10 +5,12 @@ import {NativeHeadBankSchema,nativeHeadSources,nativeHeadSourceForCell,nativeHea
 import {NativeHeadTrackSchema,nativeHeadCellAt,validateNativeHeadSource} from './native-head-track.js';
 import {nativeHeadFaceSvg,nativeHeadFaceState,nativeHeadFaceMatrixError,type NativeFaceState,type NativeFaceEmotion} from './native-head-face.js';
 import {nativeHeadIdentityMatches,isNativeHeadFaceVersion} from './native-head-identity.js';
+import {nativeHeadPaintDefs} from './native-head-paint.js';
 
 export function hasNativeHeadBank(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyHeadBank!==undefined;}
 export function hasNativeHeadSpeech(profile:Pick<HostProfile,'appearance'>){return hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.speech;}
 export function hasNativeHeadEyes(profile:Pick<HostProfile,'appearance'>){return hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.directionalEyes;}
+export function hasNativeHeadRear(profile:Pick<HostProfile,'appearance'>){return hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).cells.some(c=>c.paint?.rear.length);}
 export function registeredNativeHeadBank(profile:Pick<HostProfile,'appearance'>):NativeHeadBank{
   const a=profile.appearance,b=NativeHeadBankSchema.parse(a.bodyHeadBank);
   if(a.artworkVersion!=='forest-body-view-1'||!nativeHeadIdentityMatches(a,b.actor)||!a.bodyView||!b.bodyViews.some(v=>v.view===a.bodyView))throw new Error('needs-head-turn-registration: head bank has another actor or incompatible body source');
@@ -61,7 +63,7 @@ export function nativeHeadBankBounds(bank:NativeHeadBank){
 }
 export function nativeHeadBankFace(bank:NativeHeadBank,cellId:string){
   if(!bank.cells.some(c=>c.id===cellId))throw new Error('needs-head-turn-registration: selected face cell is missing');
-  return Object.fromEntries(bank.cells.map((cell,i)=>['head-view-bank-'+i,{opacity:cell.id===cellId?1:0}]));
+  return Object.fromEntries(bank.cells.flatMap((cell,i)=>[['head-view-bank-'+i,{opacity:cell.id===cellId?1:0}],...(cell.paint?.rear.length?[['head-back-view-bank-'+i,{opacity:cell.id===cellId?1:0}]]:[])]));
 }
 /** Every cell retains stable path/selector keys across discrete view changes. */
 export function nativeHeadBankFacialState(bank:NativeHeadBank,input:{aperture:number;blink:number;look:{x:number;y:number};emotion?:NativeFaceEmotion}):NativeFaceState{
@@ -84,9 +86,16 @@ export function nativeHeadBankSvg(profile:HostProfile,imageUrl:(file:string,sha:
     if(url!=='assets/rigs/'+s.sha256+'.png'&&!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(url))throw new Error('Unapproved native head bank image URL');
     return `<image id="native-head-bank-source-${i}" width="${s.width}" height="${s.height}" href="${url}"/>`;
   }).join('');
-  return `<g data-head-bank="${bank.fingerprint}" stroke="none"><defs>${images}${bank.cells.map((c,i)=>`<clipPath id="native-head-bank-clip-${i}" clipPathUnits="userSpaceOnUse"><rect x="${c.crop.x}" y="${c.crop.y}" width="${c.crop.width}" height="${c.crop.height}"/></clipPath>`).join('')}</defs>${bank.cells.map((c,i)=>{
+  return `<g data-head-bank="${bank.fingerprint}" stroke="none"><defs>${images}${bank.cells.map((c,i)=>`<clipPath id="native-head-bank-clip-${i}" clipPathUnits="userSpaceOnUse"><rect x="${c.crop.x}" y="${c.crop.y}" width="${c.crop.width}" height="${c.crop.height}"/></clipPath>${c.paint?nativeHeadPaintDefs(c.paint,c.crop,i):''}`).join('')}</defs>${bank.cells.map((c,i)=>{
     const imageId='native-head-bank-source-'+sourceIndex.get(nativeHeadSourceForCell(bank,c).id)!,rest=c.face?.mouth.rest,restId=rest?'native-head-bank-source-'+sourceIndex.get(rest.sourceId)!:undefined,
       emotionId=c.face?.emotions?'native-head-bank-source-'+sourceIndex.get(c.face.emotions.mouth.repair.sourceId)!:undefined;
-    return `<g id="head-view-bank-${i}" opacity="0"><g transform="scale(${nativeHeadPixelScale(bank,c)}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><use href="#${imageId}"/>${c.face?nativeHeadFaceSvg(c.face,imageId,'native-face-'+i,restId,emotionId):''}</g></g>`;
+    return `<g id="head-view-bank-${i}" opacity="0"><g transform="scale(${nativeHeadPixelScale(bank,c)}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><use href="#${imageId}"${c.paint?.rear.length?` mask="url(#native-head-paint-${i}-front)"`:''}/>${c.face?nativeHeadFaceSvg(c.face,imageId,'native-face-'+i,restId,emotionId):''}</g></g>`;
   }).join('')}</g>`;
+}
+/** Paint IDs/images are defined by the foreground bank exactly once. Caller
+ * places this sibling BEFORE the body, with the same head attachment. It is
+ * not a second independent rig or an inferred secondary-hair animation. */
+export function nativeHeadBankRearSvg(profile:HostProfile){
+  const bank=registeredNativeHeadBank(profile),sources=nativeHeadSources(bank),sourceIndex=new Map(sources.map((s,i)=>[s.id,i]));
+  return bank.cells.flatMap((c,i)=>c.paint?.rear.length?[`<g id="head-back-view-bank-${i}" opacity="0" stroke="none"><g transform="scale(${nativeHeadPixelScale(bank,c)}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><g clip-path="url(#native-head-paint-${i}-rear)"><use href="#native-head-bank-source-${sourceIndex.get(nativeHeadSourceForCell(bank,c).id)!}"/></g></g></g>`]:[]).join('');
 }

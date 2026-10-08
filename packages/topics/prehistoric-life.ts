@@ -19,7 +19,7 @@ import {isSupportingNativeHeadVersion} from '../animation/native-head-identity.j
 import {supportingFaceDescription} from './supporting-face-candidates.js';
 import {normalizeTopicActorAppearance,topicCastNormalizationDescription} from './cast-appearance.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.61-source-face-emotions';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.62-source-head-paint';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

@@ -13,7 +13,7 @@ import {projectViewExpressions} from '../animation/view-expression-track.js';
 import {viewSourceGestureDefinition} from '../animation/view-source-gesture.js';
 import {performanceScene} from '../animation/scene.js';
 import {bodyCalibrationPlan,BODY_MOUTH_PREVIEW_ACTIVITY} from './body-workbench.js';
-import {HEAD_FACE_WORKBENCH_VERSION,HEAD_FACE_VIEWS,HEAD_FACE_CANDIDATES,HEAD_FACE_EXPRESSION_CANDIDATES,HEAD_FACE_MODES} from './head-face-candidates.js';
+import {HEAD_FACE_WORKBENCH_VERSION,HEAD_FACE_VIEWS,HEAD_FACE_MODES,headFaceCandidatesForMode} from './head-face-candidates.js';
 import {NATIVE_HEAD_ACTORS,nativeHeadIdentities} from '../animation/native-head-identity.js';
 import {supportingNativeTopicAppearance} from './prehistoric-life.js';
 import {prehistoricSupportingModels} from './supporting-models.js';
@@ -57,7 +57,7 @@ export async function headFaceCalibration(repo:string,input:unknown){
   const gestures=originalGestures.map(viewSourceGestureDefinition);
   const direction=selection.view==='three-quarter-left'?-1:1;
   const gazes=selection.look==='rest'?[]:[{startMs:300,endMs:3600,target:{x:210+direction*(selection.look==='ahead'?160:80),y:selection.look==='up'?100:selection.look==='down'?395:260}}];
-  const expressions=selection.face==='expressions'?[{startMs:300,endMs:3700,mood:selection.mood}]:original.expressions;
+  const expressions=selection.face!=='speech-eyes'?[{startMs:300,endMs:3700,mood:selection.mood}]:original.expressions;
   const identity={version:HEAD_FACE_WORKBENCH_VERSION,actor:profile.id,profileHash:profile.profileHash,bank:bank.fingerprint,definitionHash:candidate.definitionHash,
     view:selection.view,action:selection.action,look:selection.look,stage:original.stage,root:original.root,scale:original.scale,headMotion,gestures,gazes,expressions,activity:BODY_MOUTH_PREVIEW_ACTIVITY};
   const plan=PerformancePlanSchema.parse({...original,id:'face-workbench-'+selection.actor,profileHash:profile.profileHash,leadCharacterId:profile.id,
@@ -81,7 +81,7 @@ export async function headFaceCalibration(repo:string,input:unknown){
   return {selection,...candidate,profile,plan,clock,activity,sourceClock,resources,vendor};
 }
 
-function sceneBase(s:HeadFaceSelection){return `${prefix}/${s.actor}/views/${s.view}/${s.action}/${s.look}/${s.slice}/${s.face==='expressions'?'expressions/'+s.mood+'/':''}`;}
+function sceneBase(s:HeadFaceSelection){return `${prefix}/${s.actor}/views/${s.view}/${s.action}/${s.look}/${s.slice}/${s.face!=='speech-eyes'?s.face+'/'+s.mood+'/':''}`;}
 export function headFacePreviewRevision(fixture:Awaited<ReturnType<typeof headFaceCalibration>>){
   return hash({version:HEAD_FACE_WORKBENCH_VERSION,profile:fixture.profile,plan:fixture.plan,clock:fixture.clock,activity:fixture.activity,sourceClock:fixture.sourceClock,
     resources:fixture.resources.map(r=>({file:r.file,path:r.path,sha256:r.sha256})),vendorSha256:fixture.vendor.sha256});
@@ -127,7 +127,7 @@ export async function headFacePreviewFile(repo:string,input:unknown,file:string,
 
 export function headFaceWorkbench(input:unknown){
   const s=HeadFaceSelectionSchema.parse(input),start=s.slice==='whole'?0:2000,base=sceneBase(s);
-  const candidate=(s.face==='expressions'?HEAD_FACE_EXPRESSION_CANDIDATES:HEAD_FACE_CANDIDATES).find(c=>c.actor===s.actor&&c.view===s.view);
+  const candidate=headFaceCandidatesForMode(s.face).find(c=>c.actor===s.actor&&c.view===s.view);
   const headFile=candidate?.headFile;
   const identity=nativeHeadIdentities[s.actor],model=identity.supporting?prehistoricSupportingModels[s.actor as keyof typeof prehistoricSupportingModels]:undefined;
   const sourceLink=headFile?(model?'<span>Đầu riêng quần chúng · tọa độ chưa kiểm geometry</span>':`<a href="/api/topics/prehistoric-life/head-cells?file=${headFile}">PNG và landmark</a>`):'<span>Góc này chưa có head candidate</span>';

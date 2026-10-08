@@ -125,7 +125,7 @@ export function createNativeSeatTracer(){return buildNativeSeatTracer();}
  * Loading/builder/geometry execution is reserved for the user's test model. */
 export async function createNativeHeadSeatTracer(repo:string,input:Partial<NativeDialogueSelection>={}){
   const selection=NativeDialogueSelectionSchema.parse(input),layout=nativeDialogueLayouts[selection.staging];
-  if(selection.acting==='emotional-reactions'&&selection.face!=='expressions')throw new Error('needs-head-turn-expression: emotional reactions need explicit face=expressions; no automatic bank promotion');
+  if(selection.acting==='emotional-reactions'&&(!selection.face||selection.face==='speech-eyes'))throw new Error('needs-head-turn-expression: emotional reactions need explicit face=expressions or source-layers; no automatic bank promotion');
   const lila=await headFaceCandidate(repo,'lila',layout[0].view,selection.face??'speech-eyes');
   const karo=await headFaceCandidate(repo,'karo',layout[1].view,selection.face??'speech-eyes');
   const f=buildNativeSeatTracer({lila:lila.bank,karo:karo.bank},selection);

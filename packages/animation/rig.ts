@@ -5,6 +5,7 @@ import {forestTribeArt} from './forest-tribe-art.js';
 import {forestHeadSvg,usesReferenceHead} from './forest-head-art.js';
 import {forestBodyArt,usesReferenceBody,referenceBodyMetrics} from './forest-body-art.js';
 import {usesBodyView,registeredBodyView} from './body-view-art.js';
+import {hasNativeHeadRear,nativeHeadBankRearSvg} from './body-head-bank.js';
 
 type Point={x:number;y:number};
 export interface RigMetrics {
@@ -58,7 +59,7 @@ export function performanceSvg(profile: HostProfile,imageMode:'embedded'|'scene'
   const inkPaths=drawn?(body?ink('leg'):(['left','right'] as const).map(side=>`<path id="ink-leg-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/><path id="ink-arm-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/>`).join('')):'';
   const neck=`<g id="neck"${body?' opacity="0"':''}><path d="M0 0V1" vector-effect="non-scaling-stroke"/></g>`;
   return `<g id="performer" data-profile-hash="${profile.profileHash}" fill="none" stroke="${a.outline}" stroke-width="${a.strokeWidth}" stroke-linecap="round" stroke-linejoin="round">`
-    + `${body?.defs??''}${inkPaths}${view?bodyArmInk+viewArmSlot(view.farHand):''}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g>`
+    + `${body?.defs??''}${hasNativeHeadRear(profile)?`<g id="head-back">${nativeHeadBankRearSvg(profile)}</g>`:''}${inkPaths}${view?bodyArmInk+viewArmSlot(view.farHand):''}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g>`
     + (body?`<g id="garment-left"><g id="garment-standing-left">${body.garments.left}</g></g><g id="garment-right"><g id="garment-standing-right">${body.garments.right}</g></g>`:'')
     + `${body?.seatedGarments??''}${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?'':neck}${heldTools}${view?'':bodyArmInk}${limbs}${view?viewArmSlot(view.nearHand):''}`
     + `<g id="head">${head}${costume('head')}${drawn?'':`<g id="face-orientation">${faceLayers(0, -4, 18, robot ? a.accent : a.outline, robot ? a.screen : a.shell, 15)}</g>`}</g>`

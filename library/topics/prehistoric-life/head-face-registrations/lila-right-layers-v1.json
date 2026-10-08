@@ -1,0 +1,591 @@
+{
+  "version": "native-head-bank-5",
+  "id": "lila-right-layers-v1",
+  "actor": "lila",
+  "source": {
+    "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+    "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+    "width": 1167,
+    "height": 1347,
+    "pixelScale": 0.1516
+  },
+  "primary": {
+    "file": "docs/topics/assets/reference-lila-full.png",
+    "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+  },
+  "bodyViews": [
+    {
+      "view": "three-quarter-right",
+      "sourceHash": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9"
+    }
+  ],
+  "unitScale": 1,
+  "cells": [
+    {
+      "id": "source-angle",
+      "sourceId": "primary",
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1167,
+        "height": 1347
+      },
+      "neck": {
+        "x": 637,
+        "y": 815
+      },
+      "neckTop": {
+        "x": 637,
+        "y": 780
+      },
+      "chin": {
+        "x": 730,
+        "y": 757
+      },
+      "eyeTarget": {
+        "x": 800.5,
+        "y": 500
+      },
+      "skull": {
+        "x": 260,
+        "y": 180,
+        "width": 770,
+        "height": 600
+      },
+      "yawDeg": null,
+      "seam": [
+        {
+          "x": 600,
+          "y": 770
+        },
+        {
+          "x": 680,
+          "y": 770
+        },
+        {
+          "x": 680,
+          "y": 860
+        },
+        {
+          "x": 600,
+          "y": 860
+        }
+      ],
+      "restMood": "happy",
+      "face": {
+        "version": "native-head-face-2",
+        "source": {
+          "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+          "width": 1167,
+          "height": 1347
+        },
+        "mouth": {
+          "kind": "skin-strip",
+          "region": [
+            {
+              "x": 637,
+              "y": 600
+            },
+            {
+              "x": 879,
+              "y": 600
+            },
+            {
+              "x": 872,
+              "y": 680
+            },
+            {
+              "x": 818,
+              "y": 712
+            },
+            {
+              "x": 637,
+              "y": 712
+            }
+          ],
+          "top": [
+            {
+              "x": 667,
+              "y": 628
+            },
+            {
+              "x": 716,
+              "y": 682
+            },
+            {
+              "x": 810,
+              "y": 685
+            },
+            {
+              "x": 855,
+              "y": 638
+            }
+          ],
+          "depth": 32,
+          "lift": 14,
+          "stroke": 6,
+          "strip": {
+            "x": 669,
+            "y": 585,
+            "width": 134,
+            "height": 9
+          }
+        },
+        "eyes": {
+          "screen-left": {
+            "center": {
+              "x": 704,
+              "y": 512
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 666,
+                "y": 468
+              },
+              {
+                "x": 743,
+                "y": 468
+              },
+              {
+                "x": 743,
+                "y": 556
+              },
+              {
+                "x": 666,
+                "y": 556
+              }
+            ],
+            "glyph": [
+              {
+                "x": 689,
+                "y": 477
+              },
+              {
+                "x": 716.5,
+                "y": 477
+              },
+              {
+                "x": 729,
+                "y": 494.5
+              },
+              {
+                "x": 729,
+                "y": 529.5
+              },
+              {
+                "x": 716.5,
+                "y": 547
+              },
+              {
+                "x": 691.5,
+                "y": 547
+              },
+              {
+                "x": 679,
+                "y": 529.5
+              },
+              {
+                "x": 679,
+                "y": 494.5
+              }
+            ],
+            "lid": [
+              {
+                "x": 679,
+                "y": 512
+              },
+              {
+                "x": 694,
+                "y": 518
+              },
+              {
+                "x": 714,
+                "y": 518
+              },
+              {
+                "x": 729,
+                "y": 512
+              }
+            ],
+            "strip": {
+              "x": 674,
+              "y": 562,
+              "width": 62,
+              "height": 8
+            },
+            "stroke": 4
+          },
+          "screen-right": {
+            "center": {
+              "x": 897,
+              "y": 488
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 861,
+                "y": 445
+              },
+              {
+                "x": 935,
+                "y": 445
+              },
+              {
+                "x": 935,
+                "y": 533
+              },
+              {
+                "x": 861,
+                "y": 533
+              }
+            ],
+            "glyph": [
+              {
+                "x": 883.2,
+                "y": 455
+              },
+              {
+                "x": 908.5,
+                "y": 455
+              },
+              {
+                "x": 920,
+                "y": 471.5
+              },
+              {
+                "x": 920,
+                "y": 504.5
+              },
+              {
+                "x": 908.5,
+                "y": 521
+              },
+              {
+                "x": 885.5,
+                "y": 521
+              },
+              {
+                "x": 874,
+                "y": 504.5
+              },
+              {
+                "x": 874,
+                "y": 471.5
+              }
+            ],
+            "lid": [
+              {
+                "x": 874,
+                "y": 488
+              },
+              {
+                "x": 887.8,
+                "y": 494
+              },
+              {
+                "x": 906.2,
+                "y": 494
+              },
+              {
+                "x": 920,
+                "y": 488
+              }
+            ],
+            "strip": {
+              "x": 877,
+              "y": 550,
+              "width": 45,
+              "height": 8
+            },
+            "stroke": 4
+          }
+        },
+        "protectedContours": [
+          [
+            {
+              "x": 827,
+              "y": 527
+            },
+            {
+              "x": 875,
+              "y": 527
+            },
+            {
+              "x": 875,
+              "y": 591
+            },
+            {
+              "x": 827,
+              "y": 591
+            }
+          ]
+        ],
+        "status": "engineering-face-registration",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false,
+        "emotions": {
+          "mouth": {
+            "flat": [
+              {
+                "x": 667,
+                "y": 628
+              },
+              {
+                "x": 716,
+                "y": 631
+              },
+              {
+                "x": 810,
+                "y": 636
+              },
+              {
+                "x": 855,
+                "y": 638
+              }
+            ],
+            "frown": [
+              {
+                "x": 667,
+                "y": 628
+              },
+              {
+                "x": 716,
+                "y": 617
+              },
+              {
+                "x": 810,
+                "y": 622
+              },
+              {
+                "x": 855,
+                "y": 638
+              }
+            ],
+            "repair": {
+              "sourceId": "primary",
+              "source": {
+                "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+                "width": 1167,
+                "height": 1347
+              },
+              "strip": {
+                "x": 669,
+                "y": 585,
+                "width": 134,
+                "height": 9
+              }
+            }
+          },
+          "brows": {
+            "screen-left": {
+              "center": {
+                "x": 680,
+                "y": 431
+              },
+              "region": [
+                {
+                  "x": 620,
+                  "y": 417
+                },
+                {
+                  "x": 735,
+                  "y": 365
+                },
+                {
+                  "x": 735,
+                  "y": 428
+                },
+                {
+                  "x": 620,
+                  "y": 480
+                }
+              ],
+              "glyph": [
+                {
+                  "x": 635,
+                  "y": 448
+                },
+                {
+                  "x": 652,
+                  "y": 430
+                },
+                {
+                  "x": 672,
+                  "y": 414
+                },
+                {
+                  "x": 699,
+                  "y": 402
+                },
+                {
+                  "x": 719,
+                  "y": 400
+                },
+                {
+                  "x": 723,
+                  "y": 411
+                },
+                {
+                  "x": 699,
+                  "y": 420
+                },
+                {
+                  "x": 674,
+                  "y": 438
+                },
+                {
+                  "x": 649,
+                  "y": 461
+                },
+                {
+                  "x": 636,
+                  "y": 466
+                }
+              ],
+              "strip": {
+                "x": 747,
+                "y": 432,
+                "width": 25,
+                "height": 7
+              },
+              "up": 4,
+              "down": 4,
+              "tiltDeg": 6
+            },
+            "screen-right": {
+              "center": {
+                "x": 903,
+                "y": 399
+              },
+              "region": [
+                {
+                  "x": 845,
+                  "y": 355
+                },
+                {
+                  "x": 959,
+                  "y": 355
+                },
+                {
+                  "x": 959,
+                  "y": 442
+                },
+                {
+                  "x": 845,
+                  "y": 442
+                }
+              ],
+              "glyph": [
+                {
+                  "x": 862,
+                  "y": 387
+                },
+                {
+                  "x": 878,
+                  "y": 379
+                },
+                {
+                  "x": 897,
+                  "y": 378
+                },
+                {
+                  "x": 917,
+                  "y": 386
+                },
+                {
+                  "x": 937,
+                  "y": 401
+                },
+                {
+                  "x": 943,
+                  "y": 412
+                },
+                {
+                  "x": 938,
+                  "y": 419
+                },
+                {
+                  "x": 922,
+                  "y": 410
+                },
+                {
+                  "x": 902,
+                  "y": 397
+                },
+                {
+                  "x": 882,
+                  "y": 396
+                },
+                {
+                  "x": 868,
+                  "y": 405
+                },
+                {
+                  "x": 859,
+                  "y": 402
+                }
+              ],
+              "strip": {
+                "x": 955,
+                "y": 449,
+                "width": 15,
+                "height": 7
+              },
+              "up": 8,
+              "down": 4,
+              "tiltDeg": 12
+            }
+          }
+        }
+      },
+      "paint": {
+        "version": "native-head-paint-1",
+        "source": {
+          "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+          "width": 1167,
+          "height": 1347
+        },
+        "rear": [
+          {
+            "id": "ponytail-behind-body",
+            "region": {
+              "x": 0,
+              "y": 750,
+              "width": 585,
+              "height": 597
+            },
+            "frontCut": {
+              "x": 0,
+              "y": 752,
+              "width": 583,
+              "height": 595
+            }
+          }
+        ],
+        "status": "engineering-paint-registration",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      }
+    }
+  ],
+  "routes": [],
+  "capabilities": {
+    "speech": true,
+    "directionalEyes": true,
+    "expressions": true,
+    "secondary": false
+  },
+  "status": "engineering-source-registration",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

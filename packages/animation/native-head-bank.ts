@@ -3,6 +3,7 @@ import {Id} from '../core/identifiers.js';
 import {jsonSha256 as hash} from '../core/json-sha256.js';
 import {bodyViewRegistrations} from './body-view-registration.js';
 import {NativeHeadFaceSchema,validateNativeHeadFace} from './native-head-face.js';
+import {NativeHeadPaintSchema,validateNativeHeadPaint} from './native-head-paint.js';
 import {NATIVE_HEAD_ACTORS,NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION,nativeHeadIdentities,isNativeHeadFaceVersion} from './native-head-identity.js';
 
 export const NATIVE_HEAD_BANK_VERSION='native-head-bank-1' as const;
@@ -28,7 +29,7 @@ export const NativeHeadBankDefinitionSchema=z.object({version:z.enum([NATIVE_HEA
   bodyViews:z.array(z.object({view:z.enum(['three-quarter-left','three-quarter-right']),sourceHash:Sha}).strict()).min(1).max(2),
   unitScale:z.number().finite().min(.05).max(2),
   cells:z.array(z.object({id:Id,sourceId:Id.optional(),crop:Rect,neck:Point,neckTop:Point,chin:Point,eyeTarget:Point,skull:Rect,yawDeg:z.number().finite().min(-90).max(90).nullable(),
-    seam:z.array(Point).min(3).max(32),restMood:z.enum(['neutral','happy']),face:NativeHeadFaceSchema.optional(),
+    seam:z.array(Point).min(3).max(32),restMood:z.enum(['neutral','happy']),face:NativeHeadFaceSchema.optional(),paint:NativeHeadPaintSchema.optional(),
   }).strict()).min(1).max(40),
   routes:z.array(z.array(Id).min(2).max(40)).max(40),
   capabilities:z.object({speech:z.boolean(),directionalEyes:z.boolean(),expressions:z.boolean(),secondary:z.literal(false)}).strict(),
@@ -37,6 +38,7 @@ export const NativeHeadBankDefinitionSchema=z.object({version:z.enum([NATIVE_HEA
   const fail=(message:string)=>ctx.addIssue({code:'custom',message});
   const faceVersion=isNativeHeadFaceVersion(b.version),identity=nativeHeadIdentities[b.actor];
   const emotionVersion=b.version===NATIVE_EMOTION_HEAD_BANK_VERSION;
+  if(b.cells.some(c=>'paint' in c)&&(!emotionVersion||b.cells.some(c=>!c.paint)))fail('Source paint requires an explicit complete bank5 partition; legacy registrations retain their bytes');
   if(!emotionVersion&&identity.supporting!==(b.version===NATIVE_SUPPORTING_HEAD_BANK_VERSION))fail('Supporting head identity requires its own version 4 bank; principal banks retain versions 1–3');
   if(emotionVersion?(!b.capabilities.expressions||b.cells.some(c=>c.face?.version!=='native-head-face-2'||!c.face.emotions||c.restMood!=='happy')):(b.capabilities.expressions||b.cells.some(c=>c.face?.version==='native-head-face-2')))fail('Only explicit bank5 may declare complete own face2 emotions from a happy source rest; legacy bank bytes retain their capabilities');
   if(!faceVersion&&(b.cells.length<2||!b.routes.length||b.cells.some(c=>c.yawDeg===null||'face' in c)||b.capabilities.speech||b.capabilities.directionalEyes))fail('Legacy head banks require numeric turn cells and forbid source-face capabilities');
@@ -76,6 +78,7 @@ export const NativeHeadBankDefinitionSchema=z.object({version:z.enum([NATIVE_HEA
     if(source&&(c.crop.x+c.crop.width>source.width||c.crop.y+c.crop.height>source.height))fail('Head crop leaves source PNG');
     for(const p of [c.neck,c.neckTop,c.chin,c.eyeTarget,...c.seam])if(!inside(p,c.crop))fail('Head landmark/overlap contour leaves its source crop');
     if(c.neckTop.y>=c.neck.y)fail('Head neck axis is inverted');
+    if(c.paint&&source){try{validateNativeHeadPaint(c.paint,source,c);}catch(error){fail(error instanceof Error?error.message:String(error));}}
     if(c.face&&source){
       try{validateNativeHeadFace(c.face,source,c.crop);}catch(error){fail(error instanceof Error?error.message:String(error));}
       if(c.face.mouth.kind!==identity.mouthKind)fail('Actor mouth requires its own source-face kind');
@@ -125,4 +128,4 @@ export const nativeHeadBankDescription={version:NATIVE_HEAD_BANK_VERSION,selecti
   modelIdentities:nativeHeadIdentities,
   method:'registered source cell at the original discrete head clock; single atlas or explicitly bound source images, fixed source pixel density and uniform global neck attachment, native eye/chin geometry; no pose-dependent scaling, whole-face warp, reflection or double-face crossfade',
   productionReady:false,approved:false,motionVerified:false,availableBanks:[],
-  pending:['faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held','bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending','bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending','secondary hair/occlusion artwork capabilities','continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked','neck overlap/painter seam masks and compatible body turns','actual head/body turn and normal-speed video review','whole arbitrary-story/script/WAV factory acceptance']};
+  pending:['faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held','bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending','bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending','explicit bank5 source-paint rear partitions authored; geometry/alpha seams/body occlusion unverified; secondary hair motion still pending','continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked','neck overlap/painter seam masks and compatible body turns','actual head/body turn and normal-speed video review','whole arbitrary-story/script/WAV factory acceptance']};

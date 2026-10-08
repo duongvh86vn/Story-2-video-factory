@@ -28,6 +28,8 @@ import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeCl
 import {hasBodyViewSeat,nativeSeatState,nativeSeatMatrixError,nativeSeatDescription} from './body-view-seat.js';
 import {hasBodyViewSecondary,registeredNativeSecondary,nativeSecondaryState,nativeSecondaryMatrixError,nativeSecondaryDescription} from './body-view-secondary.js';
 import {sampleSecondaryMotion,SECONDARY_MOTION_DELAYS_MS} from './view-secondary-motion.js';
+import {hasNativeHeadRear} from './body-head-bank.js';
+import {nativeHeadPaintDescription} from './native-head-paint.js';
 import {moodPoses,expressionPose,type ExpressionPose} from './expression-pose.js';
 import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
 import {viewSourceGestureDefinition,sourceViewGestureAt} from './view-source-gesture.js';
@@ -728,6 +730,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(usesReferenceBody(profile))transforms['neck-art']=transform(neckStart,lean,s*profile.appearance.bodyScale);
   transforms.neck=`translate(${number(neckStart.x)} ${number(neckStart.y)}) rotate(${number(degrees(Math.atan2(neckEnd.y-neckStart.y,neckEnd.x-neckStart.x))-90)}) scale(${number(s)} ${number(distance(neckStart,neckEnd))})`;
   transforms.head=transform(head,headAngle,s*headArtScale);
+  if(hasNativeHeadRear(profile))transforms['head-back']=transforms.head;
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
   const chinAt=(side:RigHand)=>add(head,rotate(usesCutoutHead(profile)?{x:sourceChinPoint(plan,profile,t,side,actingClock).x*s*headArtScale,y:sourceChinPoint(plan,profile,t,side,actingClock).y*s*headArtScale}:{x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},headAngle));
   const garment=usesReferenceBody(profile)&&!usesBodyView(profile)?referenceGarmentMotion(profile):undefined,viewCloth=hasBodyViewLocomotion(profile)?registeredBodyView(profile):undefined;
@@ -1164,7 +1167,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
         if(id==='mouth-talk'||isPainterSlot(id)||isNativeFacePainterSlot(profile,id))continue;
         // Authored-view swaps and voice-gated mouth selection are discrete. Eye
         // and brow interpolation is still checked against the pure evaluator.
-        if(usesReferenceHead(profile)&&(id.startsWith('head-view-')||id.startsWith('mouth-')))continue;
+        if(usesReferenceHead(profile)&&(id.startsWith('head-view-')||id.startsWith('head-back-view-bank-')||id.startsWith('mouth-')))continue;
         const to=b.face[id]!,wanted=actual.face[id]!;
         for(const key of ['opacity','scaleX','scaleY','rotation','x','y'] as const){
           if(from[key]===undefined||to[key]===undefined||wanted[key]===undefined)continue;
@@ -1201,7 +1204,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const [id,value] of Object.entries(f.face))if(!i||JSON.stringify(value)!==JSON.stringify(frames[i-1]!.face[id])){
       if(!usesReferenceHead(profile)){calls.push(`tl.${method}(${selector(id)},${JSON.stringify({...value,...(i?{duration,ease:'none'}:{immediateRender:true})})},${position});`);continue;}
       const voiceChange=i&&Object.keys(f.face).some(key=>key.startsWith('mouth-talk-')&&f.face[key]!.opacity!==frames[i-1]!.face[key]!.opacity);
-      const discrete=isPainterSlot(id)||isNativeFacePainterSlot(profile,id)||id.startsWith('head-view-')||id.startsWith('mouth-talk-')||id.startsWith('mouth-')&&voiceChange;
+      const discrete=isPainterSlot(id)||isNativeFacePainterSlot(profile,id)||id.startsWith('head-view-')||id.startsWith('head-back-view-bank-')||id.startsWith('mouth-talk-')||id.startsWith('mouth-')&&voiceChange;
       const attrs={...value.attr,...(value.x!==undefined||value.y!==undefined||value.rotation!==undefined||value.scaleX!==undefined||value.scaleY!==undefined?
         {transform:`translate(${number(value.x??0)} ${number(value.y??0)}) rotate(${number(value.rotation??0)}) scale(${number(value.scaleX??1)} ${number(value.scaleY??1)})`}:{})};
       // SVG matrices are local to the fixed feature anchor. GSAP's CSS transform
@@ -1214,6 +1217,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     ...(hasNativeHeadBank(profile)?{nativeHeadBank:{fingerprint:registeredNativeHeadBank(profile).fingerprint,sources:nativeHeadSources(registeredNativeHeadBank(profile)),sourceTrack:plan.sourceHead,method:'authored cells on the original run clock; uniform registered pixel-scale and neck-axis attachment, local source-face masks; single unknown-angle cell is fixed, no face crossfade',capabilities:registeredNativeHeadBank(profile).capabilities,
       ...(hasNativeHeadSpeech(profile)?{sourceFace:{versions:[...new Set(registeredNativeHeadBank(profile).cells.map(c=>c.face!.version))],version:registeredNativeHeadBank(profile).capabilities.expressions?'native-head-face-2':'native-head-face-1',activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null,blinkClock:'original absolute clock',
         ...(registeredNativeHeadBank(profile).capabilities.expressions?{expressionClock:'complete original actor expressions; return to this cell rest mood',browInterpolation:'own glyph matrices included in source-pixel refinement',expressionVerified:false}:{}),phonemeLipSync:false,audioVerified:false,opticalGazeVerified:false}}:{}),approved:false,productionReady:false,motionVerified:false}}:{}),
+    ...(hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).cells.some(c=>c.paint)?{nativeHeadPaint:{...nativeHeadPaintDescription,bankFingerprint:registeredNativeHeadBank(profile).fingerprint,cells:registeredNativeHeadBank(profile).cells.map(c=>({id:c.id,paint:c.paint})),rearPresent:hasNativeHeadRear(profile),attachment:'exact head transform and original source cell opacity; head-back before all body paint'}}:{}),
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile,plan))),interpolationGapLimitPx:.2,interpolationIncludes:['bones/cuff','spear palms/shared shaft','tip during contact hold'],selectedClips:selectedClips(plan),

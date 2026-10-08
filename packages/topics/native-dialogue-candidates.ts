@@ -1,15 +1,16 @@
 import {z} from 'zod';
+import {HEAD_FACE_MODES} from './head-face-candidates.js';
 
 /** Screen placement is explicit. The opposite layout selects independent
  * painted views; it never reflects an image or swaps actor identities. */
-export const NATIVE_HEAD_SEAT_TRACER_VERSION='native-head-seat-tracer-3';
+export const NATIVE_HEAD_SEAT_TRACER_VERSION='native-head-seat-tracer-4';
 export const NATIVE_HEAD_SEAT_TRACER_SCOPE='unapproved-native-head-seat-tracer';
 export const NATIVE_DIALOGUE_STAGINGS=['lila-left','lila-right'] as const;
 export const NATIVE_DIALOGUE_ACTING=['rest','listening-think','emotional-reactions'] as const;
 export const NativeDialogueSelectionSchema=z.object({
   staging:z.enum(NATIVE_DIALOGUE_STAGINGS).default('lila-left'),
   acting:z.enum(NATIVE_DIALOGUE_ACTING).default('rest'),
-  face:z.enum(['speech-eyes','expressions']).optional(),
+  face:z.enum(HEAD_FACE_MODES).optional(),
 }).strict();
 export type NativeDialogueSelection=z.infer<typeof NativeDialogueSelectionSchema>;
 export const nativeDialogueLayouts={

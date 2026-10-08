@@ -1588,6 +1588,142 @@
                   "motionVerified"
                 ],
                 "additionalProperties": false
+              },
+              "paint": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "const": "native-head-paint-1"
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      },
+                      "width": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 8192
+                      },
+                      "height": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 8192
+                      }
+                    },
+                    "required": [
+                      "sha256",
+                      "width",
+                      "height"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "rear": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "region": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "y": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "width": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y",
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "frontCut": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "y": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "width": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "height": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y",
+                            "width",
+                            "height"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "region",
+                        "frontCut"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 8
+                  },
+                  "status": {
+                    "type": "string",
+                    "const": "engineering-paint-registration"
+                  },
+                  "approved": {
+                    "type": "boolean",
+                    "const": false
+                  },
+                  "productionReady": {
+                    "type": "boolean",
+                    "const": false
+                  },
+                  "motionVerified": {
+                    "type": "boolean",
+                    "const": false
+                  }
+                },
+                "required": [
+                  "version",
+                  "source",
+                  "rear",
+                  "status",
+                  "approved",
+                  "productionReady",
+                  "motionVerified"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [

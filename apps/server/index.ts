@@ -304,6 +304,10 @@ export async function buildServer(options: ServerOptions = {}) {
       .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; base-uri 'none'; form-action 'none'").send(result.bytes);
   }
   // Literal "views" keeps legacy nested asset URLs unambiguous.
+  app.get<{Params:{actor:string;view:string;action:string;look:string;slice:string;mood:string;'*':string}}>('/api/topics/prehistoric-life/head-face-preview/:actor/views/:view/:action/:look/:slice/source-layers/:mood/*',async(request,reply)=>{
+    const {actor,view,action,look,slice,mood}=request.params;
+    return sendHeadFacePreview(reply,{actor,view,action,look,slice,mood,face:'source-layers'},request.params['*'],request.query);
+  });
   app.get<{Params:{actor:string;view:string;action:string;look:string;slice:string;mood:string;'*':string}}>('/api/topics/prehistoric-life/head-face-preview/:actor/views/:view/:action/:look/:slice/expressions/:mood/*',async(request,reply)=>{
     const {actor,view,action,look,slice,mood}=request.params;
     return sendHeadFacePreview(reply,{actor,view,action,look,slice,mood,face:'expressions'},request.params['*'],request.query);

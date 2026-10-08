@@ -1,0 +1,63 @@
+{
+  "version": "native-head-paint-raw-region-1",
+  "scope": "read-only raw PNG decode/count; no edit/pose/validator/renderer",
+  "rows": [
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v1.json",
+      "definitionSHA256": "afea362bb5ee5ae59e06f97e47a9bbeafe840df9e3b6da3d787e8092b1922f36",
+      "source": {
+        "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+        "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+        "width": 1168,
+        "height": 1347,
+        "pixelScale": 0.1516
+      },
+      "rawSHA256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+      "canvas": {
+        "width": 1168,
+        "height": 1347
+      },
+      "region": {
+        "x": 660,
+        "y": 815,
+        "width": 508,
+        "height": 532
+      },
+      "visiblePixels": 151291,
+      "skinColourHeuristic": 0,
+      "heuristic": "alpha>127, R>230,G>140,B>55; colour count only, cannot prove face/neck separation, mask correctness, alpha seam or artistic identity",
+      "geometryValidation": "NOT RUN",
+      "renderer": "NOT RUN"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v1.json",
+      "definitionSHA256": "f11a2c83209359159ad4bacb751a0671d3585f9e9dfd14dc23c31c8c2c7d51f5",
+      "source": {
+        "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+        "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+        "width": 1167,
+        "height": 1347,
+        "pixelScale": 0.1516
+      },
+      "rawSHA256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+      "canvas": {
+        "width": 1167,
+        "height": 1347
+      },
+      "region": {
+        "x": 0,
+        "y": 750,
+        "width": 585,
+        "height": 597
+      },
+      "visiblePixels": 199771,
+      "skinColourHeuristic": 0,
+      "heuristic": "alpha>127, R>230,G>140,B>55; colour count only, cannot prove face/neck separation, mask correctness, alpha seam or artistic identity",
+      "geometryValidation": "NOT RUN",
+      "renderer": "NOT RUN"
+    }
+  ],
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}
