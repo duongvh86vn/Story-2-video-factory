@@ -2,6 +2,8 @@
 
 Mốc0.48: bank2 nhận nhiều PNG, từng cell buộc sourceId và fixed pixelScale; raw-source staging/SVG/physical mắt-cằm/camera cùng registration. Hai PNG Lila riêng đã có hồ sơ nguồn/alpha, **chưa duyệt, chưa đăng ký**. Góc0°/8° là yêu cầu trong prompt. Chưa có bank/video được bật; speech/eyes/expressions/secondary vẫn false, productionReady=false/productionRig=null. [Nguồn, review, kiểm source và việc còn thiếu](reviews/native-head-cells-source-record-v1.md).
 
+Source0.48 `e9b4293cca4df37399adb657794e0a576dbb3d19` đã push nhánh `codex/prehistoric-life`,35 owned paths; exact local/remote SHA khớp. Build/typecheck/schema/static inventory/manifest qua;26 callback mới và toàn runtime/video **NOT RUN**. Các con số này không là nghiệm thu độ mượt hoặc identity.
+
 API chỉ đọc mới: `/api/topics/prehistoric-life/head-cells/inventory` và `/api/topics/prehistoric-life/head-cells/lila-head-front-v1.png` hoặc `lila-head-near-right-v1.png`. Reader kiểm raw PNG/đo alpha/provenance/primary/edit source trước trả bytes; inventory/API không bật rig. Bàn đo atlas cũ không nhận các PNG mới; công cụ đo riêng/cell masks và actual registration còn phải làm.
 
 Model test chạy thêm lệnh sau trong đúng C worktree, ghi exact SHA và kết quả; implementation **chưa chạy**:

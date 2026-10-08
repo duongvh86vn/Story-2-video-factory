@@ -46,6 +46,8 @@ Lovelace re-read assertion correction: overflow cell bound và đúng too_big/ad
 
 ## Việc tiếp theo để ra sản phẩm
 
+Source delivery `e9b4293cca4df37399adb657794e0a576dbb3d19`, nhánh `codex/prehistoric-life`:35 owned paths staging/compare/cached-diff và commit aca829 exit0; push/exact ls-remote4907d0 exit0, full local/remote SHA bằng nhau, tracked source clean. Các ảnh/diagnostic untracked ngoài scope không staged; D checkout không sửa/reset/merge. Documentation evidence này theo commit sau; source pass không là full goal achieved.
+
 1. Đạt identity/nét/màu của primary ở từng góc Lila/Karo thật; đo skull/neck frame/eye/chin/nose/mouth/yaw/tie-side/occlusion, không dùng crop bbox tóc làm skull size. Hai ảnh mới chưa là bộ quay đầu dùng được.
 2. Công cụ/source registration cho ảnh đơn, painter neck seams và body compatibility; face edit/mouth aperture/lids/brow/skin/protection/hair/beard layers của từng nguồn. Chỉ đăng ký nguồn phù hợp, giữ nguồn cũ để đối chiếu.
 3. Thoại/blink/emotion/gaze/secondary +continuous chin/observer/contact correspondence, body/profile/rear turns, mềm tay chân và prop grasp/carry/handoff/hunt với clock/điểm tiếp xúc đúng. Runtime model test kiểm random/reverse seek/camera cuts và video60fps thường.
