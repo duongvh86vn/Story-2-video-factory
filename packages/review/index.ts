@@ -19,6 +19,7 @@ import type { HostGeometry } from '../host/controller.js';
 import { validateCamera } from '../director/camera.js';
 import { rigMetrics } from '../animation/rig.js';
 import {actorProfile,shotPerformer} from '../actors/model.js';
+import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {castDesignAdvisories} from '../actors/design.js';
 import {hostPreviewSvg} from '../host/rig.js';
 import {loadSpriteSceneMotions,loadSpriteSceneSpeech,spriteSceneSheetBytes} from '../motion/scene-source.js';
@@ -43,8 +44,16 @@ export function eventPreviewTimes(shot:Shot):number[]{
     for(const ms of [event.startMs,Math.min(event.endMs-1,event.startMs+280),Math.floor((event.startMs+event.endMs)/2),event.endMs-1])times.add(clamp(ms));
   }
   if(shot.cinematic?.actorScene)for(const p of [shot.cinematic.performance,...shot.cinematic.actorScene.supporting.map(a=>a.performance)])
-    for(const clip of [...p.walks,...p.expressions,...(p.turns??[]),...p.gestures,...(p.postures??[]),...p.gazes])
+    for(const clip of [...p.walks,...(p.jumps??[]),...p.expressions,...(p.turns??[]),...p.gestures,...(p.postures??[]),...p.gazes])
       for(const local of [clip.startMs,Math.floor((clip.startMs+clip.endMs)/2),clip.endMs-1])times.add(clamp(shot.startMs+local));
+  if(shot.cinematic?.actorScene)for(const p of [shot.cinematic.performance,...shot.cinematic.actorScene.supporting.map(a=>a.performance)])if(p.sourceBody){
+    const source=p.sourceBody;
+    for(const clip of [...source.walks,...(source.jumps??[]),...(source.postures??[])]){
+      const start=Math.max(shot.startMs,source.startMs+clip.startMs),end=Math.min(shot.endMs,source.startMs+clip.endMs);if(end<=start)continue;
+      for(const at of [start,(start+end)/2,end-1])times.add(clamp(at));
+    }
+    for(const jump of source.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2])if(source.startMs+at>=shot.startMs&&source.startMs+at<shot.endMs)times.add(clamp(source.startMs+at));
+  }
   if(shot.cinematic?.actorScene){
     const plans=[shot.cinematic.performance,...shot.cinematic.actorScene.supporting.map(actor=>actor.performance)];
     const step=Math.ceil(1000/shot.cinematic.performance.fps);
@@ -211,7 +220,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
       const heightInvalid=cinematic
         ?!Number.isFinite(geometry.hostHeightRatio)||Math.abs(geometry.hostHeightRatio-rigMetrics(performer.profile).height*cinematic.performance.scale/cinematic.performance.stage.height)>1e-6
         :geometry.hostHeightRatio<.25||geometry.hostHeightRatio>.4;
-      if(cinematic)cameraReports.set(shot.id,validateCamera(shot,performer.profile));
+      if(cinematic)cameraReports.set(shot.id,validateCamera(shot,performer.profile,actorViewActingClock(storyboard,shot,performer.profile.id)));
       if(geometry.rigHash!==performer.rig.rigHash||geometry.profileHash!==performer.profile.profileHash||heightInvalid)issues.push(issue(shot,cinematic?.actorScene?'actor-identity':'host-identity','high','Performer geometry/profile identity is inconsistent.','Recompile the actor and shot.'));
       for(const action of geometry.interactions)if(action.type==='operate-model'&&(action.errorPx>2||action.contactMs===undefined||action.contactMs!==action.reachMs))issues.push(issue(shot,'host-contact','high',`${action.partId}: invalid contact geometry/timing`,'Adjust the model anchor or host action and rebuild.'));
     }

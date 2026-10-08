@@ -9,6 +9,8 @@ import { partAnchor } from '../host/controller.js';
 import { rigMetrics } from '../animation/rig.js';
 import { ANIMATION_VERSION, type Mood, type Point, type PerformancePlan } from '../animation/schemas.js';
 import { validatePerformance } from '../animation/compiler.js';
+import {bodyRootAt} from '../animation/view-source-body.js';
+import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import { CinematicPlanSchema, DIRECTION_VERSION, type CinematicPlan } from './schemas.js';
 import { fold } from '../explainer/plan.js';
 import { stageModels } from './models.js';
@@ -204,14 +206,15 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
   return ShotSchema.parse(shot);
 }
 
-export function validateCinematicShot(shot:Shot,profile:HostProfile,config:FactoryConfig):void {
-  validateCinematicActorShot(shot,profile,config,true);
+export function validateCinematicShot(shot:Shot,profile:HostProfile,config:FactoryConfig,board?:Storyboard):void {
+  validateCinematicActorShot(shot,profile,config,true,board);
 }
 
 /** Shared model exits belong to the scene; supporting actors do not rewind the primary prop motion. */
-function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:FactoryConfig,validateWorld:boolean):void {
+function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:FactoryConfig,validateWorld:boolean,board?:Storyboard,clockSourceShot:Shot=shot):void {
   if(shot.cinematic?.actorScene?.primary)profile=actorProfile(shot.cinematic.actorScene.primary,profile);
   const c=CinematicPlanSchema.parse(shot.cinematic),p=c.performance;
+  const actingClock=board?actorViewActingClock(board,clockSourceShot,profile.id):undefined;
   validateArtDirection(shot);
   if(c.camera.designIntent&&!c.artDirection)throw new Error(`${shot.id}: authored camera requires an art direction brief`);
   if(c.shotId!==shot.id||c.leadCharacterId!==profile.id||p.id!==shot.id||p.durationMs!==shot.endMs-shot.startMs)throw new Error(`${shot.id}: cinematic identity/clock mismatch`);
@@ -225,7 +228,7 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
     if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
     return;
   }
-  if(hash(c.continuity.entry)!==hash(p.root)||Math.abs(c.continuity.exit.x-(p.walks.at(-1)?.toX??p.root.x))>.01)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
+  if(hash(c.continuity.entry)!==hash(bodyRootAt(p,shot.startMs,0))||Math.abs(c.continuity.exit.x-bodyRootAt(p,shot.startMs,p.durationMs).x)>.01||c.continuity.exit.y!==p.stage.groundY)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
   validatePropBindings(shot);
   if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
   const exitFacing=[...(p.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??p.facing??'front';
@@ -234,14 +237,14 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   validatePerformance(p,profile);
   if(p.supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);
   sceneSeats(shot);
-  validateCamera(shot,profile);
-  if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile);
+  validateCamera(shot,profile,actingClock);
+  if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile,actingClock);
   for(const actor of c.actorScene?.supporting??[]){
     const actorDefinition=actorProfile(actor.character,profile);
     validateCinematicActorShot({...shot,host:{...shot.host!,id:actorDefinition.id,rigHash:shot.host!.rigHash,actions:actor.actions},
       cinematic:{...c,leadCharacterId:actorDefinition.id,performance:actor.performance,propBindings:[],
-        continuity:{...c.continuity,entry:actor.performance.root,exit:{x:actor.performance.walks.at(-1)?.toX??actor.performance.root.x,y:actor.performance.stage.groundY},facing:actor.performance.turns?.at(-1)?.direction??actor.performance.facing??'front'},
-        actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config,false);
+        continuity:{...c.continuity,entry:bodyRootAt(actor.performance,shot.startMs,0),exit:bodyRootAt(actor.performance,shot.startMs,actor.performance.durationMs),facing:actor.performance.turns?.at(-1)?.direction??actor.performance.facing??'front'},
+        actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config,false,board,clockSourceShot);
   }
   const consumed=new Set<string>();
   const actions=shot.host?.actions??[];

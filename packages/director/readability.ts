@@ -1,14 +1,15 @@
 import type { Shot } from '../core/schemas.js';
 import type { HostProfile } from '../host/schemas.js';
+import type { ViewActingClock } from '../animation/view-acting-clock.js';
 import { cameraHostBounds, cameraModelLabel } from './camera.js';
 
 type Box={left:number;right:number;top:number;bottom:number};
 const overlaps=(a:Box,b:Box)=>Math.min(a.right,b.right)>Math.max(a.left,b.left)+.01&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top)+.01;
 /** Check the authored two-vehicle stage on the entire walk clock, not just its exit pose. */
-export function validateComparisonReadability(shot:Shot,profile:HostProfile):void{
+export function validateComparisonReadability(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock):void{
   const parts=shot.visualization?.parts??[],p=shot.cinematic?.performance;
   if(!p||parts.filter(part=>part.kind==='car').length!==2||!parts.every(part=>['car','engine','battery'].includes(part.kind)))return;
-  const bounds=cameraHostBounds(p,profile),{width,height}=p.stage;
+  const bounds=cameraHostBounds(p,profile,actingClock),{width,height}=p.stage;
   const modelBox=(part:typeof parts[number]):Box=>({left:(part.x-part.width*.5)*width,right:(part.x+part.width*.5)*width,top:(part.y-part.height*.5)*height,bottom:(part.y+part.height*.5)*height});
   for(const part of parts){
     const label=cameraModelLabel(part,height,width),box={left:(part.x-part.width*.56)*width,right:(part.x+part.width*.56)*width,top:label.labelY-label.font,bottom:label.labelY+label.labelHeight};

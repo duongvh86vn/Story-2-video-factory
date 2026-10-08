@@ -1,0 +1,193 @@
+{
+  "$ref": "#/definitions/body-source",
+  "definitions": {
+    "body-source": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "native-source-body-1"
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "startMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "endMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "walks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "fromX": {
+                "type": "number"
+              },
+              "toX": {
+                "type": "number"
+              },
+              "gait": {
+                "type": "string",
+                "enum": [
+                  "walk",
+                  "run"
+                ]
+              }
+            },
+            "required": [
+              "startMs",
+              "endMs",
+              "fromX",
+              "toX"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "jumps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "takeoffMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "landingMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "height": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "tuck": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 0.5
+              }
+            },
+            "required": [
+              "startMs",
+              "endMs",
+              "takeoffMs",
+              "landingMs",
+              "height"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 16
+        },
+        "postures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "endMs": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pose": {
+                "type": "string",
+                "enum": [
+                  "stand",
+                  "crouch",
+                  "lean",
+                  "seated"
+                ]
+              },
+              "intensity": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "leanDeg": {
+                "type": "number",
+                "minimum": -25,
+                "maximum": 25
+              },
+              "supportId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              }
+            },
+            "required": [
+              "startMs",
+              "endMs",
+              "pose"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "entryPosture": {
+          "type": "object",
+          "properties": {
+            "pose": {
+              "type": "string",
+              "enum": [
+                "stand",
+                "crouch",
+                "lean",
+                "seated"
+              ]
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "leanDeg": {
+              "type": "number",
+              "minimum": -25,
+              "maximum": 25
+            },
+            "supportId": {
+              "type": "string",
+              "maxLength": 96,
+              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+            }
+          },
+          "required": [
+            "pose"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "id",
+        "startMs",
+        "endMs",
+        "walks"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -11,6 +11,8 @@ import type {SpeechActivity} from '../voice/schemas.js';
 import {postureAt} from '../animation/compiler.js';
 import {sameSeatSupport} from '../animation/support.js';
 import {validateSceneIntent} from '../explainer/plan.js';
+import {actorViewActingClock} from './view-acting-clock.js';
+import {bodyRootAt} from '../animation/view-source-body.js';
 
 export function actorProfile(character:ActorDefinition,_base?:HostProfile):HostProfile{
   for(const [i,layer] of (character.costume??[]).entries())artworkSvg(layer.svg,`actor.${character.id}.${i}`);
@@ -67,6 +69,11 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
       if(actor.speakingSegmentIds.some(id=>!shot.narrationSegmentIds?.includes(id)))throw new Error(`${shot.id}: actor speech is outside this shot's narration anchors`);
     }
   }
+  for(const shot of board.shots){
+    const c=shot.cinematic,scene=c?.actorScene;if(!c||!scene)continue;
+    for(const actor of [...(scene.primary?[{id:scene.primary.id,p:c.performance}]:[]),...scene.supporting.map(a=>({id:a.character.id,p:a.performance}))])
+      if(actor.p.sourceBody&&!actorViewActingClock(board,shot,actor.id)?.bodyMotion)throw new Error(`${shot.id}: needs-view-body-phase: original body source needs a registered actor and its complete continuous run`);
+  }
   for(const [index,shot] of board.shots.entries()){
     const scene=shot.cinematic?.actorScene,prior=board.shots[index-1]?.cinematic?.actorScene;
     if(!scene||scene.continuity!=='continuous'||!prior)continue;
@@ -75,6 +82,11 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
     const before=performances(board.shots[index-1]!),after=performances(shot);
     if(hash([...before.keys()].sort())!==hash([...after.keys()].sort()))throw new Error(`${shot.id}: continuous scene changed its cast; use a cut`);
     for(const [id,p] of after){const old=before.get(id)!;
+      if(old.sourceBody||p.sourceBody){
+        const a=actorViewActingClock(board,board.shots[index-1]!,id),b=actorViewActingClock(board,shot,id);
+        if(!a?.bodyMotion||!b?.bodyMotion||a.sourceIdentityHash!==b.sourceIdentityHash||hash(bodyRootAt(old,board.shots[index-1]!.startMs,old.durationMs))!==hash(bodyRootAt(p,shot.startMs,0)))throw new Error(`${shot.id}: needs-view-body-phase: original body source changed at a continuous cut`);
+        continue;
+      }
       const exit={x:old.walks.at(-1)?.toX??old.root.x,y:old.stage.groundY};
       const facing=old.turns?.at(-1)?.direction??old.facing??'front';
       if(hash(exit)!==hash(p.root)||old.scale!==p.scale||facing!==(p.facing??'front'))throw new Error(`${shot.id}: actor ${id} jumps position, facing or scale in continuous action`);
@@ -106,6 +118,7 @@ export function seedActorShot(shot:Shot,base:HostProfile,rig:HostRig):void{
       const performance=structuredClone(c.performance);
       performance.root={x:performance.stage.width*(.24+.48*(i+1)/(characters.length-1)),y:performance.stage.groundY};
       performance.walks=[];performance.turns=[];performance.gestures=[];performance.gazes=[];performance.props=[];
+      delete performance.sourceBody;
       performance.entryPosture=undefined;performance.postures=[];performance.supports=[];
       return {character,performance,actions:[{type:'idle' as const,startMs:shot.startMs,endMs:shot.endMs}],speakingSegmentIds:[]};
     })};
@@ -113,6 +126,7 @@ export function seedActorShot(shot:Shot,base:HostProfile,rig:HostRig):void{
       // A mechanism/cutaway without a sourced participant is not a universal researcher.
       shot.host!.actions=[{type:'idle',startMs:shot.startMs,endMs:shot.endMs}];
       c.performance.walks=[];c.performance.turns=[];c.performance.gestures=[];c.performance.gazes=[];c.performance.props=[];
+      delete c.performance.sourceBody;
       c.propBindings=[];c.continuity.exit={...c.performance.root};c.continuity.facing=c.performance.facing??'front';
     }
     bindActorShot(shot,base,rig);

@@ -25,6 +25,7 @@ import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeCl
 import {moodPoses,expressionPose,type ExpressionPose} from './expression-pose.js';
 import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
 import {viewSourceGestureDefinition,sourceViewGestureAt} from './view-source-gesture.js';
+import {sourceBodyPlan,validateBodySourcePlan} from './view-source-body.js';
 import {sampleLunge} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
@@ -88,6 +89,10 @@ function overlaps(items: Array<{startMs:number;endMs:number}>, label:string, dur
 }
 /** Applies equally to compiled plans and direct random-access inspection. */
 function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
+  if(plan.sourceBody){
+    if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate');
+    validateBodySourcePlan(plan);
+  }
   if(plan.gestures.some(g=>g.sourceSpan)){
     if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-gesture-phase: original gesture span needs a selected current native mouth/eyes candidate');
     for(const g of plan.gestures.filter(g=>g.sourceSpan))viewSourceGestureDefinition(g);
@@ -104,7 +109,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if(hasBodyViewExpressions(profile))registeredBodyViewExpressions(profile);
   if(!usesBodyView(profile))return;
   if(plan.headView!==registeredBodyView(profile).view||plan.headTurns?.length||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
-  if(hasBodyViewLocomotion(profile))validateNativeLocomotion(plan,profile,registeredBodyView(profile));
+  if(hasBodyViewLocomotion(profile))validateNativeLocomotion(sourceBodyPlan(plan),profile,registeredBodyView(profile));
   else if(plan.walks.length||plan.jumps?.length||plan.supports?.length||plan.postures?.length||plan.entryPosture)throw new Error('needs-view-motion: authored-view cloth/locomotion/seated registration is pending; select registered-locomotion-v1 for the native candidate');
   if(plan.expressions.some(e=>e.mood!=='happy')&&!hasBodyViewExpressions(profile))throw new Error('needs-view-expression: authored-view candidate needs explicit registered expressions for non-happy emotions');
   if(plan.gazes.length&&!hasBodyViewEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs the registered-eyes-v1 candidate');
@@ -114,6 +119,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
 }
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
   PerformancePlanSchema.parse(plan);
+  if(plan.sourceBody){validateFixedBodyView(plan,profile);validatePerformance(sourceBodyPlan(plan),profile);}
   validateReferenceHead(profile,[plan.headView,...(plan.headTurns??[]).map(turn=>turn.direction)]);
   if(usesReferenceBody(profile)&&plan.turns?.length)throw new Error('needs-body-view: source body v1 has a fixed authored torso; full body turns require side/rear artwork.');
   if(usesReferenceHead(profile)&&plan.headTurns?.some(turn=>turn.endMs-turn.startMs<280))throw new Error('Reference head turn window must be at least 280ms.');
@@ -363,16 +369,18 @@ function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetri
   return needed+walk.activation*(1.1+.5*Math.sin(walk.phase*Math.PI*2))*scale;
 }
 function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number,actingClock?:ViewActingClock){
-  const m=rigMetrics(profile),s=plan.scale,root=rootAt(plan,t),walk=gait(plan,profile,t),emotion=expressionAt(plan,t,hasBodyViewExpressions(profile)?actingClock:undefined),pose=emotion.pose;
+  if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
+  const physical=sourceBodyPlan(plan),motionTime=plan.sourceBody?t+actingClock!.startMs-plan.sourceBody.startMs:t;
+  const m=rigMetrics(profile),s=plan.scale,root=rootAt(physical,motionTime),walk=gait(physical,profile,motionTime),emotion=expressionAt(plan,t,hasBodyViewExpressions(profile)?actingClock:undefined),pose=emotion.pose;
   const lunge=sampleLunge(plan,t);
   if(lunge){walk.feet={left:{...lunge.soles.left},right:{...lunge.soles.right}};walk.stance={left:true,right:true};}
-  const jump=plan.jumps?.find(j=>t>=j.startMs&&t<=j.endMs),air=jump?sampleAirborne(jump,t,s):walk.runAir;
+  const jump=physical.jumps?.find(j=>motionTime>=j.startMs&&motionTime<=j.endMs),air=jump?sampleAirborne(jump,motionTime,s):walk.runAir;
   if(air)for(const side of ['left','right'] as const){walk.feet[side].y+=air.feetOffsetY;walk.stance[side]=walk.runAir?walk.stance[side]&&!air.airborne:!air.airborne;}
   if(jump?.tuck&&air?.airborne){
-    const p=clamp((t-jump.takeoffMs)/(jump.landingMs-jump.takeoffMs)),arch=64*p*p*p*(1-p)*(1-p)*(1-p);
+    const p=clamp((motionTime-jump.takeoffMs)/(jump.landingMs-jump.takeoffMs)),arch=64*p*p*p*(1-p)*(1-p)*(1-p);
     for(const side of ['left','right'] as const)walk.feet[side].y-=m.upperLeg*jump.tuck*s*arch;
   }
-  const orientation=orientationAt(plan,t),bodyPosture=postureAt(plan,t),source=usesReferenceBody(profile);
+  const orientation=orientationAt(physical,motionTime),bodyPosture=postureAt(physical,motionTime),source=usesReferenceBody(profile);
   const breathTime=t+(actingClock?.startMs??0),breathStart=actingClock?.runStartMs??0,breathEnd=actingClock?.runEndMs??plan.durationMs;
   const breath=source?Math.sin((breathTime+(profile.appearance.characterVariant==='karo'?1100:0))*Math.PI*2/4300)*.55*smooth((breathTime-breathStart)/VIEW_BREATH_RAMP_MS)*smooth((breathEnd-breathTime)/VIEW_BREATH_RAMP_MS):0;
   const sourceSupported=source&&plan.supports?.length?sourceSupportMotion(plan,profile,t,root,walk.feet):undefined;
@@ -414,10 +422,11 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number,actingClo
 }
 /** Shared body landmarks for authoring a tool target without invoking arm IK.
  * Does not advance a scene, render a video or accept the resulting pose. */
-export function bodyPoseAnchors(plan:PerformancePlan,profile:HostProfile,timeMs:number){
+export function bodyPoseAnchors(plan:PerformancePlan,profile:HostProfile,timeMs:number,actingClock?:ViewActingClock){
   if(plan.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
-  const {m,s,pelvis,lean}=bodyStateAt(plan,profile,clamp(timeMs,0,plan.durationMs));
+  if(actingClock)validateViewActingClock(plan,actingClock);
+  const {m,s,pelvis,lean}=bodyStateAt(plan,profile,clamp(timeMs,0,plan.durationMs),actingClock);
   const shoulders=Object.fromEntries((['left','right'] as const).map(side=>{
     const p=m.shoulders?.[side]??{x:m.shoulderOffset*(side==='left'?-1:1),y:m.shoulderY-m.pelvisY};
     return [side,add(pelvis,rotate({x:p.x*s,y:p.y*s},lean))];
@@ -572,7 +581,7 @@ function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture
   const {m,s,walk,pelvis,lean,pose,emotion,bodyPosture,bend}=bodyStateAt(plan,profile,entryTimeMs,actingClock);
   const toWorld=(point:Point)=>add(pelvis,rotate({x:point.x*s,y:point.y*s},lean));
   const shoulder=toWorld(m.shoulders![side]),lengths=m.arms![side],lower=lengths.lower*s+(m.handAttachment?.[side].length??0)*s;
-  const restPole=side==='right'?1:-1,sourceRun=plan.walks.some(w=>w.gait==='run'),rest=m.armRest![side];
+  const restPole=side==='right'?1:-1,sourceRun=(plan.sourceBody?.walks??plan.walks).some(w=>w.gait==='run'),rest=m.armRest![side];
   const swing=walk.running&&sourceRun?0:Math.sin(walk.phase*Math.PI)*(side==='right'?-1:1)*walk.armSwing*walk.activation;
   let neutral=add(shoulder,rotate({x:rest.x*s,y:rest.y*s},swing+lean)),runningChain:Chain|undefined;
   if(sourceRun&&walk.running){
@@ -611,6 +620,7 @@ function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gest
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity,sourceClock?:SpeechSourceClock,actingClock?:ViewActingClock):FrameState {
   if(plan.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
+  if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
   if(plan.gestures.some(g=>g.sourceSpan)&&!actingClock)throw new Error('needs-view-gesture-phase: source gesture requires its complete storyboard/run context');
   if(actingClock){
     if(!usesBodyView(profile)||!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)&&!hasBodyViewLocomotion(profile))throw new Error('needs-view-acting-phase: select a registered native mouth/eyes/locomotion candidate');
@@ -636,7 +646,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   const armGeometry={} as NonNullable<FrameState['armGeometry']>;
   const spearGeometry={} as NonNullable<FrameState['spearGeometry']>;
   const spearArms:Record<string,Partial<Record<RigHand,Parameters<typeof sourceSpearPairShape>[0]>>>={};
-  const sourceRun=usesReferenceBody(profile)&&plan.walks.some(w=>w.gait==='run');
+  const sourceRun=usesReferenceBody(profile)&&(plan.sourceBody?.walks??plan.walks).some(w=>w.gait==='run');
   const kneeProjection=(state:{kneeSeatWeight:number},geometry:ReturnType<typeof legGeometry>,chain:Chain)=>projectSourceKnee(geometry.hip,chain.end,chain.joint,geometry.bones.upper,geometry.bones.lower,state.kneeSeatWeight);
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
   transforms.pelvis=transform(pelvis);transforms.chest=transform(pelvis,lean,s*profile.appearance.bodyScale);
@@ -661,9 +671,8 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   transforms['face-orientation']=transform({x:orientation*5,y:0},0,1-Math.abs(orientation)*.1);
   const chinAt=(side:RigHand)=>add(head,rotate(usesCutoutHead(profile)?{x:cutoutHeadChin(profile,side).x*s*headArtScale,y:cutoutHeadChin(profile,side).y*s*headArtScale}:{x:m.headRadius*.3*s*(side==='left'?-1:1),y:(usesReferenceBody(profile)?headBottom*.85:m.headRadius*.875)*s},headAngle));
   const garment=usesReferenceBody(profile)&&!usesBodyView(profile)?referenceGarmentMotion(profile):undefined,viewCloth=hasBodyViewLocomotion(profile)?registeredBodyView(profile):undefined;
-  // Moving native clips cannot cross a cut. A static continuous run can still
-  // breathe/lean with its source expression track, so its cloth lag may look
-  // before the current shot; clamping at every cut would restart that lag.
+  // Source-owned body tracks and attention can precede this camera slice.
+  // Clamp cloth lag at the original run entry, never at an interior cut.
   const lagFloor=viewCloth&&actingClock?actingClock.runStartMs-actingClock.startMs:0;
   const lagged=garment||viewCloth?bodyStateAt(plan,profile,Math.max(lagFloor,t-(viewCloth?VIEW_CLOTH_LAG_MS:garment!.lagMs)),actingClock):undefined;
   const viewThighAngles={left:0,right:0};
@@ -977,11 +986,15 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile,plan:Per
 const isPainterSlot=(id:string)=>/^(?:hand|ink-arm)-(?:left|right)-(?:front|back)-slot$/.test(id);
 
 export function compilePerformance(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,namespace='',sourceClock?:SpeechSourceClock,actingClock?:ViewActingClock) {
+  if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
   validatePerformance(plan,profile);
   if(hasBodyViewSpeech(profile))validateBodyViewMouthActivity(activity);
   if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
   if(actingClock)validateViewActingClock(plan,actingClock);
   const times=new Set<number>([0,plan.durationMs]);
+  const physical=sourceBodyPlan(plan),motionOffset=plan.sourceBody?plan.sourceBody.startMs-actingClock!.startMs:0;
+  const addMotionTime=(at:number)=>{times.add(at+motionOffset);if(hasBodyViewLocomotion(profile))times.add(at+motionOffset+VIEW_CLOTH_LAG_MS);};
+  if(plan.sourceBody)for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)addMotionTime(at);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...plan.gestures,...(plan.spears??[]),...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
@@ -989,9 +1002,9 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   if([HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION].includes(plan.compilerVersion))for(const clip of expressionRanges(plan)){
     const window=expressionBlendMs(clip);times.add(clip.startMs+window);times.add(clip.endMs-window);
   }
-  for(const jump of plan.jumps??[])for(const at of [jump.startMs,jump.takeoffMs,jump.landingMs,jump.endMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])for(const near of [at-.01,at,at+.01])times.add(near);
+  for(const jump of physical.jumps??[])for(const at of [jump.startMs,jump.takeoffMs,jump.landingMs,jump.endMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])for(const near of [at-.01,at,at+.01])addMotionTime(near);
   for(const g of plan.gestures.filter(g=>g.action==='drop')){times.add(g.landingMs!);times.add(g.landingMs!-.01);times.add(g.landingMs!+.01);}
-  for(const clip of plan.postures??[])for(const at of [(clip.startMs+clip.endMs)/2,(clip.startMs+clip.endMs)/2-.01,(clip.startMs+clip.endMs)/2+.01])times.add(at);
+  for(const clip of physical.postures??[])for(const at of [(clip.startMs+clip.endMs)/2,(clip.startMs+clip.endMs)/2-.01,(clip.startMs+clip.endMs)/2+.01])addMotionTime(at);
   for(const g of plan.gestures)for(const at of [g.contactMs,g.releaseMs,recoveryStart(g)])if(at!==undefined){times.add(at);times.add(at-.01);times.add(at+.01);}
   if(usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion))for(const gesture of plan.gestures.filter(g=>!contacts(g)&&!g.sourceSpan)){
     const window=articulatedGestureWindow(gesture);
@@ -1002,14 +1015,14 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     if(!enteringCarry(g))times.add(g.contactMs!+CARRY_TRANSITION_MS);
     if(g.releaseMs!==undefined)times.add(g.releaseMs-CARRY_TRANSITION_MS);
   }
-  for(const walk of plan.walks)for(const step of walkSteps(plan,profile,walk)){
-    for(const at of [step.startMs,step.endMs])times.add(at);
-    if(usesReferenceBody(profile)||walk.gait==='run')for(const pose of walk.gait==='run'?RUN_POSES:SOURCE_WALK_POSES)times.add(step.startMs+(step.endMs-step.startMs)*pose.phase);
+  for(const walk of physical.walks)for(const step of walkSteps(physical,profile,walk)){
+    for(const at of [step.startMs,step.endMs])addMotionTime(at);
+    if(usesReferenceBody(profile)||walk.gait==='run')for(const pose of walk.gait==='run'?RUN_POSES:SOURCE_WALK_POSES)addMotionTime(step.startMs+(step.endMs-step.startMs)*pose.phase);
   }
-  for(const walk of plan.walks.filter(w=>w.gait==='run')){
-    const schedule=runSchedule(walk,rigMetrics(profile),plan.scale,gait(plan,profile,walk.startMs).feet,at=>rootAt(plan,at));
-    for(const track of schedule.tracks)for(const clip of track.clips)for(const at of [clip.start,clip.end])times.add(at);
-    for(const hop of schedule.hops)for(const at of [hop.startMs,hop.takeoffMs,hop.landingMs,hop.endMs])for(const near of [at-.01,at,at+.01])times.add(near);
+  for(const walk of physical.walks.filter(w=>w.gait==='run')){
+    const schedule=runSchedule(walk,rigMetrics(profile),plan.scale,gait(physical,profile,walk.startMs).feet,at=>rootAt(physical,at));
+    for(const track of schedule.tracks)for(const clip of track.clips)for(const at of [clip.start,clip.end])addMotionTime(at);
+    for(const hop of schedule.hops)for(const at of [hop.startMs,hop.takeoffMs,hop.landingMs,hop.endMs])for(const near of [at-.01,at,at+.01])addMotionTime(near);
   }
   // Audio RMS is a sampled signal: its boundaries are explicit, without blending across silence.
   for(const cue of activity.intervals)for(const at of [cue.startMs,cue.endMs]){times.add(at);times.add(at-.01);}
@@ -1110,6 +1123,6 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     ...(hasBodyViewExpressions(profile)?{bodyExpressions:{...bodyViewExpressionsDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'complete original expression run':'shot-local diagnostic expressions',sourceTrackHash:hash(actingClock?.expressions??plan.expressions),audioVerified:false}}:{}),
     ...(hasBodyViewLocomotion(profile)?{bodyMotion:{...nativeClothDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
-      clock:'complete shot-local walk/run/jump/posture; no cut through moving native run',sourceTrackHash:hash({walks:plan.walks,jumps:plan.jumps??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),audioVerified:false}}:{}),
+      clock:plan.sourceBody?'complete original body tracks through explicitly continuous camera slices':'complete shot-local walk/run/jump/posture; moving cuts require explicit sourceBody',sourceTrackHash:hash(plan.sourceBody??{walks:plan.walks,jumps:plan.jumps??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

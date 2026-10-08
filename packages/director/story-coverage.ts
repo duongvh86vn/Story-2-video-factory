@@ -5,6 +5,7 @@ import type {SceneIntent} from '../explainer/schemas.js';
 import type {ActorDefinition} from '../actors/schemas.js';
 import {isWholeSourceStatement} from '../explainer/plan.js';
 import {ApprovalRequired} from '../orchestrator/state-machine.js';
+import {actorViewActingClock} from '../actors/view-acting-clock.js';
 
 type Acting=NonNullable<SceneIntent['acting']>[number];
 export function actingSourceWindows(expected:Acting,beat:Beat,narration:Narration,interval:Pick<Shot,'startMs'|'endMs'>=beat){
@@ -33,8 +34,15 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
   if(kind==='hold')return true; // Presence is the intended performance; no artificial activity quota.
   const windows=actingSourceWindows(expected,beat,narration,shot);
   const overlaps=(clip:{startMs:number;endMs:number})=>windows.some(window=>shot.startMs+clip.startMs<window.endMs&&shot.startMs+clip.endMs>window.startMs);
-  if(kind==='locomotion'&&expected.movement==='jump')return (p.jumps??[]).some(clip=>windows.some(window=>shot.startMs+clip.takeoffMs>=window.startMs&&shot.startMs+clip.landingMs<=window.endMs));
-  if(kind==='locomotion')return p.walks.some(clip=>overlaps(clip)&&Math.abs(clip.toX-clip.fromX)>.01&&
+  const body=p.sourceBody??p,bodyOffset=p.sourceBody?.startMs??shot.startMs;
+  const bodyOverlaps=(clip:{startMs:number;endMs:number})=>windows.some(window=>bodyOffset+clip.startMs<window.endMs&&bodyOffset+clip.endMs>window.startMs);
+  if(kind==='locomotion'&&expected.movement==='jump')return (body.jumps??[]).some(clip=>{
+    // An explicit complete source run remains visible across its camera slices;
+    // takeoff AND landing must still fit the original sourced statement clock.
+    const evidence=p.sourceBody?actingSourceWindows(expected,beat,narration):windows;
+    return shot.startMs<bodyOffset+clip.landingMs&&shot.endMs>bodyOffset+clip.takeoffMs&&evidence.some(window=>bodyOffset+clip.takeoffMs>=window.startMs&&bodyOffset+clip.landingMs<=window.endMs);
+  });
+  if(kind==='locomotion')return body.walks.some(clip=>bodyOverlaps(clip)&&Math.abs(clip.toX-clip.fromX)>.01&&
     (expected.movement==='run'?clip.gait==='run':expected.movement==='walk'?clip.gait!=='run':true));
   if(kind==='manipulation'&&expected.operation==='drop')return p.gestures.some(clip=>clip.action==='drop'&&clip.releaseMs!==undefined&&clip.landingMs!==undefined&&clip.propId&&p.props.some(prop=>prop.id===clip.propId)&&actions.some(action=>action.type==='operate-model'&&expected.targetIds?.includes(action.target?.partId??'')&&action.contactMs===shot.startMs+clip.contactMs!&&action.startMs===shot.startMs+clip.startMs&&action.endMs===shot.startMs+clip.endMs&&windows.some(window=>window.id===action.narrationAnchor&&shot.startMs+clip.releaseMs!>=window.startMs&&shot.startMs+clip.landingMs!<=window.endMs)));
   if(kind==='manipulation')return p.gestures.some(clip=>overlaps(clip)&&['operate','pick-place','carry'].includes(clip.action)&&clip.contactMs!==undefined&&
@@ -49,11 +57,11 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
   if(kind==='speech')return speakingSegmentIds.some(id=>windows.some(window=>window.id===id));
   if(kind==='reaction')return p.gestures.some(clip=>overlaps(clip)&&clip.action==='react')||p.expressions.some(clip=>overlaps(clip)&&clip.mood!=='neutral');
   if(kind==='posture'){
-    let previous=p.entryPosture??{pose:'stand' as const};
-    for(const clip of [...(p.postures??[])].sort((a,b)=>a.startMs-b.startMs)){
+    let previous=body.entryPosture??{pose:'stand' as const};
+    for(const clip of [...(body.postures??[])].sort((a,b)=>a.startMs-b.startMs)){
       const {startMs,endMs,...target}=clip;
       const canonical=(pose:typeof previous)=>({pose:pose.pose,intensity:pose.intensity??1,leanDeg:pose.leanDeg??0,supportId:pose.supportId??null});
-      if(overlaps({startMs,endMs})&&hash(canonical(previous))!==hash(canonical(target)))return true;
+      if(bodyOverlaps({startMs,endMs})&&hash(canonical(previous))!==hash(canonical(target)))return true;
       previous=target;
     }
   }
@@ -62,6 +70,10 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
 
 /** Beat-level coverage permits cutaways and regrouping without dropping the accepted story actors. */
 export function validateStoryActingCoverage(board:Storyboard,beats:Beat[],narration:Narration):void{
+  for(const shot of board.shots){const c=shot.cinematic,scene=c?.actorScene;if(!c||!scene)continue;
+    for(const actor of [...(scene.primary?[{id:scene.primary.id,p:c.performance}]:[]),...scene.supporting.map(a=>({id:a.character.id,p:a.performance}))])
+      if(actor.p.sourceBody&&!actorViewActingClock(board,shot,actor.id)?.bodyMotion)throw new Error(`${shot.id}: needs-view-body-phase: acting coverage requires the complete original body run`);
+  }
   const failures:string[]=[];
   for(const beat of beats){
     const intent=beat.sceneIntent;if(!intent?.participants.length)continue;

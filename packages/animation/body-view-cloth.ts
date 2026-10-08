@@ -87,5 +87,5 @@ export const nativeClothDescription={version:BODY_VIEW_CLOTH_VERSION,selection:B
   bindings:nativeClothBindings,triangles:12,belt:'pinned complete row; upper material remains native',follow:'90ms absolute thigh follow, 0.7 gain, 18deg bound; shared lower cage and positive-area governor',
   limbs:'existing fixed XYZ chains, source mitten/sole artwork, joined soft ink, source walk/run/airborne schedules; inferred anatomy',
   supported:['forward walk','forward run','jump','stand/crouch/lean','point/think/react'],
-  limitations:['unapproved art/pose/skin/ink/mesh seam quality','fixed native view; no continuous body/head turns','no native seating or new grasp/carry/tool registration','no source locomotion phase across camera cuts','hair/beard still follow head rigidly','not a fabric simulator or anatomy/motion acceptance'],
+  limitations:['unapproved art/pose/skin/ink/mesh seam quality','fixed native view; no continuous body/head turns','no native seating or new grasp/carry/tool registration','moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross','hair/beard still follow head rigidly','not a fabric simulator or anatomy/motion acceptance'],
   approved:false,productionReady:false,physicalSimulation:false};

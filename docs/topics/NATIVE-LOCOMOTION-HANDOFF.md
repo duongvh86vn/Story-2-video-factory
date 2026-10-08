@@ -1,5 +1,7 @@
 # Lila/Karo — thân, bước chân và vạt áo native
 
+Lịch sử0.37. Phần tiếp hiện hành0.38 là [original body clock xuyên camera slices](NATIVE-SOURCE-BODY-HANDOFF.md); các giới hạn no-moving-cut bên dưới mô tả0.37. Ordinary local clips vẫn không được split;0.38 cần full explicit sourceBody trên mọi shot, chưa runtime acceptance.
+
 Mốc source0.37, 08/10/2026; source `b052f664edd608c547ce17cf2c0ff567a2aee0ea`, base `0f30da0aec9c7c65dab6a31700aac95b41765406`, branch `codex/prehistoric-life`. Source đã push lên GitHub và xác nhận remote/local cùng SHA; commit tài liệu tiếp theo chỉ ghi nhận việc công bố. Đây là phần tiếp của tool kể chuyện bất kỳ, không phải tập phim đã nghiệm thu. Checks/review/publication ghi trong [record](reviews/native-locomotion-source-review-v1.md).
 
 Full build, fresh test:typecheck, schema export và bounded source review đã qua;30 callback mới vẫn NOT RUN. Hai P2 source đã sửa và lỗi schema export trên Windows được giữ trong record; exporter hiện bỏ ghi chỉ khi byte được sinh mới bằng chính xác file hiện có, không bỏ lỗi hoặc dùng contract cũ. Các check này không chứng minh chất lượng video.

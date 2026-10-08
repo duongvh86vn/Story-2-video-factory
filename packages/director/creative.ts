@@ -29,6 +29,8 @@ import {castDesignAdvisories} from '../actors/design.js';
 import {actorDefinitions,actorLockKey,assertActorLocks} from '../actors/locks.js';
 import type {ActorDefinition} from '../actors/schemas.js';
 import {validateCamera} from './camera.js';
+import {actorViewActingClock} from '../actors/view-acting-clock.js';
+import {bodyRootAt} from '../animation/view-source-body.js';
 import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
 import {creativeActingBrief} from './acting-brief.js';
@@ -86,8 +88,8 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
           shot.camera={shotSize:c.camera.framing,movement:c.camera.movement,angle:'eye-level'};
           shot.sceneType='character-scene';shot.recipeId=EXPLAINER_RECIPES[shot.visualization!.type];
           if(!c.spriteStage){
-            c.continuity.entry={...c.performance.root};
-            c.continuity.exit={x:c.performance.walks.at(-1)?.toX??c.performance.root.x,y:c.performance.stage.groundY};
+            check(()=>{c.continuity.entry=bodyRootAt(c.performance,shot.startMs,0);
+              c.continuity.exit=bodyRootAt(c.performance,shot.startMs,c.performance.durationMs);});
             c.continuity.facing=[...(c.performance.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??c.performance.facing??'front';
           }
           c.continuity.models=modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
@@ -102,11 +104,11 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     check(()=>validateExplainerStoryboard(board,context.narration,context.beats,context.profile,context.rig,config));
     for(const shot of board.shots){
       // Per-shot diagnostics retain the full canonical world for persistent subjects and recaps.
-      check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true}));
+      check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true,sourceBoard:board}));
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
-      if(!shot.cinematic?.spriteStage)check(()=>validateCamera(shot,shotPerformer(shot,context.profile,context.rig).profile));
+      if(!shot.cinematic?.spriteStage)check(()=>{const profile=shotPerformer(shot,context.profile,context.rig).profile;validateCamera(shot,profile,actorViewActingClock(board,shot,profile.id));});
       let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;
       let speech:Awaited<ReturnType<typeof loadSpriteSceneSpeech>>;
       try{motions=await loadSpriteSceneMotions(root,shot);speech=await loadSpriteSceneSpeech(root,shot,motions);}catch(error){failures.add(String(error));}

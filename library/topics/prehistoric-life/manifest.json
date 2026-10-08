@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.37-native-locomotion-candidate",
+  "version": "forest-tribe-0.38-source-body-clock-candidate",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -1835,7 +1835,7 @@
             "unapproved art/pose/skin/ink/mesh seam quality",
             "fixed native view; no continuous body/head turns",
             "no native seating or new grasp/carry/tool registration",
-            "no source locomotion phase across camera cuts",
+            "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
             "hair/beard still follow head rigidly",
             "not a fabric simulator or anatomy/motion acceptance"
           ],
@@ -1862,7 +1862,7 @@
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "101269e8464f18c5a53d570c03cd5d2275ca8727f4eced80a11df64c047f990d",
+    "fingerprint": "f20c6309f2a6843f220233c7984c11fc9d22ebee173d2192c7fa460c35c159e0",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -1884,9 +1884,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-27",
+    "compilerVersion": "forest-source-body-motion-28",
     "rendererVersion": "forest-source-body-svg-14",
-    "fingerprint": "c2d8db9a16a0b5d3cb035f6e641d949ecc90356b448919c6b5a8ce013091eaf3",
+    "fingerprint": "64caf56821151d68a0d0a1aded2d6f7f49e9d7203f172219fc2ee5fe62ee8c7d",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -3385,7 +3385,7 @@
           "unapproved art/pose/skin/ink/mesh seam quality",
           "fixed native view; no continuous body/head turns",
           "no native seating or new grasp/carry/tool registration",
-          "no source locomotion phase across camera cuts",
+          "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
           "hair/beard still follow head rigidly",
           "not a fabric simulator or anatomy/motion acceptance"
         ],
@@ -4687,7 +4687,7 @@
             "unapproved art/pose/skin/ink/mesh seam quality",
             "fixed native view; no continuous body/head turns",
             "no native seating or new grasp/carry/tool registration",
-            "no source locomotion phase across camera cuts",
+            "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
             "hair/beard still follow head rigidly",
             "not a fabric simulator or anatomy/motion acceptance"
           ],
@@ -4722,17 +4722,20 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "476256a4b3daf986c41281b8f673d2c42d3844407afb9f962310ecf4fd646e4f",
+    "codeHash": "f319a1e5d60a6f1ca56623bc34f875dbb8c7764c0769aa33710cffd43bfe00ef",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
-    "compilerCodeHash": "a41411172e229305c1622b3261380e20dc68ec0f298bc12734658d89f828809a",
+    "compilerCodeHash": "e92367718ee3592a6f06d3b966f867a928f571d33f5e914d3cfa1f45217018e2",
     "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
-    "cameraCodeHash": "999d4649ae717202c21d27b3f000e4ace6f6b81e9f08a707bbee2853681a34b7",
+    "cameraCodeHash": "2597342bd01f5d74c030eb2c0319958022cf93b68272893674eadf9c67abb807",
+    "sourceBodyCodeHash": "ddd589dafc0287250c0e3a4fa520c83cdd676b07d4653c728af2dde92ab1ba9e",
+    "actingClockCodeHash": "36426b626c8c42430bbf2931191f7cfdf1d0e9063414c22a9850e922ee7820bb",
+    "actingBindingCodeHash": "4d90e090c87e94665b1a68d1725c2b82f951af94eee8802b2dd0c95e64929355",
     "viewCodeHash": "64a3446da24ce961429e25ccc26baeb982f354712daf9d1bb743bd1760536ec3",
     "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
-    "viewClothCodeHash": "bc96a0c1181556b9a15c3bfaa57f3d2981594debfb15db6a213a871655288892",
+    "viewClothCodeHash": "ff9d71f9af956389b13602eafa17916b72413a1d32b56d239f81ecb139abd225",
     "viewClothGeometryCodeHash": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
     "lungeCodeHash": "3d54c801e6a7143b61eb660e7670ab9c5ecd84d575cd852e6db4b8ba0f2afe24",
     "handCodeHash": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1"
@@ -6154,7 +6157,7 @@
           "unapproved art/pose/skin/ink/mesh seam quality",
           "fixed native view; no continuous body/head turns",
           "no native seating or new grasp/carry/tool registration",
-          "no source locomotion phase across camera cuts",
+          "moving camera cuts require explicit identical complete sourceBody on every continuous actor slice; ordinary local clips cannot cross",
           "hair/beard still follow head rigidly",
           "not a fabric simulator or anatomy/motion acceptance"
         ],

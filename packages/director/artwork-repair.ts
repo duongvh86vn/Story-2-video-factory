@@ -48,7 +48,7 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
   }
   const binding={modelsHash:hash({primary:config.models.storyboard,fallback:config.models.fallback}),shotHash:hash(shot),narrationHash:hash(narration),...(sourcePhase?{sourcePhase}:{}),...(actingRepair?{repairContract:'bounded-actor-motion-1'}:{})};
   const validate=async(candidate:Shot)=>{
-    validateExplainerStoryboard({shots:[candidate]},narration,beats,profile,rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true});
+    validateExplainerStoryboard({shots:[candidate]},narration,beats,profile,rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true,sourceBoard:phaseBoard});
     const motions=await loadSpriteSceneMotions(root,candidate),speech=await loadSpriteSceneSpeech(root,candidate,motions);
     const candidateBoard=phaseBoard?{shots:phaseBoard.shots.map(s=>s.id===candidate.id?candidate:s)}:undefined;
     const files=renderCinematic(candidate,profile,rig,{method:'segment-draft',windowMs:20,intervals:[]},config,undefined,narration,motions,speech,candidateBoard).files;

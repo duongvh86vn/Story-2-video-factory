@@ -3,6 +3,9 @@ import type { HostProfile } from '../host/schemas.js';
 import type { PerformancePlan, Point } from '../animation/schemas.js';
 import { rigMetrics } from '../animation/rig.js';
 import { samplePerformance } from '../animation/compiler.js';
+import { validateViewActingClock, VIEW_GAZE_RAMP_MS, VIEW_BREATH_RAMP_MS, type ViewActingClock } from '../animation/view-acting-clock.js';
+import { VIEW_EXPRESSION_RAMP_MS } from '../animation/view-expression-track.js';
+import { sourceBodyPlan, bodyTrackOffsetMs, bodyRootAt } from '../animation/view-source-body.js';
 import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
 import { CameraSchema, type CinematicCamera } from './schemas.js';
 import { rendersModelLabel } from './art-direction-schemas.js';
@@ -18,22 +21,38 @@ function include(bounds:Bounds,point:Point,pad=0){
   bounds.left=Math.min(bounds.left,point.x-pad);bounds.right=Math.max(bounds.right,point.x+pad);
   bounds.top=Math.min(bounds.top,point.y-pad);bounds.bottom=Math.max(bounds.bottom,point.y+pad);
 }
-/** Measure the existing rig on its narrative frame clock, including headScale and antenna. */
-export function cameraHostBounds(p:PerformancePlan,profile:HostProfile){
+/** Measure the shot interval, preserving original body/acting phase, headScale and antenna. */
+export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClock?:ViewActingClock){
+  if(p.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: camera bounds require the complete storyboard/run context for source body');
+  if(p.gestures.some(g=>g.sourceSpan)&&!actingClock)throw new Error('needs-view-gesture-phase: camera bounds require the complete storyboard/run context for source gesture');
+  if(actingClock)validateViewActingClock(p,actingClock);
+  const physical=sourceBodyPlan(p),motionOffset=p.sourceBody?bodyTrackOffsetMs(p,actingClock!.startMs):0;
   const times=new Set<number>([0,p.durationMs]);
   for(let ms=0;ms<p.durationMs;ms+=1000/p.fps)times.add(Number(ms.toFixed(4)));
-  for(const clip of [...p.walks,...(p.jumps??[]),...(p.spears??[]),...p.gestures,...(p.turns??[]),...(p.postures??[]),...p.expressions]){
+  for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])]){
+    for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at+motionOffset);
+  }
+  for(const clip of [...(p.spears??[]),...p.gestures,...(p.turns??[]),...p.expressions]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
   }
-  for(const jump of p.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])times.add(at);
-  for(const clip of p.postures??[])times.add((clip.startMs+clip.endMs)/2);
+  for(const jump of physical.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2,jump.startMs+(jump.takeoffMs-jump.startMs)*2/3,jump.landingMs+(jump.endMs-jump.landingMs)/3])times.add(at+motionOffset);
+  for(const clip of physical.postures??[])times.add((clip.startMs+clip.endMs)/2+motionOffset);
   for(const clip of p.spears??[])for(const at of [clip.readyMs,clip.contactMs,clip.recoverMs])if(at!==undefined)times.add(at);
   for(const g of p.gestures){if(g.contactMs!==undefined)times.add(g.contactMs);if(g.releaseMs!==undefined)times.add(g.releaseMs);if(g.landingMs!==undefined)times.add(g.landingMs);
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
+  if(actingClock){
+    for(const g of actingClock.gestures)for(const at of [g.startMs,g.reachMs,g.recoverMs,g.endMs])times.add(at-actingClock.startMs);
+    for(const g of actingClock.gazes)for(const at of [g.startMs,g.startMs+VIEW_GAZE_RAMP_MS,g.endMs-VIEW_GAZE_RAMP_MS,g.endMs])times.add(at-actingClock.startMs);
+    for(const clip of actingClock.expressions??[]){
+      const window=Math.min(VIEW_EXPRESSION_RAMP_MS,(clip.endMs-clip.startMs)/2);
+      for(const at of [clip.startMs,clip.startMs+window,clip.endMs-window,clip.endMs])times.add(at-actingClock.startMs);
+    }
+    for(const at of [actingClock.runStartMs,actingClock.runStartMs+VIEW_BREATH_RAMP_MS,actingClock.runEndMs-VIEW_BREATH_RAMP_MS,actingClock.runEndMs])times.add(at-actingClock.startMs);
+  }
   const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
-  for(const time of times){
-    const frame=samplePerformance(p,profile,time,{method:'segment-draft',windowMs:20,intervals:[]});
+  for(const time of [...times].filter(at=>Number.isFinite(at)&&at>=0&&at<=p.durationMs)){
+    const frame=samplePerformance(p,profile,time,{method:'segment-draft',windowMs:20,intervals:[]},undefined,actingClock);
     for(const [id,prop] of Object.entries(frame.props)){
       const bound=props[id]??=emptyBounds();include(bound,prop.point);
       if(prop.tip){include(bound,prop.tip,6*p.scale);include(bound,{x:2*prop.point.x-prop.tip.x,y:2*prop.point.y-prop.tip.y},3*p.scale);}
@@ -109,14 +128,18 @@ export function cameraEnvironmentBounds(camera:CinematicCamera,stage:{width:numb
   const bottom=Math.max(stage.height,...matrices.map(matrix=>(stage.height*CAMERA_VIEWPORT.bottom-matrix.y)/matrix.scale))+2;
   return {left,top,width:right-left,height:bottom-top};
 }
-export function planCamera(performance:PerformancePlan,profile:HostProfile,options:{framing:CinematicCamera['framing'];movement:CinematicCamera['movement'];focus?:CinematicCamera['focus'];target?:Point;parts?:NonNullable<Shot['visualization']>['parts'];supporting?:Array<{performance:PerformancePlan;profile:HostProfile}>}):CinematicCamera {
-  const {width,height}=performance.stage,m=rigMetrics(profile),roots=[performance.root.x,...performance.walks.flatMap(w=>[w.fromX,w.toX])];
+export function planCamera(performance:PerformancePlan,profile:HostProfile,options:{framing:CinematicCamera['framing'];movement:CinematicCamera['movement'];focus?:CinematicCamera['focus'];target?:Point;parts?:NonNullable<Shot['visualization']>['parts'];actingClock?:ViewActingClock;supporting?:Array<{performance:PerformancePlan;profile:HostProfile;actingClock?:ViewActingClock}>}):CinematicCamera {
+  const {width,height}=performance.stage,m=rigMetrics(profile);
   const focus=options.focus??'ensemble',framing=options.framing;
-  const bounds=cameraHostBounds(performance,profile),wideCap=.39/bounds.ratio.max;
+  const bounds=cameraHostBounds(performance,profile,options.actingClock),wideCap=.39/bounds.ratio.max;
+  const motionOffset=performance.sourceBody?bodyTrackOffsetMs(performance,options.actingClock!.startMs):0;
+  const roots=performance.sourceBody?[0,performance.durationMs,...sourceBodyPlan(performance).walks.flatMap(w=>[w.startMs,w.endMs])
+    .map(at=>at+motionOffset).filter(at=>at>0&&at<performance.durationMs)]
+    .map(at=>bodyRootAt(performance,options.actingClock!.startMs,at).x):[performance.root.x,...performance.walks.flatMap(w=>[w.fromX,w.toX])];
   const scales=framing==='wide'?[Math.min(1,wideCap),Math.min(1.04,wideCap)]:framing==='medium'?[1.25,1.32]:focus==='face'?[2.4,2.5]:[2.1,2.2];
   if(options.supporting?.length&&focus==='ensemble'){
     // Frame the complete cast on the same master clock, rather than anchoring on the lead alone.
-    const ensemble=emptyBounds(),cast=[bounds,...options.supporting.map(actor=>cameraHostBounds(actor.performance,actor.profile))];
+    const ensemble=emptyBounds(),cast=[bounds,...options.supporting.map(actor=>cameraHostBounds(actor.performance,actor.profile,actor.actingClock))];
     for(const actor of cast){include(ensemble,{x:actor.body.left,y:actor.body.top});include(ensemble,{x:actor.body.right,y:actor.body.bottom});}
     for(const part of options.parts??[]){
       include(ensemble,{x:(part.x-part.width*.56)*width,y:(part.y-part.height*.6)*height});
@@ -151,7 +174,7 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
 }
 
 /** Geometric envelopes cover both transform endpoints, bounded pan and the complete locomotion path. */
-export function validateCamera(shot:Shot,profile:HostProfile) {
+export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock) {
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera requires canonical cinematic data`);
   const camera=CameraSchema.parse(c.camera),p=c.performance,{width,height,groundY}=p.stage;
   const fail=(message:string):never=>{throw new Error(`${shot.id}: camera ${message}`);};
@@ -159,7 +182,7 @@ export function validateCamera(shot:Shot,profile:HostProfile) {
   if(camera.anchor.x<0||camera.anchor.x>width||camera.anchor.y<0||camera.anchor.y>height)fail('anchor must be inside the world stage.');
   const delta=camera.endScale-camera.startScale;
   if(camera.movement==='push-in'&&delta<=0||camera.movement==='pull-out'&&delta>=0||['locked','pan-left','pan-right'].includes(camera.movement)&&delta!==0)fail('movement contradicts its start/end scale.');
-  const bounds=cameraHostBounds(p,profile),worldRatio=bounds.ratio.max;
+  const bounds=cameraHostBounds(p,profile,actingClock),worldRatio=bounds.ratio.max;
   const matrices=[cameraMatrixAt(camera,p.stage,p.durationMs,0),cameraMatrixAt(camera,p.stage,p.durationMs,p.durationMs)];
   const inView=(point:Point,padX=0,padY=padX)=>matrices.every(matrix=>{
     const screen=cameraPoint(point,matrix);

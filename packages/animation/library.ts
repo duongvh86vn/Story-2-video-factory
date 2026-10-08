@@ -16,7 +16,8 @@ export const ANIMATION_LIBRARY={version:22,producer:ANIMATION_VERSION,airbornePr
     {id:'speech-activity',tracks:['talking-mouth'],entry:'audio activity',exit:'closed speech mouth during silence',constraints:['not phoneme lip-sync']}],
 } as const;
 export function selectedClips(plan:PerformancePlan):string[]{
-  return [...new Set([...plan.walks.map(w=>w.gait==='run'?'run':'walk'),...(plan.jumps?.length?['jump']:[]),...(plan.spears??[]).map(s=>'spear.'+s.action),...((plan.turns?.length||plan.facing&&plan.facing!=='front')?['turn']:[]),
-    ...(plan.entryPosture?[`body.${plan.entryPosture.pose}`]:[]),...(plan.postures??[]).map(p=>`body.${p.pose}`),
+  const body=plan.sourceBody??plan;
+  return [...new Set([...body.walks.map(w=>w.gait==='run'?'run':'walk'),...(body.jumps?.length?['jump']:[]),...(plan.spears??[]).map(s=>'spear.'+s.action),...((plan.turns?.length||plan.facing&&plan.facing!=='front')?['turn']:[]),
+    ...(body.entryPosture?[`body.${body.entryPosture.pose}`]:[]),...(body.postures??[]).map(p=>`body.${p.pose}`),
     ...plan.gestures.map(g=>g.action),...plan.expressions.map(e=>`mood.${e.mood}`),...(plan.gazes.length?['gaze']:[]),'speech-activity'])];
 }

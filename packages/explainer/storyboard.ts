@@ -89,15 +89,18 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
     assetNeeds: [{ id: `${id}.host-rig`, type: 'image', description: `Reusable explainer ${profile.id} v${profile.version}`, localPath: rig.assetPath, required: true }],
   });
 }
-export function validateExplainerStoryboard(board: Storyboard, narration: Narration, beats: Beat[], baseProfile: HostProfile, baseRig: HostRig, config: FactoryConfig,options:{fragment?:boolean}={}): void {
-  validateActorCast(board,narration,beats.flatMap(b=>ExplanationBeatSchema.parse({...b,beatId:b.id}).sourceRefs));
+export function validateExplainerStoryboard(board: Storyboard, narration: Narration, beats: Beat[], baseProfile: HostProfile, baseRig: HostRig, config: FactoryConfig,options:{fragment?:boolean;sourceBoard?:Storyboard}={}): void {
+  // A diagnostic fragment retains the actual complete source run, substituting
+  // the candidate under review so stale siblings cannot approve another phase.
+  const phaseBoard=options.sourceBoard?{shots:options.sourceBoard.shots.filter(s=>!board.shots.some(current=>current.id===s.id)).concat(board.shots).sort((a,b)=>a.startMs-b.startMs)}:board;
+  validateActorCast(phaseBoard,narration,beats.flatMap(b=>ExplanationBeatSchema.parse({...b,beatId:b.id}).sourceRefs));
   if(config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'&&!options.fragment)validateStoryActingCoverage(board,beats,narration);
   let absent = 0, speech = 0, visible = 0;
   for (const shot of board.shots) {
     if(config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'&&!shot.cinematic?.actorScene)throw new Error(`${shot.id}: actors mode requires a story actor scene; replan the old presenter storyboard`);
     const {profile,rig}=shotPerformer(shot,baseProfile,baseRig);
     const h = shot.host, v = shot.visualization;
-    if(config.presentation.mode==='story-cinematic')validateCinematicShot(shot,profile,config);
+    if(config.presentation.mode==='story-cinematic')validateCinematicShot(shot,profile,config,phaseBoard);
     else if(shot.cinematic)throw new Error(`${shot.id}: cinematic shot requires story-cinematic presentation`);
     if (!h || !v || !shot.explanationGoal || !shot.narrationSegmentIds?.length || !shot.sourceRefs?.length || shot.captionRegion !== 'bottom-safe') throw new Error(`${shot.id}: incomplete explainer specification`);
     const actorScene=shot.cinematic?.actorScene,intent=shot.cinematic?.sceneIntent;

@@ -33,6 +33,23 @@ const PostureTarget = {
 };
 export const PostureTargetSchema=z.object(PostureTarget).strict();
 export const PostureSchema=z.object({...Interval,...PostureTarget}).strict();
+/** Complete physical motion in its original run-relative clock. Every camera
+ * slice declares this same source; local motion tracks must not approximate it. */
+export const BODY_SOURCE_VERSION='native-source-body-1' as const;
+export const BodySourceSchema=z.object({version:z.literal(BODY_SOURCE_VERSION),id:Id,startMs:Time,endMs:Time,
+  walks:z.array(WalkSchema),jumps:z.array(JumpSchema).max(16).optional(),postures:z.array(PostureSchema).optional(),entryPosture:PostureTargetSchema.optional(),
+}).strict().superRefine((source,ctx)=>{
+  const duration=source.endMs-source.startMs;
+  if(duration<=0)ctx.addIssue({code:'custom',message:'Invalid original body source span'});
+  for(const [name,clips] of [['walks',source.walks],['jumps',source.jumps??[]],['postures',source.postures??[]]] as const){
+    let previousEnd=0;
+    for(const clip of [...clips].sort((a,b)=>a.startMs-b.startMs)){
+      if(clip.endMs<=clip.startMs||clip.startMs<previousEnd||clip.endMs>duration)ctx.addIssue({code:'custom',path:[name],message:'Original body tracks must fit their complete relative span without overlap'});
+      previousEnd=clip.endMs;
+    }
+  }
+});
+export type BodySource=z.infer<typeof BodySourceSchema>;
 export const SeatSupportSchema=z.object({id:Id,kind:z.literal('seat'),center:PointSchema,width:z.number().finite().positive(),
   facing:z.enum(['left','right']),backHeight:z.number().finite().nonnegative().optional()}).strict();
 /** Original absolute motion window. It is not a narration or contact clock. */
@@ -70,6 +87,7 @@ export const PerformancePlanSchema = z.object({
   entryPosture:PostureTargetSchema.optional(),postures:z.array(PostureSchema).optional(),
   supports:z.array(SeatSupportSchema).max(12).optional(),
   walks: z.array(WalkSchema), jumps:z.array(JumpSchema).max(16).optional(), gestures: z.array(GestureSchema),spears:z.array(SpearTrackSchema).max(8).optional(),
+  sourceBody:BodySourceSchema.optional(),
   lunge:LungeSchema.optional(),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
   gazes: z.array(z.object({ ...Interval, target: PointSchema }).strict()),
