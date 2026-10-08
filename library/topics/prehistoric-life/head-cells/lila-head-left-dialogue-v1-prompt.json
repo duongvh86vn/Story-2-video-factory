@@ -1,0 +1,25 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: identity-preserve. Create exactly ONE independently drawn LEFT-FACING three-quarter head of Lila for a dialogue scene. Image1 is the existing isolated source head, the edit target for character identity and painterly texture. Image2 is the original full-body PRIMARY identity, proportion, face and hair reference. Rotate the depicted head in real drawn perspective toward SCREEN LEFT, approximately 35 degrees off front; the nose points left and both dot eyes remain readable with natural near/far spacing. This is a new view drawing, NOT a horizontal mirror, NOT a frontal head looking sideways only, and NOT a warped image. Preserve this same Lila: warm peach-orange skin with softly painted highlight/shadow, simple black oval eyes, small bent-line nose, friendly CLOSED curved smile, organic round jaw, heavy slightly irregular black outline, messy dark-brown side-swept fringe and recognizable crown, coarse warm brown hair shading. Preserve the actual original low tied ponytail attachment at the back of the head and its LONG abundant hanging hair, with natural visibility/occlusion in the new head orientation; do not swap her hair anatomy by mirroring, shorten it, turn it into a small bob, or add a new hairstyle. Show the complete ponytail, tie, fringe, hair silhouette and small neck overlap, with empty transparent margin all around. The head is upright, not tilted, with a calm happy resting expression. Keep head proportions faithful to the primary, not a glossy cute doll. No exaggerated horizontal crown whip, torso, clothes, hands, flower, leaf, jewelry, beard, props, text, panel, atlas, scenery or cast shadow. One isolated usable head, genuine transparent background, richly colored painted art, crisp black ink. Do not draw multiple views.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+      "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+      "role": "edit-target"
+    },
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-d4566c3f-2916-44eb-8190-4fb230bdea61.png",
+  "requestedYawDeg": -35,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

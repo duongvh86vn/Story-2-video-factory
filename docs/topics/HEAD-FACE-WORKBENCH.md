@@ -1,15 +1,16 @@
-# Đối chiếu mặt trên thân — source0.53
+# Đối chiếu mặt trên thân — source0.54
 
-Trang dành cho người dùng/model test kiểm mặt source0.51 trên đúng thân native. Dàn diễn viên chính và quần chúng0.52 vẫn giữ nguyên. Mục tiêu cuối vẫn là story/script/WAV bất kỳ → diễn xuất đúng nội dung → video có giọng và QC; trang này không thay video nghiệm thu.
+Trang dành cho người dùng/model test kiểm mặt source0.51 và đầu trái Lila0.54 trên đúng thân native. Dàn diễn viên chính và quần chúng0.52 vẫn giữ nguyên. Mục tiêu cuối vẫn là story/script/WAV bất kỳ → diễn xuất đúng nội dung → video có giọng và QC; trang này không thay video nghiệm thu.
 
 ## Phạm vi triển khai
 
-- Nạp đúng hai definition `lila-source-face-v1.json` / `karo-source-face-v1.json`, kiểm schema, fingerprint và byte/hash nguồn; không nhận path hay bank tùy ý từ HTTP.
+- Catalog cố định ba definition: `lila-source-face-v1.json` / `karo-source-face-v1.json` cho góc phải, `lila-left-face-v1.json` cho góc trái. Kiểm schema, fingerprint và byte/hash nguồn; không nhận path hay bank tùy ý từ HTTP. Góc Karo trái chưa có phải báo `needs-head-face-candidate`, không chọn góc phải thay thế.
+- `view=three-quarter-left|three-quarter-right` chọn đúng cả đầu và body; default phải giữ URL0.53. URL resource mới có đoạn literal `/views/:view/` để không lẫn route legacy với đường dẫn PNG nhiều cấp. Mỗi definition phải khai báo chính xác một body view tương ứng và đúng source hash. Động tác point/gaze có target theo hướng chọn; không lật PNG hoặc nhập ROI của góc khác.
 - Ghép source head, closed rest patch Karo, thân/quần áo, miệng và mắt bằng `performanceScene`/compiler/SVG hiện hành. Không viết renderer hoặc easing thứ hai cho preview.
 - Có rest/point/think, hướng mắt trong góc đã đăng ký, full clock0–4000ms và camera slice2000–4000ms dùng cùng original acting/head/gesture/speech clock. Tua dùng GSAP timeline đã compile.
-- Preflight binding/report trước khi nạp iframe; HTML/JS/CSS/PNG có revision từ profile/plan/original clock/resource SHA. Mỗi request kiểm source lại trước khi dùng cache tối đa4 scene text (mỗi scene≤2MB). Thay source giữa các request phải chặn, không trộn asset cũ/mới. Không cache image hoặc frame array.
+- Preflight binding/report trước khi nạp iframe; HTML/JS/CSS/PNG/vendor có revision từ profile/plan/original clock/resource SHA và GSAP byte SHA. Mỗi request kiểm source/vendor lại trước khi dùng cache tối đa4 scene text (mỗi scene≤2MB, vendor≤512KiB). Thay source/dependency giữa các request phải chặn, không trộn asset cũ/mới. Không cache image hoặc frame array.
 - Speech activity là tín hiệu chẩn đoán cố định, **không có audio**, không gọi model/TTS/ASR, không ghi project/lock/approval. Không gọi đây là phoneme lip-sync.
-- Lỗi geometry/source/compile phải hiện là lỗi, không đổi sang đầu cũ hoặc ảnh thay thế. Chưa cung cấp góc trái/profile/rear hay quần chúng directional face.
+- Lỗi geometry/source/compile phải hiện là lỗi, không đổi sang đầu cũ hoặc ảnh thay thế. Lila trái mới là definition thủ công chưa thực thi geometry, chưa duyệt hair/neck/body seam. Chưa có Karo trái/profile/rear hay quần chúng directional face; một cell yaw null không phải continuous turn. [Artwork và phần cần kiểm](LEFT-DIALOGUE-HEAD.md).
 
 ## Môi trường và bàn giao
 
@@ -25,15 +26,17 @@ npm run studio
 
 Mở `http://127.0.0.1:8861/api/topics/prehistoric-life/head-faces`. Ctrl+C dừng server trong terminal đó. Model triển khai không chạy server, compiler, sampler, browser hay test callback; chỉ kiểm build/typecheck/source theo phân công của người dùng.
 
+Chọn Lila trái: `http://127.0.0.1:8861/api/topics/prehistoric-life/head-faces?actor=lila&view=three-quarter-left&action=point&look=ahead`. So với Karo phải ở trang riêng; chưa có scene hai actor cùng lúc trong workbench này. Kiểm cặp đối thoại trong pipeline/tracer sau khi geometry riêng hợp lệ.
+
 Model test cần kiểm schema geometry trước; full/slice tại cùng absolute time phải có face/path/hand giống nhau, kể cả seek đảo/ngẫu nhiên và ở speech/blink/gesture boundaries. Kiểm cả hai actor: identity/hair/beard, neck/body scale, mask/strip/răng/lưỡi, không double ink/ghost/seam, source nguồn không đổi. Kiểm HTTP MIME/CSP/không cache, nguồn sửa/path lạ bị chặn và giới hạn scene2MB. Ghi exact SHA, command, PASS/FAIL/NOT RUN, log, ảnh ghép và video60fps/normal speed; không lấy gallery hoặc build làm bằng chứng motion.
 
-4 callback trong `tests/head-face-workbench.test.ts` đã khai báo, **NOT RUN**: so evaluator full/slice và seek đảo/ngẫu nhiên ở speech/gesture boundaries; source/revision/file/scene generator; actor/path/source tamper; API MIME/CSP/binding/readiness flags. Dành cho model test:
+6 callback trong `tests/head-face-workbench.test.ts` đã khai báo, **NOT RUN**: so evaluator full/slice và seek đảo/ngẫu nhiên ở speech/gesture boundaries cho ba actor/view pair; source/revision/file/scene generator; actor/path/source/body-view tamper; API MIME/CSP/binding/readiness flags; left head/body/revision không mượn right; route explicit và legacy PNG nhiều cấp. Dành cho model test:
 
 ```powershell
 node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/head-face-workbench.test.ts tests/native-head-face.test.ts tests/native-head-bank-sources.test.ts tests/prehistoric-supporting.test.ts
 ```
 
-## Review source qua9router
+## Review source0.53 qua9router (lịch sử)
 
 Một request GPT Luna,7.704 input +1.016 output = **8.720 token** provider báo; output cap1.500,4 nguồn text, không gửi ảnh/toàn repo, không retry hay chạy code. [Packet hash, nguồn, response và đánh giá](reviews/head-face-workbench-nine-router-review-v1.json).
 
@@ -41,7 +44,7 @@ Hai finding inline-script/unescaped selection không là lỗi đã chứng minh
 
 `productionReady=false`, `productionRig=null`, `availableBanks=[]` giữ nguyên. Đủ views, expressions, tóc/cloth/props/contact, world day/sunset/night, ba input, EN/VI/JA/KO/TTS local-external/resume/final còn phải hoàn thành và nghiệm thu. Runtime của phần mới: **NOT RUN**.
 
-## Kiểm source ngày08/10/2026
+## Kiểm source0.53 ngày08/10/2026 (lịch sử)
 
 - `npm run build`: PASS, core/Studio typecheck và Vite41 module557ms.
 - `npm run test:typecheck`: PASS; chỉ typecheck, không gọi callback.

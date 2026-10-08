@@ -17,6 +17,7 @@ import {nativeHeadBankDescription} from '../packages/animation/native-head-bank.
 import {headCellArtDescription,headCellInventory} from '../packages/topics/head-cell-art.js';
 import {prehistoricSupportingDescription,prehistoricSupportingModels} from '../packages/topics/supporting-models.js';
 import {supportingHeadDescription} from '../packages/animation/prehistoric-supporting-head.js';
+import {HEAD_FACE_CANDIDATES,HEAD_FACE_WORKBENCH_VERSION} from '../packages/topics/head-face-candidates.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -57,13 +58,14 @@ const nativeHeadTurnMaterials=await headTurnInventory(repo);
 const nativeHeadCellMaterials=await headCellInventory(repo);
 // Read static definition bytes only; do not evaluate a compiler, face state,
 // geometry schema or registration while inventorying authoring artifacts.
-const nativeFaceDefinitions=await Promise.all(['lila','karo'].map(async actor=>{
-  const file=`library/topics/prehistoric-life/head-face-registrations/${actor}-source-face-v1.json`,bytes=await fs.readFile(path.join(repo,file)),definition=JSON.parse(bytes.toString('utf8'));
+const nativeFaceDefinitions=await Promise.all(HEAD_FACE_CANDIDATES.map(async ({actor,view,id,file})=>{
+  const bytes=await fs.readFile(path.join(repo,file)),definition=JSON.parse(bytes.toString('utf8'));
+  if(definition.actor!==actor||definition.id!==id||definition.bodyViews.length!==1||definition.bodyViews[0].view!==view)throw new Error('Face definition catalog/body view differs');
   const sources=await Promise.all([definition.source,...(definition.additionalSources??[])].map(async(source:{file:string;sha256:string;width:number;height:number})=>{
     if(!/^library\/topics\/prehistoric-life\/(?:head-cells|head-face-plates)\/(?:lila|karo)-head-[a-z0-9-]+-v[1-9]\d*\.png$/.test(source.file)||!source.file.split('/').at(-1)!.startsWith(actor+'-head-'))throw new Error('Unknown face definition static source');
     const measured=await describe(source.file);if(measured.sha256!==source.sha256||measured.width!==source.width||measured.height!==source.height||!measured.hasAlpha)throw new Error('Face definition raw source differs');return measured;
   }));
-  return {actor,file,sha256:hash(bytes),sources,status:'unvalidated-engineering-definition',geometryValidation:'NOT RUN',selected:false,registered:false,approved:false,productionReady:false,motionVerified:false};
+  return {actor,view,file,sha256:hash(bytes),sources,status:'unvalidated-engineering-definition',geometryValidation:'NOT RUN',selected:false,registered:false,approved:false,productionReady:false,motionVerified:false};
 }));
 const nativeSeatedSurface=await nativeSeatSurfaceInventory(repo);
 const headReviewFile='docs/topics/reviews/front-head-static-review-v2.json';
@@ -94,7 +96,7 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   nativeHeadTurnStudies:{...headTurnArtDescription,materials:nativeHeadTurnMaterials,fingerprint:hash(nativeHeadTurnMaterials),codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-art.ts'))),landmarkCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-landmarks.ts'))),schemaCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-schemas.ts'))),workbenchCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-workbench.ts')))},
   nativeHeadBank:{...nativeHeadBankDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/animation/native-head-bank.ts','packages/animation/native-head-track.ts','packages/animation/body-head-bank.ts','packages/animation/native-head-resources.ts','packages/animation/native-head-face.ts','packages/core/json-sha256.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   nativeHeadFaces:{version:'native-head-face-1',definitions:nativeFaceDefinitions,selection:'explicit bank3 only after user-model geometry/runtime review; no automatic selection',availableBanks:[],productionReady:false,approved:false,motionVerified:false,handoff:'docs/topics/NATIVE-HEAD-FACE-HANDOFF.md',
-    inspection:{version:'native-head-face-workbench-1',url:'/api/topics/prehistoric-life/head-faces',codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-face-workbench.ts'))),handoff:'docs/topics/HEAD-FACE-WORKBENCH.md',runtimeVerified:false,audioPresent:false,productionReady:false}},
+    inspection:{version:HEAD_FACE_WORKBENCH_VERSION,url:'/api/topics/prehistoric-life/head-faces',codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-face-workbench.ts'))),catalogCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-face-candidates.ts'))),handoff:'docs/topics/HEAD-FACE-WORKBENCH.md',runtimeVerified:false,audioPresent:false,productionReady:false}},
   nativeHeadCells:{...headCellArtDescription,materials:nativeHeadCellMaterials,fingerprint:hash(nativeHeadCellMaterials),codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-cell-art.ts'))),landmarkCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-cell-landmarks.ts'))),workbenchCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-cell-workbench.ts'))),workbench:'/api/topics/prehistoric-life/head-cells',inventory:'library/topics/prehistoric-life/head-cells/inventory-v1.json'},
   nativeActorGaze:{...nativeActorGazeDescription,handoff:'docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md',targetSourceCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/view-gaze-target.ts'))),physicalLungeCodeHash:hash(await fs.readFile(path.join(repo,'packages/animation/lunge.ts'))),publicationGuardCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/source-publication.ts'))),scenePipelineCodeHash:hash(await fs.readFile(path.join(repo,'packages/scenes/index.ts'))),artworkTransactionCodeHash:hash(await fs.readFile(path.join(repo,'packages/director/artwork-repair.ts')))},
   nativeTracer:{version:'native-seat-tracer-2',scope:'unapproved-native-seat-motion-tracer',command:'npm run tracer:native-seat',runtimeVerified:false,productionAcceptance:false,finalExportAllowed:false,

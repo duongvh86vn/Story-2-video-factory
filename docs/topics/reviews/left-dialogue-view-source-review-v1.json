@@ -1,0 +1,84 @@
+{
+  "version": "left-dialogue-view-source-review-1",
+  "scope": "source-only; no geometry or runtime acceptance",
+  "packetOutputSha256": "c53771793223f90d5964fe7e486a13545fed5962dd8e997279ef76686692bbb2",
+  "proposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [
+        {
+          "file": "packages/topics/head-face-workbench.ts",
+          "issue": "The GSAP vendor bytes are not included in the computed preview revision or verified against a fixed resource hash.",
+          "evidence": "headFacePreviewRevision hashes fixture.resources only, while headFacePreviewFile serves vendor/gsap.min.js through createRequire(...).resolve('gsap/dist/gsap.min.js'). The revision check therefore cannot detect a changed vendor file.",
+          "fix": "Bind the vendor asset to the same revision/resource-integrity check as the other preview resources, while preserving the existing renderer and CSP behavior."
+        }
+      ],
+      "limits": [
+        "Catalog enforcement is explicit and blocks KaroLeft: only the three listed actor/view pairs can pass headFaceCandidate; no mirror or fallback path is visible.",
+        "The supplied source preserves separate head/body view inputs, legacy right-facing routing, literal /views/ routing, diagnostic false production flags, and source clock fields. Runtime route behavior, renderer output, raw resource contents, CSP response behavior, and face/art quality were not verified.",
+        "The API excerpt omits unrelated routes, so the availability or behavior of /preview-bridge.js cannot be established from supplied code alone."
+      ]
+    },
+    "usage": {
+      "promptTokens": 9191,
+      "completionTokens": 1212,
+      "totalTokens": 10403
+    },
+    "model": "cx/gpt-5.6-luna",
+    "purpose": "source-only-review",
+    "fingerprint": "12e5560906910a83bfcab47448f50d076e98b62de1e81f2b7b0c260f22698e7f",
+    "slot": 2,
+    "prompt": "Inspect the new explicit left/right source-view integration for at most2 demonstrable source defects. Fixed catalog: LilaRight/KaroRight/LilaLeft only; KaroLeft must block. No mirror/fallback. Head/body view/source must match; original speech/head/gesture/gaze clocks retained across full/slice; legacy source0.53 right URLs and nested PNGs stay valid with literal /views/ new routes. Existing renderer, raw resource revision/CSP and false production flags retained. Read supplied code only; API excerpt omits unrelated routes. Do not execute tools, tests, commands, schemas, geometry, compiler, sampler, renderer, API, browser, audio/video or proposals. Manual face coordinates, art quality and runtime are explicitly unverified: do not invent acceptance or pending-feature findings. Compact JSON {findings:[{file,issue,evidence,fix}],limits:[...]}; distinguish provable source bug from missing runtime evidence. No full code rewrites.",
+    "sources": [
+      {
+        "file": "packages/topics/head-face-candidates.ts",
+        "sha256": "fb379274232740bc4f9ca7ca468c9cd453a37d5c402be7bc298f30765d81c275"
+      },
+      {
+        "file": "packages/topics/head-face-workbench.ts",
+        "sha256": "c6f7ee669e90cab1b619aa89b95a871ba0005e79035cac24585c0bbb0cc7eea6"
+      },
+      {
+        "file": "tests/head-face-workbench.test.ts",
+        "sha256": "e330e1d9eb00d77755de34eb4dce78271074c944633a499b4fe2eb6c6bd657cc"
+      },
+      {
+        "file": "docs/topics/reviews/left-dialogue-view-api-excerpt-v1.md",
+        "sha256": "464dfc2a90839fae3da8fd150bdcc57a8a99f7a045e6e9a263e4c19fc4641011"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-08T11:35:44.658Z"
+  },
+  "parentAssessment": {
+    "finding": "Vendor bytes were omitted from the preview revision. Source inspection confirms the concrete gap; the existing resource guard did not cover dependency changes.",
+    "integration": "Manually added a bounded installed GSAP byte read (512KiB), included its SHA in the revision and report, served those same bytes after revision validation. Existing renderer/CSP/clock/source guards unchanged. Added declared assertions; no proposed code executed or auto-applied.",
+    "typecheckRepair": "The review snapshot predates a TypeScript discriminated-union narrowing fix in the test: assert target is present before reading target.x. Runtime callback NOT RUN.",
+    "snapshotsRetained": "Exact original reviewed workbench and test bytes remain in ignored runtime/dev-agents/left-dialogue-head-v1; proposal.sources is immutable historical input, not final source.",
+    "finalSourceHashes": {
+      "packages/topics/head-face-candidates.ts": "fb379274232740bc4f9ca7ca468c9cd453a37d5c402be7bc298f30765d81c275",
+      "packages/topics/head-face-workbench.ts": "61ba7fa084eb58acf6579ae071722160267e975e40bf4bf0d15d9785abcae3c3",
+      "tests/head-face-workbench.test.ts": "82d2bdaa3a4b92540ebe68a477da67616009e97a61102ccda390bf0de615aa6a",
+      "docs/topics/reviews/left-dialogue-view-api-excerpt-v1.md": "464dfc2a90839fae3da8fd150bdcc57a8a99f7a045e6e9a263e4c19fc4641011"
+    },
+    "runtime": "NOT RUN; user model exclusively",
+    "approved": false,
+    "motionVerified": false,
+    "productionReady": false
+  },
+  "requestedMaxOutputTokens": 1200,
+  "usage": {
+    "promptTokens": 9191,
+    "completionTokens": 1212,
+    "totalTokens": 10403
+  },
+  "usageNote": "Provider reported1212 completion tokens against requested cap1200; retained as reported. No retry.",
+  "approved": false,
+  "motionVerified": false,
+  "productionReady": false
+}

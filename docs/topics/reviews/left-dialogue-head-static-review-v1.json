@@ -1,0 +1,70 @@
+{
+  "version": "left-dialogue-head-static-review-1",
+  "scope": "static-PNG-advice-only",
+  "packetOutputSha256": "fbf3b792a5742849b5d46c09b2eca98aecb85e713ca2349285f118cd54147885",
+  "proposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "visibleFindings": [
+        "Image 3 shows a three-quarter perspective facing toward the left, rather than a flat frontal orientation.",
+        "The ponytail tail and tie are situated on the right side of the head in Image 3, whereas in Image 1 and 2 they appear on the left side.",
+        "Key features like the dot eyes, closed line smile, warm skin tone, and thick ink outlines remain stylistically consistent with the references."
+      ],
+      "correction": "If the ponytail is intended to remain on the character's anatomical right side across rotations, reposition the ponytail attachment and mass to reflect that consistent placement from the left-facing angle.",
+      "limits": [
+        "True anatomical side and exact 3D yaw angle cannot be definitively proven from isolated 2D drawings.",
+        "Horizontal mirroring versus independent redraw cannot be conclusively certified solely from static visual comparison."
+      ]
+    },
+    "usage": {
+      "promptTokens": 5831,
+      "completionTokens": 168,
+      "totalTokens": 5999
+    },
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "static-art-advice",
+    "fingerprint": "d92638904b1b70796ed90bb020b2f15db37b906a6d8e16079bc723e7733e8a38",
+    "slot": 1,
+    "prompt": "Inspect static artwork only. Image1 PRIMARY Lila full-body identity. Image2 prior isolated source-angle head V2. Image3 new independently requested left-facing dialogue head. The user requires faithful warm face/dot eyes/closed happy smile, heavy irregular ink, long brown ponytail with preserved attachment/anatomical side, no face warp or horizontal-mirror substitute for a real view. Compare3 to1/2. Is it actually left-facing perspective versus a frontal reversed-feature face? Identify up to3 visible concrete identity/hair/proportion/face-direction differences and one focused correction if needed. Distinguish visible facts from unknown anatomical ponytail-side/yaw that cannot be proven from these2D images. Do not estimate exact yaw or give PASS/approval/anatomical/motion certification. No tools/commands/execution/renderer/tests. Compact JSON {visibleFindings:[...],correction:...,limits:[...]}.",
+    "sources": [],
+    "references": [
+      {
+        "file": "docs/topics/assets/reference-lila-full.png",
+        "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+        "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+        "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6"
+      }
+    ],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-08T11:23:06.162Z"
+  },
+  "parentAssessment": {
+    "visible": "Left-facing perspective is visible; dot eyes, warm face, closed smile and heavy ink are stylistically similar. Ponytail/tie is on screen-right in this drawing, versus screen-left in the references.",
+    "uncertain": "The anatomical attachment side, exact yaw, correspondence across views, independent-redraw fidelity and hair/body seam cannot be certified from these isolated 2D images.",
+    "decision": "Keep as an unapproved independent-view candidate. Do not reposition or mirror ponytail by guessing anatomy. No proposal code or automatic edit applied; compare primary and adjacent/body views at normal speed before acceptance.",
+    "definition": "library/topics/prehistoric-life/head-face-registrations/lila-left-face-v1.json",
+    "definitionStatus": "Manual source-coordinate hypothesis; geometry/schema/compiler/sampler/browser/audio/video NOT RUN by implementer.",
+    "approved": false,
+    "registered": false,
+    "motionVerified": false,
+    "productionReady": false
+  },
+  "usage": {
+    "promptTokens": 5831,
+    "completionTokens": 168,
+    "totalTokens": 5999
+  },
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}
