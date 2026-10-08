@@ -1,0 +1,47 @@
+{
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Edit target image 1, the existing 4-by-4 Karo head-turn atlas. Image 2 is the primary original character identity reference. Keep the canvas, transparent background and exact 4-by-4 layout. This is head animation artwork, not a poster. Repair ONLY row 3 (cells 9,10,11,12 with one-based row-major indexes). Leave rows1,2,4 as close as possible to the original.\nProblem: cell8 is front-facing, cell9 suddenly jumps to a strong left-facing view. Row3 must contain real small intermediate left turns: approximately -3,-9,-15,-21 degrees, nose toward viewer LEFT. Most of the face remains frontal in cells9 and10, both black oval eyes visible; reveal the right-screen ear slowly rather than flipping ear asymmetry instantly. Hair tufts, beard shape, cheek outline and nose displacement change progressively. Same warm round face, orange tan skin, simple black oval eyes, dark chestnut shaggy hair/full beard, small CLOSED gentle smile. No teeth or talking. Match the identity in reference2, do not invent anatomy or hairstyle. Match cell8 head size and neck attachment with its neighbors; every head has the same pixel scale and eyeline. Do not mirror, stretch or warp cell8; paint genuine intermediate perspectives with coherent lighting. Do not add body, clothes, objects, text, labels, shadows outside the hair or background. Preserve genuine RGBA transparency in every empty cell margin. The near-frontal cells should be much closer to cell8 than to the last row's strong left profile.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-turn-studies/karo-head-turn-v1.png",
+      "sha256": "965d9fb0f4e800144612bb4e3cd6ec6b482dad483c894980aea6fc61bbb4aaaf",
+      "role": "edit-target"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-1840eb23-069f-4ecc-9aa0-cbf6433030df.png",
+  "requestedYawDeg": [
+    45,
+    39,
+    33,
+    27,
+    21,
+    15,
+    9,
+    3,
+    -3,
+    -9,
+    -15,
+    -21,
+    -27,
+    -33,
+    -39,
+    -45
+  ],
+  "requestedRepairCells": [
+    9,
+    10,
+    11,
+    12
+  ],
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

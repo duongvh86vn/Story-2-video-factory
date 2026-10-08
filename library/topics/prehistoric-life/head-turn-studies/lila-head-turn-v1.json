@@ -1,0 +1,370 @@
+{
+  "version": "native-head-turn-material-1",
+  "actor": "lila",
+  "file": "lila-head-turn-v1.png",
+  "sha256": "fe9181633b8bdbb28c334d62a9c81d33c35cf9624ae35849c11850445b1d0b87",
+  "promptFile": "library/topics/prehistoric-life/head-turn-studies/lila-head-turn-v1-prompt.json",
+  "promptSha256": "af836652fb3a2a3ba0449eb3775161acf10678281e3828cd02e8a945f9fdcc3d",
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "width": 1254,
+  "height": 1254,
+  "columns": 4,
+  "rows": 4,
+  "hasAlpha": true,
+  "alphaThreshold": 8,
+  "transparentPixels": 680495,
+  "visiblePixels": 824849,
+  "opaquePixels": 6933,
+  "cells": [
+    {
+      "index": 1,
+      "region": {
+        "x": 0,
+        "y": 0,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 28,
+        "y": 15,
+        "width": 280,
+        "height": 292
+      },
+      "visiblePixels": 52064,
+      "edgePixels": 0,
+      "pixelSha256": "32fa7a5d23c68c2872a4319a310d6c29d9c22e4ef62abfabbe7e25815129c377"
+    },
+    {
+      "index": 2,
+      "region": {
+        "x": 313,
+        "y": 0,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 325,
+        "y": 15,
+        "width": 289,
+        "height": 292
+      },
+      "visiblePixels": 53138,
+      "edgePixels": 0,
+      "pixelSha256": "20ccca2004cbffb2b5f94f5311f591cae56111d1ac8a74202bffb8715212778a"
+    },
+    {
+      "index": 3,
+      "region": {
+        "x": 627,
+        "y": 0,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 634,
+        "y": 15,
+        "width": 286,
+        "height": 293
+      },
+      "visiblePixels": 53470,
+      "edgePixels": 0,
+      "pixelSha256": "0910a94e383d51692e099a57ab8e7330790c4e4ca36d21dc0de1f2d6471a7ba0"
+    },
+    {
+      "index": 4,
+      "region": {
+        "x": 940,
+        "y": 0,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 948,
+        "y": 15,
+        "width": 283,
+        "height": 293
+      },
+      "visiblePixels": 53386,
+      "edgePixels": 0,
+      "pixelSha256": "cc64ddc6118acaf99f560ec0f5d4bdd9f18881eaac21b06aa96b3431857cd9cd"
+    },
+    {
+      "index": 5,
+      "region": {
+        "x": 0,
+        "y": 313,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 23,
+        "y": 322,
+        "width": 283,
+        "height": 293
+      },
+      "visiblePixels": 53629,
+      "edgePixels": 0,
+      "pixelSha256": "63ce01d9f68a608c0b65dbd3e008aa41e42f4e69f0ee441a4cc0853b882903d3"
+    },
+    {
+      "index": 6,
+      "region": {
+        "x": 313,
+        "y": 313,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 329,
+        "y": 322,
+        "width": 284,
+        "height": 291
+      },
+      "visiblePixels": 52893,
+      "edgePixels": 0,
+      "pixelSha256": "68d881222210f46bf3c69fad1d1df30b68a4845a159d1c75ec369ba35276755f"
+    },
+    {
+      "index": 7,
+      "region": {
+        "x": 627,
+        "y": 313,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 642,
+        "y": 322,
+        "width": 276,
+        "height": 294
+      },
+      "visiblePixels": 52815,
+      "edgePixels": 0,
+      "pixelSha256": "ba9f71bb45d0eaf6e26a766d31b3a6a48bedd181af5e67acff146d0c50b2babd"
+    },
+    {
+      "index": 8,
+      "region": {
+        "x": 940,
+        "y": 313,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 953,
+        "y": 321,
+        "width": 268,
+        "height": 295
+      },
+      "visiblePixels": 52709,
+      "edgePixels": 0,
+      "pixelSha256": "15332701628643e07cd1e393564a5a1c6d3bca788e3f213a8f1f81e9a49b8b51"
+    },
+    {
+      "index": 9,
+      "region": {
+        "x": 0,
+        "y": 627,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 25,
+        "y": 635,
+        "width": 261,
+        "height": 290
+      },
+      "visiblePixels": 50203,
+      "edgePixels": 0,
+      "pixelSha256": "f8a23003d7625fdc0e8c5b390b3be0af0cfc9a830a05e3b41959b9217f17419d"
+    },
+    {
+      "index": 10,
+      "region": {
+        "x": 313,
+        "y": 627,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 350,
+        "y": 635,
+        "width": 271,
+        "height": 289
+      },
+      "visiblePixels": 50781,
+      "edgePixels": 0,
+      "pixelSha256": "1cf03595ad1af7b0fa37c3de1a6e23fcf1bf5d37b66840d66b523720faf5ad55"
+    },
+    {
+      "index": 11,
+      "region": {
+        "x": 627,
+        "y": 627,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 656,
+        "y": 636,
+        "width": 274,
+        "height": 292
+      },
+      "visiblePixels": 51196,
+      "edgePixels": 0,
+      "pixelSha256": "4a3d6e37034d0724d9724a86a7d66eb27370b7b24d2d5afa6484b0861db0d4b4"
+    },
+    {
+      "index": 12,
+      "region": {
+        "x": 940,
+        "y": 627,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 968,
+        "y": 636,
+        "width": 270,
+        "height": 292
+      },
+      "visiblePixels": 50033,
+      "edgePixels": 0,
+      "pixelSha256": "d93b312dd1494861fd5fb4eccdd9f157c058707ee2a61eaf0123b6be592ee3ea"
+    },
+    {
+      "index": 13,
+      "region": {
+        "x": 0,
+        "y": 940,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 30,
+        "y": 948,
+        "width": 274,
+        "height": 290
+      },
+      "visiblePixels": 50393,
+      "edgePixels": 0,
+      "pixelSha256": "30a469d3c01a9c520227c181261fb8798970a20805136724c6e9d6d33737955c"
+    },
+    {
+      "index": 14,
+      "region": {
+        "x": 313,
+        "y": 940,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 338,
+        "y": 951,
+        "width": 278,
+        "height": 287
+      },
+      "visiblePixels": 49604,
+      "edgePixels": 0,
+      "pixelSha256": "4340ee6f4b263c5117f1461868bb3924f80b1dee8fa01d136c115fcf5d4ee843"
+    },
+    {
+      "index": 15,
+      "region": {
+        "x": 627,
+        "y": 940,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 650,
+        "y": 948,
+        "width": 283,
+        "height": 290
+      },
+      "visiblePixels": 50945,
+      "edgePixels": 0,
+      "pixelSha256": "ba38ddda8f6281663b6c471765d9cd7372b4c85d563de045513258767a20c47d"
+    },
+    {
+      "index": 16,
+      "region": {
+        "x": 940,
+        "y": 940,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 967,
+        "y": 948,
+        "width": 268,
+        "height": 290
+      },
+      "visiblePixels": 47590,
+      "edgePixels": 0,
+      "pixelSha256": "dddd488f1d41d623c0a233927720a2becd73fd88fa5505cbe987589705d84b13"
+    }
+  ],
+  "requestedYawDeg": [
+    45,
+    39,
+    33,
+    27,
+    21,
+    15,
+    9,
+    3,
+    -3,
+    -9,
+    -15,
+    -21,
+    -27,
+    -33,
+    -39,
+    -45
+  ],
+  "yawMeasured": false,
+  "findings": [
+    {
+      "cells": [
+        8,
+        9,
+        10
+      ],
+      "note": "V1 source consultation: near-frontal to left-facing hair/ponytail/fringe change is abrupt; anatomical side and occlusion need redrawing."
+    },
+    {
+      "cells": [
+        1,
+        16
+      ],
+      "note": "Ponytail proportions are not yet faithful to the longer primary/native-body hair silhouette; neck/body seam and skull scale need independent source landmarks."
+    },
+    {
+      "cells": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "note": "Perspective clusters and possibly nonmonotonic13→14 views; requested yaw is not measured or approved."
+    }
+  ],
+  "status": "held-needs-art-repair-and-landmarks",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false
+}

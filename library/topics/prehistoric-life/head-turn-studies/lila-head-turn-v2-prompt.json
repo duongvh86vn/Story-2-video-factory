@@ -1,0 +1,47 @@
+{
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Edit target is image1, the existing Lila 4x4 head-turn atlas. Image2 is primary identity reference only. Preserve the exact current atlas canvas size, 4x4 cell geometry, transparency, colors, line style and model. Repair ONLY the four sprites of ROW THREE (row-major frames9,10,11,12); keep rows1,2,4 unchanged as much as possible. Row2's last sprite is almost frontal; row3 must continue by SMALL successive head rotations toward viewerLEFT, not jump to a mirrored 3/4-left portrait. Frame9 is essentially frontal with the nose angled just3degrees left; frame10 only9degrees left; frame11 only15degrees left; frame12 only21degrees left. In all four the face should be still mostly frontal with both eyes clearly visible, a small gradual nose displacement, coherent cheek/jaw, unchanged gentle CLOSED smile and eye-line. The tied ponytail belongs to the same anatomical side as in the primary reference and must move/occlude smoothly behind the skull: no instant leap of the ponytail tie from viewerLEFT to viewerRIGHT between frames9 and10. Show its attachment progressively receding behind the head; draw genuine new intermediate views, no image flipping/mirroring/stretching or new character. Keep the round warm face, simple small black oval eyes, asymmetric fringe and dark textured hair exactly recognizable. Neck tip/pivot and head scale must stay aligned to the neighboring unedited rows. No text, grid, backgrounds, body or new objects. Genuine transparent alpha.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-turn-studies/lila-head-turn-v1.png",
+      "sha256": "fe9181633b8bdbb28c334d62a9c81d33c35cf9624ae35849c11850445b1d0b87",
+      "role": "edit-target"
+    },
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-83ad1727-bf85-4e1c-b6d4-c875c44d6e9d.png",
+  "requestedYawDeg": [
+    45,
+    39,
+    33,
+    27,
+    21,
+    15,
+    9,
+    3,
+    -3,
+    -9,
+    -15,
+    -21,
+    -27,
+    -33,
+    -39,
+    -45
+  ],
+  "requestedRepairCells": [
+    9,
+    10,
+    11,
+    12
+  ],
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

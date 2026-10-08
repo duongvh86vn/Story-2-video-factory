@@ -1,0 +1,37 @@
+{
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Asset: a transparent animation head-turn sprite atlas of the SAME prehistoric male stick actor Karo from the supplied primary reference. The reference is the model identity/style/color guide, not a background. ONE 2048x2048 transparent PNG with EXACTLY 16 head + hair + beard + very short black stick-neck sprites in a 4x4 regular grid. 512x512 cells, row-major chronological order. No text, numbering, borders, grid lines, body, fur clothes, hands, scenery, props, shadows or floor. Full hair and beard must fit each cell with >=24px empty margins. Same neck-tip pivot cell-local x256,y456, same head scale and eye-line height in all16 cells, no tilting or bobbing. Rich warm orange skin, deep dark brown shaggy hair and FULL beard with the same distinct messy silhouette as the reference; organic bold black outlines, textured warm brown areas, small simple black oval eyes, small curved nose. Do not become another man, do not elongate neck/nose or beard, no white face, no realistic face, no big anatomy, no anime, no pale desaturated colors. Friendly QUIET LISTENING expression, open eyes and CLOSED gently smiling mouth within the original beard all16 frames; no white teeth during rest. This depicts ONE real monotonic head rotation: yaw sequence +45,+39,+33,+27,+21,+15,+9,+3,-3,-9,-15,-21,-27,-33,-39,-45 degrees. PLUS=nose toward viewerRIGHT,0=front,MINUS=viewerLEFT. Row1 moves from3/4right towards front; row2 gradually approaches front; row3 gradually turns through front towards left; row4 finishes3/4left. Each cell needs a distinct small smooth in-between rotation, especially the four cells around front; no jump directly from one3/4pose to the mirrored other. Keep individual hair tufts, ears and beard features on their same anatomical sides as they pass behind or emerge; never flip/mirror whole portraits or stretch/squeeze facial pixels. Do not draw16 mood variants or repeated copies. Genuine transparent alpha; animation-ready complete isolated head drawings with aligned neck attachment.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-78ee0297-2a8f-4b50-bd63-c57cb6b72b98.png",
+  "requestedYawDeg": [
+    45,
+    39,
+    33,
+    27,
+    21,
+    15,
+    9,
+    3,
+    -3,
+    -9,
+    -15,
+    -21,
+    -27,
+    -33,
+    -39,
+    -45
+  ],
+  "requestedRepairCells": [],
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

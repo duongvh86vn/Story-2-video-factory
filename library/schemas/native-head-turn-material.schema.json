@@ -1,0 +1,286 @@
+{
+  "$ref": "#/definitions/native-head-turn-material",
+  "definitions": {
+    "native-head-turn-material": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "native-head-turn-material-1"
+        },
+        "actor": {
+          "type": "string",
+          "enum": [
+            "lila",
+            "karo"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "pattern": "^(lila|karo)-head-turn-v[1-9]\\d*\\.png$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "promptFile": {
+          "type": "string"
+        },
+        "promptSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "primary-character-identity",
+                  "edit-target"
+                ]
+              }
+            },
+            "required": [
+              "file",
+              "sha256",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 8192
+        },
+        "height": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 8192
+        },
+        "columns": {
+          "type": "number",
+          "const": 4
+        },
+        "rows": {
+          "type": "number",
+          "const": 4
+        },
+        "hasAlpha": {
+          "type": "boolean",
+          "const": true
+        },
+        "alphaThreshold": {
+          "type": "number",
+          "const": 8
+        },
+        "transparentPixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "visiblePixels": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "opaquePixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cells": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "index": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 16
+              },
+              "region": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "y": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height"
+                ],
+                "additionalProperties": false
+              },
+              "visibleBounds": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "y": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "width": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "width",
+                  "height"
+                ],
+                "additionalProperties": false
+              },
+              "visiblePixels": {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              "edgePixels": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "pixelSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "index",
+              "region",
+              "visibleBounds",
+              "visiblePixels",
+              "edgePixels",
+              "pixelSha256"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 16,
+          "maxItems": 16
+        },
+        "requestedYawDeg": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "minItems": 16,
+          "maxItems": 16
+        },
+        "yawMeasured": {
+          "type": "boolean",
+          "const": false
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 16
+                },
+                "minItems": 1
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "cells",
+              "note"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "status": {
+          "type": "string",
+          "const": "held-needs-art-repair-and-landmarks"
+        },
+        "approved": {
+          "type": "boolean",
+          "const": false
+        },
+        "registered": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionReady": {
+          "type": "boolean",
+          "const": false
+        },
+        "motionVerified": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "actor",
+        "file",
+        "sha256",
+        "promptFile",
+        "promptSha256",
+        "references",
+        "width",
+        "height",
+        "columns",
+        "rows",
+        "hasAlpha",
+        "alphaThreshold",
+        "transparentPixels",
+        "visiblePixels",
+        "opaquePixels",
+        "cells",
+        "requestedYawDeg",
+        "yawMeasured",
+        "findings",
+        "status",
+        "approved",
+        "registered",
+        "productionReady",
+        "motionVerified"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

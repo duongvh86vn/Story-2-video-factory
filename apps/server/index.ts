@@ -40,6 +40,10 @@ import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,BO
 import {viewRegistrationWorkbench} from '../../packages/topics/view-registration-workbench.js';
 import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
 import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
+import {headTurnWorkbench,headTurnImage,headTurnEditorScript} from '../../packages/topics/head-turn-workbench.js';
+import {headTurnInventory,headTurnMaterial} from '../../packages/topics/head-turn-art.js';
+import {HeadTurnCheckRequestSchema,HeadTurnFileSchema} from '../../packages/topics/head-turn-schemas.js';
+import {checkBoundHeadTurnDraft} from '../../packages/topics/head-turn-landmarks.js';
 import {Moods} from '../../packages/animation/schemas.js';
 import {importActorMotion,listActorMotions,loadActorMotion} from '../../packages/motion/import.js';
 import {MotionHash} from '../../packages/motion/schemas.js';
@@ -328,6 +332,19 @@ export async function buildServer(options: ServerOptions = {}) {
   });
   app.get('/api/topics/prehistoric-life/view-art',async(_request,reply)=>reply.type('text/html')
     .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(await viewArtWorkbench(repo)));
+  app.get<{Querystring:{file?:string}}>('/api/topics/prehistoric-life/head-turn-art',async(request,reply)=>{
+    const file=HeadTurnFileSchema.optional().parse(request.query.file);
+    return reply.type('text/html').header('Cache-Control','no-store')
+      .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; script-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'")
+      .send(await headTurnWorkbench(repo,file));
+  });
+  app.get('/api/topics/prehistoric-life/head-turn-art/inventory',async()=>headTurnInventory(repo));
+  app.get('/api/topics/prehistoric-life/head-turn-editor.js',async(_request,reply)=>reply.type('application/javascript').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(headTurnEditorScript));
+  app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/head-turn-art/:file',async(request,reply)=>reply.type('image/png').header('Cache-Control','no-store').send(await headTurnImage(repo,request.params.file)));
+  app.post('/api/topics/prehistoric-life/head-turn-draft/check',{bodyLimit:200*1024},async(request)=>{
+    const body=HeadTurnCheckRequestSchema.parse(request.body),{record}=await headTurnMaterial(repo,body.source.file);
+    return checkBoundHeadTurnDraft(body,record);
+  });
   app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/view-art/:file',async(request,reply)=>{
     const asset=await viewArtImage(repo,request.params.file);
     return reply.type(asset.type).header('Cache-Control','no-store').send(asset.bytes);

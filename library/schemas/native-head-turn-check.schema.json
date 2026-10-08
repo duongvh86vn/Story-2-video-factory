@@ -1,0 +1,411 @@
+{
+  "$ref": "#/definitions/native-head-turn-check",
+  "definitions": {
+    "native-head-turn-check": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "object",
+          "properties": {
+            "actor": {
+              "type": "string",
+              "enum": [
+                "lila",
+                "karo"
+              ]
+            },
+            "file": {
+              "type": "string",
+              "pattern": "^(lila|karo)-head-turn-v[1-9]\\d*\\.png$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "materialFingerprint": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "width": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "actor",
+            "file",
+            "sha256",
+            "materialFingerprint",
+            "width",
+            "height"
+          ],
+          "additionalProperties": false
+        },
+        "draft": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string",
+              "const": "native-head-turn-landmarks-1"
+            },
+            "actor": {
+              "type": "string",
+              "enum": [
+                "lila",
+                "karo"
+              ]
+            },
+            "file": {
+              "type": "string",
+              "pattern": "^(lila|karo)-head-turn-v[1-9]\\d*\\.png$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "materialFingerprint": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "width": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "coordinates": {
+              "type": "string",
+              "const": "absolute-source-pixels"
+            },
+            "cells": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "index": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 16
+                  },
+                  "yawDeg": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "neck": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "neckTop": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "chin": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "eyes": {
+                    "type": "object",
+                    "properties": {
+                      "screen-left": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "visible": {
+                                "type": "boolean",
+                                "const": true
+                              },
+                              "center": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "visible",
+                              "center"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "visible": {
+                                "type": "boolean",
+                                "const": false
+                              },
+                              "occludedBy": {
+                                "type": "string",
+                                "enum": [
+                                  "nose",
+                                  "face-contour",
+                                  "hair"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "visible",
+                              "occludedBy"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "screen-right": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "visible": {
+                                "type": "boolean",
+                                "const": true
+                              },
+                              "center": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "visible",
+                              "center"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "visible": {
+                                "type": "boolean",
+                                "const": false
+                              },
+                              "occludedBy": {
+                                "type": "string",
+                                "enum": [
+                                  "nose",
+                                  "face-contour",
+                                  "hair"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "visible",
+                              "occludedBy"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "nose": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "mouth": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "faceContour": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "y": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "x",
+                        "y"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 3,
+                    "maxItems": 32
+                  },
+                  "ponytailSide": {
+                    "type": "string",
+                    "enum": [
+                      "anatomical-left",
+                      "anatomical-right",
+                      "behind",
+                      "not-applicable"
+                    ]
+                  },
+                  "review": {
+                    "type": "string",
+                    "enum": [
+                      "unreviewed",
+                      "needs-redraw",
+                      "candidate"
+                    ],
+                    "default": "unreviewed"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "maxLength": 2000,
+                    "default": ""
+                  }
+                },
+                "required": [
+                  "index"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 16,
+              "maxItems": 16
+            },
+            "approved": {
+              "type": "boolean",
+              "const": false
+            },
+            "registered": {
+              "type": "boolean",
+              "const": false
+            },
+            "productionReady": {
+              "type": "boolean",
+              "const": false
+            },
+            "motionVerified": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "version",
+            "actor",
+            "file",
+            "sha256",
+            "materialFingerprint",
+            "width",
+            "height",
+            "coordinates",
+            "cells",
+            "approved",
+            "registered",
+            "productionReady",
+            "motionVerified"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "source",
+        "draft"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

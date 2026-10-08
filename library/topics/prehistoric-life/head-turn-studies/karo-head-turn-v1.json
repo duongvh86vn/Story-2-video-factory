@@ -1,0 +1,369 @@
+{
+  "version": "native-head-turn-material-1",
+  "actor": "karo",
+  "file": "karo-head-turn-v1.png",
+  "sha256": "965d9fb0f4e800144612bb4e3cd6ec6b482dad483c894980aea6fc61bbb4aaaf",
+  "promptFile": "library/topics/prehistoric-life/head-turn-studies/karo-head-turn-v1-prompt.json",
+  "promptSha256": "9ae7cedb777ec6ba787920bc2023277a065ad9b5393e5e8f37274c150f441ae7",
+  "references": [
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "primary-character-identity"
+    }
+  ],
+  "width": 1254,
+  "height": 1254,
+  "columns": 4,
+  "rows": 4,
+  "hasAlpha": true,
+  "alphaThreshold": 8,
+  "transparentPixels": 695257,
+  "visiblePixels": 840546,
+  "opaquePixels": 6010,
+  "cells": [
+    {
+      "index": 1,
+      "region": {
+        "x": 0,
+        "y": 0,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 36,
+        "y": 19,
+        "width": 267,
+        "height": 282
+      },
+      "visiblePixels": 52113,
+      "edgePixels": 0,
+      "pixelSha256": "db02d5071e6303abeabccd014105e9575f22c7ac01367807f9d1be750c3dd5ba"
+    },
+    {
+      "index": 2,
+      "region": {
+        "x": 313,
+        "y": 0,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 342,
+        "y": 19,
+        "width": 271,
+        "height": 283
+      },
+      "visiblePixels": 52799,
+      "edgePixels": 0,
+      "pixelSha256": "c39c71af883a4ec368fe7fe19d97fa0cade2961b114b7d37e28d4e64ec89067d"
+    },
+    {
+      "index": 3,
+      "region": {
+        "x": 627,
+        "y": 0,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 642,
+        "y": 19,
+        "width": 271,
+        "height": 283
+      },
+      "visiblePixels": 53370,
+      "edgePixels": 0,
+      "pixelSha256": "9a53f632bd7b7ebc2b8bb22345170238baee058f2033504501afd9a204bd13d2"
+    },
+    {
+      "index": 4,
+      "region": {
+        "x": 940,
+        "y": 0,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 949,
+        "y": 19,
+        "width": 270,
+        "height": 283
+      },
+      "visiblePixels": 53166,
+      "edgePixels": 0,
+      "pixelSha256": "8546cdd58742b9355ca9095961d20ee898ca6f9b5b6452d923d18c4ae5ac403b"
+    },
+    {
+      "index": 5,
+      "region": {
+        "x": 0,
+        "y": 313,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 26,
+        "y": 330,
+        "width": 273,
+        "height": 284
+      },
+      "visiblePixels": 53125,
+      "edgePixels": 0,
+      "pixelSha256": "b2c5ecc4dd86f48dbef37aa9caebd5cb0e44c8455fc64eebe3a5bc0e7d8b3900"
+    },
+    {
+      "index": 6,
+      "region": {
+        "x": 313,
+        "y": 313,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 336,
+        "y": 330,
+        "width": 271,
+        "height": 284
+      },
+      "visiblePixels": 52487,
+      "edgePixels": 0,
+      "pixelSha256": "9897696e0ae2fc57e7b01b2ead50651fba386358754ea4ea39bdc5647843d4b4"
+    },
+    {
+      "index": 7,
+      "region": {
+        "x": 627,
+        "y": 313,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 642,
+        "y": 329,
+        "width": 271,
+        "height": 285
+      },
+      "visiblePixels": 52703,
+      "edgePixels": 0,
+      "pixelSha256": "067ee4acc6406513221e155de1cbfcad2f69fd7a740db85bdbe06f5aa44c51bd"
+    },
+    {
+      "index": 8,
+      "region": {
+        "x": 940,
+        "y": 313,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 955,
+        "y": 329,
+        "width": 274,
+        "height": 285
+      },
+      "visiblePixels": 53328,
+      "edgePixels": 0,
+      "pixelSha256": "cc019e05585ffe775e02f3d820995db947dd35d8d62d3a20b5347b32cd3e197e"
+    },
+    {
+      "index": 9,
+      "region": {
+        "x": 0,
+        "y": 627,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 41,
+        "y": 643,
+        "width": 270,
+        "height": 281
+      },
+      "visiblePixels": 51940,
+      "edgePixels": 0,
+      "pixelSha256": "bfc27b307b63081f5bb769ae44aa6ca13836b36c4af295fd95fc8d1a25b64516"
+    },
+    {
+      "index": 10,
+      "region": {
+        "x": 313,
+        "y": 627,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 345,
+        "y": 642,
+        "width": 272,
+        "height": 282
+      },
+      "visiblePixels": 52690,
+      "edgePixels": 0,
+      "pixelSha256": "c604b84611b22b97759c1cbfd06436187c8e7821821cb3543b833a53170eb925"
+    },
+    {
+      "index": 11,
+      "region": {
+        "x": 627,
+        "y": 627,
+        "width": 313,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 653,
+        "y": 642,
+        "width": 275,
+        "height": 282
+      },
+      "visiblePixels": 53115,
+      "edgePixels": 0,
+      "pixelSha256": "3402c509b4ad03807a0992b79a843a3e6eddb1e8575088b0f17954e8c3f3b947"
+    },
+    {
+      "index": 12,
+      "region": {
+        "x": 940,
+        "y": 627,
+        "width": 314,
+        "height": 313
+      },
+      "visibleBounds": {
+        "x": 965,
+        "y": 641,
+        "width": 271,
+        "height": 283
+      },
+      "visiblePixels": 52225,
+      "edgePixels": 0,
+      "pixelSha256": "0872f9b272438c834e0c14d39a6fe98f0f8f385c7f039086028fe26ad4ca058f"
+    },
+    {
+      "index": 13,
+      "region": {
+        "x": 0,
+        "y": 940,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 48,
+        "y": 953,
+        "width": 265,
+        "height": 282
+      },
+      "visiblePixels": 51932,
+      "edgePixels": 19,
+      "pixelSha256": "32ebe6deb060b38d1672b05cbf8d093be5b4fc81cefe72d788cce8ed6c69a093"
+    },
+    {
+      "index": 14,
+      "region": {
+        "x": 313,
+        "y": 940,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 313,
+        "y": 952,
+        "width": 312,
+        "height": 283
+      },
+      "visiblePixels": 51922,
+      "edgePixels": 9,
+      "pixelSha256": "ab0d56b40b0f35a9f6a3c2d5a3ec7adbe6913d9c45a6b0c2c8fe2a21efc7531f"
+    },
+    {
+      "index": 15,
+      "region": {
+        "x": 627,
+        "y": 940,
+        "width": 313,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 658,
+        "y": 952,
+        "width": 270,
+        "height": 283
+      },
+      "visiblePixels": 51949,
+      "edgePixels": 0,
+      "pixelSha256": "2d654b83f0c9d8959a1cff6bb85f49a05856f1c4ccbe2e274250a3999e26943c"
+    },
+    {
+      "index": 16,
+      "region": {
+        "x": 940,
+        "y": 940,
+        "width": 314,
+        "height": 314
+      },
+      "visibleBounds": {
+        "x": 965,
+        "y": 952,
+        "width": 265,
+        "height": 283
+      },
+      "visiblePixels": 51682,
+      "edgePixels": 0,
+      "pixelSha256": "0cc4fd98262c9ac2705819985f3883db89c732f4732b0590a612fabae4d4dd49"
+    }
+  ],
+  "requestedYawDeg": [
+    45,
+    39,
+    33,
+    27,
+    21,
+    15,
+    9,
+    3,
+    -3,
+    -9,
+    -15,
+    -21,
+    -27,
+    -33,
+    -39,
+    -45
+  ],
+  "yawMeasured": false,
+  "findings": [
+    {
+      "cells": [
+        8,
+        9
+      ],
+      "note": "V1 source consultation: near-frontal to strong left-facing view changes nose/ear/fringe/beard at once; intermediate perspectives are missing."
+    },
+    {
+      "cells": [
+        1,
+        16
+      ],
+      "note": "Beard/neck stub alone cannot establish attachment seam to the original native body."
+    },
+    {
+      "cells": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "note": "Similar-angle clusters and possibly nonmonotonic13→14 views; no16 distinct measured yaw samples established."
+    }
+  ],
+  "status": "held-needs-art-repair-and-landmarks",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false
+}

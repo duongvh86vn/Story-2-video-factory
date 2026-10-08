@@ -19,6 +19,7 @@
     "scripts/prehistoric-pack.ts",
     "scripts/native-seat-correspondence.ts",
     "scripts/native-seat-tracer.ts",
+    "scripts/head-turn-inventory.ts",
     "scripts/cloth-contour-geometry.ts"
   ]
 }

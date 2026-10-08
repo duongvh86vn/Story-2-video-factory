@@ -1,0 +1,37 @@
+{
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Asset: hand-drawn 2D cutout head-turn sprite atlas for the SAME prehistoric female stick actor Lila in the attached primary reference. Use the reference as the exact model identity/style/color guide; derive head views only. Create ONE 2048x2048 transparent PNG, exactly 16 isolated head-and-hair sprites in a regular 4 columns x 4 rows grid (512x512 cells), chronological row-major order. No visible grid, text, labels, body, clothing, arms, scenery, props, ground or shadow. Each cell contains the complete head, all loose hair and tied ponytail, both ears as visible, and only a short black stick neck ending at the common bottom pivot. Keep margins >=24px, sprites cannot touch or bleed into neighbor cells. The neck tip/pivot must be at cell-local x256,y456 in every cell. Keep head size, eye-line height, neck length, warm orange skin, strong black ink, dark brown textured hair, side fringe and the exact ponytail tie and attachment consistent in all frames; no vertical bobbing or stretching. Friendly quiet listening expression, eyes open and a gently closed smiling mouth throughout; the eyes, nose and mouth stay coherent on the SAME skull as it rotates. The 16 yaw angles in order are +45,+39,+33,+27,+21,+15,+9,+3,-3,-9,-15,-21,-27,-33,-39,-45 degrees, where PLUS means nose points toward viewer RIGHT, ZERO is front, MINUS means viewer LEFT. Thus row1 faces increasingly less to right, row2 approaches front, row3 crosses front and approaches left, row4 ends 3/4 left. All intermediate frames are truly drawn rotation views, not copies, not mirroring or squeezing the face. Preserve the asymmetric ponytail on the same anatomical side through rotation, occluding naturally behind the head; never move its tie to the other side. Do not beautify into anime, adult realistic anatomy, white stick face or another girl; match the reference's cute round warm face, simple small black oval eyes, small curved nose, bold organic outline and rich saturated warm/dark colors. This must be an animation sprite sheet of one character making one monotonic smooth head turn, NOT 16 different expressions or a character reference poster. Genuine alpha transparency.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-e29e7a4f-dd11-46d1-9687-0bda71215efb.png",
+  "requestedYawDeg": [
+    45,
+    39,
+    33,
+    27,
+    21,
+    15,
+    9,
+    3,
+    -3,
+    -9,
+    -15,
+    -21,
+    -27,
+    -33,
+    -39,
+    -45
+  ],
+  "requestedRepairCells": [],
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}
