@@ -1,4 +1,6 @@
-import { hash } from '../core/utils.js';
+// Contract metadata is shared with Studio schemas. Hash the identical JSON
+// bytes without importing Node fs/crypto/process into the browser graph.
+import { jsonSha256 as hash } from '../core/json-sha256.js';
 
 export const SECONDARY_MOTION_VERSION = 'native-secondary-motion-1' as const;
 export const SECONDARY_MOTION_DELAYS_MS = Object.freeze([0, 40, 80, 120, 160] as const);

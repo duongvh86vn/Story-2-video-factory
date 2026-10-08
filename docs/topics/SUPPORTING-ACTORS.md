@@ -1,6 +1,6 @@
 # Diễn viên phụ / quần chúng — Cuộc sống thời tiền sử
 
-Cập nhật hiện hành source0.62: [thứ tự vẽ tóc–đầu–thân và handoff test](NATIVE-SOURCE-HEAD-PAINT.md). Lựa chọn source-layers dùng bốn definition mới: đuôi tóc Lila sau thân, Karo giữ đầu/râu trước; hai lớp dùng cùng original head transform/cell clock. PNG và mười definition trước giữ nguyên. Geometry/hình/video chưa nghiệm thu; runtime giao model test của người dùng. Toàn story/script/WAV → giọng → diễn viên → video/final/QC vẫn là mục tiêu đầy đủ. Các mục phiên bản thấp hơn bên dưới là lịch sử.
+Cập nhật hiện hành source0.63: [đuôi tóc theo nhịp cơ thể và handoff test](NATIVE-SOURCE-HEAD-FOLLOW.md). Mode source-motion chọn bank6/paint2 riêng: đuôi tóc Lila dùng đúng nguồn và original head/body history, pinned gốc/cạnh; Karo khai báo không rear motion. Giữ nguyên 14 definition/PNG trước. Geometry/UV/seam/hình/video chưa nghiệm thu; runtime giao model test của người dùng. Toàn story/script/WAV → giọng → diễn viên → video/final/QC vẫn là mục tiêu đầy đủ. Các mục phiên bản thấp hơn bên dưới là lịch sử.
 
 **Hiện hành source0.60 · 08/10/2026:** raw nam v2 không tóc/râu và nữ v1/own head candidates/costume không đổi. Normalization dùng chung với principal, giữ bank4/view/motion và person IDs/speaker/source clocks, từ chối nguồn sai trước khi sửa cast. [Source, test và chờ nghiệm thu](TOPIC-CAST-SOURCE-HANDOFF.md). Không gán overlay principal vào đầu quần chúng hoặc tự mở production.
 

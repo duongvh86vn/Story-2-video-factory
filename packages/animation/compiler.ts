@@ -18,7 +18,7 @@ import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-a
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
 import {usesBodyView,registeredBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace,nativeHeadBankFacialState,nativeHeadBankFacialError} from './body-head-bank.js';
-import {nativeHeadSources} from './native-head-bank.js';
+import {nativeHeadSources,nativeHeadPixelScale} from './native-head-bank.js';
 import {nativeHeadTrackTimes} from './native-head-track.js';
 import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,bodyViewMouthLevel,validateBodyViewMouthActivity,bodyViewMouthDescription,BODY_VIEW_MOUTH_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS} from './body-view-mouth.js';
 import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
@@ -28,8 +28,9 @@ import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeCl
 import {hasBodyViewSeat,nativeSeatState,nativeSeatMatrixError,nativeSeatDescription} from './body-view-seat.js';
 import {hasBodyViewSecondary,registeredNativeSecondary,nativeSecondaryState,nativeSecondaryMatrixError,nativeSecondaryDescription} from './body-view-secondary.js';
 import {sampleSecondaryMotion,SECONDARY_MOTION_DELAYS_MS} from './view-secondary-motion.js';
-import {hasNativeHeadRear} from './body-head-bank.js';
+import {hasNativeHeadRear,hasNativeHeadSecondary,nativeHeadBankRearState,nativeHeadBankRearError,nativeHeadCellAngle} from './body-head-bank.js';
 import {nativeHeadPaintDescription} from './native-head-paint.js';
+import {nativeRearFollowDescription} from './native-head-follow.js';
 import {moodPoses,expressionPose,type ExpressionPose} from './expression-pose.js';
 import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
 import {viewSourceGestureDefinition,sourceViewGestureAt} from './view-source-gesture.js';
@@ -973,6 +974,16 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }});
     Object.assign(face,nativeSecondaryState(profile,c,control).face);
   }
+  if(hasNativeHeadSecondary(profile)){
+    if(!actingClock)throw new Error('needs-head-secondary-phase: own rear motion requires the complete original actor clock');
+    if(actingClock.startMs!==actingClock.runStartMs&&!plan.sourceBody&&(plan.walks.length||plan.jumps?.length||plan.postures?.length||plan.lunge))throw new Error('needs-head-secondary-phase: moving camera slice needs complete original physical history');
+    if(plan.lunge&&(actingClock.startMs!==actingClock.runStartMs||actingClock.endMs!==actingClock.runEndMs))throw new Error('needs-head-secondary-phase: sliced lunge needs an owned original head/body history');
+    const {bank,cell}=nativeHeadBankCell(plan,profile,t,actingClock),offset=actingClock.startMs,angle=nativeHeadCellAngle(cell);
+    const control=sampleSecondaryMotion({timeMs:t+offset,startMs:actingClock.runStartMs,endMs:actingClock.runEndMs,scale:nativeHeadPixelScale(bank,cell)*s*headArtScale,sample:at=>{
+      const state=bodyStateAt(plan,profile,at-offset,actingClock),geometry=headGeometry(profile,state);return {...geometry.head,angle:geometry.headAngle+angle};
+    }});
+    Object.assign(face,nativeHeadBankRearState(bank,cell.id,control).face);
+  }
   if(usesReferenceBody(profile)&&!usesBodyView(profile)){
     const weight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,n)=>sum+n,0));
     const flex=Math.abs(thighAngles.reduce((sum,n)=>sum+n,0)/thighAngles.length-lean);
@@ -1096,10 +1107,10 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   const times=new Set<number>([0,plan.durationMs]);
   if(actingClock?.headMotion)for(const global of nativeHeadTrackTimes(actingClock.headMotion))for(const delta of [-.01,0,.01])times.add(global-actingClock.startMs+delta);
   const physical=sourceBodyPlan(plan),motionOffset=plan.sourceBody?plan.sourceBody.startMs-actingClock!.startMs:0;
-  const addSecondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
+  const addSecondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile)||hasNativeHeadSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
   const addMotionTime=(at:number)=>{addSecondaryTime(at+motionOffset);if(hasBodyViewLocomotion(profile))times.add(at+motionOffset+VIEW_CLOTH_LAG_MS);};
   for(const at of supportMotionTimes(physical))for(const near of [at-.01,at,at+.01])addMotionTime(near);
-  if(plan.sourceBody||hasBodyViewSecondary(profile))for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)addMotionTime(at);
+  if(plan.sourceBody||hasBodyViewSecondary(profile)||hasNativeHeadSecondary(profile))for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)addMotionTime(at);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...plan.gestures,...(plan.spears??[]),...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)times.add(at);
@@ -1160,6 +1171,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       if(hasBodyViewSeat(profile))error=Math.max(error,nativeSeatMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
       else if(hasBodyViewLocomotion(profile))error=Math.max(error,nativeClothMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
       if(hasBodyViewSecondary(profile))error=Math.max(error,nativeSecondaryMatrixError(profile,registeredBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
+      if(hasNativeHeadSecondary(profile))error=Math.max(error,nativeHeadBankRearError(registeredNativeHeadBank(profile),a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesBodyView(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
       for(const [id,from] of Object.entries(a.face)){
@@ -1217,7 +1229,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     ...(hasNativeHeadBank(profile)?{nativeHeadBank:{fingerprint:registeredNativeHeadBank(profile).fingerprint,sources:nativeHeadSources(registeredNativeHeadBank(profile)),sourceTrack:plan.sourceHead,method:'authored cells on the original run clock; uniform registered pixel-scale and neck-axis attachment, local source-face masks; single unknown-angle cell is fixed, no face crossfade',capabilities:registeredNativeHeadBank(profile).capabilities,
       ...(hasNativeHeadSpeech(profile)?{sourceFace:{versions:[...new Set(registeredNativeHeadBank(profile).cells.map(c=>c.face!.version))],version:registeredNativeHeadBank(profile).capabilities.expressions?'native-head-face-2':'native-head-face-1',activityMethod:activity.method,sourceAudioHash:activity.audioHash??null,sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null,blinkClock:'original absolute clock',
         ...(registeredNativeHeadBank(profile).capabilities.expressions?{expressionClock:'complete original actor expressions; return to this cell rest mood',browInterpolation:'own glyph matrices included in source-pixel refinement',expressionVerified:false}:{}),phonemeLipSync:false,audioVerified:false,opticalGazeVerified:false}}:{}),approved:false,productionReady:false,motionVerified:false}}:{}),
-    ...(hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).cells.some(c=>c.paint)?{nativeHeadPaint:{...nativeHeadPaintDescription,bankFingerprint:registeredNativeHeadBank(profile).fingerprint,cells:registeredNativeHeadBank(profile).cells.map(c=>({id:c.id,paint:c.paint})),rearPresent:hasNativeHeadRear(profile),attachment:'exact head transform and original source cell opacity; head-back before all body paint'}}:{}),
+    ...(hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).cells.some(c=>c.paint)?{nativeHeadPaint:{...nativeHeadPaintDescription,version:registeredNativeHeadBank(profile).cells.some(c=>c.paint?.version==='native-head-paint-2')?'native-head-paint-2':'native-head-paint-1',secondaryMotion:hasNativeHeadSecondary(profile),...(hasNativeHeadSecondary(profile)?{follow:nativeRearFollowDescription,clock:'complete original actor head/body/expression history before camera cuts; no camera transform enters the kernel'}:{}),bankFingerprint:registeredNativeHeadBank(profile).fingerprint,cells:registeredNativeHeadBank(profile).cells.map(c=>({id:c.id,paint:c.paint})),rearPresent:hasNativeHeadRear(profile),attachment:'exact head transform and original source cell opacity; head-back before all body paint'}}:{}),
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile,plan))),interpolationGapLimitPx:.2,interpolationIncludes:['bones/cuff','spear palms/shared shaft','tip during contact hold'],selectedClips:selectedClips(plan),

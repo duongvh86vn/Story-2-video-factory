@@ -1,6 +1,7 @@
 import {z} from 'zod';
 import {Id} from '../core/identifiers.js';
 import type {NativeHeadFace} from './native-head-face.js';
+import {NativeRearMotionSchema,nativeRearFollowDefs} from './native-head-follow.js';
 
 const Scalar=z.number().finite().nonnegative();
 const Rect=z.object({x:Scalar,y:Scalar,width:z.number().finite().positive(),height:z.number().finite().positive()}).strict();
@@ -9,8 +10,8 @@ const Source=z.object({sha256:z.string().regex(/^[a-f0-9]{64}$/),width:z.number(
  * region paints behind the BODY; frontCut removes only its interior from the
  * original foreground image. The explicit narrow overlap avoids a clipping
  * crack, but its actual alpha/colour seam still needs visual acceptance. */
-export const NativeHeadPaintSchema=z.object({version:z.literal('native-head-paint-1'),source:Source,
-  rear:z.array(z.object({id:Id,region:Rect,frontCut:Rect}).strict()).max(8),
+export const NativeHeadPaintSchema=z.object({version:z.enum(['native-head-paint-1','native-head-paint-2']),source:Source,
+  rear:z.array(z.object({id:Id,region:Rect,frontCut:Rect,motion:NativeRearMotionSchema.optional()}).strict()).max(8),
   status:z.literal('engineering-paint-registration'),approved:z.literal(false),productionReady:z.literal(false),motionVerified:z.literal(false),
 }).strict();
 export type NativeHeadPaint=z.infer<typeof NativeHeadPaintSchema>;
@@ -30,6 +31,8 @@ export function validateNativeHeadPaint(value:NativeHeadPaint,source:z.infer<typ
     ...(f?.emotions?Object.values(f.emotions.brows).map(b=>b.strip):[]),
     ...(f?.emotions?.mouth.repair.source.sha256===source.sha256?[f.emotions.mouth.repair.strip]:[])];
   for(const [i,p] of paint.rear.entries()){
+    if(paint.version==='native-head-paint-1'?'motion' in p:!p.motion)fail('paint2 requires every own rear motion; paint1 forbids motion fields');
+    if(p.motion&&(p.region.width<64||p.region.height<96))fail('rear motion mesh requires at least 64 by 96 source pixels for stable UV seams');
     if(!within(p.region,cell.crop)||!within(p.frontCut,p.region))fail('rear paint or front cut leaves its cell/partition');
     // Overlap is explicitly authored and bounded at each internal edge. Crop
     // edges may coincide: they have no second paint seam outside the image.
@@ -43,7 +46,7 @@ const rect=(r:R,colour?:string)=>`<rect x="${r.x}" y="${r.y}" width="${r.width}"
 export function nativeHeadPaintDefs(paint:NativeHeadPaint,crop:R,index:number){
   if(!paint.rear.length)return '';
   const key='native-head-paint-'+index;
-  return `<clipPath id="${key}-rear" clipPathUnits="userSpaceOnUse">${paint.rear.map(p=>rect(p.region)).join('')}</clipPath><mask id="${key}-front" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="${crop.x}" y="${crop.y}" width="${crop.width}" height="${crop.height}" style="mask-type:luminance">${rect(crop,'white')}${paint.rear.map(p=>rect(p.frontCut,'black')).join('')}</mask>`;
+  return `<clipPath id="${key}-rear" clipPathUnits="userSpaceOnUse">${paint.rear.map(p=>rect(p.region)).join('')}</clipPath><mask id="${key}-front" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="${crop.x}" y="${crop.y}" width="${crop.width}" height="${crop.height}" style="mask-type:luminance">${rect(crop,'white')}${paint.rear.map(p=>rect(p.frontCut,'black')).join('')}</mask>${nativeRearFollowDefs(paint,index)}`;
 }
 export const nativeHeadPaintDescription={version:'native-head-paint-1',method:'explicit same-source rear partitions before all body paint; original face/neck in front, both on the identical uniform head transform and discrete original cell clock; bounded authored source-pixel overlap',
   secondaryMotion:false,neckTrim:false,approved:false,productionReady:false,motionVerified:false};

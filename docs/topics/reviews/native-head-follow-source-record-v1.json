@@ -1,0 +1,272 @@
+{
+  "version": "native-head-follow-source-record-1",
+  "sourceVersion": "forest-tribe-0.63-source-head-follow",
+  "precedingSourceSHA": "de995a3ba9bae4bec8351f00b6e17354200249b6",
+  "scope": "source build/typecheck/schema export/static inventory only; full factory unaccepted",
+  "checks": [
+    {
+      "command": "npm run build",
+      "startChunk": "0a126f",
+      "session": 13201,
+      "completionChunk": "d9bc0f",
+      "exitCode": 1,
+      "reason": "Initial Vite browser bundle failed: native-head-follow imported secondary descriptor through Node core/utils. Repaired the shared import to pure JSON SHA256; no browser Node polyfill or gate bypass."
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "12086f",
+      "session": 99020,
+      "completionChunk": "5c760f",
+      "exitCode": 0,
+      "callbacksDeclared": 9,
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "0f46be",
+      "session": 30718,
+      "completionChunk": "65b3eb",
+      "exitCode": 0,
+      "viteModules": 46
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "6d5d7c",
+      "session": 27090,
+      "completionChunk": "7efff5",
+      "exitCode": 0,
+      "callbacksDeclared": 10,
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "npm run schemas",
+      "chunk": "150ef9",
+      "exitCode": 0,
+      "instanceGeometryInvoked": false
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "e4b41c",
+      "exitCode": 0,
+      "compilerInvoked": false,
+      "geometryInvoked": false
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "13a4b9",
+      "session": 97166,
+      "completionChunk": "32aa8e",
+      "exitCode": 0,
+      "viteModules": 46,
+      "reason": "Final source check after explicit selected-cell/front-rear opacity refinement guard."
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "c61e36",
+      "session": 73556,
+      "completionChunk": "b8bebe",
+      "exitCode": 0,
+      "callbacksDeclared": 10,
+      "callbacksExecuted": 0,
+      "reason": "Final source check after guard assertions were declared."
+    },
+    {
+      "command": "Static byte/manifest inventory and git diff --check",
+      "chunk": "61be15",
+      "exitCode": 0,
+      "geometryInvoked": false,
+      "callbacksExecuted": 0
+    }
+  ],
+  "static": {
+    "unchangedPriorDefinitions": [
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v1.json",
+        "sha256": "b3f973990bd49e2ae23675fb21b5daa614ef7d3e7aa5013f4123a2dff49aee96"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-face-v1.json",
+        "sha256": "69f0e8352392ba78416c0000e595fe913246014ebf6b71382aa2833c76541640"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v1.json",
+        "sha256": "c20745b0039a37f2f18ebd310a264edafdca4ab7c1e3b6f731b9a4e95a6debef"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v1.json",
+        "sha256": "eb0d48c888dff442b997bc1a94a2d870fe9f5d09079119961d784d4221b017a8"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v1.json",
+        "sha256": "ba2e06c7b8edf15ea55193d7427c184db75c2a6e579c86b579fd0c5070db3d06"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/karo-source-face-v1.json",
+        "sha256": "8d1dee8c1e693b0ffafdd6ee1b641f8be2650931bb446c6b6fe9ba244e40137b"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v1.json",
+        "sha256": "193dfa7e2706d2844dd982051978143393d765958bb3c97407f971b00da30177"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-face-v1.json",
+        "sha256": "42aa9da4aab32592f2cd76b564001d550c51647497a18a355bc07f0782723146"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v1.json",
+        "sha256": "afea362bb5ee5ae59e06f97e47a9bbeafe840df9e3b6da3d787e8092b1922f36"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v1.json",
+        "sha256": "e0179ec0f199d8ad48fa9efbfb6e5972de0ac66824abb671b0259ac9a6b4f79a"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v1.json",
+        "sha256": "f11a2c83209359159ad4bacb751a0671d3585f9e9dfd14dc23c31c8c2c7d51f5"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json",
+        "sha256": "2a9be1bf907aafc4948a0d3d4355d4e2c5657dc3a37fc95428354753f71cdc9d"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/supporting-female-right-face-v1.json",
+        "sha256": "26a3807a15e055507653dad09474869dda91841736ab73828d1ed89705d09708"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-registrations/supporting-male-left-face-v1.json",
+        "sha256": "3c6cbe904b041cb8ad30cbc06a46b580ed0c8dd9753a4c68117f5fdc34097ddf"
+      }
+    ],
+    "unchangedTrackedPNGs": 84,
+    "manifestCodeHashes": 12,
+    "headDefinitions": 18,
+    "declaredCallbacks": 10,
+    "executedCallbacks": 0,
+    "productionReady": false
+  },
+  "sourceReview": {
+    "file": "docs/topics/reviews/native-head-follow-source-review-v1.json",
+    "frozenInputs": "docs/topics/reviews/native-head-follow-review-inputs-v1.md",
+    "calls": 1,
+    "model": "ag/gemini-3.8-flash-low",
+    "usage": {
+      "promptTokens": 20770,
+      "completionTokens": 674,
+      "totalTokens": 21444
+    },
+    "helperSession": 46724,
+    "startChunk": "148dab",
+    "completionChunk": "8950e6",
+    "exitCode": 0,
+    "scope": "source-only; not execution/geometry/art/film approval",
+    "autoApplied": false,
+    "codeChangesAfterReview": [
+      "packages/animation/body-head-bank.ts: explicit front/rear/endpoint source-selection guard",
+      "tests/native-head-follow.test.ts: invalid-opacity declarations"
+    ]
+  },
+  "codeHashes": {
+    "apps/server/index.ts": "c2c723b776b41e2133468fe852ff1eacdf5c62cdf59fd49ec91c848cdf2fe8b2",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md": "69fcb8005895f07885e166bb2716c122b2d5457ec3266a81eb48547eec05e3ca",
+    "docs/topics/NATIVE-SOURCE-HEAD-FOLLOW.md": "cfaf0ec14d349b3cb3a33bfdd1113f6ce33740e80dda2f5e6c00fb4b984a4610",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md": "75e6436f3a511cfd06b95e88779c6e12bcd57641df66981b8c034f0684ac0b01",
+    "docs/topics/SUPPORTING-ACTORS.md": "0825217f3c39c88b93084029cf2cd400f1f2ed0f2a9b449e53d9e3ef7f35e5bb",
+    "docs/topics/reviews/native-head-follow-review-inputs-v1.md": "a01f67a20d3da9d11334ff825c6026ebc9bed15a49cdf9efb7412e5ae4ee4f8f",
+    "docs/topics/reviews/native-head-follow-source-review-v1.json": "a893e6410cfe39f5f8057ff82d8baa8fb7679d27c32e3ee8127b10a7fbc09aad",
+    "library/schemas/host-profile.schema.json": "98de56242bf657c7d1c0bd714c43b4b089956c446f7cc777273f3f23391beabc",
+    "library/schemas/index.ts": "8a210105eaa4c52fa249fd6d8d942b0b7867fc3b785de9c55cae17ebf9cedf1b",
+    "library/schemas/native-head-bank.schema.json": "8cb3b8b4b08f1282c327d7c05d981da01139b909aebf0beee67d8dfa7ca7a0f2",
+    "library/schemas/native-head-paint.schema.json": "1c6e3bbdb9557b4841b8d30b604fdf4590c4fad7bc5656a64eb8a5e6f97c39d1",
+    "library/schemas/native-head-rear-motion.schema.json": "5ab4ca57b37457cbc51856a867283dde57ad33ffd373cfe7bbbcda8a3b49847a",
+    "library/schemas/shot.schema.json": "315b36ac0a62eef54bdb2c27537c2fa9d455d289f4d09cd1eb5067851c362d72",
+    "library/schemas/storyboard.schema.json": "5cab2e9845a33512265c5a890da23a53770294dc3485a5a0a063aa9cf68e208f",
+    "library/schemas/view-acting-clock.schema.json": "c62d21c16655dc3a19dec323ec248e3ae819f1dae62588b00b7b867ca726b00e",
+    "library/schemas/view-gaze-target.schema.json": "a0e1372d0ef99e30287a74810c1e721c035dfc7fd5315113098044b04ae1fca1",
+    "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v1.json": "98191236b89a4210462856a7c9c337c6f6843063f1b7cb8ab2c43b1a5403d1f1",
+    "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v1.json": "fbfa97cb88d62a80e726f62b1c7e1eddbb0a8ae23e3e6a4e4a2e9567c5ea740e",
+    "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v1.json": "0e729f923f103ae7f0f813412c2096f1f931d90261727fa1df7d5ba68e07fb2a",
+    "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v1.json": "8f5e23d8fb3cea937754b8d04b385ca1f323dd0d3a2d64a137a12bb72d3e9bfc",
+    "library/topics/prehistoric-life/manifest.json": "89957f7bce66ba0372966a38559e77dcabe944a864ea6f358fecd5e3944cdbcb",
+    "packages/actors/view-acting-clock.ts": "b5fc56a68d7650ee9100b6f64d3958ad0e2719ddc41a25315c2b77fbe7eaaba7",
+    "packages/animation/body-head-bank.ts": "ceb6dd70ea67b6b2493ccd94c01a3cc6d237a5bc4ec493ef0298234499c32394",
+    "packages/animation/compiler.ts": "1c89e049ef14cd4bdc1876fb93a5c46025cfccd642ae02692e748a7c62276060",
+    "packages/animation/native-head-bank.ts": "2d31176e78176aa8792bb75c0dcbad905649edda32af70117406d27395c78ade",
+    "packages/animation/native-head-follow.ts": "61f81b72f24ce6c8e522dd3db93045381f81f1dfd7385762c1a7c1ba21b69a01",
+    "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
+    "packages/animation/native-head-paint.ts": "053ee70cf2afd825e714d41e1fd391eb1f29d4a5569d70444c4914adb43633cd",
+    "packages/animation/view-secondary-motion.ts": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
+    "packages/director/acting-brief.ts": "099c585c5609d3dc9eb36578ab570d3e636daa1a2cf5cf7dd87c23b1720df2c3",
+    "packages/topics/head-face-candidates.ts": "54db4bb9c6c343611b913f334f607b8e5cddeb276e242f8c358315e0999f265b",
+    "packages/topics/head-face-source.ts": "d023a0d94ac5d2116abb0011d0cd7d303945652c38c52353c08a24179975d732",
+    "packages/topics/native-dialogue-candidates.ts": "77531f48e49841fd2940bca4cfb1275d188eeed7f38da51acda74e55e2911c85",
+    "packages/topics/prehistoric-life.ts": "5311175402aeab5a4bf52e044e0c020c0b01e9fc077750fe4a800f652610460b",
+    "scripts/native-seat-tracer.ts": "3c79e8cb7ca0b0bc9b429db42e8c50c4809409468a01d86faf85545d887b209d",
+    "scripts/prehistoric-pack.ts": "83231032626f47e4ddceb7184f05b3ed6e54a7c033d06d2e6980dd9dfe3fe756",
+    "tests/native-head-follow.test.ts": "fb13c42ed8bbed46b0c38f962349c2793fe28d8a631b9986011342e3d166968b"
+  },
+  "ownedPaths": [
+    "apps/server/index.ts",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/NATIVE-SOURCE-HEAD-FOLLOW.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/native-head-follow-review-inputs-v1.md",
+    "docs/topics/reviews/native-head-follow-source-record-v1.json",
+    "docs/topics/reviews/native-head-follow-source-review-v1.json",
+    "library/schemas/host-profile.schema.json",
+    "library/schemas/index.ts",
+    "library/schemas/native-head-bank.schema.json",
+    "library/schemas/native-head-paint.schema.json",
+    "library/schemas/native-head-rear-motion.schema.json",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/schemas/view-acting-clock.schema.json",
+    "library/schemas/view-gaze-target.schema.json",
+    "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v1.json",
+    "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v1.json",
+    "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v1.json",
+    "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v1.json",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/actors/view-acting-clock.ts",
+    "packages/animation/body-head-bank.ts",
+    "packages/animation/compiler.ts",
+    "packages/animation/native-head-bank.ts",
+    "packages/animation/native-head-follow.ts",
+    "packages/animation/native-head-identity.ts",
+    "packages/animation/native-head-paint.ts",
+    "packages/animation/view-secondary-motion.ts",
+    "packages/director/acting-brief.ts",
+    "packages/topics/head-face-candidates.ts",
+    "packages/topics/head-face-source.ts",
+    "packages/topics/native-dialogue-candidates.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/native-seat-tracer.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/native-head-follow.test.ts"
+  ],
+  "geometry": "NOT RUN",
+  "tests": "NOT RUN",
+  "renderer": "NOT RUN",
+  "server": "NOT RUN",
+  "browser": "NOT RUN",
+  "video": "NOT RUN",
+  "audio": "NOT RUN",
+  "fullFactory": "NOT ACCEPTED",
+  "approval": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "pending": [
+    "actual own-rear mesh/UV seams/alpha/source identity/body occlusion/history/bounds and normal-speed video verification",
+    "faithful art and full head/body views with continuous turns and rear-motion correspondence",
+    "neck attachment, soft plausible arms/legs, planted feet, independent hair/cloth collision handling",
+    "tools/props/grasp/contact/handoff/shared ownership",
+    "supporting own views/emotions and any appropriate rear layers; male remains bald and beardless, female retained",
+    "vivid world day/sunset/night",
+    "arbitrary story to script, exact script, original WAV and legacy SRT",
+    "EN primary plus VI/JA/KO, external/local TTS/ASR",
+    "resume/rebuild/locks",
+    "actual final/audio/subtitle/QC acceptance"
+  ]
+}

@@ -15,7 +15,7 @@ import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../animation/view-gaze-tar
 import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 import {collectViewSourceBody,validateBodySourcePlan} from '../animation/view-source-body.js';
-import {hasNativeHeadBank,validateNativeHeadBankTrack} from '../animation/body-head-bank.js';
+import {hasNativeHeadBank,hasNativeHeadSecondary,validateNativeHeadBankTrack} from '../animation/body-head-bank.js';
 import {collectNativeHeadTracks} from '../animation/native-head-track.js';
 
 function performer(shot:Shot,actorId:string){
@@ -49,7 +49,7 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
       ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:p.expressions}:{}),
       sourceBody:p.sourceBody,
       sourceHead:p.sourceHead,
-      ...(hasBodyViewSecondary(currentActor.character)?{secondaryLunge:p.lunge??null}:{}),
+      ...(hasBodyViewSecondary(currentActor.character)||hasNativeHeadSecondary(currentActor.character)?{secondaryLunge:p.lunge??null}:{}),
       ...(hasBodyViewLocomotion(currentActor.character)?{locomotion:{walks:p.walks,jumps:p.jumps??[],postures:p.postures??[],entryPosture:p.entryPosture??null}}:{})};
   };
   const entries=shots.map(entry);

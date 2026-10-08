@@ -615,7 +615,8 @@
                               "native-head-bank-2",
                               "native-head-bank-3",
                               "native-head-bank-4",
-                              "native-head-bank-5"
+                              "native-head-bank-5",
+                              "native-head-bank-6"
                             ]
                           },
                           "id": {
@@ -2198,7 +2199,10 @@
                                   "properties": {
                                     "version": {
                                       "type": "string",
-                                      "const": "native-head-paint-1"
+                                      "enum": [
+                                        "native-head-paint-1",
+                                        "native-head-paint-2"
+                                      ]
                                     },
                                     "source": {
                                       "type": "object",
@@ -2290,6 +2294,31 @@
                                               "height"
                                             ],
                                             "additionalProperties": false
+                                          },
+                                          "motion": {
+                                            "type": "object",
+                                            "properties": {
+                                              "pin": {
+                                                "type": "string",
+                                                "const": "top"
+                                              },
+                                              "gain": {
+                                                "type": "number",
+                                                "exclusiveMinimum": 0,
+                                                "maximum": 1
+                                              },
+                                              "maxDisplacement": {
+                                                "type": "number",
+                                                "exclusiveMinimum": 0,
+                                                "maximum": 24
+                                              }
+                                            },
+                                            "required": [
+                                              "pin",
+                                              "gain",
+                                              "maxDisplacement"
+                                            ],
+                                            "additionalProperties": false
                                           }
                                         },
                                         "required": [
@@ -2374,8 +2403,7 @@
                                 "type": "boolean"
                               },
                               "secondary": {
-                                "type": "boolean",
-                                "const": false
+                                "type": "boolean"
                               }
                             },
                             "required": [

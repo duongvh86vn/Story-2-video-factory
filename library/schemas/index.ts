@@ -30,6 +30,7 @@ import {HeadCellPromptSchema,HeadCellMaterialSchema} from '../../packages/topics
 import {HeadCellDraftSchema,HeadCellCheckRequestSchema} from '../../packages/topics/head-cell-landmarks.js';
 import {NativeHeadFaceSchema} from '../../packages/animation/native-head-face.js';
 import {NativeHeadPaintSchema} from '../../packages/animation/native-head-paint.js';
+import {NativeRearMotionSchema} from '../../packages/animation/native-head-follow.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
@@ -56,6 +57,7 @@ export const schemaLibrary:Record<string,z.ZodTypeAny> = {
   'native-head-cell-landmarks':HeadCellDraftSchema,'native-head-cell-check':HeadCellCheckRequestSchema,
   'native-head-face':NativeHeadFaceSchema,
   'native-head-paint':NativeHeadPaintSchema,
+  'native-head-rear-motion':NativeRearMotionSchema,
 };
 
 export async function writeSchemaLibrary(directory = path.dirname(fileURLToPath(import.meta.url))): Promise<void> {

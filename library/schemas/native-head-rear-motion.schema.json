@@ -1,0 +1,31 @@
+{
+  "$ref": "#/definitions/native-head-rear-motion",
+  "definitions": {
+    "native-head-rear-motion": {
+      "type": "object",
+      "properties": {
+        "pin": {
+          "type": "string",
+          "const": "top"
+        },
+        "gain": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "maxDisplacement": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 24
+        }
+      },
+      "required": [
+        "pin",
+        "gain",
+        "maxDisplacement"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
