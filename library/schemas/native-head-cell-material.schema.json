@@ -1,0 +1,226 @@
+{
+  "$ref": "#/definitions/native-head-cell-material",
+  "definitions": {
+    "native-head-cell-material": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "native-head-cell-material-1"
+        },
+        "actor": {
+          "type": "string",
+          "enum": [
+            "lila",
+            "karo"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "maxLength": 90,
+          "pattern": "^(lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*\\.png$(?![\\s\\S])"
+        },
+        "sha256": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "promptFile": {
+          "type": "string",
+          "maxLength": 250
+        },
+        "promptSha256": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file": {
+                "type": "string",
+                "maxLength": 250
+              },
+              "sha256": {
+                "type": "string",
+                "minLength": 64,
+                "maxLength": 64,
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "primary-character-identity",
+                  "edit-target"
+                ]
+              }
+            },
+            "required": [
+              "file",
+              "sha256",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 8192
+        },
+        "height": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 8192
+        },
+        "hasAlpha": {
+          "type": "boolean",
+          "const": true
+        },
+        "alphaThreshold": {
+          "type": "number",
+          "const": 8
+        },
+        "transparentPixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "visiblePixels": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "opaquePixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "partialPixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "edgePixels": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "alphaHistogram": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 256,
+          "maxItems": 256
+        },
+        "pixelSha256": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "visibleBounds": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "y": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "width": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "width",
+            "height"
+          ],
+          "additionalProperties": false
+        },
+        "requestedYawDeg": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "yawMeasured": {
+          "type": "boolean",
+          "const": false
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "minItems": 1,
+          "maxItems": 20
+        },
+        "status": {
+          "type": "string",
+          "const": "unreviewed-source-candidate"
+        },
+        "approved": {
+          "type": "boolean",
+          "const": false
+        },
+        "registered": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionReady": {
+          "type": "boolean",
+          "const": false
+        },
+        "motionVerified": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "actor",
+        "file",
+        "sha256",
+        "promptFile",
+        "promptSha256",
+        "references",
+        "width",
+        "height",
+        "hasAlpha",
+        "alphaThreshold",
+        "transparentPixels",
+        "visiblePixels",
+        "opaquePixels",
+        "partialPixels",
+        "edgePixels",
+        "alphaHistogram",
+        "pixelSha256",
+        "visibleBounds",
+        "requestedYawDeg",
+        "yawMeasured",
+        "findings",
+        "status",
+        "approved",
+        "registered",
+        "productionReady",
+        "motionVerified"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

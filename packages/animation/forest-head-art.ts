@@ -11,12 +11,13 @@ import {usesSourceColour,sourceColourAssets} from './source-colour-art.js';
 import {bodyViewRestMouthAssets} from './body-view-rest-mouth.js';
 import {hasNativeHeadBank,registeredNativeHeadBank} from './body-head-bank.js';
 import {nativeHeadResources,readNativeHeadSource,readNativeHeadPrimary,type NativeHeadResource} from './native-head-resources.js';
+import {nativeHeadSources} from './native-head-bank.js';
 import {projectedHeadSvg,projectedSkinPolygon,headProjectionCalibration,headProjectionGlyphLimits,HEAD_PROJECTION_UV_OVERLAP,HEAD_PROJECTION_VERSION} from './forest-head-projection.js';
 
 export const FOREST_HEAD_VERSION='forest-head-1' as const;
 // Bump these when render/evaluation logic changes after a pack is released.
 export const FOREST_FACE_COMPILER_VERSION='forest-face-motion-10';
-export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-17';
+export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-18';
 export const FOREST_HEAD_VIEWS=['three-quarter-left','front','three-quarter-right'] as const;
 export type ReferenceHeadView=typeof FOREST_HEAD_VIEWS[number];
 type View=ReferenceHeadView;
@@ -117,9 +118,12 @@ export function forestHeadSvg(profile:HostProfile,mode:'embedded'|'scene'='embed
   validateReferenceHead(profile,[]);
   if(usesCutoutHead(profile)){
     const bank=hasNativeHeadBank(profile)?registeredNativeHeadBank(profile):undefined;
-    const sourceBytes=bank?readNativeHeadSource(assetRoot(),bank.source,bank.primary):undefined;
-    return cutoutHeadSvg(profile,(file,sha)=>bank&&file===bank.source.file&&sha===bank.source.sha256?
-      mode==='scene'?'assets/rigs/'+sha+'.png':'data:image/png;base64,'+sourceBytes!.toString('base64'):referenceImageUrl(file,sha,mode));
+    const sources=bank?new Map(nativeHeadSources(bank).map(source=>[source.file,{sha256:source.sha256,bytes:readNativeHeadSource(assetRoot(),source,bank.primary)}])):undefined;
+    return cutoutHeadSvg(profile,(file,sha)=>{
+      if(sources){const source=sources.get(file);if(!source||source.sha256!==sha)throw new Error('Native head renderer requests a source outside its registered bank');
+        return mode==='scene'?'assets/rigs/'+sha+'.png':'data:image/png;base64,'+source.bytes.toString('base64');}
+      return referenceImageUrl(file,sha,mode);
+    });
   }
   const actor=profile.appearance.characterVariant!,source=sources[actor],imageId='forest-source-face';
   const glyph=(region:Region,maskInk=true)=>'<g transform="translate('+(-region.anchor.x)+' '+(-region.anchor.y)+')" clip-path="url(#'+clipId(region)+')"><use href="#'+imageId+'"'+(maskInk?' filter="url(#forest-ink-only)"':'')+'/></g>';
@@ -214,7 +218,7 @@ export function referenceHeadAssets(appearance:HostProfile['appearance']):Native
 export function readReferenceHeadAsset(asset:{file:string;sha256:string;nativeHeadSource?:NativeHeadResource['nativeHeadSource'];nativeHeadPrimary?:true}):Buffer {
   if(asset.nativeHeadSource)return readNativeHeadSource(assetRoot(),{file:asset.file,sha256:asset.sha256,...asset.nativeHeadSource},asset.nativeHeadSource.primary);
   if(asset.nativeHeadPrimary)return readNativeHeadPrimary(assetRoot(),asset);
-  if(asset.file.includes('/head-turn-studies/'))throw new Error('Native head source requires registered resource metadata');
+  if(asset.file.includes('/head-turn-studies/')||asset.file.includes('/head-cells/'))throw new Error('Native head source requires registered resource metadata');
   const bytes=readFileSync(path.join(assetRoot(),asset.file));
   if(hash(bytes)!==asset.sha256)throw new Error('Versioned head asset changed: '+asset.file);
   return bytes;

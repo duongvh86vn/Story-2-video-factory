@@ -1,6 +1,14 @@
-# Native head turns — source0.47, 08/10/2026
+# Native head turns — source0.48, 08/10/2026
 
 Mục tiêu sản phẩm vẫn là câu chuyện/kịch bản/WAV bất kỳ → hai diễn viên đúng mẫu, diễn mượt trong bối cảnh màu sống động → video có giọng/phụ đề/QC. Không thay bằng người dẫn cố định hoặc bài máy móc. Không có image-to-video API trên máy; dùng authored raster/native SVG + HTML5/GSAP. Toàn runtime/test/render do model của người dùng.
+
+## Source0.48 — từng ảnh nguồn riêng
+
+- Bank2 cho phép mỗi cell dùng một PNG cụ thể và pixel density cố định. Renderer, physical eye/chin, camera envelope và staging đọc cùng sourceId/scale/bytes/hash; bank1 giữ contract/hash cũ. Không dùng scale theo frame để che hình sai.
+- Có hai nguồn Lila front/near-right mới, mỗi PNG1024×1536, prompt/provenance/alpha nguyên bản. Requested0°/8° không là yaw đo được; chưa có registration, mask hay sourceHead thực nào. 5 atlas cũ vẫn held. API ảnh/inventory chỉ đọc, không duyệt hoặc bật rig.
+- Source kiểm actor/hash/path/nguồn thừa/trùng/unknown, mọi crop theo đúng canvas; tối đa24 source/40Mpx tổng, cap scene2MB giữ nguyên. Renderer/compiler được version lại để invalidate phần hình, narration contract không đổi.
+- 26 callback mới chỉ **khai báo, NOT RUN** (15 multi-source contract +7 static materials +4 renderer/resource). Source review/build/typecheck không là nghiệm thu hình hay motion.
+- [Nguồn, bằng chứng và phần còn thiếu](../topics/reviews/native-head-cells-source-record-v1.md). **Full speaking actors/video và toàn factory chưa hoàn thành.**
 
 ## Source0.46 — clock/renderer cho nguồn sẽ đăng ký
 
@@ -24,9 +32,9 @@ Source0.47 art follow-up: primary-only Lila V3 vẫn lật phía tóc9→10/góc
 
 ## Tiếp tục đúng thứ tự
 
-1. Artwork V3 sửa Lila ponytail silhouette/side occlusion và Karo near-front jump; giữ skull scale/colour/seams; có đủ góc thực riêng biệt. Cần source review, không coi imagegen yêu cầu được tuân thủ.
+1. Đối chiếu từng PNG quanh front: giữ đúng mặt/nét/tóc buộc dài của Lila, râu Karo, colour/skull/neck frame và che khuất theo góc thật. Hai PNG mới vẫn chưa đạt registration; không lấy 0°/8° trong prompt thành yaw thật. Làm tiếp Karo và đủ các hướng thực, không lặp atlas16ô hoặc chấp nhận hình nghỉ làm sản phẩm.
 2. Source correspondence/cell masks/capabilities: neck/skull/face/chin/eyes/nose/mouth/brow, body compatibility và painter layers. Bản draft landmark hiện tại chưa là registration.
-3. Original run-owned head source track và deterministic route/timing/holds, cast/profile/clock/camera continuity. Current compiler chưa hỗ trợ native headTurns.
+3. Điền source bank phù hợp và original run-owned sourceHead bằng các geometry/yaw thật đã đo. Contract0.46/0.48 đã có route/phase/cast/profile/clock/camera, chưa có bank thực; native headTurns tự do vẫn bị chặn. Không tự sinh registration từ prompt hoặc inventory.
 4. Attach head cell, native gaze physical target/observer/chin, per-cell speech/blink/emotion/hair, source publication/resource/cache/repair/cap. Thiếu source/capability chặn final.
 5. Body turn/profile/rear, grasp/carry/handoff/contact, world artwork day/sunset/night và full script/WAV/story/TTS EN/VI/JA/KO/resume/final QC.
 6. Model người dùng kiểm runtime và normal-speed video theo exact source, feedback sửa thật. Không dùng V1 tests hoặc static inventory để tuyên bố nghiệm thu mới.

@@ -1,7 +1,7 @@
 import type {HostProfile} from '../host/schemas.js';
 import type {PerformancePlan} from './schemas.js';
 import type {ViewActingClock} from './view-acting-clock.js';
-import {NativeHeadBankSchema,type NativeHeadBank} from './native-head-bank.js';
+import {NativeHeadBankSchema,nativeHeadSources,nativeHeadSourceForCell,nativeHeadPixelScale,type NativeHeadBank} from './native-head-bank.js';
 import {NativeHeadTrackSchema,nativeHeadCellAt,validateNativeHeadSource} from './native-head-track.js';
 
 export function hasNativeHeadBank(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyHeadBank!==undefined;}
@@ -48,7 +48,7 @@ export function nativeHeadBankCellAtGlobal(plan:PerformancePlan,profile:Pick<Hos
 }
 export function nativeHeadCellAngle(cell:NativeHeadBank['cells'][number]){return -90-Math.atan2(cell.neckTop.y-cell.neck.y,cell.neckTop.x-cell.neck.x)*180/Math.PI;}
 export function nativeHeadCellPoint(bank:NativeHeadBank,cell:NativeHeadBank['cells'][number],point:{x:number;y:number}){
-  const a=nativeHeadCellAngle(cell)*Math.PI/180,x=(point.x-cell.neck.x)*bank.unitScale,y=(point.y-cell.neck.y)*bank.unitScale;
+  const a=nativeHeadCellAngle(cell)*Math.PI/180,scale=nativeHeadPixelScale(bank,cell),x=(point.x-cell.neck.x)*scale,y=(point.y-cell.neck.y)*scale;
   return {x:x*Math.cos(a)-y*Math.sin(a),y:x*Math.sin(a)+y*Math.cos(a)};
 }
 export function nativeHeadBankBounds(bank:NativeHeadBank){
@@ -59,10 +59,14 @@ export function nativeHeadBankFace(bank:NativeHeadBank,cellId:string){
   if(!bank.cells.some(c=>c.id===cellId))throw new Error('needs-head-turn-registration: selected face cell is missing');
   return Object.fromEntries(bank.cells.map((cell,i)=>['head-view-bank-'+i,{opacity:cell.id===cellId?1:0}]));
 }
-/** Source asset is drawn once, then referenced by each cell's own crop and
+/** Every exact source asset is drawn once, then referenced by its cell crop and
  * uniform attachment. No anatomical labels or coordinates are mirrored. */
 export function nativeHeadBankSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
-  const bank=registeredNativeHeadBank(profile),s=bank.source,url=imageUrl(s.file,s.sha256);
-  if(url!=='assets/rigs/'+s.sha256+'.png'&&!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(url))throw new Error('Unapproved native head bank image URL');
-  return `<g data-head-bank="${bank.fingerprint}" stroke="none"><defs><image id="native-head-bank-source" width="${s.width}" height="${s.height}" href="${url}"/>${bank.cells.map((c,i)=>`<clipPath id="native-head-bank-clip-${i}"><rect x="${c.crop.x}" y="${c.crop.y}" width="${c.crop.width}" height="${c.crop.height}"/></clipPath>`).join('')}</defs>${bank.cells.map((c,i)=>`<g id="head-view-bank-${i}" opacity="0"><g transform="scale(${bank.unitScale}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><use href="#native-head-bank-source"/></g></g>`).join('')}</g>`;
+  const bank=registeredNativeHeadBank(profile),sources=nativeHeadSources(bank),sourceIndex=new Map(sources.map((s,i)=>[s.id,i]));
+  const images=sources.map((s,i)=>{
+    const url=imageUrl(s.file,s.sha256);
+    if(url!=='assets/rigs/'+s.sha256+'.png'&&!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(url))throw new Error('Unapproved native head bank image URL');
+    return `<image id="native-head-bank-source-${i}" width="${s.width}" height="${s.height}" href="${url}"/>`;
+  }).join('');
+  return `<g data-head-bank="${bank.fingerprint}" stroke="none"><defs>${images}${bank.cells.map((c,i)=>`<clipPath id="native-head-bank-clip-${i}" clipPathUnits="userSpaceOnUse"><rect x="${c.crop.x}" y="${c.crop.y}" width="${c.crop.width}" height="${c.crop.height}"/></clipPath>`).join('')}</defs>${bank.cells.map((c,i)=>`<g id="head-view-bank-${i}" opacity="0"><g transform="scale(${nativeHeadPixelScale(bank,c)}) rotate(${nativeHeadCellAngle(c)}) translate(${-c.neck.x} ${-c.neck.y})" clip-path="url(#native-head-bank-clip-${i})"><use href="#native-head-bank-source-${sourceIndex.get(nativeHeadSourceForCell(bank,c).id)!}"/></g></g>`).join('')}</g>`;
 }

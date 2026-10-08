@@ -1,0 +1,25 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: identity-preserve. Image1 is the EDIT TARGET: single front Lila head PNG. Image2 is PRIMARY identity/line/color/long-hair reference ONLY. Make exactly one new native 2D HEAD drawing for the immediately neighboring view: the woman turns her nose just EIGHT DEGREES toward viewer RIGHT from the front portrait. Preserve the exact image1 canvas size, neck-tip location, vertical neck axis, skull height, eye-line, closed gentle smile, face warmth and thick irregular ink style. Change ONLY the small perspective of the face/skull and its corresponding hair occlusion for that eight-degree turn. Both black oval eyes stay clearly visible, the far eye is only a little narrower, the nose only slightly right of the midline; this must remain almost FRONT, not a full three-quarter portrait. Preserve the SAME LONG loose ponytail and its tie on the SAME physical side and attachment root as image1/source, behind the head to screen-left for this tiny turn; no mirroring, no sudden side switch, no hair shortening, no new bob or smooth coiffure. Long hanging locks remain the original length and ragged tips, with gradual overlap against cheek/ear, not pasted-on duplicates. No head tilt, no facial warp, no stretching, no new smile/eyes/brows, no open mouth/teeth. No body/clothes/arms/props/text/grid/markers/ground/drop shadow/background. GENUINELY transparent background retaining original alpha/margins; the entire hair/neck must remain inside generous transparent edges. Preserve the primary vivid warm colors; do not bleach or desaturate. One single head only, not an atlas; this is an unapproved artwork source to compare with the original separately.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+      "sha256": "9fe7c077165da2483af272f0ec70a9e01fb3e467203e46ee8019af23a104e552",
+      "role": "edit-target"
+    },
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-63875ea9-f845-47ea-8e20-5c577f38117d.png",
+  "requestedYawDeg": 8,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

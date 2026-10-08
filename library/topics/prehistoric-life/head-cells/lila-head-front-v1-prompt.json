@@ -1,0 +1,20 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: identity-preserve. Image 1 is the primary identity reference, not a new character concept. Draw ONLY ONE front-facing isolated HEAD of this exact prehistoric woman Lila, for a 2D native animation rig; truly transparent background. Preserve the source's round warm orange-peach skin, tiny neat black oval eyes, bent-line nose, CLOSED gentle smile, heavy irregular hand-drawn black contour, coarse deep brown hair and source line/paint texture. Her tied hair is LONG, loose and ragged as in the original, not a short rounded ponytail. Keep the same asymmetric fringe and hair root from the reference; when turning to FRONT keep the tie and long hair naturally at the side/behind her head from the reference, never create mirrored hair or a new symmetrical bob. The two eyes and nose are aligned naturally on the face, no leaning or warped features. Show a genuinely FRONT-facing face, both eyes equally visible with nose near the midline, chin centered; head level with no tilt, no 3/4 perspective. Include just a short neck attachment below the face, and ALL original long hanging hair extending well below the chin to its full loose tips. Do not include torso, arms, clothes, leaves, body, panel, lettering, labels, border, ground shadow or decorative objects. One single head portrait, not an atlas or expression sheet. Keep at least ten percent transparent margin around all hair/neck, no ink touches canvas edges. Warm full color like the primary, NOT pale/desaturated skin or thin smooth vector lines. Keep original smile proportions; no teeth or open mouth. The actual new source geometry will be measured separately: do not draw axes or markers.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-2d30f27d-dd5f-44b6-ab0e-02a0af62aade.png",
+  "requestedYawDeg": 0,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

@@ -1,0 +1,109 @@
+{
+  "$ref": "#/definitions/native-head-cell-prompt",
+  "definitions": {
+    "native-head-cell-prompt": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "native-head-cell-prompt-1"
+        },
+        "actor": {
+          "type": "string",
+          "enum": [
+            "lila",
+            "karo"
+          ]
+        },
+        "provider": {
+          "type": "string",
+          "const": "builtin-imagegen"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24000
+        },
+        "referenceImages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file": {
+                "type": "string",
+                "maxLength": 250
+              },
+              "sha256": {
+                "type": "string",
+                "minLength": 64,
+                "maxLength": 64,
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "primary-character-identity",
+                  "edit-target"
+                ]
+              }
+            },
+            "required": [
+              "file",
+              "sha256",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 2
+        },
+        "generatedOriginal": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "requestedYawDeg": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "scope": {
+          "type": "string",
+          "const": "static-art-authoring-only"
+        },
+        "approved": {
+          "type": "boolean",
+          "const": false
+        },
+        "registered": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionReady": {
+          "type": "boolean",
+          "const": false
+        },
+        "runtimeVerified": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "actor",
+        "provider",
+        "prompt",
+        "referenceImages",
+        "generatedOriginal",
+        "requestedYawDeg",
+        "scope",
+        "approved",
+        "registered",
+        "productionReady",
+        "runtimeVerified"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -3,16 +3,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {hash} from '../packages/core/utils.js';
 import {nativeHeadBank,NativeHeadBankSchema,type NativeHeadBank} from '../packages/animation/native-head-bank.js';
-import {nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadBankFace,nativeHeadBankSvg,nativeHeadCellPoint,validateNativeHeadBankTrack} from '../packages/animation/body-head-bank.js';
+import {nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadBankFace,nativeHeadBankSvg,nativeHeadBankBounds,nativeHeadCellPoint,validateNativeHeadBankTrack} from '../packages/animation/body-head-bank.js';
 import {bodyViewRegistrations} from '../packages/animation/body-view-registration.js';
 import {HostProfileSchema,type HostProfile} from '../packages/host/schemas.js';
 import {HUNT_ANIMATION_VERSION,PerformancePlanSchema,type PerformancePlan} from '../packages/animation/schemas.js';
 import {VIEW_ACTING_CLOCK_VERSION,ViewActingClockSchema,validateViewActingClock} from '../packages/animation/view-acting-clock.js';
 import {topicPreviewProfile} from '../packages/topics/preview.js';
-import {validateNativeHeadPng} from '../packages/animation/native-head-resources.js';
+import {validateNativeHeadPng,nativeHeadResources,readNativeHeadSource} from '../packages/animation/native-head-resources.js';
+import {readReferenceHeadAsset} from '../packages/animation/forest-head-art.js';
+import {namespaceRigSvg} from '../packages/animation/svg-namespace.js';
 import {samplePerformance} from '../packages/animation/compiler.js';
 import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../packages/animation/view-gaze-target.js';
 import sharp from 'sharp';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import {fileURLToPath} from 'node:url';
 
 function bank():NativeHeadBank{return nativeHeadBank({version:'native-head-bank-1',id:'synthetic-head-bank',actor:'lila',
   source:{file:'library/topics/prehistoric-life/head-turn-studies/lila-head-turn-v4.png',sha256:'b'.repeat(64),width:400,height:200},
@@ -27,6 +33,15 @@ function fixture(){
   const plan:PerformancePlan=PerformancePlanSchema.parse({version:22,compilerVersion:HUNT_ANIMATION_VERSION,id:'shot-b',profileHash:p.profileHash,kind:'stick-man',leadCharacterId:p.id,durationMs:1000,fps:60,stage:{width:1280,height:720,groundY:630},root:{x:400,y:630},scale:1,facing:'right',headView:'three-quarter-right',walks:[],gestures:[],gazes:[],expressions:[],props:[],sourceHead:head});
   const clock=ViewActingClockSchema.parse({version:VIEW_ACTING_CLOCK_VERSION,ownerId:p.id,startMs:2000,endMs:3000,runStartMs:1000,runEndMs:3000,sourceIdentityHash:'a'.repeat(64),gazes:[],gestures:[],expressions:[],headMotion:head});
   return {b,p,plan,clock};
+}
+function multiBank():NativeHeadBank{
+  const {fingerprint,...old}=bank();
+  return nativeHeadBank({...old,version:'native-head-bank-2',source:{...old.source,file:'library/topics/prehistoric-life/head-cells/lila-head-synthetic-front-v1.png',width:200,pixelScale:1},
+    additionalSources:[{id:'near',file:'library/topics/prehistoric-life/head-cells/lila-head-synthetic-near-v1.png',sha256:'c'.repeat(64),width:400,height:400,pixelScale:.5}],
+    cells:old.cells.map((c,i)=>{
+      const point=(p:{x:number;y:number})=>({x:(p.x-i*200)*(i?2:1),y:p.y*(i?2:1)}),rect=(r:{x:number;y:number;width:number;height:number})=>({...point(r),width:r.width*(i?2:1),height:r.height*(i?2:1)});
+      return {...c,sourceId:i?'near':'primary',crop:rect(c.crop),neck:point(c.neck),neckTop:point(c.neckTop),chin:point(c.chin),eyeTarget:point(c.eyeTarget),skull:rect(c.skull),seam:c.seam.map(point)};
+    })});
 }
 test('held art, false compatibility, forged geometry fingerprint and fixed-view overlays cannot enter a bank',()=>{
   const b=bank();const {fingerprint,...definition}=b;
@@ -79,4 +94,54 @@ test('registered PNG framing rejects stale dimensions, non-RGBA and animated/tru
   const rgb=Buffer.from(bytes);rgb[25]=2;assert.throws(()=>validateNativeHeadPng(rgb,10,12),/dimensions/);
   assert.throws(()=>validateNativeHeadPng(bytes.subarray(0,bytes.length-5),10,12),/Truncated|end/);
   const apng=Buffer.concat([bytes.subarray(0,33),Buffer.from([0,0,0,0,97,99,84,76,0,0,0,0]),bytes.subarray(33)]);assert.throws(()=>validateNativeHeadPng(apng,10,12),/animated/);
+});
+
+test('distinct head PNG densities retain identical physical eye/chin/neck and full camera envelope',()=>{
+  const b=multiBank(),first=b.cells[0]!,near=b.cells[1]!;
+  for(const key of ['neck','neckTop','chin','eyeTarget'] as const)assert.deepEqual(nativeHeadCellPoint(b,first,first[key]),nativeHeadCellPoint(b,near,near[key]));
+  assert.deepEqual(nativeHeadBankBounds(b),nativeHeadBankBounds(bank()));
+  const density=near.sourceId;assert.equal(density,'near');
+  // A nonvertical neck axis still uses the same one rotation and density.
+  const point={x:near.neck.x+40,y:near.neck.y-20},tilted={...near,neckTop:{x:near.neck.x+20,y:near.neck.y-60}};
+  const transformed=nativeHeadCellPoint(b,tilted,point);
+  assert.ok(Math.abs(Math.hypot(transformed.x,transformed.y)-Math.hypot(40,20)*.15)<1e-10);
+});
+
+test('multi-source SVG requests exact registered bytes once per image and clips each cell in its own pixel frame',()=>{
+  const b=multiBank(),p=profile(b),requested:{file:string;sha:string}[]=[];
+  const svg=nativeHeadBankSvg(p,(file,sha)=>{requested.push({file,sha});return 'assets/rigs/'+sha+'.png';});
+  assert.deepEqual(requested,[{file:b.source.file,sha:b.source.sha256},{file:b.additionalSources![0]!.file,sha:b.additionalSources![0]!.sha256}]);
+  assert.equal((svg.match(/<image /g)??[]).length,2);
+  assert.equal((svg.match(/clipPathUnits="userSpaceOnUse"/g)??[]).length,2);
+  assert.ok(svg.includes('<use href="#native-head-bank-source-0"/>')&&svg.includes('<use href="#native-head-bank-source-1"/>'));
+  assert.ok(svg.includes('scale(0.3) rotate(0) translate(-100 -180)')&&svg.includes('scale(0.15) rotate(0) translate(-200 -360)'));
+  assert.equal((svg.match(/opacity="0"/g)??[]).length,2);
+  assert.throws(()=>nativeHeadBankSvg(p,()=>`assets/rigs/${'d'.repeat(64)}.png`),/Unapproved.*URL/);
+  assert.ok(!svg.includes('mouth-talk')&&!svg.includes('scale(-'));
+  const named=namespaceRigSvg(svg,'actor-lila-');
+  for(const i of [0,1])assert.ok(named.includes(`id="actor-lila-native-head-bank-source-${i}"`)&&named.includes(`href="#actor-lila-native-head-bank-source-${i}"`)&&named.includes(`url(#actor-lila-native-head-bank-clip-${i})`));
+  assert.ok(named.includes('assets/rigs/'+b.source.sha256+'.png'));
+});
+
+test('all head sources stage separately with raw SHA dimensions and unbound readers cannot bypass metadata',()=>{
+  const b=multiBank(),resources=nativeHeadResources(b);
+  assert.deepEqual(resources.map(r=>r.file),[b.source.file,b.additionalSources![0]!.file,b.primary.file]);
+  assert.deepEqual(resources.map(r=>r.path),resources.map(r=>'assets/rigs/'+r.sha256+'.png'));
+  assert.deepEqual(resources.slice(0,2).map(r=>r.nativeHeadSource?.width),[200,400]);
+  for(const r of resources.slice(0,2)){assert.deepEqual(r.nativeHeadSource?.primary,b.primary);assert.throws(()=>readReferenceHeadAsset({file:r.file,sha256:r.sha256}),/registered resource metadata/);}
+  assert.equal(resources[2]!.nativeHeadPrimary,true);
+});
+
+test('additional PNG delivery rereads its exact bytes and primary rather than trusting a cached URL',async()=>{
+  const parent=path.resolve(os.tmpdir()),root=await fs.mkdtemp(path.join(parent,'head-bank-source-'));
+  try{
+    const b=multiBank(),source=b.additionalSources![0]!,repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+    const target=path.join(root,source.file),primary=path.join(root,b.primary.file);
+    await fs.mkdir(path.dirname(target),{recursive:true});await fs.mkdir(path.dirname(primary),{recursive:true});await fs.copyFile(path.join(repo,b.primary.file),primary);
+    const bytes=await sharp({create:{width:400,height:400,channels:4,background:{r:150,g:80,b:20,alpha:0}}}).png().toBuffer(),registered={...source,sha256:hash(bytes)};
+    await fs.writeFile(target,bytes);assert.ok(readNativeHeadSource(root,registered,b.primary).equals(bytes));
+    assert.throws(()=>readNativeHeadSource(root,{...registered,width:399},b.primary),/dimensions/);
+    await fs.appendFile(target,'changed');assert.throws(()=>readNativeHeadSource(root,registered,b.primary),/artwork changed/);
+    await fs.writeFile(target,bytes);await fs.appendFile(primary,'changed');assert.throws(()=>readNativeHeadSource(root,registered,b.primary),/identity source changed/);
+  }finally{assert.equal(path.dirname(root),parent);assert.ok(path.basename(root).startsWith('head-bank-source-'));await fs.rm(root,{recursive:true,force:true});}
 });

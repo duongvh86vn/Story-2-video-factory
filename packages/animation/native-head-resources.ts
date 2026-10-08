@@ -1,15 +1,15 @@
 import {lstatSync,readFileSync} from 'node:fs';
 import path from 'node:path';
 import {hash} from '../core/utils.js';
-import type {NativeHeadBank} from './native-head-bank.js';
+import {NativeHeadSourceFileSchema,nativeHeadSources,type NativeHeadBank,type NativeHeadSource} from './native-head-bank.js';
 
-type Source=NativeHeadBank['source'];
+type Source=NativeHeadSource;
 export type NativeHeadResource={file:string;sha256:string;path:string;nativeHeadSource?:{width:number;height:number;primary:NativeHeadBank['primary']};nativeHeadPrimary?:true};
 const PNG=Buffer.from([137,80,78,71,13,10,26,10]),MAX_BYTES=40*1024*1024;
 /** Every descendant is a real bounded repository file. No URL, link, arbitrary
  * path, decoded/resampled asset or stale embedded-cache shortcut. */
 function readSource(root:string,file:string){
-  if(!/^library\/topics\/prehistoric-life\/head-turn-studies\/(lila|karo)-head-turn-v[1-9]\d*\.png$/.test(file)&&!/^docs\/topics\/assets\/reference-(lila|karo)-full\.png$/.test(file))throw new Error('Unknown registered native head resource');
+  if(!NativeHeadSourceFileSchema.safeParse(file).success&&!/^docs\/topics\/assets\/reference-(lila|karo)-full\.png$/.test(file))throw new Error('Unknown registered native head resource');
   let target=path.resolve(root);const parts=file.split('/');
   for(const [i,part] of parts.entries()){
     target=path.join(target,part);const stat=lstatSync(target);
@@ -42,6 +42,6 @@ export function readNativeHeadSource(root:string,source:Source,primary:NativeHea
   validateNativeHeadPng(bytes,source.width,source.height);return bytes;
 }
 export function nativeHeadResources(bank:NativeHeadBank):NativeHeadResource[]{return [
-  {...bank.source,path:'assets/rigs/'+bank.source.sha256+'.png',nativeHeadSource:{width:bank.source.width,height:bank.source.height,primary:bank.primary}},
+  ...nativeHeadSources(bank).map(source=>({file:source.file,sha256:source.sha256,path:'assets/rigs/'+source.sha256+'.png',nativeHeadSource:{width:source.width,height:source.height,primary:bank.primary}})),
   {...bank.primary,path:'assets/rigs/'+bank.primary.sha256+'.png',nativeHeadPrimary:true},
 ];}

@@ -1,4 +1,18 @@
-# Quay đầu Lila/Karo — source0.47 và phần còn thiếu
+# Quay đầu Lila/Karo — source0.48 và phần còn thiếu
+
+Mốc0.48: bank2 nhận nhiều PNG, từng cell buộc sourceId và fixed pixelScale; raw-source staging/SVG/physical mắt-cằm/camera cùng registration. Hai PNG Lila riêng đã có hồ sơ nguồn/alpha, **chưa duyệt, chưa đăng ký**. Góc0°/8° là yêu cầu trong prompt. Chưa có bank/video được bật; speech/eyes/expressions/secondary vẫn false, productionReady=false/productionRig=null. [Nguồn, review, kiểm source và việc còn thiếu](reviews/native-head-cells-source-record-v1.md).
+
+API chỉ đọc mới: `/api/topics/prehistoric-life/head-cells/inventory` và `/api/topics/prehistoric-life/head-cells/lila-head-front-v1.png` hoặc `lila-head-near-right-v1.png`. Reader kiểm raw PNG/đo alpha/provenance/primary/edit source trước trả bytes; inventory/API không bật rig. Bàn đo atlas cũ không nhận các PNG mới; công cụ đo riêng/cell masks và actual registration còn phải làm.
+
+Model test chạy thêm lệnh sau trong đúng C worktree, ghi exact SHA và kết quả; implementation **chưa chạy**:
+
+~~~powershell
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/native-head-bank-sources.test.ts tests/native-head-bank.test.ts tests/head-cell-art.test.ts tests/native-head-track.test.ts tests/json-sha256.test.ts
+~~~
+
+26 callback mới:15 contract,7 nguồn tĩnh,4 renderer/resource. Browser/API cần kiểm MIME/nosniff/no-store, wrong filename/newline/path/changed PNG/ref/prompt/malformed/symlink/size; false gates giữ nguyên và không tạo sourceHead. Multi-source density/neck axis/eye/chin/bounds/namespace/resources/cache/camera phase phải đúng. Chỉ khi có nguồn thật đủ speaking/gaze/emotions/seams/body/interaction mới kiểm normal-speed video; không biến câu chuyện có thoại thành im lặng để né guard.
+
+## Lịch sử0.47
 
 Mốc0.47 bổ sung [Lila V3/prompt/metadata và static findings](reviews/native-head-turn-v3-art-record.md), vẫn **held/unregistered**. Hiện5 atlas/80 ô; Lila V1–V3 và Karo V1–V2 bị chặn theo file/hash, kể cả rename. No available banks; productionReady=false/productionRig=null. Không có video mới hoặc runtime acceptance. Phần0.46 dưới là lịch sử contract/renderer; V3 Lila mới không đủ điều kiện để chọn contract đó.
 

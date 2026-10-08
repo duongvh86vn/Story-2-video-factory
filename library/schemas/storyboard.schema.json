@@ -1596,7 +1596,10 @@
                                     "properties": {
                                       "version": {
                                         "type": "string",
-                                        "const": "native-head-bank-1"
+                                        "enum": [
+                                          "native-head-bank-1",
+                                          "native-head-bank-2"
+                                        ]
                                       },
                                       "id": {
                                         "type": "string",
@@ -1615,7 +1618,7 @@
                                         "properties": {
                                           "file": {
                                             "type": "string",
-                                            "pattern": "^library\\/topics\\/prehistoric-life\\/head-turn-studies\\/(lila|karo)-head-turn-v[1-9]\\d*\\.png$"
+                                            "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|head-cells\\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
                                           },
                                           "sha256": {
                                             "type": "string",
@@ -1632,6 +1635,11 @@
                                             "type": "integer",
                                             "exclusiveMinimum": 0,
                                             "maximum": 8192
+                                          },
+                                          "pixelScale": {
+                                            "type": "number",
+                                            "minimum": 0.05,
+                                            "maximum": 2
                                           }
                                         },
                                         "required": [
@@ -1641,6 +1649,53 @@
                                           "height"
                                         ],
                                         "additionalProperties": false
+                                      },
+                                      "additionalSources": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "string",
+                                              "maxLength": 96,
+                                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                            },
+                                            "file": {
+                                              "type": "string",
+                                              "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|head-cells\\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
+                                            },
+                                            "sha256": {
+                                              "type": "string",
+                                              "minLength": 64,
+                                              "maxLength": 64,
+                                              "pattern": "^[a-f0-9]{64}$"
+                                            },
+                                            "width": {
+                                              "type": "integer",
+                                              "exclusiveMinimum": 0,
+                                              "maximum": 8192
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "exclusiveMinimum": 0,
+                                              "maximum": 8192
+                                            },
+                                            "pixelScale": {
+                                              "type": "number",
+                                              "minimum": 0.05,
+                                              "maximum": 2
+                                            }
+                                          },
+                                          "required": [
+                                            "id",
+                                            "file",
+                                            "sha256",
+                                            "width",
+                                            "height"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        "maxItems": 23
                                       },
                                       "primary": {
                                         "type": "object",
@@ -1700,6 +1755,11 @@
                                           "type": "object",
                                           "properties": {
                                             "id": {
+                                              "type": "string",
+                                              "maxLength": 96,
+                                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                            },
+                                            "sourceId": {
                                               "type": "string",
                                               "maxLength": 96,
                                               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
@@ -2201,7 +2261,10 @@
                                       "properties": {
                                         "version": {
                                           "type": "string",
-                                          "const": "native-head-bank-1"
+                                          "enum": [
+                                            "native-head-bank-1",
+                                            "native-head-bank-2"
+                                          ]
                                         },
                                         "id": {
                                           "type": "string",
@@ -2220,7 +2283,7 @@
                                           "properties": {
                                             "file": {
                                               "type": "string",
-                                              "pattern": "^library\\/topics\\/prehistoric-life\\/head-turn-studies\\/(lila|karo)-head-turn-v[1-9]\\d*\\.png$"
+                                              "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|head-cells\\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
                                             },
                                             "sha256": {
                                               "type": "string",
@@ -2237,6 +2300,11 @@
                                               "type": "integer",
                                               "exclusiveMinimum": 0,
                                               "maximum": 8192
+                                            },
+                                            "pixelScale": {
+                                              "type": "number",
+                                              "minimum": 0.05,
+                                              "maximum": 2
                                             }
                                           },
                                           "required": [
@@ -2246,6 +2314,53 @@
                                             "height"
                                           ],
                                           "additionalProperties": false
+                                        },
+                                        "additionalSources": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "type": "string",
+                                                "maxLength": 96,
+                                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                              },
+                                              "file": {
+                                                "type": "string",
+                                                "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|head-cells\\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
+                                              },
+                                              "sha256": {
+                                                "type": "string",
+                                                "minLength": 64,
+                                                "maxLength": 64,
+                                                "pattern": "^[a-f0-9]{64}$"
+                                              },
+                                              "width": {
+                                                "type": "integer",
+                                                "exclusiveMinimum": 0,
+                                                "maximum": 8192
+                                              },
+                                              "height": {
+                                                "type": "integer",
+                                                "exclusiveMinimum": 0,
+                                                "maximum": 8192
+                                              },
+                                              "pixelScale": {
+                                                "type": "number",
+                                                "minimum": 0.05,
+                                                "maximum": 2
+                                              }
+                                            },
+                                            "required": [
+                                              "id",
+                                              "file",
+                                              "sha256",
+                                              "width",
+                                              "height"
+                                            ],
+                                            "additionalProperties": false
+                                          },
+                                          "maxItems": 23
                                         },
                                         "primary": {
                                           "type": "object",
@@ -2305,6 +2420,11 @@
                                             "type": "object",
                                             "properties": {
                                               "id": {
+                                                "type": "string",
+                                                "maxLength": 96,
+                                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                              },
+                                              "sourceId": {
                                                 "type": "string",
                                                 "maxLength": 96,
                                                 "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"

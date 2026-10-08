@@ -42,6 +42,7 @@ import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-work
 import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
 import {headTurnWorkbench,headTurnImage,headTurnEditorScript} from '../../packages/topics/head-turn-workbench.js';
 import {headTurnInventory,headTurnMaterial} from '../../packages/topics/head-turn-art.js';
+import {headCellArtDescription,headCellInventory,headCellMaterial} from '../../packages/topics/head-cell-art.js';
 import {HeadTurnCheckRequestSchema,HeadTurnFileSchema} from '../../packages/topics/head-turn-schemas.js';
 import {checkBoundHeadTurnDraft} from '../../packages/topics/head-turn-landmarks.js';
 import {Moods} from '../../packages/animation/schemas.js';
@@ -339,6 +340,11 @@ export async function buildServer(options: ServerOptions = {}) {
       .send(await headTurnWorkbench(repo,file));
   });
   app.get('/api/topics/prehistoric-life/head-turn-art/inventory',async()=>headTurnInventory(repo));
+  app.get('/api/topics/prehistoric-life/head-cells/inventory',async(_request,reply)=>reply.header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send({...headCellArtDescription,materials:await headCellInventory(repo)}));
+  app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/head-cells/:file',async(request,reply)=>{
+    const {bytes}=await headCellMaterial(repo,request.params.file);
+    return reply.type('image/png').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(bytes);
+  });
   app.get('/api/topics/prehistoric-life/head-turn-editor.js',async(_request,reply)=>reply.type('application/javascript').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(headTurnEditorScript));
   app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/head-turn-art/:file',async(request,reply)=>reply.type('image/png').header('Cache-Control','no-store').send(await headTurnImage(repo,request.params.file)));
   app.post('/api/topics/prehistoric-life/head-turn-draft/check',{bodyLimit:200*1024},async(request)=>{
