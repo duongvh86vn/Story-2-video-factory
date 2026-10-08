@@ -2,6 +2,8 @@
 
 Mốc0.47 bổ sung [Lila V3/prompt/metadata và static findings](reviews/native-head-turn-v3-art-record.md), vẫn **held/unregistered**. Hiện5 atlas/80 ô; Lila V1–V3 và Karo V1–V2 bị chặn theo file/hash, kể cả rename. No available banks; productionReady=false/productionRig=null. Không có video mới hoặc runtime acceptance. Phần0.46 dưới là lịch sử contract/renderer; V3 Lila mới không đủ điều kiện để chọn contract đó.
 
+Source0.47 commit `dc60877d251095587e0e24616210de32fd4feaf7` đã push nhánh `codex/prehistoric-life`;16 owned paths, exact local/remote SHA bằng nhau. Build/typecheck/schema/static metadata/manifest qua trên source này; callbacks/video NOT RUN. Source0.46 clock/renderer nằm ở commit ghi phía dưới; hai mốc đều chưa là rig hoặc factory được nghiệm thu.
+
 Cập nhật 08/10/2026. Máy không có dịch vụ image-to-video; tiếp tục SVG/HTML5/GSAP. Lila và Karo là diễn viên trong câu chuyện người dùng đưa, không phải người dẫn cố định. Ba input vẫn là kịch bản nguyên văn → TTS/clock audio thật, WAV giữ audio/clock và câu chuyện → kịch bản; SRT là luồng tương thích. EN là chính, VI/JA/KO và TTS local/HTTP/command vẫn thuộc phạm vi nghiệm thu.
 
 **Chưa có bộ quay đầu native dùng được trong video.** Source0.46 bổ sung clock và renderer contract cho hình V3+ sẽ đăng ký; chưa có bank thực được chọn. Bốn atlas V1/V2 vẫn held, bị chặn cả theo tên file và SHA dù đổi tên; `productionReady=false`, `productionRig=null`. Bàn đo/draft không bật rig hay tự gán yaw, không gọi model/TTS hoặc dựng video.
