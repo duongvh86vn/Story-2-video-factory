@@ -1,12 +1,13 @@
 import type {HostProfile} from '../host/schemas.js';
 import type {PerformancePlan,Point} from './schemas.js';
+import {BODY_SOURCE_SEAT_CLOCK_VERSION} from './schemas.js';
 import type {NativeClothSource} from './body-view-cloth.js';
 import {clothTriangleArea,clothTriangleMatrix,clothAreaInfluence,type ClothTriangle} from './view-cloth-geometry.js';
 import {nativeSeatRegistration,nativeSeatRegistrationFingerprint} from './native-seat-registration.js';
 import {hash} from '../core/utils.js';
 
 export const BODY_VIEW_SEAT_SELECTION='registered-seated-v1' as const;
-export const BODY_VIEW_SEAT_VERSION='native-view-seat-1';
+export const BODY_VIEW_SEAT_VERSION='native-view-seat-2';
 function freezeDeep<T>(value:T):T{if(value&&typeof value==='object'){for(const child of Object.values(value))freezeDeep(child);Object.freeze(value);}return value;}
 const registration=freezeDeep(nativeSeatRegistration());
 export const hasBodyViewSeat=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySeat===BODY_VIEW_SEAT_SELECTION;
@@ -95,8 +96,8 @@ export function nativeSeatMatrixError(profile:Pick<HostProfile,'appearance'>,sou
     for(const p of piece[material]){const apply=(m:number[])=>({x:m[0]!*p.x+m[2]!*p.y+m[4]!,y:m[1]!*p.x+m[3]!*p.y+m[5]!});const x=apply(mixed),y=apply(wanted);error=Math.max(error,Math.hypot(x.x-y.x,x.y-y.y));}
   }return error;
 }
-export const nativeSeatDescription=freezeDeep({version:BODY_VIEW_SEAT_VERSION,selection:BODY_VIEW_SEAT_SELECTION,fingerprint:hash({version:BODY_VIEW_SEAT_VERSION,registration:nativeSeatRegistrationFingerprint,minimumArea:.25,lagMs:90,follow:.7,angleBound:18,uvOverlap:1.5,perimeter:'open-exterior-only',maskFillStroke:'none'}),
+export const nativeSeatDescription=freezeDeep({version:BODY_VIEW_SEAT_VERSION,selection:BODY_VIEW_SEAT_SELECTION,fingerprint:hash({version:BODY_VIEW_SEAT_VERSION,supportClock:BODY_SOURCE_SEAT_CLOCK_VERSION,registration:nativeSeatRegistrationFingerprint,minimumArea:.25,lagMs:90,follow:.7,angleBound:18,uvOverlap:1.5,perimeter:'open-exterior-only',maskFillStroke:'none'}),
   correspondence:'library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json',bindings:Object.fromEntries(Object.entries(registration.actors).map(([actor,c])=>[actor,{material:c.material,primary:c.primary,views:Object.fromEntries(Object.entries(c.views).map(([view,data])=>[view,{standing:data.standing,tileId:data.tileId,triangles:data.pieces.length,outlineVertices:data.outline.rest.length,minimumTriangleArea:data.minimumTriangleArea}]))}])),status:'registered-geometric-candidate',approved:false,productionReady:false,motionVerified:false,
   waist:'original upper torso/belt stays native; shared waist row pinned',surface:'one opaque fill and exterior outline; only internal standing/seated material blends; preserve PNG bytes/alpha',
-  clock:'actual physical support transfer, original bone chains and sole offsets; fixed matching native view only',
-  limitations:['native seat art/UV/ink/cuff/identity and normal-speed motion await review','single-shot physical supports; continuous source support ownership remains a separate pending integration','native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged','no continuous body/head turns or new tool grasp registration','no physical cloth simulation or accepted final video']});
+  supportClockVersion:BODY_SOURCE_SEAT_CLOCK_VERSION,clock:'actual physical support transfer, original bone chains and sole offsets; sourceBody owns complete original supports/postures through explicitly continuous cuts; fixed matching native view only',
+  limitations:['native seat art/UV/ink/cuff/identity and normal-speed motion await review','source support clock/occupancy through cuts and actor-role swaps is source-only; runtime equivalence and canonical tracer await tests','native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged','no continuous body/head turns or new tool grasp registration','no physical cloth simulation or accepted final video']});

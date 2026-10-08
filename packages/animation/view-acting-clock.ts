@@ -74,6 +74,6 @@ export function viewActingClockDescription(clock:ViewActingClock){
     gestureClock:'explicit source command/window; original quintic arm phase and entry branch',
     ...(clock.expressions?{expressionTrackHash:hash(clock.expressions),sourceExpressions:clock.expressions,expressionRampMs:VIEW_EXPRESSION_RAMP_MS,expressionClock:'normalized original mood track across explicitly continuous fixed-view shots'}:{}),
     sourceGestures:clock.gestures.map(g=>({id:g.id,hand:g.hand,action:g.action,startMs:g.startMs,endMs:g.endMs,reachMs:g.reachMs,recoverMs:g.recoverMs,target:g.target??null})),
-    bodyMotion:clock.bodyMotion?{version:clock.bodyMotion.version,id:clock.bodyMotion.id,startMs:clock.bodyMotion.startMs,endMs:clock.bodyMotion.endMs,sourceTrackHash:hash(clock.bodyMotion),clock:'complete original physical tracks; camera slices keep original phase',verified:false}:null,
+    bodyMotion:clock.bodyMotion?{version:clock.bodyMotion.version,id:clock.bodyMotion.id,startMs:clock.bodyMotion.startMs,endMs:clock.bodyMotion.endMs,sourceTrackHash:hash(clock.bodyMotion),supportCount:clock.bodyMotion.supports?.length??0,clock:'complete original physical tracks and seat definitions; camera slices keep original relative phase',verified:false}:null,
     wholeBodyActionContinuous:!!clock.bodyMotion,opticalGazeVerified:false,approved:false};
 }

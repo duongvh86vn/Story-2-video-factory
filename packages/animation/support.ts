@@ -50,6 +50,15 @@ export function seatedPlacement(plan:PerformancePlan,profile:HostProfile,timeMs:
   return value;
 }
 type Feet=Record<'left'|'right',Point>;
+// Shared boundaries for foot preparation, hip transfer and stand recovery.
+// These are original track times, projected to the shot only by the caller.
+export function supportMotionTimes(plan:PerformancePlan):number[]{
+  let previous=plan.entryPosture?.pose??'stand';const times:number[]=[];
+  for(const clip of [...(plan.postures??[])].sort((a,b)=>a.startMs-b.startMs)){
+    if((previous==='seated')!==(clip.pose==='seated'))for(const phase of [0,.04,.21,.38,.62,.75,.81,1])times.push(clip.startMs+(clip.endMs-clip.startMs)*phase);
+    previous=clip.pose;
+  }return times;
+}
 /** Source actors take two small planted-to-planted steps before sitting, and
  * widen their stance after rising. Both asynchronous feet and the pelvis are
  * evaluated from absolute time. A single knee pole is retained for the whole

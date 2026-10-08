@@ -2762,6 +2762,63 @@
                                   "pose"
                                 ],
                                 "additionalProperties": false
+                              },
+                              "supports": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "maxLength": 96,
+                                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                    },
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "seat"
+                                    },
+                                    "center": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number"
+                                        },
+                                        "y": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "width": {
+                                      "type": "number",
+                                      "exclusiveMinimum": 0
+                                    },
+                                    "facing": {
+                                      "type": "string",
+                                      "enum": [
+                                        "left",
+                                        "right"
+                                      ]
+                                    },
+                                    "backHeight": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "kind",
+                                    "center",
+                                    "width",
+                                    "facing"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "maxItems": 12
                               }
                             },
                             "required": [
@@ -5018,6 +5075,63 @@
                         "pose"
                       ],
                       "additionalProperties": false
+                    },
+                    "supports": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "kind": {
+                            "type": "string",
+                            "const": "seat"
+                          },
+                          "center": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number"
+                              },
+                              "y": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "width": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          },
+                          "facing": {
+                            "type": "string",
+                            "enum": [
+                              "left",
+                              "right"
+                            ]
+                          },
+                          "backHeight": {
+                            "type": "number",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "kind",
+                          "center",
+                          "width",
+                          "facing"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 12
                     }
                   },
                   "required": [

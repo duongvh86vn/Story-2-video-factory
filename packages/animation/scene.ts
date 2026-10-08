@@ -8,11 +8,12 @@ import { compilePerformance } from './compiler.js';
 import { performanceSvg } from './rig.js';
 import {seatSvg} from '../stage/seats.js';
 import {spearSvg} from './spear.js';
+import {sourceBodyPlan} from './view-source-body.js';
 
 export interface PropSupport {x:number;y:number;width:number;}
 export function performanceScene(plan:PerformancePlan,profile:HostProfile,activity:SpeechActivity,background?:string,supports?:PropSupport[],seats?:{items:SeatSupport[];palette:{surface:string;ink:string;accent:string}},sourceClock?:SpeechSourceClock,actingClock?:ViewActingClock):{files:SceneFiles;compiled:ReturnType<typeof compilePerformance>} {
   const compiled=compilePerformance(plan,profile,activity,'',sourceClock,actingClock),scope=`[data-composition-id="${plan.id}"]`,{width,height}=plan.stage;
-  const seatArt=(seats?.items??plan.supports??[]).map(seat=>seatSvg(seat,plan.stage.groundY,seats?.palette??{surface:'#FFF3DB',ink:'#201A15',accent:'#F4CD68'})).join('');
+  const seatArt=(seats?.items??sourceBodyPlan(plan).supports??[]).map(seat=>seatSvg(seat,plan.stage.groundY,seats?.palette??{surface:'#FFF3DB',ink:'#201A15',accent:'#F4CD68'})).join('');
   const props=plan.props.filter(p=>p.kind!=='spear').map(p=>`<g id="prop-${p.id}"><rect x="-12" y="-11" width="24" height="22" rx="5" fill="#C39150" stroke="#674528" stroke-width="2"/><path d="M-6 -5H6" stroke="#F4D7A5" stroke-width="3"/></g>`).join('');
   const spears=plan.props.filter(p=>p.kind==='spear').map(spearSvg).join('');
   const tables=supports?supports.map((p,i)=>`<g id="stand-${i}" stroke="#5F472F" stroke-width="5"><path d="M${p.x-p.width/2} ${p.y}H${p.x+p.width/2}M${p.x-p.width*.4} ${p.y}V${plan.stage.groundY}M${p.x+p.width*.4} ${p.y}V${plan.stage.groundY}"/></g>`).join(''):

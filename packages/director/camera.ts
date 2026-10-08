@@ -6,6 +6,8 @@ import { samplePerformance } from '../animation/compiler.js';
 import { validateViewActingClock, VIEW_GAZE_RAMP_MS, VIEW_BREATH_RAMP_MS, type ViewActingClock } from '../animation/view-acting-clock.js';
 import { VIEW_EXPRESSION_RAMP_MS } from '../animation/view-expression-track.js';
 import { sourceBodyPlan, bodyTrackOffsetMs, bodyRootAt } from '../animation/view-source-body.js';
+import {supportMotionTimes} from '../animation/support.js';
+import {sceneSeats} from '../stage/seats.js';
 import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
 import {hasBodyViewSecondary,nativeSecondaryBounds} from '../animation/body-view-secondary.js';
 import {registeredBodyView} from '../animation/body-view-art.js';
@@ -34,6 +36,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
   const physical=sourceBodyPlan(p),motionOffset=p.sourceBody?bodyTrackOffsetMs(p,actingClock!.startMs):0;
   const times=new Set<number>([0,p.durationMs]);
   const secondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
+  for(const at of supportMotionTimes(physical))secondaryTime(at+motionOffset);
   for(let ms=0;ms<p.durationMs;ms+=1000/p.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])]){
     for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)secondaryTime(at+motionOffset);
@@ -151,10 +154,14 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
     .map(at=>at+motionOffset).filter(at=>at>0&&at<performance.durationMs)]
     .map(at=>bodyRootAt(performance,options.actingClock!.startMs,at).x):[performance.root.x,...performance.walks.flatMap(w=>[w.fromX,w.toX])];
   const scales=framing==='wide'?[Math.min(1,wideCap),Math.min(1.04,wideCap)]:framing==='medium'?[1.25,1.32]:focus==='face'?[2.4,2.5]:[2.1,2.2];
-  if(options.supporting?.length&&focus==='ensemble'){
+  if(focus==='ensemble'&&(options.supporting?.length||sourceBodyPlan(performance).supports?.length)){
     // Frame the complete cast on the same master clock, rather than anchoring on the lead alone.
-    const ensemble=emptyBounds(),cast=[bounds,...options.supporting.map(actor=>cameraHostBounds(actor.performance,actor.profile,actor.actingClock))];
+    const ensemble=emptyBounds(),cast=[bounds,...(options.supporting??[]).map(actor=>cameraHostBounds(actor.performance,actor.profile,actor.actingClock))];
     for(const actor of cast){include(ensemble,{x:actor.body.left,y:actor.body.top});include(ensemble,{x:actor.body.right,y:actor.body.bottom});}
+    for(const actor of [performance,...(options.supporting??[]).map(a=>a.performance)])for(const seat of sourceBodyPlan(actor).supports??[]){
+      include(ensemble,{x:seat.center.x-seat.width*.6-2,y:seat.center.y-(seat.backHeight??0)-2});
+      include(ensemble,{x:seat.center.x+seat.width*.6+2,y:actor.stage.groundY+9});
+    }
     for(const part of options.parts??[]){
       include(ensemble,{x:(part.x-part.width*.56)*width,y:(part.y-part.height*.6)*height});
       const label=cameraModelLabel(part,height,width);
@@ -180,7 +187,7 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
   else if(focus==='contact'){if(!options.target)throw new Error('Contact camera requires a world contact target.');anchor=options.target;}
   else {
     const xs=[...roots.map(x=>x-(m.upperArm+m.lowerArm)*performance.scale),...roots.map(x=>x+(m.upperArm+m.lowerArm)*performance.scale),
-      ...(performance.supports??[]).flatMap(seat=>[seat.center.x-seat.width*.6,seat.center.x+seat.width*.6]),
+      ...(sourceBodyPlan(performance).supports??[]).flatMap(seat=>[seat.center.x-seat.width*.6,seat.center.x+seat.width*.6]),
       ...(options.parts??[]).flatMap(p=>[(p.x-p.width*.56)*width,(p.x+p.width*.56)*width])];
     anchor={x:(Math.min(...xs)+Math.max(...xs))/2,y:bounds.feet.bottom-height*((framing==='wide'?.76:.78)-CAMERA_VIEWPORT.centerY)/maxScale};
   }
@@ -233,8 +240,8 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       if(!boundsInView(bounds.feet))fail('feet/visual ground enter the subtitle region or leave the frame.');
       if(!boundsInView(bounds.body))fail('hands/body leave the safe action region; use a wider camera or replan its layout.');
       for(const g of p.gestures)if(g.target&&!inView(g.target,8*p.scale))fail(`${g.id} target is outside the safe action region.`);
-      for(const seat of p.supports??[])if(!boundsInView({left:seat.center.x-seat.width*.6-2,right:seat.center.x+seat.width*.6+2,top:seat.center.y-(seat.backHeight??0)-2,bottom:groundY+9}))fail(`seat ${seat.id} leaves the safe action region; preserve its support and ground in ensemble framing.`);
     }
+    for(const seat of sceneSeats(shot))if(!boundsInView({left:seat.center.x-seat.width*.6-2,right:seat.center.x+seat.width*.6+2,top:seat.center.y-(seat.backHeight??0)-2,bottom:groundY+9}))fail(`seat ${seat.id} leaves the safe action region; preserve its support and ground in ensemble framing.`);
     for(const part of shot.visualization?.parts??[]){
       if(!modelInView(part))fail(`model ${part.id} is cropped during its motion; use a wider camera or replan its world layout.${modelCropDiagnostic(part)}`);
       labelInView(part);

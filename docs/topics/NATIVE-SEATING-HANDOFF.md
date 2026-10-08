@@ -1,8 +1,8 @@
 # Lila/Karo — trang phục ngồi native
 
-Mốc **0.41, 08/10/2026**, nhánh `codex/prehistoric-life`, tiếp tục từ `4ff12ddfa216344a86fbd907d92550bfc001cc13`. Đã viết source cho lựa chọn **`appearance.bodySeat='registered-seated-v1'`** ở cả hai actor × hai góc3/4. Đây là ứng viên **một shot**, chưa có kết quả runtime hoặc video nghiệm thu.12 callback mới và8 callback material cũ **NOT RUN** bởi implementation agent. [Plan](../plans/2026-10-08-native-seating.md), [record source](reviews/native-seat-surface-source-record-v1.md).
+Mốc **0.42, 08/10/2026**, nhánh `codex/prehistoric-life`, tiếp tục từ `ec61d0e379642966ec158a7e299267e402b6f360`. Source thêm **`performance.sourceBody.supports`** cho native Lila/Karo đã chọn `bodySeat='registered-seated-v1'` và registered locomotion. Ghế, chân chuẩn bị/trụ, hông/contact, vải và lịch sử tóc đọc cùng clock gốc qua camera và đổi vai primary/supporting. Đây là source candidate, **chưa có kết quả runtime hoặc video nghiệm thu**.7 callback source-clock mới,12 callback surface và8 callback material **NOT RUN** bởi implementation agent. [Plan](../plans/2026-10-08-native-seating.md), [record hiện hành](reviews/native-seat-clock-source-record-v1.md); [record0.41](reviews/native-seat-surface-source-record-v1.md) là lịch sử.
 
-Source/artifact đã push tại `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 file đúng scope; exact SHA local/remote khớp. Build/typecheck/schema/metadata checks thành công, source review hai lượt đã nhận và sửa lỗi. Không có runtime/video verdict; docs-only follow-up không thay source đã kiểm.
+Mốc0.41 đã push source/artifact `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 file đúng scope. Các check của0.41 không chứng minh các sửa đổi0.42. Record0.42 ghi kiểm tra mới, review và SHA thực tế sau khi xuất bản; không dùng kết quả V1 hoặc source build để nhận là video đã đạt.
 
 ## Đã có trong source
 
@@ -10,7 +10,10 @@ Source/artifact đã push tại `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 fi
 - [Correspondence](../../library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json) giữ exact primary/standing/atlas hashes, UV riêng cho hai hướng, eo ghim và50 điểm contour. Đo alpha tĩnh và tính minimum của đa thức diện tích trên toàn đoạn hình học đứng→ngồi; không gọi sampler/renderer hoặc sửa PNG. Số mảnh Lila phải/trái48/222; Karo phải/trái48/226. Kết quả này chỉ chứng minh đăng ký hình học chưa biến dạng.
 - Renderer dùng phần thân trên/đai áo native và một fill đục, một đường viền ngoài. Hai texture đứng/ngồi blend bên trong cùng surface; eo không bị xóa texture hoặc thêm vạch đen ngang. Lila giữ một váy, Karo có material hai miệng ống; hình dáng thực tế khi diễn vẫn cần review. PNG alpha250–254 được giữ nguyên.
 - Compiler lấy progress từ chuyển trọng lượng của solver support hiện có; giữ bone/sole offsets, chân chuẩn bị trước khi hông chạm support. Rise hoàn tất rồi mới đi tiếp. Vạt đứng theo đùi với lag90ms, giới hạn hình học25% diện tích trung tính; matrix suy biến/lật/nonfinite vẫn lỗi. Đầu/mắt/miệng/tóc dùng các lựa chọn riêng hiện có; không gọi đây là phoneme lip-sync.
-- Camera bao contour vải hiện tại. Texture tài nguyên đi cùng actor rig, namespace/scene security và cap2MB giữ nguyên. Brief/context/manifest/inventory/cache fingerprint nhận selection/material/geometry. Body compiler30, body SVG16, head SVG16, view registration4.
+- Camera bao contour vải và support của cả primary/supporting. Texture tài nguyên đi cùng actor rig, namespace/scene security và cap2MB giữ nguyên. Brief/context/manifest/inventory/cache fingerprint nhận selection/material/geometry. Body compiler31, body SVG16, head SVG16, view registration4; seat surface2 và support clock `native-source-seat-1`.
+- Schema bounded tối đa12 support trong source gốc, chặn ID trùng/thiếu, pose không ngồi nhận support và local/source conflict. `sourceBodyPlan()` giữ full supports/postures/entry. Solver/body/report đọc `shot.startMs + localTimeMs - sourceBody.startMs`, không khởi động lại ở cut. Run phải phủ kín, mỗi shot lặp nguyên source, actor/view/root/stage/scale giữ nguyên.1500ms/reach/facing/ẩn actor vẫn chặn.
+- Occupancy giữ cả approach/hold/rise và project chính xác về đoạn shot. Hai actor không được cùng dùng một support khi interval chồng; cùng ID phải cùng geometry trong world. Camera, scene seats, report, review timestamps và publication/repair hash dùng cùng source. Chuẩn bị chân/chuyển hông/đứng dậy có các mốc baked tường minh; lag vải/tóc vẫn đọc lịch sử trước cut.
+- Có7 callback mới trong `tests/native-source-seat.test.ts`: contract/guard; whole-run so với slices cho2 actor×2view×3scale và seek ngược; exclusive occupancy/world geometry; invalidation/hidden/missing/cut/repair; baked clock/report/camera/review; ca canonical **không có diagram/object**, hai actor ngồi–đứng–đi với5 camera slice, primary/speaking ownership đổi, môi trường SVG có màu và hai support. Ca này được khai báo, **chưa tạo scene/frame/video**, chưa chứng minh giọng hoặc chất lượng diễn.
 - API diagnostic `/api/topics/prehistoric-life/body` có `seat=registered-seated-v1`; form giữ lựa chọn trong link đổi action/time. Đây là trang xem pose, không phải video hoặc nghiệm thu chuyển động.
 - Review mã nguồn độc lập tìm ba lỗi alias metadata, mask eo và vòng phụ thuộc generator. Đã sửa: active registration/description deep-freeze, mask chỉ xóa texture sát mép ngoài, generator dùng landmark modules độc lập. Verdict follow-up được ghi ở record; không có verdict art/motion/video.
 
@@ -27,9 +30,9 @@ Prompt đầy đủ tại `native-seat-v1/lila-seated-folds-v1-prompt.json` và 
 
 ## Chưa hoàn thành
 
-1. **Task3: full sourceBody support clock.** Schema/sourceBody hiện chưa sở hữu support; không cắt một chuyển động ngồi native đang diễn sang shot khác rồi nhận là continuous. Cần nối clock hông/chân/vải/tóc, geometry/occupancy/facing/coverage, camera/primary swap và source/cache/repair invalidation.
+1. **Runtime của Task3 và ca canonical.** Source đã nối support clock; cần model test chạy whole/slices, original XYZ limbs/sole/hip, continuity và occupancy thật. Thiếu một actor slice, đổi geometry/definition hoặc thiếu full board phải lỗi. Chưa thể nhận camera swap hoặc ngồi native đã chạy đúng chỉ từ việc source/typecheck hợp lệ.
 2. **Runtime và chất lượng.** Model của người dùng phải kiểm sit/hold/rise/walk, xương, gối, tay, chân trụ, hip contact, áo/quần/cuff, màu/mặt/identity, gaze, random/reverse seek và video60fps. Hai mesh trái lớn: phải đo compile/seek cost và scene byte count; nếu vượt2MB phải tối ưu representation, **không nâng cap hoặc giấu lỗi**.
-3. **Task4: ca canonical hai người**, camera/subtitle bounds, vai nói/nghe, repair/resume/sibling edits và source publication. Ca kiểm chứng chỉ phục vụ tool tổng quát, không ép truyện về máy móc/đồ ăn/săn thú.
+3. **Task4: tracer có media và full pipeline**: xuất canonical scene/frame/video60fps, waveform/subtitle/narration, video review với ảnh gốc, repair/resume và sibling/source changes trên artifact thật. Callback canonical mới chỉ kiểm contract/scene/security/byte cap khi được chạy; không xuất final và không thay full input test. Ca kiểm chứng phục vụ tool tổng quát, không ép chủ đề hoặc đặt cốt truyện mặc định.
 4. Full factory còn ba input script nguyên văn/WAV giữ audio-clock/story→script→video, SRT, EN chính/VI/JA/KO và TTS local/ngoài, đầy đủ views/turns/tools/grasp/handoff/world/colours và final audio/subtitle/QC. `productionReady=false`, `productionRig=null`; final/art/identity/source/target/voice/sync gates giữ nguyên.
 
 ## Model test chạy
@@ -39,10 +42,10 @@ Windows, Node>=22.13; implementation hiện dùng24.19. Không cần image-to-vi
 ```powershell
 Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1'
 git rev-parse HEAD
-node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/native-seat-art.test.ts tests/native-seat.test.ts tests/native-locomotion.test.ts tests/native-source-body.test.ts tests/native-secondary.test.ts tests/seated-acting.test.ts tests/view-cloth-geometry.test.ts
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/native-seat-art.test.ts tests/native-seat.test.ts tests/native-source-seat.test.ts tests/native-locomotion.test.ts tests/native-source-body.test.ts tests/native-secondary.test.ts tests/seated-acting.test.ts tests/view-cloth-geometry.test.ts
 ```
 
-12 callback mới: contract/gates;4 bindings/UV/waist; invalid geometry; immutable alias; opaque surface/positive area; matrix interpolation; SVG/resources/namespaces; sit-rise-walk/fixed bones/random seeks; facing/support/reach/transition blockers; camera contour; form/link selection; scene security/cap/interpolation. Phải lưu raw PASS/FAIL/NOT RUN và full SHA. Typecheck, alpha inventory và static triangulation **không phải** test runtime PASS.
+27 callback seating được khai báo (8 material +12 surface +7 source-clock); không có callback nào được implementation agent chạy. Phải lưu raw PASS/FAIL/NOT RUN và full SHA, stderr/log, byte count/compile/seek cost, frame và video so với ảnh gốc. Typecheck, alpha inventory và static triangulation **không phải** test runtime PASS.
 
 Khởi động Studio riêng để không tác động project8850:
 

@@ -48,8 +48,10 @@ Task2 source/artifact published `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 ow
 
 **Interfaces:** Extend complete `BodySourceSchema` with bounded supports; `sourceBodyPlan()` owns those support definitions. Sample body, occupancy, seat weights/contact, diagnostic/report/camera and shared scene seats using the same original relative time. Every explicit continuous camera slice repeats identical full source tracks.
 
-- [ ] Reject duplicate/missing supports, geometry/facing changes, seated-without-support, local/source conflicts and incomplete source coverage. Preserve existing1500ms source sit/rise transition and fixed reach guards. Reserve occupancy during approach/hold/rise and reject overlapping different actors on the same seat. Continuous camera and primary/supporting swaps do not reset foot preparation, hip contact, pose, cloth or hair lag.
-- [ ] Declare whole-run vs camera slices equivalence across preparation/held/rise/later walk, both actors/views and scale, sibling/source/support edit invalidation, same seat vs conflicting geometry and occupancy, camera/world/subtitle bounds, scene assets and cache/repair bindings. User model executes original body/secondary/seat suites together; **NOT RUN here**.
+- [x] Source-only0.42: bounded original supports/known IDs and ownership; sourceBodyPlan retains full definitions. Compiler uses original relative support time; stage occupancy projects/clips approach/hold/rise into the shot, same seat world geometry and exclusive actor use. Full identical run coverage/local conflict/facing/1500ms/fixed reach/hidden actor guards remain. Body/cloth/hair share original history; runtime continuity is NOT RUN/unaccepted.
+- [x] Declare7 callbacks in `tests/native-source-seat.test.ts`: whole-run vs slices across preparation/held/rise/later walk for2 actors×2views×3scales; sibling/source/support changes; exclusive occupancy/geometry; camera/report/review/baked seeds; missing/hidden/cut/context/repair; single-actor large seat framing; canonical objectless two-actor/camp/5 camera slices with primary and cue ownership changes, assets/security/2MB/subtitle bounds. **Every fixture/callback/sampler/renderer NOT RUN here**. Real voice/frame/video/resume and budget/seek cost remain acceptance work for user's model.
+
+Task3 source candidate uses seat surface2/support clock1/body compiler31, optional supports additive to body1 (old supported project contracts remain). Scene fallback, stage direction gate, camera support envelopes and all exported source schemas updated. Runtime acceptance and full factory are still pending; use the0.42 record/handoff for actual source review/check/publication evidence.
 
 ### Task 4: Canonical authoring and handoff
 
@@ -57,7 +59,7 @@ Task2 source/artifact published `09a09f9d38021d01ba73b873ec2a253d15faea18`,36 ow
 
 **Interfaces:** API/CLI/cast consume the shared optional appearance field and sourceBody supports. Diagnostic Studio exposes explicit seat selection and preserves it in links. Model brief describes physical seat/contact/ownership and actual unsupported angles instead of inventing motion.
 
-- [ ] Integrate exact registered pose hashes/fingerprints into source/cache/repair/manifest; default/approved assets remain explicit. Task1 adds material-only manifest/context/schema records; profile/renderer/body/source-clock integration remains Task2/3. Export schemas; run `npm run build`, `npm run test:typecheck`, `npm run schemas`, metadata inventory and `git diff --check`; these prove only source/static artifacts.
+- [ ] Complete source delivery: exact registered material/geometry/support fingerprints are integrated in existing source/cache/repair/manifest and schema export. Run final build/typecheck/static checks and publish only owned paths with exact GitHub SHA. Task3 already declares canonical scene/security/camera/role tracer; actual frames/video/audio/resume, left mesh cost and scene cap still need user-model execution. These checks prove only source/static artifacts.
 - [ ] Seek bounded read-only source advice under existing9router authorization if available; record unavailable/quota/timeout as no verdict, never PASS. Publish only owned paths to `codex/prehistoric-life`, verify exact GitHub SHA, deliver test/server/environment commands and all remaining full-product obligations.
 
 ## Acceptance still required

@@ -33,14 +33,24 @@ const PostureTarget = {
 };
 export const PostureTargetSchema=z.object(PostureTarget).strict();
 export const PostureSchema=z.object({...Interval,...PostureTarget}).strict();
+export const SeatSupportSchema=z.object({id:Id,kind:z.literal('seat'),center:PointSchema,width:z.number().finite().positive(),
+  facing:z.enum(['left','right']),backHeight:z.number().finite().nonnegative().optional()}).strict();
 /** Complete physical motion in its original run-relative clock. Every camera
  * slice declares this same source; local motion tracks must not approximate it. */
 export const BODY_SOURCE_VERSION='native-source-body-1' as const;
+export const BODY_SOURCE_SEAT_CLOCK_VERSION='native-source-seat-1' as const;
 export const BodySourceSchema=z.object({version:z.literal(BODY_SOURCE_VERSION),id:Id,startMs:Time,endMs:Time,
   walks:z.array(WalkSchema),jumps:z.array(JumpSchema).max(16).optional(),postures:z.array(PostureSchema).optional(),entryPosture:PostureTargetSchema.optional(),
+  supports:z.array(SeatSupportSchema).max(12).optional(),
 }).strict().superRefine((source,ctx)=>{
   const duration=source.endMs-source.startMs;
   if(duration<=0)ctx.addIssue({code:'custom',message:'Invalid original body source span'});
+  const ids=new Set((source.supports??[]).map(s=>s.id));
+  if(ids.size!==(source.supports?.length??0))ctx.addIssue({code:'custom',path:['supports'],message:'Duplicate original seat support identity'});
+  for(const pose of [...(source.entryPosture?[source.entryPosture]:[]),...(source.postures??[])]){
+    if(pose.pose==='seated'&&(!pose.supportId||!ids.has(pose.supportId)))ctx.addIssue({code:'custom',path:['supports'],message:'Original seated posture requires a known seat support'});
+    if(pose.pose!=='seated'&&pose.supportId)ctx.addIssue({code:'custom',path:['postures'],message:'Only an original seated posture can own a seat support'});
+  }
   for(const [name,clips] of [['walks',source.walks],['jumps',source.jumps??[]],['postures',source.postures??[]]] as const){
     let previousEnd=0;
     for(const clip of [...clips].sort((a,b)=>a.startMs-b.startMs)){
@@ -50,8 +60,6 @@ export const BodySourceSchema=z.object({version:z.literal(BODY_SOURCE_VERSION),i
   }
 });
 export type BodySource=z.infer<typeof BodySourceSchema>;
-export const SeatSupportSchema=z.object({id:Id,kind:z.literal('seat'),center:PointSchema,width:z.number().finite().positive(),
-  facing:z.enum(['left','right']),backHeight:z.number().finite().nonnegative().optional()}).strict();
 /** Original absolute motion window. It is not a narration or contact clock. */
 export const GestureSourceSpanSchema=z.object({...Interval,id:Id,reachMs:Time.optional(),recoverMs:Time.optional()}).strict().superRefine((span,ctx)=>{
   const reach=span.reachMs??span.startMs+Math.min(600,(span.endMs-span.startMs)*.35),recover=span.recoverMs??Math.max(reach,span.endMs-Math.min(400,(span.endMs-span.startMs)*.25));

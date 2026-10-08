@@ -1,6 +1,8 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
+import {supportMotionTimes} from '../animation/support.js';
+import {sourceBodyPlan} from '../animation/view-source-body.js';
 import type { FactoryConfig } from '../core/config.js';
 import { ReviewSchema, type AssetManifest, type CharacterBible, type Review, type ReviewIssue, type Shot, type Story, type Storyboard, type Narration } from '../core/schemas.js';
 import type { ModelRouter } from '../models/registry.js';
@@ -54,6 +56,8 @@ export function eventPreviewTimes(shot:Shot):number[]{
     }
     for(const jump of source.jumps??[])for(const at of [jump.takeoffMs,jump.landingMs,(jump.takeoffMs+jump.landingMs)/2])if(source.startMs+at>=shot.startMs&&source.startMs+at<shot.endMs)times.add(clamp(source.startMs+at));
   }
+  if(shot.cinematic?.actorScene)for(const p of [shot.cinematic.performance,...shot.cinematic.actorScene.supporting.map(a=>a.performance)])
+    for(const at of supportMotionTimes(sourceBodyPlan(p))){const global=(p.sourceBody?.startMs??shot.startMs)+at;if(global>=shot.startMs&&global<shot.endMs)times.add(clamp(global));}
   if(shot.cinematic?.actorScene){
     const plans=[shot.cinematic.performance,...shot.cinematic.actorScene.supporting.map(actor=>actor.performance)];
     const step=Math.ceil(1000/shot.cinematic.performance.fps);

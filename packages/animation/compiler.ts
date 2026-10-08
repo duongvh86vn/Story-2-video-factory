@@ -4,7 +4,7 @@ import { hash } from '../core/utils.js';
 import { rigHand, type RigHand } from '../core/identifiers.js';
 import { rigMetrics,type RigMetrics } from './rig.js';
 import { HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION, ANIMATION_VERSION, CONTINUOUS_ANIMATION_VERSION, STORY_ANIMATION_VERSION, SEATED_ANIMATION_VERSION, PREVIOUS_ANIMATION_VERSION, LEGACY_ANIMATION_VERSION, STORY_MOODS, PerformancePlanSchema,isCurrentAnimation, type Gesture, type Mood, type PerformancePlan, type Point, type PostureTarget } from './schemas.js';
-import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy,sourceSupportMotion} from './support.js';
+import {seatFor,seatWeightsAt,seatedPlacement,seatOccupancy,sourceSupportMotion,supportMotionTimes} from './support.js';
 import { selectedClips } from './library.js';
 import {sampleAirborne,sampleFallingObject,type AirborneSample} from './airborne.js';
 import {runSchedule,sampleRunning,runStepCount,RUN_POSES} from './running.js';
@@ -390,8 +390,8 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number,actingClo
   const orientation=orientationAt(physical,motionTime),bodyPosture=postureAt(physical,motionTime),source=usesReferenceBody(profile);
   const breathTime=t+(actingClock?.startMs??0),breathStart=actingClock?.runStartMs??0,breathEnd=actingClock?.runEndMs??plan.durationMs;
   const breath=source?Math.sin((breathTime+(profile.appearance.characterVariant==='karo'?1100:0))*Math.PI*2/4300)*.55*smooth((breathTime-breathStart)/VIEW_BREATH_RAMP_MS)*smooth((breathEnd-breathTime)/VIEW_BREATH_RAMP_MS):0;
-  const sourceSupported=source&&plan.supports?.length?sourceSupportMotion(plan,profile,t,root,walk.feet):undefined;
-  const supported=sourceSupported??(plan.supports?.length?seatedPlacement(plan,profile,t,root):undefined);
+  const sourceSupported=source&&physical.supports?.length?sourceSupportMotion(physical,profile,motionTime,root,walk.feet):undefined;
+  const supported=sourceSupported??(physical.supports?.length?seatedPlacement(physical,profile,motionTime,root):undefined);
   if(sourceSupported?.ownsFeet&&!walk.activation){walk.feet=sourceSupported.feet;walk.stance=sourceSupported.stance;}
   const lean=lunge?lunge.leanDeg:bodyPosture.leanDeg+pose.lean*emotion.weight+Math.sin(walk.phase*Math.PI)*walk.activation*1.5+orientation*3+breath+(sourceSupported?.leanOffset??0)+(source&&walk.running?walk.direction*10*walk.activation:0);
   const postureDrop=Math.abs(m.pelvisY)*bodyPosture.pelvisDropRatio*s+(lunge?.dropY??0);
@@ -425,7 +425,7 @@ function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number,actingClo
   if(supported&&walk.activation){pelvis.x+=walk.supportShiftX;pelvis.y+=walkDrop;}
   if(air)pelvis.y+=air.bodyOffsetY;
   const seatProgress=clamp(sourceSupported?.supportWeight??Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0));
-  return {m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend:supported?.bend??1,seatProgress,
+  return {physical,m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend:supported?.bend??1,seatProgress,
     kneeSeatWeight:usesBodyView(profile)?hasBodyViewSeat(profile)?lerp(VIEW_CLOTH_KNEE_WEIGHT,1,seatProgress):hasBodyViewLocomotion(profile)?VIEW_CLOTH_KNEE_WEIGHT:1:seatProgress};
 }
 /** Shared body landmarks for authoring a tool target without invoking arm IK.
@@ -640,7 +640,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if((hasBodyViewSpeech(profile)||hasBodyViewEyes(profile))&&sourceClock&&(sourceClock.ownerId!==profile.id||sourceClock.endMs-sourceClock.startMs!==plan.durationMs))throw new Error('needs-speech-phase: source owner or shot span does not match performer');
   if(hasBodyViewEyes(profile)&&sourceClock)validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);
   if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires an explicit registered mouth candidate');
-  const t=clamp(time,0,plan.durationMs),{m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight,seatProgress}=bodyStateAt(plan,profile,t,actingClock);
+  const t=clamp(time,0,plan.durationMs),{physical,m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight,seatProgress}=bodyStateAt(plan,profile,t,actingClock);
   const resolvedGesture=(side:RigHand)=>{
     const source=actingClock?sourceViewGestureAt(actingClock.gestures,t+actingClock.startMs,side):undefined,gesture=source??gestureAt(plan,t,side);
     return {gesture,timeMs:source?t+actingClock!.startMs:t,entryTimeMs:source?source.startMs-actingClock!.startMs:gesture?.startMs??0};
@@ -898,7 +898,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const weight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,n)=>sum+n,0));
     const flex=Math.abs(thighAngles.reduce((sum,n)=>sum+n,0)/thighAngles.length-lean);
     const folded=smooth((weight-.2)/.35)*smooth((flex-35)/35);
-    const hasSeat=[...(plan.entryPosture?[plan.entryPosture]:[]),...(plan.postures??[])].some(p=>p.pose==='seated');
+    const hasSeat=[...(physical.entryPosture?[physical.entryPosture]:[]),...(physical.postures??[])].some(p=>p.pose==='seated');
     for(const side of ['left','right'] as const){
       transforms['garment-seated-'+side]=transform(pelvis,lean,s*profile.appearance.bodyScale);
       const chosen=side===(bend===1?'right':'left'),surface=seatedGarmentState(profile,side,hasSeat&&chosen?folded:0,chosen?restCloth:undefined);
@@ -945,7 +945,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     if(contactErrors[side]>1)throw new Error(`${gesture.id}: ${side} hand misses contact anchor at ${t}ms (${contactErrors[side].toFixed(2)}px)`);
   }
   }
-  const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=plan.supports?.find(s=>s.id===heldSeat);
+  const heldSeat=Object.entries(bodyPosture.seatWeights??{}).find(([,weight])=>weight===1)?.[0],seat=physical.supports?.find(s=>s.id===heldSeat);
   const seatOffset=m.seatContactOffset?rotate({x:-bend*m.seatContactOffset.x*s,y:m.seatContactOffset.y*s},lean):{x:0,y:0};
   return {timeMs:t,...(air?{airborne:{phase:air.phase,bodyVelocityY:air.bodyVelocityY}}:{}),root,feet:walk.feet,stance:walk.stance,bodyPosture,...(legProjection?{legProjection}:{}),...(Object.keys(armProjection).length?{armProjection}:{}),...(Object.keys(armGeometry).length?{armGeometry}:{}),...(Object.keys(spearGeometry).length?{spearGeometry}:{}),hands,...(wrists?{wrists}:{}),transforms,...(drawn?{paths}:{}),face,props,mood:emotion.mood,contactError,contactErrors,...(seat?{seatContact:{supportId:seat.id,errorPx:distance(add(pelvis,seatOffset),seat.center)}}:{})};
 }
@@ -1015,6 +1015,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   const physical=sourceBodyPlan(plan),motionOffset=plan.sourceBody?plan.sourceBody.startMs-actingClock!.startMs:0;
   const addSecondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
   const addMotionTime=(at:number)=>{addSecondaryTime(at+motionOffset);if(hasBodyViewLocomotion(profile))times.add(at+motionOffset+VIEW_CLOTH_LAG_MS);};
+  for(const at of supportMotionTimes(physical))for(const near of [at-.01,at,at+.01])addMotionTime(near);
   if(plan.sourceBody||hasBodyViewSecondary(profile))for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)addMotionTime(at);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
   for(const clip of [...plan.gestures,...(plan.spears??[]),...plan.walks,...(plan.jumps??[]),...(plan.turns??[]),...(plan.headTurns??[]),...(plan.postures??[]),...plan.expressions,...plan.gazes,...activity.intervals]){
@@ -1131,7 +1132,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     durationMs:plan.durationMs,fps:plan.fps,frames:frames.length,maxContactError:Math.max(...frames.map(f=>f.contactError)),
     maxHandContactError:{left:Math.max(...frames.map(f=>f.contactErrors.left)),right:Math.max(...frames.map(f=>f.contactErrors.right))},gestureHands:[...new Set(plan.gestures.map(rigHand))],
     maxInterpolationGapPx:Math.max(...frames.slice(1).map((f,i)=>interpolationGap(frames[i]!,f,profile,plan))),interpolationGapLimitPx:.2,interpolationIncludes:['bones/cuff','spear palms/shared shaft','tip during contact hold'],selectedClips:selectedClips(plan),
-    ...(plan.supports?.length?{seatSupports:plan.supports,maxSeatContactErrorPx:Math.max(0,...frames.flatMap(f=>f.seatContact?[f.seatContact.errorPx]:[]))}:{}),
+    ...(physical.supports?.length?{seatSupports:physical.supports,maxSeatContactErrorPx:Math.max(0,...frames.flatMap(f=>f.seatContact?[f.seatContact.errorPx]:[]))}:{}),
     ...(usesReferenceHead(profile)?{headArtwork:{version:referenceHeadDescription().version,fingerprint:referenceHeadDescription().fingerprint,
       availableViews:usesBodyView(profile)?[registeredBodyView(profile).view]:usesCutoutHead(profile)?['source-orientation']:referenceHeadDescription().views,turnRendering:usesBodyView(profile)?'fixed-authored-body-view-candidate':usesCutoutHead(profile)?'registered-cutout-source-orientation':'stepped-authored-views-with-front',fullBodyReplacement:usesReferenceBody(profile),productionAcceptance:false}}:{}),
     ...(usesReferenceBody(profile)?{bodyArtwork:referenceBodyDescription()}:{}),
@@ -1148,7 +1149,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),
     ...(hasBodyViewSeat(profile)?{bodySeat:{...nativeSeatDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
-      supportTrackHash:hash({supports:plan.supports??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),clock:'shot-local physical support transfer; native source support cuts remain blocked',motionVerified:false,audioVerified:false}}:{}),
+      supportTrackHash:hash({supports:physical.supports??[],postures:physical.postures??[],entryPosture:physical.entryPosture??null}),clock:plan.sourceBody?'complete original physical support/body transfer through explicit continuous camera slices':'shot-local physical support transfer',sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     ...(hasBodyViewLocomotion(profile)?{bodyMotion:{...nativeClothDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:plan.sourceBody?'complete original body tracks through explicitly continuous camera slices':'complete shot-local walk/run/jump/posture; moving cuts require explicit sourceBody',sourceTrackHash:hash(plan.sourceBody??{walks:plan.walks,jumps:plan.jumps??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};

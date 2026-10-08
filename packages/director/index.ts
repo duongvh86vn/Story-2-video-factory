@@ -9,7 +9,7 @@ import { partAnchor } from '../host/controller.js';
 import { rigMetrics } from '../animation/rig.js';
 import { ANIMATION_VERSION, type Mood, type Point, type PerformancePlan } from '../animation/schemas.js';
 import { validatePerformance } from '../animation/compiler.js';
-import {bodyRootAt} from '../animation/view-source-body.js';
+import {bodyRootAt,sourceBodyPlan} from '../animation/view-source-body.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import { CinematicPlanSchema, DIRECTION_VERSION, type CinematicPlan } from './schemas.js';
 import { fold } from '../explainer/plan.js';
@@ -235,7 +235,7 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   if(c.continuity.facing!==exitFacing)throw new Error(`${shot.id}: cinematic facing disagrees with turn exit`);
   if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
   validatePerformance(p,profile);
-  if(p.supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);
+  if(sourceBodyPlan(p).supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);
   sceneSeats(shot);
   validateCamera(shot,profile,actingClock);
   if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile,actingClock);

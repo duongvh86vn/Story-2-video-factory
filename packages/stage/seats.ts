@@ -2,8 +2,19 @@ import type {Shot} from '../core/schemas.js';
 import {escapeHtml} from '../core/utils.js';
 import type {SeatSupport} from '../animation/schemas.js';
 import {seatOccupancy,sameSeatSupport} from '../animation/support.js';
+import type {PerformancePlan} from '../animation/schemas.js';
+import {sourceBodyPlan,bodyTrackOffsetMs} from '../animation/view-source-body.js';
 
-export const SEAT_SUPPORT_VERSION='physical-seat-2.2.1';
+export const SEAT_SUPPORT_VERSION='physical-seat-2.2.2';
+/** Project the complete occupancy to this shot; never reserve an off-shot seat.
+ * Approach/hold/rise all remain occupied, even if the cut lies in a held pose. */
+export function shotSeatOccupancy(plan:PerformancePlan,shotStartMs:number){
+  const offset=bodyTrackOffsetMs(plan,shotStartMs);
+  return seatOccupancy(sourceBodyPlan(plan)).flatMap(interval=>{
+    const startMs=Math.max(0,interval.startMs+offset),endMs=Math.min(plan.durationMs,interval.endMs+offset);
+    return endMs>startMs?[{supportId:interval.supportId,startMs,endMs}]:[];
+  });
+}
 export function sceneSeats(shot:Shot):SeatSupport[]{
   const c=shot.cinematic;if(!c)return [];
   const performers=[...(c.actorScene?.primary===null?[]:[{id:c.leadCharacterId,performance:c.performance}]),
@@ -12,12 +23,12 @@ export function sceneSeats(shot:Shot):SeatSupport[]{
   for(const actor of performers){
     const stage=actor.performance.stage,world=c.performance.stage;
     if(stage.width!==world.width||stage.height!==world.height||stage.groundY!==world.groundY)throw new Error(`${shot.id}: actor ${actor.id} must share the physical stage and ground anchor`);
-    for(const seat of actor.performance.supports??[]){
+    for(const seat of sourceBodyPlan(actor.performance).supports??[]){
       const previous=seats.get(seat.id);
       if(previous&&!sameSeatSupport(previous,seat))throw new Error(`${shot.id}: seat ${seat.id} changes its world geometry between actors`);
       seats.set(seat.id,seat);
     }
-    for(const interval of seatOccupancy(actor.performance)){
+    for(const interval of shotSeatOccupancy(actor.performance,shot.startMs)){
       const existing=owners.get(interval.supportId)??[];
       if(existing.some(p=>p.actorId!==actor.id&&p.startMs<interval.endMs&&p.endMs>interval.startMs))throw new Error(`${shot.id}: seat ${interval.supportId} has overlapping actor owners`);
       owners.set(interval.supportId,[...existing,{...interval,actorId:actor.id}]);

@@ -285,12 +285,12 @@
     }
   ],
   "surfaceCandidate": {
-    "version": "native-view-seat-1",
+    "version": "native-view-seat-2",
     "selection": "registered-seated-v1",
     "status": "candidate-source-registration",
     "file": "library/topics/prehistoric-life/native-seat-v1/correspondence-v1.json",
     "sha256": "89df68c15f5c359f3b9421fce0ac2c5309d259a2e6fe469991e20592f03d48af",
-    "fingerprint": "e9f63557b538db57308e5c97765a0c5a6e1007ea465d5345823691e011d37b77",
+    "fingerprint": "3f3556f5570792ef243708234d199a5f3bb4a42e058052e0375e6114444ff0a7",
     "registrationFingerprint": "5a2a6297457d20e4fa8915da0ec9e48a3c1b6c51550a97f20fc40d0305a9f265",
     "bindings": {
       "lila": {
@@ -402,7 +402,7 @@
     "productionAllowed": false,
     "limitations": [
       "native seat art/UV/ink/cuff/identity and normal-speed motion await review",
-      "single-shot physical supports; continuous source support ownership remains a separate pending integration",
+      "source support clock/occupancy through cuts and actor-role swaps is source-only; runtime equivalence and canonical tracer await tests",
       "native left meshes have222/226 pieces; compile/seek cost and existing2MB scene cap require runtime verification, cap unchanged",
       "no continuous body/head turns or new tool grasp registration",
       "no physical cloth simulation or accepted final video"

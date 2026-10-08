@@ -12,7 +12,6 @@ export function validateBodySourcePlan(plan:PerformancePlan):void{
     if((plan[name]?.length??0)>0)throw new Error('needs-view-body-phase: source body conflicts with local '+name);
   }
   if(plan.entryPosture!==undefined||plan.lunge!==undefined)throw new Error('needs-view-body-phase: source body conflicts with local entryPosture/lunge');
-  if(source.entryPosture?.supportId!==undefined||source.postures?.some(posture=>posture.supportId!==undefined))throw new Error('needs-view-body-phase: source body cannot own a support posture');
 }
 
 /** Retain the complete original relative tracks for physical validation/sampling. */
@@ -21,7 +20,7 @@ export function sourceBodyPlan(plan:PerformancePlan):PerformancePlan{
   validateBodySourcePlan(plan);
   const source=plan.sourceBody;
   return {...plan,sourceBody:undefined,durationMs:source.endMs-source.startMs,
-    walks:source.walks,jumps:source.jumps,postures:source.postures,entryPosture:source.entryPosture,
+    walks:source.walks,jumps:source.jumps,postures:source.postures,entryPosture:source.entryPosture,supports:source.supports,
     gestures:[],gazes:[],expressions:[]};
 }
 
