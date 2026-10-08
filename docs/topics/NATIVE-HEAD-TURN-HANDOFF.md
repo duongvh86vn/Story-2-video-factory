@@ -6,6 +6,8 @@ Cập nhật 08/10/2026. Máy không có dịch vụ image-to-video; tiếp tụ
 
 ## Phần source0.46 mới
 
+Source commit `db78d4883f41f30b8d0ab350e33c8a91f889c7e3` đã push GitHub nhánh `codex/prehistoric-life`; full SHA local/remote khớp,37 owned paths. Build/typecheck/schema/static manifest qua; runtime17 callbacks và video vẫn NOT RUN.
+
 `NativeHeadBankSchema` mô tả source PNG/primary/body hash, scale chung, crop/neck axis/skull/chin/eyeTarget/yaw/seam/restMood của từng cell và route rõ ràng. Geometry được khai báo/đo thủ công; fingerprint bao trọn bank, không là chứng nhận identity hoặc đọc draft landmarks tự động. `appearance.bodyHeadBank` phải đúng actor/body source; `performance.sourceHead` phải dùng cùng fingerprint/actor và complete run. Không có script hoặc model tự chuyển draft thành bank.
 
 `native-head-source-1` lưu start/end global cùng sample time relative. Mọi shot trong run continuous lặp cùng toàn bộ source; clock5 giữ offset/run/source và expressions; bank/actor/track đổi làm scene identity khác. Original-history chin lookup trước camera slice vẫn dùng đúng cell nguồn. Crop/neck-axis SVG transform đồng nhất với physical eye/chin/camera bounds; ảnh chỉ stage một lần theo hash, mỗi cell dùng SVG reference và discrete visibility, không face warp/mirror/crossfade. Body source/view vẫn phải tương thích; head bank không tự tạo body turn.
