@@ -2,6 +2,8 @@
 
 Mục tiêu vẫn là câu chuyện/kịch bản/WAV bất kỳ → hai diễn viên đúng mẫu, diễn mượt → video có giọng/phụ đề/QC. EN chính, VI/JA/KO, TTS local/HTTP/command và resume/locks không thay đổi. Đây là phần nối mặt theo source, **chưa phải video hoặc factory được nghiệm thu**.
 
+Source0.51 được lưu tại `066c9e94130aada4525e4a95f2ad226e809bffe4`; phần quần chúng0.52 kế tiếp nằm trong [SUPPORTING-ACTORS.md](SUPPORTING-ACTORS.md). Các kết quả source dưới đây thuộc0.51, không thay nghiệm thu runtime của0.52 hoặc toàn factory.
+
 ## Source đã viết
 
 - `native-head-face.ts`: mouth/eyes dùng tọa độ tuyệt đối của đúng PNG; strict source SHA/canvas/crop, polygon đơn và vùng edit lồi để chặn toàn bộ hull Bezier/transform. Mặt/mũi/tóc không bị warp. Mắt lấy glyph raster từ chính source, chỉ dịch/blink glyph; mí riêng, vùng màu mẫu riêng. Đường miệng/răng/lưỡi dùng cùng hàm tạo control points để kiểm cả hai đầu aperture0–1 và giới hạn nét.

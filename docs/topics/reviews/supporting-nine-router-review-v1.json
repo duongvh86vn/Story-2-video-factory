@@ -63,7 +63,9 @@
     "runtime": "NOT RUN; user model exclusively",
     "imageAcceptance": false,
     "motionVerified": false,
-    "productionReady": false
+    "productionReady": false,
+    "deliveredExcerptSHA": "cd5c4ce80996ae186c083a383edc8958b7e330169baee1a52c880b6a61c5575c",
+    "excerptNote": "The delivered Markdown excerpt has trailing context whitespace removed. Proposal.sources retains the exact original input SHA captured by the review tool; runtime packet/output are retained unchanged. The excerpt is the pre-hardening integration snapshot, not current full source."
   },
   "usage": {
     "promptTokens": 8446,

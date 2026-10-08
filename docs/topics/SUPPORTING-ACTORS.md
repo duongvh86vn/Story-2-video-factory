@@ -1,6 +1,8 @@
 # Diễn viên phụ / quần chúng — Cuộc sống thời tiền sử
 Source0.52 · 08/10/2026. Bổ sung theo yêu cầu người dùng, giữ Lila/Karo là hai mẫu chính.
 
+Source code/artifact: `34ed5be9d4b55fd14a28ca6b81b1c408a5cedea2`, nhánh `codex/prehistoric-life`. Bản này gồm phần mặt0.51 ở commit `066c9e94130aada4525e4a95f2ad226e809bffe4`. Các commit tài liệu theo sau chỉ ghi bằng chứng/chuẩn hóa whitespace; không thay source đã build/typecheck. Dùng `git rev-parse HEAD` khi ghi kết quả test, không dùng SHA cũ/V1 làm chứng nhận phiên bản hiện hành.
+
 | Mẫu ngoại hình | Đầu / mặt | Trang phục trong rig |
 |---|---|---|
 | `prehistoric-male-bald` | Nam đầu trọc hoàn toàn; da ấm, mắt đen, cười khép miệng; giữ râu nâu ngắn theo mẫu Karo | Dùng lại asset áo một vai, thắt lưng dây và quần hai ống của Karo |

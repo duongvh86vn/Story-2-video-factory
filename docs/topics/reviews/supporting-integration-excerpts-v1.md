@@ -79,7 +79,7 @@ index 5a757e6..500430e 100644
  import {hasNativeHeadBank} from './body-head-bank.js';
  import {usesSourceColour,sourceColourSvg,sourceColourDescription} from './source-colour-art.js';
 +import {supportingHeadRegistration,supportingHeadSvg,supportingHeadDescription} from './prehistoric-supporting-head.js';
- 
+
  type Actor='lila'|'karo';
  type Point={x:number;y:number};
 @@ -22,13 +23,14 @@ export const cutoutHeadCalibration={
@@ -145,7 +145,7 @@ index 0808b7c..b1fd01d 100644
  import { Id, RigHandSchema } from '../core/identifiers.js';
  import {NativeHeadBankSchema} from '../animation/native-head-bank.js';
 +import {PREHISTORIC_SUPPORTING_MODELS,prehistoricSupportingModel} from '../topics/supporting-models.js';
- 
+
  export const HostKinds = ['mini-robot', 'stick-man'] as const;
  export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker'] as const;
 @@ -12,10 +13,12 @@ export const HostProfileSchema = z.object({
@@ -170,7 +170,7 @@ index b82922f..2ce31c0 100644
  import {nativeHeadBankDescription} from '../animation/native-head-bank.js';
  import {headCellArtDescription} from './head-cell-art.js';
 +import {prehistoricSupportingModel,prehistoricSupportingDescription,type PrehistoricSupportingModel} from './supporting-models.js';
- 
+
 -export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.51-source-face';
 +export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.52-supporting-cast';
  export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
