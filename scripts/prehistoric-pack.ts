@@ -15,6 +15,8 @@ import {nativeActorGazeDescription} from '../packages/animation/view-gaze-target
 import {headTurnArtDescription,headTurnInventory} from '../packages/topics/head-turn-art.js';
 import {nativeHeadBankDescription} from '../packages/animation/native-head-bank.js';
 import {headCellArtDescription,headCellInventory} from '../packages/topics/head-cell-art.js';
+import {prehistoricSupportingDescription,prehistoricSupportingModels} from '../packages/topics/supporting-models.js';
+import {supportingHeadDescription} from '../packages/animation/prehistoric-supporting-head.js';
 
 // Inventory existing artwork. Never regenerate or approve the rejected vector pack.
 const repo=await findRepoRoot(),dir=path.join(repo,'library/topics/prehistoric-life');
@@ -24,6 +26,11 @@ async function describe(relative:string) {
   return {file:relative,sha256:hash(bytes),width:metadata.width,height:metadata.height,hasAlpha:metadata.hasAlpha};
 }
 const references=await Promise.all(prehistoricReferences.map(async reference=>({...reference,...await describe(`docs/topics/assets/${reference.file}`)})));
+const supportingMaterials=await Promise.all(Object.values(prehistoricSupportingModels).map(async model=>{
+  const material=JSON.parse(await fs.readFile(path.join(repo,model.file.replace(/\.png$/,'.json')),'utf8')),measured=await describe(model.file);
+  if(material.sha256!==model.sha256||measured.sha256!==model.sha256||material.width!==model.width||material.height!==model.height||measured.width!==model.width||measured.height!==model.height||material.model!==model.id||material.approved!==false||material.registered!==false||material.productionReady!==false||material.motionVerified!==false)throw new Error('Supporting actor source metadata changed');
+  return {...model,...measured,approved:false,registered:false,productionReady:false,motionVerified:false};
+}));
 const candidates=await Promise.all(['lila','karo'].flatMap(id=>[
   {file:`${id}-cutout-v1.png`,kind:'full-body-cutout',status:'candidate',approved:false,source:`reference-${id}-full.png`},
   {file:`${id}-parts-candidate-v1.png`,kind:'puppet-parts-atlas',status:id==='karo'?'needs-repair-static-vision-review':'candidate-needs-layout-and-fidelity-review',approved:false,source:`reference-${id}-full.png`},
@@ -80,6 +87,8 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
 }));
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
   primaryModel:'warm-skin-close-ups',referencePolicy:'Supplemental detailed and white-face sheets do not replace or blend into the primary model.',
+  supportingCast:{...prehistoricSupportingDescription,materials:supportingMaterials,headCandidate:supportingHeadDescription,
+    codeHashes:Object.fromEntries(await Promise.all(['packages/topics/supporting-models.ts','packages/topics/supporting-workbench.ts','packages/animation/prehistoric-supporting-head.ts','packages/host/schemas.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))]))),workbench:'/api/topics/prehistoric-life/supporting-actors'},
   nativeSeatedMaterials:{...nativeSeatArtDescription,materials:nativeSeatedMaterials,codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/native-seat-art.ts')))},
   nativeSeatedSurface,
   nativeHeadTurnStudies:{...headTurnArtDescription,materials:nativeHeadTurnMaterials,fingerprint:hash(nativeHeadTurnMaterials),codeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-art.ts'))),landmarkCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-landmarks.ts'))),schemaCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-schemas.ts'))),workbenchCodeHash:hash(await fs.readFile(path.join(repo,'packages/topics/head-turn-workbench.ts')))},

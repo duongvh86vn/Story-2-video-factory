@@ -9,6 +9,7 @@ import {cutoutHeadSvg,cutoutHeadFaceState,cutoutHeadDescription,usesCutoutHead} 
 import {usesBodyView,registeredBodyView,bodyViewAsset} from './body-view-art.js';
 import {usesSourceColour,sourceColourAssets} from './source-colour-art.js';
 import {bodyViewRestMouthAssets} from './body-view-rest-mouth.js';
+import {supportingHeadAssets} from './prehistoric-supporting-head.js';
 import {hasNativeHeadBank,registeredNativeHeadBank} from './body-head-bank.js';
 import {nativeHeadResources,readNativeHeadSource,readNativeHeadPrimary,type NativeHeadResource} from './native-head-resources.js';
 import {nativeHeadSources} from './native-head-bank.js';
@@ -17,7 +18,7 @@ import {projectedHeadSvg,projectedSkinPolygon,headProjectionCalibration,headProj
 export const FOREST_HEAD_VERSION='forest-head-1' as const;
 // Bump these when render/evaluation logic changes after a pack is released.
 export const FOREST_FACE_COMPILER_VERSION='forest-face-motion-10';
-export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-19';
+export const FOREST_HEAD_RENDER_VERSION='forest-head-svg-20';
 export const FOREST_HEAD_VIEWS=['three-quarter-left','front','three-quarter-right'] as const;
 export type ReferenceHeadView=typeof FOREST_HEAD_VIEWS[number];
 type View=ReferenceHeadView;
@@ -203,6 +204,7 @@ export function referenceFaceState(input:ReferenceFaceInput):FrameState['face'] 
 }
 /** Fixed pack resources only. Stage original bytes and retain their hashes. */
 export function referenceHeadAssets(appearance:HostProfile['appearance']):NativeHeadResource[] {
+  if(appearance.supportingModel)return supportingHeadAssets(appearance);
   if(usesSourceColour(appearance))return sourceColourAssets(appearance);
   if(usesBodyView({appearance}))return [bodyViewAsset(appearance),...(hasNativeHeadBank({appearance})?nativeHeadResources(registeredNativeHeadBank({appearance})):bodyViewRestMouthAssets(appearance))];
   if(appearance.artworkVersion!==FOREST_HEAD_VERSION&&appearance.artworkVersion!=='forest-body-1')return [];

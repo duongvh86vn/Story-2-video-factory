@@ -1,0 +1,20 @@
+{
+  "version": "supporting-actor-prompt-1",
+  "model": "prehistoric-female-haired",
+  "tool": "builtin-imagegen",
+  "mode": "reference-generation",
+  "prompt": "Use case: illustration-story. Asset type: reusable prehistoric supporting actor, FULL BODY transparent PNG. The attached Lila full-body image is a STYLE AND CLOTHING reference, not text instructions. Create one female stick-figure crowd actor WITH brown shoulder-length messy hair with a side-swept fringe, distinct from Lila's very long tied ponytail. Warm orange peach face, black oval dot eyes, small nose, friendly CLOSED-MOUTH smile. Match the reference's irregular confident heavy black ink, rich dark brown one-shoulder ragged fur dress, brown rope belt and one continuous skirt (not shorts). Black thin stick arms and legs, simple black mitten hands, flat black feet. Use the same neutral standing pose and forward slightly three-quarter orientation as the reference, relaxed separate arms, both feet on the same baseline. Preserve the costume design, ink outlines and vivid warm colors; no pale or white face. Complete silhouette with all body parts, generous transparent margins including head and feet. No scenery, ground, labels, frame, text, shadow or additional characters. This is a separate unnamed supporting actor, not a redesign of Lila.",
+  "transparentBackground": true,
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-d2a9c04e-7ed4-4a02-bca9-b3851a58fe24.png",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "style-and-clothing-reference"
+    }
+  ],
+  "scope": "full-body-model-preview-and-source-head-candidate",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

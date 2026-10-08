@@ -1571,6 +1571,13 @@
                                 "karo"
                               ]
                             },
+                            "supportingModel": {
+                              "type": "string",
+                              "enum": [
+                                "prehistoric-male-bald",
+                                "prehistoric-female-haired"
+                              ]
+                            },
                             "artworkVersion": {
                               "type": "string",
                               "enum": [
@@ -2984,6 +2991,13 @@
                                 "enum": [
                                   "lila",
                                   "karo"
+                                ]
+                              },
+                              "supportingModel": {
+                                "type": "string",
+                                "enum": [
+                                  "prehistoric-male-bald",
+                                  "prehistoric-female-haired"
                                 ]
                               },
                               "artworkVersion": {

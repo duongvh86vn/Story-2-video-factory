@@ -12,8 +12,9 @@ import {nativeActorGazeDescription} from '../animation/view-gaze-target.js';
 import {headTurnArtDescription} from './head-turn-art.js';
 import {nativeHeadBankDescription} from '../animation/native-head-bank.js';
 import {headCellArtDescription} from './head-cell-art.js';
+import {prehistoricSupportingModel,prehistoricSupportingDescription,type PrehistoricSupportingModel} from './supporting-models.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.51-source-face';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.52-supporting-cast';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -36,6 +37,9 @@ export const forestPalette={ink:'#2B1710',skin:'#F2C58D',skinShadow:'#C88A53',ha
 export function topicAppearance(id:'lila'|'karo'):ActorDefinition['appearance'] {
   return {outline:'#080604',shell:forestPalette.skin,screen:forestPalette.skin,accent:forestPalette.fur,badge:forestPalette.hair,
     headScale:id==='lila'?1:1.04,bodyScale:id==='lila'?1:1.08,strokeWidth:16*318/(id==='lila'?766:716),characterVariant:id,artworkVersion:'forest-body-1'};
+}
+export function supportingTopicAppearance(model:PrehistoricSupportingModel):ActorDefinition['appearance']{
+  return {...topicAppearance(prehistoricSupportingModel(model).bodyTemplate),supportingModel:model};
 }
 export function topicContext(config:FactoryConfig) {
   if(!config.topic.id)return null;
@@ -65,7 +69,8 @@ export function topicContext(config:FactoryConfig) {
       })},
     cast:[{id:'lila',name:'Lila',description:'Female prehistoric stick actor: long dark brown hair with side-swept fringe, warm face, asymmetric ragged fur dress.',appearance:topicAppearance('lila')},
       {id:'karo',name:'Karo',description:'Male prehistoric stick actor: tousled short dark brown hair, full beard around expressive mouth, asymmetric fur tunic and ragged shorts with two separate legs.',appearance:topicAppearance('karo')}],
-    acting:'These are reusable visual actors inside the events. Assign the two principal sourced roles to IDs lila (female model) and karo (male model). Keep each participant name, role, identity and evidence from narration unchanged: Lila/Karo are the model names, not permission to rename story people. Do not invent a presenter, dialogue, historical identity or extra events. Only source-supported dialogue gets speakingSegmentIds. A recorded narrator stays off screen.',
+    supportingCast:prehistoricSupportingDescription,
+    acting:'These are reusable visual actors inside the events. Assign the two principal sourced roles to IDs lila (female model) and karo (male model). Additional source-supported participants use their own stable actor IDs with appearance.supportingModel=prehistoric-male-bald or prehistoric-female-haired and the matching Karo/Lila source costume. Multiple participants may share a visual model, never an actor ID. A supporting person may be the camera primary in a shot while keeping their supportingModel and identity. Keep each participant name, role, identity and evidence from narration unchanged: visual model names are not permission to rename story people. Do not invent a presenter, crowds, dialogue, historical identity or extra events. Only source-supported dialogue gets speakingSegmentIds. A recorded narrator stays off screen.',
     design:'Thin continuous dark curved limbs, grounded feet, anatomically stable elbows, coordinated body action, head turns and partner/object gaze. Rich forest greens, warm ochre fur and skin, vivid fire. Layered forest depth with textured artwork. Never replace the cast with portraits or slides.',
     freedoms:'Staging, narrative action, environments, props, lighting and camera vary with the input story. Do not force machinery or a fixed food scene. Use the palette as the reusable art direction, not an unlit flat background.'};
 }
@@ -77,9 +82,11 @@ export function applyTopicCast(board:Storyboard,config:FactoryConfig):void {
   for(const shot of board.shots){
     const scene=shot.cinematic?.actorScene;if(!scene)continue;
     for(const character of [...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)]){
-      if(character.id!=='lila'&&character.id!=='karo')throw new Error(`${shot.id}: topic cast must use lila/karo IDs; preserve source roles without inventing new cast`);
+      const principal=character.id==='lila'||character.id==='karo';
+      if(principal&&character.appearance.supportingModel)throw new Error(`${shot.id}: principal lila/karo IDs cannot select a supporting model`);
+      if(!principal&&!character.appearance.supportingModel)throw new Error(`${shot.id}: additional sourced cast requires its own actor ID and explicit supportingModel`);
       character.kind='stick-man';
-      character.appearance=topicAppearance(character.id);
+      character.appearance=principal?topicAppearance(character.id as 'lila'|'karo'):supportingTopicAppearance(character.appearance.supportingModel!);
       // Costume and head artwork are versioned rig assets, not per-shot model drawings.
       delete character.costume;
     }

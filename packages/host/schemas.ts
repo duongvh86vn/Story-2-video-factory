@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Id, RigHandSchema } from '../core/identifiers.js';
 import {NativeHeadBankSchema} from '../animation/native-head-bank.js';
+import {PREHISTORIC_SUPPORTING_MODELS,prehistoricSupportingModel} from '../topics/supporting-models.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker'] as const;
@@ -12,10 +13,12 @@ export const HostProfileSchema = z.object({
     headScale: z.number().min(0.75).max(1.25), bodyScale: z.number().min(0.75).max(1.25),
     strokeWidth: z.number().min(2).max(10),
     characterVariant: z.enum(['lila','karo']).optional(),
+    supportingModel:z.enum(PREHISTORIC_SUPPORTING_MODELS).optional(),
     artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
     bodyView:z.enum(['three-quarter-right','three-quarter-left']).optional(),
     bodyHeadBank:NativeHeadBankSchema.optional(),
     bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1']).optional(),bodyEyes:z.literal('registered-eyes-v1').optional(),bodyExpressions:z.literal('registered-expressions-v1').optional(),bodyMotion:z.literal('registered-locomotion-v1').optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.literal('registered-secondary-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
+      if(a.supportingModel&&(a.artworkVersion!=='forest-body-1'||a.characterVariant!==prehistoricSupportingModel(a.supportingModel).bodyTemplate||a.bodyView||a.bodyHeadBank||a.bodySpeech||a.bodyEyes||a.bodyExpressions||a.bodyMotion||a.bodySeat||a.bodySecondary||a.sourceColour))ctx.addIssue({code:'custom',message:'Supporting model requires its matching source costume; primary/native-view face and motion registrations cannot be reused'});
       if(a.artworkVersion==='forest-body-view-1'&&(!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Authored body candidate requires its actor and registered view'});
       if(a.bodyView&&a.artworkVersion!=='forest-body-view-1')ctx.addIssue({code:'custom',message:'bodyView requires the authored body candidate artwork version'});
       if(a.bodyHeadBank&&(a.artworkVersion!=='forest-body-view-1'||a.characterVariant!==a.bodyHeadBank.actor||!a.bodyHeadBank.bodyViews.some(v=>v.view===a.bodyView)||a.bodySpeech||a.bodyEyes||a.bodyExpressions||a.bodySecondary))ctx.addIssue({code:'custom',message:'Head bank requires its actor/body source and independent cell capabilities; fixed-view face/hair overlays cannot be reused'});

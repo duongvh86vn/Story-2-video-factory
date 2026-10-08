@@ -1,0 +1,76 @@
+{
+  "version": "supporting-source-review-1",
+  "sourceOnly": true,
+  "packetOutputSha256": "6f5d8b9a34a7bba1bf2d882d90c9a415354bbeec7a78c386128f7ddef308431e",
+  "proposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [
+        {
+          "file": "packages/animation/prehistoric-supporting-head.ts",
+          "issue": "The generated SVG uses the same global clipPath ID, supporting-head-clip, for every supporting actor instance.",
+          "evidence": "supportingHeadSvg() emits <clipPath id=\"supporting-head-clip\"> for both model types and every rendered instance; SVG ID references are document-global, so duplicate IDs can cause one actor's clip definition to be selected for another.",
+          "fix": "Generate a unique, deterministic clipPath ID per actor instance or model registration and reference that ID from the corresponding group."
+        }
+      ],
+      "limits": [
+        "No demonstrable source defect was found in the supplied excerpts concerning independent actor IDs, sourced role/dialogue preservation, principal-actor preservation, false production flags, or exact Karo/Lila costume declarations.",
+        "PNG pixel content, costume geometry, head calibration, views, motion, runtime behavior, API behavior, and production acceptance remain unverified from source and diff data only.",
+        "The excerpts do not establish whether each supporting participant is actually assigned a distinct runtime ID; that requires the omitted storyboard/actor-ingestion paths."
+      ]
+    },
+    "usage": {
+      "promptTokens": 8446,
+      "completionTokens": 749,
+      "totalTokens": 9195
+    },
+    "model": "cx/gpt-5.6-luna",
+    "purpose": "source-only-review",
+    "fingerprint": "b9b1f32e2f0563d3fde4130deb7a91bd54eb76e18adeafcd5c5eeb37ce715edd",
+    "slot": 1,
+    "prompt": "Review the new supporting-actor implementation for at most 3 concrete integration bugs. User requires bald male and haired female stick actors with exact reused Karo/Lila costume assets, independent per-person IDs, sourced roles/dialogue, preserved main actors and false production flags. Generated fullbody PNGs are preview and own head sources only. This is a first fixed-source engineering candidate, not accepted views/motion/final video. No code, tests, commands, renderer, sampler, API or tools execution. Read supplied code and diff data only. Do not invent missing-feature bugs for declared pending views/production. Reply compact JSON {findings:[{file,issue,evidence,fix}],limits:[...]}; distinguish demonstrable source defect from unverified PNG/geometry/motion. Do not certify artwork or quota saving.",
+    "sources": [
+      {
+        "file": "packages/topics/supporting-models.ts",
+        "sha256": "67db6a856cfe991d19af2be079438166ed33d952ffe54df3ce445adaf8d087c7"
+      },
+      {
+        "file": "packages/animation/prehistoric-supporting-head.ts",
+        "sha256": "be0567955786f709294c3c6d570ecc309348d49df42e7f8ace03a39e16298078"
+      },
+      {
+        "file": "packages/topics/supporting-workbench.ts",
+        "sha256": "2c0ce89a9acf581eabcab667af7320ff0cda95b51386ad02799d379da80ecb1f"
+      },
+      {
+        "file": "docs/topics/reviews/supporting-integration-excerpts-v1.md",
+        "sha256": "8d89cf33856f01027d932226411bcb9de7bf0e217395984018d94febb92fe66f"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-08T10:42:34.560Z"
+  },
+  "parentAssessment": {
+    "finding": "Shared local clipPath ID was a compositing risk; hardened to a deterministic actor/model/source hash. Broader actor scoping was omitted from the review and not proven defective.",
+    "integration": "Manually changed one clip definition/reference and added a declared different-actor clip assertion. No model code was executed or automatically applied.",
+    "reviewedHeadSHA": "be0567955786f709294c3c6d570ecc309348d49df42e7f8ace03a39e16298078",
+    "finalHeadSHA": "9faa98ee18e40e2e4efb4596c35d04dc9bdf8eedf9bc28d5b8df5b9de61a6f4c",
+    "runtime": "NOT RUN; user model exclusively",
+    "imageAcceptance": false,
+    "motionVerified": false,
+    "productionReady": false
+  },
+  "usage": {
+    "promptTokens": 8446,
+    "completionTokens": 749,
+    "totalTokens": 9195
+  },
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

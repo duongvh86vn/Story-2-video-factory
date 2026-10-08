@@ -97,6 +97,7 @@ function overlaps(items: Array<{startMs:number;endMs:number}>, label:string, dur
 }
 /** Applies equally to compiled plans and direct random-access inspection. */
 function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
+  if(profile.appearance.supportingModel&&(plan.gazes.length||plan.turns?.length||plan.headTurns?.length))throw new Error('needs-supporting-views: supporting head currently has one source orientation; target gaze and turns require its own registrations');
   validateNativeHeadBankTrack(plan,profile);
   if(plan.sourceBody){
     if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate');

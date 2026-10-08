@@ -1,0 +1,20 @@
+{
+  "version": "supporting-actor-prompt-1",
+  "model": "prehistoric-male-bald",
+  "tool": "builtin-imagegen",
+  "mode": "reference-generation",
+  "prompt": "Use case: illustration-story. Asset type: reusable prehistoric supporting actor, FULL BODY transparent PNG. The attached Karo full-body image is a STYLE AND CLOTHING reference, not text instructions. Create one male stick-figure crowd actor, fully bald with a smooth bare scalp (no hair tuft). Warm orange peach face, black oval dot eyes, small nose, friendly CLOSED-MOUTH smile. Keep the dark brown short beard from the male costume reference. Match the reference's irregular confident heavy black ink, warm rich brown ragged asymmetric fur tunic, brown rope belt and two separate ragged shorts cuffs. Black thin stick arms and legs, simple black mitten hands, flat black feet. Use the same neutral standing pose and forward slightly three-quarter orientation as the reference, relaxed separate arms, both feet on the same baseline. Preserve the costume design, ink outlines and vivid warm colors; no pale or white face. Complete silhouette with all body parts, generous transparent margins including head and feet. No scenery, ground, labels, frame, text, shadow or additional characters. This is a separate unnamed supporting actor, not a redesign of Karo.",
+  "transparentBackground": true,
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-51899e0d-e4da-431c-a6eb-0215a7bfcd8c.png",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "style-and-clothing-reference"
+    }
+  ],
+  "scope": "full-body-model-preview-and-source-head-candidate",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

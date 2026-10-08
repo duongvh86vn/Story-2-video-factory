@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.51-source-face",
+  "version": "forest-tribe-0.52-supporting-cast",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -7,6 +7,208 @@
   "motionAcceptance": "pending",
   "primaryModel": "warm-skin-close-ups",
   "referencePolicy": "Supplemental detailed and white-face sheets do not replace or blend into the primary model.",
+  "supportingCast": {
+    "version": "prehistoric-supporting-1",
+    "templates": {
+      "prehistoric-male-bald": {
+        "id": "prehistoric-male-bald",
+        "label": "Quần chúng nam đầu trọc",
+        "bodyTemplate": "karo",
+        "hair": "bald",
+        "beard": "short-dark-brown",
+        "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+        "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+        "width": 910,
+        "height": 1728,
+        "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
+      },
+      "prehistoric-female-haired": {
+        "id": "prehistoric-female-haired",
+        "label": "Quần chúng nữ có tóc",
+        "bodyTemplate": "lila",
+        "hair": "brown-shoulder-length",
+        "beard": "none",
+        "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+        "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+        "width": 939,
+        "height": 1675,
+        "costume": "Reuse Lila source one-shoulder fur dress, rope belt and single continuous skirt; do not substitute shorts."
+      }
+    },
+    "identity": "Each sourced participant has a distinct stable actor ID/name/role/sourceRefs. Many actors may share a visual template. Do not rename a person to a model ID or invent dialogue/crowds absent from the input.",
+    "costume": "Source body assets, garment mesh, cuffs, hands, feet and limb proportions are reused from the corresponding main actor. Generated full-body images are model previews and head sources, not replacement garment textures.",
+    "views": [
+      "source-orientation"
+    ],
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "pending": [
+      "native face and gaze acceptance",
+      "partner-facing/profile/rear views",
+      "continuous turns",
+      "crowd staging and normal-speed multi-actor video acceptance"
+    ],
+    "materials": [
+      {
+        "id": "prehistoric-male-bald",
+        "label": "Quần chúng nam đầu trọc",
+        "bodyTemplate": "karo",
+        "hair": "bald",
+        "beard": "short-dark-brown",
+        "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+        "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+        "width": 910,
+        "height": 1728,
+        "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume.",
+        "hasAlpha": true,
+        "approved": false,
+        "registered": false,
+        "productionReady": false,
+        "motionVerified": false
+      },
+      {
+        "id": "prehistoric-female-haired",
+        "label": "Quần chúng nữ có tóc",
+        "bodyTemplate": "lila",
+        "hair": "brown-shoulder-length",
+        "beard": "none",
+        "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+        "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+        "width": 939,
+        "height": 1675,
+        "costume": "Reuse Lila source one-shoulder fur dress, rope belt and single continuous skirt; do not substitute shorts.",
+        "hasAlpha": true,
+        "approved": false,
+        "registered": false,
+        "productionReady": false,
+        "motionVerified": false
+      }
+    ],
+    "headCandidate": {
+      "version": "prehistoric-supporting-head-1",
+      "models": {
+        "prehistoric-male-bald": {
+          "id": "prehistoric-male-bald",
+          "label": "Quần chúng nam đầu trọc",
+          "bodyTemplate": "karo",
+          "hair": "bald",
+          "beard": "short-dark-brown",
+          "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+          "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+          "width": 910,
+          "height": 1728,
+          "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
+        },
+        "prehistoric-female-haired": {
+          "id": "prehistoric-female-haired",
+          "label": "Quần chúng nữ có tóc",
+          "bodyTemplate": "lila",
+          "hair": "brown-shoulder-length",
+          "beard": "none",
+          "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+          "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+          "width": 939,
+          "height": 1675,
+          "costume": "Reuse Lila source one-shoulder fur dress, rope belt and single continuous skirt; do not substitute shorts."
+        }
+      },
+      "calibration": {
+        "prehistoric-male-bald": {
+          "scale": 0.25,
+          "neck": {
+            "x": 485,
+            "y": 630
+          },
+          "chin": {
+            "left": {
+              "x": 451,
+              "y": 564
+            },
+            "right": {
+              "x": 619,
+              "y": 558
+            }
+          },
+          "eyes": [
+            {
+              "x": 490,
+              "y": 333
+            },
+            {
+              "x": 632,
+              "y": 320
+            }
+          ],
+          "mouth": {
+            "x": 559,
+            "y": 463
+          },
+          "bounds": {
+            "left": 264,
+            "right": 762,
+            "top": 117,
+            "bottom": 635
+          },
+          "clip": "M264 117H762V530L672 586L599 635L537 615L485 631L416 582L325 533L264 440Z",
+          "mouthCover": "M484 442Q561 433 635 441L636 482Q563 515 484 482Z",
+          "mouthColor": "#FFAA64"
+        },
+        "prehistoric-female-haired": {
+          "scale": 0.25,
+          "neck": {
+            "x": 518,
+            "y": 596
+          },
+          "chin": {
+            "left": {
+              "x": 481,
+              "y": 523
+            },
+            "right": {
+              "x": 690,
+              "y": 508
+            }
+          },
+          "eyes": [
+            {
+              "x": 553,
+              "y": 391
+            },
+            {
+              "x": 670,
+              "y": 372
+            }
+          ],
+          "mouth": {
+            "x": 590,
+            "y": 474
+          },
+          "bounds": {
+            "left": 210,
+            "right": 852,
+            "top": 75,
+            "bottom": 705
+          },
+          "clip": "M210 75H852V604L780 663L676 698L574 687L556 615L533 609L519 565L500 613L458 624L405 674L322 705L210 653Z",
+          "mouthCover": "M517 449Q585 441 659 449L663 487Q589 513 516 485Z",
+          "mouthColor": "#FFAC68"
+        }
+      },
+      "status": "manual-unvalidated-source-head-candidate",
+      "approved": false,
+      "productionReady": false,
+      "motionVerified": false,
+      "face": "Native closed happy smile remains in silence. Existing provisional local blink/round/frown/activity overlays use each model source coordinates. Not registered bank3 face, verified gaze, phonemes or accepted motion."
+    },
+    "codeHashes": {
+      "packages/topics/supporting-models.ts": "67db6a856cfe991d19af2be079438166ed33d952ffe54df3ce445adaf8d087c7",
+      "packages/topics/supporting-workbench.ts": "2c0ce89a9acf581eabcab667af7320ff0cda95b51386ad02799d379da80ecb1f",
+      "packages/animation/prehistoric-supporting-head.ts": "9faa98ee18e40e2e4efb4596c35d04dc9bdf8eedf9bc28d5b8df5b9de61a6f4c",
+      "packages/host/schemas.ts": "3f194a8b532c60b2bf00afa5b3a7753b11a2c180c2c3ad101e8b136ee2d9455c"
+    },
+    "workbench": "/api/topics/prehistoric-life/supporting-actors"
+  },
   "nativeSeatedMaterials": {
     "version": "native-seat-material-1",
     "fingerprint": "6c501c83b77df0c9b1898ba4143bbb2b30531b906a8b3a7998a5bd9188f2d444",
@@ -4842,7 +5044,7 @@
       }
     },
     "faceCompilerVersion": "forest-face-motion-10",
-    "rendererVersion": "forest-head-svg-19",
+    "rendererVersion": "forest-head-svg-20",
     "facialCalibration": {
       "eyeStretch": {
         "x": 1.25,
@@ -5060,6 +5262,122 @@
           "clip": "M0 0H377V255L283 281L229 291L196 279L165 247H0Z",
           "mouthCover": "M199 181Q245 166 293 181L288 216Q246 243 207 221Z"
         }
+      },
+      "supporting": {
+        "version": "prehistoric-supporting-head-1",
+        "models": {
+          "prehistoric-male-bald": {
+            "id": "prehistoric-male-bald",
+            "label": "Quần chúng nam đầu trọc",
+            "bodyTemplate": "karo",
+            "hair": "bald",
+            "beard": "short-dark-brown",
+            "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+            "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+            "width": 910,
+            "height": 1728,
+            "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
+          },
+          "prehistoric-female-haired": {
+            "id": "prehistoric-female-haired",
+            "label": "Quần chúng nữ có tóc",
+            "bodyTemplate": "lila",
+            "hair": "brown-shoulder-length",
+            "beard": "none",
+            "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+            "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+            "width": 939,
+            "height": 1675,
+            "costume": "Reuse Lila source one-shoulder fur dress, rope belt and single continuous skirt; do not substitute shorts."
+          }
+        },
+        "calibration": {
+          "prehistoric-male-bald": {
+            "scale": 0.25,
+            "neck": {
+              "x": 485,
+              "y": 630
+            },
+            "chin": {
+              "left": {
+                "x": 451,
+                "y": 564
+              },
+              "right": {
+                "x": 619,
+                "y": 558
+              }
+            },
+            "eyes": [
+              {
+                "x": 490,
+                "y": 333
+              },
+              {
+                "x": 632,
+                "y": 320
+              }
+            ],
+            "mouth": {
+              "x": 559,
+              "y": 463
+            },
+            "bounds": {
+              "left": 264,
+              "right": 762,
+              "top": 117,
+              "bottom": 635
+            },
+            "clip": "M264 117H762V530L672 586L599 635L537 615L485 631L416 582L325 533L264 440Z",
+            "mouthCover": "M484 442Q561 433 635 441L636 482Q563 515 484 482Z",
+            "mouthColor": "#FFAA64"
+          },
+          "prehistoric-female-haired": {
+            "scale": 0.25,
+            "neck": {
+              "x": 518,
+              "y": 596
+            },
+            "chin": {
+              "left": {
+                "x": 481,
+                "y": 523
+              },
+              "right": {
+                "x": 690,
+                "y": 508
+              }
+            },
+            "eyes": [
+              {
+                "x": 553,
+                "y": 391
+              },
+              {
+                "x": 670,
+                "y": 372
+              }
+            ],
+            "mouth": {
+              "x": 590,
+              "y": 474
+            },
+            "bounds": {
+              "left": 210,
+              "right": 852,
+              "top": 75,
+              "bottom": 705
+            },
+            "clip": "M210 75H852V604L780 663L676 698L574 687L556 615L533 609L519 565L500 613L458 624L405 674L322 705L210 653Z",
+            "mouthCover": "M517 449Q585 441 659 449L663 487Q589 513 516 485Z",
+            "mouthColor": "#FFAC68"
+          }
+        },
+        "status": "manual-unvalidated-source-head-candidate",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false,
+        "face": "Native closed happy smile remains in silence. Existing provisional local blink/round/frown/activity overlays use each model source coordinates. Not registered bank3 face, verified gaze, phonemes or accepted motion."
       },
       "sourceColour": {
         "version": "original-rgb-v2",
@@ -6426,13 +6744,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "c070ec840a1edca73d51e75f7429b8cccff8d7b8649ad4dc32613feb34c67296",
+      "fingerprint": "d2028efe93d31892aeddbcbbf33c30de77f1e077bb357e2b92114b35add96dc9",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "ba9cc794c36a257a83488e557d44647c3a336fb6d10589137a69663fc3a8aaff",
+    "fingerprint": "0f5d8728f35d5ae43df137032994f70391bbb279b21840fdd811f2918800c3d1",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -6448,15 +6766,15 @@
       "library/topics/prehistoric-life/rig-v1/head-prompts.json",
       "library/topics/prehistoric-life/rig-v1/front-prompts.json"
     ],
-    "codeHash": "01315d066aaeeac348a4c3936c7a0bc2317e43cd053c1f4e740c5336b39c654a",
-    "cutoutCodeHash": "75bb804b339e7884531917d50bd80f33e6a742edc14c5b7daa5e0e8c638e8ee2",
+    "codeHash": "f0118f3761ef602cf2f323a049cbb0cd435b0f467d941e9ccee3e7cfd00bdf26",
+    "cutoutCodeHash": "ece159d21349aa7fd37014b5e8497d6216d2e8d990b766d664689bc10373158a",
     "projectionCodeHash": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22"
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-35",
+    "compilerVersion": "forest-source-body-motion-36",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "869097797079caf9ee0c8c3e6b0f4d18a6e4dc86b219e6f57e87604ce575c021",
+    "fingerprint": "62077a7220c5fbcc6d9b8f723a9967da349268f853025bb3117c29344522a8e6",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -8529,6 +8847,122 @@
           "mouthCover": "M199 181Q245 166 293 181L288 216Q246 243 207 221Z"
         }
       },
+      "supporting": {
+        "version": "prehistoric-supporting-head-1",
+        "models": {
+          "prehistoric-male-bald": {
+            "id": "prehistoric-male-bald",
+            "label": "Quần chúng nam đầu trọc",
+            "bodyTemplate": "karo",
+            "hair": "bald",
+            "beard": "short-dark-brown",
+            "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+            "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca",
+            "width": 910,
+            "height": 1728,
+            "costume": "Reuse Karo source tunic, rope belt and two separate shorts cuffs; do not redraw a new costume."
+          },
+          "prehistoric-female-haired": {
+            "id": "prehistoric-female-haired",
+            "label": "Quần chúng nữ có tóc",
+            "bodyTemplate": "lila",
+            "hair": "brown-shoulder-length",
+            "beard": "none",
+            "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+            "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+            "width": 939,
+            "height": 1675,
+            "costume": "Reuse Lila source one-shoulder fur dress, rope belt and single continuous skirt; do not substitute shorts."
+          }
+        },
+        "calibration": {
+          "prehistoric-male-bald": {
+            "scale": 0.25,
+            "neck": {
+              "x": 485,
+              "y": 630
+            },
+            "chin": {
+              "left": {
+                "x": 451,
+                "y": 564
+              },
+              "right": {
+                "x": 619,
+                "y": 558
+              }
+            },
+            "eyes": [
+              {
+                "x": 490,
+                "y": 333
+              },
+              {
+                "x": 632,
+                "y": 320
+              }
+            ],
+            "mouth": {
+              "x": 559,
+              "y": 463
+            },
+            "bounds": {
+              "left": 264,
+              "right": 762,
+              "top": 117,
+              "bottom": 635
+            },
+            "clip": "M264 117H762V530L672 586L599 635L537 615L485 631L416 582L325 533L264 440Z",
+            "mouthCover": "M484 442Q561 433 635 441L636 482Q563 515 484 482Z",
+            "mouthColor": "#FFAA64"
+          },
+          "prehistoric-female-haired": {
+            "scale": 0.25,
+            "neck": {
+              "x": 518,
+              "y": 596
+            },
+            "chin": {
+              "left": {
+                "x": 481,
+                "y": 523
+              },
+              "right": {
+                "x": 690,
+                "y": 508
+              }
+            },
+            "eyes": [
+              {
+                "x": 553,
+                "y": 391
+              },
+              {
+                "x": 670,
+                "y": 372
+              }
+            ],
+            "mouth": {
+              "x": 590,
+              "y": 474
+            },
+            "bounds": {
+              "left": 210,
+              "right": 852,
+              "top": 75,
+              "bottom": 705
+            },
+            "clip": "M210 75H852V604L780 663L676 698L574 687L556 615L533 609L519 565L500 613L458 624L405 674L322 705L210 653Z",
+            "mouthCover": "M517 449Q585 441 659 449L663 487Q589 513 516 485Z",
+            "mouthColor": "#FFAC68"
+          }
+        },
+        "status": "manual-unvalidated-source-head-candidate",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false,
+        "face": "Native closed happy smile remains in silence. Existing provisional local blink/round/frown/activity overlays use each model source coordinates. Not registered bank3 face, verified gaze, phonemes or accepted motion."
+      },
       "sourceColour": {
         "version": "original-rgb-v2",
         "productionReady": false,
@@ -9894,7 +10328,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "c070ec840a1edca73d51e75f7429b8cccff8d7b8649ad4dc32613feb34c67296",
+      "fingerprint": "d2028efe93d31892aeddbcbbf33c30de77f1e077bb357e2b92114b35add96dc9",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -9908,12 +10342,12 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "3d46117560821c540e807851d15a5caf24d0341737d086a1f0053bbe20762118",
+    "codeHash": "d861b769428b53ce74fae22604625bdba853bb9f9e316ce91f01b08ed05ebf25",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
-    "compilerCodeHash": "37ab0f82e801c30c9fb92eedf996662d138834456dcf232847258af7063f379b",
+    "compilerCodeHash": "374554a5e8d47307ef439c5c5767e3c38c1697c9046349389806dcf7b56d6d32",
     "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
     "cameraCodeHash": "e9bf2d4a816df18d28ddba2496fdd840bf87a4163cc82cf43825620d1c82d52a",
     "sourceBodyCodeHash": "d3b78d1283a37ea6e2470972ca33640e0bed46d1c6aa5ed8e43473ee56174e3c",

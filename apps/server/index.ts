@@ -45,6 +45,7 @@ import {headTurnInventory,headTurnMaterial} from '../../packages/topics/head-tur
 import {headCellArtDescription,headCellInventory,headCellMaterial,HeadCellFileSchema} from '../../packages/topics/head-cell-art.js';
 import {HeadCellCheckRequestSchema,checkBoundHeadCellDraft} from '../../packages/topics/head-cell-landmarks.js';
 import {headCellWorkbench,headCellEditorScript} from '../../packages/topics/head-cell-workbench.js';
+import {supportingActorWorkbench,supportingActorManifest,supportingActorImage} from '../../packages/topics/supporting-workbench.js';
 import {HeadTurnCheckRequestSchema,HeadTurnFileSchema} from '../../packages/topics/head-turn-schemas.js';
 import {checkBoundHeadTurnDraft} from '../../packages/topics/head-turn-landmarks.js';
 import {Moods} from '../../packages/animation/schemas.js';
@@ -288,7 +289,10 @@ export async function buildServer(options: ServerOptions = {}) {
     return { projects: projects.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)) };
   });
   app.get('/api/9router',async()=>{await loadConfig(projectsRoot);try{return await discoverNineRouter();}catch{throw new ApiError(503,'9router unavailable or authentication failed. Configure MODEL_GATEWAY_KEY and start the local service.','ROUTER_UNAVAILABLE');}});
-  app.get('/api/topics',async()=>({topics:[{id:'prehistoric-life',name:'Cuộc sống thời tiền sử',cast:['Lila','Karo'],visualAcceptance:'pending',readiness:prehistoricReadiness,inputModes:['script','wav','story'],preview:'/api/topics/prehistoric-life/preview',compare:'/api/topics/prehistoric-life/compare'}]}));
+  app.get('/api/topics',async()=>({topics:[{id:'prehistoric-life',name:'Cuộc sống thời tiền sử',cast:['Lila','Karo'],supportingCast:supportingActorManifest(),visualAcceptance:'pending',readiness:prehistoricReadiness,inputModes:['script','wav','story'],preview:'/api/topics/prehistoric-life/preview',compare:'/api/topics/prehistoric-life/compare'}]}));
+  app.get('/api/topics/prehistoric-life/supporting-actors',async(_request,reply)=>reply.type('text/html').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(supportingActorWorkbench()));
+  app.get('/api/topics/prehistoric-life/supporting-actors/manifest',async()=>supportingActorManifest());
+  app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/supporting-actors/:file',async(request,reply)=>reply.type('image/png').header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(await supportingActorImage(repo,request.params.file)));
   app.get<{Params:{topic:string};Querystring:{light?:string}}>('/api/topics/:topic/preview',async(request,reply)=>{
     z.literal('prehistoric-life').parse(request.params.topic);const light=z.enum(['day','sunset','night']).default('day').parse(request.query.light);
     const images=await Promise.all(['lila','karo'].map(async id=>{const bytes=await fs.readFile(await boundPath(repo,`library/topics/prehistoric-life/${id}-cutout-v1.png`));return bytes.toString('base64');}));

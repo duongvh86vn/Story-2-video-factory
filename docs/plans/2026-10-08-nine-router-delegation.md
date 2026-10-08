@@ -1,4 +1,6 @@
-# Phân việc triển khai qua 9router — source0.51
+# Phân việc triển khai qua 9router — source0.52
+
+Lượt quần chúng0.52 dùng1 request GPT Luna review source/excerpt hẹp, cap1.500 output, không ảnh/toàn repo/retry:8.446 input +749 output =9.195 token. Finding local clip ID được parent harden theo actor/model/source; không có model code tự áp dụng. [Report/binding/giới hạn](../topics/reviews/supporting-nine-router-review-v1.json), [source và mẫu quần chúng](../topics/SUPPORTING-ACTORS.md). Đây là số token báo thực; không là bằng chứng tỷ lệ tiết kiệm quota.
 
 ## Lượt mới source0.51 và cách kiểm soát quota
 

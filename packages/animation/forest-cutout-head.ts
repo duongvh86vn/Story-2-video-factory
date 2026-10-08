@@ -4,6 +4,7 @@ import {hash} from '../core/utils.js';
 import {usesBodyView,bodyViewHeadCalibration,bodyViewHeadSvg,bodyViewDescription} from './body-view-art.js';
 import {hasNativeHeadBank} from './body-head-bank.js';
 import {usesSourceColour,sourceColourSvg,sourceColourDescription} from './source-colour-art.js';
+import {supportingHeadRegistration,supportingHeadSvg,supportingHeadDescription} from './prehistoric-supporting-head.js';
 
 type Actor='lila'|'karo';
 type Point={x:number;y:number};
@@ -22,13 +23,14 @@ export const cutoutHeadCalibration={
 } as const;
 export const CUTOUT_HEAD_VERSION='forest-cutout-head-2';
 export function usesCutoutHead(profile:HostProfile){return profile.appearance.artworkVersion==='forest-body-1'||usesBodyView(profile);}
-export function cutoutHeadRegistration(profile:HostProfile){return usesBodyView(profile)?bodyViewHeadCalibration(profile):cutoutHeadCalibration[profile.appearance.characterVariant!];}
+export function cutoutHeadRegistration(profile:HostProfile){return profile.appearance.supportingModel?supportingHeadRegistration(profile):usesBodyView(profile)?bodyViewHeadCalibration(profile):cutoutHeadCalibration[profile.appearance.characterVariant!];}
 export function cutoutHeadChin(profile:HostProfile,side:'left'|'right'):Point {
   if(hasNativeHeadBank(profile))throw new Error('needs-head-source-phase: changing head chin requires its selected original cell/time');
   const c=cutoutHeadRegistration(profile);
   return {x:(c.chin[side].x-c.neck.x)*c.scale,y:(c.chin[side].y-c.neck.y)*c.scale};
 }
 export function cutoutHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string):string {
+  if(profile.appearance.supportingModel)return supportingHeadSvg(profile,imageUrl);
   const originalColour=usesSourceColour(profile.appearance);
   if(usesBodyView(profile))return bodyViewHeadSvg(profile,imageUrl);
   const actor=profile.appearance.characterVariant!,c=cutoutHeadCalibration[actor];
@@ -55,7 +57,7 @@ export function cutoutHeadFaceState(input:{blink:number;round:number;frown:numbe
     'mouth-talk-round-front':{opacity:roundedSpeaking?1:0,scaleY:roundedSpeaking?.6+input.speechLevel!*.55:1},
     'mouth-round-front':{opacity:round*(1-frown)},'mouth-frown-front':{opacity:frown}};
 }
-export function cutoutHeadDescription(){return {version:CUTOUT_HEAD_VERSION,calibration:cutoutHeadCalibration,sourceColour:sourceColourDescription,authoredViews:bodyViewDescription,fingerprint:hash({version:CUTOUT_HEAD_VERSION,cutoutHeadCalibration,views:bodyViewDescription.fingerprint,colour:sourceColourDescription.fingerprint}),
+export function cutoutHeadDescription(){return {version:CUTOUT_HEAD_VERSION,calibration:cutoutHeadCalibration,supporting:supportingHeadDescription,sourceColour:sourceColourDescription,authoredViews:bodyViewDescription,fingerprint:hash({version:CUTOUT_HEAD_VERSION,cutoutHeadCalibration,supporting:supportingHeadDescription,views:bodyViewDescription.fingerprint,colour:sourceColourDescription.fingerprint}),
   happy:'One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.',
   orientation:'fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending',
   expression:'source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync',
