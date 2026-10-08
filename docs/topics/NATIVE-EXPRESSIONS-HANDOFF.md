@@ -1,6 +1,6 @@
 # Lila/Karo — biểu cảm trong câu chuyện
 
-Mốc source0.36, 08/10/2026. Base `354e628064e41c469467cbd222ccc6b372feca41`, branch `codex/prehistoric-life`. Đây là tiến triển source của tool chung, chưa hoàn thành mục tiêu video sản xuất. Source SHA và verdict ghi trong [record](reviews/native-expressions-source-review-v1.md).
+Mốc source0.36, 08/10/2026. Source `b759b572d5c87c21f26af6993078f089ad0cea63`, base `354e628064e41c469467cbd222ccc6b372feca41`, branch `codex/prehistoric-life`. Đã push GitHub và kiểm local/remote cùng SHA; đây là tiến triển source của tool chung, chưa hoàn thành mục tiêu video sản xuất. Verdict và bằng chứng ghi trong [record](reviews/native-expressions-source-review-v1.md).
 
 Full build, test:typecheck, schema export, whitespace và bounded source review đã qua; initial HOLD4P2s và các sửa được giữ trong record. Cả18 callback mới và các regression cũ liên quan chưa chạy. Không có chứng nhận mỹ thuật/chuyển động/audio/video hoặc ba input từ các check này.
 
