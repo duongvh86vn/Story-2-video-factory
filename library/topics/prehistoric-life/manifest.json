@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.55-opposing-heads",
+  "version": "forest-tribe-0.56-native-head-dialogue",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -2654,8 +2654,9 @@
     "inspection": {
       "version": "native-head-face-workbench-3",
       "url": "/api/topics/prehistoric-life/head-faces",
-      "codeHash": "5c41e068ed466a303dd31a96c0e56509bf84ed3642e1c13ead288ec909f0d29c",
+      "codeHash": "4b92403955dd4fcf02090192c4744899f551930914f2f5fea47c2cf33434f654",
       "catalogCodeHash": "cf18f7f9544b76b8220e342c8ac7891db5cee1d7f37d27fa935ec5ac932375f9",
+      "sourceLoaderCodeHash": "01b12d56fe29faead176cec3583059c343576b82ab74013f78ae707d1c62edde",
       "handoff": "docs/topics/HEAD-FACE-WORKBENCH.md",
       "runtimeVerified": false,
       "audioPresent": false,
@@ -5141,10 +5142,31 @@
     "productionAcceptance": false,
     "finalExportAllowed": false,
     "builder": "benchmarks/native-seat-tracer.ts",
-    "builderHash": "a4ab29f14642d2062d76dda5e83a70341d7cb6e209e3680ae3f8fe415be8f000",
+    "builderHash": "79fc4153a308410af73d4907751b81cd569164e0711fb19977df4bf4bbdcaebf",
     "exporter": "scripts/native-seat-tracer.ts",
-    "exporterHash": "d47a0183fe58bb6b98040b7f23ee403300b6b87044fa5ce97f0177692f31cafc",
-    "handoff": "docs/topics/NATIVE-SEAT-TRACER.md"
+    "exporterHash": "a77e4a08d604afbec39686370775f3a69cac9249f645f0498c30c9d5330784b0",
+    "handoff": "docs/topics/NATIVE-SEAT-TRACER.md",
+    "opposingHeads": {
+      "version": "native-head-seat-tracer-1",
+      "scope": "unapproved-native-head-seat-tracer",
+      "command": "npm run tracer:native-seat -- --native-heads",
+      "builderFunction": "createNativeHeadSeatTracer",
+      "selection": [
+        {
+          "actorId": "lila",
+          "view": "three-quarter-right"
+        },
+        {
+          "actorId": "karo",
+          "view": "three-quarter-left"
+        }
+      ],
+      "runtimeVerified": false,
+      "productionAcceptance": false,
+      "finalExportAllowed": false,
+      "motionVerified": false,
+      "handoff": "docs/topics/NATIVE-HEAD-DIALOGUE.md"
+    }
   },
   "references": [
     {

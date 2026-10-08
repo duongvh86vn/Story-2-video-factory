@@ -29,13 +29,13 @@ import {secureSceneFiles,validateSceneFiles,SCENE_SECURITY_VERSION} from '../pac
 import {buildMaster} from '../packages/scenes/index.js';
 import {measureSpeech} from '../packages/voice/index.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
-import {createNativeSeatTracer,NATIVE_SEAT_TRACER_DURATION_MS,NATIVE_SEAT_TRACER_SCOPE,NATIVE_SEAT_TRACER_VERSION} from '../benchmarks/native-seat-tracer.js';
+import {createNativeSeatTracer,createNativeHeadSeatTracer,NATIVE_SEAT_TRACER_DURATION_MS,NATIVE_SEAT_TRACER_SCOPE,NATIVE_SEAT_TRACER_VERSION,NATIVE_HEAD_SEAT_TRACER_SCOPE,NATIVE_HEAD_SEAT_TRACER_VERSION} from '../benchmarks/native-seat-tracer.js';
 
 const require=createRequire(import.meta.url),execFileAsync=promisify(execFile);
 export function nativeSeatTracerOptions(args:string[]){
-  const {values}=parseArgs({args,strict:true,allowPositionals:false,options:{validate:{type:'boolean'},frames:{type:'boolean'},render:{type:'boolean'},wav:{type:'string'},help:{type:'boolean'}}});
+  const {values}=parseArgs({args,strict:true,allowPositionals:false,options:{validate:{type:'boolean'},frames:{type:'boolean'},render:{type:'boolean'},wav:{type:'string'},help:{type:'boolean'},'native-heads':{type:'boolean'}}});
   if(values.wav&&(!path.isAbsolute(values.wav)||path.extname(values.wav).toLowerCase()!=='.wav'))throw new Error('--wav requires an absolute path to an existing WAV file');
-  return {validate:!!(values.validate||values.frames||values.render),frames:!!values.frames,render:!!values.render,wav:values.wav,help:!!values.help};
+  return {validate:!!(values.validate||values.frames||values.render),frames:!!values.frames,render:!!values.render,wav:values.wav,help:!!values.help,...(values['native-heads']?{nativeHeads:true as const}:{})};
 }
 export type NativeSeatTracerOptions=ReturnType<typeof nativeSeatTracerOptions>;
 
@@ -65,7 +65,7 @@ export function checkNativeSeatTracerMedia(result:ProbeResult,hasAudio:boolean):
   return errors;
 }
 type TracerReport={scope:string;version:string;sourceSHA:string|null;trackedSourceDirty:boolean|null;productionAcceptance:false;finalExportAllowed:false;motionAccepted:false;phonemeLipSync:false;status:'exporting'|'exported'|'failed';phase:string;
-  checks:Record<string,{status:'PASS'|'FAIL'|'NOT RUN';detail?:unknown}>;shots:unknown[];resources:unknown[];audio:unknown;error?:string;outputRoot:string;elapsedMs?:number};
+  checks:Record<string,{status:'PASS'|'FAIL'|'NOT RUN';detail?:unknown}>;shots:unknown[];resources:unknown[];audio:unknown;headSelection?:unknown;error?:string;outputRoot:string;elapsedMs?:number};
 
 export async function exportNativeSeatTracer(repo:string,options:NativeSeatTracerOptions):Promise<string>{
   if(options.help)throw new Error('Help does not export a tracer');
@@ -74,13 +74,14 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
   try{const result=await execFileAsync('git',['rev-parse','HEAD'],{cwd:repo,timeout:10000});const sha=result.stdout.trim();if(/^[a-f0-9]{40}$/.test(sha))sourceSHA=sha;
     const status=await execFileAsync('git',['status','--porcelain','--untracked-files=no'],{cwd:repo,timeout:10000});trackedSourceDirty=!!status.stdout.trim();
   }catch{/* A source archive may have no Git executable/history. */}
-  const report:TracerReport={scope:NATIVE_SEAT_TRACER_SCOPE,version:NATIVE_SEAT_TRACER_VERSION,sourceSHA,trackedSourceDirty,productionAcceptance:false,finalExportAllowed:false,motionAccepted:false,phonemeLipSync:false,status:'exporting',phase:'canonical',outputRoot:root,shots:[],resources:[],audio:{source:'silent-draft',speechActivity:'empty',contentAlignment:'NOT RUN'},
+  const report:TracerReport={scope:options.nativeHeads?NATIVE_HEAD_SEAT_TRACER_SCOPE:NATIVE_SEAT_TRACER_SCOPE,version:options.nativeHeads?NATIVE_HEAD_SEAT_TRACER_VERSION:NATIVE_SEAT_TRACER_VERSION,sourceSHA,trackedSourceDirty,productionAcceptance:false,finalExportAllowed:false,motionAccepted:false,phonemeLipSync:false,status:'exporting',phase:'canonical',outputRoot:root,shots:[],resources:[],audio:{source:'silent-draft',speechActivity:'empty',contentAlignment:'NOT RUN'},
     checks:Object.fromEntries(['canonical','diagnostic-wav','cast-and-story','scene-security-and-byte-cap','master','hyperframes','snapshots','render-draft','video-probe','video-decode','visual-motion-review','source-clock-and-reverse-seek','full-factory-inputs'].map(k=>[k,{status:'NOT RUN' as const}]))};
   const save=()=>writeJson(path.join(root,'tracer-report.json'),JSON.parse(redact(JSON.stringify({...report,elapsedMs:Math.round(performance.now()-started)}))));
   await save();
   try{
-    const f=createNativeSeatTracer(),{config,board,beat,profile,rig,narration}=f;
-    report.checks.canonical={status:'PASS',detail:{storyboardHash:hash(board),narrationHash:hash(narration)}};
+    const f=options.nativeHeads?await createNativeHeadSeatTracer(repo):createNativeSeatTracer(),{config,board,beat,profile,rig,narration}=f;
+    if('headSelection' in f)report.headSelection=f.headSelection;
+    report.checks.canonical={status:'PASS',detail:{storyboardHash:hash(board),narrationHash:hash(narration),headMode:options.nativeHeads?'explicit-opposing-bank3':'legacy-fixed-view'}};
     let activity:SpeechActivity={method:'segment-draft',windowMs:20,intervals:[]};
     if(options.wav){
       report.phase='diagnostic-wav';await save();
@@ -163,8 +164,8 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
 
 async function main(){
   const options=nativeSeatTracerOptions(process.argv.slice(2));
-  if(options.help){process.stdout.write('npm run tracer:native-seat -- [--validate] [--frames] [--render] [--wav "ABSOLUTE.wav"]\nDefault exports an unapproved silent SRT tracer. Media/browser/ffmpeg execution is opt-in. Fresh runtime folder per invocation; never final/DONE.\n');return;}
+  if(options.help){process.stdout.write('npm run tracer:native-seat -- [--native-heads] [--validate] [--frames] [--render] [--wav "ABSOLUTE.wav"]\nDefault exports an unapproved silent SRT tracer with legacy fixed-view overlays. --native-heads explicitly selects Lila right and Karo left bank3 sources for the same canonical body/cast/camera. No synthetic speech; silent without WAV. Media/browser/ffmpeg execution is opt-in. Fresh runtime folder per invocation; never final/DONE.\n');return;}
   const root=await exportNativeSeatTracer(await findRepoRoot(),options);
-  process.stdout.write(JSON.stringify({scope:NATIVE_SEAT_TRACER_SCOPE,outputRoot:root,report:path.join(root,'tracer-report.json'),productionAcceptance:false,finalExportAllowed:false})+'\n');
+  process.stdout.write(JSON.stringify({scope:options.nativeHeads?NATIVE_HEAD_SEAT_TRACER_SCOPE:NATIVE_SEAT_TRACER_SCOPE,outputRoot:root,report:path.join(root,'tracer-report.json'),productionAcceptance:false,finalExportAllowed:false})+'\n');
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(error=>{process.stderr.write(redact(error instanceof Error?error.message:String(error))+'\n');process.exitCode=1;});

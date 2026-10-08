@@ -1,3 +1,7 @@
+# Native head seat integration: source-only review input
+Original: benchmarks/native-seat-tracer.ts; SHA256 79fc4153a308410af73d4907751b81cd569164e0711fb19977df4bf4bbdcaebf
+No runtime/geometry/renderer or acceptance evidence.
+```ts
 /** Candidate diagnostic only. Calling this builder evaluates native plans/camera;
  * implementation agents must not invoke it while runtime tests are delegated. */
 import {ConfigSchema} from '../packages/core/config.js';
@@ -122,3 +126,5 @@ export async function createNativeHeadSeatTracer(repo:string){
   ] as const).map(({actorId,view,candidate})=>({actorId,view,definitionFile:candidate.definitionFile,definitionHash:candidate.definitionHash,bankFingerprint:candidate.bank.fingerprint,
     sourceFile:candidate.bank.source.file,sourceSHA256:candidate.bank.source.sha256,artApproved:false,motionVerified:false}))};
 }
+
+```

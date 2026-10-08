@@ -1,12 +1,10 @@
 import {promises as fs} from 'node:fs';
-import path from 'node:path';
 import {createRequire} from 'node:module';
 import {z} from 'zod';
 import {hash} from '../core/utils.js';
 import {HostProfileSchema} from '../host/schemas.js';
 import {PerformancePlanSchema} from '../animation/schemas.js';
-import {NativeHeadBankDefinitionSchema,nativeHeadBank} from '../animation/native-head-bank.js';
-import {nativeHeadResources,readNativeHeadSource,readNativeHeadPrimary} from '../animation/native-head-resources.js';
+import {boundedHeadFaceFile as boundedFile,headFaceCandidate} from './head-face-source.js';
 import {referenceHeadAssets} from '../animation/forest-head-art.js';
 import {referenceBodyAssets} from '../animation/forest-body-art.js';
 import {SPEECH_SOURCE_CLOCK_VERSION,projectSpeechActivity,windowSpeechActivity} from '../animation/speech-clock.js';
@@ -15,9 +13,10 @@ import {projectViewExpressions} from '../animation/view-expression-track.js';
 import {viewSourceGestureDefinition} from '../animation/view-source-gesture.js';
 import {performanceScene} from '../animation/scene.js';
 import {bodyCalibrationPlan,BODY_MOUTH_PREVIEW_ACTIVITY} from './body-workbench.js';
-import {HEAD_FACE_WORKBENCH_VERSION,HEAD_FACE_VIEWS,HEAD_FACE_CANDIDATES,type HeadFaceView} from './head-face-candidates.js';
+import {HEAD_FACE_WORKBENCH_VERSION,HEAD_FACE_VIEWS,HEAD_FACE_CANDIDATES} from './head-face-candidates.js';
 
 export {HEAD_FACE_WORKBENCH_VERSION} from './head-face-candidates.js';
+export {headFaceCandidate} from './head-face-source.js';
 export const HeadFaceSelectionSchema=z.object({actor:z.enum(['lila','karo']).default('lila'),
   view:z.enum(HEAD_FACE_VIEWS).default('three-quarter-right'),
   action:z.enum(['rest','point','think']).default('rest'),look:z.enum(['rest','ahead','up','down']).default('rest'),
@@ -30,41 +29,11 @@ const MAX_VENDOR_BYTES=512*1024;
 // lookup. Failed compilation is never cached. No frames or image copies kept.
 const scenes=new Map<string,{files:ReturnType<typeof performanceScene>['files'];report:ReturnType<typeof performanceScene>['compiled']['report']}>();
 
-/** Exact paths from the fixed definitions/resource catalog only. No links or
- * caller-controlled filesystem paths. The caller checks the expected hash. */
-async function boundedFile(repo:string,file:string,maxBytes:number){
-  let target=path.resolve(repo);const parts=file.split('/');
-  if(parts.some(p=>!p||p==='.'||p==='..'||p.includes('\\')||p.includes(':')))throw new Error('Invalid face workbench source');
-  for(const [i,part] of parts.entries()){
-    target=path.join(target,part);const stat=await fs.lstat(target);
-    if(stat.isSymbolicLink()||(i===parts.length-1?!stat.isFile()||stat.size>maxBytes:!stat.isDirectory()))throw new Error('Linked/oversized face workbench source');
-  }
-  const bytes=await fs.readFile(target);if(bytes.length>maxBytes)throw new Error('Oversized face workbench source');return bytes;
-}
-
 async function headFaceVendor(){
   const file=createRequire(import.meta.url).resolve('gsap/dist/gsap.min.js'),stat=await fs.lstat(file);
   if(!stat.isFile()||stat.isSymbolicLink()||stat.size>MAX_VENDOR_BYTES)throw new Error('Linked/oversized face workbench vendor');
   const bytes=await fs.readFile(file);if(bytes.length>MAX_VENDOR_BYTES)throw new Error('Oversized face workbench vendor');
   return {sha256:hash(bytes),bytes};
-}
-
-/** Read/validate only. Callers must not infer artistic approval from parsing. */
-export async function headFaceCandidate(repo:string,actor:HeadFaceSelection['actor'],view:HeadFaceView='three-quarter-right'){
-  const selected=HeadFaceSelectionSchema.shape.actor.parse(actor),selectedView=HeadFaceSelectionSchema.shape.view.parse(view);
-  const entry=HEAD_FACE_CANDIDATES.find(c=>c.actor===selected&&c.view===selectedView);
-  if(!entry)throw new Error(`needs-head-face-candidate: ${selected}/${selectedView} has not been authored`);
-  const file=entry.file;
-  const bytes=await boundedFile(repo,file,200*1024),definition=NativeHeadBankDefinitionSchema.parse(JSON.parse(bytes.toString('utf8')));
-  if(definition.actor!==selected||definition.id!==entry.id||definition.version!=='native-head-bank-3'||definition.cells.length!==1||definition.cells[0]!.yawDeg!==null||definition.routes.length||
-    definition.bodyViews.length!==1||definition.bodyViews[0]!.view!==selectedView||
-    definition.source.file!=='library/topics/prehistoric-life/head-cells/'+entry.headFile)throw new Error('Face workbench needs the exact fixed source-angle candidate and compatible body view');
-  const bank=nativeHeadBank(definition);
-  for(const resource of nativeHeadResources(bank)){
-    if(resource.nativeHeadSource)readNativeHeadSource(repo,{file:resource.file,sha256:resource.sha256,...resource.nativeHeadSource},bank.primary);
-    else readNativeHeadPrimary(repo,bank.primary);
-  }
-  return {bank,definitionFile:file,definitionHash:hash(bytes)};
 }
 
 /** The same original run is sliced, rather than rebuilding a local mouth,

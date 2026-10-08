@@ -1,6 +1,8 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Hiện hành0.55 — 08/10/2026:** bổ sung đầu Karo trái và local mouth rest V2, definition/source/body riêng; plate V1 bị hold vì dời chòm râu và bị chặn theo SHA kể cả đổi tên. Catalog workbench có bốn pair Lila/Karo × phải/trái, UI/loader/inventory dùng đúng head filename, giữ original clocks/revision/vendor/legacy URL guards. [Nguồn/việc cần kiểm](OPPOSING-DIALOGUE-HEADS.md), [server/test](HEAD-FACE-WORKBENCH.md), trạng thái hiện hành tại mục12. Đây là source/ảnh authoring chưa thực thi geometry hoặc nghiệm thu chuyển động. Quần chúng nam trọc/nữ tóc dùng trang phục Karo/Lila và full story/script/WAV, EN chính/VI/JA/KO, TTS ngoài/local, resume/QC vẫn giữ; productionReady=false/productionRig=null/availableBanks[].
+**Hiện hành0.56 — 08/10/2026:** nối explicit hai đầu bank3 Lila phải/Karo trái vào cùng canonical body/cast/camera và factory renderer bằng `--native-heads`; mỗi diễn viên giữ original head/body/speech clock, gaze nhắm mắt bạn diễn qua cut/lead swap. Loader exact catalog dùng chung workbench; default tracer2 không đổi, không âm thầm mở production. [Source, môi trường và lệnh model test](NATIVE-HEAD-DIALOGUE.md). Hai mẫu quần chúng nam trọc/nữ có tóc dùng trang phục Karo/Lila vẫn giữ. Bốn callback mới NOT RUN; chưa chạy geometry/renderer/video hoặc nghiệm thu độ mượt. Full story/script/WAV, EN chính/VI/JA/KO, TTS ngoài/local, resume/QC vẫn chưa hoàn thành; productionReady=false/productionRig=null/availableBanks[].
+
+**Lịch sử0.55 — 08/10/2026:** bổ sung đầu Karo trái và local mouth rest V2, definition/source/body riêng; plate V1 bị hold vì dời chòm râu và bị chặn theo SHA kể cả đổi tên. Catalog workbench có bốn pair Lila/Karo × phải/trái, UI/loader/inventory dùng đúng head filename, giữ original clocks/revision/vendor/legacy URL guards. [Nguồn/việc cần kiểm](OPPOSING-DIALOGUE-HEADS.md), [server/test](HEAD-FACE-WORKBENCH.md), trạng thái hiện hành tại mục12. Đây là source/ảnh authoring chưa thực thi geometry hoặc nghiệm thu chuyển động. Quần chúng nam trọc/nữ tóc dùng trang phục Karo/Lila và full story/script/WAV, EN chính/VI/JA/KO, TTS ngoài/local, resume/QC vẫn giữ; productionReady=false/productionRig=null/availableBanks[].
 
 **Lịch sử0.54 — 08/10/2026:** bổ sung raw đầu Lila hướng trái, prompt/provenance và definition miệng/mắt/cổ riêng; review ảnh tĩnh Gemini không là duyệt identity/anatomy/motion. Workbench chọn view explicit, ghép đúng head/body source và original clocks; góc chưa có chặn rõ, URL0.53 vẫn mặc định phải. Một cell yaw null không phải quay đầu liên tục. [Artwork/việc cần nghiệm thu](LEFT-DIALOGUE-HEAD.md), [môi trường/server/test](HEAD-FACE-WORKBENCH.md). Quần chúng nam trọc/nữ tóc0.52 dùng trang phục Karo/Lila; toàn bộ story/script/WAV, EN chính/VI/JA/KO, TTS ngoài/local, resume/QC vẫn giữ. Runtime/geometry/renderer/video mới NOT RUN; productionReady=false/productionRig=null/availableBanks[].
 
@@ -613,19 +615,19 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-### Hiện hành0.55 — source chưa nghiệm thu sản phẩm
+### Hiện hành0.56 — source chưa nghiệm thu sản phẩm
 
 | Hạng mục | Source hiện có | Chứng cứ còn thiếu |
 |---|---|---|
 | Ba input + legacy SRT | Code script giữ lời, WAV giữ audio/clock, story→script; Studio/API/CLI và external/local TTS WIP | Chạy câu chuyện mới qua mỗi luồng tới MP4 có giọng/subtitle/QC, không dùng V1 làm chứng nhận |
 | Hai diễn viên đúng mẫu | Primary warm-skin khóa theo hash; bốn definition head/body phải/trái và raw artwork riêng | Identity, face/neck/hair seam, phối cảnh/tỷ lệ/màu, geometry và normal-speed video ở cả hai bố trí đối thoại |
 | Diễn viên phụ | Nam đầu trọc, nữ có tóc, dùng trang phục Karo/Lila, ID/vai/thoại riêng trong source0.52 | Face/view/pose/contact và video có nhiều người; chưa dùng mẫu quần chúng để chứng nhận principal rig |
-| Miệng/mắt | Bank3 local paint/glyph/lid/speech source-clock; Karo trái rest V2 chỉ ghép miệng; V1 held theo SHA | Chỉ người nói mở miệng, silence đúng, không double ink/râu/ghost, gaze target và mask/subpixel seam |
+| Miệng/mắt | Bank3 local paint/glyph/lid/speech source-clock; Karo trái rest V2 chỉ ghép miệng; V1 held theo SHA; opt-in paired-head canonical dùng cùng factory renderer | Chỉ người nói mở miệng, silence đúng, không double ink/râu/ghost, target/rendered eye projection, cut/seek và mask/subpixel seam |
 | Diễn xuất/chuyển động | Source gesture/gaze/expression/locomotion/secondary/seat/contact/clock guards và tracer WIP | Toàn chu kỳ khớp/chân trụ/weight/cloth/hair/props, cut/seek/role swap, cảm xúc và tương tác ở tốc độ thường |
 | Bối cảnh/màu | Reference/palette và nguồn draft hiện có; vector cũ bị loại | World day/sunset/night có chiều sâu, nguồn sáng/bóng/contact và màu tươi trong final, không nền nhợt/slideshow |
 | EN chính + VI/JA/KO/TTS ngoài-local | Adapter/config/source contract hiện có; WAV không bị buộc đổi thành TTS | Giọng đúng ngôn ngữ/speaker, TTS/API lỗi/clock/fit, audio-subtitle-duration và final gate thực |
 | Resume/rebuild/locks | Source/hash/cache/repair và lock guards WIP | Sửa script/voice/actor/shot giữ hoặc invalidate đúng artifact; không xuất final từ source/clock cũ |
-| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory được ghi theo từng phiên bản, source0.55 xem record riêng | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
+| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory được ghi theo từng phiên bản, source0.56 xem NATIVE-HEAD-DIALOGUE.md | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
 | Production | productionReady=false, productionRig=null, availableBanks=[] | Chỉ mở sau khi model test có evidence đáp ứng toàn bộ mục11 và bộ chủ đề thực sự dùng lại cho câu chuyện mới |
 
 Các nguyên liệu/definition đơn lẻ không thay bộ sản phẩm hoàn chỉnh. Nội dung tập lấy từ input người dùng; việc chưa có một tập đầu được chọn không là lý do bó tool vào demo món ăn/máy móc hoặc dừng các phần source độc lập.

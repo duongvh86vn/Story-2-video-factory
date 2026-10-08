@@ -9,6 +9,8 @@ import {temporary} from './support.js';
 
 test('tracer media is opt-in, strict and cannot request final or overwrite a project',()=>{
   assert.deepEqual(nativeSeatTracerOptions([]),{validate:false,frames:false,render:false,wav:undefined,help:false});
+  assert.deepEqual(nativeSeatTracerOptions(['--native-heads']),{validate:false,frames:false,render:false,wav:undefined,help:false,nativeHeads:true});
+  assert.equal(nativeSeatTracerOptions(['--native-heads','--render']).render,true);
   for(const option of ['--frames','--render','--validate'])assert.equal(nativeSeatTracerOptions([option]).validate,true);
   for(const args of [['--final'],['--output','existing-project'],['--wav','relative.wav'],['--wav',path.resolve('audio.mp3')],['--render','extra']])assert.throws(()=>nativeSeatTracerOptions(args));
   assert.equal(nativeSeatTracerOptions(['--wav',path.resolve('diagnostic.wav')]).wav,path.resolve('diagnostic.wav'));

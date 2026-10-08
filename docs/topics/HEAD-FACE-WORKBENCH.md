@@ -1,5 +1,7 @@
 # Đối chiếu mặt trên thân — source0.55
 
+Source0.56 tách loader exact source thành `packages/topics/head-face-source.ts` dùng chung cho workbench và [ca hai diễn viên native-head](NATIVE-HEAD-DIALOGUE.md). Public import cũ `headFaceCandidate` và URL/default/revision giữ nguyên; không thêm approval hoặc production selection.
+
 Trang dành cho người dùng/model test kiểm mặt source0.51, Lila trái0.54 và Karo trái0.55 trên đúng thân native. Dàn diễn viên chính và quần chúng0.52 vẫn giữ nguyên. Mục tiêu cuối vẫn là story/script/WAV bất kỳ → diễn xuất đúng nội dung → video có giọng và QC; trang này không thay video nghiệm thu.
 
 ## Phạm vi triển khai

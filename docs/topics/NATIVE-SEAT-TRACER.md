@@ -1,5 +1,7 @@
 # Chạy ca hai diễn viên ngồi–đứng–đi
 
+Source0.56 thêm flag opt-in `--native-heads` cho bank3 Lila phải/Karo trái, cùng body/cast/camera/exporter bên dưới. Mặc định tracer2 giữ nguyên. [Phạm vi, môi trường, lệnh model test và giới hạn](NATIVE-HEAD-DIALOGUE.md). Runtime/video mới chưa chạy.
+
 Hiện hành0.44/tracer2: cùng canonical bên dưới có **mutual actor gaze** theo original physical eye source; không dùng static root hoặc gaze feedback. [Contract, source guards và nghiệm thu gaze](NATIVE-ACTOR-GAZE-HANDOFF.md). Clock4/body compiler32, target/body/expression thay đổi phải invalidate publication. Chưa chạy builder/test/tracer/media. Phần mô tả0.43 bên dưới là lịch sử exporter, các lệnh vẫn dùng cho tracer2.
 
 Mốc source0.43: tool xuất ca canonical dùng chung với `tests/native-source-seat.test.ts`, không bootstrap project máy móc hoặc gọi model. Implementation **chưa chạy** builder, tracer, test, trình duyệt, frame, FFmpeg hoặc render video. Source/typecheck thành công không chứng minh chuyển động đẹp, đúng giải phẫu hoặc giống video mẫu. Cả chủ đề vẫn `productionReady=false`, `productionRig=null`.
