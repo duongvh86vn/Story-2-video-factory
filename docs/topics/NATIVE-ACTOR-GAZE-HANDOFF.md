@@ -2,6 +2,8 @@
 
 Source0.44 bổ sung gaze theo ID diễn viên vào renderer SVG/HTML5/GSAP hiện có. Máy người dùng không có API image-to-video. Không cần API đó để chạy ca này. Source chưa được nghiệm thu bằng test, browser, audio hoặc video; `productionReady=false`, `productionRig=null` vẫn giữ. Đây là phần của tool nhận truyện bất kỳ, không đặt cốt truyện hoặc người dẫn cố định.
 
+Source đã push GitHub nhánh `codex/prehistoric-life`: `0632c91366259306627bf1f0a84fc719b3d91aec`,34 owned paths; full SHA local/remote khớp. Fresh build/typecheck/schema/static pack và bounded source re-review đã qua;13 callback mới/old regressions/tracer/video vẫn NOT RUN. Source delivery không hoàn thành mục tiêu sản phẩm.
+
 ## Contract đã triển khai
 
 Trong `performance.gazes`, chọn đúng một nguồn:

@@ -22,10 +22,14 @@ Euclid `01a119fb-0f57-75d2-9037-40c27417563c`, giới hạn đọc source; khôn
 ## Source checks thực tế
 
 - `npm run schemas; npm run test:typecheck`:27ea2f/429418 exit0 cho contract đầu. Initial96506/c0e566 exit1 do legacy `.target` chưa narrow union;6fff19 exit1 do3 nested replacements; sửa explicit rồi check qua. Không thực thi test.
-- Sau11 declarations:2b8898/a20bfe exit1 do missing-sibling assignment, minimal clock-only Shot cast và compile argument slot; sửa source.25e355/e3d536 schemas/typecheck exit0 sau8 callbacks đầu.46e940/24ab09 typecheck exit0 sau publication guard. Ba callback publication chưa chạy.
+- Sau8 declarations đầu:2b8898/a20bfe exit1 do missing-sibling assignment, minimal clock-only Shot cast và compile argument slot; sửa source.25e355/e3d536 schemas/typecheck exit0.46e940/24ab09 typecheck exit0 sau publication guard. Ba callback publication chưa chạy.
 - Build3b2c09/b6062d exit0 (Vite32 modules,480ms); static pack4e78d3 exit0 (6 refs/12 candidates/6 heads/2 garments/7 rejected/productionReady false).
 - Build a6c215/fa3ce0 exit0 (32 modules,473ms); typecheck1fade4/4d7a75 exit0 sau10 callbacks, trước rollback bảo toàn separate edit.
-- Final build160da8/adfc50 exit0 (Vite32 modules,561ms), typecheck905956/ccb693 exit0 sau11 declarations và rollback preservation. Schema/static pack5695a9 exit0;17dfb/017dfb kiểm5 native gaze/publication code hashes khớp manifest, clock/source/tracer metadata đúng và whitespace exit0. Không gọi sampler hay callback.
+- Build160da8/adfc50 exit0 (Vite32 modules,561ms), typecheck905956/ccb693 exit0 sau11 declarations và rollback preservation. Schema/static pack5695a9 exit0;017dfb kiểm5 native gaze/publication code hashes khớp manifest, clock/source/tracer metadata đúng và whitespace exit0. Không gọi sampler hay callback.
 - Fresh build71c2eb/4aa3a5 exit0 (Vite32 modules,472ms), typecheck9f3eda/d3452b exit0 sau3 sửa cuối/13 declarations; static pack466dae exit0, productionReady false. Bounded re-review source đã khép; owned publication và exact remote SHA được ghi ở checkpoint tiếp theo.
+
+## Source publication
+
+Source0.44 `0632c91366259306627bf1f0a84fc719b3d91aec`,34 owned paths, commit5dc944, push8f3f9b exit0. Remote branch `codex/prehistoric-life` tại GitHub chỉ định:2dbc8e kiểm exact full SHA local=remote và tracked clean. F01686 kiểm lại5 current manifest code hashes và whitespace exit0; manifest productionReady=false/productionRig=null. Unrelated untracked artwork/demos/research không stage hoặc xóa. Docs checkpoint này bổ sung sau source commit; không thay source hoặc chạy runtime.
 
 Runtime test/fixture/pose/tracer/browser/API/audio/media: **NOT RUN**, không có phim mới, không motion/identity/optical/audio/video/ba-input/resume/final-QC PASS. Source0.44 không phải DONE của mục tiêu sản phẩm.
