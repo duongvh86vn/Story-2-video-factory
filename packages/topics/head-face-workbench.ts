@@ -57,7 +57,8 @@ export async function headFaceCandidate(repo:string,actor:HeadFaceSelection['act
   const file=entry.file;
   const bytes=await boundedFile(repo,file,200*1024),definition=NativeHeadBankDefinitionSchema.parse(JSON.parse(bytes.toString('utf8')));
   if(definition.actor!==selected||definition.id!==entry.id||definition.version!=='native-head-bank-3'||definition.cells.length!==1||definition.cells[0]!.yawDeg!==null||definition.routes.length||
-    definition.bodyViews.length!==1||definition.bodyViews[0]!.view!==selectedView)throw new Error('Face workbench needs the exact fixed source-angle candidate and compatible body view');
+    definition.bodyViews.length!==1||definition.bodyViews[0]!.view!==selectedView||
+    definition.source.file!=='library/topics/prehistoric-life/head-cells/'+entry.headFile)throw new Error('Face workbench needs the exact fixed source-angle candidate and compatible body view');
   const bank=nativeHeadBank(definition);
   for(const resource of nativeHeadResources(bank)){
     if(resource.nativeHeadSource)readNativeHeadSource(repo,{file:resource.file,sha256:resource.sha256,...resource.nativeHeadSource},bank.primary);
@@ -150,7 +151,7 @@ export async function headFacePreviewFile(repo:string,input:unknown,file:string,
 export function headFaceWorkbench(input:unknown){
   const s=HeadFaceSelectionSchema.parse(input),start=s.slice==='whole'?0:2000,base=sceneBase(s);
   const candidate=HEAD_FACE_CANDIDATES.find(c=>c.actor===s.actor&&c.view===s.view);
-  const headFile=candidate?.view==='three-quarter-left'?'lila-head-left-dialogue-v1.png':candidate?s.actor+'-head-source-angle-v2.png':undefined;
+  const headFile=candidate?.headFile;
   const sourceLink=headFile?`<a href="/api/topics/prehistoric-life/head-cells?file=${headFile}">PNG và landmark</a>`:'<span>Góc này chưa có head candidate</span>';
   const options=(values:readonly string[],selected:string)=>values.map(v=>`<option value="${v}"${v===selected?' selected':''}>${v}</option>`).join('');
   return `<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mặt trên thân · Lila/Karo</title><style>

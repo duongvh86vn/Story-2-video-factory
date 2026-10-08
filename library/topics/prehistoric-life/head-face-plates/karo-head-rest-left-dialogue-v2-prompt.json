@@ -1,0 +1,19 @@
+{
+  "version": "native-head-rest-plate-prompt-1",
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Edit this exact closed-mouth Karo LEFT-FACING head image, retaining its exact 1312x1199 canvas, pose, framing, scale, alpha and all feature placement. ONE tiny local correction ONLY: REMOVE the small dark triangular chin tuft directly below the smile, approximately x425..535 and y810..890 in this canvas. Paint that triangle and its dark outline out with continuous warm brown beard texture sampled visually from the surrounding beard, leaving no triangular tuft, outline, extra mouth or symbol anywhere in this local area. This image is only a clipped MOUTH REPAIR PLATE; the actor's real lower chin tuft comes from a separate original head image and must not be duplicated by this plate. Preserve the already CLOSED curved black smile, moustache, lip crease and every other part exactly. Do not open mouth, show teeth/tongue, move smile, add/relocate a chin tuft, alter nose/eyes/eyebrows/hair/ear/beard silhouette/neck, mirror, warp, crop, zoom, or change colour/light. Return this same ONE full head, complete genuine transparent background and unchanged margins. The correction is removing that one triangle, not redesigning the character.",
+  "source": {
+    "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+    "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410"
+  },
+  "editTarget": {
+    "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-left-dialogue-v1.png",
+    "sha256": "1f84f61a4bf5e69c45903626df91517091013f16aa3bbc5bec52aa14609227b2"
+  },
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-3e61b87d-5eae-471f-8495-4567b2736d98.png",
+  "scope": "local-mouth-plate-authoring-only",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

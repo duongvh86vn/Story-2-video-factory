@@ -8,11 +8,12 @@ import {fileURLToPath} from 'node:url';
 import {buildServer} from '../apps/server/index.js';
 import {samplePerformance} from '../packages/animation/compiler.js';
 import {hash} from '../packages/core/utils.js';
+import {NativeHeadBankDefinitionSchema} from '../packages/animation/native-head-bank.js';
 import {headFaceCalibration,headFaceCandidate,headFacePreviewFile,headFacePreviewRevision} from '../packages/topics/head-face-workbench.js';
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 
 test('full and camera-sliced face previews keep original mouth/blink/gesture phase in all authored views',async()=>{
-  const views=[{actor:'lila',view:'three-quarter-right'},{actor:'karo',view:'three-quarter-right'},{actor:'lila',view:'three-quarter-left'}] as const;
+  const views=[{actor:'lila',view:'three-quarter-right'},{actor:'karo',view:'three-quarter-right'},{actor:'lila',view:'three-quarter-left'},{actor:'karo',view:'three-quarter-left'}] as const;
   for(const {actor,view} of views)for(const action of ['rest','point','think'] as const){
     const full=await headFaceCalibration(repo,{actor,view,action,look:'ahead',slice:'whole'}),slice=await headFaceCalibration(repo,{actor,view,action,look:'ahead',slice:'second-half'});
     assert.equal(full.profile.appearance.bodyView,view);assert.equal(full.plan.headView,view);
@@ -33,7 +34,7 @@ test('full and camera-sliced face previews keep original mouth/blink/gesture pha
   }
 });
 
-test('left selection owns its own raw head/body and cannot use a right revision or missing Karo view',async()=>{
+test('each left selection owns its own raw head/body/rest plate and cannot borrow another revision',async()=>{
   const left=await headFaceCalibration(repo,{actor:'lila',view:'three-quarter-left'});
   const right=await headFaceCalibration(repo,{actor:'lila'});
   assert.equal(left.bank.id,'lila-left-face-v1');
@@ -41,7 +42,17 @@ test('left selection owns its own raw head/body and cannot use a right revision 
   assert.equal(left.bank.bodyViews[0]!.sourceHash,'ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf');
   assert.notEqual(left.bank.fingerprint,right.bank.fingerprint);
   await assert.rejects(headFacePreviewFile(repo,left.selection,'index.html',headFacePreviewRevision(right)),/binding changed/);
-  await assert.rejects(headFaceCandidate(repo,'karo','three-quarter-left'),/needs-head-face-candidate/);
+  const karo=await headFaceCalibration(repo,{actor:'karo',view:'three-quarter-left'});
+  assert.equal(karo.bank.id,'karo-left-face-v1');
+  assert.equal(karo.bank.source.sha256,'2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410');
+  assert.equal(karo.bank.bodyViews[0]!.sourceHash,'bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4');
+  assert.equal(karo.bank.additionalSources?.[0]?.sha256,'1d439730677e66f9017f2763768470ffa61125f597bf1b496804406ae94b4b95');
+  const renamedHeld=JSON.parse(await fs.readFile(path.join(repo,karo.definitionFile),'utf8'));
+  const heldSha='1f84f61a4bf5e69c45903626df91517091013f16aa3bbc5bec52aa14609227b2';
+  renamedHeld.additionalSources[0].sha256=heldSha;
+  renamedHeld.cells[0].face.mouth.rest.source.sha256=heldSha;
+  assert.throws(()=>NativeHeadBankDefinitionSchema.parse(renamedHeld),/Held head art/);
+  await assert.rejects(headFacePreviewFile(repo,karo.selection,'index.html',headFacePreviewRevision(left)),/binding changed/);
   await assert.rejects(headFaceCalibration(repo,{actor:'lila',view:'profile-left'}));
 });
 
@@ -80,6 +91,8 @@ test('the exact candidate loader rejects renamed actor, traversal and changed so
   // A valid opposite-view body binding still cannot replace the catalog view.
   await fs.writeFile(path.join(root,definition),JSON.stringify({...body,bodyViews:[{view:'three-quarter-left',sourceHash:'ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf'}]}));
   await assert.rejects(headFaceCandidate(root,'lila'),/compatible body view/);
+  await fs.writeFile(path.join(root,definition),JSON.stringify({...body,source:{...body.source,file:'library/topics/prehistoric-life/head-cells/lila-head-source-angle-v1.png'}}));
+  await assert.rejects(headFaceCandidate(root,'lila'),/exact fixed source-angle candidate/);
   await fs.writeFile(path.join(root,definition),JSON.stringify(body));
   // Source ownership stays strict even if the advertised registration is valid.
   await fs.mkdir(path.dirname(path.join(root,body.primary.file)),{recursive:true});
@@ -105,11 +118,22 @@ test('explicit view routes and legacy nested PNG URLs retain exact resources wit
     assert.notEqual(binding.json().revision,a.json().revision);
     const report=await app.inject({url:left+'report.json?revision='+binding.json().revision});
     assert.equal(report.statusCode,200);assert.equal(report.json().selection.view,'three-quarter-left');
-    const missing=await app.inject({url:'/api/topics/prehistoric-life/head-face-preview/karo/views/three-quarter-left/rest/rest/whole/binding.json'});
-    assert.notEqual(missing.statusCode,200);assert.ok(missing.body.includes('needs-head-face-candidate'));
+    const karoBase='/api/topics/prehistoric-life/head-face-preview/karo/views/three-quarter-left/rest/rest/whole/';
+    const karoBinding=await app.inject({url:karoBase+'binding.json'});assert.equal(karoBinding.statusCode,200);
+    const karoReport=await app.inject({url:karoBase+'report.json?revision='+karoBinding.json().revision});
+    assert.equal(karoReport.statusCode,200);assert.equal(karoReport.json().selection.actor,'karo');
+    assert.equal(karoReport.json().selection.view,'three-quarter-left');
+    const karoFixture=await headFaceCalibration(repo,{actor:'karo',view:'three-quarter-left'});
+    for(const raw of karoFixture.resources.filter(r=>r.file.includes('/head-cells/')||r.file.includes('/head-face-plates/'))){
+      const image=await app.inject({url:karoBase+raw.path+'?revision='+karoBinding.json().revision});
+      assert.equal(image.statusCode,200);assert.deepEqual(image.rawPayload,await fs.readFile(path.join(repo,raw.file)));
+    }
     const page=await app.inject({url:'/api/topics/prehistoric-life/head-faces?actor=lila&view=three-quarter-left'});
     assert.equal(page.statusCode,200);assert.ok(page.body.includes('name="view"'));assert.ok(page.body.includes('lila-head-left-dialogue-v1.png'));
     assert.ok(page.body.includes('data-face-base="'+left+'"'));
+    const karoPage=await app.inject({url:'/api/topics/prehistoric-life/head-faces?actor=karo&view=three-quarter-left'});
+    assert.equal(karoPage.statusCode,200);assert.ok(karoPage.body.includes('head-cells?file=karo-head-left-dialogue-v1.png'));
+    assert.ok(!karoPage.body.includes('head-cells?file=lila-head-left-dialogue-v1.png'));
   }finally{await app.close();}
 });
 

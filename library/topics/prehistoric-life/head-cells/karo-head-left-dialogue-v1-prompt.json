@@ -1,0 +1,25 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: identity-preserve. Draw exactly ONE isolated LEFT-FACING three-quarter head of Karo, the same prehistoric male stick-actor in the references. Image1 is the existing isolated Karo source head, the EDIT TARGET for identity, painterly texture, warm colours, facial structure and beard. Image2 is the original PRIMARY full-body Karo, the authoritative character/style reference. Draw a real new perspective turned toward SCREEN LEFT, roughly 35 degrees from front; nose points left, near/far dot eyes have natural spacing and perspective, ear and cheek occlusion follow the turn. Do NOT horizontal-mirror an image, rearrange a frontal face, warp, stretch or tilt the head. Preserve the recognizable messy spiky dark-brown hair without giant sideways hair whip, heavy irregular BLACK ink, warm peach-orange skin, simple black oval eyes and small bent-line nose, full rugged dark-brown beard and moustache with painted brown shading and organic irregular silhouette. Friendly happy resting OPEN smile with visible upper white teeth and small warm tongue as in the primary. No thin brows, realistic eyes, realistic anatomy, glossy doll, new hairstyle or new beard. Complete hair, beard and a small neck overlap upright, empty transparent margin around every side. Head only, no torso, shirt, arms, hands, props, text, multi-view sheet, panels, scenery, cast shadow or light background. Keep original rich saturation and crisp ink. Genuine transparent background.",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "role": "edit-target",
+      "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "role": "primary-character-identity",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-424f9044-4b6e-4c8f-8b0a-ce2ad9a3b2c9.png",
+  "requestedYawDeg": -35,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

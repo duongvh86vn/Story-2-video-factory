@@ -58,9 +58,9 @@ const nativeHeadTurnMaterials=await headTurnInventory(repo);
 const nativeHeadCellMaterials=await headCellInventory(repo);
 // Read static definition bytes only; do not evaluate a compiler, face state,
 // geometry schema or registration while inventorying authoring artifacts.
-const nativeFaceDefinitions=await Promise.all(HEAD_FACE_CANDIDATES.map(async ({actor,view,id,file})=>{
+const nativeFaceDefinitions=await Promise.all(HEAD_FACE_CANDIDATES.map(async ({actor,view,id,file,headFile})=>{
   const bytes=await fs.readFile(path.join(repo,file)),definition=JSON.parse(bytes.toString('utf8'));
-  if(definition.actor!==actor||definition.id!==id||definition.bodyViews.length!==1||definition.bodyViews[0].view!==view)throw new Error('Face definition catalog/body view differs');
+  if(definition.actor!==actor||definition.id!==id||definition.bodyViews.length!==1||definition.bodyViews[0].view!==view||definition.source.file!=='library/topics/prehistoric-life/head-cells/'+headFile)throw new Error('Face definition catalog/body view differs');
   const sources=await Promise.all([definition.source,...(definition.additionalSources??[])].map(async(source:{file:string;sha256:string;width:number;height:number})=>{
     if(!/^library\/topics\/prehistoric-life\/(?:head-cells|head-face-plates)\/(?:lila|karo)-head-[a-z0-9-]+-v[1-9]\d*\.png$/.test(source.file)||!source.file.split('/').at(-1)!.startsWith(actor+'-head-'))throw new Error('Unknown face definition static source');
     const measured=await describe(source.file);if(measured.sha256!==source.sha256||measured.width!==source.width||measured.height!==source.height||!measured.hasAlpha)throw new Error('Face definition raw source differs');return measured;

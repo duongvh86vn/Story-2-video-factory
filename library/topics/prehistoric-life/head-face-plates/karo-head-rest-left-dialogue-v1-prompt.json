@@ -1,0 +1,15 @@
+{
+  "version": "native-head-rest-plate-prompt-1",
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Edit this exact isolated Karo LEFT-FACING head. This image is the sole EDIT TARGET and the geometric/pixel-placement reference. Change ONLY his open mouth and immediately adjacent lip/beard patch into a relaxed CLOSED friendly smile for a listening/resting actor. No visible teeth, tongue or open dark mouth cavity. Retain the moustache, full beard, chin tuft and warm brown painted shading; replace the former mouth opening with coherent beard/lip paint and a simple curved dark closed smile. Keep the entire rest of the head, eyes, nose, eyebrows, cheeks, hair, ear, head orientation, colour, silhouette, neck overlap, framing, scale, position and transparent margin exactly as in the target. Do not redraw/beautify or turn the face, move any eye/nose/ear/hair feature, crop, zoom, mirror or warp. Return ONE complete isolated head on genuine transparent background in the SAME 1312x1199 canvas and alignment. No torso/clothes/text/panels/scenery/shadow. This will supply only a local mouth repair overlay; unchanged features are required for accurate alignment.",
+  "source": {
+    "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+    "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410"
+  },
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-4f796860-62e1-458c-a34c-4b24549b7be6.png",
+  "scope": "local-mouth-plate-authoring-only",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

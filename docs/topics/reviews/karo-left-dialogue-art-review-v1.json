@@ -1,0 +1,70 @@
+{
+  "version": "karo-left-dialogue-art-review-1",
+  "scope": "static-PNG-advice-only",
+  "packetOutputSha256": "9cb6d3474967274faac076c948d379e6382ea240de449bddf19dcd6d278bf17b",
+  "proposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "visibleFindings": [
+        "Image 2 and 3 face leftward in a 3/4 turn whereas Image 1 primary Karo faces slightly toward the viewer's right with his ear positioned on the left side of his face.",
+        "The closed-mouth line and darkened fill in Image 3 alter the interior beard shading and contour directly below the mustache relative to Image 2's open mouth cavity.",
+        "A raw unblended white/pale notch sits along the upper beard-to-cheek contour below the left ear in both head variants, risking edge artifacts along composite boundaries."
+      ],
+      "correction": "Restrict splicing to the enclosed mouth/lip seam directly under the nose and mustache, feathered against Image 2's beard base so original outer contours, chin silhouette, and jawline remain untouched.",
+      "limits": [
+        "Cannot verify exact subpixel bounding-box coordinates (x330..677, y710..900) without canvas inspection tools.",
+        "Cannot calculate exact 3D yaw degrees, camera rotation, or physical anatomical depth from 2D pixel rasters.",
+        "Cannot certify runtime rendering blending, alpha transparency, or production acceptance."
+      ]
+    },
+    "usage": {
+      "promptTokens": 5873,
+      "completionTokens": 235,
+      "totalTokens": 6108
+    },
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "static-art-advice",
+    "fingerprint": "9475db61cc6a4ecd5a357e257c42993d7e9324abb0edfa2378732762f0e3eedc",
+    "slot": 1,
+    "prompt": "Static artwork advice only. Image1 PRIMARY Karo identity. Image2 requested new left3/4 head. Image3 closed-mouth local repair plate V2. V1 had moved chin tuft upward; V2 removes that duplicate. Intended renderer keeps ALL Image2 except local mouth area roughly x330..677,y710..900; original lower chin tuft (below910) remains from Image2. Image3 must never replace the whole head. Compare perspective, dot eyes/nose/moustache/beard/hair, warm skin and heavy irregular ink to PRIMARY; identify up to3 visible concrete issues including local mouth/beard alignment/seam risks from2/3. Distinguish visible findings from exact source-coordinate alignment, anatomical correspondence, independent-redraw/mirroring and measured yaw which isolated2D images cannot certify. Do not claim PASS/approval, valid geometry, motion or production; no commands/code/tests/tools/API/runtime. Compact JSON {visibleFindings:[...],correction:...,limits:[...]}.",
+    "sources": [],
+    "references": [
+      {
+        "file": "docs/topics/assets/reference-karo-full.png",
+        "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+        "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410"
+      },
+      {
+        "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-left-dialogue-v2.png",
+        "sha256": "1d439730677e66f9017f2763768470ffa61125f597bf1b496804406ae94b4b95"
+      }
+    ],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-08T11:55:36.522Z"
+  },
+  "parentAssessment": {
+    "visible": "Leftward perspective is visible; mouth-only V2 removes the upward duplicate chin tuft found in V1. A pale cheek/beard notch remains in the source head and needs primary comparison at final scale.",
+    "clarification": "Reviewer refers to below the left ear; ear/notch screen-side label is not a reliable anatomy measurement. Visible source notch is outside the intended local mouth patch, not automatically corrected by it.",
+    "decision": "V1 held and its PNG SHA blocked under aliases by native head source validation. V2 used only in the bounded mouth region, original lower chin tuft and all other head paint remain from open head. No whole-head replacement, code bitmap edit or automatic feather/warp applied.",
+    "pending": "Manual region, fixed pixelScale, eye glyph/strip, chin/neck/seam and rest scale/offset need user-model geometry, composite and normal-speed video verification. Isolated image advice does not certify independent redraw, mirror absence, exact yaw, anatomical correspondence, alpha seam or motion.",
+    "approved": false,
+    "registered": false,
+    "motionVerified": false,
+    "productionReady": false
+  },
+  "usage": {
+    "promptTokens": 5873,
+    "completionTokens": 235,
+    "totalTokens": 6108
+  },
+  "approved": false,
+  "motionVerified": false,
+  "productionReady": false
+}

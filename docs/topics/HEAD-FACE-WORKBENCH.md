@@ -1,16 +1,16 @@
-# Đối chiếu mặt trên thân — source0.54
+# Đối chiếu mặt trên thân — source0.55
 
-Trang dành cho người dùng/model test kiểm mặt source0.51 và đầu trái Lila0.54 trên đúng thân native. Dàn diễn viên chính và quần chúng0.52 vẫn giữ nguyên. Mục tiêu cuối vẫn là story/script/WAV bất kỳ → diễn xuất đúng nội dung → video có giọng và QC; trang này không thay video nghiệm thu.
+Trang dành cho người dùng/model test kiểm mặt source0.51, Lila trái0.54 và Karo trái0.55 trên đúng thân native. Dàn diễn viên chính và quần chúng0.52 vẫn giữ nguyên. Mục tiêu cuối vẫn là story/script/WAV bất kỳ → diễn xuất đúng nội dung → video có giọng và QC; trang này không thay video nghiệm thu.
 
 ## Phạm vi triển khai
 
-- Catalog cố định ba definition: `lila-source-face-v1.json` / `karo-source-face-v1.json` cho góc phải, `lila-left-face-v1.json` cho góc trái. Kiểm schema, fingerprint và byte/hash nguồn; không nhận path hay bank tùy ý từ HTTP. Góc Karo trái chưa có phải báo `needs-head-face-candidate`, không chọn góc phải thay thế.
+- Catalog cố định bốn definition: `lila-source-face-v1.json` / `karo-source-face-v1.json` cho góc phải, `lila-left-face-v1.json` / `karo-left-face-v1.json` cho góc trái. Kiểm schema, fingerprint và byte/hash nguồn; không nhận path hay bank tùy ý từ HTTP. Mỗi pair có head filename explicit, phải trùng definition và link PNG trên UI. Không tự chọn góc khác khi thiếu/lỗi.
 - `view=three-quarter-left|three-quarter-right` chọn đúng cả đầu và body; default phải giữ URL0.53. URL resource mới có đoạn literal `/views/:view/` để không lẫn route legacy với đường dẫn PNG nhiều cấp. Mỗi definition phải khai báo chính xác một body view tương ứng và đúng source hash. Động tác point/gaze có target theo hướng chọn; không lật PNG hoặc nhập ROI của góc khác.
 - Ghép source head, closed rest patch Karo, thân/quần áo, miệng và mắt bằng `performanceScene`/compiler/SVG hiện hành. Không viết renderer hoặc easing thứ hai cho preview.
 - Có rest/point/think, hướng mắt trong góc đã đăng ký, full clock0–4000ms và camera slice2000–4000ms dùng cùng original acting/head/gesture/speech clock. Tua dùng GSAP timeline đã compile.
 - Preflight binding/report trước khi nạp iframe; HTML/JS/CSS/PNG/vendor có revision từ profile/plan/original clock/resource SHA và GSAP byte SHA. Mỗi request kiểm source/vendor lại trước khi dùng cache tối đa4 scene text (mỗi scene≤2MB, vendor≤512KiB). Thay source/dependency giữa các request phải chặn, không trộn asset cũ/mới. Không cache image hoặc frame array.
 - Speech activity là tín hiệu chẩn đoán cố định, **không có audio**, không gọi model/TTS/ASR, không ghi project/lock/approval. Không gọi đây là phoneme lip-sync.
-- Lỗi geometry/source/compile phải hiện là lỗi, không đổi sang đầu cũ hoặc ảnh thay thế. Lila trái mới là definition thủ công chưa thực thi geometry, chưa duyệt hair/neck/body seam. Chưa có Karo trái/profile/rear hay quần chúng directional face; một cell yaw null không phải continuous turn. [Artwork và phần cần kiểm](LEFT-DIALOGUE-HEAD.md).
+- Lỗi geometry/source/compile phải hiện là lỗi, không đổi sang đầu cũ hoặc ảnh thay thế. Hai definition trái thủ công chưa thực thi geometry, chưa duyệt hair/neck/body seam. Karo rest trái V1 bị hold và chặn theo SHA; V2 chỉ là miếng ghép miệng, giữ chòm râu từ head gốc. Chưa có profile/rear hay quần chúng directional face; một cell yaw null không phải continuous turn. [Lila0.54](LEFT-DIALOGUE-HEAD.md), [Karo và đối thoại0.55](OPPOSING-DIALOGUE-HEADS.md).
 
 ## Môi trường và bàn giao
 
@@ -28,9 +28,11 @@ Mở `http://127.0.0.1:8861/api/topics/prehistoric-life/head-faces`. Ctrl+C dừ
 
 Chọn Lila trái: `http://127.0.0.1:8861/api/topics/prehistoric-life/head-faces?actor=lila&view=three-quarter-left&action=point&look=ahead`. So với Karo phải ở trang riêng; chưa có scene hai actor cùng lúc trong workbench này. Kiểm cặp đối thoại trong pipeline/tracer sau khi geometry riêng hợp lệ.
 
+Chọn Karo trái: `http://127.0.0.1:8861/api/topics/prehistoric-life/head-faces?actor=karo&view=three-quarter-left&action=point&look=ahead`; so với Lila phải. Cả hai cách bố trí đều cần kiểm source/head/body/speech/target thực, không lấy một góc làm bằng chứng cho góc còn lại.
+
 Model test cần kiểm schema geometry trước; full/slice tại cùng absolute time phải có face/path/hand giống nhau, kể cả seek đảo/ngẫu nhiên và ở speech/blink/gesture boundaries. Kiểm cả hai actor: identity/hair/beard, neck/body scale, mask/strip/răng/lưỡi, không double ink/ghost/seam, source nguồn không đổi. Kiểm HTTP MIME/CSP/không cache, nguồn sửa/path lạ bị chặn và giới hạn scene2MB. Ghi exact SHA, command, PASS/FAIL/NOT RUN, log, ảnh ghép và video60fps/normal speed; không lấy gallery hoặc build làm bằng chứng motion.
 
-6 callback trong `tests/head-face-workbench.test.ts` đã khai báo, **NOT RUN**: so evaluator full/slice và seek đảo/ngẫu nhiên ở speech/gesture boundaries cho ba actor/view pair; source/revision/file/scene generator; actor/path/source/body-view tamper; API MIME/CSP/binding/readiness flags; left head/body/revision không mượn right; route explicit và legacy PNG nhiều cấp. Dành cho model test:
+6 callback trong `tests/head-face-workbench.test.ts` đã khai báo, **NOT RUN**: so evaluator full/slice và seek đảo/ngẫu nhiên ở speech/gesture boundaries cho bốn actor/view pair; source/revision/file/scene generator; actor/path/source/body-view tamper; API MIME/CSP/binding/readiness flags; left head/body/rest/revision không mượn actor/view khác; route explicit/legacy PNG nhiều cấp và link Karo trái đúng ảnh. Callback held-hash trong `native-head-bank-sources.test.ts` thêm plate V1, cũng NOT RUN. Dành cho model test:
 
 ```powershell
 node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/head-face-workbench.test.ts tests/native-head-face.test.ts tests/native-head-bank-sources.test.ts tests/prehistoric-supporting.test.ts

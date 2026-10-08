@@ -11,6 +11,9 @@ export const NativeHeadSourceFileSchema=z.string().regex(/^library\/topics\/preh
 const NativeHeadSourceSchema=z.object({file:NativeHeadSourceFileSchema,sha256:Sha,width:z.number().int().positive().max(8192),height:z.number().int().positive().max(8192),pixelScale:z.number().finite().min(.05).max(2).optional()}).strict();
 export type NativeHeadSource=z.infer<typeof NativeHeadSourceSchema>;
 const held=new Set(['fe9181633b8bdbb28c334d62a9c81d33c35cf9624ae35849c11850445b1d0b87','1893e4c02fa8f3cd089436536d33e85d6ad3656643b7674f844f3a8e707220e0','965d9fb0f4e800144612bb4e3cd6ec6b482dad483c894980aea6fc61bbb4aaaf','035b9d42e3825b311b25b155ddfd646416f806b2ab9f28086aa706eb16295a4f','9946191d25bdb10c9729ba77e7112d66f4171a1dcec6b6ab55fdf05a794fdb21']);
+// This local-mouth plate moved the chin tuft into the overlay and would
+// duplicate the original beard detail; renaming cannot make it usable.
+held.add('1f84f61a4bf5e69c45903626df91517091013f16aa3bbc5bec52aa14609227b2');
 /** An explicit engineering source registration, distinct from the incomplete
  * landmark draft, artistic approval or production rig. Held studies cannot
  * enter this contract, even under a renamed path. */

@@ -1,5 +1,7 @@
 # Đầu Lila hướng trái cho cảnh đối thoại — source0.54
 
+Phần dưới là record0.54. Bản0.55 bổ sung [Karo trái và cách kiểm cả hai bố trí đối thoại](OPPOSING-DIALOGUE-HEADS.md); các câu “KaroLeft chưa có” bên dưới thuộc thời điểm0.54. Không nâng review0.54 thành nghiệm thu0.55.
+
 Mục tiêu vẫn là story/script/WAV → diễn viên đúng mẫu → video có giọng/phụ đề/QC, EN chính và VI/JA/KO/TTS ngoài-local. Đây là bước bổ sung hướng đối diện; chưa phải đủ continuous turn hoặc video được nghiệm thu.
 
 ## Artwork và registration đề xuất
