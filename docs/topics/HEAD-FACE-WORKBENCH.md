@@ -1,5 +1,7 @@
 # Đối chiếu mặt trên thân — source0.55
 
+**Bổ sung source0.59 — 08/10/2026:** catalog/workbench4 nhận thêm quần chúng nam trọc không râu góc trái và nữ tóc ngang vai góc phải với own-model bank4, dùng body costume Karo/Lila. URL/default principal và renderer giữ cùng contract, không tự gán đầu mới cho production. Mẫu thiếu góc báo lỗi. [Nguồn, môi trường và lệnh kiểm cho model test](SUPPORTING-NATIVE-HEAD.md). Manual geometry, artwork và video NOT RUN/chưa nghiệm thu; giữ readiness false. Các mô tả source0.55–0.56 bên dưới là lịch sử principal.
+
 Source0.56 tách loader exact source thành `packages/topics/head-face-source.ts` dùng chung cho workbench và [ca hai diễn viên native-head](NATIVE-HEAD-DIALOGUE.md). Public import cũ `headFaceCandidate` và URL/default/revision giữ nguyên; không thêm approval hoặc production selection.
 
 Trang dành cho người dùng/model test kiểm mặt source0.51, Lila trái0.54 và Karo trái0.55 trên đúng thân native. Dàn diễn viên chính và quần chúng0.52 vẫn giữ nguyên. Mục tiêu cuối vẫn là story/script/WAV bất kỳ → diễn xuất đúng nội dung → video có giọng và QC; trang này không thay video nghiệm thu.

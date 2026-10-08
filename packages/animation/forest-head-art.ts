@@ -204,6 +204,7 @@ export function referenceFaceState(input:ReferenceFaceInput):FrameState['face'] 
 }
 /** Fixed pack resources only. Stage original bytes and retain their hashes. */
 export function referenceHeadAssets(appearance:HostProfile['appearance']):NativeHeadResource[] {
+  if(hasNativeHeadBank({appearance}))return [bodyViewAsset(appearance),...nativeHeadResources(registeredNativeHeadBank({appearance}))];
   if(appearance.supportingModel)return supportingHeadAssets(appearance);
   if(usesSourceColour(appearance))return sourceColourAssets(appearance);
   if(usesBodyView({appearance}))return [bodyViewAsset(appearance),...(hasNativeHeadBank({appearance})?nativeHeadResources(registeredNativeHeadBank({appearance})):bodyViewRestMouthAssets(appearance))];

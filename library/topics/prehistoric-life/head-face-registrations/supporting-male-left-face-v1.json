@@ -1,0 +1,380 @@
+{
+  "version": "native-head-bank-4",
+  "id": "supporting-male-left-face-v1",
+  "actor": "prehistoric-male-bald",
+  "source": {
+    "file": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1.png",
+    "sha256": "8308c768b762c00b8d9aba4a1ed37f225c1c4b507591e51823778cca5091b674",
+    "width": 1199,
+    "height": 1312,
+    "pixelScale": 0.15
+  },
+  "primary": {
+    "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+    "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+  },
+  "bodyViews": [
+    {
+      "view": "three-quarter-left",
+      "sourceHash": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4"
+    }
+  ],
+  "unitScale": 1,
+  "cells": [
+    {
+      "id": "source-angle",
+      "sourceId": "primary",
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1199,
+        "height": 1312
+      },
+      "neck": {
+        "x": 627,
+        "y": 1062
+      },
+      "neckTop": {
+        "x": 627,
+        "y": 997
+      },
+      "chin": {
+        "x": 489,
+        "y": 930
+      },
+      "eyeTarget": {
+        "x": 446,
+        "y": 505
+      },
+      "skull": {
+        "x": 200,
+        "y": 100,
+        "width": 820,
+        "height": 870
+      },
+      "yawDeg": null,
+      "seam": [
+        {
+          "x": 590,
+          "y": 1020
+        },
+        {
+          "x": 665,
+          "y": 1020
+        },
+        {
+          "x": 665,
+          "y": 1125
+        },
+        {
+          "x": 590,
+          "y": 1125
+        }
+      ],
+      "restMood": "happy",
+      "face": {
+        "version": "native-head-face-1",
+        "source": {
+          "sha256": "8308c768b762c00b8d9aba4a1ed37f225c1c4b507591e51823778cca5091b674",
+          "width": 1199,
+          "height": 1312
+        },
+        "mouth": {
+          "kind": "skin-strip",
+          "region": [
+            {
+              "x": 300,
+              "y": 685
+            },
+            {
+              "x": 620,
+              "y": 685
+            },
+            {
+              "x": 620,
+              "y": 849
+            },
+            {
+              "x": 300,
+              "y": 849
+            }
+          ],
+          "top": [
+            {
+              "x": 324,
+              "y": 713
+            },
+            {
+              "x": 385,
+              "y": 772
+            },
+            {
+              "x": 515,
+              "y": 785
+            },
+            {
+              "x": 582,
+              "y": 707
+            }
+          ],
+          "depth": 43,
+          "lift": 18,
+          "stroke": 12,
+          "strip": {
+            "x": 457,
+            "y": 659,
+            "width": 125,
+            "height": 9
+          }
+        },
+        "eyes": {
+          "screen-left": {
+            "center": {
+              "x": 324,
+              "y": 487
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 280,
+                "y": 422
+              },
+              {
+                "x": 369,
+                "y": 422
+              },
+              {
+                "x": 369,
+                "y": 551
+              },
+              {
+                "x": 280,
+                "y": 551
+              }
+            ],
+            "glyph": [
+              {
+                "x": 310,
+                "y": 439
+              },
+              {
+                "x": 339,
+                "y": 439
+              },
+              {
+                "x": 354,
+                "y": 463
+              },
+              {
+                "x": 354,
+                "y": 511
+              },
+              {
+                "x": 339,
+                "y": 535
+              },
+              {
+                "x": 310,
+                "y": 535
+              },
+              {
+                "x": 294,
+                "y": 511
+              },
+              {
+                "x": 294,
+                "y": 463
+              }
+            ],
+            "lid": [
+              {
+                "x": 294,
+                "y": 487
+              },
+              {
+                "x": 310,
+                "y": 495
+              },
+              {
+                "x": 338,
+                "y": 495
+              },
+              {
+                "x": 354,
+                "y": 487
+              }
+            ],
+            "strip": {
+              "x": 285,
+              "y": 555,
+              "width": 76,
+              "height": 9
+            },
+            "stroke": 4
+          },
+          "screen-right": {
+            "center": {
+              "x": 568,
+              "y": 523
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 525,
+                "y": 459
+              },
+              {
+                "x": 629,
+                "y": 459
+              },
+              {
+                "x": 629,
+                "y": 585
+              },
+              {
+                "x": 525,
+                "y": 585
+              }
+            ],
+            "glyph": [
+              {
+                "x": 553,
+                "y": 476
+              },
+              {
+                "x": 583,
+                "y": 476
+              },
+              {
+                "x": 598,
+                "y": 499
+              },
+              {
+                "x": 598,
+                "y": 547
+              },
+              {
+                "x": 583,
+                "y": 570
+              },
+              {
+                "x": 553,
+                "y": 570
+              },
+              {
+                "x": 538,
+                "y": 547
+              },
+              {
+                "x": 538,
+                "y": 499
+              }
+            ],
+            "lid": [
+              {
+                "x": 538,
+                "y": 523
+              },
+              {
+                "x": 553,
+                "y": 531
+              },
+              {
+                "x": 583,
+                "y": 531
+              },
+              {
+                "x": 598,
+                "y": 523
+              }
+            ],
+            "strip": {
+              "x": 533,
+              "y": 590,
+              "width": 78,
+              "height": 9
+            },
+            "stroke": 4
+          }
+        },
+        "protectedContours": [
+          [
+            {
+              "x": 300,
+              "y": 552
+            },
+            {
+              "x": 433,
+              "y": 552
+            },
+            {
+              "x": 433,
+              "y": 678
+            },
+            {
+              "x": 300,
+              "y": 678
+            }
+          ],
+          [
+            {
+              "x": 260,
+              "y": 325
+            },
+            {
+              "x": 392,
+              "y": 325
+            },
+            {
+              "x": 392,
+              "y": 391
+            },
+            {
+              "x": 260,
+              "y": 391
+            }
+          ],
+          [
+            {
+              "x": 540,
+              "y": 340
+            },
+            {
+              "x": 720,
+              "y": 340
+            },
+            {
+              "x": 720,
+              "y": 450
+            },
+            {
+              "x": 540,
+              "y": 450
+            }
+          ]
+        ],
+        "status": "engineering-face-registration",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      }
+    }
+  ],
+  "routes": [],
+  "capabilities": {
+    "speech": true,
+    "directionalEyes": true,
+    "expressions": false,
+    "secondary": false
+  },
+  "status": "engineering-source-registration",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

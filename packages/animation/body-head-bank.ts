@@ -4,13 +4,14 @@ import type {ViewActingClock} from './view-acting-clock.js';
 import {NativeHeadBankSchema,nativeHeadSources,nativeHeadSourceForCell,nativeHeadPixelScale,type NativeHeadBank} from './native-head-bank.js';
 import {NativeHeadTrackSchema,nativeHeadCellAt,validateNativeHeadSource} from './native-head-track.js';
 import {nativeHeadFaceSvg,nativeHeadFaceState,nativeHeadFaceMatrixError,type NativeFaceState} from './native-head-face.js';
+import {nativeHeadIdentityMatches,isNativeHeadFaceVersion} from './native-head-identity.js';
 
 export function hasNativeHeadBank(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyHeadBank!==undefined;}
 export function hasNativeHeadSpeech(profile:Pick<HostProfile,'appearance'>){return hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.speech;}
 export function hasNativeHeadEyes(profile:Pick<HostProfile,'appearance'>){return hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.directionalEyes;}
 export function registeredNativeHeadBank(profile:Pick<HostProfile,'appearance'>):NativeHeadBank{
   const a=profile.appearance,b=NativeHeadBankSchema.parse(a.bodyHeadBank);
-  if(a.artworkVersion!=='forest-body-view-1'||a.characterVariant!==b.actor||!a.bodyView||!b.bodyViews.some(v=>v.view===a.bodyView))throw new Error('needs-head-turn-registration: head bank has another actor or incompatible body source');
+  if(a.artworkVersion!=='forest-body-view-1'||!nativeHeadIdentityMatches(a,b.actor)||!a.bodyView||!b.bodyViews.some(v=>v.view===a.bodyView))throw new Error('needs-head-turn-registration: head bank has another actor or incompatible body source');
   if(a.bodySpeech||a.bodyEyes||a.bodyExpressions||a.bodySecondary)throw new Error('needs-head-turn-registration: fixed-view face/hair overlays cannot be used on different head cells');
   return b;
 }
@@ -64,7 +65,7 @@ export function nativeHeadBankFace(bank:NativeHeadBank,cellId:string){
 }
 /** Every cell retains stable path/selector keys across discrete view changes. */
 export function nativeHeadBankFacialState(bank:NativeHeadBank,input:{aperture:number;blink:number;look:{x:number;y:number}}):NativeFaceState{
-  if(bank.version!=='native-head-bank-3'||!bank.capabilities.speech||!bank.capabilities.directionalEyes||bank.cells.some(c=>!c.face))throw new Error('needs-head-face-registration: complete bank3 facial capabilities required');
+  if(!isNativeHeadFaceVersion(bank.version)||!bank.capabilities.speech||!bank.capabilities.directionalEyes||bank.cells.some(c=>!c.face))throw new Error('needs-head-face-registration: complete source-face bank3/4 capabilities required');
   const face:NativeFaceState['face']={},paths:Record<string,string>={};
   for(const [i,cell] of bank.cells.entries())if(cell.face){const a=-nativeHeadCellAngle(cell)*Math.PI/180,look={x:input.look.x*Math.cos(a)-input.look.y*Math.sin(a),y:input.look.x*Math.sin(a)+input.look.y*Math.cos(a)};
     const state=nativeHeadFaceState(cell.face,{...input,look},'native-face-'+i);Object.assign(face,state.face);Object.assign(paths,state.paths);

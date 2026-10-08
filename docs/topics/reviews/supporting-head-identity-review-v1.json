@@ -1,0 +1,164 @@
+{
+  "version": "supporting-head-identity-review-1",
+  "precedingSourceSHA": "3d30c1a96193dc481275f3a354449a941f605c27",
+  "candidateVersion": "forest-tribe-0.59-supporting-source-face",
+  "scope": "bounded text-only source advice; no tests/geometry/runtime/art/video execution",
+  "packet": {
+    "version": "dev-nine-router-task-1",
+    "id": "supporting-head-identity-v1",
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "source-only-review",
+    "prompt": "Review this narrow source change: explicit native-head-bank-4 for prehistoric supporting male (bald, no beard) and female (shoulder-length hair), separate visual model IDs from story-person ownerId. Versions1–3 remain principal-only with unchanged canonical registration output. Bank4 binds own current primary/full model and directional PNG prefixes, own skin-strip face geometry, matching Karo/Lila body template only. Topic normalizer preserves explicit supporting native bank/view and selected motion/seat without automatic production selection. Find concrete source regressions or resource/model-identity bypasses in supplied files. DO NOT request tools, run or propose executing tests/geometry/builders/compilers/renderers/browser/server/audio/video. Runtime exclusively delegated to human's model. No approval/final/quality claim, current drawings and manual face coords unvalidated, availableBanks empty and readiness false. Return JSON with findings [{severity,file,location,problem,sourceEvidence,repair}], or [] if none, and unverified[]. Do not invent runtime observations; reference exact source. max6 findings; do not advise broader art styles or changes to story input/TTS.",
+    "sources": [
+      "packages/animation/native-head-identity.ts",
+      "packages/animation/native-head-bank.ts",
+      "packages/host/schemas.ts",
+      "packages/animation/native-head-resources.ts",
+      "packages/topics/head-face-source.ts",
+      "packages/topics/prehistoric-life.ts"
+    ],
+    "images": [],
+    "maxOutputTokens": 2200
+  },
+  "proposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [
+        {
+          "severity": "regression",
+          "file": "packages/animation/native-head-identity.ts",
+          "location": "nativeHeadIdentityMatches",
+          "problem": "nativeHeadIdentityMatches compares identity.supporting against a boolean check, but then strictly checks appearance.supportingModel === actor. For principal actors ('lila' and 'karo'), identity.supporting is false, but if appearance.supportingModel is defined on a principal character or omitted inconsistently, it checks appearance.supportingModel === undefined. More critically, in host schemas, HostProfileSchema.appearance validates `!nativeHeadIdentityMatches(a, a.bodyHeadBank.actor)`. For supporting models, `appearance.characterVariant` is matched against `identity.bodyTemplate`, but `nativeHeadIdentities['prehistoric-male-bald'].bodyTemplate` is 'karo'. When matching, `nativeHeadIdentityMatches` checks `appearance.characterVariant === identity.bodyTemplate && (identity.supporting ? appearance.supportingModel === actor : appearance.supportingModel === undefined)`. However, if `appearance.characterVariant` is undefined (which is optional on `HostProfileSchema.appearance`), `appearance.characterVariant === identity.bodyTemplate` fails even if `supportingModel` is validly configured.",
+          "sourceEvidence": "const identity=nativeHeadIdentities[actor];\nreturn appearance.characterVariant===identity.bodyTemplate&&(identity.supporting?appearance.supportingModel===actor:appearance.supportingModel===undefined);",
+          "repair": "Ensure characterVariant is populated or resolve bodyTemplate via prehistoricSupportingModel when matching supporting identities if characterVariant is optional on the input appearance object."
+        },
+        {
+          "severity": "regression",
+          "file": "packages/animation/native-head-bank.ts",
+          "location": "NativeHeadBankDefinitionSchema.superRefine / sourceById validation",
+          "problem": "When validating NativeHeadBankDefinitionSchema, bank-4 or bank-3 multi-source banks allow `c.face.mouth.rest.sourceId`. The check `const usedSources=new Set([...b.cells.map(sourceId),...b.cells.flatMap(c=>c.face?.mouth.rest?[c.face.mouth.rest.sourceId]:[])]);` collects string IDs, but `sourceId` helper returns `undefined` for multi-source cells where `c.sourceId` is undefined before `c.sourceId` presence is validated, adding `undefined` to `usedSources`. Furthermore, `sources.some(s=>!usedSources.has(s.id))` compares `s.id` against `usedSources`. If a cell uses `source.id` but `b.source` has id `'primary'`, cells in bank 4 with `sourceId: 'primary'` are permitted, but `NativeHeadSourceFileSchema` requires files matching `/^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|(?:head-cells|head-face-plates)\\/(?:lila|karo|prehistoric-male-bald|prehistoric-female-haired)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])/`. However, for supporting models, `b.primary` in `nativeHeadIdentities` is `docs/topics/assets/reference-...` which is validated against `readSource`. In `readSource`: `if(!NativeHeadSourceFileSchema.safeParse(file).success&&!Object.values(nativeHeadIdentities).some(identity=>identity.primary.file===file))throw new Error(...)`. In `nativeHeadResources`, `b.source.file` is validated by `readNativeHeadSource(root, source, bank.primary)` which calls `readSource(root, source.file)`. This works, but in `NativeHeadBankDefinitionSchema`, `b.primary.file` is not checked against `NativeHeadSourceFileSchema` only `b.source.file`. But if `b.actor` has a bank-4 registration where `b.source.file` is in `head-cells/`, `!s.file.split('/').at(-1)!.startsWith(b.actor+'-head-')` checks that the file starts with `b.actor+'-head-'`. For supporting models `b.actor` is `'prehistoric-male-bald'` or `'prehistoric-female-haired'`. If a closed-mouth plate is included in `additionalSources`, its file must also start with `${b.actor}-head-`, which matches the regex.",
+          "sourceEvidence": "if(!s.file.split('/').at(-1)!.startsWith(b.actor+'-head-'))fail('Head bank source and identity must belong to the same actor');",
+          "repair": "Ensure tests verify that closed-mouth plate filename prefixes strictly follow `${b.actor}-head-` format rather than generic plates."
+        },
+        {
+          "severity": "regression",
+          "file": "packages/topics/prehistoric-life.ts",
+          "location": "supportingNativeTopicAppearance",
+          "problem": "In `supportingNativeTopicAppearance`, `supportingTopicAppearance(a.supportingModel)` is called, which calls `topicAppearance(...)` and returns `{ characterVariant: bodyTemplate, supportingModel: model, ... }`. Then `supportingNativeTopicAppearance` sets `{...supportingTopicAppearance(a.supportingModel), artworkVersion:'forest-body-view-1', bodyView:a.bodyView, bodyHeadBank:a.bodyHeadBank, ...}`. But `topicAppearance` sets `artworkVersion: 'forest-body-1'`, which gets overridden to `'forest-body-view-1'`. However, in `applyTopicCast`, the assignment for principal is `character.appearance = principal ? topicAppearance(character.id as 'lila'|'karo') : requested.artworkVersion==='forest-body-view-1'||requested.bodyHeadBank||requested.bodyView ? supportingNativeTopicAppearance(requested) : supportingTopicAppearance(requested.supportingModel!)`. But if `character.appearance` was updated, `character.costume` is deleted (`delete character.costume;`). Notice that in `topicAppearance`, `characterVariant` is set to `id` ('lila' or 'karo'). However, in `HostProfileSchema`, `a.characterVariant` is optional. In `applyTopicCast`, `supportingNativeTopicAppearance` parses `input` with `HostProfileSchema.shape.appearance.parse(input)`. In `HostProfileSchema`, the refine check requires: `if(a.artworkVersion==='forest-body-view-1'&&(!a.bodyView||!a.characterVariant))ctx.addIssue(...)`. If the input story actor has `supportingModel` and `artworkVersion: 'forest-body-view-1'` but omitted `characterVariant` (expecting it to be inferred from `supportingModel`), `HostProfileSchema.shape.appearance.parse(input)` will throw a validation error before `supportingTopicAppearance` has a chance to supply `characterVariant: prehistoricSupportingModel(model).bodyTemplate`.",
+          "sourceEvidence": "const a=HostProfileSchema.shape.appearance.parse(input);\nif(!a.supportingModel||a.artworkVersion!=='forest-body-view-1'||!a.bodyView||a.bodyHeadBank?.version!==NATIVE_SUPPORTING_HEAD_BANK_VERSION||a.bodyHeadBank.actor!==a.supportingModel)\n  throw new Error('needs-supporting-head-registration: explicit own-model bank4 and compatible body view required');",
+          "repair": "Ensure `characterVariant` matching `prehistoricSupportingModel(input.supportingModel).bodyTemplate` is populated on `input` prior to parsing with `HostProfileSchema.shape.appearance.parse(input)`, or relax the requirement that callers must explicitly declare `characterVariant` when `supportingModel` is already explicitly specified."
+        }
+      ],
+      "unverified": [
+        "Pixel coordinates and seam points in unvalidated manual face registrations",
+        "Availability and contents of image files in library/topics/prehistoric-life/head-cells/",
+        "Runtime motion acceptance and audio synchronization"
+      ]
+    },
+    "usage": {
+      "promptTokens": 16491,
+      "completionTokens": 1850,
+      "totalTokens": 18341
+    },
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "source-only-review",
+    "fingerprint": "e4a8fee010cf68760128de2f9f72d651199a87658a047ceb3845bf66cc7443d1",
+    "slot": 1,
+    "prompt": "Review this narrow source change: explicit native-head-bank-4 for prehistoric supporting male (bald, no beard) and female (shoulder-length hair), separate visual model IDs from story-person ownerId. Versions1–3 remain principal-only with unchanged canonical registration output. Bank4 binds own current primary/full model and directional PNG prefixes, own skin-strip face geometry, matching Karo/Lila body template only. Topic normalizer preserves explicit supporting native bank/view and selected motion/seat without automatic production selection. Find concrete source regressions or resource/model-identity bypasses in supplied files. DO NOT request tools, run or propose executing tests/geometry/builders/compilers/renderers/browser/server/audio/video. Runtime exclusively delegated to human's model. No approval/final/quality claim, current drawings and manual face coords unvalidated, availableBanks empty and readiness false. Return JSON with findings [{severity,file,location,problem,sourceEvidence,repair}], or [] if none, and unverified[]. Do not invent runtime observations; reference exact source. max6 findings; do not advise broader art styles or changes to story input/TTS.",
+    "sources": [
+      {
+        "file": "packages/animation/native-head-identity.ts",
+        "sha256": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894"
+      },
+      {
+        "file": "packages/animation/native-head-bank.ts",
+        "sha256": "6250a4ba019866be5a2a7e0ef1ff423faa4af263bd62e819fdf54eecf1d7e5ef"
+      },
+      {
+        "file": "packages/host/schemas.ts",
+        "sha256": "4d5997d8651f4f907d28b02d77e4285f4155e1b153c44a3068dd8c1545c177a1"
+      },
+      {
+        "file": "packages/animation/native-head-resources.ts",
+        "sha256": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461"
+      },
+      {
+        "file": "packages/topics/head-face-source.ts",
+        "sha256": "20ec9b0071e8b35a20aa5eef64d0f234047f873b78c17dd654ed139d1b8a2d9e"
+      },
+      {
+        "file": "packages/topics/prehistoric-life.ts",
+        "sha256": "7cd475ad27e9a5b8c44457ad314997b4a66f14fc4a08048f3ce1c2cc9940a78a"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-08T13:47:16.749Z"
+  },
+  "snapshots": [
+    {
+      "file": "packages/animation/native-head-identity.ts",
+      "sha256": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894",
+      "snapshot": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/animation/native-head-identity.ts",
+      "snapshotSha256": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894"
+    },
+    {
+      "file": "packages/animation/native-head-bank.ts",
+      "sha256": "6250a4ba019866be5a2a7e0ef1ff423faa4af263bd62e819fdf54eecf1d7e5ef",
+      "snapshot": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/animation/native-head-bank.ts",
+      "snapshotSha256": "6250a4ba019866be5a2a7e0ef1ff423faa4af263bd62e819fdf54eecf1d7e5ef"
+    },
+    {
+      "file": "packages/host/schemas.ts",
+      "sha256": "4d5997d8651f4f907d28b02d77e4285f4155e1b153c44a3068dd8c1545c177a1",
+      "snapshot": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/host/schemas.ts",
+      "snapshotSha256": "4d5997d8651f4f907d28b02d77e4285f4155e1b153c44a3068dd8c1545c177a1"
+    },
+    {
+      "file": "packages/animation/native-head-resources.ts",
+      "sha256": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461",
+      "snapshot": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/animation/native-head-resources.ts",
+      "snapshotSha256": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461"
+    },
+    {
+      "file": "packages/topics/head-face-source.ts",
+      "sha256": "20ec9b0071e8b35a20aa5eef64d0f234047f873b78c17dd654ed139d1b8a2d9e",
+      "snapshot": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/topics/head-face-source.ts",
+      "snapshotSha256": "20ec9b0071e8b35a20aa5eef64d0f234047f873b78c17dd654ed139d1b8a2d9e"
+    },
+    {
+      "file": "packages/topics/prehistoric-life.ts",
+      "sha256": "7cd475ad27e9a5b8c44457ad314997b4a66f14fc4a08048f3ce1c2cc9940a78a",
+      "snapshot": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/topics/prehistoric-life.ts",
+      "snapshotSha256": "7cd475ad27e9a5b8c44457ad314997b4a66f14fc4a08048f3ce1c2cc9940a78a"
+    }
+  ],
+  "dispositions": [
+    {
+      "finding": 0,
+      "result": "not-demonstrated",
+      "reason": "Missing characterVariant deliberately fails: matching body costume is explicit in existing source and native Host/Actor contracts. No inference or relaxed identity guard authorized. Canonical supporting appearance supplies it for callers."
+    },
+    {
+      "finding": 1,
+      "result": "not-demonstrated",
+      "reason": "Advice describes allowed own-prefix local plates without a bypass. Missing sourceId is independently rejected, unused resources fail, and primary file/hash are exact own-model identities. Supporting primary is its own catalog full image, not the principal reference stated in part of the response."
+    },
+    {
+      "finding": 2,
+      "result": "not-demonstrated",
+      "reason": "Same missing-characterVariant suggestion as finding0. Normalizer intentionally validates an explicit already selected bank/body view, preserves it, and rejects unsupported requests rather than synthesizing a compatible source."
+    }
+  ],
+  "changesAppliedFromModel": false,
+  "automaticRetry": false,
+  "geometryValidation": "NOT RUN",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "note": "All source suggestions assessed manually. No claim of reduced account quota, geometry, likeness, smoothness or video acceptance."
+}

@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.58-supporting-clean-face",
+  "version": "forest-tribe-0.59-supporting-source-face",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -201,12 +201,55 @@
       "motionVerified": false,
       "face": "Native closed happy smile remains in silence. Existing provisional local blink/round/frown/activity overlays use each model source coordinates. Not registered bank3 face, verified gaze, phonemes or accepted motion."
     },
+    "nativeFaces": {
+      "version": "supporting-source-face-1",
+      "candidates": [
+        {
+          "actor": "prehistoric-male-bald",
+          "view": "three-quarter-left",
+          "id": "supporting-male-left-face-v1",
+          "file": "library/topics/prehistoric-life/head-face-registrations/supporting-male-left-face-v1.json",
+          "headFile": "prehistoric-male-bald-head-left-v1.png",
+          "sha256": "8308c768b762c00b8d9aba4a1ed37f225c1c4b507591e51823778cca5091b674",
+          "width": 1199,
+          "height": 1312
+        },
+        {
+          "actor": "prehistoric-female-haired",
+          "view": "three-quarter-right",
+          "id": "supporting-female-right-face-v1",
+          "file": "library/topics/prehistoric-life/head-face-registrations/supporting-female-right-face-v1.json",
+          "headFile": "prehistoric-female-haired-head-right-v1.png",
+          "sha256": "7ab9bcd21fa122a711af6797c81f7d127b369de0588ea37306e53898eeeb7a58",
+          "width": 1419,
+          "height": 1109
+        }
+      ],
+      "selection": "Explicit own-model bank4 with matching Karo/Lila body costume; story-person IDs and clocks remain separate.",
+      "geometryValidation": "NOT RUN",
+      "yawMeasured": false,
+      "independentRedrawProven": false,
+      "availableBanks": [],
+      "approved": false,
+      "productionReady": false,
+      "motionVerified": false,
+      "pending": [
+        "identity and face artwork review",
+        "geometry and seam validation",
+        "original speaker/gaze clocks through camera cuts",
+        "missing opposite/profile/rear views",
+        "continuous turns and normal-speed multi-actor video"
+      ]
+    },
     "codeHashes": {
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
-      "packages/topics/supporting-workbench.ts": "2c0ce89a9acf581eabcab667af7320ff0cda95b51386ad02799d379da80ecb1f",
+      "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
+      "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
+      "packages/topics/prehistoric-life.ts": "7cd475ad27e9a5b8c44457ad314997b4a66f14fc4a08048f3ce1c2cc9940a78a",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
+      "packages/animation/native-head-identity.ts": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
-      "packages/host/schemas.ts": "3f194a8b532c60b2bf00afa5b3a7753b11a2c180c2c3ad101e8b136ee2d9455c"
+      "packages/host/schemas.ts": "4d5997d8651f4f907d28b02d77e4285f4155e1b153c44a3068dd8c1545c177a1"
     },
     "workbench": "/api/topics/prehistoric-life/supporting-actors"
   },
@@ -2515,8 +2558,47 @@
     "sourceVersions": [
       "native-head-bank-1",
       "native-head-bank-2",
-      "native-head-bank-3"
+      "native-head-bank-3",
+      "native-head-bank-4"
     ],
+    "modelIdentities": {
+      "lila": {
+        "bodyTemplate": "lila",
+        "supporting": false,
+        "mouthKind": "skin-strip",
+        "primary": {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+        }
+      },
+      "karo": {
+        "bodyTemplate": "karo",
+        "supporting": false,
+        "mouthKind": "native-rim",
+        "primary": {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+        }
+      },
+      "prehistoric-male-bald": {
+        "bodyTemplate": "karo",
+        "supporting": true,
+        "mouthKind": "skin-strip",
+        "primary": {
+          "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+          "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+        }
+      },
+      "prehistoric-female-haired": {
+        "bodyTemplate": "lila",
+        "supporting": true,
+        "mouthKind": "skin-strip",
+        "primary": {
+          "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+          "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+        }
+      }
+    },
     "method": "registered source cell at the original discrete head clock; single atlas or explicitly bound source images, fixed source pixel density and uniform global neck attachment, native eye/chin geometry; no pose-dependent scaling, whole-face warp, reflection or double-face crossfade",
     "productionReady": false,
     "approved": false,
@@ -2532,10 +2614,11 @@
       "whole arbitrary-story/script/WAV factory acceptance"
     ],
     "codeHashes": {
-      "packages/animation/native-head-bank.ts": "cf4c8e4f25544c68753e3fcec4e21e045a1da05563b6221851cf99e73b016b2a",
+      "packages/animation/native-head-bank.ts": "6250a4ba019866be5a2a7e0ef1ff423faa4af263bd62e819fdf54eecf1d7e5ef",
+      "packages/animation/native-head-identity.ts": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894",
       "packages/animation/native-head-track.ts": "e96ca04c97bb01ebf542043768565a9a151c04f83d330ebb02a1a4cc5de2f0ab",
-      "packages/animation/body-head-bank.ts": "735f60f921543cc86dfc0c1e60f1e07509ab74d00228e344aa22efa3081c6e42",
-      "packages/animation/native-head-resources.ts": "5403a2093674bb66d88c519d80bfa78d71dbe152b618a2cf70ca0a5312edaac7",
+      "packages/animation/body-head-bank.ts": "7264c2511cec22beeaaae4b15a25601d507d5dd5884c1aedf15c3ab178a0f1ce",
+      "packages/animation/native-head-resources.ts": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461",
       "packages/animation/native-head-face.ts": "739dba84c31cd8d48c67860024caae1f6a6a3940aa1df99f31ee151936aae9f5",
       "packages/core/json-sha256.ts": "04d3524a8b3c2a053835b9bb7d4cd6218b0ece94a9ccca32768f5deab56d1eff"
     }
@@ -2548,6 +2631,14 @@
         "view": "three-quarter-right",
         "file": "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json",
         "sha256": "2a9be1bf907aafc4948a0d3d4355d4e2c5657dc3a37fc95428354753f71cdc9d",
+        "primary": {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+          "width": 430,
+          "height": 766,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "lila",
         "sources": [
           {
             "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
@@ -2570,6 +2661,14 @@
         "view": "three-quarter-right",
         "file": "library/topics/prehistoric-life/head-face-registrations/karo-source-face-v1.json",
         "sha256": "8d1dee8c1e693b0ffafdd6ee1b641f8be2650931bb446c6b6fe9ba244e40137b",
+        "primary": {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+          "width": 377,
+          "height": 716,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "karo",
         "sources": [
           {
             "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
@@ -2599,6 +2698,14 @@
         "view": "three-quarter-left",
         "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-face-v1.json",
         "sha256": "42aa9da4aab32592f2cd76b564001d550c51647497a18a355bc07f0782723146",
+        "primary": {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+          "width": 430,
+          "height": 766,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "lila",
         "sources": [
           {
             "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
@@ -2621,6 +2728,14 @@
         "view": "three-quarter-left",
         "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-face-v1.json",
         "sha256": "69f0e8352392ba78416c0000e595fe913246014ebf6b71382aa2833c76541640",
+        "primary": {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+          "width": 377,
+          "height": 716,
+          "hasAlpha": false
+        },
+        "bodyTemplate": "karo",
         "sources": [
           {
             "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
@@ -2644,20 +2759,80 @@
         "approved": false,
         "productionReady": false,
         "motionVerified": false
+      },
+      {
+        "actor": "prehistoric-male-bald",
+        "view": "three-quarter-left",
+        "file": "library/topics/prehistoric-life/head-face-registrations/supporting-male-left-face-v1.json",
+        "sha256": "3c6cbe904b041cb8ad30cbc06a46b580ed0c8dd9753a4c68117f5fdc34097ddf",
+        "primary": {
+          "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+          "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
+          "width": 910,
+          "height": 1728,
+          "hasAlpha": true
+        },
+        "bodyTemplate": "karo",
+        "sources": [
+          {
+            "file": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1.png",
+            "sha256": "8308c768b762c00b8d9aba4a1ed37f225c1c4b507591e51823778cca5091b674",
+            "width": 1199,
+            "height": 1312,
+            "hasAlpha": true
+          }
+        ],
+        "status": "unvalidated-engineering-definition",
+        "geometryValidation": "NOT RUN",
+        "selected": false,
+        "registered": false,
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      },
+      {
+        "actor": "prehistoric-female-haired",
+        "view": "three-quarter-right",
+        "file": "library/topics/prehistoric-life/head-face-registrations/supporting-female-right-face-v1.json",
+        "sha256": "26a3807a15e055507653dad09474869dda91841736ab73828d1ed89705d09708",
+        "primary": {
+          "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+          "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+          "width": 939,
+          "height": 1675,
+          "hasAlpha": true
+        },
+        "bodyTemplate": "lila",
+        "sources": [
+          {
+            "file": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1.png",
+            "sha256": "7ab9bcd21fa122a711af6797c81f7d127b369de0588ea37306e53898eeeb7a58",
+            "width": 1419,
+            "height": 1109,
+            "hasAlpha": true
+          }
+        ],
+        "status": "unvalidated-engineering-definition",
+        "geometryValidation": "NOT RUN",
+        "selected": false,
+        "registered": false,
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
       }
     ],
-    "selection": "explicit bank3 only after user-model geometry/runtime review; no automatic selection",
+    "selection": "explicit bank3 principals or bank4 own supporting model only after user-model geometry/runtime review; no automatic selection",
     "availableBanks": [],
     "productionReady": false,
     "approved": false,
     "motionVerified": false,
     "handoff": "docs/topics/NATIVE-HEAD-FACE-HANDOFF.md",
     "inspection": {
-      "version": "native-head-face-workbench-3",
+      "version": "native-head-face-workbench-4",
       "url": "/api/topics/prehistoric-life/head-faces",
-      "codeHash": "4b92403955dd4fcf02090192c4744899f551930914f2f5fea47c2cf33434f654",
-      "catalogCodeHash": "cf18f7f9544b76b8220e342c8ac7891db5cee1d7f37d27fa935ec5ac932375f9",
-      "sourceLoaderCodeHash": "01b12d56fe29faead176cec3583059c343576b82ab74013f78ae707d1c62edde",
+      "codeHash": "7569bac80061391c7663ea4ecf6bc89ac8b2d6c4102eed8b6dff3d3c9ccb0090",
+      "catalogCodeHash": "52bbaeef73bc71d1a4c71c4a492657f1b158ae0eaba533c383ae06b6ef05254c",
+      "sourceLoaderCodeHash": "20ec9b0071e8b35a20aa5eef64d0f234047f873b78c17dd654ed139d1b8a2d9e",
       "handoff": "docs/topics/HEAD-FACE-WORKBENCH.md",
       "runtimeVerified": false,
       "audioPresent": false,
@@ -6421,8 +6596,47 @@
           "sourceVersions": [
             "native-head-bank-1",
             "native-head-bank-2",
-            "native-head-bank-3"
+            "native-head-bank-3",
+            "native-head-bank-4"
           ],
+          "modelIdentities": {
+            "lila": {
+              "bodyTemplate": "lila",
+              "supporting": false,
+              "mouthKind": "skin-strip",
+              "primary": {
+                "file": "docs/topics/assets/reference-lila-full.png",
+                "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+              }
+            },
+            "karo": {
+              "bodyTemplate": "karo",
+              "supporting": false,
+              "mouthKind": "native-rim",
+              "primary": {
+                "file": "docs/topics/assets/reference-karo-full.png",
+                "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+              }
+            },
+            "prehistoric-male-bald": {
+              "bodyTemplate": "karo",
+              "supporting": true,
+              "mouthKind": "skin-strip",
+              "primary": {
+                "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+                "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+              }
+            },
+            "prehistoric-female-haired": {
+              "bodyTemplate": "lila",
+              "supporting": true,
+              "mouthKind": "skin-strip",
+              "primary": {
+                "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+                "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+              }
+            }
+          },
           "method": "registered source cell at the original discrete head clock; single atlas or explicitly bound source images, fixed source pixel density and uniform global neck attachment, native eye/chin geometry; no pose-dependent scaling, whole-face warp, reflection or double-face crossfade",
           "productionReady": false,
           "approved": false,
@@ -7476,7 +7690,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "0a2dc277bcdb5702f8b6c696c6732d523827ab0775f912bd85e11bc31f71bceb",
+        "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -7490,13 +7704,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "6bff829c255663cadd8040dd0aaa1f11a11cb600c1190263f71c9d20f4f62024",
+      "fingerprint": "457b6a2fce37d3ab0f22682ad89f13ffb8dbd03aedd9d3f4807601662c5e0930",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "c3acccaa2b8d4a3f5e6948e7cbb810b343ae02bb02bd4756594879b0ef266434",
+    "fingerprint": "6d125320bd4f37dcdb9c2ac403aee5cc514e5e1f06e80734d234dda687970d68",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -7512,15 +7726,15 @@
       "library/topics/prehistoric-life/rig-v1/head-prompts.json",
       "library/topics/prehistoric-life/rig-v1/front-prompts.json"
     ],
-    "codeHash": "f0118f3761ef602cf2f323a049cbb0cd435b0f467d941e9ccee3e7cfd00bdf26",
-    "cutoutCodeHash": "ece159d21349aa7fd37014b5e8497d6216d2e8d990b766d664689bc10373158a",
+    "codeHash": "7d2f08c1ad2a324375d23ab58f7ff75ff00f902ea31887e127e19977e3d48e36",
+    "cutoutCodeHash": "6444bbc8ec7e1da9dc709842867ed2a8d1c22eac889049ce4050900a6d878e45",
     "projectionCodeHash": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22"
   },
   "bodyPack": {
     "version": "forest-body-1",
     "compilerVersion": "forest-source-body-motion-36",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "086bcf759a5d96250a2e6823f80378b2abd17bebd8cae04a54205905beb89410",
+    "fingerprint": "fd3e1d77c395b48159d9014297d1b03a08f02f32a624466bad3c8c070a3728e1",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -8279,8 +8493,47 @@
         "sourceVersions": [
           "native-head-bank-1",
           "native-head-bank-2",
-          "native-head-bank-3"
+          "native-head-bank-3",
+          "native-head-bank-4"
         ],
+        "modelIdentities": {
+          "lila": {
+            "bodyTemplate": "lila",
+            "supporting": false,
+            "mouthKind": "skin-strip",
+            "primary": {
+              "file": "docs/topics/assets/reference-lila-full.png",
+              "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+            }
+          },
+          "karo": {
+            "bodyTemplate": "karo",
+            "supporting": false,
+            "mouthKind": "native-rim",
+            "primary": {
+              "file": "docs/topics/assets/reference-karo-full.png",
+              "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+            }
+          },
+          "prehistoric-male-bald": {
+            "bodyTemplate": "karo",
+            "supporting": true,
+            "mouthKind": "skin-strip",
+            "primary": {
+              "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+              "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+            }
+          },
+          "prehistoric-female-haired": {
+            "bodyTemplate": "lila",
+            "supporting": true,
+            "mouthKind": "skin-strip",
+            "primary": {
+              "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+              "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+            }
+          }
+        },
         "method": "registered source cell at the original discrete head clock; single atlas or explicitly bound source images, fixed source pixel density and uniform global neck attachment, native eye/chin geometry; no pose-dependent scaling, whole-face warp, reflection or double-face crossfade",
         "productionReady": false,
         "approved": false,
@@ -9334,7 +9587,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "0a2dc277bcdb5702f8b6c696c6732d523827ab0775f912bd85e11bc31f71bceb",
+      "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
@@ -10005,8 +10258,47 @@
           "sourceVersions": [
             "native-head-bank-1",
             "native-head-bank-2",
-            "native-head-bank-3"
+            "native-head-bank-3",
+            "native-head-bank-4"
           ],
+          "modelIdentities": {
+            "lila": {
+              "bodyTemplate": "lila",
+              "supporting": false,
+              "mouthKind": "skin-strip",
+              "primary": {
+                "file": "docs/topics/assets/reference-lila-full.png",
+                "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+              }
+            },
+            "karo": {
+              "bodyTemplate": "karo",
+              "supporting": false,
+              "mouthKind": "native-rim",
+              "primary": {
+                "file": "docs/topics/assets/reference-karo-full.png",
+                "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+              }
+            },
+            "prehistoric-male-bald": {
+              "bodyTemplate": "karo",
+              "supporting": true,
+              "mouthKind": "skin-strip",
+              "primary": {
+                "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+                "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+              }
+            },
+            "prehistoric-female-haired": {
+              "bodyTemplate": "lila",
+              "supporting": true,
+              "mouthKind": "skin-strip",
+              "primary": {
+                "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+                "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+              }
+            }
+          },
           "method": "registered source cell at the original discrete head clock; single atlas or explicitly bound source images, fixed source pixel density and uniform global neck attachment, native eye/chin geometry; no pose-dependent scaling, whole-face warp, reflection or double-face crossfade",
           "productionReady": false,
           "approved": false,
@@ -11060,7 +11352,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "0a2dc277bcdb5702f8b6c696c6732d523827ab0775f912bd85e11bc31f71bceb",
+        "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -11074,7 +11366,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "6bff829c255663cadd8040dd0aaa1f11a11cb600c1190263f71c9d20f4f62024",
+      "fingerprint": "457b6a2fce37d3ab0f22682ad89f13ffb8dbd03aedd9d3f4807601662c5e0930",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -11093,7 +11385,7 @@
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "0fa5772913378124bb852678df9570743bcbffb93969cbee4d5f22002e9f283c",
-    "compilerCodeHash": "374554a5e8d47307ef439c5c5767e3c38c1697c9046349389806dcf7b56d6d32",
+    "compilerCodeHash": "87745642f06ff31266d7a584a4e4ceba6381704d029e67a199911a5113088e3f",
     "rigCodeHash": "f02ec323a20a8bdf605d9397e79e5ac2620edef9942e19fbd3a79a7fba2b900b",
     "cameraCodeHash": "e9bf2d4a816df18d28ddba2496fdd840bf87a4163cc82cf43825620d1c82d52a",
     "sourceBodyCodeHash": "d3b78d1283a37ea6e2470972ca33640e0bed46d1c6aa5ed8e43473ee56174e3c",
@@ -11788,8 +12080,47 @@
         "sourceVersions": [
           "native-head-bank-1",
           "native-head-bank-2",
-          "native-head-bank-3"
+          "native-head-bank-3",
+          "native-head-bank-4"
         ],
+        "modelIdentities": {
+          "lila": {
+            "bodyTemplate": "lila",
+            "supporting": false,
+            "mouthKind": "skin-strip",
+            "primary": {
+              "file": "docs/topics/assets/reference-lila-full.png",
+              "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+            }
+          },
+          "karo": {
+            "bodyTemplate": "karo",
+            "supporting": false,
+            "mouthKind": "native-rim",
+            "primary": {
+              "file": "docs/topics/assets/reference-karo-full.png",
+              "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+            }
+          },
+          "prehistoric-male-bald": {
+            "bodyTemplate": "karo",
+            "supporting": true,
+            "mouthKind": "skin-strip",
+            "primary": {
+              "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+              "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+            }
+          },
+          "prehistoric-female-haired": {
+            "bodyTemplate": "lila",
+            "supporting": true,
+            "mouthKind": "skin-strip",
+            "primary": {
+              "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+              "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+            }
+          }
+        },
         "method": "registered source cell at the original discrete head clock; single atlas or explicitly bound source images, fixed source pixel density and uniform global neck attachment, native eye/chin geometry; no pose-dependent scaling, whole-face warp, reflection or double-face crossfade",
         "productionReady": false,
         "approved": false,
@@ -12843,7 +13174,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "0a2dc277bcdb5702f8b6c696c6732d523827ab0775f912bd85e11bc31f71bceb",
+      "fingerprint": "e85f5251dbb9a015328270121800af9d791305a0ecfc0399e47c951b63641822",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,

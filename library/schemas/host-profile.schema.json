@@ -112,7 +112,8 @@
                   "enum": [
                     "native-head-bank-1",
                     "native-head-bank-2",
-                    "native-head-bank-3"
+                    "native-head-bank-3",
+                    "native-head-bank-4"
                   ]
                 },
                 "id": {
@@ -124,7 +125,9 @@
                   "type": "string",
                   "enum": [
                     "lila",
-                    "karo"
+                    "karo",
+                    "prehistoric-male-bald",
+                    "prehistoric-female-haired"
                   ]
                 },
                 "source": {
@@ -132,7 +135,7 @@
                   "properties": {
                     "file": {
                       "type": "string",
-                      "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|(?:head-cells|head-face-plates)\\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
+                      "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|(?:head-cells|head-face-plates)\\/(?:lila|karo|prehistoric-male-bald|prehistoric-female-haired)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
                     },
                     "sha256": {
                       "type": "string",
@@ -176,7 +179,7 @@
                       },
                       "file": {
                         "type": "string",
-                        "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|(?:head-cells|head-face-plates)\\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
+                        "pattern": "^library\\/topics\\/prehistoric-life\\/(?:head-turn-studies\\/(?:lila|karo)-head-turn-v[1-9]\\d*|(?:head-cells|head-face-plates)\\/(?:lila|karo|prehistoric-male-bald|prehistoric-female-haired)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\\d*)\\.png$(?![\\s\\S])"
                       },
                       "sha256": {
                         "type": "string",

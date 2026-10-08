@@ -1,0 +1,404 @@
+{
+  "version": "native-head-bank-4",
+  "id": "supporting-female-right-face-v1",
+  "actor": "prehistoric-female-haired",
+  "source": {
+    "file": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1.png",
+    "sha256": "7ab9bcd21fa122a711af6797c81f7d127b369de0588ea37306e53898eeeb7a58",
+    "width": 1419,
+    "height": 1109,
+    "pixelScale": 0.145
+  },
+  "primary": {
+    "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+    "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+  },
+  "bodyViews": [
+    {
+      "view": "three-quarter-right",
+      "sourceHash": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9"
+    }
+  ],
+  "unitScale": 1,
+  "cells": [
+    {
+      "id": "source-angle",
+      "sourceId": "primary",
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1419,
+        "height": 1109
+      },
+      "neck": {
+        "x": 780,
+        "y": 890
+      },
+      "neckTop": {
+        "x": 780,
+        "y": 835
+      },
+      "chin": {
+        "x": 891,
+        "y": 785
+      },
+      "eyeTarget": {
+        "x": 948.5,
+        "y": 520.5
+      },
+      "skull": {
+        "x": 475,
+        "y": 260,
+        "width": 655,
+        "height": 545
+      },
+      "yawDeg": null,
+      "seam": [
+        {
+          "x": 744,
+          "y": 840
+        },
+        {
+          "x": 822,
+          "y": 840
+        },
+        {
+          "x": 822,
+          "y": 940
+        },
+        {
+          "x": 744,
+          "y": 940
+        }
+      ],
+      "restMood": "happy",
+      "face": {
+        "version": "native-head-face-1",
+        "source": {
+          "sha256": "7ab9bcd21fa122a711af6797c81f7d127b369de0588ea37306e53898eeeb7a58",
+          "width": 1419,
+          "height": 1109
+        },
+        "mouth": {
+          "kind": "skin-strip",
+          "region": [
+            {
+              "x": 791,
+              "y": 621
+            },
+            {
+              "x": 1038,
+              "y": 621
+            },
+            {
+              "x": 1038,
+              "y": 755
+            },
+            {
+              "x": 791,
+              "y": 755
+            }
+          ],
+          "top": [
+            {
+              "x": 822,
+              "y": 647
+            },
+            {
+              "x": 868,
+              "y": 704
+            },
+            {
+              "x": 971,
+              "y": 712
+            },
+            {
+              "x": 1012,
+              "y": 655
+            }
+          ],
+          "depth": 32,
+          "lift": 14,
+          "stroke": 8,
+          "strip": {
+            "x": 830,
+            "y": 611,
+            "width": 127,
+            "height": 6
+          }
+        },
+        "eyes": {
+          "screen-left": {
+            "center": {
+              "x": 858,
+              "y": 536
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 812,
+                "y": 482
+              },
+              {
+                "x": 913,
+                "y": 482
+              },
+              {
+                "x": 913,
+                "y": 604
+              },
+              {
+                "x": 812,
+                "y": 604
+              }
+            ],
+            "glyph": [
+              {
+                "x": 852,
+                "y": 498
+              },
+              {
+                "x": 878,
+                "y": 493
+              },
+              {
+                "x": 890,
+                "y": 487
+              },
+              {
+                "x": 885,
+                "y": 511
+              },
+              {
+                "x": 889,
+                "y": 553
+              },
+              {
+                "x": 873,
+                "y": 581
+              },
+              {
+                "x": 846,
+                "y": 580
+              },
+              {
+                "x": 832,
+                "y": 555
+              },
+              {
+                "x": 832,
+                "y": 511
+              }
+            ],
+            "lid": [
+              {
+                "x": 834,
+                "y": 536
+              },
+              {
+                "x": 848,
+                "y": 543
+              },
+              {
+                "x": 870,
+                "y": 543
+              },
+              {
+                "x": 888,
+                "y": 536
+              }
+            ],
+            "strip": {
+              "x": 825,
+              "y": 609,
+              "width": 71,
+              "height": 8
+            },
+            "stroke": 4
+          },
+          "screen-right": {
+            "center": {
+              "x": 1039,
+              "y": 505
+            },
+            "shift": {
+              "x": 5,
+              "y": 3
+            },
+            "region": [
+              {
+                "x": 1002,
+                "y": 446
+              },
+              {
+                "x": 1088,
+                "y": 446
+              },
+              {
+                "x": 1088,
+                "y": 563
+              },
+              {
+                "x": 1002,
+                "y": 563
+              }
+            ],
+            "glyph": [
+              {
+                "x": 1025,
+                "y": 466
+              },
+              {
+                "x": 1053,
+                "y": 464
+              },
+              {
+                "x": 1066,
+                "y": 455
+              },
+              {
+                "x": 1062,
+                "y": 481
+              },
+              {
+                "x": 1061,
+                "y": 540
+              },
+              {
+                "x": 1044,
+                "y": 546
+              },
+              {
+                "x": 1021,
+                "y": 540
+              },
+              {
+                "x": 1017,
+                "y": 479
+              }
+            ],
+            "lid": [
+              {
+                "x": 1019,
+                "y": 505
+              },
+              {
+                "x": 1030,
+                "y": 511
+              },
+              {
+                "x": 1048,
+                "y": 511
+              },
+              {
+                "x": 1060,
+                "y": 505
+              }
+            ],
+            "strip": {
+              "x": 1054,
+              "y": 570,
+              "width": 30,
+              "height": 8
+            },
+            "stroke": 4
+          }
+        },
+        "protectedContours": [
+          [
+            {
+              "x": 978,
+              "y": 546
+            },
+            {
+              "x": 999,
+              "y": 546
+            },
+            {
+              "x": 999,
+              "y": 565
+            },
+            {
+              "x": 1036,
+              "y": 575
+            },
+            {
+              "x": 1032,
+              "y": 600
+            },
+            {
+              "x": 987,
+              "y": 616
+            },
+            {
+              "x": 987,
+              "y": 605
+            },
+            {
+              "x": 1013,
+              "y": 581
+            },
+            {
+              "x": 978,
+              "y": 563
+            }
+          ],
+          [
+            {
+              "x": 783,
+              "y": 428
+            },
+            {
+              "x": 888,
+              "y": 428
+            },
+            {
+              "x": 888,
+              "y": 476
+            },
+            {
+              "x": 783,
+              "y": 476
+            }
+          ],
+          [
+            {
+              "x": 995,
+              "y": 390
+            },
+            {
+              "x": 1090,
+              "y": 390
+            },
+            {
+              "x": 1090,
+              "y": 439
+            },
+            {
+              "x": 995,
+              "y": 439
+            }
+          ]
+        ],
+        "status": "engineering-face-registration",
+        "approved": false,
+        "productionReady": false,
+        "motionVerified": false
+      }
+    }
+  ],
+  "routes": [],
+  "capabilities": {
+    "speech": true,
+    "directionalEyes": true,
+    "expressions": false,
+    "secondary": false
+  },
+  "status": "engineering-source-registration",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

@@ -1,0 +1,318 @@
+{
+  "version": "supporting-native-head-source-record-1",
+  "sourceVersion": "forest-tribe-0.59-supporting-source-face",
+  "precedingSourceSHA": "3d30c1a96193dc481275f3a354449a941f605c27",
+  "scope": "Static existing/new raw bytes, metadata and hashes plus build/types/export; no geometry or runtime callbacks",
+  "assets": [
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1.png",
+      "sha256": "8308c768b762c00b8d9aba4a1ed37f225c1c4b507591e51823778cca5091b674",
+      "width": 1199,
+      "height": 1312,
+      "rawRGBAHash": "501f5795c9bf83d0f8f0bed6ce30f613d36a3403c8b53cb3e6c7138e94855981",
+      "edgePixels": 0,
+      "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-014ab386-27c2-4348-a881-5a8869511033.png",
+      "promptFile": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1-prompt.json",
+      "promptSHA256": "6110021a11b0d1c7eb2acc1df3f02d8df37e63b8a1e5fa690345920f81d91d8b",
+      "geometryValidation": "NOT RUN"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1.png",
+      "sha256": "7ab9bcd21fa122a711af6797c81f7d127b369de0588ea37306e53898eeeb7a58",
+      "width": 1419,
+      "height": 1109,
+      "rawRGBAHash": "4d007161fbfc2aae430176abc6ce062a1bd7b1cabb0fb2311ec2eeca9529d45b",
+      "edgePixels": 0,
+      "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-099766a2-d766-4efc-9e36-b64906a1cca4.png",
+      "promptFile": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1-prompt.json",
+      "promptSHA256": "7655e6149c7dc19b094984db63419d7424b521517ffe17014a1e2f69f945f3a1",
+      "geometryValidation": "NOT RUN"
+    }
+  ],
+  "unchanged": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    },
+    {
+      "file": "docs/topics/assets/reference-expressions.png",
+      "sha256": "fbc6c963252786216689c48a3c7fb09dd258eb6ae0d43b9d777d57587fb69094"
+    },
+    {
+      "file": "docs/topics/assets/reference-palette.png",
+      "sha256": "bef24980d1fea40180a20705793d3f7aebb0b6c8d8a80c342040e5a11d58a665"
+    },
+    {
+      "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
+      "sha256": "ef8b4a5f1445e0937bb41e661e8dc9de8a8a12a499e2eca87e3367807474d14e"
+    },
+    {
+      "file": "library/topics/prehistoric-life/karo-cutout-v1.png",
+      "sha256": "f190653ab448f89da80b7156ff7ee677d5788a16dca6126b7796bab3f845b665"
+    },
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v1.png",
+      "sha256": "f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca"
+    },
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+      "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+    },
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+      "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json",
+      "sha256": "2a9be1bf907aafc4948a0d3d4355d4e2c5657dc3a37fc95428354753f71cdc9d"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/karo-source-face-v1.json",
+      "sha256": "8d1dee8c1e693b0ffafdd6ee1b641f8be2650931bb446c6b6fe9ba244e40137b"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-face-v1.json",
+      "sha256": "42aa9da4aab32592f2cd76b564001d550c51647497a18a355bc07f0782723146"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-face-v1.json",
+      "sha256": "69f0e8352392ba78416c0000e595fe913246014ebf6b71382aa2833c76541640"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+      "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+      "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+      "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410"
+    }
+  ],
+  "manifestCodeHashesVerified": 15,
+  "reviewSnapshotsVerified": 6,
+  "sourceFiles": [
+    {
+      "file": "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+      "sha256": "77a3e6e73376483b579402cd6d27cfbcb26acd1e3350aa9d05bd593e67b9f8c6"
+    },
+    {
+      "file": "docs/topics/HEAD-FACE-WORKBENCH.md",
+      "sha256": "a5cf7ce672eae28587a597b6abe407dec3805f498c7f98c5783cc1b7ac71f162"
+    },
+    {
+      "file": "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+      "sha256": "dd36df7932eb962a9b0b3ad6804a26c7d20ec605f4480ea0e4906ca499660ad5"
+    },
+    {
+      "file": "docs/topics/SUPPORTING-ACTORS.md",
+      "sha256": "401eb61c786c3ee61d6fa2faadf0710b98816a77d9d4758ab43537b58ef0cd9c"
+    },
+    {
+      "file": "docs/topics/SUPPORTING-NATIVE-HEAD.md",
+      "sha256": "df78652ecf636ae778fc927cf4791f4d4267c5e8c33913e9890aafc4fe09815a"
+    },
+    {
+      "file": "docs/topics/reviews/supporting-head-identity-review-v1.json",
+      "sha256": "2224a3b5fb8ae5822b4b801fdd46752f3d97e24a91c943fd096bf7d3a48b4b14"
+    },
+    {
+      "file": "packages/animation/body-head-bank.ts",
+      "sha256": "7264c2511cec22beeaaae4b15a25601d507d5dd5884c1aedf15c3ab178a0f1ce"
+    },
+    {
+      "file": "packages/animation/compiler.ts",
+      "sha256": "87745642f06ff31266d7a584a4e4ceba6381704d029e67a199911a5113088e3f"
+    },
+    {
+      "file": "packages/animation/forest-cutout-head.ts",
+      "sha256": "6444bbc8ec7e1da9dc709842867ed2a8d1c22eac889049ce4050900a6d878e45"
+    },
+    {
+      "file": "packages/animation/forest-head-art.ts",
+      "sha256": "7d2f08c1ad2a324375d23ab58f7ff75ff00f902ea31887e127e19977e3d48e36"
+    },
+    {
+      "file": "packages/animation/native-head-bank.ts",
+      "sha256": "6250a4ba019866be5a2a7e0ef1ff423faa4af263bd62e819fdf54eecf1d7e5ef"
+    },
+    {
+      "file": "packages/animation/native-head-identity.ts",
+      "sha256": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894"
+    },
+    {
+      "file": "packages/animation/native-head-resources.ts",
+      "sha256": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461"
+    },
+    {
+      "file": "packages/host/schemas.ts",
+      "sha256": "4d5997d8651f4f907d28b02d77e4285f4155e1b153c44a3068dd8c1545c177a1"
+    },
+    {
+      "file": "packages/topics/head-face-candidates.ts",
+      "sha256": "52bbaeef73bc71d1a4c71c4a492657f1b158ae0eaba533c383ae06b6ef05254c"
+    },
+    {
+      "file": "packages/topics/head-face-source.ts",
+      "sha256": "20ec9b0071e8b35a20aa5eef64d0f234047f873b78c17dd654ed139d1b8a2d9e"
+    },
+    {
+      "file": "packages/topics/head-face-workbench.ts",
+      "sha256": "7569bac80061391c7663ea4ecf6bc89ac8b2d6c4102eed8b6dff3d3c9ccb0090"
+    },
+    {
+      "file": "packages/topics/prehistoric-life.ts",
+      "sha256": "7cd475ad27e9a5b8c44457ad314997b4a66f14fc4a08048f3ce1c2cc9940a78a"
+    },
+    {
+      "file": "packages/topics/supporting-workbench.ts",
+      "sha256": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b"
+    },
+    {
+      "file": "packages/topics/supporting-face-candidates.ts",
+      "sha256": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558"
+    },
+    {
+      "file": "scripts/prehistoric-pack.ts",
+      "sha256": "a9db3aff4b71b79adecb0bbc6f23310a38f00ac02368149e6d0963629e70d656"
+    },
+    {
+      "file": "tests/supporting-native-head.test.ts",
+      "sha256": "8ac51fdb4ea27c66bc72a7d4e3927b1c8a047f524a3a035fbc7523f5af215168"
+    },
+    {
+      "file": "library/schemas/host-profile.schema.json",
+      "sha256": "4d9097f8ceb0f990a7b37a09ef2f10e86f46e4b48576390b80853a0b17c033bb"
+    },
+    {
+      "file": "library/schemas/native-head-bank.schema.json",
+      "sha256": "bf598b36bace847df102baef154ea832b82eebe8461748e767566b0f1c996689"
+    },
+    {
+      "file": "library/schemas/shot.schema.json",
+      "sha256": "03308eea8e46a2519f14c7c11aefbee1832214221b67783da5e7acbd191d9a31"
+    },
+    {
+      "file": "library/schemas/storyboard.schema.json",
+      "sha256": "af923e316c1b2656cf55488146ae97cfb4789ffa289ca9349149a4668375872b"
+    },
+    {
+      "file": "library/schemas/view-acting-clock.schema.json",
+      "sha256": "8a6c4c544c1f22b0e73a91ba1e0b298bbe8cd587356c4af2170a88acbec317f0"
+    },
+    {
+      "file": "library/schemas/view-gaze-target.schema.json",
+      "sha256": "de641f7e5167211ab74daf84cb28c451ba141d67ecb44c14de1e0478935a824c"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1.png",
+      "sha256": "8308c768b762c00b8d9aba4a1ed37f225c1c4b507591e51823778cca5091b674"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1.json",
+      "sha256": "34a452770cbe61ffb3a11e8d8f6f9788401f49450bfddc15e4871a12580c7d34"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-male-bald-head-left-v1-prompt.json",
+      "sha256": "6110021a11b0d1c7eb2acc1df3f02d8df37e63b8a1e5fa690345920f81d91d8b"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1.png",
+      "sha256": "7ab9bcd21fa122a711af6797c81f7d127b369de0588ea37306e53898eeeb7a58"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1.json",
+      "sha256": "dcdc974f64b5b05e898f6dca97b23e46c99e839a727edce01540762ea4d8e436"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-cells/prehistoric-female-haired-head-right-v1-prompt.json",
+      "sha256": "7655e6149c7dc19b094984db63419d7424b521517ffe17014a1e2f69f945f3a1"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/supporting-male-left-face-v1.json",
+      "sha256": "3c6cbe904b041cb8ad30cbc06a46b580ed0c8dd9753a4c68117f5fdc34097ddf"
+    },
+    {
+      "file": "library/topics/prehistoric-life/head-face-registrations/supporting-female-right-face-v1.json",
+      "sha256": "26a3807a15e055507653dad09474869dda91841736ab73828d1ed89705d09708"
+    },
+    {
+      "file": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/animation/native-head-identity.ts",
+      "sha256": "3b409371fc69adcf1f84341f031d9a1697c98132fce0c138c808625882c2a894"
+    },
+    {
+      "file": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/animation/native-head-bank.ts",
+      "sha256": "6250a4ba019866be5a2a7e0ef1ff423faa4af263bd62e819fdf54eecf1d7e5ef"
+    },
+    {
+      "file": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/host/schemas.ts",
+      "sha256": "4d5997d8651f4f907d28b02d77e4285f4155e1b153c44a3068dd8c1545c177a1"
+    },
+    {
+      "file": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/animation/native-head-resources.ts",
+      "sha256": "c9456de143e6e5ac3a0f95f6d5dd31a5d0cb40f700b91a0fa8238279cd4e5461"
+    },
+    {
+      "file": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/topics/head-face-source.ts",
+      "sha256": "20ec9b0071e8b35a20aa5eef64d0f234047f873b78c17dd654ed139d1b8a2d9e"
+    },
+    {
+      "file": "docs/topics/reviews/supporting-head-identity-inputs-v1/packages/topics/prehistoric-life.ts",
+      "sha256": "7cd475ad27e9a5b8c44457ad314997b4a66f14fc4a08048f3ce1c2cc9940a78a"
+    },
+    {
+      "file": "library/topics/prehistoric-life/manifest.json",
+      "sha256": "2a324f799aca9a4aac27bc62ec145f042bb7631276d7992d1b647c8d4108e34a"
+    }
+  ],
+  "verification": {
+    "build": {
+      "status": "PASS",
+      "command": "npm run build",
+      "coreExitCode": 0,
+      "studioModules": 42,
+      "viteBuildMs": 541,
+      "handle": "12080 / terminal04019f"
+    },
+    "testTypecheck": {
+      "status": "PASS",
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "58079 / terminal051084",
+      "callbacksExecuted": 0
+    },
+    "schemaExport": {
+      "status": "PASS",
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "9f7794"
+    },
+    "staticManifest": {
+      "status": "PASS",
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "df9acf",
+      "productionReady": false
+    },
+    "staticRawBytes": "PASS",
+    "runtime": "NOT RUN",
+    "newCallbacks": 7,
+    "callbacksExecuted": 0
+  },
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "fullGoalComplete": false
+}

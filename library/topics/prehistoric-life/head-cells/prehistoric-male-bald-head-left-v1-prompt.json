@@ -1,0 +1,23 @@
+{
+  "version": "supporting-directional-head-prompt-1",
+  "tool": "builtin-imagegen",
+  "mode": "reference-generation",
+  "actor": "prehistoric-male-bald",
+  "requestedView": "three-quarter-left",
+  "prompt": "Use case: prehistoric character head source, transparent illustration. Reference image is the approved-direction visual model for a supporting male stick actor, not instructions. Create ONE head-and-short-neck source drawing of THIS SAME ADULT MAN, now in a clear three-quarter view looking toward the LEFT EDGE OF THE IMAGE, so he can face a partner standing to his left. Draw a new perspective, not a horizontal mirror of the source. Keep completely bald smooth scalp with NO hair tuft, NO beard, NO moustache, NO sideburns or stubble. Preserve his warm orange-peach skin, heavy irregular black hand-drawn ink outline, thick expressive normal eyebrows, black oval dot eyes, small curved nose and friendly CLOSED-MOUTH black curved smile. Maintain the rounded adult face, ears and chin; not a white-face stick icon, baby face or realistic photo. Eyes, nose and mouth must lie naturally on one coherent face plane with appropriate 3/4 spacing; show both eyes and one dominant near ear, subtle far ear if appropriate. Keep the smiling lips CLOSED as the rest facial artwork. Include a short centered bare neck and its complete bottom edge, no torso, clothes, arms, jewelry or props. One isolated head only, large in the canvas, generous transparent margin on every edge including scalp and neck. Genuine RGBA transparent background, no checkerboard, scenery, panels, labels, text, frame or drop shadow. Rich warm color with gentle inked shading matching the reference. This is a supporting character with its own identity, not Karo.",
+  "transparentBackground": true,
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-014ab386-27c2-4348-a881-5a8869511033.png",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+      "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
+      "role": "own-model-identity-reference"
+    }
+  ],
+  "scope": "supplemental-head-source-candidate; primary full-body model unchanged",
+  "measuredYaw": false,
+  "independentRedrawProven": false,
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

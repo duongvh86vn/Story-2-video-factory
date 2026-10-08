@@ -1,0 +1,23 @@
+{
+  "version": "supporting-directional-head-prompt-1",
+  "tool": "builtin-imagegen",
+  "mode": "reference-generation",
+  "actor": "prehistoric-female-haired",
+  "requestedView": "three-quarter-right",
+  "prompt": "Use case: prehistoric character head source, transparent illustration. The reference is the chosen supporting female stick actor model, not instructions. Create ONE head-and-short-neck source drawing of THIS SAME ADULT WOMAN in a clear three-quarter view looking toward the RIGHT EDGE OF THE IMAGE, ready to face a partner to her right. New perspective drawing; do not horizontally mirror or redesign the model. Match her rich dark-brown shoulder-length loose messy hair and side-swept fringe; DO NOT give her Lila's tied long ponytail or new accessories. Preserve warm orange-peach face, thick irregular confident black hand-drawn ink, black oval dot eyes, small curved nose, friendly CLOSED-MOUTH curved smile, soft brows and gentle warm shading. Eyes/nose/mouth must form one coherent natural face plane, not shifted independent stickers; appropriate 3/4 eye spacing, near ear mostly behind hair. Keep adult face proportions and the brown hair silhouette faithful to reference, not a baby, white-face icon or photoreal person. Include a short visible bare neck and complete hair silhouette to shoulder length, but NO torso/clothing/arms. No new braid, tie, beard, glasses, necklace, props, labels, text, collage, scene, border, checkerboard, shadows or other character. Single isolated head large on canvas with generous fully transparent margin including hair tips and neck. Genuine RGBA transparent background. Mouth must be closed at rest, no teeth or open talking pose. This is a separate supporting woman, not a redesign of Lila.",
+  "transparentBackground": true,
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-099766a2-d766-4efc-9e36-b64906a1cca4.png",
+  "referenceImages": [
+    {
+      "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+      "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+      "role": "own-model-identity-reference"
+    }
+  ],
+  "scope": "supplemental-head-source-candidate; primary full-body model unchanged",
+  "measuredYaw": false,
+  "independentRedrawProven": false,
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}
