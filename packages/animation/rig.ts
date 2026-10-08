@@ -5,6 +5,7 @@ import {forestTribeArt} from './forest-tribe-art.js';
 import {forestHeadSvg,usesReferenceHead} from './forest-head-art.js';
 import {forestBodyArt,usesReferenceBody,referenceBodyMetrics} from './forest-body-art.js';
 import {usesBodyView,registeredBodyView} from './body-view-art.js';
+import {hasBodyViewManipulation} from './native-contact-arm.js';
 import {hasNativeHeadRear,nativeHeadBankRearSvg} from './body-head-bank.js';
 
 type Point={x:number;y:number};
@@ -33,6 +34,12 @@ export function rigMetrics(profile: HostProfile):RigMetrics {
     upperArm: 55 * b, lowerArm: 50 * b, headY: (robot ? -240 : -270) * b,
     headRadius: (robot ? 50 : 40) * profile.appearance.headScale,
   };
+}
+
+/** This slot follows the real owned glyph in the shared world. It reuses the
+ * own source palm definition; the compiler steps exactly one hand painter. */
+export function propHandSlotsSvg(profile:HostProfile):string {
+  return hasBodyViewManipulation(profile)?(['left','right'] as const).map(side=>`<g id="hand-${side}-prop-slot" opacity="0"><use href="#hand-${side}"/></g>`).join(''):'';
 }
 
 /** Logical parent transforms are baked by the compiler into independent world-space bones. */

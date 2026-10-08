@@ -18,10 +18,10 @@ export const HostProfileSchema = z.object({
     artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
     bodyView:z.enum(['three-quarter-right','three-quarter-left']).optional(),
     bodyHeadBank:NativeHeadBankSchema.optional(),
-    bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1']).optional(),bodyEyes:z.literal('registered-eyes-v1').optional(),bodyExpressions:z.literal('registered-expressions-v1').optional(),bodyMotion:z.literal('registered-locomotion-v1').optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.literal('registered-secondary-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
+    bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1']).optional(),bodyEyes:z.literal('registered-eyes-v1').optional(),bodyExpressions:z.literal('registered-expressions-v1').optional(),bodyMotion:z.literal('registered-locomotion-v1').optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.literal('registered-secondary-v1').optional(),bodyManipulation:z.literal('registered-manipulation-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
       if(a.supportingModel){
         const matchingCostume=a.characterVariant===prehistoricSupportingModel(a.supportingModel).bodyTemplate;
-        const legacy=a.artworkVersion==='forest-body-1'&&!a.bodyView&&!a.bodyHeadBank&&!a.bodyMotion&&!a.bodySeat;
+        const legacy=a.artworkVersion==='forest-body-1'&&!a.bodyView&&!a.bodyHeadBank&&!a.bodyMotion&&!a.bodySeat&&!a.bodyManipulation;
         const native=a.artworkVersion==='forest-body-view-1'&&!!a.bodyView&&!!a.bodyHeadBank&&isSupportingNativeHeadVersion(a.bodyHeadBank.version)&&a.bodyHeadBank.actor===a.supportingModel;
         if(!matchingCostume||!legacy&&!native||a.bodySpeech||a.bodyEyes||a.bodyExpressions||a.bodySecondary||a.sourceColour)ctx.addIssue({code:'custom',message:'Supporting model requires its matching source costume and own version 4/5 head; principal/fixed-view face and hair registrations cannot be reused'});
       }
@@ -33,6 +33,7 @@ export const HostProfileSchema = z.object({
       if(a.bodyExpressions&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant||a.bodyEyes!=='registered-eyes-v1'||a.bodySpeech!=='registered-rest-mouth-v1'))ctx.addIssue({code:'custom',message:'Registered expressions require native actor/view, registered eyes and resting speech'});
       if(a.bodyMotion&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered locomotion requires its native actor and body view'});
       if(a.bodySeat&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant||a.bodyMotion!=='registered-locomotion-v1'))ctx.addIssue({code:'custom',message:'Registered seating requires its native actor/view and registered locomotion'});
+      if(a.bodyManipulation&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered manipulation requires its native actor and body view'});
       if(a.bodySecondary&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered secondary motion requires its native actor and body view'});
       if(a.sourceColour&&(a.artworkVersion!=='forest-body-1'||!a.characterVariant))ctx.addIssue({code:'custom',message:'Original source colour requires the source body and its actor; authored views are separate artwork'});
     }),

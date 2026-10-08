@@ -2,10 +2,10 @@ import {HostProfileSchema,type HostProfile} from '../host/schemas.js';
 import {nativeHeadIdentities,type NativeHeadActor} from '../animation/native-head-identity.js';
 
 type Appearance=HostProfile['appearance'];
-export const TOPIC_CAST_NORMALIZATION_VERSION='topic-cast-source-2';
-export const TOPIC_RENDER_SELECTION_KEYS=['bodyView','bodyHeadBank','bodySpeech','bodyEyes','bodyExpressions','bodyMotion','bodySeat','bodySecondary','sourceColour'] as const;
+export const TOPIC_CAST_NORMALIZATION_VERSION='topic-cast-source-3';
+export const TOPIC_RENDER_SELECTION_KEYS=['bodyView','bodyHeadBank','bodySpeech','bodyEyes','bodyExpressions','bodyMotion','bodySeat','bodySecondary','bodyManipulation','sourceColour'] as const;
 export const topicCastNormalizationDescription={version:TOPIC_CAST_NORMALIZATION_VERSION,sourceFields:TOPIC_RENDER_SELECTION_KEYS,
-  facePaths:{fixedBodyView:'bodySpeech/bodyEyes/bodyExpressions/bodySecondary use that fixed drawing only',independentHead:'bodyHeadBank uses its own registered source-face capabilities; fixed-view facial/hair flags cannot be mixed',sharedBody:'bodyMotion/bodySeat may accompany either valid head path'},
+  facePaths:{fixedBodyView:'bodySpeech/bodyEyes/bodyExpressions/bodySecondary use that fixed drawing only',independentHead:'bodyHeadBank uses its own registered source-face capabilities; fixed-view facial/hair flags cannot be mixed',sharedBody:'bodyMotion/bodySeat/bodyManipulation may accompany either valid head path'},
   rule:'Preserve explicitly selected valid own-model artwork, source faces, body views and motion controls. Canonical topic palette/proportions/costume remain fixed. Reject foreign or incomplete selections; never silently replace them with a legacy face. Validate the complete unlocked cast before committing any actor changes.',
   approval:'No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.'};
 

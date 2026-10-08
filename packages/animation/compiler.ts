@@ -25,6 +25,7 @@ import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSource
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
 import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
+import {hasBodyViewManipulation,isNativeContactGesture,validateNativeManipulation,validateNativeContactBodyClock,nativeContactWindow,sampleNativeContactArm,nativeManipulationDescription} from './native-contact-arm.js';
 import {hasBodyViewSeat,nativeSeatState,nativeSeatMatrixError,nativeSeatDescription} from './body-view-seat.js';
 import {hasBodyViewSecondary,registeredNativeSecondary,nativeSecondaryState,nativeSecondaryMatrixError,nativeSecondaryDescription} from './body-view-secondary.js';
 import {sampleSecondaryMotion,SECONDARY_MOTION_DELAYS_MS} from './view-secondary-motion.js';
@@ -127,6 +128,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
     if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-secondary: registered secondary motion requires animation2.2.13/14/15');
   }
   if(!usesBodyView(profile))return;
+  if(hasBodyViewManipulation(profile))validateNativeManipulation(plan,profile,registeredBodyView(profile));
   if(plan.headTurns?.length)throw new Error('needs-head-turn-registration: authored head cells still need continuity repair, source landmarks and original head-clock registration; see /api/topics/prehistoric-life/head-turn-art');
   if(plan.headView!==registeredBodyView(profile).view||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
   if(hasBodyViewLocomotion(profile))validateNativeLocomotion(sourceBodyPlan(plan),profile,registeredBodyView(profile));
@@ -134,7 +136,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if(!hasNativeHeadBank(profile)&&plan.expressions.some(e=>e.mood!=='happy')&&!hasBodyViewExpressions(profile))throw new Error('needs-view-expression: authored-view candidate needs explicit registered expressions for non-happy emotions');
   if(plan.gazes.length&&!hasBodyViewEyes(profile)&&!hasNativeHeadEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs its registered fixed-view or source-cell eyes');
   if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
-  if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'&&!(hasBodyViewLocomotion(profile)&&g.action==='react')))throw new Error('needs-view-motion: native gesture has no registered point/think/react candidate');
+  if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'&&!(hasBodyViewLocomotion(profile)&&g.action==='react')&&!(hasBodyViewManipulation(profile)&&(isNativeContactGesture(g)||g.action==='inspect'))))throw new Error('needs-view-motion: native gesture requires its registered point/think/react or explicit manipulation candidate');
   if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
 }
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
@@ -699,6 +701,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(hasNativeHeadBank(profile)&&(activity.intervals.length||sourceClock?.activity.intervals.length)&&!hasNativeHeadSpeech(profile))throw new Error('needs-head-turn-voice: cell-specific speech artwork is not registered; no silent fallback over supplied narration');
   if(hasNativeHeadSpeech(profile)){validateBodyViewMouthActivity(activity);if(!sourceClock)throw new Error('needs-speech-phase: source-cell speech requires the complete owned narration clock');validateSpeechSourceClock(activity,sourceClock,profile.id,plan.durationMs);}
   if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile)&&!hasNativeHeadSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires an explicit registered mouth candidate');
+  if(hasBodyViewManipulation(profile))validateNativeContactBodyClock(plan,actingClock);
   const t=clamp(time,0,plan.durationMs),{physical,m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight,seatProgress}=bodyStateAt(plan,profile,t,actingClock);
   const resolvedGesture=(side:RigHand)=>{
     const source=actingClock?sourceViewGestureAt(actingClock.gestures,t+actingClock.startMs,side):undefined,gesture=source??gestureAt(plan,t,side);
@@ -812,7 +815,9 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     const spearPole=spear?.track.elbowPoles?.[side===spear?.track.hand?'primary':'secondary']??(spear&&spear.track.aim.x>=plan.root.x?-1:1);
     if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
     const expressiveSource=usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion)&&gesture&&!contacts(gesture);
-    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:expressiveSource
+    const nativeContact=hasBodyViewManipulation(profile)&&gesture&&isNativeContactGesture(gesture);
+    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:nativeContact
+      ?sampleNativeContactArm(shoulder,neutral,goal(gesture,neutral,chin,carryAnchor,Math.max(gesture.contactMs!,Math.min(gestureTime,nativeContactWindow(gesture).recoverMs)),s,shoulder),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),solveChain):expressiveSource
       ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),authoredRun)
       :armPose(shoulder,neutral,target,sourceGesture,gestureTime,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
@@ -840,7 +845,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     if(wrists)wrists[side]=wrist;
     if(usesReferenceBody(profile)){
       const seatedWeight=Object.values(bodyPosture.seatWeights??{}).reduce((sum,w)=>sum+w,0);
-      const role:SourceArmRole=spear?(side===spear.track.hand?'spear-front':'spear-rear'):gesture?.action==='think'?'chin':gesture?.action==='point'?'point':gesture?'react':walk.running?'run':seatedWeight>.01?'lap':walk.activation>.01?'walk':'rest';
+      const role:SourceArmRole=spear?(side===spear.track.hand?'spear-front':'spear-rear'):gesture?.action==='think'?'chin':gesture?.action==='point'||gesture?.action==='inspect'?'point':nativeContact?'manipulate':gesture?'react':walk.running?'run':seatedWeight>.01?'lap':walk.activation>.01?'walk':'rest';
       armGeometry[side]=sourceArmShape(role,shoulder,projectedArm?.joint??arm.joint,wrist,lengths.upper*s,lengths.lower*s,projectedArm?.depth??0);
       if(spear){
         (spearArms[spear.track.id]??={})[side]={shoulder,elbow:projectedArm?.joint??arm.joint,wrist,grip:arm.end,upper:lengths.upper*s,lower:lengths.lower*s};
@@ -1025,6 +1030,14 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
     props[prop.id]={point,attached};transforms[`prop-${prop.id}`]=transform(point,0,s);
   }
+  // Reuse this physical source palm above its real owned glyph while held.
+  // Other arm/hand depth remains unchanged, and release restores that depth.
+  if(hasBodyViewManipulation(profile))for(const side of ['left','right'] as const){
+    const held=plan.gestures.some(g=>attaches(g)&&rigHand(g)===side&&g.propId&&props[g.propId]?.attached&&t>=g.contactMs!&&
+      (g.releaseMs===undefined?t<=g.endMs:t<g.releaseMs));
+    face[`hand-${side}-prop-slot`]={opacity:held?1:0};
+    if(held){face[`hand-${side}-front-slot`]={opacity:0};face[`hand-${side}-back-slot`]={opacity:0};}
+  }
   for(const side of ['left','right'] as const){const gesture=activeGestures[side];
   if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)){
     const sourceShoulder=m.shoulders?.[side];
@@ -1093,7 +1106,7 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile,plan:Per
 
 // Painter ownership changes at authored gesture boundaries, not as a fade
 // between duplicate appearances of the same physical arm or hand.
-const isPainterSlot=(id:string)=>/^(?:hand|ink-arm)-(?:left|right)-(?:front|back)-slot$/.test(id);
+const isPainterSlot=(id:string)=>/^(?:(?:hand|ink-arm)-(?:left|right)-(?:front|back)-slot|hand-(?:left|right)-prop-slot)$/.test(id);
 const isNativeFacePainterSlot=(profile:HostProfile,id:string)=>profile.appearance.bodyHeadBank?.capabilities.expressions===true&&
   /^native-face-\d+-(?:mouth-(?:layer|generated|emotion-repair)|eyes-layer|brow-screen-(?:left|right)-layer)$/.test(id);
 
@@ -1250,6 +1263,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       clock:actingClock?'complete original expression run':'shot-local diagnostic expressions',sourceTrackHash:hash(actingClock?.expressions??plan.expressions),audioVerified:false}}:{}),
     ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),
+    ...(hasBodyViewManipulation(profile)?{bodyManipulation:{...nativeManipulationDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+      clock:'shot-local contact/release with current original body state; no cross-cut prop clock',contacts:plan.gestures.filter(isNativeContactGesture).map(g=>({id:g.id,hand:rigHand(g),action:g.action,window:nativeContactWindow(g)})),motionVerified:false}}:{}),
     ...(hasBodyViewSeat(profile)?{bodySeat:{...nativeSeatDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       supportTrackHash:hash({supports:physical.supports??[],postures:physical.postures??[],entryPosture:physical.entryPosture??null}),clock:plan.sourceBody?'complete original physical support/body transfer through explicit continuous camera slices':'shot-local physical support transfer',sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     ...(hasBodyViewLocomotion(profile)?{bodyMotion:{...nativeClothDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,

@@ -22,7 +22,7 @@ import {actorProfile,actorActions,shotPerformer,actorSpeech} from '../../package
 import {actorShotSpeech,narrationCueOwners,shotUsesSourceSpeechClock} from '../../packages/actors/speech-clock.js';
 import {SPEECH_SOURCE_CLOCK_VERSION,windowSpeechActivity,validateSpeechActivityTrack,type SpeechSourceClock} from '../../packages/animation/speech-clock.js';
 import {buildRig} from '../../packages/host/rig.js';
-import {performanceSvg} from '../../packages/animation/rig.js';
+import {performanceSvg,propHandSlotsSvg} from '../../packages/animation/rig.js';
 import {namespaceRigSvg} from '../../packages/animation/svg-namespace.js';
 import {compilePerformance} from '../../packages/animation/compiler.js';
 import {PROP_BINDING_VERSION,boundProp} from '../../packages/director/props.js';
@@ -90,7 +90,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     actorReports.push({actorId:definition.id,profileHash:definition.profileHash,rigHash:buildRig(definition).rigHash,report:compiled.report});
     calls.push(compiled.js);
     const props=actor.performance.props.map(prop=>`<g id="${prefix}prop-${prop.id}"></g>`).join('');
-    return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}${props}</g>`;
+    return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}${props}${namespaceRigSvg(propHandSlotsSvg(definition),prefix)}</g>`;
   }).join('');
   const propArt=new Map<string,string>(),foregroundModels:string[]=[];
   const foregroundParts=new Set(art?.models.filter(model=>model.foregroundSvg!==undefined).map(model=>model.partId));

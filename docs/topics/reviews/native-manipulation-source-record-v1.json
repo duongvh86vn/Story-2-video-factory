@@ -1,0 +1,250 @@
+{
+  "version": "native-manipulation-source-record-1",
+  "sourceVersion": "forest-tribe-0.65-native-manipulation",
+  "precedingSourceSHA": "101eda87aeced82925aa48aa27166e0c556fd90e",
+  "scope": "source-only; genuine geometry, callbacks, builders, compilers/samplers/renderers, browser/server, model production pipeline, TTS/ASR/audio/video/MP4/tracer NOT RUN",
+  "checks": [
+    {
+      "command": "npm run build",
+      "startChunk": "276ba6",
+      "session": 11226,
+      "completionChunk": "7d91ca",
+      "exitCode": 0,
+      "viteModules": 46,
+      "scope": "intermediate before later source fixes"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "9a9e6e",
+      "session": 93757,
+      "completionChunk": "68ddc1",
+      "exitCode": 1,
+      "reason": "New test declarations used wrong actor profile/render/security contracts; fixed declarations, no callback execution."
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "b46a83",
+      "session": 90960,
+      "completionChunk": "0fd982",
+      "exitCode": 0,
+      "scope": "intermediate",
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "80f3a6",
+      "session": 52954,
+      "completionChunk": "2eaf66",
+      "exitCode": 0,
+      "viteModules": 46,
+      "scope": "intermediate; final attachment-time filter added afterward"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "8fb93c",
+      "session": 25390,
+      "completionChunk": "88dad4",
+      "exitCode": 0,
+      "scope": "intermediate",
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "38358b",
+      "session": 46418,
+      "completionChunk": "0a86cd",
+      "exitCode": 0,
+      "viteModules": 46,
+      "scope": "final source"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "60d8a3",
+      "session": 95900,
+      "completionChunk": "a8c0a9",
+      "exitCode": 0,
+      "scope": "final source",
+      "callbacksDeclared": 11,
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "npm run schemas",
+      "chunk": "105e5e",
+      "exitCode": 0,
+      "instanceGeometryInvoked": false
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "bbc8fa",
+      "exitCode": 0,
+      "scope": "static raw artwork/hash/inventory only",
+      "compilerInvoked": false,
+      "geometryInvoked": false
+    },
+    {
+      "command": "Static raw-byte/source/hash inspection",
+      "chunk": "b498a8",
+      "exitCode": 0,
+      "geometryInvoked": false,
+      "callbacksExecuted": 0
+    },
+    {
+      "command": "git diff --check",
+      "chunk": "a75e92",
+      "exitCode": 0
+    }
+  ],
+  "static": {
+    "version": "native-manipulation-static-1",
+    "precedingSourceSHA": "101eda87aeced82925aa48aa27166e0c556fd90e",
+    "sourceVersion": "forest-tribe-0.65-native-manipulation",
+    "unchangedTrackedPNGs": 232,
+    "unchangedHeadDefinitions": 18,
+    "newManifestCodeHashes": 17,
+    "frozenProvidedFiles": 3,
+    "frozenExcerptFiles": 6,
+    "declaredCallbacks": 11,
+    "executedCallbacks": 0,
+    "actors": [
+      {
+        "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+        "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
+        "width": 910,
+        "height": 1728,
+        "unchanged": true
+      },
+      {
+        "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+        "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+        "width": 939,
+        "height": 1675,
+        "unchanged": true
+      }
+    ],
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "runtimeExecuted": false,
+    "geometryInvoked": false,
+    "rendererInvoked": false,
+    "fullGoalComplete": false
+  },
+  "sourceReview": {
+    "file": "docs/topics/reviews/native-manipulation-source-review-v1.json",
+    "frozenInputs": "docs/topics/reviews/native-manipulation-review-inputs-v1.md",
+    "calls": 1,
+    "model": "ag/gemini-3.8-flash-low",
+    "usage": {
+      "promptTokens": 17030,
+      "completionTokens": 816,
+      "totalTokens": 17846
+    },
+    "startChunk": "9bf6df",
+    "helperSession": 16346,
+    "completionChunk": "73a0bf",
+    "exitCode": 0,
+    "scope": "partial frozen source only; independent after-freeze repairs were not reviewed by helper"
+  },
+  "toolingFailures": [
+    {
+      "chunk": "e541e7",
+      "kind": "source packet preparation only",
+      "reason": "Initial excerpt exceeded55000characters; narrowed before API call/reservation to44224characters."
+    },
+    {
+      "chunk": "7706e8",
+      "kind": "atomic source edit preparation",
+      "reason": "Exact token missing before any file write; corrected edit sequentially."
+    },
+    {
+      "chunk": "912ac8",
+      "kind": "source edit preparation",
+      "reason": "Painter edits saved in rig/scene/cinematic/workbench/tests; compiler exact token failed. Finished compiler and producer/model revisions explicitly; final source checks passed."
+    },
+    {
+      "chunk": "828251",
+      "kind": "static inspection only",
+      "nodeExitCode": 1,
+      "shellExitCode": 0,
+      "reason": "Inspection incorrectly looked for availableBanks at manifest top level; actual field is nativeHeadBank.availableBanks. Subsequent git commands masked shell exit. Corrected read location and reran raw-byte inspection separately; b498a8 exit0. No production source, artwork or geometry changed."
+    }
+  ],
+  "codeHashes": {
+    "packages/animation/native-contact-arm.ts": "e5dfc47263da48440eb3df654586d3fa8e5c3393cb98765d684f9f1b46cf6c77",
+    "packages/animation/compiler.ts": "b341a0bbb77d26f51fe13314a46d44b2791e505f8b9ce2a75a26debd3b6bae55",
+    "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
+    "packages/animation/rig.ts": "e28f5d076aa7211179582f7cb01db7fe0f6b675379004a869ac7dc97e586d96f",
+    "packages/animation/scene.ts": "934e89805cf0ea20471d278d8a4906d2352ef74c7841ba405bf32add8ace2fe4",
+    "packages/animation/body-view-art.ts": "79f315c05716d4e951e8a445cbc6b9bd73b4f0723b1f7f5bbc05551a663012e7",
+    "packages/animation/forest-body-art.ts": "dbcb213b8f2fe7d050505cdd90ba316f5383b958b6efd6896a324bb14051f2bf",
+    "packages/host/schemas.ts": "ce505440d4aaf32bddd7a29fbd70d89438349a49d694a3b044c647fe8d9b8df7",
+    "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
+    "packages/topics/body-workbench.ts": "9247143df6f5cc439e0fd80434dcc2a9c3cab016fb2255e4f31de4fcd3ea97a2",
+    "packages/topics/prehistoric-life.ts": "2cf872ab907bed59c502f8234ca27164874597b609dc7d1522d03b80bff7f72c",
+    "packages/director/acting-brief.ts": "7ab786fe0ab05c84c98cb9b5d98fd4f67d27e5c03bc85787df8eddb78c4f8d1b",
+    "packages/director/schemas.ts": "ac1da6804cb02a9631c68789ef5bfceac1fbbaa48df47c6d2093700a02651138",
+    "library/shots/cinematic.ts": "a13b357b1bbdc48f72f0159b07f60b387a12c5def959f2fdb51042c9442effc7",
+    "library/shots/cinematic-models.ts": "9d28093dfc23ba675bf8c966f9d3260904a38c38dd73dba8803d12668aab428e",
+    "library/prompts/creative-director.md": "1b42f03f5facdbed149068abda15952a32f365c08669d2a3773cdf5b099d1c90",
+    "apps/server/index.ts": "a02c4185653bc208e2a47fe9fac08680e2e7408fa4e071a4d108ddbe6502e0d6"
+  },
+  "ownedPaths": [
+    "apps/server/index.ts",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/NATIVE-MANIPULATION-HANDOFF.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/native-manipulation-review-inputs-v1.md",
+    "docs/topics/reviews/native-manipulation-source-record-v1.json",
+    "docs/topics/reviews/native-manipulation-source-review-v1.json",
+    "library/prompts/creative-director.md",
+    "library/schemas/host-profile.schema.json",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/schemas/view-acting-clock.schema.json",
+    "library/schemas/view-gaze-target.schema.json",
+    "library/shots/cinematic-models.ts",
+    "library/shots/cinematic.ts",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/animation/body-view-art.ts",
+    "packages/animation/compiler.ts",
+    "packages/animation/forest-body-art.ts",
+    "packages/animation/native-contact-arm.ts",
+    "packages/animation/rig.ts",
+    "packages/animation/scene.ts",
+    "packages/animation/source-arm.ts",
+    "packages/director/acting-brief.ts",
+    "packages/director/schemas.ts",
+    "packages/host/schemas.ts",
+    "packages/topics/body-workbench.ts",
+    "packages/topics/cast-appearance.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/native-manipulation.test.ts"
+  ],
+  "geometry": "NOT RUN",
+  "tests": {
+    "declared": 11,
+    "executed": 0,
+    "status": "DECLARED/NOT RUN",
+    "moduleLoadFixturesInvoked": false
+  },
+  "renderer": "NOT RUN",
+  "server": "NOT STARTED",
+  "browser": "NOT RUN",
+  "video": "NOT RENDERED",
+  "audio": "NOT GENERATED",
+  "fullFactory": "NOT ACCEPTED; arbitrary story->script/exact script/original WAV (+legacy SRT), narration, sourced actors/actions/world, review/repair, final audio/subtitle/QC remain required. EN primary, VI/JA/KO, external-local TTS and resume/rebuild/locks retained.",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "pending": [
+    "native anatomy/cuff/palm/grasp/silhouette/ink/painter/clearance/interpolation and normal-speed film acceptance",
+    "own supporting opposite views/expressions and continuous measured head/body angles without borrowed principal ROI",
+    "sequential/shared actor handoff and cross-cut prop/hand source clock",
+    "native finger/wrist/tool/left-spear poses and bright world/contact lighting",
+    "full3-input narration/language/external TTS/resume/locks/final MP4/QC evidence"
+  ]
+}

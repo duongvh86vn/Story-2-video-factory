@@ -1,6 +1,8 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-Cập nhật hiện hành source0.64: [đạo cụ thuộc từng diễn viên và bàn giao test](ACTOR-PROP-OWNERS-HANDOFF.md). Một scene có thể khai báo mỗi person ID sở hữu vật khác nhau, với tay/scale/source/contact/motion/camera/exit riêng; không ép người phụ thành lead. Source chung đã viết, runtime/geometry/render/video NOT RUN. Chuyền chung vật/cross-cut carry/native grasp còn thiếu, productionReady=false/productionRig=null/availableBanks[]. Full story/script/WAV → giọng → diễn viên → final/audio/subtitle/QC vẫn chưa nghiệm thu.
+Cập nhật hiện hành source0.65: [pose thao tác vật native và bàn giao](NATIVE-MANIPULATION-HANDOFF.md). Explicit bodyManipulation=registered-manipulation-v1 nối inspect/operate/pick-place/carry/drop vào canonical compiler với cuff/palm riêng, chiều dài xương cố định, elbowPole=rest và approach/recovery theo góc khớp C2. Người phụ dùng costume cùng nguồn và đầu riêng. Mẫu nam trọc/không râu, nữ giữ nguyên; productionReady=false/productionRig=null/availableBanks[]. Geometry/runtime/render/video mới NOT RUN; toàn story/script/WAV/giọng/diễn xuất/bối cảnh/resume/finalQC chưa nghiệm thu.
+
+Lịch sử source0.64: [đạo cụ thuộc từng diễn viên và bàn giao test](ACTOR-PROP-OWNERS-HANDOFF.md). Một scene có thể khai báo mỗi person ID sở hữu vật khác nhau, với tay/scale/source/contact/motion/camera/exit riêng; không ép người phụ thành lead. Source chung đã viết, runtime/geometry/render/video NOT RUN. Chuyền chung vật/cross-cut carry/native grasp còn thiếu, productionReady=false/productionRig=null/availableBanks[]. Full story/script/WAV → giọng → diễn viên → final/audio/subtitle/QC vẫn chưa nghiệm thu.
 
 Lịch sử source0.63: [đuôi tóc theo nhịp cơ thể và handoff test](NATIVE-SOURCE-HEAD-FOLLOW.md). Mode source-motion chọn bank6/paint2 riêng: đuôi tóc Lila dùng đúng nguồn và original head/body history, pinned gốc/cạnh; Karo khai báo không rear motion. Giữ nguyên 14 definition/PNG trước. Geometry/UV/seam/hình/video chưa nghiệm thu; runtime giao model test của người dùng. Toàn story/script/WAV → giọng → diễn viên → video/final/QC vẫn là mục tiêu đầy đủ. Các mục phiên bản thấp hơn bên dưới là lịch sử.
 
@@ -627,19 +629,19 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-### Hiện hành0.58 — source chưa nghiệm thu sản phẩm
+### Hiện hành0.65 — source chưa nghiệm thu sản phẩm
 
 | Hạng mục | Source hiện có | Chứng cứ còn thiếu |
 |---|---|---|
 | Ba input + legacy SRT | Code script giữ lời, WAV giữ audio/clock, story→script; Studio/API/CLI và external/local TTS WIP | Chạy câu chuyện mới qua mỗi luồng tới MP4 có giọng/subtitle/QC, không dùng V1 làm chứng nhận |
-| Hai diễn viên đúng mẫu | Primary warm-skin khóa theo hash; bốn definition head/body phải/trái và raw artwork riêng | Identity, face/neck/hair seam, phối cảnh/tỷ lệ/màu, geometry và normal-speed video ở cả hai bố trí đối thoại |
+| Hai diễn viên đúng mẫu | Primary warm-skin khóa theo hash; bốn pair head/body trái/phải, own speech/emotion/layers/follow candidates; góc yaw chưa đo vẫn null | Identity, face/neck/hair seam, phối cảnh/tỷ lệ/màu, geometry và normal-speed video ở cả hai bố trí đối thoại |
 | Diễn viên phụ | Nam đầu trọc không râu v2, nữ có tóc giữ v1, dùng asset trang phục Karo/Lila, ID/vai/thoại riêng | Face/view/pose/contact và video có nhiều người; chưa dùng mẫu quần chúng để chứng nhận principal rig |
-| Miệng/mắt | Bank3 local paint/glyph/lid/speech source-clock; Karo trái rest V2 chỉ ghép miệng; V1 held theo SHA; opt-in paired-head canonical dùng cùng factory renderer | Chỉ người nói mở miệng, silence đúng, không double ink/râu/ghost, target/rendered eye projection, cut/seek và mask/subpixel seam |
-| Diễn xuất/chuyển động | Source gesture/gaze/expression/locomotion/secondary/seat/contact/clock guards; paired native-head hai staging, optional listener gestures và core source projector | Toàn chu kỳ khớp/chân trụ/weight/cloth/hair/props, cut/seek/role swap, cảm xúc và tương tác ở tốc độ thường; geometry/video mới chưa chạy |
+| Miệng/mắt | Bank3/4 own speech/eyes và bank5/6 own expressions, mouth erase/repair, rear layers/follow; source clock/speaker riêng. Old plate V1 held theo SHA; không mượn mặt/mask principal cho quần chúng | Chỉ người nói mở miệng, silence đúng, không double ink/râu/ghost, target/rendered eye projection, cut/seek và mask/subpixel seam |
+| Diễn xuất/chuyển động | Canonical original body/head clocks, source gesture/gaze/expression/locomotion/seat/rear follow;0.64 mỗi diễn viên sở hữu đạo cụ khác nhau;0.65 explicit native manipulation có fixed-chain/C2 approach/recovery và own cuff/palm, không mở guard thiếu nguồn/pose | Toàn chu kỳ khớp/chân trụ/weight/cloth/hair/props, cut/seek/role swap, cảm xúc và tương tác ở tốc độ thường; geometry/video mới chưa chạy |
 | Bối cảnh/màu | Reference/palette và nguồn draft hiện có; vector cũ bị loại | World day/sunset/night có chiều sâu, nguồn sáng/bóng/contact và màu tươi trong final, không nền nhợt/slideshow |
 | EN chính + VI/JA/KO/TTS ngoài-local | Adapter/config/source contract hiện có; WAV không bị buộc đổi thành TTS | Giọng đúng ngôn ngữ/speaker, TTS/API lỗi/clock/fit, audio-subtitle-duration và final gate thực |
 | Resume/rebuild/locks | Source/hash/cache/repair và lock guards WIP | Sửa script/voice/actor/shot giữ hoặc invalidate đúng artifact; không xuất final từ source/clock cũ |
-| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory được ghi theo từng phiên bản, source0.58 xem SUPPORTING-ACTORS.md, source0.57 xem NATIVE-DIALOGUE-ACTING.md | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
+| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory ghi theo exact source/commit; source0.65 xem NATIVE-MANIPULATION-HANDOFF.md, source0.64 xem ACTOR-PROP-OWNERS-HANDOFF.md | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
 | Production | productionReady=false, productionRig=null, availableBanks=[] | Chỉ mở sau khi model test có evidence đáp ứng toàn bộ mục11 và bộ chủ đề thực sự dùng lại cho câu chuyện mới |
 
 Các nguyên liệu/definition đơn lẻ không thay bộ sản phẩm hoàn chỉnh. Nội dung tập lấy từ input người dùng; việc chưa có một tập đầu được chọn không là lý do bó tool vào demo món ăn/máy móc hoặc dừng các phần source độc lập.

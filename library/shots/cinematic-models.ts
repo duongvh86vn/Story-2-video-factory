@@ -7,7 +7,7 @@ import { component } from './explainer.js';
 import type {PropMotionFrame} from '../../packages/director/prop-motion.js';
 import {boundProp} from '../../packages/director/props.js';
 
-export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.2';
+export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.3';
 type Part=NonNullable<Shot['visualization']>['parts'][number];
 export interface ModelIllustration {svg:string;motionAnchors:Array<{selector:string;x:number;y:number}>;}
 

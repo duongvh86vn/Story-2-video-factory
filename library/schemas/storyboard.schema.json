@@ -1076,7 +1076,7 @@
                   },
                   "producer": {
                     "type": "string",
-                    "const": "story-direction-2.2.32"
+                    "const": "story-direction-2.2.33"
                   },
                   "shotId": {
                     "type": "string",
@@ -3476,6 +3476,10 @@
                                     "type": "string",
                                     "const": "registered-secondary-v1"
                                   },
+                                  "bodyManipulation": {
+                                    "type": "string",
+                                    "const": "registered-manipulation-v1"
+                                  },
                                   "sourceColour": {
                                     "type": "string",
                                     "const": "original-rgb-v2"
@@ -5569,6 +5573,10 @@
                                     "bodySecondary": {
                                       "type": "string",
                                       "const": "registered-secondary-v1"
+                                    },
+                                    "bodyManipulation": {
+                                      "type": "string",
+                                      "const": "registered-manipulation-v1"
                                     },
                                     "sourceColour": {
                                       "type": "string",
