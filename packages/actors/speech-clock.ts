@@ -4,6 +4,7 @@ import type {SpeechActivity} from '../voice/schemas.js';
 import {actorSpeech} from './model.js';
 import {SPEECH_SOURCE_CLOCK_VERSION,projectSpeechActivity,windowSpeechActivity,validateSpeechActivityTrack,validateSpeechSourceClock,type SpeechSourceClock} from '../animation/speech-clock.js';
 import {actorViewActingClock,actorUsesViewActingClock} from './view-acting-clock.js';
+import {sourcePropBindingIdentity} from '../director/source-prop-identity.js';
 
 export function shotUsesSourceSpeechClock(shot:Shot):boolean{
   const scene=shot.cinematic?.actorScene;
@@ -42,8 +43,10 @@ export function rigSpeechInputIdentity(shot:Shot,narration:Narration,board:Story
   if(!shotUsesSourceSpeechClock(shot))return undefined;
   const owners=narrationCueOwners(board,shot,narration),scene=shot.cinematic!.actorScene!;
   const selected=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)].filter(actorUsesViewActingClock);
+  const sourceModels=sourcePropBindingIdentity(shot,board,narration);
   return {version:SPEECH_SOURCE_CLOCK_VERSION,narrationHash:hash(NarrationSchema.parse(narration)),owners:selected.map(a=>({actorId:a.id,cueIds:owners.get(a.id)??[]})),
-    viewActing:selected.flatMap(a=>{const clock=actorViewActingClock(board,shot,a.id);return clock?[clock]:[]})};
+    viewActing:selected.flatMap(a=>{const clock=actorViewActingClock(board,shot,a.id);return clock?[clock]:[]}),
+    ...(sourceModels?{sourcePropBinding:sourceModels}:{})};
 }
 export type RigSpeechPublicationBinding={version:typeof SPEECH_SOURCE_CLOCK_VERSION;identityHash:string};
 export function rigSpeechPublicationBinding(shot:Shot,narration:Narration,board:Storyboard):RigSpeechPublicationBinding|undefined{

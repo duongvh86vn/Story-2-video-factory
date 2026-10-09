@@ -142,7 +142,7 @@ export async function validateStoryboardEdit(root: string, board: Storyboard, pr
   try { validateStoryboard(board, narration, beats, bible); }
   catch (error) { throw new ApiError(422, (error as Error).message, 'STORYBOARD_INVALID'); }
   const config = await loadConfig(root);
-  validateCinematicEdit(board, config, previous);
+  validateCinematicEdit(board, config, previous,narration);
   if (config.content.mode === 'narrated-explainer') {
     const { profile, rig } = await loadHost(root);
     try { validateExplainerStoryboard(board, narration, beats, profile, rig, config); }

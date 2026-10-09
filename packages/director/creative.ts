@@ -92,7 +92,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
               c.continuity.exit=bodyRootAt(c.performance,shot.startMs,c.performance.durationMs);});
             c.continuity.facing=[...(c.performance.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??c.performance.facing??'front';
           }
-          c.continuity.models=modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
+          c.continuity.models=modelExitParts(shot,board).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
         }
       }
       const prior=board.shots[i-1]?.cinematic;
@@ -106,7 +106,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       // Per-shot diagnostics retain the full canonical world for persistent subjects and recaps.
       check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true,sourceBoard:board}));
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
-      check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot));
+      check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot,board));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
       if(!shot.cinematic?.spriteStage)check(()=>{const profile=shotPerformer(shot,context.profile,context.rig).profile;validateCamera(shot,profile,actorViewActingClock(board,shot,profile.id));});
       let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;

@@ -94,9 +94,9 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
         for(const [i,shot] of ordered.entries()){
           if(locks.some(s=>s.id===shot.id)){
             if(!shot.cinematic)throw new Error(`${shot.id}: locked diagram shot cannot become cinematic; unlock the shot or keep diagram mode`);
-            validateCinematicShot(shot,profile,config,{shots:ordered});
-          }else ordered[i]=directCinematicShot(shot,beats.find(b=>shot.beatIds.includes(b.id))!,profile,config,entry,{setting,facing,seed:config.presentation.character_mode==='actors',parts:ordered[i-1]?modelExitParts(ordered[i-1]!):undefined,nextControlId:ordered[i+1]?.host?.actions.find(a=>a.type==='operate-model')?.target?.partId});
-          validateModelContinuity(ordered[i-1],ordered[i]!);
+            validateCinematicShot(shot,profile,config,{shots:ordered},narration);
+          }else ordered[i]=directCinematicShot(shot,beats.find(b=>shot.beatIds.includes(b.id))!,profile,config,entry,{setting,facing,seed:config.presentation.character_mode==='actors',parts:ordered[i-1]?modelExitParts(ordered[i-1]!,{shots:ordered}):undefined,nextControlId:ordered[i+1]?.host?.actions.find(a=>a.type==='operate-model')?.target?.partId});
+          validateModelContinuity(ordered[i-1],ordered[i]!,{shots:ordered});
           const next=ordered[i]!.cinematic!;
           if(entry&&hash(next.continuity.entry)!==hash(entry))throw new Error(`${shot.id}: locked entry breaks character continuity`);
           entry=next.continuity.exit;

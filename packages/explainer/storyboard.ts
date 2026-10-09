@@ -100,7 +100,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     if(config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'&&!shot.cinematic?.actorScene)throw new Error(`${shot.id}: actors mode requires a story actor scene; replan the old presenter storyboard`);
     const {profile,rig}=shotPerformer(shot,baseProfile,baseRig);
     const h = shot.host, v = shot.visualization;
-    if(config.presentation.mode==='story-cinematic')validateCinematicShot(shot,profile,config,phaseBoard);
+    if(config.presentation.mode==='story-cinematic')validateCinematicShot(shot,profile,config,phaseBoard,narration);
     else if(shot.cinematic)throw new Error(`${shot.id}: cinematic shot requires story-cinematic presentation`);
     if (!h || !v || !shot.explanationGoal || !shot.narrationSegmentIds?.length || !shot.sourceRefs?.length || shot.captionRegion !== 'bottom-safe') throw new Error(`${shot.id}: incomplete explainer specification`);
     const actorScene=shot.cinematic?.actorScene,intent=shot.cinematic?.sceneIntent;
@@ -193,7 +193,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     const spoken = narration.segments.reduce((n, s) => n + Math.max(0, Math.min(s.endMs, shot.endMs) - Math.max(s.startMs, shot.startMs)), 0);
     speech += spoken; if (h.presence !== 'absent') visible += spoken;
   }
-  if(config.presentation.mode==='story-cinematic')for(const [i,shot] of board.shots.entries())validateModelContinuity(board.shots[i-1],shot);
+  if(config.presentation.mode==='story-cinematic')for(const [i,shot] of board.shots.entries())validateModelContinuity(board.shots[i-1],shot,phaseBoard);
   if (!board.shots.some(s=>s.cinematic?.actorScene)&&speech && visible / speech < config.presentation.minimum_host_speech_visibility) throw new Error('Insufficient host visibility during narration');
   if (!board.shots.some(s=>s.cinematic?.actorScene)&&config.presentation.require_meaningful_host_action_per_beat) for (const beat of beats) {
     if (!board.shots.some(s => s.beatIds.includes(beat.id) && s.host?.presence !== 'absent' && s.host?.actions.some(a => !['idle', 'greet', 'react'].includes(a.type)))) throw new Error(`${beat.id}: no explanatory host action`);

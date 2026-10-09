@@ -1,0 +1,168 @@
+{
+  "version": "source-prop-binding-source-record-1",
+  "sourceVersion": "forest-tribe-0.68-source-prop-binding",
+  "precedingSourceSHA": "75f156e6a81a61f17d054038999a80c4858f5170",
+  "scope": "source build/typecheck/schema export/static byte/hash inspection only; not geometry/runtime/art/motion/film/full-flow acceptance",
+  "checks": [
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "00a3f3",
+      "session": 31571,
+      "completionChunk": "a69520",
+      "exitCode": 0,
+      "scope": "intermediate initial binding/context before cache/declarations"
+    },
+    {
+      "command": "npm run build:core",
+      "startChunk": "5e67fa",
+      "session": 54334,
+      "completionChunk": "e14172",
+      "exitCode": 1,
+      "reason": "Missing sourcePropBindingIdentity import in speech-clock.ts; corrected before final checks."
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "6028f8",
+      "session": 89356,
+      "completionChunk": "3eac48",
+      "exitCode": 0,
+      "scope": "intermediate source/declarations, no callbacks"
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "eabea9",
+      "session": 25033,
+      "completionChunk": "b1319a",
+      "exitCode": 0,
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 46 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-aVGRYQRW.js   219.27 kB │ gzip: 68.98 kB\n✓ built in 560ms\n",
+      "scope": "final source build only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "50ef48",
+      "session": 86748,
+      "completionChunk": "444dd7",
+      "exitCode": 0,
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "final declaration typecheck; completion output empty; no callbacks"
+    },
+    {
+      "command": "npm run schemas",
+      "chunk": "f945b3",
+      "exitCode": 0,
+      "scope": "schema export only; no schema instance geometry"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "e8516d",
+      "exitCode": 0,
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "static existing asset metadata/source hashes"
+    },
+    {
+      "command": "static fs/Git raw byte/header/hash inspection",
+      "startChunk": "7a0a01",
+      "session": 90362,
+      "completionChunk": "09fc11",
+      "exitCode": 0,
+      "decisiveOutput": "{\"trackedImages\":232,\"actualPNG\":131,\"originalJPEGNamedPNG\":101,\"unchangedDefinitions\":18,\"uniqueManifestCodeHashes\":52,\"sourceBindingHashes\":14,\"availableBankFields\":8,\"callbacksDeclared\":7,\"callbacksExecuted\":0,\"productionReady\":false}\n",
+      "scope": "raw image bytes/PNG headers/JSON definitions/code hashes/gates; no sampler or renderer"
+    },
+    {
+      "command": "git diff --cached --check",
+      "chunk": "a1bf75",
+      "exitCode": 2,
+      "reason": "Extra blank line at EOF in new prop-owner.ts; removed without semantic change, then static manifest and checks refreshed."
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "fba46a",
+      "exitCode": 0,
+      "scope": "refresh current source hashes after nonsemantic EOF blank removal; no geometry or renderer"
+    }
+  ],
+  "helper": {
+    "model": "ag/gemini-3.8-flash-low",
+    "calls": 1,
+    "startChunk": "b6b095",
+    "session": 9989,
+    "completionChunk": "af57f6",
+    "exitCode": 0,
+    "usage": {
+      "promptTokens": 18737,
+      "completionTokens": 30,
+      "totalTokens": 18767
+    },
+    "frozenInputs": "source-prop-binding-review-metadata-v1.json",
+    "review": "source-prop-binding-source-review-v1.json",
+    "scope": "six exact complete source files and frozen wiring excerpts, no findings; not independently reviewed entire integrated patch",
+    "finalSourceIndependentlyReviewed": false,
+    "preparation": [
+      {
+        "chunk": "c4104b",
+        "exitCode": 1,
+        "reason": "Initial context57591 chars exceeded55000 budget; no writes/model call."
+      },
+      {
+        "chunk": "8c00ed",
+        "exitCode": 0,
+        "reason": "Valid seven-file52481-char packet; one model request, no retries."
+      }
+    ]
+  },
+  "staticRecord": "source-prop-binding-static-record-v1.json",
+  "callbacksDeclared": 7,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "ownedPaths": [
+    "apps/server/artifacts.ts",
+    "apps/server/cinematic.ts",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SOURCE-PROP-BINDING-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/source-prop-binding-review-inputs-v1.md",
+    "docs/topics/reviews/source-prop-binding-review-metadata-v1.json",
+    "docs/topics/reviews/source-prop-binding-source-record-v1.json",
+    "docs/topics/reviews/source-prop-binding-source-review-v1.json",
+    "docs/topics/reviews/source-prop-binding-static-record-v1.json",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/shots/cinematic.ts",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/actors/speech-clock.ts",
+    "packages/director/acting-brief.ts",
+    "packages/director/creative.ts",
+    "packages/director/index.ts",
+    "packages/director/prop-owner.ts",
+    "packages/director/props.ts",
+    "packages/director/schemas.ts",
+    "packages/director/source-prop-binding.ts",
+    "packages/director/source-prop-identity.ts",
+    "packages/explainer/storyboard.ts",
+    "packages/storyboard/director.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/acting-transport.test.ts",
+    "tests/source-prop-binding.test.ts"
+  ],
+  "goalComplete": false,
+  "delivery": "Full Git/remote SHA and staged/committed/working byte equality recorded externally after commit; this record cannot contain its future commit SHA.",
+  "postSourceChecksChanges": [
+    {
+      "file": "packages/director/prop-owner.ts",
+      "change": "remove one extra blank line at EOF only for git diff --cached --check",
+      "beforeSHA256": "e4098bb0bc70e69ed404f56a726f155a4077275cd8a126ccfc9391c41c0f7fd1",
+      "afterSHA256": "bb1cc12a15461fbfca6cb6465361274cf57a841d4ae8b7b1f264e6a3eded9d16",
+      "nonWhitespaceSourceUnchanged": true
+    }
+  ]
+}

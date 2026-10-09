@@ -1,41 +1,23 @@
-import type { Shot } from '../core/schemas.js';
+import type { Shot,Storyboard,Narration } from '../core/schemas.js';
 import { rigHand } from '../core/identifiers.js';
 import { hash } from '../core/utils.js';
 import { fold } from '../explainer/plan.js';
 import type {CinematicPlan} from './schemas.js';
+import {boundProp} from './prop-owner.js';
+import {performanceProps} from '../animation/view-source-manipulation.js';
+import {sourceBoundPropFrame,validateSourcePropBindings} from './source-prop-binding.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
-export const PROP_BINDING_VERSION='bound-model-motion-2.2.3';
+export const PROP_BINDING_VERSION='bound-model-motion-2.2.4';
 export const ACTOR_PROP_OWNERSHIP_DESCRIPTION={version:'actor-prop-ownership-1',bindingVersion:PROP_BINDING_VERSION,
   field:'cinematic.propBindings[].ownerId',identity:'actual visible story-person ID, not rig/model identity',
-  selection:'explicit supporting owner; omission retains primary/presenter only',
-  motion:'one completed in-shot pickup/carry/drop per sourced entity and one hand owner; different people can manipulate different entities concurrently',
-  history:'actual own compiled shot clock/scale for glyph, label, foreground, relation, effects, camera envelope, exit and report',
-  pending:['real geometry/render/runtime/film acceptance','cross-person handoff, shared ownership and cross-cut carried source clock','native authored-view tool/contact poses and full art/motion acceptance'],
+  selection:'explicit supporting owner; omission retains legacy primary/presenter only; original source props require explicit person on every slice',
+  motion:'one completed local attachment or candidate complete original actor/model attachment clock; different people can own different entities concurrently',
+  history:'actual own shot clock/scale; original model entry/exit uses the complete source geometry through primary/supporting camera swaps',
+  pending:['real geometry/render/runtime/film acceptance','source world/event/effect/interaction/coverage integration','cross-person handoff and shared/sequential ownership','native authored-view tool/contact poses and full art/motion acceptance'],
   runtimeVerified:false,productionAcceptance:false};
 
-/** Ownership is a story-person ID, independent of lead role, model or rig identity.
- * Omission retains the original primary/presenter contract; never infer a
- * supporting owner from a prop name or whichever gesture happens to match. */
-export function propPerformer(shot:Shot,binding:CinematicPlan['propBindings'][number]){
-  const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: bound prop requires cinematic data`);
-  const id=binding.ownerId??c.actorScene?.primary?.id??c.leadCharacterId;
-  if(c.actorScene&&[...(c.actorScene.primary?[c.actorScene.primary.id]:[]),...c.actorScene.supporting.map(a=>a.character.id)].filter(actorId=>actorId===id).length!==1)throw new Error(`${shot.id}: prop ${binding.propId} owner ${id} is not one visible story actor`);
-  if(c.actorScene?.primary?.id===id||!c.actorScene&&binding.ownerId===undefined){
-    return {id,performance:c.performance,actions:shot.host?.actions??[],prefix:'',character:c.actorScene?.primary??undefined};
-  }
-  if(binding.ownerId===undefined)throw new Error(`${shot.id}: bound prop has no primary owner; supporting ownership must be explicit`);
-  const matches=c.actorScene?.supporting.filter(a=>a.character.id===id)??[];
-  if(matches.length!==1)throw new Error(`${shot.id}: prop ${binding.propId} owner ${id} is not one visible story actor`);
-  const actor=matches[0]!;
-  return {id,performance:actor.performance,actions:actor.actions,prefix:`actor-${id}-`,character:actor.character};
-}
-
-export function boundProp(shot:Shot,binding:CinematicPlan['propBindings'][number]){
-  const owner=propPerformer(shot,binding),prop=owner.performance.props.find(p=>p.id===binding.propId);
-  if(!prop)throw new Error(`${shot.id}: prop ${binding.propId} is missing from its explicit owner ${owner.id}`);
-  return {...owner,prop,svgId:`${owner.prefix}prop-${binding.propId}`};
-}
+export {propPerformer,boundProp} from './prop-owner.js';
 
 // JSON coordinates and normalized-to-stage multiplication may differ by a few
 // floating-point units. This is a serialization check, not a spatial tolerance.
@@ -51,21 +33,34 @@ export function pickupPart(shot:Shot){
   const ref=part.sourceRefs.find(ref=>{const text=fold(ref.quote);return new RegExp(`\\b(?:ta|chung ta|nguoi dan)\\s+nhac\\s+${label}\\b[^.!?;]*\\bdat\\s+${label}\\b[^.!?;]*\\bsang ben phai\\b`).test(text);});
   return ref?{part,ref}:undefined;
 }
-export function modelExitParts(shot:Shot):NonNullable<Shot['visualization']>['parts']{
+function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard):NonNullable<Shot['visualization']>['parts']{
+  const owners=new Map<string,ReturnType<typeof sourceBoundPropFrame>['frame']>();
   return (shot.visualization?.parts??[]).map(part=>{
     const binding=shot.cinematic?.propBindings.find(b=>b.partId===part.id),owned=binding&&boundProp(shot,binding),prop=owned?.prop,p=owned?.performance;
-    return prop?.destination&&p?{...part,x:prop.destination.x/p.stage.width,y:prop.destination.y/p.stage.height}:part;
+    if(binding&&owned&&p?.sourceManipulation){
+      let frame=owners.get(owned.id);if(!frame){frame=sourceBoundPropFrame(shot,binding,exit?p.durationMs:0,board).frame;owners.set(owned.id,frame);}
+      const state=frame.props[binding.propId];if(!state)throw new Error(`${shot.id}: needs-source-prop-binding: actual model state missing`);
+      return {...part,x:state.point.x/p.stage.width,y:state.point.y/p.stage.height};
+    }
+    return exit&&prop?.destination&&p?{...part,x:prop.destination.x/p.stage.width,y:prop.destination.y/p.stage.height}:part;
   });
 }
-export function validatePropBindings(shot:Shot):void{
+export function modelExitParts(shot:Shot,board?:Storyboard){return modelPartsAt(shot,true,board);}
+export function modelEntryParts(shot:Shot,board?:Storyboard){return modelPartsAt(shot,false,board);}
+export function validatePropBindings(shot:Shot,board?:Storyboard,narration?:Narration):void{
   const c=shot.cinematic;if(!c)return;
   const performances=[c.performance,...(c.actorScene?.supporting.map(a=>a.performance)??[])];
-  if(performances.some(p=>p.sourceManipulation))throw new Error(`${shot.id}: needs-source-prop-binding: original contact clock requires sourced model/action/camera continuity binding; an unbound prop cannot enter production`);
-  const declared=performances.flatMap(p=>p.props.map(prop=>prop.id));
+  const sourceSelected=performances.some(p=>p.sourceManipulation);
+  if(sourceSelected){
+    if(!board||!narration)throw new Error(`${shot.id}: needs-source-prop-binding: original contact requires complete storyboard and original narration`);
+    validateSourcePropBindings(shot,board,narration);
+  }
+  const declared=performances.flatMap(p=>performanceProps(p).map(prop=>prop.id));
   if(new Set(declared).size!==declared.length)throw new Error(`${shot.id}: prop IDs must be unique across the entire visible cast`);
   if(c.propBindings.length!==declared.length)throw new Error(`${shot.id}: every animated prop requires a sourced model binding`);
   const svgIds=c.propBindings.map(binding=>boundProp(shot,binding).svgId);
   if(new Set(svgIds).size!==svgIds.length)throw new Error(`${shot.id}: bound prop namespaces collide; use unambiguous actor/prop IDs`);
+  if(sourceSelected)throw new Error(`${shot.id}: needs-source-prop-binding: original entity/action/evidence binding is checked; source event/effect/interaction/coverage world contract remains pending and cannot enter production`);
   const pickup=pickupPart(shot),ids=new Set<string>(),parts=new Set<string>();
   for(const binding of c.propBindings){
     const owned=boundProp(shot,binding),{prop,performance:p}=owned,part=shot.visualization!.parts.find(p=>p.id===binding.partId);

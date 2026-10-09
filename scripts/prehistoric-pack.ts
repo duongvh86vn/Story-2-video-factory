@@ -8,6 +8,7 @@ import {nativeManipulationDescription} from '../packages/animation/native-contac
 import {sourceManipulationDescription} from '../packages/animation/view-source-manipulation.js';
 import {physicalPerformanceDescription} from '../packages/animation/compiler.js';
 import {sourceManipulationActionDescription} from '../packages/director/source-manipulation-actions.js';
+import {sourcePropBindingDescription} from '../packages/director/source-prop-binding.js';
 import {ACTOR_PROP_OWNERSHIP_DESCRIPTION} from '../packages/director/props.js';
 import {referenceHeadDescription} from '../packages/animation/forest-head-art.js';
 import {referenceBodyDescription} from '../packages/animation/forest-body-art.js';
@@ -104,6 +105,7 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
   return {...measured,actor,approved:false,status:'candidate-authored-seated-folds'};
 }));
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
+  sourcePropBinding:{...sourcePropBindingDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/director/source-prop-binding.ts','packages/director/source-prop-identity.ts','packages/director/prop-owner.ts','packages/director/props.ts','packages/director/index.ts','packages/director/schemas.ts','packages/director/creative.ts','packages/director/acting-brief.ts','packages/actors/speech-clock.ts','packages/explainer/storyboard.ts','packages/storyboard/director.ts','apps/server/cinematic.ts','apps/server/artifacts.ts','library/shots/cinematic.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   physicalGeometry:{...physicalPerformanceDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/animation/compiler.ts','packages/director/camera.ts','packages/animation/forest-body-art.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   sourceManipulationActions:{...sourceManipulationActionDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/director/source-manipulation-actions.ts','packages/director/index.ts','packages/director/schemas.ts','packages/host/schemas.ts','packages/director/acting-repair.ts','packages/director/acting-brief.ts','library/schemas/index.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   actorPropOwnership:{...ACTOR_PROP_OWNERSHIP_DESCRIPTION,codeHashes:Object.fromEntries(await Promise.all(['packages/director/props.ts','packages/director/prop-motion.ts','packages/director/camera.ts','packages/director/index.ts','packages/director/schemas.ts','packages/director/acting-brief.ts','library/shots/cinematic.ts','library/shots/cinematic-models.ts','library/prompts/creative-director.md','apps/server/cinematic.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},

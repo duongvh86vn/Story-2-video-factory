@@ -1,0 +1,92 @@
+{
+  "version": "source-prop-binding-review-metadata-1",
+  "precedingSourceSHA": "75f156e6a81a61f17d054038999a80c4858f5170",
+  "scope": "frozen source-only review; no execution, geometry, artwork or motion acceptance",
+  "sources": [
+    {
+      "file": "packages/director/source-prop-binding.ts",
+      "sha256": "86bddf68dd1870784f2c9e65283adfbf85fe48b0de4d8a00f9250eeef42c254d",
+      "bytes": 12274
+    },
+    {
+      "file": "packages/director/source-prop-identity.ts",
+      "sha256": "6230d5d3c5f700bf26a0a0c370f6a51afe9265deb09693496c82f1fe1a61de54",
+      "bytes": 1212
+    },
+    {
+      "file": "packages/director/prop-owner.ts",
+      "sha256": "e4098bb0bc70e69ed404f56a726f155a4077275cd8a126ccfc9391c41c0f7fd1",
+      "bytes": 2015
+    },
+    {
+      "file": "packages/director/props.ts",
+      "sha256": "d7349ad51134ccfdebe9d5485dc7bd1e343d951b6cd20816bf20bc0d00ae3bdc",
+      "bytes": 10068
+    },
+    {
+      "file": "packages/director/source-manipulation-actions.ts",
+      "sha256": "c039a24547c45a53765b616007943c59395528cacc446c5e4602815e15cdb325",
+      "bytes": 4671
+    },
+    {
+      "file": "tests/source-prop-binding.test.ts",
+      "sha256": "e6005530328e71812a01e5f904946ffe2e155fa51d16908a44f7edbd26c9d6a7",
+      "bytes": 13191
+    }
+  ],
+  "excerpts": [
+    {
+      "file": "packages/core/identifiers.ts",
+      "start": 1,
+      "end": 6,
+      "fullFileSHA256": "7d5d65506ca7e11c92f4bf5232f8ac9fe894eb0a73f3226986ac2e17c3c14fad",
+      "excerptSHA256": "b80e491a2473d23fa7a3e4d018a169772fa6b35b43e0c6ac2c386bd9f8dfa5f5"
+    },
+    {
+      "file": "packages/actors/view-acting-clock.ts",
+      "start": 73,
+      "end": 90,
+      "fullFileSHA256": "62953cbce054fc8c2f4024f783a62cfe5ce134d470c2ee57ab8653a90a3c9bc8",
+      "excerptSHA256": "e03062e4c0be774d873364ce1ee312e91ef42e5f2e45ea8d1b51d4656290fd89"
+    },
+    {
+      "file": "packages/actors/speech-clock.ts",
+      "start": 42,
+      "end": 56,
+      "fullFileSHA256": "a053773e915aede27110baec0d1d426ea74d6cc361896f6c6fcba32275140970",
+      "excerptSHA256": "6c8d23a0f1579d31ce145813c59993e1cec77e3305eaf1c76a04511276df4f3d"
+    },
+    {
+      "file": "apps/server/cinematic.ts",
+      "start": 41,
+      "end": 49,
+      "fullFileSHA256": "29c0904852a4e7614393c6354292c0eabfde0cd238f896ce275a6d8474531677",
+      "excerptSHA256": "03be213a06456162d993b1650c22b63652502b7bc3bafb62e3044f2d4a3bb340"
+    },
+    {
+      "file": "packages/director/index.ts",
+      "start": 283,
+      "end": 291,
+      "fullFileSHA256": "6c73e039b21316dfc9fa58657007121c87390d44f8ea1c2a1ba2e44349d94f6a",
+      "excerptSHA256": "f3c26b603615ca85e3b43a9ced05a4eee9c72c836e9aa85fe0481d94d33ff2b9"
+    },
+    {
+      "file": "library/shots/cinematic.ts",
+      "start": 219,
+      "end": 231,
+      "fullFileSHA256": "63db9c9730773fddda497987c17953883d09f7423b4d1c6bc17b45f666513474",
+      "excerptSHA256": "98f5b41cb409c36e0e2aaaa3fa366dd4908c35c9050ae3973fbb3097a5c86096"
+    }
+  ],
+  "context": {
+    "file": "docs/topics/reviews/source-prop-binding-review-inputs-v1.md",
+    "sha256": "211019f322e1d623acac2d7fb2ca7e527f3b321c9d678cd6e18ff93af68d6b30",
+    "chars": 9050
+  },
+  "totalChars": 52481,
+  "packetSHA256": "cb22fbbfa412755aa5a0dad7b476ca83a39cfeae39673cd9db589a26e50d89d5",
+  "helperCallsPlanned": 1,
+  "productionReady": false,
+  "geometryInvoked": false,
+  "callbacksExecuted": 0
+}

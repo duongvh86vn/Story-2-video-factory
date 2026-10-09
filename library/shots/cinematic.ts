@@ -26,6 +26,8 @@ import {performanceSvg,propHandSlotsSvg} from '../../packages/animation/rig.js';
 import {namespaceRigSvg} from '../../packages/animation/svg-namespace.js';
 import {compilePerformance} from '../../packages/animation/compiler.js';
 import {PROP_BINDING_VERSION,boundProp} from '../../packages/director/props.js';
+import {originalPropGesture} from '../../packages/director/source-prop-binding.js';
+import {performanceProps} from '../../packages/animation/view-source-manipulation.js';
 import {compiledPropFrames} from '../../packages/director/prop-motion.js';
 import {sceneSeats,SEAT_SUPPORT_VERSION} from '../../packages/stage/seats.js';
 import {sceneLabels} from './scene-labels.js';
@@ -40,7 +42,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;propId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[]};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
-  validateCinematicShot(shot,profile,config,board);
+  validateCinematicShot(shot,profile,config,board,narration);
   const c=shot.cinematic!,p=c.performance,v=shot.visualization!,{width,height}=p.stage;
   const sceneText=sceneLabels(config.project.language);
   const art=c.artDirection,palette=art?.palette??{background:'#F3DDAA',surface:'#FFF3DB',ink:'#201A15',accent:'#F4CD68'};
@@ -89,7 +91,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     ownerCompilations.set(definition.id,compiled);
     actorReports.push({actorId:definition.id,profileHash:definition.profileHash,rigHash:buildRig(definition).rigHash,report:compiled.report});
     calls.push(compiled.js);
-    const props=actor.performance.props.map(prop=>`<g id="${prefix}prop-${prop.id}"></g>`).join('');
+    const props=performanceProps(actor.performance).map(prop=>`<g id="${prefix}prop-${prop.id}"></g>`).join('');
     return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}${props}${namespaceRigSvg(propHandSlotsSvg(definition),prefix)}</g>`;
   }).join('');
   const propArt=new Map<string,string>(),foregroundModels:string[]=[];
@@ -216,8 +218,9 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});
   return {files,geometry,report:{...result.compiled.report,camera:validateCamera(shot,profile,primaryActingClock,{worldShot:shot,board}),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>({partId,...(c.propBindings.find(binding=>binding.partId===partId)?{propId:c.propBindings.find(binding=>binding.partId===partId)!.propId}:{})}))}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
-    const owner=boundProp(shot,binding),prop=owner.prop,g=owner.performance.gestures.find(g=>g.propId===prop.id)!;
-    return {...binding,actorId:owner.id,ownerScale:owner.performance.scale,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs};
+    const owner=originalPropGesture(shot,binding),prop=owner.prop,g=owner.gesture,source=owner.performance.sourceManipulation;
+    return {...binding,actorId:owner.id,ownerScale:owner.performance.scale,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs,
+      ...(source?{originalSource:{sourceId:source.id,sourceHash:hash(source),originalStartMs:source.startMs,originalEndMs:source.endMs,contactGlobalMs:source.startMs+g.contactMs!,releaseGlobalMs:g.releaseMs===undefined?null:source.startMs+g.releaseMs,clock:'reported clip times are original source-relative; sampled positions follow the actual shot slice',motionVerified:false}}:{})};
   })}:{})}};
 }
 

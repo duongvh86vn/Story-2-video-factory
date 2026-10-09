@@ -1,5 +1,5 @@
 import type { FactoryConfig } from '../../packages/core/config.js';
-import { ShotSchema, type Storyboard } from '../../packages/core/schemas.js';
+import { ShotSchema, type Storyboard,type Narration } from '../../packages/core/schemas.js';
 import { z } from 'zod';
 import { CinematicPlanSchema, DIRECTION_VERSION } from '../../packages/director/schemas.js';
 import { isCurrentAnimation, PerformancePlanSchema } from '../../packages/animation/schemas.js';
@@ -8,6 +8,7 @@ import { ApiError } from './security.js';
 import { validateModelContinuity, CINEMATIC_CLIPS } from '../../packages/director/index.js';
 import { validateArtDirection } from '../../packages/director/art-direction.js';
 import {validatePropBindings} from '../../packages/director/props.js';
+import {performanceProps} from '../../packages/animation/view-source-manipulation.js';
 
 // This schema is for inspection only. Production and edits still use current literals.
 const inspectionSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -24,7 +25,7 @@ export function inspectCinematicStoryboard(value:unknown,locks:Record<string,boo
 }
 
 /** Bound editing to values the current production scene actually consumes. */
-export function validateCinematicEdit(board: Storyboard, config: FactoryConfig, previous?: Storyboard | null): void {
+export function validateCinematicEdit(board: Storyboard, config: FactoryConfig, previous?: Storyboard | null,narration?:Narration): void {
   if (!board.shots.some(s => s.cinematic) && config.presentation.mode !== 'story-cinematic') return;
   if (config.content.mode !== 'narrated-explainer') throw new ApiError(422, 'The legacy renderer does not support cinematic performance.', 'CINEMATIC_UNSUPPORTED');
   if (previous) {
@@ -40,16 +41,16 @@ export function validateCinematicEdit(board: Storyboard, config: FactoryConfig, 
     if (c.continuity.carriedProps.length) unsupported('Carried props are not supported by the current cinematic clips.');
     if (shot.host?.presence !== 'beside-model'&&!(c.actorScene?.primary===null&&shot.host?.presence==='absent')) unsupported('Absent performance requires an explicit mechanism-only actor scene.');
     const performances=[c.performance,...(c.actorScene?.supporting.map(actor=>actor.performance)??[])];
-    if (performances.reduce((count,p)=>count+p.props.length,0)!==c.propBindings.length || performances.some(p=>p.gestures.some(g => !CINEMATIC_CLIPS.includes(g.action)))) {
+    if (performances.reduce((count,p)=>count+performanceProps(p).length,0)!==c.propBindings.length || performances.some(p=>[...p.gestures,...(p.sourceManipulation?.gestures??[])].some(g => !CINEMATIC_CLIPS.includes(g.action)))) {
       unsupported('Animated props need a sourced model binding. Unsupported clips and cross-cut carry require a production continuity plan.');
     }
-    try{validatePropBindings(shot);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
+    try{validatePropBindings(shot,board,narration);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
     const old = previous?.shots.find(s => s.id === shot.id)?.cinematic;
     if(old&&old.artDirection?.useEnvironment!==c.artDirection?.useEnvironment&&old.environmentAssetId)unsupported('Changing the background asset source requires production replanning; preserve the environment setting during direct edits.');
     if (old && (old.setting !== c.setting || old.environmentAssetId !== c.environmentAssetId)) unsupported('Environment changes require replanning through the production asset resolver; direct environment replacement is not supported.');
     if (Math.abs(c.continuity.exit.y - c.performance.stage.groundY) > .01) throw new ApiError(422, `${shot.id}: exit continuity must use the ground anchor.`, 'CINEMATIC_INVALID');
     const prior = board.shots[i - 1]?.cinematic;
-    try{validateModelContinuity(board.shots[i-1],shot);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
+    try{validateModelContinuity(board.shots[i-1],shot,board);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
     if (prior && c.actorScene?.continuity!=='cut'&&(Math.hypot(prior.continuity.exit.x - c.continuity.entry.x, prior.continuity.exit.y - c.continuity.entry.y) > .01 || prior.continuity.facing!==(c.performance.facing??'front') || prior.leadCharacterId !== c.leadCharacterId || prior.performance.scale !== c.performance.scale)) {
       throw new ApiError(422, `${shot.id}: continuity must continue the previous shot's lead character, position and scale.`, 'CINEMATIC_INVALID');
     }

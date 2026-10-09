@@ -1,0 +1,82 @@
+{
+  "version": "source-prop-binding-source-review-1",
+  "sourceVersion": "forest-tribe-0.68-source-prop-binding",
+  "scope": "bounded exact6 complete files plus frozen wiring excerpts only; not whole patch or runtime/art/motion/film acceptance",
+  "rawProposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [],
+      "reviewScope": "source-only",
+      "runtimeExecuted:false": false,
+      "artOrMotionAccepted": false,
+      "runtimeExecuted": false
+    },
+    "usage": {
+      "promptTokens": 18737,
+      "completionTokens": 30,
+      "totalTokens": 18767
+    },
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "source-only-review",
+    "fingerprint": "585913ed4bd1cedcc99fc5ca9b2dcc8936d56c39a3959308cd455659c818a1c4",
+    "slot": 1,
+    "prompt": "Review source0.68 original person/entity/model/art/narration/action binding and actual model entry/exit plus structural sibling cache identity. Find only concrete correctness defects evidenced by these exact sources; preserve all source/voice/actor/hand/clock guards. Production source world event/reaction/effect/thermal/control/action-group/interaction/coverage integration is intentionally pending and the needs-source-prop-binding gate MUST remain. Operation-only source gestures are not claimed to be fully bound. rigHand defaults to right, never throws. Tests are declarations, not runtime results. Do not execute or request code/tests/callbacks/fixtures/samplers/browser/API pipeline/TTS/ASR/render/audio/video. Do not assume visual acceptance, relax equality/guards, rewrite narration, mirror/warp a face or replace original carry with local placement. Return JSON {findings:[{file,line,severity,issue,proposedSourceChange}],reviewScope:\"source-only\",runtimeExecuted:false,artOrMotionAccepted:false}. Prefer short source-grounded findings; an empty list is valid.",
+    "sources": [
+      {
+        "file": "packages/director/source-prop-binding.ts",
+        "sha256": "86bddf68dd1870784f2c9e65283adfbf85fe48b0de4d8a00f9250eeef42c254d"
+      },
+      {
+        "file": "packages/director/source-prop-identity.ts",
+        "sha256": "6230d5d3c5f700bf26a0a0c370f6a51afe9265deb09693496c82f1fe1a61de54"
+      },
+      {
+        "file": "packages/director/prop-owner.ts",
+        "sha256": "e4098bb0bc70e69ed404f56a726f155a4077275cd8a126ccfc9391c41c0f7fd1"
+      },
+      {
+        "file": "packages/director/props.ts",
+        "sha256": "d7349ad51134ccfdebe9d5485dc7bd1e343d951b6cd20816bf20bc0d00ae3bdc"
+      },
+      {
+        "file": "packages/director/source-manipulation-actions.ts",
+        "sha256": "c039a24547c45a53765b616007943c59395528cacc446c5e4602815e15cdb325"
+      },
+      {
+        "file": "tests/source-prop-binding.test.ts",
+        "sha256": "e6005530328e71812a01e5f904946ffe2e155fa51d16908a44f7edbd26c9d6a7"
+      },
+      {
+        "file": "docs/topics/reviews/source-prop-binding-review-inputs-v1.md",
+        "sha256": "211019f322e1d623acac2d7fb2ca7e527f3b321c9d678cd6e18ff93af68d6b30"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-09T02:44:21.689Z"
+  },
+  "decisions": [],
+  "reviewedFinalSource": false,
+  "finalScopeNote": "No findings supplied. A trailing blank line in prop-owner.ts was removed after freezing for Git whitespace checks; non-whitespace source unchanged. The entire integrated patch was not independently reviewed.",
+  "helperCalls": 1,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "postFreezeChanges": [
+    {
+      "file": "packages/director/prop-owner.ts",
+      "change": "remove one extra blank line at EOF only for git diff --cached --check",
+      "beforeSHA256": "e4098bb0bc70e69ed404f56a726f155a4077275cd8a126ccfc9391c41c0f7fd1",
+      "afterSHA256": "bb1cc12a15461fbfca6cb6465361274cf57a841d4ae8b7b1f264e6a3eded9d16",
+      "nonWhitespaceSourceUnchanged": true
+    }
+  ]
+}

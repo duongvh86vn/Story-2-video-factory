@@ -1,6 +1,6 @@
 import path from 'node:path';
 import type { FactoryConfig } from '../core/config.js';
-import { ShotSchema, StoryboardSchema, type Beat, type Shot, type Storyboard } from '../core/schemas.js';
+import { ShotSchema, StoryboardSchema, type Beat, type Shot, type Storyboard,type Narration } from '../core/schemas.js';
 import { exists, hash, readJson, writeJson,writeAtomic } from '../core/utils.js';
 import {rigHand} from '../core/identifiers.js';
 import {cinematicActionGroups} from './actions.js';
@@ -18,7 +18,7 @@ import { stageModels } from './models.js';
 import { ANIMATION_LIBRARY } from '../animation/library.js';
 import { planCamera, validateCamera } from './camera.js';
 import { validateComparisonReadability } from './readability.js';
-import { pickupPart, modelExitParts, validatePropBindings } from './props.js';
+import { pickupPart, modelExitParts,modelEntryParts, validatePropBindings } from './props.js';
 import { cueExpressions } from './emotion.js';
 import { validateArtDirection } from './art-direction.js';
 import {actorProfile,seedActorShot} from '../actors/model.js';
@@ -44,6 +44,8 @@ export function cinematicSetting(text:string,fallback:CinematicPlan['setting']='
 
 /** Choreographs inside the immutable audio interval. No dialogue generation or retiming. */
 export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,config:FactoryConfig,entry?:Point,context?:{seed?:boolean;setting?:CinematicPlan['setting'];facing?:'front'|'left'|'right';parts?:NonNullable<Shot['visualization']>['parts'];nextControlId?:string}):Shot {
+  if([input.cinematic?.performance,...(input.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation))
+    throw new Error(`${input.id}: needs-source-prop-binding: original carried model cannot be replaced by an offline local placement seed; preserve/replan its sourced complete actor/model world contract`);
   const shot=structuredClone(input),v=shot.visualization,h=shot.host;
   if(!v||!h||!shot.sourceRefs?.length)throw new Error(`${shot.id}: cinematic direction requires sourced explanation and approved host`);
   const actors=config.presentation.character_mode==='actors',seed=actors&&context?.seed;
@@ -207,12 +209,12 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
   return ShotSchema.parse(shot);
 }
 
-export function validateCinematicShot(shot:Shot,profile:HostProfile,config:FactoryConfig,board?:Storyboard):void {
-  validateCinematicActorShot(shot,profile,config,true,board);
+export function validateCinematicShot(shot:Shot,profile:HostProfile,config:FactoryConfig,board?:Storyboard,narration?:Narration):void {
+  validateCinematicActorShot(shot,profile,config,true,board,shot,narration);
 }
 
 /** Shared model exits belong to the scene; supporting actors do not rewind the primary prop motion. */
-function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:FactoryConfig,validateWorld:boolean,board?:Storyboard,clockSourceShot:Shot=shot):void {
+function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:FactoryConfig,validateWorld:boolean,board?:Storyboard,clockSourceShot:Shot=shot,narration?:Narration):void {
   if(shot.cinematic?.actorScene?.primary)profile=actorProfile(shot.cinematic.actorScene.primary,profile);
   const c=CinematicPlanSchema.parse(shot.cinematic),p=c.performance;
   const actingClock=board?actorViewActingClock(board,clockSourceShot,profile.id):undefined;
@@ -231,8 +233,8 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   }
   if(hash(c.continuity.entry)!==hash(bodyRootAt(p,shot.startMs,0))||Math.abs(c.continuity.exit.x-bodyRootAt(p,shot.startMs,p.durationMs).x)>.01||c.continuity.exit.y!==p.stage.groundY)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
   validateManipulationActionSlices(p,shot.host?.actions??[],shot.startMs);
-  if(validateWorld)validatePropBindings(shot);
-  if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
+  if(validateWorld)validatePropBindings(shot,board,narration);
+  if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot,board).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
   const exitFacing=[...(p.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??p.facing??'front';
   if(c.continuity.facing!==exitFacing)throw new Error(`${shot.id}: cinematic facing disagrees with turn exit`);
   if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
@@ -246,7 +248,7 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
     validateCinematicActorShot({...shot,host:{...shot.host!,id:actorDefinition.id,rigHash:shot.host!.rigHash,actions:actor.actions},
       cinematic:{...c,leadCharacterId:actorDefinition.id,performance:actor.performance,propBindings:[],
         continuity:{...c.continuity,entry:bodyRootAt(actor.performance,shot.startMs,0),exit:bodyRootAt(actor.performance,shot.startMs,actor.performance.durationMs),facing:actor.performance.turns?.at(-1)?.direction??actor.performance.facing??'front'},
-        actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config,false,board,clockSourceShot);
+        actorScene:{primary:actor.character,speakingSegmentIds:actor.speakingSegmentIds,continuity:'cut',supporting:[]}}},actorDefinition,config,false,board,clockSourceShot,narration);
   }
   const consumed=new Set<string>();
   const actions=shot.host?.actions??[];
@@ -280,10 +282,11 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   if(consumed.size!==p.gestures.length)throw new Error(`${shot.id}: missing performance action`);
 }
 
-export function validateModelContinuity(previous:Shot|undefined,next:Shot):void{
+export function validateModelContinuity(previous:Shot|undefined,next:Shot,board?:Storyboard):void{
   if(!previous?.cinematic||!next.cinematic)return;
   if(next.cinematic.actorScene?.continuity==='cut')return;
-  for(const part of next.visualization!.parts){const prior=modelExitParts(previous).find(p=>p.id===part.id);if(prior&&hash([part.x,part.y,part.width,part.height])!==hash([prior.x,prior.y,prior.width,prior.height]))throw new Error(`${next.id}: model ${part.id} teleports at the cut; preserve its world transform`);}
+  const priorParts=modelExitParts(previous,board);
+  for(const part of modelEntryParts(next,board)){const prior=priorParts.find(p=>p.id===part.id);if(prior&&hash([part.x,part.y,part.width,part.height])!==hash([prior.x,prior.y,prior.width,prior.height]))throw new Error(`${next.id}: model ${part.id} teleports at the cut; preserve its world transform`);}
 }
 
 export async function writeCinematicPlans(root:string,board:Storyboard):Promise<void> {
