@@ -1,0 +1,205 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.79-entity-motion",
+  "precedingSourceSHA": "5338a590946b3a2670b880da9831d57c59c2e158",
+  "scope": "Actual story-person local alias identity and canonical model motion data through local/shared renderer relations;legacy explicit primary correction;source only,not art/motion/whole-product acceptance",
+  "features": [
+    "One actor/prop tuple per binding across local and original source timelines,including shared ownership",
+    "Complete canonical entity centers keyed by partId,union of actual owner adaptive frames,no bare alias overwrite",
+    "Relations/flow fail on missing/extra entity or wrong clock and consume exact drawn piecewise-linear centers",
+    "Shared ownership emits one center per canonical entity independent of grip alias names",
+    "Foreground reports actual local person or canonical source,not first shared alias",
+    "Explicit legacy primary ID matches omission without allowing another person or original source without a real actor",
+    "Producer/cache/model/ownership renderer versions,generated schema,manifest,prompt and acting brief updated;production source guard unchanged"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "4fea0d/session44613/completione82384",
+      "decisiveOutput": "Vite7.3.6;51 modules;index.html0.91kB/0.51gzip,CSS17.11kB/4.44gzip,JS index-ChzacBbO.js231.18kB/72.27gzip;built in542ms",
+      "scope": "fresh compile/bundle after source correction; no production TS edits afterwards"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "0e356a/session49745/completion219fae",
+      "decisiveOutput": "tsc -p tsconfig.tests.json;completion output empty",
+      "scope": "fresh typecheck after channel type correction;no tests/callbacks/fixtures executed"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "cb6e56",
+      "decisiveOutput": "tsx library/schemas/export.ts",
+      "scope": "schema definition export after producer2.2.42;two generated files changed;no definitions edited later"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "028220",
+      "decisiveOutput": "references6/candidates12/headCandidates6/garmentCandidates2/rejected7/productionReadyfalse",
+      "scope": "static existing asset inventory and mapped code hashes"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/entity-motion-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "aa4eaa/session10890/completiond15fc3",
+      "record": "entity-motion-static-record-v1.json",
+      "scope": "raw existing rasters/headers/JSON/schema literal/code-hash/source-guard only;no business imports/geometry evaluation"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "dc3d3f",
+      "decisiveOutput": "",
+      "scope": "whitespace only;index also to be checked"
+    },
+    {
+      "command": "source ownership path and unrelated inventory comparison",
+      "exitCode": 0,
+      "handle": "03177d",
+      "decisiveOutput": "27 tracked owned edits,32 total owned paths,52 unrelated untracked preserved;schema files shot.schema.json/storyboard.schema.json",
+      "scope": "raw source inventory only"
+    }
+  ],
+  "priorChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "dc8bd2/session20601/completiona52e23",
+      "scope": "earlier candidate before confirmed legacy owner correction;not final source check"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 1,
+      "handle": "fc7997/session16440/completion8d5602",
+      "decisiveOutput": "tests/model-motion.test.ts(11,39):TS2352;synthetic time/props fixture was asserted as complete FrameState without root/feet/stance/bodyPosture and other fields",
+      "correction": "Converter type uses only Pick<FrameState,timeMs|props>;test declares those channels directly;fresh typecheck passed",
+      "runtimeExecuted": false
+    }
+  ],
+  "ownedPaths": [
+    "docs/topics/CAMERA-REVISION-HANDOFF.md",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/DIRECTOR-CAMERA-AGENTS.md",
+    "docs/topics/ENTITY-MOTION-HANDOFF.md",
+    "docs/topics/OWNERSHIP-OBSERVATION-HANDOFF.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/entity-motion-agent-record-v1.json",
+    "docs/topics/reviews/entity-motion-source-record-v1.json",
+    "docs/topics/reviews/entity-motion-static-record-v1.json",
+    "library/prompts/creative-director.md",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/shots/cinematic-models.ts",
+    "library/shots/cinematic.ts",
+    "library/shots/ownership-layer.ts",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/director/acting-brief.ts",
+    "packages/director/ownership-compile.ts",
+    "packages/director/ownership-render-version.ts",
+    "packages/director/prop-motion.ts",
+    "packages/director/prop-owner.ts",
+    "packages/director/props.ts",
+    "packages/director/schemas.ts",
+    "packages/director/source-prop-binding.ts",
+    "packages/director/source-prop-identity.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/actor-owned-props.test.ts",
+    "tests/cinematic-props.test.ts",
+    "tests/model-motion.test.ts",
+    "tests/ownership-render.test.ts"
+  ],
+  "sourceHashes": {
+    "library/shots/cinematic-models.ts": "4c9fbcfd3db4053af15373b894e5ceab9ea6fa8fed028c0d6086a68efe15b5a2",
+    "library/shots/cinematic.ts": "20a3139e95f371dbc5800b745381ecb2900b5125b7b857600dc187e5bc23f0ce",
+    "library/shots/ownership-layer.ts": "30f0117663a291562d0958fda1be22bb6db347b047016a62ddd6ff14f60ddc69",
+    "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
+    "packages/director/ownership-compile.ts": "94afbe02b492c77b8d3d682d238fa2c6f79eb50ed283b8a830dda17ed4e2e5ff",
+    "packages/director/ownership-render-version.ts": "20190d4bdef8c21ed057544d74c0de70891d22bb944b9708623b80518b2fc09e",
+    "packages/director/prop-motion.ts": "58933e0bf73d92505712a7d1cfd23a43bff5b84b91712aff1d88c5d21146fb50",
+    "packages/director/prop-owner.ts": "c5ce737c469fdd7b43751305c08bc29d78d2e3f38d29fa751168e261d7af6cd7",
+    "packages/director/props.ts": "c002fde4acb36afa67bc7b4b8cef729d39e4a35f01a471bfd5997bbfd76735f5",
+    "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+    "packages/director/source-prop-binding.ts": "9e68b58a312c8f977b1c0802a923da2bc12fcda6e6f0cc7ca740222f35ff2153",
+    "packages/director/source-prop-identity.ts": "ac16b339b3c6d899a0762f4d0d36f985c2c04c77902bdeae6aa0af124b528ebe",
+    "packages/topics/prehistoric-life.ts": "875ef58577386eef379a1488194ef0dba28cdc79f478acec4318222f636d0d22",
+    "scripts/prehistoric-pack.ts": "00ed80fe23a0baf9552138de5543776af56f7116edd7b0f59668a5f4697f51c5",
+    "tests/actor-owned-props.test.ts": "20906152e479bb4dad7cd96765ffe2160cb92c1024252a3d804dba64fe65a0a0",
+    "tests/cinematic-props.test.ts": "48f601008f2c6b8358ef033d040c1c31ccc3fc5299b804623e0b82164b3515e7",
+    "tests/model-motion.test.ts": "64a2c6e2af5a994abc0f88a06f563dad9dc0894f8902ce1b8bbfb70c5030f261",
+    "tests/ownership-render.test.ts": "a58a645611976e1f4ba40d96533b80b7985dcce14055d7de66ef1ddaee1cfb79"
+  },
+  "agent": {
+    "record": "entity-motion-agent-record-v1.json",
+    "task": "actor-prop-alias-audit-v1",
+    "calls": 1,
+    "retries": 0,
+    "requestedModel": "cx/gpt-6.1-sol",
+    "responseModel": "gpt-6.1-sol",
+    "requestedReasoningEffort": "xhigh",
+    "backendReasoningEffort": "not independently confirmed",
+    "requestedOutputTokens": 3600,
+    "outputCapVerified": false,
+    "reportedCompletionExceedsRequestedLimit": true,
+    "usage": {
+      "promptTokens": 11145,
+      "completionTokens": 9925,
+      "totalTokens": 21070
+    },
+    "frozenCandidateInputs": 5,
+    "confirmedFindings": 1,
+    "postReviewAmendedFiles": [
+      "packages/director/prop-owner.ts",
+      "packages/director/prop-motion.ts"
+    ],
+    "wholeDiffReviewed": false,
+    "proposalExecuted": false
+  },
+  "testDeclarations": {
+    "newLiteralCallbacks": 7,
+    "newParameterizedCases": 2,
+    "newCallbacks": 9,
+    "callbacksExecuted": 0,
+    "newFile": "tests/model-motion.test.ts",
+    "updatedFiles": [
+      "tests/actor-owned-props.test.ts",
+      "tests/ownership-render.test.ts",
+      "tests/cinematic-props.test.ts"
+    ],
+    "status": "DECLARED / NOT RUN",
+    "scope": "Entity channel contracts plus both-rig local alias rendering and explicit legacy binding regressions;not native shared geometry or film acceptance"
+  },
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT INVOKED",
+    "geometry": "NOT INVOKED",
+    "server": "NOT STARTED",
+    "browser": "NOT USED",
+    "APIProductionPipeline": "NOT RUN",
+    "TTS": "NOT RUN",
+    "ASR": "NOT RUN",
+    "audio": "NOT GENERATED",
+    "video": "NOT RENDERED",
+    "acceptance": "delegated to human test model"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "remaining": [
+    "Native original/shared alias/geometry/bake/camera/interaction and actual emitted SVG/GSAP/report acceptance",
+    "Integrated source production semantics and own art/motion acceptance before original source production guard can change",
+    "Owner-qualified alias/source/role-swap/resume/migration/lock/camera-repair/review/final/QC runtime acceptance",
+    "Rotating spear/airborne/mixed local/shared bindings/changing depth and native tool pose contracts",
+    "Faithful own face/hair/limbs/costumes/vivid world/camera/normal-speed performance acceptance",
+    "Arbitrary story/exact script/original WAV;EN primary/VI/JA/KO/external-local TTS;resume/rebuild/locks and final MP4/audio/subtitle/thumbnail/QC acceptance"
+  ]
+}

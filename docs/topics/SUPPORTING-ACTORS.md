@@ -1,5 +1,7 @@
 # Diễn viên phụ / quần chúng — Cuộc sống thời tiền sử
 
+Cập nhật source0.79: [đúng người, đúng vật và entity motion](ENTITY-MOTION-HANDOFF.md). Prop IDs theo từng diễn viên; relation/flow dùng canonical entity, không chọn theo tên prop của người đầu tiên. Đã sửa thêm explicit legacy primary binding. Source vẫn chưa nghiệm thu native art/motion/video và toàn luồng. Các mốc dưới đây là lịch sử.
+
 Cập nhật source0.78: [camera repair theo đúng revision](CAMERA-REVISION-HANDOFF.md). Đã tách binding trước/sau sửa camera; scene/review cũ vẫn mất hiệu lực. Combo 9router `tester` gọi được và trả `gpt-6-luna`; chỉ kiểm kết nối. Runtime/video và full-product acceptance vẫn chờ model người dùng. Các mốc bên dưới là lịch sử bàn giao.
 
 Cập nhật source0.77: [camera/tương tác/continuity của vật chung](OWNERSHIP-OBSERVATION-HANDOFF.md). Nhánh observation đã viết; production và nghiệm thu art/motion/video vẫn chờ. Phần source0.76 trở về trước dưới đây là lịch sử bàn giao.

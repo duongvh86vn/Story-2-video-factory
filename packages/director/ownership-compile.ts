@@ -4,7 +4,7 @@ import {samplePhysicalPerformance,gestureRecoveryStart} from '../animation/compi
 import {actorProfile} from '../actors/model.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {sourceActor} from './source-actor.js';
-import {boundProp} from './prop-owner.js';
+import {boundProp,assertPropAliasCoverage} from './prop-owner.js';
 import {validateSourceOwnershipTimelines,sourceOwnershipFrame,sourceOwnershipBoundary} from './source-ownership.js';
 import {validateSourceWorld} from './source-world.js';
 import {validateSourceGripWorld} from './source-grip-world.js';
@@ -35,8 +35,8 @@ export function compileSourceOwnership(shot:Shot,board:Storyboard,narration:Narr
   const sources=canonical.cinematic!.sourceOwnership!,paints=canonical.cinematic!.ownershipPaint??[];
   if(paints.length!==sources.length||new Set(paints.map(p=>p.sourceId)).size!==paints.length)return fail(shot,'every entity requires one explicit depth plan');
   const allAliases=sources.flatMap(s=>s.grips.map(g=>JSON.stringify([g.actorId,g.propId])));
-  const propIds=sources.flatMap(s=>s.grips.map(g=>g.propId));
-  if(new Set(propIds).size!==propIds.length)return fail(shot,'physical prop alias IDs must be unambiguous across the visible cast');
+  if(new Set(allAliases).size!==allAliases.length)return fail(shot,'each original actor/prop alias must belong to one canonical entity');
+  assertPropAliasCoverage(canonical);
   if(canonical.cinematic!.propBindings.length!==allAliases.length||canonical.cinematic!.propBindings.some(b=>!b.ownerId||!allAliases.includes(JSON.stringify([b.ownerId,b.propId]))))
     return fail(shot,'mixed unregistered/local prop rendering is not supported by this candidate; preserve and report the missing physical binding');
   const result=new Map<string,CompiledOwnership>();

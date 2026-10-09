@@ -11,7 +11,7 @@ import {compilePerformance,samplePerformance} from '../packages/animation/compil
 import {DIRECTION_VERSION} from '../packages/director/schemas.js';
 import {stageModels} from '../packages/director/models.js';
 import {boundProp,propPerformer,modelExitParts,validatePropBindings} from '../packages/director/props.js';
-import {compiledPropFrames} from '../packages/director/prop-motion.js';
+import {compiledModelFrames} from '../packages/director/prop-motion.js';
 import {validateCinematicShot,validateModelContinuity} from '../packages/director/index.js';
 import {validateCamera} from '../packages/director/camera.js';
 import {renderCinematic} from '../library/shots/cinematic.js';
@@ -65,7 +65,7 @@ test('supporting ownership is explicit, unambiguous and cannot borrow a primary 
   delete binding.ownerId;assert.throws(()=>validatePropBindings(f.shot),/missing from/);
   binding.ownerId='invented-person';assert.throws(()=>validatePropBindings(f.shot),/one visible/);
   binding.ownerId='karo-person';f.shot.cinematic!.actorScene!.supporting.push(structuredClone(f.shot.cinematic!.actorScene!.supporting[0]!));assert.throws(()=>validatePropBindings(f.shot),/unique|one visible/);
-  const duplicate=fixture();duplicate.plans[1]!.props[0]!.id=duplicate.plans[0]!.props[0]!.id;assert.throws(()=>validatePropBindings(duplicate.shot),/unique across/);
+  const duplicate=fixture();duplicate.plans[1]!.props.push(structuredClone(duplicate.plans[1]!.props[0]!));assert.throws(()=>validatePropBindings(duplicate.shot),/unique within/);
 });
 
 test('wrong owner scale/clock/stage/source/hand/contact and joint manipulation still reject',()=>{
@@ -102,14 +102,28 @@ test('model exits and role changes keep each owner placed center and refuse reta
 
 test('relation clock includes every real owner boundary and rejects missing/truncated centers',()=>{
   const f=fixture(),compiled=f.plans.map((p,i)=>compilePerformance(p,f.profiles[i]!,f.activity));
-  const sources=new Map(f.plans.map((p,i)=>[p.props[0]!.id,compiled[i]!.frames])),frames=compiledPropFrames(compiled[0]!.frames,sources);
-  for(const source of sources.values())for(const frame of source)assert.ok(frames.some(f=>f.timeMs===frame.timeMs));
+  const sources=f.plans.map((p,i)=>({partId:f.shot.visualization!.parts[i]!.id,ownerId:f.characters[i]!.id,propId:p.props[0]!.id,frames:compiled[i]!.frames})),frames=compiledModelFrames(compiled[0]!.frames,sources);
+  for(const source of sources)for(const frame of source.frames)assert.ok(frames.some(f=>f.timeMs===frame.timeMs));
   f.shot.visualization!.relations=[{from:'basket',to:'bowl',kind:'compare',sourceRefs:[f.ref]}];
   assert.match(cinematicRelations(f.shot,1280,720,frames).html,/relation-0-segment-0/);
-  const invalid=structuredClone(compiled[1]!.frames);delete invalid[0]!.props['bowl-prop'];assert.throws(()=>compiledPropFrames(compiled[0]!.frames,new Map([['bowl-prop',invalid]])),/missing or invalid/);
-  assert.throws(()=>compiledPropFrames(compiled[0]!.frames,new Map([['bowl-prop',compiled[1]!.frames.slice(1)]])),/different compiled/);
-  const numeric=structuredClone(compiled[1]!.frames);numeric[1]!.props['bowl-prop']!.point.x=NaN;assert.throws(()=>compiledPropFrames(compiled[0]!.frames,new Map([['bowl-prop',numeric]])),/invalid/);
-  const clone=structuredClone(compiled[0]!.frames);assert.equal(compiledPropFrames(clone,new Map()),clone);
+  const invalid=structuredClone(compiled[1]!.frames);delete invalid[0]!.props['bowl-prop'];assert.throws(()=>compiledModelFrames(compiled[0]!.frames,[{...sources[1]!,frames:invalid}]),/missing or invalid/);
+  assert.throws(()=>compiledModelFrames(compiled[0]!.frames,[{...sources[1]!,frames:compiled[1]!.frames.slice(1)}]),/different compiled/);
+  const numeric=structuredClone(compiled[1]!.frames);numeric[1]!.props['bowl-prop']!.point.x=NaN;assert.throws(()=>compiledModelFrames(compiled[0]!.frames,[{...sources[1]!,frames:numeric}]),/invalid/);
+  const clone=structuredClone(compiled[0]!.frames),empty=compiledModelFrames(clone,[]);assert.deepEqual(empty.map(f=>f.timeMs),clone.map(f=>f.timeMs));assert.ok(empty.every(f=>!Object.keys(f.centers).length));
+});
+
+for(const kind of ['stick-man','mini-robot'] as const)test(`${kind}: same actor-local prop ID keeps two real owners and entity relation tracks separate`,()=>{
+  const f=fixture(kind),alias=f.plans[0]!.props[0]!.id;
+  f.plans[1]!.props[0]!.id=alias;f.plans[1]!.gestures[0]!.propId=alias;f.shot.cinematic!.propBindings[1]!.propId=alias;
+  f.shot.visualization!.relations=[{from:'basket',to:'bowl',kind:'compare',sourceRefs:[f.ref]}];
+  validatePropBindings(f.shot);validateCinematicShot(f.shot,f.profiles[0]!,f.config);
+  const result=renderCinematic(f.shot,f.profiles[0]!,buildRig(f.profiles[0]!),f.activity,f.config),html=result.files.files.find(file=>file.path==='index.html')!.content,js=result.files.files.find(file=>file.path==='scene.js')!.content;
+  assert.equal((html.match(/data-prop-entity="basket"/g)??[]).length,1);assert.equal((html.match(/data-prop-entity="bowl"/g)??[]).length,1);
+  assert.ok(js.includes('actor-karo-person-prop-'+alias));assert.ok(js.includes('relation-0-segment-0'));
+  assert.deepEqual(result.report.boundModels?.map(m=>[m.actorId,m.propId]),[['lila-person',alias],['karo-person',alias]]);
+  const compiled=f.plans.map((p,i)=>compilePerformance(p,f.profiles[i]!,f.activity));
+  const frames=compiledModelFrames(compiled[0]!.frames,f.plans.map((p,i)=>({partId:f.shot.visualization!.parts[i]!.id,ownerId:f.characters[i]!.id,propId:alias,frames:compiled[i]!.frames})));
+  for(const frame of frames)assert.notDeepEqual(frame.centers.basket,frame.centers.bowl);
 });
 
 test('camera uses the supporting prop motion envelope instead of its static or primary anchor',()=>{

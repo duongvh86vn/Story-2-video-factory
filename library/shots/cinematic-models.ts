@@ -4,12 +4,12 @@ import { escapeHtml } from '../../packages/core/utils.js';
 import { fold } from '../../packages/explainer/plan.js';
 import { steamComponentLabels } from '../../packages/explainer/configurations.js';
 import { component } from './explainer.js';
-import type {PropMotionFrame} from '../../packages/director/prop-motion.js';
+import {validateModelMotionFrames,type ModelMotionFrame} from '../../packages/director/prop-motion.js';
 import {ownershipGlyph} from '../../packages/director/ownership-reference.js';
 import {boundProp} from '../../packages/director/props.js';
 import {sourceWorldTrack,type SourceWorldFrame} from './source-world-timeline.js';
 
-export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.5';
+export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.6';
 type Part=NonNullable<Shot['visualization']>['parts'][number];
 export interface ModelIllustration {svg:string;motionAnchors:Array<{selector:string;x:number;y:number}>;}
 
@@ -53,16 +53,21 @@ const arrow=(tip:{x:number;y:number},from:{x:number;y:number},size:number)=>{
 };
 
 /** Directed relations use arrowheads; compare and part-of do not imply causality. */
-export function cinematicRelations(shot:Shot,width:number,height:number,frames?:PropMotionFrame[],worldFrames?:SourceWorldFrame[]) {
+export function cinematicRelations(shot:Shot,width:number,height:number,frames?:ModelMotionFrame[],worldFrames?:SourceWorldFrame[]) {
   const v=shot.visualization!,html:string[]=[],calls:string[]=[],scope=`[data-composition-id="${shot.id}"]`;
   const bindings=shot.cinematic?.propBindings??[];
+  if(bindings.length&&v.relations.length){
+    if(!frames)throw new Error(`${shot.id}: relation requires the actual compiled canonical entity centers`);
+    validateModelMotionFrames(frames,bindings.map(b=>b.partId),shot.endMs-shot.startMs);
+  }
   const centerAt=(part:Part,time:number)=>{
     const binding=bindings.find(binding=>binding.partId===part.id);
-    if(!binding||!frames?.length)return point(part.x*width,part.y*height);
+    if(!binding)return point(part.x*width,part.y*height);
+    if(!frames?.length||time<frames[0]!.timeMs||time>frames.at(-1)!.timeMs)throw new Error(`${shot.id}: relation lacks the actual compiled entity clock for ${part.id}`);
     let low=0,high=frames.length-1;
     while(low<high){const middle=Math.floor((low+high)/2);if(frames[middle]!.timeMs<time)low=middle+1;else high=middle;}
-    const right=frames[low]!,left=frames[Math.max(0,low-1)]!,a=left.props[binding.propId]?.point,b=right.props[binding.propId]?.point;
-    if(!a||!b)throw new Error(`${shot.id}: relation lacks compiled prop ${binding.propId}`);
+    const right=frames[low]!,left=frames[Math.max(0,low-1)]!,a=Object.hasOwn(left.centers,part.id)?left.centers[part.id]:undefined,b=Object.hasOwn(right.centers,part.id)?right.centers[part.id]:undefined;
+    if(!a||!b||![a.x,a.y,b.x,b.y].every(Number.isFinite))throw new Error(`${shot.id}: relation lacks compiled entity ${part.id}`);
     const mix=left.timeMs===right.timeMs?0:Math.max(0,Math.min(1,(time-left.timeMs)/(right.timeMs-left.timeMs)));
     return point(a.x+(b.x-a.x)*mix,a.y+(b.y-a.y)*mix);
   };

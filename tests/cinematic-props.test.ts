@@ -29,6 +29,13 @@ for(const kind of ['stick-man','mini-robot'] as const)test(`${kind}: a narrated 
   assert.deepEqual(release.props[g.propId!]!.point,g.destination);
   validateExplainerStoryboard({shots:[shot]},narration,[beat],profile,rig,config);
   assert.doesNotThrow(()=>validateCinematicEdit({shots:[shot]},config));
+  const qualified=structuredClone(shot);qualified.cinematic!.propBindings[0]!.ownerId=qualified.cinematic!.leadCharacterId;
+  validateExplainerStoryboard({shots:[qualified]},narration,[beat],profile,rig,config);
+  assert.doesNotThrow(()=>validateCinematicEdit({shots:[qualified]},config));
+  const qualifiedRender=renderCinematic(qualified,profile,rig,activity,config);
+  assert.equal(qualifiedRender.report.boundModels?.[0]?.actorId,qualified.cinematic!.leadCharacterId);
+  qualified.cinematic!.propBindings[0]!.ownerId='invented-person';
+  assert.throws(()=>validateCinematicEdit({shots:[qualified]},config),/not one visible/);
   const rendered=renderCinematic(shot,profile,rig,activity,config),files=secureSceneFiles(rendered.files),html=files.files.find(f=>f.path==='index.html')!.content;
   assert.match(html,/data-prop-entity="b1.battery"/);assert.equal((html.match(/data-prop-entity="b1.battery"/g)??[]).length,1);
   assert.ok(rendered.geometry.interactions.some(a=>a.type==='operate-model'&&a.contactMs===a.reachMs&&a.errorPx<.01));

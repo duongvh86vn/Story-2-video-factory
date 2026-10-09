@@ -93,11 +93,11 @@ test('only generated alias paint is suppressed; original hand and free slots rem
   assert.throws(()=>suppressOwnershipCopies(shot,html.replace('<rect width="24" height="22"/>','<g><rect/></g>'),layer));
 });
 
-test('relations use canonical centers for all explicit grip aliases',()=>{
+test('relations use one canonical entity channel independent of repeated local grip names',()=>{
   const original=source(),bake=bakeOwnership(original,1000,1300,60,[],resolver(original,t=>({x:t,y:30}))),shot={id:'one',startMs:1000,endMs:1300} as Shot;
-  const item={version:OWNERSHIP_RENDER_VERSION,source:original,bake,aliases:[{propId:'left-alias'},{propId:'right-alias'}]} as unknown as CompiledOwnership;
+  const item={version:OWNERSHIP_RENDER_VERSION,source:original,bake,aliases:[{actorId:'person-a',propId:'shared-name'},{actorId:'person-b',propId:'shared-name'}]} as unknown as CompiledOwnership;
   const frames=ownershipRelationFrames(shot,new Map([['basket',item]]));
   assert.equal(frames[0]!.timeMs,0);assert.equal(frames.at(-1)!.timeMs,300);
-  for(const frame of frames)assert.deepEqual(frame.props['left-alias']!.point,frame.props['right-alias']!.point);
-  assert.equal(hash(frames[0]!.props['left-alias']!.point),hash({x:1000,y:30}));
+  for(const frame of frames)assert.deepEqual(Object.keys(frame.centers),['basket']);
+  assert.equal(hash(frames[0]!.centers.basket),hash({x:1000,y:30}));
 });

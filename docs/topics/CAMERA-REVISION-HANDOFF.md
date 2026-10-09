@@ -1,5 +1,7 @@
 # Camera repair theo đúng revision — source0.78
 
+Cập nhật source0.79: [đúng người, đúng vật và entity motion](ENTITY-MOTION-HANDOFF.md). Prop IDs theo từng diễn viên; relation/flow dùng canonical entity, không chọn theo tên prop của người đầu tiên. Đã sửa thêm explicit legacy primary binding. Source vẫn chưa nghiệm thu native art/motion/video và toàn luồng. Các mốc dưới đây là lịch sử.
+
 Mục tiêu vẫn là câu chuyện → kịch bản, kịch bản nguyên văn hoặc WAV → video có diễn viên trong câu chuyện. Source0.78 sửa một lỗi được phát hiện khi đọc code camera repair sau [source0.77](OWNERSHIP-OBSERVATION-HANDOFF.md). Chưa chạy lại lỗi hoặc nghiệm thu video. Không đổi ảnh, nét, mặt, tóc, trang phục hoặc màu; nam phụ trọc/không râu và nữ phụ giữ nguyên.
 
 ## Lỗi và thay đổi

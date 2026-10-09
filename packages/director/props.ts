@@ -3,8 +3,7 @@ import { rigHand } from '../core/identifiers.js';
 import { hash } from '../core/utils.js';
 import { fold } from '../explainer/plan.js';
 import type {CinematicPlan} from './schemas.js';
-import {boundProp} from './prop-owner.js';
-import {performanceProps} from '../animation/view-source-manipulation.js';
+import {boundProp,assertPropAliasCoverage,propAliasIdentity} from './prop-owner.js';
 import {sourceBoundPropFrame,validateSourcePropBindings} from './source-prop-binding.js';
 import {validateSourceWorld} from './source-world.js';
 import {sourceInteractionDescriptor} from './source-interactions.js';
@@ -15,11 +14,12 @@ import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeAt} from './ownership-bake-query.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
-export const PROP_BINDING_VERSION='bound-model-motion-2.2.4';
-export const ACTOR_PROP_OWNERSHIP_DESCRIPTION={version:'actor-prop-ownership-1',bindingVersion:PROP_BINDING_VERSION,
+export const PROP_BINDING_VERSION='bound-model-motion-2.2.5';
+export const ACTOR_PROP_OWNERSHIP_DESCRIPTION={version:'actor-prop-ownership-2',bindingVersion:PROP_BINDING_VERSION,
   field:'cinematic.propBindings[].ownerId',identity:'actual visible story-person ID, not rig/model identity',
   selection:'explicit supporting owner; omission retains legacy primary/presenter only; original source props require explicit person on every slice',
   motion:'one completed local attachment or candidate complete original actor/model attachment clock; different people can own different entities concurrently',
+  aliases:'prop IDs are local to each actual person; every actor/prop tuple binds once; shared relation/effect centers are keyed by canonical entity; SVG namespace collisions still reject',
   history:'actual own shot clock/scale; original model entry/exit uses the complete source geometry through primary/supporting camera swaps',
   pending:['real geometry/render/runtime/film acceptance','source world/event/effect/interaction/coverage integration','cross-person handoff and shared/sequential ownership','native authored-view tool/contact poses and full art/motion acceptance'],
   runtimeVerified:false,productionAcceptance:false};
@@ -78,23 +78,20 @@ export function validatePropBindings(shot:Shot,board?:Storyboard,narration?:Narr
       for(const action of owner.actions.filter(a=>a.sourceManipulation))sourceInteractionDescriptor(shot,owner.id,action,board,narration);
     }
   }
-  const declared=performances.flatMap(p=>performanceProps(p).map(prop=>prop.id));
-  if(new Set(declared).size!==declared.length)throw new Error(`${shot.id}: prop IDs must be unique across the entire visible cast`);
-  if(c.propBindings.length!==declared.length)throw new Error(`${shot.id}: every animated prop requires a sourced model binding`);
-  const svgIds=c.propBindings.map(binding=>boundProp(shot,binding).svgId);
-  if(new Set(svgIds).size!==svgIds.length)throw new Error(`${shot.id}: bound prop namespaces collide; use unambiguous actor/prop IDs`);
+  assertPropAliasCoverage(shot);
   if(sourceSelected)throw new Error(`${shot.id}: needs-source-prop-binding: source event/effect/interaction/coverage candidates require the integrated source production audit and runtime/art/motion acceptance; cannot enter production`);
   const pickup=pickupPart(shot),ids=new Set<string>(),parts=new Set<string>();
   for(const binding of c.propBindings){
     const owned=boundProp(shot,binding),{prop,performance:p}=owned,part=shot.visualization!.parts.find(p=>p.id===binding.partId);
-    if(!prop||!part||ids.has(binding.propId))throw new Error(`${shot.id}: prop binding lacks its sourced model pickup`);
+    const alias=propAliasIdentity(owned.id,binding.propId);
+    if(!prop||!part||ids.has(alias))throw new Error(`${shot.id}: prop binding lacks its sourced model pickup`);
     if(hash(p.stage)!==hash(c.performance.stage)||p.durationMs!==shot.endMs-shot.startMs||p.leadCharacterId!==owned.id)throw new Error(`${shot.id}: prop owner has a different scene stage, clock or person identity`);
     if(parts.has(binding.partId))throw new Error(`${shot.id}: model entity ${binding.partId} cannot bind to multiple props`);
     if(owned.character){
       if(!binding.sourceRefs.length||binding.sourceRefs.some(ref=>!part.sourceRefs.some(source=>hash(source)===hash(ref))))throw new Error(`${shot.id}: illustrative actor pickup must retain the manipulated model's source evidence`);
       if(!c.artDirection||!['authored','model'].includes(c.artDirection.origin))throw new Error(`${shot.id}: illustrative pickup needs an authored/model story direction`);
     }else if(!pickup||pickup.part.id!==part.id||hash(binding.sourceRefs)!==hash([pickup.ref]))throw new Error(`${shot.id}: prop binding lacks its narrated model pickup`);
-    ids.add(binding.propId);
+    ids.add(alias);
     parts.add(binding.partId);
     const sourcedEntryDrop=prop.attachedTo&&owned.character&&c.actorScene?.continuity==='cut'&&p.gestures.some(g=>g.propId===prop.id&&g.action==='drop'&&g.startMs===0&&g.contactMs===0)&&c.sceneIntent?.acting?.some(a=>a.participantId===owned.id&&a.kind==='manipulation'&&a.operation==='drop'&&a.targetIds?.includes(part.id));
     if(prop.attachedTo&&!sourcedEntryDrop||c.continuity.carriedProps.length)throw new Error(`${shot.id}: cross-cut carried prop requires a continuity plan; use a completed placement`);

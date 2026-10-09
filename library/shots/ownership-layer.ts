@@ -4,7 +4,7 @@ import {sourceActor} from '../../packages/director/source-actor.js';
 import {actorProfile} from '../../packages/actors/model.js';
 import {OWNERSHIP_RENDER_VERSION,type CompiledOwnership} from '../../packages/director/ownership-compile.js';
 import {ownershipEntityId,ownershipPalmId} from '../../packages/director/ownership-reference.js';
-import type {PropMotionFrame} from '../../packages/director/prop-motion.js';
+import type {ModelMotionFrame} from '../../packages/director/prop-motion.js';
 import {customModelArt,customModelForegroundArt} from '../../packages/director/art-direction.js';
 import {cinematicModel} from './cinematic-models.js';
 
@@ -75,19 +75,21 @@ export function suppressOwnershipCopies(shot:Shot,html:string,layer:OwnershipLay
 }
 
 /** Relations consume the exact canonical piecewise-linear drawn centers.
- * Explicit grip aliases point to that single center, never to stale free props.
+ * One center channel per entity, never actor-local grip aliases or free props.
  * This is not a resampled actor body/face or a second physical world clock. */
-export function ownershipRelationFrames(shot:Shot,compiled:ReadonlyMap<string,CompiledOwnership>):PropMotionFrame[]{
+export function ownershipRelationFrames(shot:Shot,compiled:ReadonlyMap<string,CompiledOwnership>):ModelMotionFrame[]{
   const times=[...new Set([...compiled.values()].flatMap(c=>c.bake.samples.map(s=>s.timeMs)))].sort((a,b)=>a-b);
   return times.map(global=>{
-    const props:PropMotionFrame['props']=Object.create(null);
-    for(const item of compiled.values()){
+    const centers:ModelMotionFrame['centers']=Object.create(null);
+    for(const [partId,item] of compiled){
+      if(partId!==item.source.partId||item.bake.startMs!==shot.startMs||item.bake.endMs!==shot.endMs||item.version!==OWNERSHIP_RENDER_VERSION)return fail(shot,'relation entity source/revision/clock differs from its canonical bake');
       const samples=item.bake.samples;let index=0;while(index<samples.length-1&&samples[index]!.timeMs<global)index++;
       const b=samples[index]!,a=samples[Math.max(0,index-1)]!,weight=a.timeMs===b.timeMs?0:(global-a.timeMs)/(b.timeMs-a.timeMs);
       if(global<item.bake.startMs||global>item.bake.endMs||weight<0||weight>1)return fail(shot,'relation query is outside its canonical bake');
       const point={x:a.center.x+(b.center.x-a.center.x)*weight,y:a.center.y+(b.center.y-a.center.y)*weight};
-      for(const alias of item.aliases){if(Object.hasOwn(props,alias.propId))return fail(shot,'relation alias points at multiple canonical entities');props[alias.propId]={point,attached:false};}
+      if(![point.x,point.y].every(Number.isFinite)||Object.hasOwn(centers,partId))return fail(shot,'relation has missing or duplicated canonical entity centers');
+      centers[partId]=point;
     }
-    return {timeMs:global-shot.startMs,props};
+    return {timeMs:global-shot.startMs,centers};
   });
 }

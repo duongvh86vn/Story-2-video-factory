@@ -10,7 +10,7 @@ import {samplePhysicalPerformance} from '../animation/compiler.js';
 import {performanceProps} from '../animation/view-source-manipulation.js';
 import {hasBodyViewManipulation} from '../animation/native-contact-arm.js';
 import {validateManipulationActionSlices} from './source-manipulation-actions.js';
-import {boundProp,propPerformer} from './prop-owner.js';
+import {boundProp,propPerformer,assertPropAliasCoverage} from './prop-owner.js';
 import {SOURCE_PROP_BINDING_VERSION} from './source-prop-identity.js';
 import {partAnchor} from '../host/controller.js';
 import {validateSourceGripWorld} from './source-grip-world.js';
@@ -70,8 +70,9 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
     for(const slice of slices){if(slice.startMs!==end)return fail(shot,'model source camera coverage has a gap');end=slice.endMs;}
     if(end!==source.endMs)return fail(shot,'model source camera coverage is incomplete');
     for(const slice of slices){
-      const plans=[slice.cinematic!.performance,...(slice.cinematic!.actorScene?.supporting.map(a=>a.performance)??[])],ids=plans.flatMap(p=>performanceProps(p).map(prop=>prop.id)),bindings=slice.cinematic!.propBindings;
-      if(new Set(ids).size!==ids.length||bindings.length!==ids.length||new Set(bindings.map(b=>b.partId)).size!==bindings.length||new Set(bindings.map(b=>boundProp(slice,b).svgId)).size!==bindings.length)return fail(slice,'ambiguous visible prop/model/painter ownership');
+      assertPropAliasCoverage(slice);
+      const bindings=slice.cinematic!.propBindings;
+      if(new Set(bindings.map(b=>b.partId)).size!==bindings.length)return fail(slice,'ambiguous visible prop/model/painter ownership');
     }
     for(const prop of performanceProps(sourceOwner.performance)){
       const current=c.propBindings.filter(b=>b.propId===prop.id&&b.ownerId===sourceOwner.id);
