@@ -18,7 +18,7 @@ import { stageModels } from './models.js';
 import { ANIMATION_LIBRARY } from '../animation/library.js';
 import { planCamera, validateCamera } from './camera.js';
 import { validateComparisonReadability } from './readability.js';
-import { pickupPart, modelExitParts,modelEntryParts, validatePropBindings } from './props.js';
+import { pickupPart, modelExitParts,modelEntryParts, validatePropBindings,validateSourceSpearProductionBinding } from './props.js';
 import { cueExpressions } from './emotion.js';
 import { validateArtDirection } from './art-direction.js';
 import {actorProfile,seedActorShot} from '../actors/model.js';
@@ -227,6 +227,7 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
  * ordinary production validator. No artifact or accepted receipt is created. */
 export function validateSourceCinematicCandidate(shot:Shot,profile:HostProfile,config:FactoryConfig,board:Storyboard,narration:Narration){
   assertOriginalAuditContext(board,narration,[shot]);
+  validateSourceSpearProductionBinding(shot);
   if(!hasOriginalSource(shot))validateCinematicShot(shot,profile,config,board,narration);
   else{
     validateSourceWorld(shot,board,narration);

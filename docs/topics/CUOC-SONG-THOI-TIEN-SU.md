@@ -1,6 +1,6 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.83:** [Clock gốc cho giáo qua camera cuts](ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Code sourceSpear/body/lunge, hai tay, partner eye anchor và camera envelope đã nối; production rotating entity/model/action/cue/native tool art vẫn bị chặn. Producer2.2.46, acting clock7/body compiler40; chín callbacks mới NOT RUN. Combo 9router tester gọi được, chỉ connectivity; film/runtime/toàn tool chưa nghiệm thu. Các mốc cũ bên dưới là lịch sử.
 
 Cập nhật source0.81: [vật chung và vật cầm riêng trong cùng cảnh](MIXED-OWNERSHIP-HANDOFF.md). Đã viết complete-run binding closure, union center channels và hand masks theo phase; chín callbacks mới chưa chạy. Combo tester đã trả static review; không có runtime/hình/chuyển động/video acceptance. Các mốc bên dưới là lịch sử.
 

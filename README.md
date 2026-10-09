@@ -1,6 +1,6 @@
 # Story-to-Video Factory — diễn viên trong câu chuyện
 
-**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](docs/topics/ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.83:** [Clock gốc cho giáo qua camera cuts](docs/topics/ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Code sourceSpear/body/lunge, hai tay, partner eye anchor và camera envelope đã nối; production rotating entity/model/action/cue/native tool art vẫn bị chặn. Producer2.2.46, acting clock7/body compiler40; chín callbacks mới NOT RUN. Combo 9router tester gọi được, chỉ connectivity; film/runtime/toàn tool chưa nghiệm thu. Các mốc cũ bên dưới là lịch sử.
 
 **Hiện hành0.43 — 08/10/2026, source candidate:** thêm `npm run tracer:native-seat` xuất scene/master và tùy chọn ảnh/video draft60fps cho ca hai diễn viên ngồi–đứng–đi, dùng cùng canonical với test và không bootstrap sơ đồ máy móc. Cue SRT diagnostic im lặng mặc định; WAV tùy chọn giữ bytes/clock và vẫn cần kiểm nội dung/speaker. Scene guard nhận viền SVG hở bounded, cache security4. Builder/test/tracer/browser/media chưa chạy; productionReady=false/productionRig=null, không final/DONE hoặc nghiệm thu độ mượt. [Cách chạy và artifact](docs/topics/NATIVE-SEAT-TRACER.md).
 

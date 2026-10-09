@@ -1,6 +1,6 @@
 # Trạng thái triển khai V2.2
 
-**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](docs/topics/ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.83:** [Clock gốc cho giáo qua camera cuts](docs/topics/ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Code sourceSpear/body/lunge, hai tay, partner eye anchor và camera envelope đã nối; production rotating entity/model/action/cue/native tool art vẫn bị chặn. Producer2.2.46, acting clock7/body compiler40; chín callbacks mới NOT RUN. Combo 9router tester gọi được, chỉ connectivity; film/runtime/toàn tool chưa nghiệm thu. Các mốc cũ bên dưới là lịch sử.
 
 Chủ đề tiền sử 0.20: tách cuff/cổ tay khỏi palm/grip, migrate chain theo landmark nguồn, giữ contact và nối mitten theo cẳng tay. Sửa preset frontal hết reach, khai báo pole/offset rõ và painter slot discrete; bổ sung kiểm shaft khi nội suy. DOM tĩnh có 144 ô: 138 SVG, sáu head-turn bị chặn. Không chứng minh video mượt; grasp, pose/secondary motion và runtime còn thiếu. `productionReady=false`. [Source, evidence và lệnh server/test](docs/topics/WRIST-PALM-IMPLEMENTATION.md).
 

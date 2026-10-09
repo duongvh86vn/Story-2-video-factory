@@ -16,6 +16,7 @@ import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 import {collectViewSourceBody,validateBodySourcePlan} from '../animation/view-source-body.js';
 import {collectViewSourceManipulation,validateManipulationSourcePlan} from '../animation/view-source-manipulation.js';
+import {collectViewSourceSpear,validateSpearSourcePlan,performanceSpears} from '../animation/view-source-spear.js';
 import {hasBodyViewManipulation} from '../animation/native-contact-arm.js';
 import {hasNativeHeadBank,hasNativeHeadSecondary,validateNativeHeadBankTrack} from '../animation/body-head-bank.js';
 import {collectNativeHeadTracks} from '../animation/native-head-track.js';
@@ -41,17 +42,19 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
     const p=PerformancePlanSchema.parse(a.performance);
     validateBodySourcePlan(p);
     validateManipulationSourcePlan(p);
+    validateSpearSourcePlan(p);
     validateNativeHeadBankTrack(p,a.character);
     if(p.sourceHead&&s.cinematic!.actorScene!.primary?.id===actorId&&s.host?.presence==='absent')throw new Error('needs-head-source-phase: source head actor is hidden in a declared camera slice');
     if(p.sourceBody&&s.cinematic!.actorScene!.primary?.id===actorId&&s.host?.presence==='absent')throw new Error('needs-view-body-phase: source body actor is hidden in a declared camera slice');
     if(p.leadCharacterId!==actorId||p.durationMs!==s.endMs-s.startMs)throw new Error('needs-view-acting-phase: performer does not cover its shot');
     if(normalizeViewGazes(p.gazes).some(g=>g.endMs>p.durationMs))throw new Error('needs-view-acting-phase: gaze outside authored shot');
     const scene=s.cinematic!.actorScene!,cast=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(actor=>actor.character)].sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
-    return {shotId:s.id,startMs:s.startMs,endMs:s.endMs,continuity:scene.continuity??'cut',
+    return {shotId:s.id,ownerId:actorId,startMs:s.startMs,endMs:s.endMs,continuity:scene.continuity??'cut',
       castHash:hash(cast.map(character=>ActorDefinitionSchema.parse(character))),geometryHash:hash({stage:p.stage,root:p.root,scale:p.scale,facing:p.facing??'front',headView:p.headView??null,kind:p.kind,profileHash:p.profileHash}),gazes:p.gazes,gestures:p.gestures,
       ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:p.expressions}:{}),
       sourceBody:p.sourceBody,
       sourceManipulation:p.sourceManipulation,
+      sourceSpear:p.sourceSpear,
       sourceHead:p.sourceHead,
       ...(hasBodyViewSecondary(currentActor.character)||hasNativeHeadSecondary(currentActor.character)?{secondaryLunge:p.lunge??null}:{}),
       ...(hasBodyViewLocomotion(currentActor.character)?{locomotion:{walks:p.walks,jumps:p.jumps??[],postures:p.postures??[],entryPosture:p.entryPosture??null}}:{})};
@@ -71,6 +74,7 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
   const run=entries.slice(first,last+1).map(e=>e!);
   const bodyMotion=collectViewSourceBody(run,run[0]!.startMs,run.at(-1)!.endMs);
   const manipulationMotion=collectViewSourceManipulation(run,run[0]!.startMs,run.at(-1)!.endMs);
+  const spearMotion=collectViewSourceSpear(run,run[0]!.startMs,run.at(-1)!.endMs);
   const headMotion=collectNativeHeadTracks(run,run[0]!.startMs,run.at(-1)!.endMs);
   const clock:ViewActingClock={version:VIEW_ACTING_CLOCK_VERSION,ownerId:actorId,startMs:current.startMs,endMs:current.endMs,
     runStartMs:run[0]!.startMs,runEndMs:run.at(-1)!.endMs,sourceIdentityHash:hash({version:VIEW_ACTING_CLOCK_VERSION,actorId,run}),
@@ -78,6 +82,7 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
     gestures:collectViewSourceGestures(run,run[0]!.startMs,run.at(-1)!.endMs),
     ...(bodyMotion?{bodyMotion}:{}),
     ...(manipulationMotion?{manipulationMotion}:{}),
+    ...(spearMotion?{spearMotion}:{}),
     ...(headMotion?{headMotion}:{}),
     ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:normalizeViewExpressions(run.flatMap(e=>(e.expressions??[]).map(expression=>({...expression,startMs:expression.startMs+e.startMs,endMs:expression.endMs+e.startMs}))))}:{})};
   validateViewActingClockSource(currentActor.performance,clock);return clock;
@@ -108,8 +113,11 @@ export function actorViewActingClock(board:Storyboard,current:Shot,actorId:strin
       const thrust=p.lunge&&p.spears?.find(s=>s.id===p.lunge!.spearId);
       if(p.lunge&&(!thrust||thrust.action!=='thrust'||thrust.readyMs===undefined||thrust.contactMs===undefined||thrust.recoverMs===undefined))throw new Error('needs-actor-gaze: lunge target lost its owned original thrust clock');
       const lungeClock=thrust?{spearId:thrust.id,readyMs:thrust.readyMs!,contactMs:thrust.contactMs!,recoverMs:thrust.recoverMs!,endMs:thrust.endMs}:undefined;
-      p.expressions=projectViewExpressions(raw.expressions,raw.runStartMs,raw.runEndMs);p.gazes=[];p.gestures=[];p.props=[];p.spears=[];p.sourceManipulation=undefined;
-      return viewGazeTarget({version:VIEW_ACTOR_GAZE_VERSION,actorId:id,startMs:raw.runStartMs,endMs:raw.runEndMs,sourceIdentityHash:raw.sourceIdentityHash,profile:actorProfile(target.character),performance:p,...(lungeClock?{lungeClock}:{})});
+      const originalLunge=p.sourceSpear?.lunge,originalThrust=originalLunge&&performanceSpears(p).find(s=>s.id===originalLunge.spearId);
+      if(originalLunge&&(!originalThrust||originalThrust.action!=='thrust'||originalThrust.readyMs===undefined||originalThrust.contactMs===undefined||originalThrust.recoverMs===undefined))throw new Error('needs-actor-gaze: original planted target lost its complete spear/body clock');
+      const physicalLunge=originalLunge&&originalThrust?{lunge:structuredClone(originalLunge),clock:{spearId:originalThrust.id,readyMs:originalThrust.readyMs!,contactMs:originalThrust.contactMs!,recoverMs:originalThrust.recoverMs!,endMs:originalThrust.endMs}}:undefined;
+      p.expressions=projectViewExpressions(raw.expressions,raw.runStartMs,raw.runEndMs);p.gazes=[];p.gestures=[];p.props=[];p.spears=[];p.sourceManipulation=undefined;p.sourceSpear=undefined;
+      return viewGazeTarget({version:VIEW_ACTOR_GAZE_VERSION,actorId:id,startMs:raw.runStartMs,endMs:raw.runEndMs,sourceIdentityHash:raw.sourceIdentityHash,profile:actorProfile(target.character),performance:p,...(lungeClock?{lungeClock}:{}),...(physicalLunge?{physicalLunge}:{})});
     });
     clock.sourceIdentityHash=hash({sourceIdentityHash:clock.sourceIdentityHash,actorTargets:clock.actorTargets.map(s=>({actorId:s.actorId,fingerprint:s.fingerprint}))});
   }

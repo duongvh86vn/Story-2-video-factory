@@ -82,9 +82,10 @@ export function validateActorContinuity(board:Storyboard):void{
   for(const shot of board.shots){
     const c=shot.cinematic,scene=c?.actorScene;if(!c||!scene)continue;
     for(const actor of [...(scene.primary?[{id:scene.primary.id,p:c.performance}]:[]),...scene.supporting.map(a=>({id:a.character.id,p:a.performance}))]){
-      const clock=actor.p.sourceBody||actor.p.sourceHead?actorViewActingClock(board,shot,actor.id):undefined;
+      const clock=actor.p.sourceBody||actor.p.sourceHead||actor.p.sourceSpear?actorViewActingClock(board,shot,actor.id):undefined;
       if(actor.p.sourceBody&&!clock?.bodyMotion)throw new Error(`${shot.id}: needs-view-body-phase: original body source needs a registered actor and its complete continuous run`);
       if(actor.p.sourceHead&&!clock?.headMotion)throw new Error(`${shot.id}: needs-head-source-phase: original head source needs a registered actor and its complete continuous run`);
+      if(actor.p.sourceSpear&&!clock?.spearMotion)throw new Error(`${shot.id}: needs-source-spear: original tool needs its complete continuous actor run`);
     }
   }
   for(const [index,shot] of board.shots.entries()){

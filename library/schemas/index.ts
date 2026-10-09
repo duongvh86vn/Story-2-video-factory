@@ -11,7 +11,7 @@ import { ExplanationPlanSchema } from '../../packages/explainer/schemas.js';
 import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/schemas.js';
 import {SpeechSourceClockSchema} from '../../packages/animation/speech-clock.js';
 import {ViewActingClockSchema} from '../../packages/animation/view-acting-clock.js';
-import {BodySourceSchema,GestureSourceSpanSchema,ManipulationSourceSchema} from '../../packages/animation/schemas.js';
+import {BodySourceSchema,GestureSourceSpanSchema,ManipulationSourceSchema,SpearSourceSchema} from '../../packages/animation/schemas.js';
 import { ConfigSchema } from '../../packages/core/config.js';
 import { GeneratedDraftSchema, ScriptGenerationReportSchema } from '../../packages/orchestrator/script-generation.js';
 import {ActorMotionSchema,MotionRegistrationSchema,SpriteClipSchema} from '../../packages/motion/schemas.js';
@@ -40,6 +40,7 @@ import {OwnershipPaintSchema} from '../../packages/director/ownership-paint-sche
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
+  'spear-source':SpearSourceSchema,
   'source-ownership':SourceOwnershipSchema,
   'ownership-paint':OwnershipPaintSchema,
   'review-attempt':ReviewAttemptSchema,'review-source':ReviewSourceSchema,'review-input':ReviewInputSchema,'review-evidence':ReviewEvidenceSchema,'final-evidence':FinalEvidenceSchema,

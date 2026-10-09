@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.83-original-spear-clock",
+  "precedingSourceSHA": "1d79e3d6f701943fa0e08ad196cd30e63572bb25",
+  "purpose": "bounded source-code proposal only",
+  "modelRequested": "cx/gpt-6.1-sol",
+  "modelReturned": "gpt-6.1-sol",
+  "reasoningEffortRequested": "xhigh",
+  "reasoningEffortIndependentlyVerified": false,
+  "handle": "df53f0/session54318/completionda1ab2",
+  "exitCode": 0,
+  "usage": {
+    "promptTokens": 14107,
+    "completionTokens": 17206,
+    "totalTokens": 31313
+  },
+  "requestedMaxOutputTokens": 6000,
+  "requestedCapEnforced": false,
+  "frozenInputFile": "C:/Users/Duongvh-pc/.codex/tmp/source083-original-spear-agent-inputs-v1.json",
+  "frozenInputSHA256": "7b302b74ecbdb02ab92300837f17df5efcf79af319603c4b4227f7ad7215dbcb",
+  "sources": [
+    {
+      "file": "packages/animation/schemas.ts",
+      "frozenSHA256": "e567ad54c3cf95d4f04d9ef9c1e5ad9af291e35b98bf28e8b257840154a98c6f",
+      "finalSHA256": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
+      "bytesChangedSinceProposal": true,
+      "sameAsPrecedingGitBlob": true
+    },
+    {
+      "file": "packages/animation/view-source-body.ts",
+      "frozenSHA256": "57a34a4593c922c9c66f93fcf767dd8aec5e7f900b91ed815e9fced0852b677e",
+      "finalSHA256": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
+      "bytesChangedSinceProposal": true,
+      "sameAsPrecedingGitBlob": true
+    },
+    {
+      "file": "packages/animation/view-source-manipulation.ts",
+      "frozenSHA256": "ce1b729014d6bf0854295221353b963679d7399d0421ccece5773c866f1bc45c",
+      "finalSHA256": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
+      "bytesChangedSinceProposal": true,
+      "sameAsPrecedingGitBlob": true
+    },
+    {
+      "file": "packages/animation/spear.ts",
+      "frozenSHA256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
+      "finalSHA256": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
+      "bytesChangedSinceProposal": false,
+      "sameAsPrecedingGitBlob": true
+    },
+    {
+      "file": "packages/animation/view-acting-clock.ts",
+      "frozenSHA256": "0ef35a8989470a8333df620517c6a2064215c122a973d4772af47fb8142a4e4c",
+      "finalSHA256": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
+      "bytesChangedSinceProposal": true,
+      "sameAsPrecedingGitBlob": true
+    }
+  ],
+  "promptSHA256": "caa8bbdad17e8e91ff5bcff78eafdbe7949691ed753e06589a1876ba1c13efd1",
+  "sourceCharacters": 38546,
+  "promptCharacters": 13983,
+  "responseFile": "runtime/dev-agents/original-spear-clock-v1/original-spear-clock-v1-proposal.json",
+  "responseSHA256": "a2711d89c2c271d4b42818ac0f8dd4bb6b047ed1a3aa531fe26282c1cd6cbd63",
+  "responseRetainedLocally": true,
+  "responseExecuted": false,
+  "agentChangedRepository": false,
+  "integration": "Parent read entire helper/schema, integrated manually and tightened wooden shaft bounds/one two-hand lunge, explicit actor owner, disjoint-hand coexistence, original body/lunge/eye/camera/repair/schema/inventory and separate pending production binding guard. Parent additionally rejects moving/seated/support histories in planted source lunge and body-only eye descriptors, unsafe clock phases and ungrounded soles. Final integration was not independently re-reviewed.",
+  "independentlyReviewedFinalIntegration": false,
+  "testsExecuted": false,
+  "fixturesInvoked": false,
+  "geometryInvoked": false,
+  "rendererRun": false,
+  "videoRendered": false,
+  "productionApproval": false,
+  "productionReady": false,
+  "testerConnectivity": {
+    "modelRequested": "tester",
+    "httpStatus": 200,
+    "modelReturned": "gpt-6-luna",
+    "reply": "TESTER_OK",
+    "elapsedMs": 1377,
+    "totalTokens": 44,
+    "purpose": "connectivity only",
+    "testsExecuted": false
+  },
+  "finalIntegrationSourceHashes": {
+    "apps/studio/src/main.ts": "8f699e31d0b68f6e3ce7bbe0575001c40be2f7fb1094d78ad7c511fdbd19eb7f",
+    "library/schemas/index.ts": "209f7dcb192e1dea5b0d72fd8ba76df43f6568099570ea24326e3c1815847b8e",
+    "packages/actors/model.ts": "a38d10af6aa1bf75c99f909d611d6cbf93995592b765335ac529967822187602",
+    "packages/actors/view-acting-clock.ts": "a5264e4c4b8191a3045bf3d762869d035bad5b5d734db8472b2e1dcc720f4639",
+    "packages/animation/compiler.ts": "7cb1b752fb5c506ed115db824544ab1fec0beedbc9ea51a9f6997219e82bb99b",
+    "packages/animation/forest-body-art.ts": "5be6a0e011b3909760c112c2439830325abac33d29fec88ed8c13eb4fa21f2f3",
+    "packages/animation/schemas.ts": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
+    "packages/animation/view-acting-clock.ts": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
+    "packages/animation/view-gaze-target.ts": "bf637de1adead7bef4f71af79990ad61795223ccf48cb00935727d0d7f566812",
+    "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
+    "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
+    "packages/director/acting-brief.ts": "cbd8d50e20df6290d3f2fc69f998796998a84fb667a1622a01d8e481e6b0a3ba",
+    "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
+    "packages/director/camera.ts": "830bab788eef3dbaaf6203835d9c9ac4d5bdc311f76fe7dcc18e176088ce4279",
+    "packages/director/index.ts": "9d83f50c79a090c12d205a957ca911b269999c06fbcfe246de7dcab99bb4d28b",
+    "packages/director/props.ts": "d08d969803011af6d264e875b3614a57d25ba00bcd8625b56f808990a8c53b26",
+    "packages/director/schemas.ts": "672ed6d88731e1163cd1f3174698bac23400282362eefbcedc090aba4e715776",
+    "packages/director/source-audit-context.ts": "cc65696ca6490f91d35efbdb51af560b63412a50082cc7a05bc6e10f919a9da0",
+    "packages/topics/prehistoric-life.ts": "85f6e9683ded9f97bbc310a5c9d604da6a90911cc818e2795abcd07d3341f5c7",
+    "scripts/prehistoric-pack.ts": "68da40fd97a11907d8726364e69e12aca1ed3a9d2b6bab8e46f2a9381f935a9b",
+    "packages/animation/view-source-spear.ts": "7b9a50038ca9fcc3c9cf3fd5a54299f467c57c294d1fd7c0715786b1f4b8f4cd",
+    "tests/native-source-spear.test.ts": "7787657d4ac348be1fc0a138177e1fc46fb7e66c2c2111ec98fc1f4d76a7926c"
+  }
+}

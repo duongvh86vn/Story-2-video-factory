@@ -1,6 +1,6 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
-**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](docs/topics/ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.83:** [Clock gốc cho giáo qua camera cuts](docs/topics/ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Code sourceSpear/body/lunge, hai tay, partner eye anchor và camera envelope đã nối; production rotating entity/model/action/cue/native tool art vẫn bị chặn. Producer2.2.46, acting clock7/body compiler40; chín callbacks mới NOT RUN. Combo 9router tester gọi được, chỉ connectivity; film/runtime/toàn tool chưa nghiệm thu. Các mốc cũ bên dưới là lịch sử.
 
 **Hiện hành0.44 — 08/10/2026:** source gaze theo ID diễn viên dùng original physical eye clock, không static root/feedback hoặc vẽ lại mặt. Full target source/identity/world/visibility/fingerprint, timing lunge, publication/cache/camera/schema và tracer2 đã nối;13 callback mới NOT RUN. Build/typecheck và source review chỉ kiểm source; native art/motion/audio/video/ba input/full final còn chờ. [Handoff](docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md), [plan hiện hành](docs/plans/2026-10-08-actor-gaze.md).
 

@@ -22,7 +22,10 @@ export function manipulationSourcePlan(plan:PerformancePlan):PerformancePlan{
   return {...physical,sourceManipulation:undefined,sourceHead:undefined,durationMs:source.endMs-source.startMs,
     gestures:structuredClone(source.gestures),props:structuredClone(source.props),gazes:[],expressions:[]};
 }
-export function performanceProps(plan:PerformancePlan){return plan.sourceManipulation?.props??plan.props;}
+export function performanceProps(plan:PerformancePlan):PerformancePlan['props']{
+  if(plan.sourceSpear)return [...(plan.sourceManipulation?.props??[]),...plan.sourceSpear.props];
+  return plan.sourceManipulation?.props??plan.props;
+}
 export function sourceManipulationTime(plan:PerformancePlan,clock:ViewActingClock|undefined,timeMs:number){
   if(!plan.sourceManipulation)return timeMs;
   if(!clock||clock.ownerId!==plan.leadCharacterId||clock.endMs-clock.startMs!==plan.durationMs)

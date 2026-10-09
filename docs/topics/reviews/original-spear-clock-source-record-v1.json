@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.83-original-spear-clock",
+  "precedingSourceSHA": "1d79e3d6f701943fa0e08ad196cd30e63572bb25",
+  "sourceOnly": true,
+  "environment": {
+    "node": "v24.19.0",
+    "shell": "PowerShell",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1"
+  },
+  "checks": [
+    {
+      "command": "npm run build",
+      "handle": "636aa1/session83641/completion346afe",
+      "exitCode": 0,
+      "output": "Vite7.3.6;52 modules;index-nF7LpOJB.js236.83kB/74.10gzip;626ms",
+      "scope": "source compile/bundle only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "handle": "bcd446/session45653/completion4df855",
+      "exitCode": 0,
+      "output": "tsc -p tsconfig.tests.json",
+      "scope": "typecheck only; callbacks NOT RUN"
+    },
+    {
+      "command": "npm run schemas",
+      "handle": "df0ee9",
+      "exitCode": 0,
+      "output": "tsx library/schemas/export.ts",
+      "scope": "schema definition export only"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "handle": "df0ee9",
+      "exitCode": 0,
+      "output": "references6,candidates12,headCandidates6,garmentCandidates2,rejected7,productionReadyfalse",
+      "scope": "raw source/PNG/JSON metadata only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/original-spear-clock-static-v1.mjs",
+      "handle": "9fc3b7/session97266/completionefe05f",
+      "exitCode": 0,
+      "output": "294 original rasters;18 original head definitions;27 original head metadata;114 mapped code hashes/260 entries;9 empty availableBanks;9 callbacks NOT RUN",
+      "scope": "no project business imports or schema-instance/geometry evaluation"
+    }
+  ],
+  "testsDeclared": 9,
+  "testsExecuted": 0,
+  "fixturesInvoked": false,
+  "geometryInvoked": false,
+  "rendererRun": false,
+  "serverStarted": false,
+  "TTSOrASRRun": false,
+  "videoRendered": false,
+  "agentRecord": "docs/topics/reviews/original-spear-clock-agent-record-v1.json",
+  "independentlyReviewedFinalIntegration": false,
+  "staticRecord": "docs/topics/reviews/original-spear-clock-static-record-v1.json",
+  "staticSummary": {
+    "originalRasters": 294,
+    "headDefinitions": 18,
+    "headMetadata": 27,
+    "mappedSourceHashes": 114,
+    "mappedSourceEntries": 260,
+    "availableBankFields": 9
+  },
+  "handoff": "docs/topics/ORIGINAL-SPEAR-CLOCK-HANDOFF.md",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "canonical actors/camera lead-support swaps and partner eye-anchor runtime cases",
+    "actual emitted SVG/GSAP versus evaluator, palms/shaft contact/plant/cloth/hair/seeks and film smoothness",
+    "rotating entity/model/world/action/cue contracts and native tool artwork acceptance",
+    "all story/script/WAV inputs, EN/VI/JA/KO and external/local TTS",
+    "resume/rebuild/locks and final audio/subtitle/thumbnail/review/QC"
+  ]
+}

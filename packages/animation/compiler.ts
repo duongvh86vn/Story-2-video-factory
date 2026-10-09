@@ -39,6 +39,7 @@ import {type ViewGazeTarget,ViewGazeTargetSchema,VIEW_ACTOR_GAZE_VERSION,viewGaz
 import {VIEW_ACTING_CLOCK_VERSION,validateViewActingClockSource} from './view-acting-clock.js';
 import {sourceBodyPlan,validateBodySourcePlan} from './view-source-body.js';
 import {validateManipulationSourcePlan,manipulationSourcePlan,performanceProps,sourceManipulationTime,sourceManipulationGestureAt,sourceManipulationDescription} from './view-source-manipulation.js';
+import {validateSpearSourcePlan,spearSourcePlan,performanceSpears,sourceSpearTime,sourceSpearDescription} from './view-source-spear.js';
 import {projectViewExpressions} from './view-expression-track.js';
 import {sampleLunge,samplePhysicalLunge,type PhysicalLungeClock} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
@@ -140,14 +141,18 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if(plan.gazes.length&&!hasBodyViewEyes(profile)&&!hasNativeHeadEyes(profile))throw new Error('needs-view-gaze: explicit target gaze needs its registered fixed-view or source-cell eyes');
   if(plan.facing!==undefined&&plan.facing!==bodyViewFacing(profile))throw new Error('needs-body-registration: fixed authored artwork cannot portray the opposite body direction');
   if(plan.gestures.some(g=>g.action!=='point'&&g.action!=='think'&&!(hasBodyViewLocomotion(profile)&&g.action==='react')&&!(hasBodyViewManipulation(profile)&&(isNativeContactGesture(g)||g.action==='inspect'))))throw new Error('needs-view-motion: native gesture requires its registered point/think/react or explicit manipulation candidate');
-  if(bodyViewFacing(profile)==='left'&&(plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
+  if(bodyViewFacing(profile)==='left'&&(performanceSpears(plan).length||performanceProps(plan).some(p=>p.kind==='spear')))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
 }
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
   PerformancePlanSchema.parse(plan);
+  if(plan.sourceSpear){
+    if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)||plan.compilerVersion!==HUNT_ANIMATION_VERSION)throw new Error('needs-source-spear: own native body/locomotion and hunt compiler required');
+    validateSpearSourcePlan(plan);validatePerformance(spearSourcePlan(plan),profile);
+  }
   if(plan.gazes.some(g=>'actorTarget' in g)&&(!usesBodyView(profile)||!hasBodyViewEyes(profile)&&!hasNativeHeadEyes(profile)))throw new Error('needs-actor-gaze: actor references require the registered native eye/body candidate');
   if(plan.sourceManipulation){
     if(!hasBodyViewManipulation(profile))throw new Error('needs-source-manipulation: select the explicit native manipulation candidate');
-    validateManipulationSourcePlan(plan);validatePerformance(manipulationSourcePlan(plan),profile);
+    validateManipulationSourcePlan(plan);if(!plan.sourceSpear)validatePerformance(manipulationSourcePlan(plan),profile);
   }
   if(plan.sourceBody){validateFixedBodyView(plan,profile);validatePerformance(sourceBodyPlan(plan),profile);}
   validateReferenceHead(profile,[plan.headView,...(plan.headTurns??[]).map(turn=>turn.direction)]);
@@ -399,12 +404,12 @@ function sourceWalkDrop(root:Point,walk:ReturnType<typeof gait>,metrics:RigMetri
   }
   return needed+walk.activation*(1.1+.5*Math.sin(walk.phase*Math.PI*2))*scale;
 }
-function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number,actingClock?:ViewActingClock,lungeClock?:PhysicalLungeClock){
+function bodyStateAt(plan:PerformancePlan,profile:HostProfile,t:number,actingClock?:ViewActingClock,lungeClock?:PhysicalLungeClock,originalLunge?:{lunge:NonNullable<PerformancePlan['lunge']>;clock:PhysicalLungeClock}){
   if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
   if(plan.sourceHead&&!actingClock)throw new Error('needs-head-source-phase: source head requires its complete storyboard/run context');
-  const physical=sourceBodyPlan(plan),motionTime=plan.sourceBody?t+actingClock!.startMs-plan.sourceBody.startMs:t;
+  const physical=plan.sourceSpear?spearSourcePlan(plan):sourceBodyPlan(plan),motionTime=plan.sourceBody?(actingClock!.startMs-plan.sourceBody.startMs)+t:t;
   const m=rigMetrics(profile),s=plan.scale,root=rootAt(physical,motionTime),walk=gait(physical,profile,motionTime),emotion=expressionAt(plan,t,hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)?actingClock:undefined),pose=emotion.pose;
-  const lunge=lungeClock?samplePhysicalLunge(plan.lunge!,plan.scale,t,lungeClock):sampleLunge(plan,t);
+  const lunge=originalLunge?samplePhysicalLunge(originalLunge.lunge,plan.scale,motionTime,originalLunge.clock):lungeClock?samplePhysicalLunge(plan.lunge!,plan.scale,t,lungeClock):sampleLunge(physical,motionTime);
   if(lunge){walk.feet={left:{...lunge.soles.left},right:{...lunge.soles.right}};walk.stance={left:true,right:true};}
   const jump=physical.jumps?.find(j=>motionTime>=j.startMs&&motionTime<=j.endMs),air=jump?sampleAirborne(jump,motionTime,s):walk.runAir;
   if(air)for(const side of ['left','right'] as const){walk.feet[side].y+=air.feetOffsetY;walk.stance[side]=walk.runAir?walk.stance[side]&&!air.airborne:!air.airborne;}
@@ -485,12 +490,13 @@ export function sourceActorEyeAnchor(source:ViewGazeTarget,globalTimeMs:number):
   const at=globalTimeMs-source.startMs;
   if(!Number.isFinite(at)||at<0||at>p.durationMs)throw new Error('needs-actor-gaze: target time is outside its complete run');
   validateFixedBodyView(p,source.profile);validateViewActingClockSource(p,clock);
-  const state=bodyStateAt(p,source.profile,at,clock,source.lungeClock);return nativeEyeOrigin(source.profile,headGeometry(source.profile,state),state.s,{plan:p,timeMs:at,clock});
+  if(source.physicalLunge)validateBodyViewLunge(source.profile);
+  const state=bodyStateAt(p,source.profile,at,clock,source.lungeClock,source.physicalLunge);return nativeEyeOrigin(source.profile,headGeometry(source.profile,state),state.s,{plan:p,timeMs:at,clock});
 }
 /** Shared body landmarks for authoring a tool target without invoking arm IK.
  * Does not advance a scene, render a video or accept the resulting pose. */
 export function bodyPoseAnchors(plan:PerformancePlan,profile:HostProfile,timeMs:number,actingClock?:ViewActingClock){
-  if(plan.lunge)validateBodyViewLunge(profile);
+  if(plan.lunge||plan.sourceSpear?.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
   if(actingClock)validateViewActingClock(plan,actingClock);
   const {m,s,pelvis,lean}=bodyStateAt(plan,profile,clamp(timeMs,0,plan.durationMs),actingClock);
@@ -721,7 +727,8 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
   if(evaluation.kind==='geometry'&&(!Number.isFinite(time)||time<0||time>plan.durationMs))throw new Error('needs-physical-phase: seek is outside the owned shot');
   const sourceClock=evaluation.kind==='render'?evaluation.sourceClock:undefined;
   if(plan.sourceManipulation){validateManipulationSourcePlan(plan);if(!hasBodyViewManipulation(profile)||!actingClock)throw new Error('needs-source-manipulation: native selection and complete owned clock required');}
-  if(plan.lunge)validateBodyViewLunge(profile);
+  if(plan.sourceSpear){validateSpearSourcePlan(plan);if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)||!actingClock)throw new Error('needs-source-spear: own native selection and complete owned clock required');}
+  if(plan.lunge||plan.sourceSpear?.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
   if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
   if(plan.sourceHead&&!actingClock)throw new Error('needs-head-source-phase: source head requires its complete storyboard/run context');
@@ -762,11 +769,12 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
   transforms['ground-shadow']=transform({x:root.x,y:root.y+4},0,air?.shadowScale??1);
   transforms.pelvis=transform(pelvis);transforms.chest=transform(pelvis,lean,s*profile.appearance.bodyScale);
   const toWorld=(x:number,y:number)=>add(pelvis,rotate({x:x*s,y:y*s},lean));
-  const spearStates=(plan.spears??[]).map(track=>{
+  const spearTime=sourceSpearTime(plan,actingClock,t),spearProps=performanceProps(plan);
+  const spearStates=performanceSpears(plan).map(track=>{
     const point=m.shoulders?.[track.hand],shoulder=toWorld(point?.x??m.shoulderOffset*(track.hand==='left'?-1:1),point?.y??m.shoulderY-m.pelvisY);
-    const state=sampleSpear(track,plan.props.find(p=>p.id===track.propId)!,t,s,shoulder,lean);
+    const state=sampleSpear(track,spearProps.find(p=>p.id===track.propId)!,spearTime,s,shoulder,lean);
     if(track.action==='thrust'&&(state.extension<0||state.extension>m.upperArm*s*.6))throw new Error(track.id+': aim must require a forward strike within rig reach');
-    const half=(plan.props.find(p=>p.id===track.propId)!.length??120)*s/2,angle=state.angle*Math.PI/180;
+    const half=(spearProps.find(p=>p.id===track.propId)!.length??120)*s/2,angle=state.angle*Math.PI/180;
     for(const end of [-1,1]){const p={x:state.center.x+end*half*Math.cos(angle),y:state.center.y+end*half*Math.sin(angle)};if(p.x<0||p.x>plan.stage.width||p.y<0||p.y>plan.stage.groundY)throw new Error(track.id+': spear shaft leaves the physical stage');}
     return {track,state};
   });
@@ -789,7 +797,7 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
   for(const [i,side] of (['left','right'] as const).entries()){
     // One continuous bend branch, including rest, walk entry and recovery.
     const geometry=legGeometry(m,pelvis,walk.feet[side],side,s,profile.appearance.bodyScale,lean),{hip,ankle}=geometry;
-    const pole=plan.lunge?.kneePoles[side]??(usesBodyView(profile)?bodyViewFacing(profile)==='left'?-1:1:usesReferenceBody(profile)?sourceKneePole(plan,side,bend):bend);
+    const pole=physical.lunge?.kneePoles[side]??(usesBodyView(profile)?bodyViewFacing(profile)==='left'?-1:1:usesReferenceBody(profile)?sourceKneePole(plan,side,bend):bend);
     const leg=solveChain(hip,ankle,geometry.bones.upper,geometry.bones.lower,pole);
     const projected=legProjection?kneeProjection({kneeSeatWeight},geometry,leg):undefined;
     thighAngles.push(projected?.upper??leg.upper);
@@ -1130,8 +1138,8 @@ function interpolationGap(a:FrameState,b:FrameState,profile:HostProfile,plan:Per
     // Palm origins and the shaft frame are tweened separately. Connected bones
     // alone cannot bound grip slip during a changing shaft angle. Reconstruct
     // the actual interpolated wood contact and refine using the same gap limit.
-    for(const track of plan.spears??[]){
-      const prop=plan.props.find(p=>p.id===track.propId)!,tool=at(`prop-${prop.id}`),center=origin(tool);
+    for(const track of performanceSpears(plan)){
+      const prop=performanceProps(plan).find(p=>p.id===track.propId)!,tool=at(`prop-${prop.id}`),center=origin(tool);
       for(const side of ['left','right'] as const)if(side===track.hand||track.twoHands){
         const localX=(prop.gripOffset?.x??0)+(side===track.hand?0:track.secondaryOffset);
         const grip=add(center,rotate({x:localX*tool[3]!,y:0},tool[2]!));
@@ -1169,9 +1177,14 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     for(const at of [g.startMs,g.contactMs,g.releaseMs,g.landingMs,g.endMs,recoveryStart(g),g.action==='carry'||g.action==='drop'?g.contactMs!+CARRY_TRANSITION_MS:undefined,g.action==='carry'&&g.releaseMs!==undefined?g.releaseMs-CARRY_TRANSITION_MS:undefined])
       if(at!==undefined)for(const delta of [-.01,0,.01])times.add(at+offset+delta);
   }
-  const physical=sourceBodyPlan(plan),motionOffset=plan.sourceBody?plan.sourceBody.startMs-actingClock!.startMs:0;
+  const physical=plan.sourceSpear?spearSourcePlan(plan):sourceBodyPlan(plan),motionOffset=plan.sourceBody?plan.sourceBody.startMs-actingClock!.startMs:0;
   const addSecondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile)||hasNativeHeadSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
   const addMotionTime=(at:number)=>{addSecondaryTime(at+motionOffset);if(hasBodyViewLocomotion(profile))times.add(at+motionOffset+VIEW_CLOTH_LAG_MS);};
+  if(plan.sourceSpear){
+    const offset=plan.sourceSpear.startMs-actingClock!.startMs;
+    for(const track of performanceSpears(plan))for(const at of [track.startMs,track.readyMs,track.contactMs,track.recoverMs,track.endMs])
+      if(at!==undefined)for(const near of [at-.01,at,at+.01])addSecondaryTime(near+offset);
+  }
   for(const at of supportMotionTimes(physical))for(const near of [at-.01,at,at+.01])addMotionTime(near);
   if(plan.sourceBody||hasBodyViewSecondary(profile)||hasNativeHeadSecondary(profile))for(const clip of [...physical.walks,...(physical.jumps??[]),...(physical.postures??[])])for(const at of [clip.startMs,clip.endMs,clip.startMs+140,clip.endMs-140])if(at>=clip.startMs&&at<=clip.endMs)addMotionTime(at);
   for(let ms=0;ms<plan.durationMs;ms+=1000/plan.fps)times.add(Number(ms.toFixed(4)));
@@ -1315,6 +1328,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),
     ...(plan.sourceManipulation?{sourceManipulation:{...sourceManipulationDescription,sourceHash:hash(plan.sourceManipulation),offsetMs:plan.sourceManipulation.startMs-actingClock!.startMs,source:plan.sourceManipulation}}:{}),
+    ...(plan.sourceSpear?{sourceSpear:{...sourceSpearDescription,sourceHash:hash(plan.sourceSpear),offsetMs:plan.sourceSpear.startMs-actingClock!.startMs,source:plan.sourceSpear,motionVerified:false,productionApproval:false}}:{}),
     ...(hasBodyViewManipulation(profile)?{bodyManipulation:{...nativeManipulationDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:'shot-local contact/release with current original body state; no cross-cut prop clock',contacts:plan.gestures.filter(isNativeContactGesture).map(g=>({id:g.id,hand:rigHand(g),action:g.action,window:nativeContactWindow(g)})),motionVerified:false}}:{}),
     ...(hasBodyViewSeat(profile)?{bodySeat:{...nativeSeatDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,

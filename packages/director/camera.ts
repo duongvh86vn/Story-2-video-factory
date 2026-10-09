@@ -6,6 +6,7 @@ import { samplePhysicalPerformance } from '../animation/compiler.js';
 import { validateViewActingClock, VIEW_GAZE_RAMP_MS, VIEW_BREATH_RAMP_MS, type ViewActingClock } from '../animation/view-acting-clock.js';
 import { VIEW_EXPRESSION_RAMP_MS } from '../animation/view-expression-track.js';
 import { sourceBodyPlan, bodyTrackOffsetMs, bodyRootAt } from '../animation/view-source-body.js';
+import {spearSourcePlan} from '../animation/view-source-spear.js';
 import {supportMotionTimes} from '../animation/support.js';
 import {sceneSeats} from '../stage/seats.js';
 import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
@@ -40,7 +41,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
   if(p.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: camera bounds require the complete storyboard/run context for source body');
   if(p.gestures.some(g=>g.sourceSpan)&&!actingClock)throw new Error('needs-view-gesture-phase: camera bounds require the complete storyboard/run context for source gesture');
   if(actingClock)validateViewActingClock(p,actingClock);
-  const physical=sourceBodyPlan(p),motionOffset=p.sourceBody?bodyTrackOffsetMs(p,actingClock!.startMs):0;
+  const physical=p.sourceSpear?spearSourcePlan(p):sourceBodyPlan(p),motionOffset=p.sourceBody?bodyTrackOffsetMs(p,actingClock!.startMs):0;
   const times=new Set<number>([0,p.durationMs]);
   const secondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
   for(const at of supportMotionTimes(physical))secondaryTime(at+motionOffset);
@@ -58,6 +59,10 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
   if(actingClock){
+    if(actingClock.spearMotion)for(const spear of actingClock.spearMotion.spears){
+      for(const at of [spear.startMs,spear.readyMs,spear.contactMs,spear.recoverMs,spear.endMs])
+        if(at!==undefined)for(const delta of [-.01,0,.01])secondaryTime(actingClock.spearMotion.startMs+at-actingClock.startMs+delta);
+    }
     if(actingClock.manipulationMotion)for(const g of actingClock.manipulationMotion.gestures){
       for(const at of [g.startMs,g.contactMs,g.releaseMs,g.landingMs,g.endMs,g.action==='carry'||g.action==='drop'?g.contactMs!+250:undefined,g.action==='carry'&&g.releaseMs!==undefined?g.releaseMs-250:undefined])
         if(at!==undefined)for(const delta of [-.01,0,.01])times.add(actingClock.manipulationMotion.startMs+at-actingClock.startMs+delta);
@@ -167,10 +172,13 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
     .map(at=>at+motionOffset).filter(at=>at>0&&at<performance.durationMs)]
     .map(at=>bodyRootAt(performance,options.actingClock!.startMs,at).x):[performance.root.x,...performance.walks.flatMap(w=>[w.fromX,w.toX])];
   const scales=framing==='wide'?[Math.min(1,wideCap),Math.min(1.04,wideCap)]:framing==='medium'?[1.25,1.32]:focus==='face'?[2.4,2.5]:[2.1,2.2];
-  if(focus==='ensemble'&&(options.supporting?.length||sourceBodyPlan(performance).supports?.length)){
+  if(focus==='ensemble'&&(options.supporting?.length||sourceBodyPlan(performance).supports?.length||performance.sourceSpear)){
     // Frame the complete cast on the same master clock, rather than anchoring on the lead alone.
     const ensemble=emptyBounds(),cast=[bounds,...(options.supporting??[]).map(actor=>cameraHostBounds(actor.performance,actor.profile,actor.actingClock))];
-    for(const actor of cast){include(ensemble,{x:actor.body.left,y:actor.body.top});include(ensemble,{x:actor.body.right,y:actor.body.bottom});}
+    for(const actor of cast){
+      include(ensemble,{x:actor.body.left,y:actor.body.top});include(ensemble,{x:actor.body.right,y:actor.body.bottom});
+      for(const prop of Object.values(actor.props)){include(ensemble,{x:prop.left,y:prop.top});include(ensemble,{x:prop.right,y:prop.bottom});}
+    }
     for(const actor of [performance,...(options.supporting??[]).map(a=>a.performance)])for(const seat of sourceBodyPlan(actor).supports??[]){
       include(ensemble,{x:seat.center.x-seat.width*.6-2,y:seat.center.y-(seat.backHeight??0)-2});
       include(ensemble,{x:seat.center.x+seat.width*.6+2,y:actor.stage.groundY+9});
@@ -286,6 +294,7 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       if(!boundsInView(bounds.head))fail('head would be cropped or enter the heading region.');
       if(!boundsInView(bounds.feet))fail('feet/visual ground enter the subtitle region or leave the frame.');
       if(!boundsInView(bounds.body))fail('hands/body leave the safe action region; use a wider camera or replan its layout.');
+      if(p.sourceSpear)for(const prop of p.sourceSpear.props){const shaft=bounds.props[prop.id];if(!shaft||!boundsInView(shaft))fail(`original spear ${prop.id} shaft/tip leaves the safe action region.`);}
       for(const g of p.gestures)if(g.target&&!inView(g.target,8*p.scale))fail(`${g.id} target is outside the safe action region.`);
     }
     for(const seat of sceneSeats(shot))if(!boundsInView({left:seat.center.x-seat.width*.6-2,right:seat.center.x+seat.width*.6+2,top:seat.center.y-(seat.backHeight??0)-2,bottom:groundY+9}))fail(`seat ${seat.id} leaves the safe action region; preserve its support and ground in ensemble framing.`);
@@ -294,6 +303,7 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       labelInView(part);
     }
   }else if(camera.focus==='face'){
+    if(p.sourceSpear?.spears.some(s=>s.action==='thrust'&&s.readyMs!+p.sourceSpear!.startMs<shot.endMs&&s.recoverMs!+p.sourceSpear!.startMs>shot.startMs))fail('face close would hide the original spear thrust; preserve its shaft, palms and contact.');
     if(contactGroups.length||p.gestures.some(g=>['operate','pick-place','carry','drop'].includes(g.action)))fail('face close would hide contact; use contact focus or medium.');
     if(!p.expressions.some(e=>c.actorScene?e.mood!=='neutral':['curious','thinking','surprised','understanding'].includes(e.mood)))fail('face close requires an informative expression/reaction.');
     if(!boundsInView(bounds.head))fail('face close crops the face; move the anchor to the face, preserving subtitle clearance.');

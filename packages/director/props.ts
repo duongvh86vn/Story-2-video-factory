@@ -41,6 +41,7 @@ export function pickupPart(shot:Shot){
   return ref?{part,ref}:undefined;
 }
 function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene):NonNullable<Shot['visualization']>['parts']{
+  validateSourceSpearProductionBinding(shot);
   const owners=new Map<string,ReturnType<typeof sourceBoundPropFrame>['frame']>();
   const canonical=shot.cinematic?.sourceOwnership?ownershipScene(shot,board,narration,compiled):undefined;
   return (shot.visualization?.parts??[]).map(part=>{
@@ -57,8 +58,17 @@ function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard,narration?:Narrat
 }
 export function modelExitParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){return modelPartsAt(shot,true,board,narration,compiled);}
 export function modelEntryParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){return modelPartsAt(shot,false,board,narration,compiled);}
+/** Physical source clock support cannot certify a rotating entity/model/action
+ * binding or native tool pose. Keep this separate from the existing generic
+ * manipulation acceptance guard. */
+export function validateSourceSpearProductionBinding(shot:Shot):void{
+  const c=shot.cinematic;
+  if([c?.performance,...(c?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceSpear))
+    throw new Error(`${shot.id}: needs-source-prop-binding: original spear clock is a physical source candidate; rotating entity/model/action/cue binding and native tool art/motion/runtime acceptance are pending`);
+}
 export function validatePropBindings(shot:Shot,board?:Storyboard,narration?:Narration):void{
   const c=shot.cinematic;if(!c)return;
+  validateSourceSpearProductionBinding(shot);
   if(c.sourceOwnership){
     if(!board||!narration)throw new Error(`${shot.id}: needs-source-prop-binding: candidate ownership needs the complete storyboard and original narration`);
     validateSourceOwnershipTimelines(shot,board,narration);

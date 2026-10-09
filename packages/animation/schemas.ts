@@ -110,6 +110,84 @@ export const LungeSchema=z.object({version:z.literal('forest-planted-lunge-1'),s
   kneePoles:z.object({left:z.union([z.literal(-1),z.literal(1)]),right:z.union([z.literal(-1),z.literal(1)])}).strict(),
   advanceX:z.number().finite().min(-20).max(20),dropY:z.number().finite().min(0).max(12),
   entryLeanDeg:z.number().finite().min(-20).max(20),contactLeanDeg:z.number().finite().min(-25).max(25)}).strict();
+// Insert immediately after LungeSchema. Existing local SpearTrackSchema and generic manipulation schemas remain unchanged.
+export const SPEAR_SOURCE_VERSION='native-source-spear-1' as const;
+const SpearSourceTime=Time.refine(Number.isSafeInteger,{message:'Original spear clocks require exact safe integers'});
+const SpearSourcePole=z.union([z.literal(-1),z.literal(1)]);
+/** Complete actor-owned, entry-attached spear history. The source-only twoHand
+ * and left/right poles are explicitly adapted to the existing physical track
+ * representation by view-source-spear.ts; no authored values are defaulted. */
+export const SpearSourceSchema=z.object({
+  version:z.literal(SPEAR_SOURCE_VERSION),id:Id,ownerId:Id,
+  startMs:SpearSourceTime,endMs:SpearSourceTime,
+  props:z.array(z.object({
+    id:Id,kind:z.literal('spear'),origin:PointSchema,
+    attachedTo:z.enum(['left-hand','right-hand']),
+    length:z.number().finite().min(50).max(600),
+    gripOffset:z.object({x:z.number().finite(),y:z.literal(0)}).strict(),
+  }).strict()).min(1).max(2),
+  spears:z.array(z.object({
+    id:Id,propId:Id,startMs:z.literal(0),endMs:SpearSourceTime,
+    hand:RigHandSchema,twoHand:z.boolean(),
+    action:z.enum(['hold','thrust']),grip:PointSchema,aim:PointSchema,
+    secondaryOffset:z.number().finite().min(-200).max(-10),
+    elbowPoles:z.object({left:SpearSourcePole,right:SpearSourcePole}).strict(),
+    readyMs:SpearSourceTime.optional(),contactMs:SpearSourceTime.optional(),recoverMs:SpearSourceTime.optional(),
+  }).strict()).min(1).max(2),
+  lunge:LungeSchema.optional(),
+}).strict().superRefine((source,ctx)=>{
+  const issue=(path:(string|number)[],message:string)=>ctx.addIssue({code:'custom',path,message});
+  const duration=source.endMs-source.startMs;
+  if(duration<=0)issue([],'Original spear source must have a positive complete span');
+  const props=new Map(source.props.map(prop=>[prop.id,prop]));
+  if(props.size!==source.props.length)issue(['props'],'Duplicate original spear prop identity');
+  if(new Set(source.spears.map(track=>track.id)).size!==source.spears.length)
+    issue(['spears'],'Duplicate original spear track identity');
+  if(new Set(source.spears.map(track=>track.propId)).size!==source.spears.length)
+    issue(['spears'],'Each original spear prop must have exactly one complete owning track');
+  const owners=new Set<string>();
+  for(const [index,track] of source.spears.entries()){
+    const path=['spears',index];
+    if(track.endMs!==duration)issue(path,'Every original spear track must cover exactly 0 through the full original duration');
+    const hands=track.twoHand?['left','right'] as const:[track.hand];
+    for(const hand of hands){
+      if(owners.has(hand))issue(path,'Duplicated original spear hand owner');
+      owners.add(hand);
+    }
+    const prop=props.get(track.propId);
+    if(!prop)issue([...path,'propId'],'Original spear track references an unknown own prop');
+    else {
+      if(prop.attachedTo!==(track.hand==='left'?'left-hand':'right-hand'))
+        issue([...path,'hand'],'Entry attachment must match the declared primary hand');
+      const half=prop.length/2,primary=prop.gripOffset.x,secondary=primary+track.secondaryOffset;
+      if(primary < -half+5||primary > half-22)
+        issue(['props',source.props.indexOf(prop),'gripOffset'],'Primary grip must remain on its own wooden shaft, clear of the butt and tip');
+      if(track.twoHand&&(secondary < -half+5||secondary > half-22))
+        issue([...path,'secondaryOffset'],'Secondary grip must remain on its own wooden shaft, clear of the butt and tip');
+    }
+    if(track.action==='hold'){
+      if(track.readyMs!==undefined||track.contactMs!==undefined||track.recoverMs!==undefined)
+        issue(path,'An original hold cannot declare thrust phases');
+    } else {
+      const ready=track.readyMs,contact=track.contactMs,recover=track.recoverMs;
+      if(ready===undefined||contact===undefined||recover===undefined||
+        !(track.startMs<ready&&ready<contact&&contact<recover&&recover<track.endMs))
+        issue(path,'A complete original thrust requires start < ready < contact < recover < end');
+    }
+  }
+  for(const [index,prop] of source.props.entries())
+    if(source.spears.filter(track=>track.propId===prop.id).length!==1)
+      issue(['props',index],'Every original spear prop requires exactly one complete owning track');
+  const lunge=source.lunge;
+  if(lunge){
+    const track=source.spears.find(candidate=>candidate.id===lunge.spearId);
+    if(!track||track.action!=='thrust'||!track.twoHand||source.spears.length!==1)
+      issue(['lunge','spearId'],'Original planted lunge requires exactly one owned two-hand thrust track ID, not a prop ID');
+  }
+});
+export type SpearSource=z.infer<typeof SpearSourceSchema>;
+
+
 export const PerformancePlanSchema = z.object({
   version: z.literal(22), compilerVersion: z.enum([HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION,CONTINUOUS_ANIMATION_VERSION,STORY_ANIMATION_VERSION,SEATED_ANIMATION_VERSION,PREVIOUS_ANIMATION_VERSION,BODY_ANIMATION_VERSION,LEGACY_ANIMATION_VERSION]), id: Id,
   leadCharacterId: Id, profileHash: z.string().min(1), kind: z.enum(['stick-man', 'mini-robot']),
@@ -123,6 +201,7 @@ export const PerformancePlanSchema = z.object({
   walks: z.array(WalkSchema), jumps:z.array(JumpSchema).max(16).optional(), gestures: z.array(GestureSchema),spears:z.array(SpearTrackSchema).max(8).optional(),
   sourceBody:BodySourceSchema.optional(),
   sourceManipulation:ManipulationSourceSchema.optional(),
+  sourceSpear:SpearSourceSchema.optional(),
   sourceHead:NativeHeadTrackSchema.optional(),
   lunge:LungeSchema.optional(),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),

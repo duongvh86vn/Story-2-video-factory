@@ -1,6 +1,6 @@
 # STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
-**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](docs/topics/ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.83:** [Clock gốc cho giáo qua camera cuts](docs/topics/ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Code sourceSpear/body/lunge, hai tay, partner eye anchor và camera envelope đã nối; production rotating entity/model/action/cue/native tool art vẫn bị chặn. Producer2.2.46, acting clock7/body compiler40; chín callbacks mới NOT RUN. Combo 9router tester gọi được, chỉ connectivity; film/runtime/toàn tool chưa nghiệm thu. Các mốc cũ bên dưới là lịch sử.
 
 **Hiện hành0.44 — 08/10/2026, source candidate:** thêm `actorTarget:{id,anchor:'eyes'}` để hai diễn viên nhìn theo vị trí mắt thật từ original body/expression/breath/seat/lunge clock của bạn diễn. Descriptor không chứa gaze/arms/props, không đệ quy; mất/ẩn/sai world/source/view hoặc target sau lưng vẫn chặn. Clock4/body compiler32, publication/cache/schema/context/manifest/brief/camera cùng contract; tracer2 có mutual gaze. Chưa thực thi test/tracer/media hoặc nghiệm thu khuôn mặt/độ mượt; productionReady=false/productionRig=null. Máy không có image-to-video API; tiếp tục SVG/HTML5/GSAP. [Bàn giao và lệnh test](docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md).
 

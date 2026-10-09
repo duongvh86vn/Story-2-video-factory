@@ -1,5 +1,7 @@
 # Kiểm tra cảnh trên nguồn gốc — source0.82
 
+Hiện hành source0.83 bổ sung nhận diện `sourceSpear` và báo pending rotating model/action/cue/native tool acceptance, không thông qua candidate/production binding. Xem [bàn giao clock giáo](ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Phần source0.82 dưới đây là lịch sử; runtime/video vẫn chưa nghiệm thu.
+
 Đã viết màn hình **Kiểm tra cảnh** và API chỉ đọc để model test biết lỗi nào còn thiếu theo toàn câu chuyện, cảnh và diễn viên. Source `forest-tribe-0.82-original-source-audit`, producer `story-direction-2.2.45`, audit `original-source-audit-1`. Chưa chạy API, test callback, server, geometry, renderer hoặc video; chưa nghiệm thu chất lượng phim hay toàn sản phẩm.
 
 ## Contract và phần đã triển khai

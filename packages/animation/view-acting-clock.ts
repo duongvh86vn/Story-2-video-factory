@@ -1,23 +1,24 @@
 import {z} from 'zod';
 import {Id} from '../core/identifiers.js';
 import {hash} from '../core/utils.js';
-import {BodySourceSchema,ManipulationSourceSchema,GazeSchema,type PerformancePlan} from './schemas.js';
+import {BodySourceSchema,ManipulationSourceSchema,SpearSourceSchema,GazeSchema,type PerformancePlan} from './schemas.js';
 import {ViewGazeTargetSchema,VIEW_ACTOR_GAZE_VERSION} from './view-gaze-target.js';
 import {rigHand} from '../core/identifiers.js';
 import {VIEW_SOURCE_GESTURE_VERSION,ViewSourceGestureSchema,validateViewGesturePiece,validateViewSourceGestureTrack} from './view-source-gesture.js';
 import {ViewExpressionSchema,normalizeViewExpressions,projectViewExpressions,VIEW_EXPRESSION_RAMP_MS} from './view-expression-track.js';
 import {validateViewSourceBody} from './view-source-body.js';
 import {validateViewSourceManipulation} from './view-source-manipulation.js';
+import {validateViewSourceSpear} from './view-source-spear.js';
 import {NativeHeadTrackSchema,validateNativeHeadSource} from './native-head-track.js';
 
-export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-6' as const;
+export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-7' as const;
 export const VIEW_GAZE_RAMP_MS=140,VIEW_BREATH_RAMP_MS=200;
 export type ViewGaze=z.infer<typeof GazeSchema>;
 /** Renderer context only; never changes narration, persisted activity or authored clips. */
 export const ViewActingClockSchema=z.object({version:z.literal(VIEW_ACTING_CLOCK_VERSION),ownerId:Id,
   startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),
   runStartMs:z.number().int().nonnegative(),runEndMs:z.number().int().positive(),
-  sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),gazes:z.array(GazeSchema),gestures:z.array(ViewSourceGestureSchema),expressions:z.array(ViewExpressionSchema).optional(),bodyMotion:BodySourceSchema.optional(),manipulationMotion:ManipulationSourceSchema.optional(),
+  sourceIdentityHash:z.string().regex(/^[a-f0-9]{64}$/),gazes:z.array(GazeSchema),gestures:z.array(ViewSourceGestureSchema),expressions:z.array(ViewExpressionSchema).optional(),bodyMotion:BodySourceSchema.optional(),manipulationMotion:ManipulationSourceSchema.optional(),spearMotion:SpearSourceSchema.optional(),
   actorTargets:z.array(ViewGazeTargetSchema).max(8).optional(),
   headMotion:NativeHeadTrackSchema.optional(),
 }).strict().superRefine((c,ctx)=>{
@@ -49,6 +50,7 @@ export function validateViewActingClockSource(plan:PerformancePlan,clock:ViewAct
   if(clock.ownerId!==plan.leadCharacterId||clock.endMs-clock.startMs!==plan.durationMs)throw new Error('needs-view-acting-phase: actor or shot span mismatch');
   validateViewSourceBody(plan,parsed.bodyMotion,clock.startMs,clock.endMs,clock.runStartMs,clock.runEndMs);
   validateViewSourceManipulation(plan,parsed);
+  validateViewSourceSpear(plan,parsed);
   validateNativeHeadSource(plan,parsed.headMotion,clock.startMs,clock.endMs,clock.runStartMs,clock.runEndMs);
   if(hash(normalized)!==hash(parsed.gazes)||normalized.some(g=>g.startMs<clock.runStartMs||g.endMs>clock.runEndMs))throw new Error('needs-view-acting-phase: source gaze is not a normalized run track');
   if(plan.gazes.some(g=>g.startMs<0||g.endMs>plan.durationMs)||hash(projectViewGazes(normalized,clock.startMs,clock.endMs))!==hash(normalizeViewGazes(plan.gazes)))throw new Error('needs-view-acting-phase: authored gaze differs from source projection');
@@ -102,5 +104,6 @@ export function viewActingClockDescription(clock:ViewActingClock){
     sourceGestures:clock.gestures.map(g=>({id:g.id,hand:g.hand,action:g.action,startMs:g.startMs,endMs:g.endMs,reachMs:g.reachMs,recoverMs:g.recoverMs,target:g.target??null})),
     bodyMotion:clock.bodyMotion?{version:clock.bodyMotion.version,id:clock.bodyMotion.id,startMs:clock.bodyMotion.startMs,endMs:clock.bodyMotion.endMs,sourceTrackHash:hash(clock.bodyMotion),supportCount:clock.bodyMotion.supports?.length??0,clock:'complete original physical tracks and seat definitions; camera slices keep original relative phase',verified:false}:null,
     manipulationMotion:clock.manipulationMotion?{version:clock.manipulationMotion.version,id:clock.manipulationMotion.id,startMs:clock.manipulationMotion.startMs,endMs:clock.manipulationMotion.endMs,sourceTrackHash:hash(clock.manipulationMotion),propCount:clock.manipulationMotion.props.length,gestureCount:clock.manipulationMotion.gestures.length,clock:'complete original contact/release/flight/hand history; no restart at a camera cut',verified:false}:null,
+    spearMotion:clock.spearMotion?{version:clock.spearMotion.version,id:clock.spearMotion.id,startMs:clock.spearMotion.startMs,endMs:clock.spearMotion.endMs,sourceTrackHash:hash(clock.spearMotion),clock:'complete original rigid shaft, both own palms and planted transfer; no cut-local phase restart',verified:false}:null,
     wholeBodyActionContinuous:!!clock.bodyMotion,opticalGazeVerified:false,approved:false};
 }

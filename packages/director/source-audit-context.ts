@@ -2,7 +2,7 @@ import {StoryboardSchema,type Storyboard,type Narration,type Shot} from '../core
 import {validateNarration} from '../story/timeline.js';
 import {hash} from '../core/utils.js';
 
-export const hasOriginalSource=(shot:Shot)=>!!shot.cinematic?.sourceWorld||!!shot.cinematic?.sourceOwnership?.length||[shot.cinematic?.performance,...(shot.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation);
+export const hasOriginalSource=(shot:Shot)=>!!shot.cinematic?.sourceWorld||!!shot.cinematic?.sourceOwnership?.length||[shot.cinematic?.performance,...(shot.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation||p?.sourceSpear);
 
 /** Membership alone is insufficient: a fragment cannot declare its own
  * truncated history authoritative. This structural gate covers the actual
