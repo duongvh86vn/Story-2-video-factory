@@ -7,6 +7,9 @@ import {boundProp} from './prop-owner.js';
 import {performanceProps} from '../animation/view-source-manipulation.js';
 import {sourceBoundPropFrame,validateSourcePropBindings} from './source-prop-binding.js';
 import {validateSourceWorld} from './source-world.js';
+import {sourceInteractionDescriptor} from './source-interactions.js';
+import {sourceActor} from './source-actor.js';
+import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
 export const PROP_BINDING_VERSION='bound-model-motion-2.2.4';
@@ -56,13 +59,18 @@ export function validatePropBindings(shot:Shot,board?:Storyboard,narration?:Narr
   if(sourceSelected){
     if(!board||!narration)throw new Error(`${shot.id}: needs-source-prop-binding: original contact requires complete storyboard and original narration`);
     validateSourcePropBindings(shot,board,narration);
+    const owners=[...(c.actorScene?.primary?[c.actorScene.primary.id]:[]),...(c.actorScene?.supporting.map(a=>a.character.id)??[])].map(id=>({id,...sourceActor(shot,id)}));
+    for(const owner of owners){
+      validateManipulationActionSlices(owner.performance,owner.actions,shot.startMs);
+      for(const action of owner.actions.filter(a=>a.sourceManipulation))sourceInteractionDescriptor(shot,owner.id,action,board,narration);
+    }
   }
   const declared=performances.flatMap(p=>performanceProps(p).map(prop=>prop.id));
   if(new Set(declared).size!==declared.length)throw new Error(`${shot.id}: prop IDs must be unique across the entire visible cast`);
   if(c.propBindings.length!==declared.length)throw new Error(`${shot.id}: every animated prop requires a sourced model binding`);
   const svgIds=c.propBindings.map(binding=>boundProp(shot,binding).svgId);
   if(new Set(svgIds).size!==svgIds.length)throw new Error(`${shot.id}: bound prop namespaces collide; use unambiguous actor/prop IDs`);
-  if(sourceSelected)throw new Error(`${shot.id}: needs-source-prop-binding: original entity/action/evidence binding is checked; source event/effect/interaction/coverage production still requires fixed operate geometry and API continuity; cannot enter production`);
+  if(sourceSelected)throw new Error(`${shot.id}: needs-source-prop-binding: source event/effect/interaction/coverage candidates require the integrated source production audit and runtime/art/motion acceptance; cannot enter production`);
   const pickup=pickupPart(shot),ids=new Set<string>(),parts=new Set<string>();
   for(const binding of c.propBindings){
     const owned=boundProp(shot,binding),{prop,performance:p}=owned,part=shot.visualization!.parts.find(p=>p.id===binding.partId);

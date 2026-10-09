@@ -27,6 +27,7 @@ import {writeActorAssets} from '../actors/assets.js';
 import {sceneSeats} from '../stage/seats.js';
 import {validateSpriteScenePlan} from '../motion/scene-validation.js';
 import {sourceInteractionDescriptor} from './source-interactions.js';
+import {validatePerformanceContinuity} from './continuity.js';
 
 const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'curious',mechanism:'effort',process:'understanding',
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
@@ -232,12 +233,10 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
     if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
     return;
   }
-  if(hash(c.continuity.entry)!==hash(bodyRootAt(p,shot.startMs,0))||Math.abs(c.continuity.exit.x-bodyRootAt(p,shot.startMs,p.durationMs).x)>.01||c.continuity.exit.y!==p.stage.groundY)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
+  validatePerformanceContinuity(shot);
   validateManipulationActionSlices(p,shot.host?.actions??[],shot.startMs);
   if(validateWorld)validatePropBindings(shot,board,narration);
   if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot,board).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
-  const exitFacing=[...(p.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??p.facing??'front';
-  if(c.continuity.facing!==exitFacing)throw new Error(`${shot.id}: cinematic facing disagrees with turn exit`);
   if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
   validatePerformance(p,profile);
   if(sourceBodyPlan(p).supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);

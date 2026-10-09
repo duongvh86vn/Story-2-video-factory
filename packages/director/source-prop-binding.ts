@@ -110,5 +110,5 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
 export const sourcePropBindingDescription={version:SOURCE_PROP_BINDING_VERSION,
   scope:'complete original story-person/model/entity/art/source/action/clock binding and physical entry/exit candidate',
   rule:'explicit binding ownerId on every source slice; stable canonical model origin/size/art/evidence and complete original narration witness; physical positions from actual original prop frame',
-  pending:['original world/event/interaction runtime and film acceptance','fixed operation geometry and canonical API continuity','full runtime/art/motion/video/input/resume acceptance'],
+  pending:['original world/event/interaction runtime and film acceptance','integrated source production audit and shared/sequential ownership','full runtime/art/motion/video/input/resume acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false};

@@ -10,29 +10,25 @@ import {samplePhysicalPerformance} from '../animation/compiler.js';
 import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 import {validateSourcePropBindings} from './source-prop-binding.js';
 import {boundProp} from './prop-owner.js';
+import {sourceActor as person} from './source-actor.js';
+import {sourceFixedOperation} from './source-fixed-operation.js';
 
 type Action=ShotHost['actions'][number];
-export const SOURCE_INTERACTION_VERSION='source-interaction-1';
-export type SourceInteractionPhase='approach'|'held'|'released'|'landed';
+export const SOURCE_INTERACTION_VERSION='source-interaction-2';
+export type SourceInteractionPhase='approach'|'held'|'released'|'landed'|'recovery';
 const fail=(shot:Shot,message:string):never=>{throw new Error(shot.id+': needs-source-prop-binding: original interaction '+message);};
-function person(shot:Shot,id:string){
-  const c=shot.cinematic,scene=c?.actorScene;
-  const all=[...(scene?.primary?[{character:scene.primary,performance:c!.performance,actions:shot.host?.actions??[]}]:[]),...(scene?.supporting??[])];
-  const matches=all.filter(a=>a.character.id===id);
-  if(matches.length!==1||scene?.primary?.id===id&&shot.host?.presence==='absent')return fail(shot,'requires one explicit visible person');
-  return matches[0]!;
-}
 export interface SourceInteractionDescriptor {
   version:typeof SOURCE_INTERACTION_VERSION;actorId:string;sourceId:string;sourceHash:string;gestureId:string;hand:RigHand;operation:string;
-  partId:string;propId:string;narrationAnchor:string;cueHash:string;modelHash:string;startMs:number;endMs:number;contactMs:number;releaseMs?:number;landingMs?:number;
+  partId:string;targetKind:'bound-prop'|'fixed-model';propId?:string;narrationAnchor:string;cueHash:string;modelHash:string;startMs:number;endMs:number;contactMs:number;releaseMs?:number;landingMs?:number;recoveryMs?:number;
   sliceStartMs:number;sliceEndMs:number;inheritedContact:boolean;entryPhase:SourceInteractionPhase;exitPhase:SourceInteractionPhase;fingerprint:string;
 }
 export interface SourceInteractionRecord extends SourceInteractionDescriptor {
   sampleMs:number;phase:SourceInteractionPhase;modelCenter:Anchor;gripConstraintErrorPx?:number;originalContact:{shotId:string;sampleMs:number;target:Anchor;hand:Anchor;modelCenter:Anchor;errorPx:number;constraintErrorPx:number};
   scope:'original-physical-geometry-candidate';contactVerified:false;motionVerified:false;
 }
-function phase(at:number,contact:number,release?:number,landing?:number):SourceInteractionPhase{
+function phase(at:number,contact:number,release?:number,landing?:number,recovery?:number):SourceInteractionPhase{
   if(at<contact)return 'approach';
+  if(recovery!==undefined&&at>=recovery)return 'recovery';
   if(landing!==undefined&&at>=landing)return 'landed';
   if(release!==undefined&&at>=release)return 'released';
   return 'held';
@@ -46,7 +42,14 @@ export function sourceInteractionDescriptor(shot:Shot,actorId:string,action:Acti
   validateManipulationActionSlices(owner.performance,owner.actions,shot.startMs);
   const g=source.gestures.find(g=>g.id===ref.gestureId);
   if(!g||g.contactMs===undefined||!action.target||!action.narrationAnchor)return fail(shot,'missing original gesture, target or cue');
-  if(g.action==='operate')return fail(shot,'fixed operate target geometry is still pending; do not substitute a carried prop');
+  if(g.action==='operate'){
+    const fixed=sourceFixedOperation(shot,actorId,action,board,narration),start=source.startMs+g.startMs,end=source.startMs+g.endMs;
+    const descriptor:Omit<SourceInteractionDescriptor,'fingerprint'>={version:SOURCE_INTERACTION_VERSION,actorId,sourceId:source.id,sourceHash:hash(source),gestureId:g.id,hand:rigHand(g),operation:g.action,
+      partId:fixed.part.id,targetKind:'fixed-model',narrationAnchor:fixed.cue.id,cueHash:hash(fixed.cue),modelHash:fixed.modelHash,startMs:start,endMs:end,contactMs:fixed.contactMs,recoveryMs:fixed.recoverMs,
+      sliceStartMs:action.startMs,sliceEndMs:action.endMs,inheritedContact:fixed.contactMs<action.startMs,
+      entryPhase:phase(action.startMs,fixed.contactMs,undefined,undefined,fixed.recoverMs),exitPhase:phase(action.endMs,fixed.contactMs,undefined,undefined,fixed.recoverMs)};
+    return {...descriptor,fingerprint:hash({descriptor,original:fixed.run,narration})};
+  }
   validateSourcePropBindings(shot,board,narration);
   const bindings=shot.cinematic!.propBindings.filter(b=>b.ownerId===actorId&&b.propId===g.propId&&b.partId===action.target!.partId);
   if(bindings.length!==1)return fail(shot,'target is not the explicit original prop entity');
@@ -68,8 +71,10 @@ export function sourceInteractionDescriptor(shot:Shot,actorId:string,action:Acti
   }
   const start=source.startMs+g.startMs,end=source.startMs+g.endMs,contact=source.startMs+g.contactMs;
   const release=g.releaseMs===undefined?undefined:source.startMs+g.releaseMs,landing=g.landingMs===undefined?undefined:source.startMs+g.landingMs;
+  // Transport phases describe the object (released/landed), independently of
+  // the now-free arm recovery. recoveryMs is reserved for fixed contact.
   const descriptor:Omit<SourceInteractionDescriptor,'fingerprint'>={version:SOURCE_INTERACTION_VERSION,actorId,sourceId:source.id,sourceHash:hash(source),gestureId:g.id,hand:rigHand(g),operation:g.action,
-    partId:binding.partId,propId:prop.id,narrationAnchor:cue.id,cueHash:hash(cue),modelHash:hash({binding,part:shot.visualization!.parts.find(p=>p.id===binding.partId),model:shot.cinematic!.models.find(m=>m.partId===binding.partId),art:shot.cinematic!.artDirection?.models.find(m=>m.partId===binding.partId)}),
+    partId:binding.partId,targetKind:'bound-prop',propId:prop.id,narrationAnchor:cue.id,cueHash:hash(cue),modelHash:hash({binding,part:shot.visualization!.parts.find(p=>p.id===binding.partId),model:shot.cinematic!.models.find(m=>m.partId===binding.partId),art:shot.cinematic!.artDirection?.models.find(m=>m.partId===binding.partId)}),
     startMs:start,endMs:end,contactMs:contact,...(release===undefined?{}:{releaseMs:release}),...(landing===undefined?{}:{landingMs:landing}),
     sliceStartMs:action.startMs,sliceEndMs:action.endMs,inheritedContact:contact<action.startMs,entryPhase:phase(action.startMs,contact,release,landing),exitPhase:phase(action.endMs,contact,release,landing)};
   return {...descriptor,fingerprint:hash({descriptor,original:run,narration})};
@@ -78,10 +83,27 @@ export function sourceInteractionDescriptor(shot:Shot,actorId:string,action:Acti
  * slice. No speech/face evaluation or invented target after release. */
 export function sourceInteractionGeometry(shot:Shot,actorId:string,action:Action,board:Storyboard|undefined,narration:Narration|undefined):HostGeometry['interactions'][number]{
   const d=sourceInteractionDescriptor(shot,actorId,action,board,narration);
+  if(d.targetKind==='fixed-model'){
+    const sample=(slice:Shot,global:number)=>{
+      const owner=person(slice,actorId),clock=actorViewActingClock(board!,slice,actorId);
+      if(!clock?.manipulationMotion)return fail(slice,'fixed sample lacks its complete original clock');
+      const frame=samplePhysicalPerformance(owner.performance,actorProfile(owner.character),global-slice.startMs,clock),part=slice.visualization!.parts.find(p=>p.id===d.partId)!;
+      const target=partAnchor(slice,part.id,action.target!.anchor,owner.performance.stage.width,owner.performance.stage.height),hand=frame.hands[d.hand];
+      return {frame,target,hand,center:{x:part.x*owner.performance.stage.width,y:part.y*owner.performance.stage.height},error:Math.hypot(hand.x-target.x,hand.y-target.y)};
+    };
+    const contactShot=board!.shots.find(s=>s.startMs<=d.contactMs&&s.endMs>d.contactMs);
+    if(!contactShot)return fail(shot,'fixed original contact camera is absent');
+    const original=sample(contactShot,d.contactMs),sampleMs=action.contactMs??action.startMs,at=sample(shot,sampleMs),currentPhase=phase(sampleMs,d.contactMs,undefined,undefined,d.recoveryMs);
+    const constraint=original.frame.contactErrors[d.hand],currentConstraint=at.frame.contactErrors[d.hand];
+    if(!Number.isFinite(original.error)||original.error>1||!Number.isFinite(constraint)||constraint>1||currentPhase==='held'&&(!Number.isFinite(at.error)||at.error>1||!Number.isFinite(currentConstraint)||currentConstraint>1))return fail(shot,'fixed palm misses the independently declared actual model anchor');
+    return {actorId,handSide:d.hand,type:action.type,startMs:action.startMs,reachMs:sampleMs,endMs:action.endMs,partId:d.partId,target:at.target,hand:at.hand,errorPx:at.error,root:at.frame.root,gaze:at.target,
+      ...(action.contactMs===undefined?{}:{contactMs:action.contactMs}),sourceManipulation:{...d,sampleMs,phase:currentPhase,modelCenter:at.center,...(currentPhase==='held'?{gripConstraintErrorPx:currentConstraint}:{}),
+        originalContact:{shotId:contactShot.id,sampleMs:d.contactMs,target:original.target,hand:original.hand,modelCenter:original.center,errorPx:original.error,constraintErrorPx:constraint},scope:'original-physical-geometry-candidate',contactVerified:false,motionVerified:false}};
+  }
   const sample=(s:Shot,global:number)=>{
     const owner=person(s,actorId),clock=actorViewActingClock(board!,s,actorId);
     if(!clock?.manipulationMotion)return fail(s,'sample lacks its complete original clock');
-    const f=samplePhysicalPerformance(owner.performance,actorProfile(owner.character),global-s.startMs,clock),state=f.props[d.propId];
+    const f=samplePhysicalPerformance(owner.performance,actorProfile(owner.character),global-s.startMs,clock),state=f.props[d.propId!];
     if(!state)return fail(s,'sample has no actual original model center');
     const prop=owner.performance.sourceManipulation!.props.find(p=>p.id===d.propId)!,offset=prop.gripOffset??{x:0,y:0},hand=f.hands[d.hand];
     const target={x:state.point.x+offset.x*owner.performance.scale,y:state.point.y+offset.y*owner.performance.scale};
@@ -107,7 +129,8 @@ export function sourceInteractionGeometry(shot:Shot,actorId:string,action:Action
  * inherited contact cannot bypass the legacy contact check. */
 export function validateSourceInteractionGeometry(shot:Shot,board:Storyboard,narration:Narration,interactions:HostGeometry['interactions']):void{
   const scene=shot.cinematic?.actorScene;
-  const owners=[...(scene?.primary?[{id:scene.primary.id,actions:shot.host?.actions??[]}]:[]),...(scene?.supporting.map(a=>({id:a.character.id,actions:a.actions}))??[])];
+  const owners=[...(scene?.primary?[scene.primary.id]:[]),...(scene?.supporting.map(a=>a.character.id)??[])].map(id=>({id,...person(shot,id)}));
+  for(const o of owners)validateManipulationActionSlices(o.performance,o.actions,shot.startMs);
   const expected=owners.flatMap(o=>o.actions.filter(a=>a.sourceManipulation).map(a=>sourceInteractionGeometry(shot,o.id,a,board,narration)));
   const actual=interactions.filter(a=>a.sourceManipulation),sort=(records:typeof actual)=>[...records].sort((a,b)=>(a.actorId+':'+a.sourceManipulation!.gestureId).localeCompare(b.actorId+':'+b.sourceManipulation!.gestureId));
   if(hash(sort(actual))!==hash(sort(expected)))return fail(shot,'geometry differs from its canonical original contact/slice; rebuild rather than editing the report');
@@ -119,14 +142,14 @@ export function interactionPreviewTimes(shot:Pick<Shot,'startMs'|'endMs'>,intera
     const source=action.sourceManipulation;
     if(source){
       add(shot.startMs);add(shot.endMs-1);add(action.reachMs);
-      for(const at of [source.contactMs,source.releaseMs,source.landingMs].filter((t):t is number=>t!==undefined))for(const time of [at-step,at,at+step])add(time);
+      for(const at of [source.contactMs,source.releaseMs,source.landingMs,source.recoveryMs].filter((t):t is number=>t!==undefined))for(const time of [at-step,at,at+step])add(time);
     }else for(const time of [action.reachMs-step,action.reachMs,action.reachMs+step])add(Math.max(shot.startMs,Math.min(shot.endMs-1,time)));
   }
   return [...times].sort((a,b)=>a-b);
 }
 export const sourceInteractionDescription={version:SOURCE_INTERACTION_VERSION,
   rule:'actual original person/source/gesture/hand/entity/grip/cue; unchanged complete original action through camera and primary/supporting swaps',
-  geometry:'original contact sampled in its actual camera slice; current held/approach/released/landed state uses the actual physical source frame, without new contact at entry or narration/face evaluation',
+  geometry:'original contact sampled in its actual camera slice; current held/approach/released/landed/recovery state uses the actual physical source frame; fixed center/explicit authored handle remains independent of the palm, without new contact at entry or narration/face evaluation',
   review:'recompute canonical source records; actual original contact/release/landing evidence sampled only in the owning camera slice',
-  pending:['fixed operate geometry, generic operation validation and API role swaps','shared/sequential ownership and full runtime/art/motion/film/factory acceptance'],
+  pending:['full integrated source production audit and runtime/API/geometry acceptance','shared/sequential ownership and full runtime/art/motion/film/factory acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false};

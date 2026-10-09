@@ -59,8 +59,8 @@ export const HostActionSchema = z.object({ type: z.enum(HostActions), startMs: z
   sourceManipulation:ManipulationActionRefSchema.optional() })
   .superRefine((action,ctx)=>{
     if(action.endMs<=action.startMs)ctx.addIssue({code:'custom',message:'Host action interval must be positive'});
-    if(action.sourceManipulation&&(action.type!=='operate-model'||!action.hand||!action.narrationAnchor||!action.target||action.target.anchor!=='center'||action.secondTarget))
-      ctx.addIssue({code:'custom',path:['sourceManipulation'],message:'Original contact action requires operate-model, explicit own hand, cue and one model center target'});
+    if(action.sourceManipulation&&(action.type!=='operate-model'||!action.hand||!action.narrationAnchor||!action.target||action.target.anchor==='label'||action.secondTarget))
+      ctx.addIssue({code:'custom',path:['sourceManipulation'],message:'Original contact action requires operate-model, explicit own hand, cue and one model center/handle target'});
   });
 export const ShotHostSchema = z.object({ id: Id, profileVersion: z.number().int().positive(), rigHash: z.string(),
   presence: z.enum(['beside-model', 'inset', 'absent']), actions: z.array(HostActionSchema).min(1) });

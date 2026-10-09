@@ -1,0 +1,104 @@
+{
+  "version": "fixed-source-source-record-1",
+  "sourceVersion": "forest-tribe-0.71-fixed-source-operations",
+  "precedingSourceSHA": "c669bdd89bbf60a4e428eeb24c792ba8d504d5e6",
+  "scope": "Source-only claimed delivery; exact published SHA/owned byte hashes kept in external delivery record. No independent whole-patch verification or runtime/geometry/art/film/full-factory acceptance.",
+  "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+  "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+  "checks": [
+    {
+      "command": "npm run build",
+      "handle": "82385d/session47267/completion99ea0f",
+      "exitCode": 0,
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 49 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-C2XloSmT.js   222.99 kB │ gzip: 69.93 kB\n✓ built in 596ms\n",
+      "scope": "full production source and Studio build only; no server/browser"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "handle": "a0dd8a/session5601/completion380a5c",
+      "exitCode": 0,
+      "decisiveOutput": "> tsc -p tsconfig.tests.json\n\n",
+      "note": "Final completion output empty. Latest check follows independent per-camera fixture copy correction.",
+      "scope": "typecheck only; no test callback/fixture execution"
+    },
+    {
+      "command": "npm run schemas",
+      "handle": "ed46a2",
+      "exitCode": 0,
+      "decisiveOutput": "> tsx library/schemas/export.ts",
+      "scope": "schema export only; no schema-instance geometry"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "handle": "c19244",
+      "exitCode": 0,
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "static manifest exporter only"
+    },
+    {
+      "command": "raw Node fs/Git/PNG headers/JSON/source declaration inspection",
+      "handle": "39c44d/session76276/completion1fc5a1",
+      "exitCode": 0,
+      "record": "docs/topics/reviews/fixed-source-static-record-v1.json",
+      "scope": "294 image bytes compared with Git HEAD; 37 original head JSON definitions unchanged; 126 mapped and 8 scalar code hashes matched raw source bytes; no project functions"
+    },
+    {
+      "command": "raw JPEG signature plus actual filename extension count",
+      "handle": "fde10a",
+      "exitCode": 0,
+      "decisiveOutput": "{\"actualJPEG\":163,\"existingJPEGNamedPNG\":101,\"actualJPGExtension\":62,\"trackedImages\":294,\"imagesUnchanged\":true}",
+      "scope": "Correct the initial all-JPEG output label, retain raw unchanged-byte evidence"
+    },
+    {
+      "command": "git diff --check",
+      "handle": "9bd55c",
+      "exitCode": 0,
+      "decisiveOutput": "",
+      "scope": "source whitespace at that read; repeated again before staging"
+    }
+  ],
+  "helperReview": "docs/topics/reviews/fixed-source-source-review-v1.json",
+  "helpers": {
+    "actualRequests": 2,
+    "successful": 1,
+    "failed": 1,
+    "autoRetries": 0,
+    "images": 0,
+    "sourceFilesReviewed": 8,
+    "reviewedChars": 50440,
+    "deepseek": "HTTP400, no proposal applied",
+    "opus": "5 findings; parent source decisions recorded; later edits not independently re-reviewed"
+  },
+  "declarations": {
+    "file": "tests/source-fixed-operation.test.ts",
+    "newCallbacks": 11,
+    "status": "DECLARED / NOT RUN",
+    "fixture": "tests/fixtures/source-interaction-fixture.ts",
+    "fixtureInvoked": false
+  },
+  "implementation": [
+    "Independent fixed entity/model/art center or explicit authored handle contact/recovery and original world history",
+    "Canonical primary/supporting continuity by person plus actual primary root metadata",
+    "Shared compiler recovery/world projection/implicit flow policy",
+    "Missing primary action or empty original action set cannot evade canonical geometry reports",
+    "Versions/brief/manifest/schema/cache handoff preserve source/art/voice/production gates"
+  ],
+  "ownedFiles": 34,
+  "unrelatedUntrackedPreserved": 52,
+  "geometryInvoked": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "fullGoalComplete": false,
+  "pending": [
+    "Integrated source production audit and runtime/geometry/API/QC/cache acceptance",
+    "Shared/sequential ownership",
+    "Own-model pose/head/hair/garment/environment and normal-speed motion acceptance",
+    "Full story/script/WAV/legacy SRT EN+VI/JA/KO external-local voice, locks/resume/rebuild/final MP4/audio/subtitle/QC"
+  ]
+}

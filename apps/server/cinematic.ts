@@ -9,6 +9,8 @@ import { validateModelContinuity, CINEMATIC_CLIPS } from '../../packages/directo
 import { validateArtDirection } from '../../packages/director/art-direction.js';
 import {validatePropBindings} from '../../packages/director/props.js';
 import {performanceProps} from '../../packages/animation/view-source-manipulation.js';
+import {validateActorContinuity} from '../../packages/actors/model.js';
+import {validatePerformanceContinuity} from '../../packages/director/continuity.js';
 
 // This schema is for inspection only. Production and edits still use current literals.
 const inspectionSchema=z.object({shots:z.array(ShotSchema.innerType().extend({
@@ -32,6 +34,7 @@ export function validateCinematicEdit(board: Storyboard, config: FactoryConfig, 
     const clock = (b: Storyboard) => b.shots.map(s => ({ id: s.id, startMs: s.startMs, endMs: s.endMs, narrationSegmentIds: s.narrationSegmentIds }));
     if (hash(clock(board)) !== hash(clock(previous))) throw new ApiError(422, 'Cinematic edits must preserve shot IDs, narration anchors and timing. Replan through production for new cuts.', 'TIMESTAMP_IMMUTABLE');
   }
+  try{validateActorContinuity(board);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
   for (const [i, shot] of board.shots.entries()) {
     const c = shot.cinematic;
     if (!c) throw new ApiError(422, `${shot.id}: cinematic plan is missing. Replan in story-cinematic mode.`, 'CINEMATIC_INVALID');
@@ -45,13 +48,14 @@ export function validateCinematicEdit(board: Storyboard, config: FactoryConfig, 
       unsupported('Animated props need a sourced model binding. Unsupported clips and cross-cut carry require a production continuity plan.');
     }
     try{validatePropBindings(shot,board,narration);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
+    try{validatePerformanceContinuity(shot);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
     const old = previous?.shots.find(s => s.id === shot.id)?.cinematic;
     if(old&&old.artDirection?.useEnvironment!==c.artDirection?.useEnvironment&&old.environmentAssetId)unsupported('Changing the background asset source requires production replanning; preserve the environment setting during direct edits.');
     if (old && (old.setting !== c.setting || old.environmentAssetId !== c.environmentAssetId)) unsupported('Environment changes require replanning through the production asset resolver; direct environment replacement is not supported.');
     if (Math.abs(c.continuity.exit.y - c.performance.stage.groundY) > .01) throw new ApiError(422, `${shot.id}: exit continuity must use the ground anchor.`, 'CINEMATIC_INVALID');
     const prior = board.shots[i - 1]?.cinematic;
     try{validateModelContinuity(board.shots[i-1],shot,board);}catch(error){throw new ApiError(422,error instanceof Error?error.message:String(error),'CINEMATIC_INVALID');}
-    if (prior && c.actorScene?.continuity!=='cut'&&(Math.hypot(prior.continuity.exit.x - c.continuity.entry.x, prior.continuity.exit.y - c.continuity.entry.y) > .01 || prior.continuity.facing!==(c.performance.facing??'front') || prior.leadCharacterId !== c.leadCharacterId || prior.performance.scale !== c.performance.scale)) {
+    if (prior && !(prior.actorScene&&c.actorScene) && c.actorScene?.continuity!=='cut'&&(Math.hypot(prior.continuity.exit.x - c.continuity.entry.x, prior.continuity.exit.y - c.continuity.entry.y) > .01 || prior.continuity.facing!==(c.performance.facing??'front') || prior.leadCharacterId !== c.leadCharacterId || prior.performance.scale !== c.performance.scale)) {
       throw new ApiError(422, `${shot.id}: continuity must continue the previous shot's lead character, position and scale.`, 'CINEMATIC_INVALID');
     }
     const camera = c.camera, delta = camera.endScale - camera.startScale;

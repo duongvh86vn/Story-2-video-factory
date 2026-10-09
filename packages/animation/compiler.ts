@@ -74,6 +74,7 @@ export function postureAt(plan:PerformancePlan,timeMs:number):BodyPosture {
   return Object.keys(seatWeights).length?{...value,seatWeights}:value;
 }
 const recoveryStart = (g:Gesture) => g.releaseMs ?? (g.action==='carry'?g.endMs:g.endMs-Math.min(220,(g.endMs-g.startMs)*.18));
+export {recoveryStart as gestureRecoveryStart};
 const attaches = (g:Gesture) => g.action==='pick-place'||g.action==='carry'||g.action==='drop';
 const contacts = (g:Gesture) => g.action==='operate'||attaches(g);
 const CARRY_TRANSITION_MS=250;

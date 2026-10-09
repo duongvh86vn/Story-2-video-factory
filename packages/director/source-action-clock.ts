@@ -25,7 +25,7 @@ export function validateSourceActionClock(plan:PerformancePlan,actions:readonly 
   const seen=new Set<string>();
   for(const action of selected){
     const ref=action.sourceManipulation!,entry=expected.find(e=>e.gesture.id===ref.gestureId);
-    if(action.type!=='operate-model'||!action.hand||!action.target||!action.narrationAnchor||action.secondTarget||
+    if(action.type!=='operate-model'||!action.hand||!action.target||action.target.anchor==='label'||!action.narrationAnchor||action.secondTarget||
       ref.sourceId!==source.id||!entry||seen.has(ref.gestureId)||rigHand(action)!==rigHand(entry.gesture)||
       action.startMs!==entry.slice.startMs||action.endMs!==entry.slice.endMs||action.contactMs!==entry.slice.contactMs)
       throw new Error('needs-source-action: original source/gesture/hand/clock/contact was changed or restarted at a cut');

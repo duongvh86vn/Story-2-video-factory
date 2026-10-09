@@ -1,4 +1,4 @@
-import type {SourceWorld} from './source-world-schemas.js';
+import type {SourceWorld,SourceWorldEvent} from './source-world-schemas.js';
 import type {Visualization} from '../explainer/schemas.js';
 
 export interface SourceWorldModelPhase {
@@ -9,6 +9,13 @@ export interface SourceWorldPhase {globalMs:number;models:Record<string,SourceWo
 const progress=(t:number,start:number,end:number)=>t<=start?0:t>=end?1:(t-start)/(end-start);
 const sine=(t:number)=>(1-Math.cos(Math.PI*t))/2;
 const pulse=(t:number,low:number)=>t<=.5?1+(low-1)*sine(t*2):low+(1-low)*sine((t-.5)*2);
+/** Shared policy for implicit flow responses; fixed anchors must account for
+ * persistent rotation already introduced before their current camera slice. */
+export function sourceFlowImplicitMotion(world:SourceWorld,event:SourceWorldEvent,part:Visualization['parts'][number]):'rotate'|'pulse'|'none'{
+  const split=event.startMs+(event.endMs-event.startMs)*.55;
+  if(world.events.some(other=>other.targetId===part.id&&other.motion!=='none'&&other.startMs<event.endMs&&other.endMs>split))return 'none';
+  return ['wheel','gear'].includes(part.kind)?'rotate':part.kind==='engine'?'pulse':'none';
+}
 /** Pure original-global effect state. No geometry, voice, GSAP, renderer or
  * mutation; callers validate the complete original source before compilation.
  * History before the current camera slice is deliberately retained. */
@@ -42,9 +49,9 @@ export function sampleSourceWorldPhase(world:SourceWorld,parts:Visualization['pa
     const target=parts.find(p=>p.id===e.relationTo),state=target&&models[target.id];if(!target||!state)continue;
     const response=progress(globalMs,split,e.endMs);
     state.energy=Math.max(state.energy,.55*(response<=.5?sine(response*2):1-sine((response-.5)*2)));
-    const explicit=world.events.some(other=>other.targetId===target.id&&other.motion!=='none'&&other.startMs<e.endMs&&other.endMs>split);
-    if(!explicit&&['wheel','gear'].includes(target.kind))state.rotation+=100*response;
-    if(!explicit&&target.kind==='engine')state.opacity*=pulse(response,.3);
+    const motion=sourceFlowImplicitMotion(world,e,target);
+    if(motion==='rotate')state.rotation+=100*response;
+    if(motion==='pulse')state.opacity*=pulse(response,.3);
   }
   return {globalMs,models,flows};
 }

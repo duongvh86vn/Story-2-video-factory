@@ -27,5 +27,5 @@ export function validateManipulationActionSlices(plan:PerformancePlan,actions:re
 export const sourceManipulationActionDescription={version:'source-manipulation-action-1',
   selection:'explicit host/supporting action.sourceManipulation sourceId + gestureId',
   clock:'exact shot intersection of original contact gesture; contact only in its actual half-open slice, never fabricated at a later cut',
-  scope:'exact original action projection and source groups; original cue/model/entity/world/interaction/coverage source candidates exist; fixed operation/API/runtime production acceptance remains pending',
+  scope:'exact original action projection and source groups; original cue/model/entity/world/interaction/coverage source candidates exist; fixed operation and per-person API continuity have source candidates; integrated production audit and runtime acceptance remain pending',
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false};

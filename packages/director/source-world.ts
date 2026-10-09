@@ -8,6 +8,9 @@ import {isWholeSourceStatement} from '../explainer/plan.js';
 import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 import {SourceWorldSchema,type SourceWorld,type SourceWorldEvent} from './source-world-schemas.js';
 import {SOURCE_WORLD_VERSION} from './source-world-reference.js';
+import {sourceFixedOperation} from './source-fixed-operation.js';
+import {projectSourceWorldEvents} from './source-world-projection.js';
+export {projectSourceWorldEvents} from './source-world-projection.js';
 
 type Event=NonNullable<Shot['visualization']>['events'][number];
 const fail=(shot:Shot,message:string):never=>{throw new Error(`${shot.id}: needs-source-prop-binding: original world ${message}`);};
@@ -17,16 +20,6 @@ function actor(shot:Shot,id:string){
   const matches=all.filter(a=>a.character.id===id);
   if(matches.length!==1)return fail(shot,'requires one explicit visible contact person');
   return matches[0]!;
-}
-/** Exact global event intersection. Contacts and phase stay in sourceWorld;
- * no new contact, rewritten cue or reconstructed history at a camera cut. */
-export function projectSourceWorldEvents(world:SourceWorld,startMs:number,endMs:number):Event[]{
-  SourceWorldSchema.parse(world);
-  if(!Number.isSafeInteger(startMs)||!Number.isSafeInteger(endMs)||startMs<world.startMs||endMs>world.endMs||endMs<=startMs)throw new Error('needs-source-prop-binding: invalid original world camera slice');
-  return world.events.flatMap(({id,contacts:_,...event})=>{
-    const start=Math.max(event.startMs,startMs),end=Math.min(event.endMs,endMs);
-    return start<end?[{...event,startMs:start,endMs:end,sourceWorld:{sourceId:world.id,eventId:id}}]:[];
-  });
 }
 export function sourceWorldEvent(shot:Shot,event:Event):SourceWorldEvent{
   const world=shot.cinematic?.sourceWorld,ref=event.sourceWorld,original=world?.events.find(e=>e.id===ref?.eventId);
@@ -84,13 +77,16 @@ export function validateSourceWorld(shot:Shot,board?:Storyboard,narration?:Narra
         validateManipulationActionSlices(owned.performance,owned.actions,slice.startMs);
         const actions=owned.actions.filter(a=>a.sourceManipulation?.sourceId===source.id&&a.sourceManipulation.gestureId===g.id);
         if(actions.some(a=>a.target?.modelId!==slice.visualization?.modelId||a.target?.partId!==contactPart||a.narrationAnchor!==event.narrationAnchor))return fail(slice,'reaction target/cue differs from its actual original contact action');
+        if(g.action==='operate')for(const action of actions){
+          const fixed=sourceFixedOperation(slice,contact.actorId,action,board,narration);
+          if(event.endMs>fixed.recoverMs)return fail(slice,'fixed reaction exceeds the actual original held contact before recovery');
+        }
         const operation=g.action==='operate'?'contact':g.action;
         statement ||= (slice.cinematic?.sceneIntent?.acting??[]).some(a=>a.participantId===contact.actorId&&a.kind==='manipulation'&&a.operation===operation&&a.targetIds?.includes(contactPart)&&isWholeSourceStatement(a.statement,cue.text)&&a.sourceRefs.some(r=>r.kind==='narration'&&r.segmentId===cue.id&&isWholeSourceStatement(a.statement,r.quote)));
       }
       if(!statement||contactMs<cue.startMs||contactMs>=cue.endMs)return fail(shot,'reaction is not bound to its complete original narrated contact statement');
-      // The target geometry/grip/source for carried entities is validated by
-      // validateSourcePropBindings; fixed operate targets remain a separate
-      // production contract until source action groups/coverage are integrated.
+      // Carried entities use validateSourcePropBindings; fixed operation uses
+      // its independent original model anchor and real hold/recovery clock.
     }
   }
 }
@@ -103,5 +99,5 @@ export const sourceWorldDescription={version:SOURCE_WORLD_VERSION,selection:'exp
   statePolicy:'thermal paint persists until the next sourced state; reveals persist after first appearance; highlight/particle windows remain bounded',
   history:'thermal/control/effect/flow/motion phase uses original global time, including history before a camera cut; no re-contact or local event restart',
   evidence:'complete original storyboard/model/entity/art/relation/stage identity and exact native person/source/gesture/hand/narration contact witnesses',
-  pending:['fixed-operate geometry, API continuity and interaction/world runtime acceptance','world/render/cache/resume geometry/runtime/film acceptance'],
+  pending:['integrated source production audit and API/interaction/world runtime acceptance','world/render/cache/resume geometry/runtime/film acceptance'],
   approved:false,productionReady:false,motionVerified:false,productionBinding:'needs-source-prop-binding'};

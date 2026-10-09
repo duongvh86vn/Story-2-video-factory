@@ -1,0 +1,52 @@
+{
+  "version": "fixed-source-static-record-1",
+  "sourceVersion": "forest-tribe-0.71-fixed-source-operations",
+  "precedingSourceSHA": "c669bdd89bbf60a4e428eeb24c792ba8d504d5e6",
+  "scope": "raw Git/fs bytes, PNG headers and JSON metadata only; no project modules/functions imported or executed",
+  "trackedImages": 294,
+  "actualPNG": 131,
+  "existingJPEGNamedPNG": 101,
+  "allOriginalImageBytesUnchanged": true,
+  "imagesFingerprint": "0fea7fe3f4378503d96ee9f0df657cb928118b480f92b1b9ac099f52d0dad9db",
+  "priorHeadDefinitionsUnchanged": 37,
+  "manifestMappedCodeHashes": 126,
+  "manifestScalarCodeHashes": 8,
+  "mappedFixedOperationHashes": 9,
+  "availableBankFields": [
+    "root.supportingCast.nativeFaces.availableBanks",
+    "root.nativeHeadBank.availableBanks",
+    "root.nativeHeadFaces.availableBanks",
+    "root.nativeHeadCells.availableBanks",
+    "root.headPack.bodyHead.authoredViews.headBankCandidate.availableBanks",
+    "root.bodyPack.authoredViews.headBankCandidate.availableBanks",
+    "root.bodyPack.headMotion.authoredViews.headBankCandidate.availableBanks",
+    "root.authoredViewArtwork.engineeringRegistrations.headBankCandidate.availableBanks"
+  ],
+  "male": {
+    "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+    "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
+    "width": 910,
+    "height": 1728
+  },
+  "female": {
+    "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+    "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+    "width": 939,
+    "height": 1675
+  },
+  "newCallbacksDeclared": 11,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "actualJPEG": 163,
+  "metadataCorrection": "Initial raw output used existingJPEGNamedPNG for all JPEG files including .jpg. Corrected by extension-aware raw-header read; 163 actual JPEG files, 101 named .png, 62 actual .jpg. All original byte comparisons remain valid."
+}

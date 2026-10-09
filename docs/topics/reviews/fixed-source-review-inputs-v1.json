@@ -1,0 +1,52 @@
+{
+  "version": "fixed-source-review-inputs-1",
+  "sourceVersion": "forest-tribe-0.71-fixed-source-operations",
+  "precedingSHA": "c669bdd89bbf60a4e428eeb24c792ba8d504d5e6",
+  "scope": "Eight complete static source files only; wiring/tests/docs/art/runtime are not independently reviewed",
+  "sources": [
+    {
+      "file": "packages/director/source-fixed-operation.ts",
+      "sha256": "7c47cc999e66fbaf14559c23c6f906b8959dc54a3e8d79db3bb59b31f5fd9b96",
+      "chars": 8985
+    },
+    {
+      "file": "packages/director/source-interactions.ts",
+      "sha256": "d887f20fbff38fe905dcc9fb4cbe80bf55c4e470ce1c369b7f9f6df47959fe91",
+      "chars": 16041
+    },
+    {
+      "file": "packages/actors/model.ts",
+      "sha256": "98e444497877babb2084fbdb4d6e9f797024cafd59c073b48c252842981eda55",
+      "chars": 11992
+    },
+    {
+      "file": "apps/server/cinematic.ts",
+      "sha256": "9c5cf3b2702e909dc8a0be97f7fe9253c276ae4624e4edfffd47595f64249fab",
+      "chars": 6591
+    },
+    {
+      "file": "packages/director/continuity.ts",
+      "sha256": "10fc00d7c76e79d38fdbc674be58def424c18c2183be764be3b81c0415284b7e",
+      "chars": 974
+    },
+    {
+      "file": "packages/director/source-world-phase.ts",
+      "sha256": "a10b771d5e8515aa408cc639fdbc02e0061d64a44fe13907f90794ad55edcb26",
+      "chars": 4376
+    },
+    {
+      "file": "packages/director/source-world-projection.ts",
+      "sha256": "cd3129eeae06a357a95031c41c17c1c80a1fc3a16eb4da782a53abe2e62aa2ff",
+      "chars": 836
+    },
+    {
+      "file": "packages/director/source-actor.ts",
+      "sha256": "76731ddaa463f5569d4d1d54236e5e9d44e05f2789ed066036654a3dc9b90cc3",
+      "chars": 645
+    }
+  ],
+  "totalChars": 50440,
+  "noRuntime": true,
+  "approved": false,
+  "productionReady": false
+}

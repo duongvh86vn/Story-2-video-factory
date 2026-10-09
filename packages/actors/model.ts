@@ -69,6 +69,16 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
       if(actor.speakingSegmentIds.some(id=>!shot.narrationSegmentIds?.includes(id)))throw new Error(`${shot.id}: actor speech is outside this shot's narration anchors`);
     }
   }
+  validateActorContinuity(board);
+}
+
+/** Same person-based continuity authority for production and API edits. */
+export function validateActorContinuity(board:Storyboard):void{
+  const identities=new Map<string,string>();
+  for(const shot of board.shots){const scene=shot.cinematic?.actorScene;if(!scene)continue;const actors=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)];
+    if(new Set(actors.map(a=>a.id)).size!==actors.length)throw new Error(shot.id+': duplicate cast actor');
+    for(const actor of actors){const current=hash(actor),prior=identities.get(actor.id);if(prior&&prior!==current)throw new Error(shot.id+': actor '+actor.id+' changed identity');identities.set(actor.id,current);}
+  }
   for(const shot of board.shots){
     const c=shot.cinematic,scene=c?.actorScene;if(!c||!scene)continue;
     for(const actor of [...(scene.primary?[{id:scene.primary.id,p:c.performance}]:[]),...scene.supporting.map(a=>({id:a.character.id,p:a.performance}))]){
@@ -79,12 +89,14 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
   }
   for(const [index,shot] of board.shots.entries()){
     const scene=shot.cinematic?.actorScene,prior=board.shots[index-1]?.cinematic?.actorScene;
-    if(!scene||scene.continuity!=='continuous'||!prior)continue;
+    if(!scene||scene.continuity!=='continuous')continue;
+    if(!prior||board.shots[index-1]!.endMs!==shot.startMs)throw new Error(shot.id+': continuous actor scene needs an adjacent actual previous cast');
     const performances=(s:Shot)=>new Map([...(s.cinematic!.actorScene!.primary?[{id:s.cinematic!.actorScene!.primary!.id,p:s.cinematic!.performance}]:[]),
       ...s.cinematic!.actorScene!.supporting.map(a=>({id:a.character.id,p:a.performance}))].map(a=>[a.id,a.p]));
     const before=performances(board.shots[index-1]!),after=performances(shot);
     if(hash([...before.keys()].sort())!==hash([...after.keys()].sort()))throw new Error(`${shot.id}: continuous scene changed its cast; use a cut`);
     for(const [id,p] of after){const old=before.get(id)!;
+      if(hash(old.stage)!==hash(p.stage))throw new Error(shot.id+': actor '+id+' changed its world/stage at a continuous cut');
       if(old.sourceBody||p.sourceBody){
         const a=actorViewActingClock(board,board.shots[index-1]!,id),b=actorViewActingClock(board,shot,id);
         if(!a?.bodyMotion||!b?.bodyMotion||a.sourceIdentityHash!==b.sourceIdentityHash||hash(bodyRootAt(old,board.shots[index-1]!.startMs,old.durationMs))!==hash(bodyRootAt(p,shot.startMs,0)))throw new Error(`${shot.id}: needs-view-body-phase: original body source changed at a continuous cut`);
