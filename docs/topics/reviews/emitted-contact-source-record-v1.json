@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.86-emitted-contact",
+  "precedingSourceSHA": "a365c58a76bd9ba347c04c7ab0562fdbdda66129",
+  "scope": "source build/typecheck/schema definitions/raw bytes only; no runtime/geometry/native art/film/full factory acceptance",
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "af11c5",
+      "session": 81495,
+      "completionChunk": "aa57a6",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 56 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-MwzxRy1F.js   243.74 kB │ gzip: 76.02 kB\n✓ built in 2.70s\n"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "462e53",
+      "session": 64503,
+      "completionChunk": "52bff4",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "typecheck only, no callback execution"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "2f84bb",
+      "scope": "schema definition export only; no schema instance validation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "ab74b6",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "existing raw image/header/hash/JSON metadata and static candidate descriptions only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/emitted-contact-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "d8012b",
+      "session": 3164,
+      "completionChunk": "1a9b2d",
+      "scope": "raw byte/header/source-text/JSON inventory only; no business imports"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "chunk": "66a32f"
+    }
+  ],
+  "failedEarlierChecks": [
+    {
+      "command": "npm run test:typecheck",
+      "chunk": "adb265",
+      "reason": "extra closing parenthesis in channel selection; corrected"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "cd2366",
+      "session": 4539,
+      "completionChunk": "8d5947",
+      "reason": "test used owner.id instead of owner.character.id; corrected"
+    },
+    {
+      "command": "raw static inventory",
+      "completionChunk": "61ce59",
+      "reason": "copied checker expected old producer2.2.48; checker updated to current2.2.49, source schemas were current"
+    }
+  ],
+  "declaredCallbacks": {
+    "tests/source-spear-model.test.ts": 8,
+    "tests/source-spear-actions.test.ts": 8,
+    "tests/model-contact-frame.test.ts": 8,
+    "tests/source-spear-emitted.test.ts": 4
+  },
+  "newCallbacksDeclared": 12,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "browserOpened": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "sourceAdvice": {
+    "record": "docs/topics/reviews/emitted-contact-advice-record-v1.json",
+    "requestedModel": "tester",
+    "returnedModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 2858,
+    "totalTokens": 20181,
+    "issues": [],
+    "scope": "snapshot source-only advisory; no independent final-integration acceptance"
+  },
+  "rawInventory": {
+    "trackedImages": 294,
+    "actualPNG": 131,
+    "actualJPEG": 163,
+    "allOriginalImageBytesUnchanged": true,
+    "headDefinitions": 18,
+    "headMetadata": 27,
+    "mappedSourceHashes": 127,
+    "mappedSourceEntries": 315,
+    "availableBankFields": 9
+  },
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44.1314772Z",
+    "acceptsCurrentSource": false
+  },
+  "ownedPaths": 39,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/EMITTED-CONTACT-HANDOFF.md",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "relation/flow/label/focus/thermal geometry following projected moving models where required; actual depth and opposite views",
+    "actual original shaft/palms/tip/targets, GSAP rounding/time precision, fractional/reverse/cut seek and real60fps film",
+    "faithful native face/hair/costumes/soft anatomical limbs/continuous acting and vivid environment, original supporting cast",
+    "arbitrary story/topic→script, exact script/original WAV/legacy SRT, EN primary/VI/JA/KO/external-local TTS",
+    "resume/rebuild/locks; final MP4/audio/subtitle/thumbnail/storyboard/asset manifest/review/QC"
+  ]
+}

@@ -1,6 +1,6 @@
 # Bàn giao source WIP — Cuộc sống thời tiền sử
 
-**Cập nhật source0.85:** [Hành động cầm/đâm giáo của diễn viên](ORIGINAL-SPEAR-ACTIONS-HANDOFF.md). Đã viết original tool action/whole-cue/independent target/tip-reaction, exact camera slices/both-hand ownership, review records và Studio listing; producer2.2.48. Tám callbacks mới DECLARED/NOT RUN. Tester9router trả HTTP200/gpt-6-luna cho lượt source-only; không có test hoặc video acceptance. Emitted target/contact, dynamic artwork anchors, native art/motion, film và toàn tool còn chờ; production giữ needs-source-prop-binding. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.86:** [Điểm chạm theo SVG được vẽ](EMITTED-CONTACT-HANDOFF.md). Đã viết projected whole-glyph contact frame, original-grid matrix/anchor/camera, exact owned foreground transform và renderer-supplied shaft/palm/tip diagnostics; producer2.2.49. 12 callbacks mới DECLARED/NOT RUN. Tester9router HTTP200/gpt-6-luna chỉ review source. Native art/acting, browser/GSAP/60fps film và toàn tool ba luồng/voice/resume/final còn chờ; needs-source-prop-binding vẫn chặn production. Chưa sẵn sàng sử dụng hoàn chỉnh. Các mốc cũ bên dưới là lịch sử.
 
 Cập nhật source0.81: [vật chung và vật cầm riêng trong cùng cảnh](MIXED-OWNERSHIP-HANDOFF.md). Complete-run binding closure, union centers và phase hand masks đã viết; chín callbacks mới NOT RUN. Tester trả static advice, không thực thi test. Native art/motion, production và toàn story/script/WAV/voice/resume/final vẫn chưa nghiệm thu.
 

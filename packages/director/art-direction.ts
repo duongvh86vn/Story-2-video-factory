@@ -1,6 +1,8 @@
 import type { Shot } from '../core/schemas.js';
 import { escapeHtml, hash } from '../core/utils.js';
-import { ArtDirectionSchema, ArtEasingSchema, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
+import { ArtDirectionSchema, ArtEasingSchema, rendersModelControl, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
+import {MODEL_CONTACT_FRAME_VERSION} from './model-contact-reference.js';
+import {modelContactSlice} from './model-contact-motion.js';
 export { ArtDirectionSchema, type ArtDirection } from './art-direction-schemas.js';
 export const ARTWORK_RENDER_VERSION='passive-svg-2.2.6';
 /** Only shots opting into incoming-keyframe easing acquire this renderer identity. */
@@ -42,7 +44,7 @@ export function artworkSvg(svg:string,prefix:string):string {
       const key=a[1]!.toLowerCase(),value=decodeAttribute(a[2]??a[3]??'');tail=tail.slice(a[0].length);
       if(attributes.has(key))throw new Error('Art SVG duplicate attribute');attributes.set(key,value);
       if(/^on|^data-(?:composition|duration|start|width|height)|^(?:href|xlink:href|src|style|autoplay)$/i.test(key))throw new Error('Art SVG executable/resource/factory attributes are forbidden');
-      if(key==='class'&&/\b(?:camera-rig|environment|performer|ground-shadow)\b/.test(value))throw new Error('Art SVG uses a reserved factory class');
+      if(key==='class'&&/\b(?:camera-rig|environment|performer|ground-shadow|contact-model-root)\b/.test(value))throw new Error('Art SVG uses a reserved factory class');
       if(key==='id'){
         if(!/^[a-z][\w.-]*$/i.test(value)||ids.has(value))throw new Error('Art SVG IDs must be valid and unique');
         ids.add(value);
@@ -125,7 +127,12 @@ export function validateArtDirection(shot:Shot):void{
       if(!hasRenderedArtworkGeometry(foreground))throw new Error(`${shot.id}: model foreground requires visible drawable content`);
     }
     if(shot.visualization!.events.some(event=>event.targetId===model.partId&&event.motion!=='none')&&
-      !hasRenderedMotionGeometry(canonical)&&!(foreground&&hasRenderedMotionGeometry(foreground)))throw new Error(`${shot.id}: custom motion event has no rendered motion geometry`);
+      !(model.contactFrame?hasRenderedArtworkGeometry(canonical):hasRenderedMotionGeometry(canonical))&&!(foreground&&(model.contactFrame?hasRenderedArtworkGeometry(foreground):hasRenderedMotionGeometry(foreground))))throw new Error(`${shot.id}: custom motion event has no rendered motion geometry`);
+    if(model.contactFrame){
+      if(!shot.cinematic?.actorScene||!hasRenderedArtworkGeometry(canonical))throw new Error(`${shot.id}: projected model frame requires its actual actor scene and drawable source artwork`);
+      if(rendersModelControl(shot,model.partId))throw new Error(`${shot.id}: projected contact model must own its visible controls; set controlMode=none instead of a separate renderer knob`);
+      modelContactSlice(shot,model.partId);
+    }
   }
 }
 
@@ -175,13 +182,14 @@ export function customModelForegroundArt(shot:Shot,partId:string,width:number,he
 function projectedModelArt(shot:Shot,partId:string,width:number,height:number,foreground:boolean):string|undefined {
   const model=shot.cinematic?.artDirection?.models.find(model=>model.partId===partId);
   if(!model||(foreground&&model.foregroundSvg===undefined))return undefined;
+  const frame=(html:string)=>model.contactFrame?`<g class="contact-model-root" data-model-contact-frame="${MODEL_CONTACT_FRAME_VERSION}" transform="matrix(1 0 0 1 0 0)">${html}</g>`:html;
   let svg=artworkSvg(foreground?model.foregroundSvg!:model.svg,`${shot.id}.art.model.${partId}${foreground?'.foreground':''}`);
   if(foreground)validateSharedModelSpace(artworkSvg(model.svg,`${shot.id}.art.model.${partId}`),svg,model.projection);
   if(model.projection==='model-viewport'){
     if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw new Error('Model viewport dimensions must be finite and positive');
     const attributes=modelViewportAttributes(svg);
     svg=svg.trim().replace(/^<svg\b[^>]*>/,`<svg x="${-width/2}" y="${-height/2}" width="${width}" height="${height}"${attributes}>`);
-    return `<g data-custom-model="${escapeHtml(partId)}" fill="#000000" stroke="none" stroke-width="1">${svg}</g>`;
+    return frame(`<g data-custom-model="${escapeHtml(partId)}" fill="#000000" stroke="none" stroke-width="1">${svg}</g>`);
   }
   // A complete SVG is an image in the centered model box; fragments already use centered coordinates.
   if(/^<svg\b[^>]*>[\s\S]*<\/svg>$/.test(svg.trim())){
@@ -192,7 +200,7 @@ function projectedModelArt(shot:Shot,partId:string,width:number,height:number,fo
   }
   // A custom SVG owns its own paint. Stock-model outlines must not stroke its
   // typography or backing shapes. Explicit artist strokes still override these defaults.
-  return `<g data-custom-model="${escapeHtml(partId)}" fill="#000000" stroke="none" stroke-width="1" transform="scale(${width/100} ${height/100})">${svg}</g>`;
+  return frame(`<g data-custom-model="${escapeHtml(partId)}" fill="#000000" stroke="none" stroke-width="1" transform="scale(${width/100} ${height/100})">${svg}</g>`);
 }
 
 

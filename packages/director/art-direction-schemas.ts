@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { Id } from '../core/identifiers.js';
 import type { Shot } from '../core/schemas.js';
 import { SourceRefSchema } from '../explainer/schemas.js';
+import {ModelContactFrameSchema} from './model-contact-reference.js';
 
 const Color=z.string().regex(/^#[0-9a-fA-F]{6}$/);
 /** Finite, non-overshooting incoming-segment curves; no provider-supplied code. */
@@ -22,7 +23,11 @@ export const ArtDirectionSchema=z.object({
     labelMode:z.enum(['renderer','artwork','none']).optional(),motionOrigin:z.object({x:z.number().finite(),y:z.number().finite()}).strict().optional(),
     handleAnchor:ModelHandleAnchorSchema.optional().describe('Optional handle point within the rendered part viewport: (0,0) top-left, (1,1) bottom-right. Account for SVG aspect-policy padding; this is not SVG viewBox or stage coordinates. Keep the gesture/grip at the same resolved point.'),
     controlMode:z.enum(['renderer','none']).optional(),
-  }).strict()).max(40),
+    contactFrame:ModelContactFrameSchema.optional(),
+  }).strict().superRefine((model,ctx)=>{
+    if(model.contactFrame&&model.motionOrigin)ctx.addIssue({code:'custom',path:['motionOrigin'],message:'Whole projected contact frame owns its pivot; do not add a second internal SVG motion origin'});
+    if(model.contactFrame&&model.handleAnchor&&(!model.contactFrame.anchors.handle||model.handleAnchor.x!==model.contactFrame.anchors.handle.x||model.handleAnchor.y!==model.contactFrame.anchors.handle.y))ctx.addIssue({code:'custom',path:['handleAnchor'],message:'Legacy viewport handle and explicit contact frame handle must be identical'});
+  })).max(40),
 }).strict();
 export type ArtDirection=z.infer<typeof ArtDirectionSchema>;
 export type ArtKeyframe=z.infer<typeof ArtKeyframeSchema>;

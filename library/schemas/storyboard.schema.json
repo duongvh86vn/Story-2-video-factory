@@ -1150,7 +1150,7 @@
                   },
                   "producer": {
                     "type": "string",
-                    "const": "story-direction-2.2.48"
+                    "const": "story-direction-2.2.49"
                   },
                   "shotId": {
                     "type": "string",
@@ -1513,6 +1513,103 @@
                                 "renderer",
                                 "none"
                               ]
+                            },
+                            "contactFrame": {
+                              "type": "object",
+                              "properties": {
+                                "version": {
+                                  "type": "string",
+                                  "const": "model-contact-frame-1"
+                                },
+                                "pivot": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number"
+                                    },
+                                    "y": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "anchors": {
+                                  "type": "object",
+                                  "properties": {
+                                    "center": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number"
+                                        },
+                                        "y": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "handle": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number"
+                                        },
+                                        "y": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "center"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "bounds": {
+                                  "type": "object",
+                                  "properties": {
+                                    "left": {
+                                      "type": "number"
+                                    },
+                                    "right": {
+                                      "type": "number"
+                                    },
+                                    "top": {
+                                      "type": "number"
+                                    },
+                                    "bottom": {
+                                      "type": "number"
+                                    }
+                                  },
+                                  "required": [
+                                    "left",
+                                    "right",
+                                    "top",
+                                    "bottom"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "version",
+                                "pivot",
+                                "anchors",
+                                "bounds"
+                              ],
+                              "additionalProperties": false
                             }
                           },
                           "required": [

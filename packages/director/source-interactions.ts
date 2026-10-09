@@ -19,6 +19,7 @@ import {ownershipBakeAt} from './ownership-bake-query.js';
 import {sourceOwnershipFrame} from './source-ownership.js';
 import {sourceSpearInteractionGeometry,type SourceSpearInteractionRecord} from './source-spear-interactions.js';
 import {validateSpearActionSlices} from './source-spear-actions.js';
+import {modelContactWorldPoint} from './model-contact-motion.js';
 export {SOURCE_INTERACTION_VERSION} from './source-interaction-version.js';
 
 type Action=ShotHost['actions'][number];
@@ -120,7 +121,7 @@ export function sourceInteractionGeometry(shot:Shot,actorId:string,action:Action
       const owner=person(slice,actorId),clock=actorViewActingClock(board!,slice,actorId);
       if(!clock?.manipulationMotion)return fail(slice,'fixed sample lacks its complete original clock');
       const frame=samplePhysicalPerformance(owner.performance,actorProfile(owner.character),global-slice.startMs,clock),part=slice.visualization!.parts.find(p=>p.id===d.partId)!;
-      const target=partAnchor(slice,part.id,action.target!.anchor,owner.performance.stage.width,owner.performance.stage.height),hand=frame.hands[d.hand];
+      const target=slice.cinematic!.artDirection?.models.find(m=>m.partId===part.id)?.contactFrame?modelContactWorldPoint(slice,part.id,action.target!.anchor,global):partAnchor(slice,part.id,action.target!.anchor,owner.performance.stage.width,owner.performance.stage.height),hand=frame.hands[d.hand];
       return {frame,target,hand,center:{x:part.x*owner.performance.stage.width,y:part.y*owner.performance.stage.height},error:Math.hypot(hand.x-target.x,hand.y-target.y)};
     };
     const contactShot=board!.shots.find(s=>s.startMs<=d.contactMs&&s.endMs>d.contactMs);

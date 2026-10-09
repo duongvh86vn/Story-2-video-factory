@@ -37,6 +37,7 @@ import {sceneLabels} from './scene-labels.js';
 import {renderSpriteScene} from '../../packages/motion/scene.js';
 import type {ActorMotion} from '../../packages/motion/schemas.js';
 import {sourceWorldFrames,sourceWorldModelTimeline} from './source-world-timeline.js';
+import {inspectEmittedSpearActions} from '../../packages/director/source-spear-emitted.js';
 import {sourceInteractionGeometry} from '../../packages/director/source-interactions.js';
 import {sourceSpearInteractionGeometry} from '../../packages/director/source-spear-interactions.js';
 import {compileSourceOwnership} from '../../packages/director/ownership-compile.js';
@@ -48,7 +49,7 @@ export function modelThermal(part:NonNullable<Shot['visualization']>['parts'][nu
 }
 
 function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,board?:Storyboard):{
-  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;actorId?:string;propId?:string;ownershipSourceId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[];sourceWorld?:Record<string,unknown>;sourceOwnership?:Record<string,unknown>};
+  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;actorId?:string;propId?:string;ownershipSourceId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[];sourceWorld?:Record<string,unknown>;sourceOwnership?:Record<string,unknown>;emittedSpearActions?:ReturnType<typeof inspectEmittedSpearActions>};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
   validateCinematicShot(shot,profile,config,board,narration);
@@ -108,6 +109,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   const ownership=c.sourceOwnership?compileSourceOwnership(shot,board!,narration!,[...ownerCompilations.values()].flatMap(owner=>owner.frames.map(f=>shot.startMs+f.timeMs))):undefined;
   const ownershipLayer=ownership?renderOwnershipLayer(shot,ownership,modelThermal):undefined;
   if(ownershipLayer)calls.push(...ownershipLayer.calls);
+  const emittedSpears=inspectEmittedSpearActions(shot,board,narration,ownerCompilations,ownership);
   const propArt=new Map<string,string>(),foregroundModels:string[]=[];
   const foregroundParts=new Set(art?.models.filter(model=>model.foregroundSvg!==undefined).map(model=>model.partId));
   const modelTargets=(partId:string,base:string,suffix:string)=>[selector(`${base} ${suffix}`),...(foregroundParts.has(partId)?[selector(`#foreground-object-${v.parts.findIndex(part=>part.id===partId)} ${suffix}`)]:[])];
@@ -115,14 +117,16 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     const x=part.x*width,y=part.y*height,w=part.width*width,h=part.height*height,handle=partAnchor(shot,part.id,'handle',width,height);
     const focal=part.id===c.attentionPartId;
     const model=c.models.find(m=>m.partId===part.id)!;
+    const contactFrame=art?.models.find(m=>m.partId===part.id)?.contactFrame;
     const illustration=cinematicModel(part,model,w,h);
     const authoredGlyph=customModelArt(shot,part.id,w,h);
-    if(authoredGlyph){illustration.svg=authoredGlyph;illustration.motionAnchors=[...authoredGlyph.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion'))?[{selector:'.motion',...customModelMotionOrigin(shot,part.id)}]:[];}
+    if(authoredGlyph){illustration.svg=authoredGlyph;illustration.motionAnchors=!contactFrame&&[...authoredGlyph.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion'))?[{selector:'.motion',...customModelMotionOrigin(shot,part.id)}]:[];}
     const binding=c.propBindings.find(binding=>binding.partId===part.id),canonicalGlyph=ownershipGlyph(shot,part.id),showLabel=rendersModelLabel(shot,part.id);
-    const foreground=canonicalGlyph?undefined:customModelForegroundArt(shot,part.id,w,h);
+    const frontScale=contactFrame&&binding&&!canonicalGlyph?boundProp(shot,binding).performance.scale:1;
+    const foreground=canonicalGlyph?undefined:customModelForegroundArt(shot,part.id,w/frontScale,h/frontScale);
     if(foreground){
       foregroundModels.push(`<g id="foreground-object-${i}" data-sourced-foreground="${escapeHtml(part.id)}"${binding?` data-bound-prop-id="${escapeHtml(binding.propId)}"`:''} transform="translate(${x} ${y})">${foreground}</g>`);
-      if([...foreground.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion')))calls.push(`tl.set(${selector(`#foreground-object-${i} .motion`)},{svgOrigin:${JSON.stringify(`${customModelMotionOrigin(shot,part.id).x} ${customModelMotionOrigin(shot,part.id).y}`)}},0);`);
+      if(!contactFrame&&[...foreground.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion')))calls.push(`tl.set(${selector(`#foreground-object-${i} .motion`)},{svgOrigin:${JSON.stringify(`${customModelMotionOrigin(shot,part.id).x} ${customModelMotionOrigin(shot,part.id).y}`)}},0);`);
     }
     if(binding&&!canonicalGlyph){
       const owner=boundProp(shot,binding),scale=owner.performance.scale,compiled=ownerCompilations.get(owner.id);
@@ -144,8 +148,16 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
         const interpolation=previous?{duration:Number(((frame.timeMs-previous.timeMs)/1000).toFixed(6)),ease:'none'}:{immediateRender:true};
         const method=previous?'to':'set',deltaY=center.y-y;
         calls.push(`tl.${method}(${selector(`#object-${i}`)},${JSON.stringify({attr:{transform:`translate(${center.x-x} ${deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
-        if(foreground)calls.push(`tl.${method}(${selector(`#foreground-object-${i}`)},${JSON.stringify({attr:{transform:`translate(${center.x} ${center.y})`},...interpolation})},${Number(at.toFixed(6))});`);
+        if(foreground&&!contactFrame)calls.push(`tl.${method}(${selector(`#foreground-object-${i}`)},${JSON.stringify({attr:{transform:`translate(${center.x} ${center.y})`},...interpolation})},${Number(at.toFixed(6))});`);
         calls.push(`tl.${method}(${selector(`#object-${i} .bound-model-shadow`)},${JSON.stringify({attr:{transform:`translate(0 ${-deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
+      }
+      if(foreground&&contactFrame){
+        // Copy the actual emitted owner channel, including its unwrapped angle,
+        // rounded scale and exact interpolation clock; never just its center.
+        const from=selector(`#${owner.svgId}`),to=selector(`#foreground-object-${i}`);
+        const transforms=compiled.js.split('\n').filter(line=>line.startsWith(`tl.set(${from},`)||line.startsWith(`tl.to(${from},`));
+        if(!transforms.length||transforms.some(line=>!line.includes('"attr":{"transform":')))throw new Error(`${shot.id}: projected foreground has no exact owner transform channel`);
+        calls.push(...transforms.map(line=>line.replace(from,to)));
       }
     }
     for(const anchor of illustration.motionAnchors)calls.push(`tl.set(${selector(`${canonicalGlyph?`#${canonicalGlyph}`:binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`} ${anchor.selector}`)},{svgOrigin:${JSON.stringify(`${anchor.x} ${anchor.y}`)}},0);`);
@@ -252,7 +264,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});
   const ownershipReport=ownership&&ownershipLayer?{scope:'canonical-render-candidate',entities:ownershipLayer.entities,bakes:[...ownership.values()].map(item=>({sourceId:item.source.id,partId:item.source.partId,sourceHash:item.sourceHash,paintHash:item.paintHash,frames:item.bake.samples.length,entry:item.bake.samples[0],exit:item.bake.samples.at(-1),maxMeasuredGapPx:item.bake.maxMeasuredGapPx,gapLimitPx:item.bake.gapLimitPx})),contactVerified:false,motionVerified:false,productionApproval:false}:undefined;
-  return {files,geometry,report:{...result.compiled.report,...(ownershipReport?{sourceOwnership:ownershipReport}:{}),...(worldFrames?{sourceWorld:{version:c.sourceWorld!.version,id:c.sourceWorld!.id,originalStartMs:c.sourceWorld!.startMs,originalEndMs:c.sourceWorld!.endMs,sourceHash:hash(c.sourceWorld),entry:worldFrames[0]!.phase,exit:worldFrames.at(-1)!.phase,scope:"original-global-phase-candidate",motionVerified:false}}:{}),camera:validateCamera(shot,profile,primaryActingClock,{worldShot:shot,board,narration,ownership}),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>{const canonical=ownership?.get(partId),binding=c.propBindings.find(binding=>binding.partId===partId);return canonical?{partId,ownershipSourceId:canonical.source.id}:binding?{partId,actorId:boundProp(shot,binding).id,propId:binding.propId}:{partId};})}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
+  return {files,geometry,report:{...result.compiled.report,...(emittedSpears.length?{emittedSpearActions:emittedSpears}:{}),...(ownershipReport?{sourceOwnership:ownershipReport}:{}),...(worldFrames?{sourceWorld:{version:c.sourceWorld!.version,id:c.sourceWorld!.id,originalStartMs:c.sourceWorld!.startMs,originalEndMs:c.sourceWorld!.endMs,sourceHash:hash(c.sourceWorld),entry:worldFrames[0]!.phase,exit:worldFrames.at(-1)!.phase,scope:"original-global-phase-candidate",motionVerified:false}}:{}),camera:validateCamera(shot,profile,primaryActingClock,{worldShot:shot,board,narration,ownership}),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>{const canonical=ownership?.get(partId),binding=c.propBindings.find(binding=>binding.partId===partId);return canonical?{partId,ownershipSourceId:canonical.source.id}:binding?{partId,actorId:boundProp(shot,binding).id,propId:binding.propId}:{partId};})}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
     const tool=sourceSpearBinding(shot,binding);
     if(tool)return {...binding,scope:'original rigid tool entity/model candidate',actorId:tool.owner.id,ownerScale:tool.owner.performance.scale,artwork:tool.declared.artwork,
       originalSource:{sourceId:tool.source.id,sourceHash:hash(tool.source),trackId:tool.track.id,originalStartMs:tool.source.startMs,originalEndMs:tool.source.endMs,

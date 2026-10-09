@@ -15,6 +15,7 @@ import {validateSourceGripWorld} from './source-grip-world.js';
 import {sourceOwnershipFrame} from './source-ownership.js';
 import {SOURCE_SPEAR_ACTION_VERSION} from './source-spear-action-reference.js';
 import type {SourceWorldEvent} from './source-world-schemas.js';
+import {modelContactPoint} from './model-contact-motion.js';
 
 type Action=ShotHost['actions'][number];
 const fail=(shot:Shot,message:string):never=>{throw new Error(`${shot.id}: needs-source-prop-binding: original spear interaction ${message}`);};
@@ -24,14 +25,14 @@ function targetDescriptor(shot:Shot,partId:string,anchor:'center'|'handle'|'labe
   const c=shot.cinematic!,parts=shot.visualization!.parts.filter(p=>p.id===partId),models=c.models.filter(m=>m.partId===partId),art=c.artDirection?.models.filter(m=>m.partId===partId)??[];
   if(parts.length!==1||models.length!==1||art.length>1||anchor==='label')return fail(shot,'target requires one original entity/model and a physical center/handle');
   const part=parts[0]!,model=models[0]!,drawing=art[0];
-  if(anchor==='handle'&&!drawing?.handleAnchor)return fail(shot,'handle needs an explicit authored anchor; no guessed handle');
+  if(anchor==='handle'&&!(drawing?.contactFrame?.anchors.handle??drawing?.handleAnchor))return fail(shot,'handle needs an explicit authored anchor; no guessed handle');
   for(const refs of [part.sourceRefs,model.sourceRefs,...(drawing?[drawing.sourceRefs]:[])]){
     if(!refs.length||refs.some(r=>!part.sourceRefs.some(p=>hash(p)===hash(r))))return fail(shot,'target model/art lost original entity evidence');
     for(const ref of refs)if(ref.kind==='narration'&&!narration.segments.some(s=>s.id===ref.segmentId&&s.text.normalize('NFC').includes(ref.quote.normalize('NFC'))))return fail(shot,'target evidence is absent from original narration');
   }
   const canonical=c.sourceOwnership?.find(s=>s.partId===partId),bindings=c.propBindings.filter(b=>b.partId===partId);
   if(!canonical&&bindings.length>1)return fail(shot,'independent target has multiple physical owners');
-  return {part,model,art:drawing,canonical,binding:bindings[0],identity:hash({part,model,art:drawing??null,canonical:canonical??null,bindings,stage:c.performance.stage,sourceWorld:c.sourceWorld??null})};
+  return {part,model,art:drawing,canonical,binding:bindings[0],identity:hash({part,model,art:drawing??null,canonical:canonical??null,bindings,stage:c.performance.stage,contactGridFps:drawing?.contactFrame?c.performance.fps:undefined,sourceWorld:c.sourceWorld??null})};
 }
 /** Original physical geometry only, not emitted-bake or pixel acceptance.
  * Moving owned/canonical centers retain their real actor/source clocks. Fixed
@@ -52,12 +53,14 @@ function targetAt(shot:Shot,partId:string,anchor:'center'|'handle'|'label',globa
     center=at.point;angle=at.angle??0;kind='owned-prop';
     const span=owner.performance.sourceSpear??owner.performance.sourceManipulation!;
     validateSourceGripWorld(shot,d.part,span.startMs,span.endMs,{startMs:span.startMs,endMs:span.endMs});
-  }else{
+  }else if(!d.art?.contactFrame){
     // A one-time strike permits a later reaction. Any retained rotation or
     // current whole-glyph motion before contact needs its own anchor contract.
     validateSourceGripWorld(shot,d.part,globalMs,globalMs+0.0001);
   }
-  const offset=rotate({x:base.x-d.part.x*p.stage.width,y:base.y-d.part.y*p.stage.height},angle);
+  const projected=d.art?.contactFrame?modelContactPoint(shot,partId,anchor,globalMs):undefined;
+  if(projected&&(projected.visible!==1||projected.opacity<=0))return fail(shot,'projected target is not visible at its actual original contact');
+  const offset=rotate(projected?.point??{x:base.x-d.part.x*p.stage.width,y:base.y-d.part.y*p.stage.height},angle);
   return {...d,kind,center,point:{x:center.x+offset.x,y:center.y+offset.y}};
 }
 export interface SourceSpearInteractionRecord {

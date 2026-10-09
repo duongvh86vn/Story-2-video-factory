@@ -1,5 +1,7 @@
 # Hành động cầm/đâm giáo của diễn viên — source0.85
 
+Hiện hành source0.86 thêm explicit projected frame và renderer-supplied emitted diagnostics: [bàn giao điểm chạm](EMITTED-CONTACT-HANDOFF.md). Source0.85 bên dưới giữ lịch sử; chưa có runtime/video/full-factory acceptance.
+
 Source `forest-tribe-0.85-original-spear-actions`, producer `story-direction-2.2.48`, tool action `source-spear-action-1`. Bản này nối hành động và lời kể vào [model giáo source0.84](ORIGINAL-SPEAR-MODEL-HANDOFF.md). Đây là source candidate, chưa nghiệm thu geometry/runtime/chất lượng phim và chưa hoàn thành toàn sản phẩm.
 
 ## Phần đã viết

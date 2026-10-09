@@ -27,6 +27,7 @@ import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeCenterBounds} from './ownership-bake-query.js';
 import {sourceSpearBinding} from './source-spear-bindings.js';
 import {sourceSpearInteractionGeometry} from './source-spear-interactions.js';
+import {modelContactBounds} from './model-contact-motion.js';
 
 export const CAMERA_VIEWPORT={left:.04,right:.96,top:.14,bottom:.80,centerY:.46,pan:.025} as const;
 export interface CameraMatrix { scale:number; x:number; y:number; }
@@ -280,6 +281,18 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
   };
   const modelBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
     if(rigidParts.has(part.id))return props.get(part.id)!; // Complete shaft/tip/butt, not a center to expand again.
+    const frame=c.artDirection?.models.find(m=>m.partId===part.id)?.contactFrame;
+    if(frame){
+      const source=context?.worldShot??shot,canonical=c.sourceOwnership?.some(s=>s.partId===part.id),binding=c.propBindings.find(b=>b.partId===part.id);
+      if(!binding&&!canonical)return modelContactBounds(source,part.id);
+      const b=movingBounds(part),f=frame.bounds;
+      if(canonical)return {left:b.left+(f.left-.5)*part.width*width,right:b.right+(f.right-.5)*part.width*width,top:b.top+(f.top-.5)*part.height*height,bottom:b.bottom+(f.bottom-.5)*part.height*height};
+      // Independent props retain their actual owner rotation/rounded scale.
+      // A conservative circle encloses the declared artwork at every angle.
+      const scale=boundProp(source,binding!).performance.scale,ratio=Number(scale.toFixed(4))/scale;
+      const radius=Math.hypot(Math.max(Math.abs(f.left-.5),Math.abs(f.right-.5))*part.width*width,Math.max(Math.abs(f.top-.5),Math.abs(f.bottom-.5))*part.height*height)*ratio+.001;
+      return {left:b.left-radius,right:b.right+radius,top:b.top-radius,bottom:b.bottom+radius};
+    }
     const b=movingBounds(part);return {left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top-part.height*height*.6,bottom:b.bottom+part.height*height*.6};
   };
   const modelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>boundsInView(modelBounds(part));

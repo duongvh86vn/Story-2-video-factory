@@ -1,0 +1,45 @@
+{
+  "sourceVersion": "forest-tribe-0.86-emitted-contact",
+  "httpStatus": 200,
+  "elapsedMs": 2858,
+  "modelRequested": "tester",
+  "modelReturned": "gpt-6-luna",
+  "usage": {
+    "prompt_tokens": 20132,
+    "completion_tokens": 49,
+    "total_tokens": 20181
+  },
+  "answer": "{\"issues\":[],\"limits\":[\"No concrete source defect identified within the stated projected-matrix, emitted-transform, and ownership constraints.\",\"Review is source-only; no runtime, rendering, browser, or media behavior was exercised.\"]}",
+  "sources": [
+    {
+      "file": "packages/director/model-contact-motion.ts",
+      "sha256": "1157631125fd88bb42078cec28ab7e69a2098bc6936e36ce06358e8e80d03eeb"
+    },
+    {
+      "file": "packages/animation/svg-transform-track.ts",
+      "sha256": "d9d3270b57f6caeb924371c4cd8ec3be17880530847493429013563ea9f5a423"
+    },
+    {
+      "file": "packages/director/source-spear-emitted.ts",
+      "sha256": "016793bc406c0dff977bed11bbbfe68a336d605f0b9373b44ada5a3e691d64a5"
+    },
+    {
+      "file": "library/shots/source-world-timeline.ts",
+      "sha256": "1404efe642f0c9321d9528cc164651a522cdcb67e1592ecab3d0cd7ddfec9723"
+    },
+    {
+      "file": "library/shots/cinematic.ts",
+      "sha256": "32e3c9585cfbbcaf9a011603e002f6de5eb99228868430c7318310f6184eb896"
+    }
+  ],
+  "testsExecuted": false,
+  "geometryInvoked": false,
+  "approved": false,
+  "scope": "source-only snapshot advice, not runtime or independent final-integration acceptance",
+  "independentlyReviewedFinalIntegration": false,
+  "changesAfterSnapshot": [
+    "remove an extra closing parenthesis in transform channel selection",
+    "correct test owner character ID and target-specific assertion",
+    "fixed-world query rejects owned/canonical substitutions"
+  ]
+}

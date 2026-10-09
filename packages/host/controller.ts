@@ -2,6 +2,7 @@ import type { Shot } from '../core/schemas.js';
 import type { HostProfile, HostRig } from './schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 import { ModelHandleAnchorSchema } from '../director/art-direction-schemas.js';
+import {ModelContactFrameSchema} from '../director/model-contact-reference.js';
 import type {SourceInteractionRecord} from '../director/source-interactions.js';
 import type {SourceSpearInteractionRecord} from '../director/source-spear-interactions.js';
 
@@ -24,7 +25,9 @@ export function solveArm(dx: number, dy: number): { upper: number; lower: number
 }
 export function partAnchor(shot: Shot, partId: string, kind: 'center' | 'handle' | 'label', width: number, height: number): Anchor {
   const p = shot.visualization?.parts.find(p => p.id === partId); if (!p) throw new Error(`${shot.id}: unknown anchor part ${partId}`);
-  const declared = kind === 'handle' ? shot.cinematic?.artDirection?.models.find(model => model.partId === partId)?.handleAnchor : undefined;
+  const art=shot.cinematic?.artDirection?.models.find(model=>model.partId===partId),frame=art?.contactFrame?ModelContactFrameSchema.parse(art.contactFrame):undefined;
+  const declared=kind==='label'?undefined:frame?.anchors[kind]??(kind==='handle'?art?.handleAnchor:undefined);
+  if(frame&&kind==='handle'&&!declared)throw new Error(`${shot.id}: projected contact frame has no own handle`);
   if (declared !== undefined) {
     const anchor = ModelHandleAnchorSchema.parse(declared);
     return { x: width * (p.x + (anchor.x - .5) * p.width), y: height * (p.y + (anchor.y - .5) * p.height) };

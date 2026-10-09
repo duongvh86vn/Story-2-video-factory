@@ -11,6 +11,7 @@ import {validateManipulationActionSlices} from './source-manipulation-actions.js
 import {isWholeSourceStatement} from '../explainer/plan.js';
 import {sourceActor} from './source-actor.js';
 import {validateSourceGripWorld} from './source-grip-world.js';
+import {modelContactHeldAnchor} from './model-contact-motion.js';
 
 type Action=ShotHost['actions'][number];
 export const SOURCE_FIXED_OPERATION_VERSION='source-fixed-operation-1';
@@ -37,14 +38,14 @@ export function sourceFixedOperation(shot:Shot,actorId:string,action:Action,boar
     if(stage.width!==c.performance.stage.width||stage.height!==c.performance.stage.height)return fail(slice,'person and fixed entity do not share world frame dimensions');
     const part=p[0]!,model=m[0]!,drawing=art?.[0];
     if((art?.length??0)>1||c.propBindings.some(b=>b.partId===partId))return fail(slice,'fixed entity is duplicated or owned as a moving prop');
-    if(action.target!.anchor==='handle'&&!drawing?.handleAnchor)return fail(slice,'handle requires its explicit authored artwork anchor; no guessed grip');
+    if(action.target!.anchor==='handle'&&!(drawing?.contactFrame?.anchors.handle??drawing?.handleAnchor))return fail(slice,'handle requires its explicit authored artwork anchor; no guessed grip');
     for(const refs of [part.sourceRefs,model.sourceRefs,...(drawing?[drawing.sourceRefs]:[])]){
       if(!refs.length||refs.some(ref=>!part.sourceRefs.some(r=>hash(r)===hash(ref))))return fail(slice,'model/art lost its original entity source');
       for(const ref of refs)if(ref.kind==='narration'&&!narration.segments.some(n=>n.id===ref.segmentId&&n.text.normalize('NFC').includes(ref.quote.normalize('NFC'))))return fail(slice,'entity quote is absent from original narration');
     }
     if(hash(c.sourceWorld)!==hash(shot.cinematic!.sourceWorld))return fail(slice,'fixed target lost its original world history at a cut');
-    validateSourceGripWorld(slice,part,contactMs,recoverMs);
-    const anchor=partAnchor(slice,partId,action.target!.anchor,stage.width,stage.height);
+    if(!drawing?.contactFrame)validateSourceGripWorld(slice,part,contactMs,recoverMs);
+    const anchor=drawing?.contactFrame?modelContactHeldAnchor(run,partId,action.target!.anchor,contactMs,recoverMs):partAnchor(slice,partId,action.target!.anchor,stage.width,stage.height);
     if(Math.hypot(anchor.x-g.target!.x,anchor.y-g.target!.y)>1e-6&&Math.hypot(Math.round(anchor.x*1000)/1000-g.target!.x,Math.round(anchor.y*1000)/1000-g.target!.y)>1e-6)return fail(slice,'declared model anchor differs from the original physical hand target');
     return {part,model,art:drawing??null,anchor,identity:{part,model,art:drawing??null,stage,setting:c.setting,environmentAssetId:c.environmentAssetId,palette:c.artDirection.palette,useEnvironment:c.artDirection.useEnvironment}};
   };
