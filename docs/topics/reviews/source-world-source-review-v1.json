@@ -1,0 +1,142 @@
+{
+  "version": "source-world-source-review-1",
+  "sourceVersion": "forest-tribe-0.69-source-world-timeline",
+  "scope": "bounded frozen source and wiring excerpts only; no whole-patch/runtime/geometry/art/motion/film acceptance",
+  "rawProposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [
+        {
+          "file": "packages/scenes/index.ts",
+          "line": 137,
+          "severity": "medium",
+          "issue": "sourceWorldPhase is computed at index.ts:137 via sourceWorldIdentity(shot,phaseBoard,phaseNarration), but is never included in the returned scene hash object at line 139 (rigSpeechPhase is passed, but sourceWorldPhase is omitted). A change in sourceWorld identity/phase between shots will bypass the scene cache hash identity unless speech identity happens to be co-active.",
+          "proposedSourceChange": "Add `...(sourceWorldPhase?{sourceWorldPhase}:{})` into the returned hash payload object alongside `...(rigSpeechPhase?{rigSpeechPhase}:{})`."
+        },
+        {
+          "file": "packages/director/source-world-phase.ts",
+          "line": 20,
+          "severity": "medium",
+          "issue": "Visible phase logic `visible:!reveals.length||reveals.some(e=>e.startMs<=globalMs)?1:0` ignores reveal event endMs and sets visible to 1 for all time once globalMs reaches reveal.startMs. When multiple reveals occur or if a reveal event represents a bounded window, or conversely when unrevealed before startMs, it doesn't account for event duration or multiple reveal phases. More critically, state.hot and state.cold set opacity directly based only on latest.state, whereas if globalMs is before the first state event startMs or between non-overlapping state events, state is evaluated against past events without resetting after endMs.",
+          "proposedSourceChange": "In sampleSourceWorldPhase, check `const activeState=events.find(e=>e.type==='state'&&e.startMs<=globalMs&&globalMs<e.endMs);` to set `state.hot=activeState?.state==='hot'?1:0; state.cold=activeState?.state==='cold'?1:0;` and reset coat values when outside active state windows."
+        },
+        {
+          "file": "library/shots/cinematic-models.ts",
+          "line": 110,
+          "severity": "medium",
+          "issue": "The flow progress fallback `const flow=(frame:SourceWorldFrame)=>originals.find(e=>frame.phase.flows[e.id]!=null)??originals.filter(e=>e.startMs<=frame.phase.globalMs).at(-1)??originals[0]!;` selects the latest past flow, but `progress` at line 113 defaults to `(frame.phase.globalMs>=split?1:0)` if flows[original.id] is null. If globalMs is past split (or after endMs), progress stays pinned at 1 while opacity track at line 110 sets opacity to 0 when flows is null, creating an abrupt 1.0 curve position jump right before disappearing or at cut boundaries without proper continuity clamping.",
+          "proposedSourceChange": "Clamp progress computation and check if frame.phase.flows[original.id] is defined before applying curve transform, or ensure opacity transition gracefully hides the completed particle before position reset."
+        }
+      ],
+      "reviewScope": "source-only",
+      "runtimeExecuted:false": true,
+      "artOrMotionAccepted:false": true
+    },
+    "usage": {
+      "promptTokens": 19349,
+      "completionTokens": 667,
+      "totalTokens": 20016
+    },
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "source-only-review",
+    "fingerprint": "828bc9efad60fa3e025daa36f8dd0095c9c9d4ed68dd86ff36787af30d8f0844",
+    "slot": 1,
+    "prompt": "Review source0.69 complete original world event projections, source contact evidence, pure original-global effect phases, deterministic camera-local GSAP tracks, directed flow and cache/publication identity. Find only concrete source-evidenced defects, especially incorrect phase/reaction/reset at a cut, hidden temporal interpolation, partial coverage/ownership or cache bypass. All tests are declarations NOT RUN. Native manipulation production MUST remain blocked by needs-source-prop-binding until source action groups/fixed operation geometry/acting coverage/API role swaps are implemented; do not remove that guard or claim full production/visual acceptance. Glyph motion coordinates retain existing illustrative renderer convention; physical model root motion remains actual compiled prop geometry. No executable proposals/tools/tests/callbacks/fixtures/samplers/browser/server/API pipeline/TTS/ASR/render/audio/video or face warps/mirrors. Return JSON {findings:[{file,line,severity,issue,proposedSourceChange}],reviewScope:\"source-only\",runtimeExecuted:false,artOrMotionAccepted:false}. No detached changes or speculative runtime claims.",
+    "sources": [
+      {
+        "file": "packages/director/source-world-reference.ts",
+        "sha256": "ddd5dae4afc519fc7528c6f9424121022330bf467f91d398dd2b2969b30b150f"
+      },
+      {
+        "file": "packages/director/source-world-schemas.ts",
+        "sha256": "9e6cc724a81ffedc46cad317a84e62472246d646efe4191f8e545806324db0e8"
+      },
+      {
+        "file": "packages/director/source-world.ts",
+        "sha256": "4497d0adc58438b7de78f10c27121c760d301b188d29027595a2794e76914c41"
+      },
+      {
+        "file": "packages/director/source-world-phase.ts",
+        "sha256": "81bafb084f94696a6a1406cf72ff0148cc66d87778638e3b4bedf7ebf6b94a6f"
+      },
+      {
+        "file": "tests/source-world.test.ts",
+        "sha256": "58fd6d5f50d0d4093b4868e0697d6d8ce36ac1405a2ffc4ccbf841eb0c4066df"
+      },
+      {
+        "file": "docs/topics/reviews/source-world-review-inputs-v2.md",
+        "sha256": "ecab6fd562cdfa7538f1c421751098edd89b0b76970b11492c344a408c78ea6a"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-09T03:21:08.387Z"
+  },
+  "decisions": [
+    {
+      "finding": 0,
+      "status": "cache-bypass claim rejected; duplicate computation cleaned",
+      "reason": "Frozen speech-clock.ts:44-51 computes sourceWorldIdentity before the early return and always embeds world under rigSpeechPhase even without native speech clocks. Scene return hash includes rigSpeechPhase. An extra local sourceWorldPhase was redundant, not the sole binding; removed without fallback or omitted original-world identity."
+    },
+    {
+      "finding": 1,
+      "status": "rejected",
+      "reason": "Thermal paint is persistent until the next explicitly sourced state; the existing cinematic renderer also sets state at start without resetting at end. Reveal means appearance with persistent result; focus/flow remain bounded. Suggested resets would erase original state at a later cut. Clarifying policy/comment added, algorithm retained."
+    },
+    {
+      "finding": 2,
+      "status": "rejected",
+      "reason": "Pure progress is already bounded0..1; exact original split is a frame breakpoint. At split the particle reaches curve t1 and opacity switches off at that same point. Holding invisible t1 avoids tweening a still-visible particle back to the start. Later camera entries initialize the actual phase; no inferred clamp or before-contact response added."
+    },
+    {
+      "finding": "response flags",
+      "status": "not evidence",
+      "reason": "Model emitted malformed keys runtimeExecuted:false and artOrMotionAccepted:false with true values. These are archived as untrusted advice text, not execution or acceptance proof. Request was a text-only bounded chat-completion with no tools; parent/helper runtime remains NOT RUN."
+    }
+  ],
+  "postFreezeChanges": [
+    {
+      "file": "packages/scenes/index.ts",
+      "kind": "remove unused duplicate world fingerprint; actual source world remains in rigSpeechPhase hash/publication binding",
+      "beforeSHA256": "83e440c2f23405f6b5a75579bc1dd854afbea51bf54f5b928084e82fd9244d83",
+      "afterSHA256": "13f1785fb73ffa54f40cb541912fe1c030bca5e5144d3d4149c7db96527c0dbc"
+    },
+    {
+      "file": "packages/director/source-world-phase.ts",
+      "kind": "clarifying persistent state/reveal comment only; algorithm unchanged"
+    },
+    {
+      "file": "packages/director/source-world.ts",
+      "kind": "descriptor states explicit persistent-result policy; validation unchanged"
+    },
+    {
+      "file": "packages/actors/speech-clock.ts",
+      "kind": "clear source publication error for malformed world without actorScene; no inferred source or cache fallback"
+    },
+    {
+      "file": "library/shots/cinematic-models.ts",
+      "kind": "LF/EOF whitespace only",
+      "beforeSHA256": "6087194292ab1c024920d34883973b2169fc4b1ca8c9d08704cfcb1fe92a213a",
+      "afterSHA256": "e176f50949cfd78b3f88bbac8aa84b451ac1e17591f96d99afd38a9ebfaa88c9"
+    },
+    {
+      "file": "packages/scenes/index.ts",
+      "kind": "LF/EOF whitespace only",
+      "beforeSHA256": "13f1785fb73ffa54f40cb541912fe1c030bca5e5144d3d4149c7db96527c0dbc",
+      "afterSHA256": "e55e0c2404439fe5f054b038d51e915978da22c2cb539a9129eb6bf3b21a8da4"
+    }
+  ],
+  "reviewedFinalSource": false,
+  "helperCalls": 1,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false
+}

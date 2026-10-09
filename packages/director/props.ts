@@ -6,6 +6,7 @@ import type {CinematicPlan} from './schemas.js';
 import {boundProp} from './prop-owner.js';
 import {performanceProps} from '../animation/view-source-manipulation.js';
 import {sourceBoundPropFrame,validateSourcePropBindings} from './source-prop-binding.js';
+import {validateSourceWorld} from './source-world.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
 export const PROP_BINDING_VERSION='bound-model-motion-2.2.4';
@@ -49,6 +50,7 @@ export function modelExitParts(shot:Shot,board?:Storyboard){return modelPartsAt(
 export function modelEntryParts(shot:Shot,board?:Storyboard){return modelPartsAt(shot,false,board);}
 export function validatePropBindings(shot:Shot,board?:Storyboard,narration?:Narration):void{
   const c=shot.cinematic;if(!c)return;
+  validateSourceWorld(shot,board,narration);
   const performances=[c.performance,...(c.actorScene?.supporting.map(a=>a.performance)??[])];
   const sourceSelected=performances.some(p=>p.sourceManipulation);
   if(sourceSelected){

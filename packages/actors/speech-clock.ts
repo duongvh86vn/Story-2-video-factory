@@ -5,6 +5,7 @@ import {actorSpeech} from './model.js';
 import {SPEECH_SOURCE_CLOCK_VERSION,projectSpeechActivity,windowSpeechActivity,validateSpeechActivityTrack,validateSpeechSourceClock,type SpeechSourceClock} from '../animation/speech-clock.js';
 import {actorViewActingClock,actorUsesViewActingClock} from './view-acting-clock.js';
 import {sourcePropBindingIdentity} from '../director/source-prop-identity.js';
+import {sourceWorldIdentity} from '../director/source-world.js';
 
 export function shotUsesSourceSpeechClock(shot:Shot):boolean{
   const scene=shot.cinematic?.actorScene;
@@ -40,13 +41,15 @@ export function actorShotSpeech(activity:SpeechActivity,narration:Narration|unde
   return {activity:local,sourceClock};
 }
 export function rigSpeechInputIdentity(shot:Shot,narration:Narration,board:Storyboard){
-  if(!shotUsesSourceSpeechClock(shot))return undefined;
-  const owners=narrationCueOwners(board,shot,narration),scene=shot.cinematic!.actorScene!;
+  const world=sourceWorldIdentity(shot,board,narration);
+  if(!shotUsesSourceSpeechClock(shot)&&!world)return undefined;
+  const scene=shot.cinematic?.actorScene;if(!scene)throw new Error('needs-source-prop-binding: world publication requires a canonical actor scene');
+  const owners=narrationCueOwners(board,shot,narration);
   const selected=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)].filter(actorUsesViewActingClock);
   const sourceModels=sourcePropBindingIdentity(shot,board,narration);
   return {version:SPEECH_SOURCE_CLOCK_VERSION,narrationHash:hash(NarrationSchema.parse(narration)),owners:selected.map(a=>({actorId:a.id,cueIds:owners.get(a.id)??[]})),
     viewActing:selected.flatMap(a=>{const clock=actorViewActingClock(board,shot,a.id);return clock?[clock]:[]}),
-    ...(sourceModels?{sourcePropBinding:sourceModels}:{})};
+    ...(sourceModels?{sourcePropBinding:sourceModels}:{}),...(world?{sourceWorld:world}:{})};
 }
 export type RigSpeechPublicationBinding={version:typeof SPEECH_SOURCE_CLOCK_VERSION;identityHash:string};
 export function rigSpeechPublicationBinding(shot:Shot,narration:Narration,board:Storyboard):RigSpeechPublicationBinding|undefined{

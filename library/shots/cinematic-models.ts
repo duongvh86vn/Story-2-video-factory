@@ -6,8 +6,9 @@ import { steamComponentLabels } from '../../packages/explainer/configurations.js
 import { component } from './explainer.js';
 import type {PropMotionFrame} from '../../packages/director/prop-motion.js';
 import {boundProp} from '../../packages/director/props.js';
+import {sourceWorldTrack,type SourceWorldFrame} from './source-world-timeline.js';
 
-export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.4';
+export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.5';
 type Part=NonNullable<Shot['visualization']>['parts'][number];
 export interface ModelIllustration {svg:string;motionAnchors:Array<{selector:string;x:number;y:number}>;}
 
@@ -51,7 +52,7 @@ const arrow=(tip:{x:number;y:number},from:{x:number;y:number},size:number)=>{
 };
 
 /** Directed relations use arrowheads; compare and part-of do not imply causality. */
-export function cinematicRelations(shot:Shot,width:number,height:number,frames?:PropMotionFrame[]) {
+export function cinematicRelations(shot:Shot,width:number,height:number,frames?:PropMotionFrame[],worldFrames?:SourceWorldFrame[]) {
   const v=shot.visualization!,html:string[]=[],calls:string[]=[],scope=`[data-composition-id="${shot.id}"]`;
   const bindings=shot.cinematic?.propBindings??[];
   const centerAt=(part:Part,time:number)=>{
@@ -101,6 +102,20 @@ export function cinematicRelations(shot:Shot,width:number,height:number,frames?:
       }
     }
     if(!['transfer','cause'].includes(r.kind))continue;
+    if(shot.cinematic?.sourceWorld){
+      if(!worldFrames?.length)throw new Error(`${shot.id}: needs-source-prop-binding: relation lacks the original world frame clock`);
+      const originals=shot.cinematic.sourceWorld.events.filter(e=>e.type==='flow'&&e.targetId===r.from&&e.relationTo===r.to).sort((a,b)=>a.startMs-b.startMs);
+      if(originals.length){
+        const flow=(frame:SourceWorldFrame)=>originals.find(e=>frame.phase.flows[e.id]!=null)??originals.filter(e=>e.startMs<=frame.phase.globalMs).at(-1)??originals[0]!;
+        calls.push(...sourceWorldTrack(worldFrames,`${scope} #relation-flow-${i}`,frame=>({opacity:originals.some(e=>frame.phase.flows[e.id]!=null)?1:0}),true));
+        calls.push(...sourceWorldTrack(worldFrames,`${scope} #relation-flow-${i}`,frame=>{
+          const original=flow(frame),split=original.startMs+(original.endMs-original.startMs)*.55;
+          const progress=frame.phase.flows[original.id]??(frame.phase.globalMs>=split?1:0),pos=curvePoint(geometryAt(a,b,frame.timeMs),progress);
+          return {attr:{transform:`translate(${pos.x} ${pos.y})`}};
+        }));
+      }
+      continue; // Energy and motion use the same original phase in the model track.
+    }
     const events=v.events.filter(e=>e.type==='flow'&&e.targetId===r.from&&e.relationTo===r.to).sort((a,b)=>a.startMs-b.startMs);
     for(const event of events){
     const begin=(event.startMs-shot.startMs)/1000,span=(event.endMs-event.startMs)/1000*.55;
@@ -131,4 +146,3 @@ export function cinematicRelations(shot:Shot,width:number,height:number,frames?:
   }
   return {html:html.join(''),calls};
 }
-

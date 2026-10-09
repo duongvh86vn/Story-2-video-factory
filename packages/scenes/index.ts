@@ -48,7 +48,7 @@ async function cinematicBackground(root:string,shot:Shot):Promise<string|undefin
   return visualAssetPath(asset);
 }
 async function sourceSpeechBoard(root:string,shot:Shot,provided?:Storyboard):Promise<Storyboard|undefined>{
-  if(!shotUsesSourceSpeechClock(shot))return undefined;
+  if(!shotUsesSourceSpeechClock(shot)&&!shot.cinematic?.sourceWorld)return undefined;
   if(provided)return provided;
   const file=path.join(root,'work/storyboard.json');
   if(!await exists(file))throw new Error('needs-speech-phase: canonical source clock requires the complete storyboard');
@@ -131,7 +131,8 @@ async function inputIdentity(root:string,config:FactoryConfig,shot:Shot,characte
   const speechNarration=shot.cinematic?.spriteStage?.actors.some(actor=>actor.clips.some(clip=>clip.speech))?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
   const actorScene=shot.cinematic?.actorScene,actors=[...(actorScene?.primary?[actorScene.primary]:[]),...(actorScene?.supporting.map(actor=>actor.character)??[])];
   const phaseBoard=await sourceSpeechBoard(root,shot,board);
-  const rigSpeechPhase=phaseBoard?rigSpeechInputIdentity(shot,await readJson(path.join(root,'work/narration.json'),NarrationSchema),phaseBoard):undefined;
+  const phaseNarration=phaseBoard?await readJson(path.join(root,'work/narration.json'),NarrationSchema):undefined;
+  const rigSpeechPhase=phaseBoard&&phaseNarration?rigSpeechInputIdentity(shot,phaseNarration,phaseBoard):undefined;
   const referenceRig=Object.keys(assetHashes).some(file=>file.startsWith('assets/rigs/'))?{referenceHeadPack:referenceHeadDescription().fingerprint,
     ...(actors.some(actor=>usesReferenceBody(actor))?{referenceBodyPack:referenceBodyDescription().fingerprint}:{})}:{};
   return hash({shot,...referenceRig,...(rigSpeechPhase?{rigSpeechPhase}:{}),...(shot.cinematic?.spriteStage?{spriteSceneRenderer:SPRITE_SCENE_VERSION}:{}),...(speechNarration?{spriteSpeechNarration:hash(speechNarration)}:{}),source:hash(source),characters:characters.characters.filter(character=>shot.characters.includes(character.id)),assetHashes,style:getStyle(config),renderer:HYPERFRAMES_VERSION,gsap:hash(gsap),recipe:selectRecipe(shot),dimensions:config.rendering.final,securityVersion:SCENE_SECURITY_VERSION,hostRigIdentityVersion:shot.host?HOST_RIG_IDENTITY_VERSION:undefined,controller:shot.cinematic?shot.cinematic.performance.compilerVersion:HOST_CONTROLLER_VERSION,director:shot.cinematic?DIRECTION_VERSION:undefined,artworkRenderer:shot.cinematic?ARTWORK_RENDER_VERSION:undefined,artworkEasingRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.keyframes.some(frame=>frame.ease!==undefined))?ARTWORK_EASING_VERSION:undefined,artworkWorldBackgroundRenderer:shot.cinematic?.artDirection?.layers.some(layer=>layer.plane==='background'&&layer.coordinateSpace==='world')?ARTWORK_WORLD_BACKGROUND_VERSION:undefined,modelForegroundRenderer:shot.cinematic?.artDirection?.models.some(model=>model.foregroundSvg!==undefined)?MODEL_FOREGROUND_VERSION:undefined,modelContactAnchor:shot.cinematic?.artDirection?.models.some(model=>model.handleAnchor!==undefined)?MODEL_CONTACT_ANCHOR_VERSION:undefined,modelRenderer:shot.cinematic?CINEMATIC_MODEL_VERSION:undefined,propBindingsRenderer:shot.cinematic?.propBindings.length?PROP_BINDING_VERSION:undefined,seatSupportRenderer:shot.cinematic?SEAT_SUPPORT_VERSION:undefined,sceneLabels:sceneLabelIdentity(shot,config),activity});

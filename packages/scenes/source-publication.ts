@@ -7,7 +7,7 @@ import {assertRigSpeechPublicationBinding,shotUsesSourceSpeechClock,type RigSpee
  * never to a later board supplied by the caller. Optimistic disk rechecks are
  * run before staging/writes and after writes; they are not a filesystem lock. */
 export function nativeSceneSourceGuard(root:string,shot:Shot,expected?:RigSpeechPublicationBinding):(()=>Promise<void>)|undefined{
-  if(!shotUsesSourceSpeechClock(shot)&&!expected)return undefined;
+  if(!shotUsesSourceSpeechClock(shot)&&!shot.cinematic?.sourceWorld&&!expected)return undefined;
   const shotId=shot.id,shotHash=hash(shot),binding=expected&&structuredClone(expected);
   return async()=>{
     const board=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema),current=board.shots.find(s=>s.id===shotId);

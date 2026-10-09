@@ -823,6 +823,26 @@
                           },
                           "minItems": 1,
                           "maxItems": 2
+                        },
+                        "sourceWorld": {
+                          "type": "object",
+                          "properties": {
+                            "sourceId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "eventId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            }
+                          },
+                          "required": [
+                            "sourceId",
+                            "eventId"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -1096,7 +1116,7 @@
                   },
                   "producer": {
                     "type": "string",
-                    "const": "story-direction-2.2.36"
+                    "const": "story-direction-2.2.37"
                   },
                   "shotId": {
                     "type": "string",
@@ -7850,6 +7870,199 @@
                       "durationMs",
                       "stage",
                       "actors"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sourceWorld": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "string",
+                        "const": "source-world-timeline-1"
+                      },
+                      "id": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "startMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "endMs": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0
+                      },
+                      "events": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "highlight",
+                                "part-motion",
+                                "flow",
+                                "reveal",
+                                "compare",
+                                "state"
+                              ]
+                            },
+                            "targetId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "narrationAnchor": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            },
+                            "contactRequired": {
+                              "type": "boolean",
+                              "default": false
+                            },
+                            "motion": {
+                              "type": "string",
+                              "enum": [
+                                "translate",
+                                "rotate",
+                                "pulse",
+                                "none"
+                              ],
+                              "default": "none"
+                            },
+                            "sourceRefs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "enum": [
+                                      "narration",
+                                      "source"
+                                    ]
+                                  },
+                                  "segmentId": {
+                                    "type": "string",
+                                    "maxLength": 96,
+                                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                  },
+                                  "quote": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 2000
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "quote"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 1
+                            },
+                            "state": {
+                              "type": "string",
+                              "enum": [
+                                "hot",
+                                "cold"
+                              ]
+                            },
+                            "relationTo": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "contactPartId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "contactActorId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "contactHands": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right"
+                                ]
+                              },
+                              "minItems": 1,
+                              "maxItems": 2
+                            },
+                            "id": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "contacts": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "actorId": {
+                                    "type": "string",
+                                    "maxLength": 96,
+                                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                  },
+                                  "sourceId": {
+                                    "type": "string",
+                                    "maxLength": 96,
+                                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                  },
+                                  "gestureId": {
+                                    "type": "string",
+                                    "maxLength": 96,
+                                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                  }
+                                },
+                                "required": [
+                                  "actorId",
+                                  "sourceId",
+                                  "gestureId"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minItems": 1,
+                              "maxItems": 2
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "targetId",
+                            "narrationAnchor",
+                            "startMs",
+                            "endMs",
+                            "sourceRefs",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "maxItems": 128
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "id",
+                      "startMs",
+                      "endMs",
+                      "events"
                     ],
                     "additionalProperties": false
                   },

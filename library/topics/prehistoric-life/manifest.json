@@ -1,10 +1,44 @@
 {
-  "version": "forest-tribe-0.68-source-prop-binding",
+  "version": "forest-tribe-0.69-source-world-timeline",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
   "layers": "source-body-and-head-integrated-secondary-pending",
   "motionAcceptance": "pending",
+  "sourceWorldTimeline": {
+    "version": "source-world-timeline-1",
+    "selection": "explicit cinematic.sourceWorld with complete original global events; visualization.events are exact sourceId/eventId camera intersections",
+    "statePolicy": "thermal paint persists until the next sourced state; reveals persist after first appearance; highlight/particle windows remain bounded",
+    "history": "thermal/control/effect/flow/motion phase uses original global time, including history before a camera cut; no re-contact or local event restart",
+    "evidence": "complete original storyboard/model/entity/art/relation/stage identity and exact native person/source/gesture/hand/narration contact witnesses",
+    "pending": [
+      "source action groups, interaction geometry, fixed-operate targets and acting coverage production contract",
+      "world/render/cache/resume geometry/runtime/film acceptance"
+    ],
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "productionBinding": "needs-source-prop-binding",
+    "codeHashes": {
+      "packages/director/source-world-reference.ts": "ddd5dae4afc519fc7528c6f9424121022330bf467f91d398dd2b2969b30b150f",
+      "packages/director/source-world-schemas.ts": "9e6cc724a81ffedc46cad317a84e62472246d646efe4191f8e545806324db0e8",
+      "packages/director/source-world.ts": "a2028def7658da646c972408004aeea1b119f59350b83d022da1461e07ffcc56",
+      "packages/director/source-world-phase.ts": "15e85ea723dbd5d531bea5755a3b423af7a32f7c856c9b542b1d32f30229941d",
+      "library/shots/source-world-timeline.ts": "8d3fe011eb7c514ebd7b49d60c19a88b37e1e555fce3791af67b356b70b25971",
+      "library/shots/cinematic-models.ts": "e176f50949cfd78b3f88bbac8aa84b451ac1e17591f96d99afd38a9ebfaa88c9",
+      "library/shots/cinematic.ts": "9077c40cd242b4ea2d4c4c834124a4167e8df3123fc0b346aa3215a55e5031a3",
+      "packages/explainer/schemas.ts": "aa87b8b2a4ad1e1fe5aefe5bff4405d00434d186ff3ccfd5be2bb89ced0579e8",
+      "packages/actors/speech-clock.ts": "15035687e1a402c31d2348c754baa61adae232aab60348f49a034c33c495a21a",
+      "packages/scenes/index.ts": "e55e0c2404439fe5f054b038d51e915978da22c2cb539a9129eb6bf3b21a8da4",
+      "packages/scenes/source-publication.ts": "0de47346be7ebd2aa70d987aecf9c6dcd02bfc1ad61e42d3b7db835bc32ebba2",
+      "packages/director/artwork-repair.ts": "e64070b205318650593b1eb9b6a2602b8cbf635f819d1ab18577d3bf51176abc",
+      "packages/director/schemas.ts": "54fcddb6617facb34a5ef9c73aa55bdf4d6c68d8b166892b2cbe2bc4e12b718c",
+      "packages/director/props.ts": "a6a61d3a0044bdae86b1a92b7758a93c6ffd00b7921fa65a435b3bf5ec412ed1",
+      "packages/director/index.ts": "e6033e555ce8ee601104501ebc09b5af860f902de8cbb4a0cf4260b26caeb169",
+      "packages/director/acting-brief.ts": "4977cf4a6554117d07fa8c7627e17e0e4ad9072c89ca9e6a799049d1aa2d14f0",
+      "library/schemas/index.ts": "b8a05a9c99b578e076a84f841f287c2a59e32f994eb26d30880598c130bfdbc2"
+    }
+  },
   "sourcePropBinding": {
     "version": "source-prop-binding-1",
     "scope": "complete original story-person/model/entity/art/source/action/clock binding and physical entry/exit candidate",
@@ -22,17 +56,17 @@
       "packages/director/source-prop-binding.ts": "86bddf68dd1870784f2c9e65283adfbf85fe48b0de4d8a00f9250eeef42c254d",
       "packages/director/source-prop-identity.ts": "6230d5d3c5f700bf26a0a0c370f6a51afe9265deb09693496c82f1fe1a61de54",
       "packages/director/prop-owner.ts": "bb1cc12a15461fbfca6cb6465361274cf57a841d4ae8b7b1f264e6a3eded9d16",
-      "packages/director/props.ts": "d7349ad51134ccfdebe9d5485dc7bd1e343d951b6cd20816bf20bc0d00ae3bdc",
-      "packages/director/index.ts": "6c73e039b21316dfc9fa58657007121c87390d44f8ea1c2a1ba2e44349d94f6a",
-      "packages/director/schemas.ts": "70751c91e172aa09573f198b6d839be4b7060d2a7e3904f4b054474a3807d7c9",
+      "packages/director/props.ts": "a6a61d3a0044bdae86b1a92b7758a93c6ffd00b7921fa65a435b3bf5ec412ed1",
+      "packages/director/index.ts": "e6033e555ce8ee601104501ebc09b5af860f902de8cbb4a0cf4260b26caeb169",
+      "packages/director/schemas.ts": "54fcddb6617facb34a5ef9c73aa55bdf4d6c68d8b166892b2cbe2bc4e12b718c",
       "packages/director/creative.ts": "09903644c8a3d983e9b07d7a2c5b04c3193f42c1948520d5f3ff4de39ffa4e02",
-      "packages/director/acting-brief.ts": "9305407e7db44974ae898819507384ae3c159ea8c0e8f9f8f94e59044ccee28e",
-      "packages/actors/speech-clock.ts": "a053773e915aede27110baec0d1d426ea74d6cc361896f6c6fcba32275140970",
+      "packages/director/acting-brief.ts": "4977cf4a6554117d07fa8c7627e17e0e4ad9072c89ca9e6a799049d1aa2d14f0",
+      "packages/actors/speech-clock.ts": "15035687e1a402c31d2348c754baa61adae232aab60348f49a034c33c495a21a",
       "packages/explainer/storyboard.ts": "92acf7eec9ccb3b4433a703ccad3e7f6baafa88de8dbd73b1b099655f88eec9b",
       "packages/storyboard/director.ts": "5056c39a84972bcb7847355fb98626b614d4643fd9b51985f7b07c8e7f055ef3",
       "apps/server/cinematic.ts": "29c0904852a4e7614393c6354292c0eabfde0cd238f896ce275a6d8474531677",
       "apps/server/artifacts.ts": "295ca90ad7d14ed4031a9e3dbb52e410898af686e1eb435098b97b6574e06a14",
-      "library/shots/cinematic.ts": "63db9c9730773fddda497987c17953883d09f7423b4d1c6bc17b45f666513474"
+      "library/shots/cinematic.ts": "9077c40cd242b4ea2d4c4c834124a4167e8df3123fc0b346aa3215a55e5031a3"
     }
   },
   "physicalGeometry": {
@@ -58,12 +92,12 @@
     "motionVerified": false,
     "codeHashes": {
       "packages/director/source-manipulation-actions.ts": "c039a24547c45a53765b616007943c59395528cacc446c5e4602815e15cdb325",
-      "packages/director/index.ts": "6c73e039b21316dfc9fa58657007121c87390d44f8ea1c2a1ba2e44349d94f6a",
-      "packages/director/schemas.ts": "70751c91e172aa09573f198b6d839be4b7060d2a7e3904f4b054474a3807d7c9",
+      "packages/director/index.ts": "e6033e555ce8ee601104501ebc09b5af860f902de8cbb4a0cf4260b26caeb169",
+      "packages/director/schemas.ts": "54fcddb6617facb34a5ef9c73aa55bdf4d6c68d8b166892b2cbe2bc4e12b718c",
       "packages/host/schemas.ts": "f484a43ad7b05c3842e33fd7482a1da81b892c55331db9ed62b90fe52d8edf91",
       "packages/director/acting-repair.ts": "6d3d0a2aed15c2f3657c9a1c56e6ab4cfadd693c245edd9d5c250a3ddcf307c1",
-      "packages/director/acting-brief.ts": "9305407e7db44974ae898819507384ae3c159ea8c0e8f9f8f94e59044ccee28e",
-      "library/schemas/index.ts": "f363b3224854350f5b5a3399f2625745c116b65e42204d38fb0a3f95d113121b"
+      "packages/director/acting-brief.ts": "4977cf4a6554117d07fa8c7627e17e0e4ad9072c89ca9e6a799049d1aa2d14f0",
+      "library/schemas/index.ts": "b8a05a9c99b578e076a84f841f287c2a59e32f994eb26d30880598c130bfdbc2"
     }
   },
   "actorPropOwnership": {
@@ -83,14 +117,14 @@
     "runtimeVerified": false,
     "productionAcceptance": false,
     "codeHashes": {
-      "packages/director/props.ts": "d7349ad51134ccfdebe9d5485dc7bd1e343d951b6cd20816bf20bc0d00ae3bdc",
+      "packages/director/props.ts": "a6a61d3a0044bdae86b1a92b7758a93c6ffd00b7921fa65a435b3bf5ec412ed1",
       "packages/director/prop-motion.ts": "d0351cb4e010eb3bddd2818cf9bfb9f94f1c091a45fa6ff350865f3bc4b62cc2",
       "packages/director/camera.ts": "ca33edc94c90cf48f161bd1c9357cf274d470fab0e2de2148a0fa41f066c51f1",
-      "packages/director/index.ts": "6c73e039b21316dfc9fa58657007121c87390d44f8ea1c2a1ba2e44349d94f6a",
-      "packages/director/schemas.ts": "70751c91e172aa09573f198b6d839be4b7060d2a7e3904f4b054474a3807d7c9",
-      "packages/director/acting-brief.ts": "9305407e7db44974ae898819507384ae3c159ea8c0e8f9f8f94e59044ccee28e",
-      "library/shots/cinematic.ts": "63db9c9730773fddda497987c17953883d09f7423b4d1c6bc17b45f666513474",
-      "library/shots/cinematic-models.ts": "a64e973dd538508323d70186e4e331ee5112c22def6369a40a61444760de282a",
+      "packages/director/index.ts": "e6033e555ce8ee601104501ebc09b5af860f902de8cbb4a0cf4260b26caeb169",
+      "packages/director/schemas.ts": "54fcddb6617facb34a5ef9c73aa55bdf4d6c68d8b166892b2cbe2bc4e12b718c",
+      "packages/director/acting-brief.ts": "4977cf4a6554117d07fa8c7627e17e0e4ad9072c89ca9e6a799049d1aa2d14f0",
+      "library/shots/cinematic.ts": "9077c40cd242b4ea2d4c4c834124a4167e8df3123fc0b346aa3215a55e5031a3",
+      "library/shots/cinematic-models.ts": "e176f50949cfd78b3f88bbac8aa84b451ac1e17591f96d99afd38a9ebfaa88c9",
       "library/prompts/creative-director.md": "1b42f03f5facdbed149068abda15952a32f365c08669d2a3773cdf5b099d1c90",
       "apps/server/cinematic.ts": "29c0904852a4e7614393c6354292c0eabfde0cd238f896ce275a6d8474531677"
     }
@@ -115,10 +149,10 @@
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
       "packages/actors/view-acting-clock.ts": "62953cbce054fc8c2f4024f783a62cfe5ce134d470c2ee57ab8653a90a3c9bc8",
       "packages/director/acting-repair.ts": "6d3d0a2aed15c2f3657c9a1c56e6ab4cfadd693c245edd9d5c250a3ddcf307c1",
-      "packages/director/acting-brief.ts": "9305407e7db44974ae898819507384ae3c159ea8c0e8f9f8f94e59044ccee28e",
+      "packages/director/acting-brief.ts": "4977cf4a6554117d07fa8c7627e17e0e4ad9072c89ca9e6a799049d1aa2d14f0",
       "packages/director/camera.ts": "ca33edc94c90cf48f161bd1c9357cf274d470fab0e2de2148a0fa41f066c51f1",
-      "packages/director/props.ts": "d7349ad51134ccfdebe9d5485dc7bd1e343d951b6cd20816bf20bc0d00ae3bdc",
-      "library/schemas/index.ts": "f363b3224854350f5b5a3399f2625745c116b65e42204d38fb0a3f95d113121b"
+      "packages/director/props.ts": "a6a61d3a0044bdae86b1a92b7758a93c6ffd00b7921fa65a435b3bf5ec412ed1",
+      "library/schemas/index.ts": "b8a05a9c99b578e076a84f841f287c2a59e32f994eb26d30880598c130bfdbc2"
     }
   },
   "nativeManipulation": {
@@ -466,11 +500,11 @@
       "packages/host/schemas.ts": "f484a43ad7b05c3842e33fd7482a1da81b892c55331db9ed62b90fe52d8edf91",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/body-workbench.ts": "9247143df6f5cc439e0fd80434dcc2a9c3cab016fb2255e4f31de4fcd3ea97a2",
-      "packages/topics/prehistoric-life.ts": "f1a0f907cfa76fa25e7a48a2775989bbe94e29422e9b35ac7a5555f7c6b1bc81",
-      "packages/director/acting-brief.ts": "9305407e7db44974ae898819507384ae3c159ea8c0e8f9f8f94e59044ccee28e",
-      "packages/director/schemas.ts": "70751c91e172aa09573f198b6d839be4b7060d2a7e3904f4b054474a3807d7c9",
-      "library/shots/cinematic.ts": "63db9c9730773fddda497987c17953883d09f7423b4d1c6bc17b45f666513474",
-      "library/shots/cinematic-models.ts": "a64e973dd538508323d70186e4e331ee5112c22def6369a40a61444760de282a",
+      "packages/topics/prehistoric-life.ts": "ddf7455f903bed42ac7dc97b17ec63d1bf667bbcbbc8e44da691dbedad457235",
+      "packages/director/acting-brief.ts": "4977cf4a6554117d07fa8c7627e17e0e4ad9072c89ca9e6a799049d1aa2d14f0",
+      "packages/director/schemas.ts": "54fcddb6617facb34a5ef9c73aa55bdf4d6c68d8b166892b2cbe2bc4e12b718c",
+      "library/shots/cinematic.ts": "9077c40cd242b4ea2d4c4c834124a4167e8df3123fc0b346aa3215a55e5031a3",
+      "library/shots/cinematic-models.ts": "e176f50949cfd78b3f88bbac8aa84b451ac1e17591f96d99afd38a9ebfaa88c9",
       "library/prompts/creative-director.md": "1b42f03f5facdbed149068abda15952a32f365c08669d2a3773cdf5b099d1c90",
       "apps/server/index.ts": "a02c4185653bc208e2a47fe9fac08680e2e7408fa4e071a4d108ddbe6502e0d6"
     }
@@ -498,8 +532,8 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "f1a0f907cfa76fa25e7a48a2775989bbe94e29422e9b35ac7a5555f7c6b1bc81",
-      "packages/director/acting-brief.ts": "9305407e7db44974ae898819507384ae3c159ea8c0e8f9f8f94e59044ccee28e"
+      "packages/topics/prehistoric-life.ts": "ddf7455f903bed42ac7dc97b17ec63d1bf667bbcbbc8e44da691dbedad457235",
+      "packages/director/acting-brief.ts": "4977cf4a6554117d07fa8c7627e17e0e4ad9072c89ca9e6a799049d1aa2d14f0"
     }
   },
   "primaryModel": "warm-skin-close-ups",
@@ -742,7 +776,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "f1a0f907cfa76fa25e7a48a2775989bbe94e29422e9b35ac7a5555f7c6b1bc81",
+      "packages/topics/prehistoric-life.ts": "ddf7455f903bed42ac7dc97b17ec63d1bf667bbcbbc8e44da691dbedad457235",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
@@ -6417,9 +6451,9 @@
     "handoff": "docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md",
     "targetSourceCodeHash": "0f85a8cc5df5429e8931f22fe57c392ce052ad65a8bae06f54bd28d16c9fce2a",
     "physicalLungeCodeHash": "124f4fe064ceda099e1f1ecd108faf2d09910738c402463530106b2d7a1fcdfc",
-    "publicationGuardCodeHash": "8529fc923e3b142c1cbc9d51dc35e4067097a9c9ec309900b8549cafdecf1eac",
-    "scenePipelineCodeHash": "6da0a0608ddf6a28abf05de9788548b73b4656240354ab5ab164824a387390fb",
-    "artworkTransactionCodeHash": "a28b6f878682b906b70372405a3bd494886cd623d022eca9c3ab40a4e238d385"
+    "publicationGuardCodeHash": "0de47346be7ebd2aa70d987aecf9c6dcd02bfc1ad61e42d3b7db835bc32ebba2",
+    "scenePipelineCodeHash": "e55e0c2404439fe5f054b038d51e915978da22c2cb539a9129eb6bf3b21a8da4",
+    "artworkTransactionCodeHash": "e64070b205318650593b1eb9b6a2602b8cbf635f819d1ab18577d3bf51176abc"
   },
   "nativeTracer": {
     "version": "native-seat-tracer-2",

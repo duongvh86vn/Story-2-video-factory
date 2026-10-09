@@ -1,0 +1,120 @@
+{
+  "version": "source-world-review-metadata-1",
+  "precedingSourceSHA": "7f26a6cd1b373ffd4fe976ae42246ddacacf1614",
+  "scope": "six exact complete files and selected frozen wiring excerpts; source-only advice",
+  "sources": [
+    {
+      "file": "packages/director/source-world-reference.ts",
+      "sha256": "ddd5dae4afc519fc7528c6f9424121022330bf467f91d398dd2b2969b30b150f",
+      "bytes": 207
+    },
+    {
+      "file": "packages/director/source-world-schemas.ts",
+      "sha256": "9e6cc724a81ffedc46cad317a84e62472246d646efe4191f8e545806324db0e8",
+      "bytes": 1639
+    },
+    {
+      "file": "packages/director/source-world.ts",
+      "sha256": "4497d0adc58438b7de78f10c27121c760d301b188d29027595a2794e76914c41",
+      "bytes": 11167
+    },
+    {
+      "file": "packages/director/source-world-phase.ts",
+      "sha256": "81bafb084f94696a6a1406cf72ff0148cc66d87778638e3b4bedf7ebf6b94a6f",
+      "bytes": 3732
+    },
+    {
+      "file": "library/shots/source-world-timeline.ts",
+      "sha256": "8d3fe011eb7c514ebd7b49d60c19a88b37e1e555fce3791af67b356b70b25971",
+      "bytes": 4732
+    },
+    {
+      "file": "tests/source-world.test.ts",
+      "sha256": "58fd6d5f50d0d4093b4868e0697d6d8ce36ac1405a2ffc4ccbf841eb0c4066df",
+      "bytes": 13665
+    }
+  ],
+  "excerpts": [
+    {
+      "file": "library/shots/cinematic-models.ts",
+      "start": 104,
+      "end": 126,
+      "fullFileSHA256": "6087194292ab1c024920d34883973b2169fc4b1ca8c9d08704cfcb1fe92a213a",
+      "excerptSHA256": "b5f8232e17894eee3e9324e07130bbb736c7d0dbee9a3eb59923d63b8e3bb2f5"
+    },
+    {
+      "file": "library/shots/cinematic.ts",
+      "start": 144,
+      "end": 181,
+      "fullFileSHA256": "9077c40cd242b4ea2d4c4c834124a4167e8df3123fc0b346aa3215a55e5031a3",
+      "excerptSHA256": "e16740e51b49348a3ceee1af9488da50fc4b9d12fe10f887d99a2c7c94fba3fd"
+    },
+    {
+      "file": "packages/actors/speech-clock.ts",
+      "start": 42,
+      "end": 61,
+      "fullFileSHA256": "bebcf0a85644ec4857a8513cf6c66331a32e9c5ae80d562c052b4ff3ab1188bb",
+      "excerptSHA256": "9bdd72e222b0c6628016297518e88a23a4879dc22fdbd4085023cd183af12a29"
+    },
+    {
+      "file": "packages/scenes/index.ts",
+      "start": 51,
+      "end": 57,
+      "fullFileSHA256": "83e440c2f23405f6b5a75579bc1dd854afbea51bf54f5b928084e82fd9244d83",
+      "excerptSHA256": "1d79e6534412322672810fa4933bc381f3430a4a29860ec22696e2b836b9403a"
+    },
+    {
+      "file": "packages/scenes/index.ts",
+      "start": 132,
+      "end": 140,
+      "fullFileSHA256": "83e440c2f23405f6b5a75579bc1dd854afbea51bf54f5b928084e82fd9244d83",
+      "excerptSHA256": "7539aaf6ce6deca4ee4ea48dcb93382a3cf91a30d81475b1a469fae06d4a8d20"
+    },
+    {
+      "file": "packages/scenes/source-publication.ts",
+      "start": 8,
+      "end": 18,
+      "fullFileSHA256": "0de47346be7ebd2aa70d987aecf9c6dcd02bfc1ad61e42d3b7db835bc32ebba2",
+      "excerptSHA256": "e5f11ce3902e5d19e070d69627ab95be070078fe9c08154ce10c4b056ce8c8d1"
+    },
+    {
+      "file": "packages/director/props.ts",
+      "start": 50,
+      "end": 66,
+      "fullFileSHA256": "a6a61d3a0044bdae86b1a92b7758a93c6ffd00b7921fa65a435b3bf5ec412ed1",
+      "excerptSHA256": "40850ab4d665aa1953ff0387a1ce69b4b1ed9c29b3877e80b75054c530a5cd82"
+    },
+    {
+      "file": "packages/director/schemas.ts",
+      "start": 28,
+      "end": 38,
+      "fullFileSHA256": "54fcddb6617facb34a5ef9c73aa55bdf4d6c68d8b166892b2cbe2bc4e12b718c",
+      "excerptSHA256": "76e2db074c679aa1d8cb38361db8d128dbca593cec84fb1037f497963c74a0b2"
+    },
+    {
+      "file": "packages/explainer/schemas.ts",
+      "start": 42,
+      "end": 49,
+      "fullFileSHA256": "aa87b8b2a4ad1e1fe5aefe5bff4405d00434d186ff3ccfd5be2bb89ced0579e8",
+      "excerptSHA256": "54f84934ad1c951b77234f53603e2ca2e2a992797a2365097989fed32bc6b5af"
+    },
+    {
+      "file": "packages/core/identifiers.ts",
+      "start": 1,
+      "end": 6,
+      "fullFileSHA256": "7d5d65506ca7e11c92f4bf5232f8ac9fe894eb0a73f3226986ac2e17c3c14fad",
+      "excerptSHA256": "b80e491a2473d23fa7a3e4d018a169772fa6b35b43e0c6ac2c386bd9f8dfa5f5"
+    }
+  ],
+  "context": {
+    "file": "docs/topics/reviews/source-world-review-inputs-v1.md",
+    "sha256": "12fcf3afe375e5f79be7f251b71977e1c0ed452b7764bdc1569c7eada85f64d2",
+    "chars": 16727
+  },
+  "totalChars": 51869,
+  "packetSHA256": "474d26c3b0bfde215029f319027e498bf1b388a20669029b2222b1d5d936eb10",
+  "callsPlanned": 1,
+  "productionReady": false,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false
+}

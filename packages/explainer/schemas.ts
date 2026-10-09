@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { Id, RigHandSchema } from '../core/identifiers.js';
+import {SourceWorldRefSchema} from '../director/source-world-reference.js';
 
 export const VisualMethods = ['question', 'mechanism', 'process', 'evolution', 'comparison', 'breakdown', 'event-sequence', 'summary'] as const;
 export const SourceRefSchema = z.object({ kind: z.enum(['narration', 'source']), segmentId: Id.optional(),
@@ -43,7 +44,7 @@ export const VisualizationEventSchema = z.object({ type: z.enum(['highlight', 'p
   targetId: Id, narrationAnchor: Id, startMs: z.number().int().nonnegative(), endMs: z.number().int().positive(),
   contactRequired: z.boolean().default(false), motion: z.enum(['translate', 'rotate', 'pulse', 'none']).default('none'),
   sourceRefs: z.array(SourceRefSchema).min(1),state:z.enum(['hot','cold']).optional(),relationTo:Id.optional(),contactPartId:Id.optional(),
-  contactActorId:Id.optional(),contactHands:z.array(RigHandSchema).min(1).max(2).optional() });
+  contactActorId:Id.optional(),contactHands:z.array(RigHandSchema).min(1).max(2).optional(),sourceWorld:SourceWorldRefSchema.optional() });
 export const VisualizationSchema = z.object({ type: z.enum(VisualMethods), modelId: Id,
   parts: z.array(VisualizationPartSchema).max(8), relations: z.array(RelationSchema).max(16),
   events: z.array(VisualizationEventSchema), provenance: z.literal('visualization'),

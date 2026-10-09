@@ -31,7 +31,7 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
   const narration=await readJson(path.join(root,'work/narration.json'),NarrationSchema),beats=await readJson(path.join(root,'work/beats.json'),z.array(BeatSchema));
   const {profile,rig}=await loadHost(root);
   let phaseBoard:Storyboard|undefined;
-  if(shotUsesSourceSpeechClock(shot)){
+  if(shotUsesSourceSpeechClock(shot)||shot.cinematic.sourceWorld){
     const file=path.join(root,'work/storyboard.json');
     if(!board&&!await exists(file))throw new Error('needs-speech-phase: artwork repair requires the complete storyboard');
     phaseBoard=StoryboardSchema.parse(board??await readJson(file,StoryboardSchema));

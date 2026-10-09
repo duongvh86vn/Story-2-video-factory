@@ -44,8 +44,8 @@ export function cinematicSetting(text:string,fallback:CinematicPlan['setting']='
 
 /** Choreographs inside the immutable audio interval. No dialogue generation or retiming. */
 export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,config:FactoryConfig,entry?:Point,context?:{seed?:boolean;setting?:CinematicPlan['setting'];facing?:'front'|'left'|'right';parts?:NonNullable<Shot['visualization']>['parts'];nextControlId?:string}):Shot {
-  if([input.cinematic?.performance,...(input.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation))
-    throw new Error(`${input.id}: needs-source-prop-binding: original carried model cannot be replaced by an offline local placement seed; preserve/replan its sourced complete actor/model world contract`);
+  if(input.cinematic?.sourceWorld||[input.cinematic?.performance,...(input.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation))
+    throw new Error(`${input.id}: needs-source-prop-binding: original carried model/world cannot be replaced by an offline local placement seed; preserve/replan its sourced complete actor/model world contract`);
   const shot=structuredClone(input),v=shot.visualization,h=shot.host;
   if(!v||!h||!shot.sourceRefs?.length)throw new Error(`${shot.id}: cinematic direction requires sourced explanation and approved host`);
   const actors=config.presentation.character_mode==='actors',seed=actors&&context?.seed;

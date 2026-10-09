@@ -1,0 +1,195 @@
+{
+  "version": "source-world-source-record-1",
+  "sourceVersion": "forest-tribe-0.69-source-world-timeline",
+  "precedingSourceSHA": "7f26a6cd1b373ffd4fe976ae42246ddacacf1614",
+  "scope": "source-only delivery; exact final Git SHA and byte equivalence recorded externally after publication; no runtime/art/motion/film/full-factory acceptance",
+  "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+  "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+  "implementation": [
+    "Explicit original world event IDs and exact camera event projections",
+    "Complete original board/model/art/relation/stage identity and original narration/contact witnesses",
+    "Original global effect/state/reveal/control/flow phases with camera-entry initialization",
+    "Shared renderer world phase and directed flow; original compiled prop roots retained",
+    "World and sibling source cache/publication/repair identity without single-shot fallback"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "d81743/session81026/completionad78bc",
+      "decisiveLines": [
+        "vite v7.3.6 building client environment for production...",
+        "48 modules transformed.",
+        "built in 576ms"
+      ],
+      "scope": "source build only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "da27c6/session9695/completionf7caec",
+      "decisiveOutput": "tsc -p tsconfig.tests.json; completion output empty",
+      "scope": "typecheck only; no callbacks invoked"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "f2b255",
+      "scope": "schema export only; no fixture/schema-instance geometry"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "aac227",
+      "decisiveOutput": {
+        "references": 6,
+        "candidates": 12,
+        "headCandidates": 6,
+        "garmentCandidates": 2,
+        "rejected": 7,
+        "productionReady": false
+      },
+      "scope": "static source/artifact manifest only"
+    },
+    {
+      "command": "raw fs/Git byte, PNG header, JSON metadata and callback declaration inspection",
+      "exitCode": 0,
+      "handle": "e3c759/session97095/completion6dff81",
+      "record": "docs/topics/reviews/source-world-static-record-v1.json",
+      "decisiveOutput": {
+        "trackedImages": 232,
+        "actualPNG": 131,
+        "existingJPEGNamedPNG": 101,
+        "unchangedHeadDefinitions": 18,
+        "uniqueManifestCodeHashes": 61,
+        "newWorldCodeHashes": 17,
+        "emptyAvailableBankFields": 8,
+        "callbacksDeclared": 8,
+        "callbacksExecuted": 0,
+        "productionReady": false
+      },
+      "scope": "raw static inspection only"
+    }
+  ],
+  "review": {
+    "record": "docs/topics/reviews/source-world-source-review-v1.json",
+    "model": "ag/gemini-3.8-flash-low",
+    "helperCalls": 1,
+    "handle": "a69267",
+    "usage": {
+      "promptTokens": 19349,
+      "completionTokens": 667,
+      "totalTokens": 20016
+    },
+    "outputCapTokens": 2200,
+    "images": [],
+    "scope": "bounded frozen source and wiring excerpts only; no whole-patch/runtime/geometry/art/motion/film acceptance",
+    "reviewedFinalSource": false,
+    "postFreezeChanges": [
+      {
+        "file": "packages/scenes/index.ts",
+        "kind": "remove unused duplicate world fingerprint; actual source world remains in rigSpeechPhase hash/publication binding",
+        "beforeSHA256": "83e440c2f23405f6b5a75579bc1dd854afbea51bf54f5b928084e82fd9244d83",
+        "afterSHA256": "13f1785fb73ffa54f40cb541912fe1c030bca5e5144d3d4149c7db96527c0dbc"
+      },
+      {
+        "file": "packages/director/source-world-phase.ts",
+        "kind": "clarifying persistent state/reveal comment only; algorithm unchanged"
+      },
+      {
+        "file": "packages/director/source-world.ts",
+        "kind": "descriptor states explicit persistent-result policy; validation unchanged"
+      },
+      {
+        "file": "packages/actors/speech-clock.ts",
+        "kind": "clear source publication error for malformed world without actorScene; no inferred source or cache fallback"
+      },
+      {
+        "file": "library/shots/cinematic-models.ts",
+        "kind": "LF/EOF whitespace only",
+        "beforeSHA256": "6087194292ab1c024920d34883973b2169fc4b1ca8c9d08704cfcb1fe92a213a",
+        "afterSHA256": "e176f50949cfd78b3f88bbac8aa84b451ac1e17591f96d99afd38a9ebfaa88c9"
+      },
+      {
+        "file": "packages/scenes/index.ts",
+        "kind": "LF/EOF whitespace only",
+        "beforeSHA256": "13f1785fb73ffa54f40cb541912fe1c030bca5e5144d3d4149c7db96527c0dbc",
+        "afterSHA256": "e55e0c2404439fe5f054b038d51e915978da22c2cb539a9129eb6bf3b21a8da4"
+      }
+    ],
+    "preRequestRejection": {
+      "handle": "06c38c",
+      "exitCode": 1,
+      "reason": "direct library source path outside local source-only allowlist",
+      "reservation": false,
+      "httpRequest": false,
+      "modelCall": false
+    },
+    "actualModelRequestRetries": 0,
+    "autoApply": false,
+    "decisions": [
+      {
+        "finding": 0,
+        "status": "cache-bypass claim rejected; duplicate computation cleaned",
+        "reason": "Frozen speech-clock.ts:44-51 computes sourceWorldIdentity before the early return and always embeds world under rigSpeechPhase even without native speech clocks. Scene return hash includes rigSpeechPhase. An extra local sourceWorldPhase was redundant, not the sole binding; removed without fallback or omitted original-world identity."
+      },
+      {
+        "finding": 1,
+        "status": "rejected",
+        "reason": "Thermal paint is persistent until the next explicitly sourced state; the existing cinematic renderer also sets state at start without resetting at end. Reveal means appearance with persistent result; focus/flow remain bounded. Suggested resets would erase original state at a later cut. Clarifying policy/comment added, algorithm retained."
+      },
+      {
+        "finding": 2,
+        "status": "rejected",
+        "reason": "Pure progress is already bounded0..1; exact original split is a frame breakpoint. At split the particle reaches curve t1 and opacity switches off at that same point. Holding invisible t1 avoids tweening a still-visible particle back to the start. Later camera entries initialize the actual phase; no inferred clamp or before-contact response added."
+      },
+      {
+        "finding": "response flags",
+        "status": "not evidence",
+        "reason": "Model emitted malformed keys runtimeExecuted:false and artOrMotionAccepted:false with true values. These are archived as untrusted advice text, not execution or acceptance proof. Request was a text-only bounded chat-completion with no tools; parent/helper runtime remains NOT RUN."
+      }
+    ]
+  },
+  "callbacks": {
+    "file": "tests/source-world.test.ts",
+    "declared": 8,
+    "executed": 0,
+    "status": "NOT RUN; fixtures/calibration/schema instances/samplers/timeline builders only declared inside callbacks"
+  },
+  "static": {
+    "trackedImagesUnchanged": true,
+    "headDefinitionsUnchanged": 18,
+    "manifestCodeHashesMatch": 61,
+    "male": {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+      "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
+      "status": "unchanged bald/no beard candidate"
+    },
+    "female": {
+      "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+      "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+      "status": "unchanged"
+    },
+    "emptyAvailableBanks": 8
+  },
+  "geometryInvoked": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "pending": [
+    "Source-aware action groups, interaction geometry/QC and acting coverage",
+    "Fixed operate original target geometry, generic operation guard and API role swaps",
+    "Shared handoff and sequential pickup, own-model pose/view/head banks and art/motion acceptance",
+    "Source cut continuity, random/reverse seek, SVG displacement, scene cap, resume/repair and real film tests",
+    "Full story/script/original WAV plus legacy SRT, EN/VI/JA/KO external/local TTS and final audio/subtitle/QC acceptance"
+  ],
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "goalComplete": false,
+  "handoff": "docs/topics/SOURCE-WORLD-TIMELINE-HANDOFF.md"
+}
