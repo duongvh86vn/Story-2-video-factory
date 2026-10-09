@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.81-mixed-ownership",
+  "precedingSourceSHA": "ff5acf6b6f27dfa41feaa4d9071dbfe5fce652d4",
+  "candidateSourceHashes": {
+    "library/prompts/creative-director.md": "95c6c65675c2f0a97b7ae3a4c7a6d009e76247c1c8fbccdd4447ec24d609c055",
+    "library/shots/cinematic.ts": "4e1b56069d4d644a423464fbdcea0d708a9ce7527940952728980639ec0dbe35",
+    "library/shots/ownership-layer.ts": "0cd41860d502b431291832650d059e301d16903d5c29b8dabd32256b7e72f386",
+    "packages/director/acting-brief.ts": "114872bb63665f8c9c55ce40ca9b4933ee54d0270e13eb3ce2593208abcfd707",
+    "packages/director/ownership-compile.ts": "9d26766ce37a22f174ed4cb9e2256005604ad48f3a228505d4175662b0ea861b",
+    "packages/director/ownership-render-version.ts": "f61f62d2a859533051850b3e3d78f7759a6257a1bfd4acfb9ecb38b50cceb647",
+    "packages/director/prop-motion.ts": "27dfee7ac4c2cc9cdd862c575aca882424f743acf6c9c3205946ab9d394379ed",
+    "packages/director/props.ts": "9a4509e2f794e215905a589a1e02cac01f0cc4e1fca933449438edd8fba1ab69",
+    "packages/director/schemas.ts": "cdc5abff35df41a6915ac6ab81caad6cceadc265d2744679a19773cbc18fb237",
+    "packages/director/source-prop-binding.ts": "ed50d545c30ff7b03925ec7e0e00d81961a4a0fffdd8abf2d7406fe54200058e",
+    "packages/director/source-prop-identity.ts": "414e3b00eb5c12ae5c385f54f1cfe1f69a1421667ea4929b87a991e022118746",
+    "packages/topics/prehistoric-life.ts": "52a2fd4dfe80ec73a91e4b3054ac135ab372b8f229e9e0762f74a3be9d6c598a",
+    "scripts/prehistoric-pack.ts": "5538c047ebd35830ece648648f59a73a943cf18486191575f7e176d7e75ff132",
+    "tests/ownership-render.test.ts": "e92efe6002278b17d0e2090e647119ad94c3d5654fdc9ffc5d1600f4a81363ba",
+    "packages/director/ownership-bindings.ts": "77d9e8e13fe3013bed7c140c86e91b81f36e1196ba5388bf73c2e09ed7811f69",
+    "packages/director/ownership-binding-context.ts": "6806e3ae48cae14795473b02bd90ee3d140223acdea6bcf1aa5320a6e5e1ba4f",
+    "packages/director/ownership-palm-mask.ts": "4ea051733a098a2cebe665c69b7a885dd1007d90b93e080c507cf873636ac467",
+    "tests/mixed-ownership.test.ts": "6f2cd159db873c2aeae1726dd32c15725987045dc75cc101b7cb41f28937177a",
+    "library/schemas/shot.schema.json": "d0aab6d5e299487c30066dbf9a05fab386e70ac8c372e837a00a716bca1b29e3",
+    "library/schemas/storyboard.schema.json": "963aaa3bc871bd7292b087f520411cd92fabbd438ad129d99ea6fdd13b2936e2",
+    "library/topics/prehistoric-life/manifest.json": "7c35535f26367afa1ea7dcb1f4452f5c2852074c4c06d6c9a1fda258edcbf2c1"
+  },
+  "changes": [
+    "Exact original actor/prop/entity binding partition; complete connected source camera closure before canonical alias exemptions",
+    "All independent native/art/clock/action/cue/world validations retained, including later owners",
+    "Independent actual-owner compiled centers merged with canonical entity centers on complete retained union clock",
+    "Per-hand aggregate canonical phase masks preserve original native prop-palm slots for other props",
+    "Correct mixed report scope and story-action prompt; producer44/renderer5/ownership3/sourcebinding5/boundmodel2.2.6 cache metadata"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "684ab0/session11938/completion58596a",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 51 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-B16LhxU6.js   231.18 kB │ gzip: 72.27 kB\n✓ built in 569ms",
+      "scope": "compile/bundle only; no runtime callbacks; subsequent owned LF normalization and generated metadata do not change TypeScript semantics"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "08bb02/session24301/completion575113",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\ncompletion output empty",
+      "scope": "typecheck only; no callbacks/fixtures"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "41eb8a",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts",
+      "scope": "schema definition export only"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "f6982a",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "static existing image/JSON metadata and raw source hashes"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/mixed-ownership-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "aa522e/session98289/completionbeac16",
+      "decisiveOutput": "294 unchanged original rasters;18 head definitions/27 metadata unchanged;107 unique mapped hashes/228 entries;8 empty banks;9 declared callbacks;productionReadyfalse",
+      "scope": "raw bytes/header/JSON/code-hash/source-literal only;no project schemas/geometry/callbacks"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "c6f613",
+      "decisiveOutput": "",
+      "scope": "whitespace only before final record write;staged whitespace checked later"
+    },
+    {
+      "command": "owned path and unrelated untracked comparison",
+      "exitCode": 0,
+      "handle": "current delivery preparation",
+      "scope": "raw Git/filesystem inventory;29 owned paths;52 unrelated untracked unchanged"
+    }
+  ],
+  "newCallbacksDeclared": 9,
+  "callbacksExecuted": 0,
+  "existingTestDeclarationsUpdated": [
+    "tests/ownership-render.test.ts"
+  ],
+  "independentSourceReview": "mixed-ownership-agent-record-v1.json; Sol four source0.80 files; tester six candidate files plus renderer excerpt; no complete final diff/native art/motion acceptance",
+  "testerConnectivity": {
+    "requestedModel": "tester",
+    "httpStatus": 200,
+    "ok": true,
+    "responseModel": "gpt-6-luna",
+    "reply": "TESTER_OK",
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 37,
+      "completion_tokens": 7,
+      "total_tokens": 44
+    },
+    "elapsedMs": 1377,
+    "purpose": "connectivity only",
+    "testsExecuted": false
+  },
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT RUN",
+    "geometry": "NOT RUN",
+    "server": "NOT RUN",
+    "browser": "NOT RUN",
+    "renderer": "NOT RUN",
+    "tts": "NOT RUN",
+    "asr": "NOT RUN",
+    "audio": "NOT RUN",
+    "mp4": "NOT RUN",
+    "nativeArtMotionAcceptance": "pending",
+    "fullFactoryAcceptance": "pending"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "handoff": "../MIXED-OWNERSHIP-HANDOFF.md"
+}

@@ -12,6 +12,8 @@ import {OwnershipPaintSchema,type OwnershipPaint} from './ownership-paint-schema
 import {bakeOwnership,type OwnershipBake} from './ownership-bake.js';
 import type {SourceOwnership} from './source-ownership-schemas.js';
 import {OWNERSHIP_RENDER_VERSION} from './ownership-render-version.js';
+import {ownershipBindingPartition} from './ownership-bindings.js';
+import {validateSourcePropBindings} from './source-prop-binding.js';
 export {OWNERSHIP_RENDER_VERSION} from './ownership-render-version.js';
 
 export interface CompiledOwnership {
@@ -37,8 +39,10 @@ export function compileSourceOwnership(shot:Shot,board:Storyboard,narration:Narr
   const allAliases=sources.flatMap(s=>s.grips.map(g=>JSON.stringify([g.actorId,g.propId])));
   if(new Set(allAliases).size!==allAliases.length)return fail(shot,'each original actor/prop alias must belong to one canonical entity');
   assertPropAliasCoverage(canonical);
-  if(canonical.cinematic!.propBindings.length!==allAliases.length||canonical.cinematic!.propBindings.some(b=>!b.ownerId||!allAliases.includes(JSON.stringify([b.ownerId,b.propId]))))
-    return fail(shot,'mixed unregistered/local prop rendering is not supported by this candidate; preserve and report the missing physical binding');
+  ownershipBindingPartition(canonical);
+  // Additional entities are not inferred from a convenient alias: they must
+  // pass their full original person/model/art/target/cue/world binding audit.
+  validateSourcePropBindings(canonical,original,voice);
   const result=new Map<string,CompiledOwnership>();
   for(const source of sources){
     const matches=paints.filter(p=>p.sourceId===source.id);if(matches.length!==1)return fail(shot,'missing entity depth plan');
@@ -92,7 +96,8 @@ export function compileSourceOwnership(shot:Shot,board:Storyboard,narration:Narr
 
 export const ownershipRenderDescription={version:OWNERSHIP_RENDER_VERSION,status:'candidate',
   geometry:'single entity from original ownership; shared palms agree, boundaries checked before interpolation; own original actor compiler breakpoints and a common original fps clock',
-  paint:'explicit ownershipPaint for each entity and own original grip; own authored normalized viewport grip anchor matches physical stage offset; entity behind/in front of actors, each palm before/after entity; no inference from left/right, near/far or camera primary',
+  paint:'explicit ownershipPaint for each entity and own original grip; authored viewport grip matches physical stage offset; entity and each own palm have explicit depth; one aggregate mask hides each generic prop palm only during canonical active intervals, preserving independent props before/after release',
+  independentEntities:'explicit actual actor/prop partition; full canonical and independent original-source validation over finite complete-run camera closure, including later owners; one merged union of drawn-center channels; no unsourced fallback or canonical/local reclassification inside an original run',
   interpolation:'measured sampled spatial error <=0.2px at interval probes; discrete grip/authority never tween; bounded refinement fails closed; renderer and relations consume fresh validated bake snapshots, same checks as observations',
   pending:['actual source geometry/bake/SVG/runtime and film acceptance','source observation integration runtime, publication/review/QC and complete production audit','rotating tools/airborne drops and full faithful art/motion/input/voice/resume/final acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false,productionApproval:false};

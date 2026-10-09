@@ -14,12 +14,12 @@ import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeAt} from './ownership-bake-query.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
-export const PROP_BINDING_VERSION='bound-model-motion-2.2.5';
-export const ACTOR_PROP_OWNERSHIP_DESCRIPTION={version:'actor-prop-ownership-2',bindingVersion:PROP_BINDING_VERSION,
+export const PROP_BINDING_VERSION='bound-model-motion-2.2.6';
+export const ACTOR_PROP_OWNERSHIP_DESCRIPTION={version:'actor-prop-ownership-3',bindingVersion:PROP_BINDING_VERSION,
   field:'cinematic.propBindings[].ownerId',identity:'actual visible story-person ID, not rig/model identity',
   selection:'explicit supporting owner; omission retains legacy primary/presenter only; original source props require explicit person on every slice',
   motion:'one completed local attachment or candidate complete original actor/model attachment clock; different people can own different entities concurrently',
-  aliases:'prop IDs are local to each actual person; every actor/prop tuple binds once; shared relation/effect centers are keyed by canonical entity; SVG namespace collisions still reject',
+  aliases:'prop IDs are local to each actual person; every actor/prop tuple binds once; canonical ownership and independent original entities have disjoint bindings and merged drawn-center channels; SVG namespace collisions still reject',
   history:'actual own shot clock/scale; original model entry/exit uses the complete source geometry through primary/supporting camera swaps',
   pending:['real geometry/render/runtime/film acceptance','source world/event/effect/interaction/coverage integration','cross-person handoff and shared/sequential ownership','native authored-view tool/contact poses and full art/motion acceptance'],
   runtimeVerified:false,productionAcceptance:false};

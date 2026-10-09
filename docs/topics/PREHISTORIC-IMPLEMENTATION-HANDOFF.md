@@ -1,5 +1,7 @@
 # Bàn giao source WIP — Cuộc sống thời tiền sử
 
+Cập nhật source0.81: [vật chung và vật cầm riêng trong cùng cảnh](MIXED-OWNERSHIP-HANDOFF.md). Complete-run binding closure, union centers và phase hand masks đã viết; chín callbacks mới NOT RUN. Tester trả static advice, không thực thi test. Native art/motion, production và toàn story/script/WAV/voice/resume/final vẫn chưa nghiệm thu.
+
 Cập nhật source0.80: [renderer/camera/relation dùng chung bake đã kiểm](OWNERSHIP-CONSUMERS-HANDOFF.md). Đã chặn bake hỏng, paint bị sửa và relation khác revision; năm regression callbacks mới chưa chạy. Hình, chuyển động, production và toàn ba luồng vẫn chưa nghiệm thu. Các mốc bên dưới là lịch sử.
 
 Cập nhật source0.79: [đúng người, đúng vật và entity motion](ENTITY-MOTION-HANDOFF.md). Prop IDs theo từng diễn viên; relation/flow dùng canonical entity, không chọn theo tên prop của người đầu tiên. Đã sửa thêm explicit legacy primary binding. Source vẫn chưa nghiệm thu native art/motion/video và toàn luồng. Các mốc dưới đây là lịch sử.

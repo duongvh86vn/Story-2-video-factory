@@ -9,7 +9,7 @@ import {SourceWorldSchema} from './source-world-schemas.js';
 import {SourceOwnershipSchema} from './source-ownership-schemas.js';
 import {OwnershipPaintSchema} from './ownership-paint-schemas.js';
 
-export const DIRECTION_VERSION='story-direction-2.2.43';
+export const DIRECTION_VERSION='story-direction-2.2.44';
 export const CINEMATIC_PLAN_FILES=['story-direction.json','stage-plan.json','performance-plan.json','camera-plan.json','creative-direction-report.json','camera-direction-report.json','actor-cast.json','actor-timeline.json'] as const;
 export const CINEMATIC_EXPORT_FILES=[...CINEMATIC_PLAN_FILES,'environment-provenance.json','performance-report.json','animation-library.json'] as const;
 export const CinematicModelSchema=z.object({partId:Id,variant:z.enum(['conceptual','historical-note','vehicle-feature-schematic','three-wheel-group','electric-vehicle-schematic','combustion-vehicle-schematic','electric-motor','combustion-engine','steam-old','steam-split']),sourceRefs:z.array(SourceRefSchema).min(1)}).strict();

@@ -8,6 +8,7 @@ import {ownershipBakeSnapshot} from '../../packages/director/ownership-bake-quer
 import type {ModelMotionFrame} from '../../packages/director/prop-motion.js';
 import {customModelArt,customModelForegroundArt} from '../../packages/director/art-direction.js';
 import {cinematicModel} from './cinematic-models.js';
+import {ownershipPalmMasks,type OwnershipPalmMask} from '../../packages/director/ownership-palm-mask.js';
 
 const fail=(shot:Shot,message:string):never=>{throw new Error(`${shot.id}: needs-source-prop-binding: canonical ownership layer ${message}`);};
 const selector=(shot:Shot,id:string,suffix='')=>`[data-composition-id="${shot.id}"] [id=${JSON.stringify(id)}]${suffix}`;
@@ -15,14 +16,14 @@ const xmlRegex=(text:string)=>text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 
 export interface OwnershipLayer {
   beforeActors:string;afterActors:string;calls:string[];entities:Array<{partId:string;entityId:string;sourceId:string;plane:string;palmIds:string[]}>;
-  aliasIds:string[];slotIds:string[];motionVerified:false;productionApproval:false;
+  aliasIds:string[];slotIds:string[];slotMasks:OwnershipPalmMask[];motionVerified:false;productionApproval:false;
 }
 
 /** Serializes a canonical bake into one model and explicit own-source palms.
  * No additional actor/world transforms, alias glyphs or entity scale. Actual
  * actor timelines retain ownership of the referenced palm transformations. */
 export function renderOwnershipLayer(shot:Shot,compiled:ReadonlyMap<string,CompiledOwnership>,thermal:(part:NonNullable<Shot['visualization']>['parts'][number],width:number,height:number)=>string):OwnershipLayer {
-  const result:OwnershipLayer={beforeActors:'',afterActors:'',calls:[],entities:[],aliasIds:[],slotIds:[],motionVerified:false,productionApproval:false};
+  const result:OwnershipLayer={beforeActors:'',afterActors:'',calls:[],entities:[],aliasIds:[],slotIds:[],slotMasks:[],motionVerified:false,productionApproval:false};
   const c=shot.cinematic;if(!c?.sourceOwnership||compiled.size!==c.sourceOwnership.length)return fail(shot,'requires every original canonical entity bake');
   const allIds=new Set<string>(),slots=new Set<string>();
   for(const [partId,item] of compiled){
@@ -61,17 +62,27 @@ export function renderOwnershipLayer(shot:Shot,compiled:ReadonlyMap<string,Compi
     }
   }
   if(new Set(result.aliasIds).size!==result.aliasIds.length)return fail(shot,'physical alias namespace collision');
-  result.slotIds=[...slots];return result;
+  result.slotIds=[...slots];result.slotMasks=ownershipPalmMasks(shot,compiled);
+  if(result.slotMasks.length!==slots.size||result.slotMasks.some(mask=>!slots.has(mask.slotId)||allIds.has(mask.maskId)))return fail(shot,'original hand mask coverage/namespace differs from its actual grip slots');
+  for(const mask of result.slotMasks)for(const state of mask.states)
+    result.calls.push(`tl.set(${JSON.stringify(selector(shot,mask.maskId))},{opacity:${state.opacity}},${(state.timeMs-shot.startMs)/1000});`);
+  return result;
 }
 
-/** Clear only generated generic alias placeholders and inline prop-palm slots.
- * Keep their IDs as empty timeline targets; actual original hand definitions
- * and free-hand/front/back painters are preserved. Ambiguous markup fails. */
+/** Clear duplicate entity aliases, but retain the compiler's original palm
+ * slots beneath per-hand canonical masks. Earlier/later independent props can
+ * reuse the real palm. Native front/back/free-hand painters remain unchanged. */
 export function suppressOwnershipCopies(shot:Shot,html:string,layer:OwnershipLayer):string {
-  for(const id of [...layer.aliasIds,...layer.slotIds]){
+  for(const id of layer.aliasIds){
     const regex=new RegExp(`<g\\b([^>]*\\bid="${xmlRegex(id)}"[^>]*)>([\\s\\S]*?)</g>`,'g'),matches=[...html.matchAll(regex)];
     if(matches.length!==1||/<g\b/i.test(matches[0]![2]!))return fail(shot,'generated alias/palm slot missing, duplicated or unexpectedly nested');
     html=html.replace(regex,`<g id="${escapeHtml(id)}" data-canonical-empty-alias="true"></g>`);
+  }
+  if(layer.slotMasks.length!==layer.slotIds.length||new Set(layer.slotMasks.map(mask=>mask.slotId)).size!==layer.slotIds.length||layer.slotMasks.some(mask=>!layer.slotIds.includes(mask.slotId)))return fail(shot,'palm mask coverage differs from original slots');
+  for(const mask of layer.slotMasks){
+    const regex=new RegExp(`<g\\b([^>]*\\bid="${xmlRegex(mask.slotId)}"[^>]*)>([\\s\\S]*?)</g>`,'g'),matches=[...html.matchAll(regex)];
+    if(matches.length!==1||/<g\b/i.test(matches[0]![2]!)||!mask.states.length||html.includes(`id="${escapeHtml(mask.maskId)}"`))return fail(shot,'original palm slot missing, duplicated, nested or already masked');
+    html=html.replace(regex,match=>`<g id="${escapeHtml(mask.maskId)}" data-ownership-slot-mask="${escapeHtml(mask.slotId)}" opacity="${mask.states[0]!.opacity}">${match}</g>`);
   }
   return html;
 }

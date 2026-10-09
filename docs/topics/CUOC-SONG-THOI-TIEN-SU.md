@@ -1,5 +1,7 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
+Cập nhật source0.81: [vật chung và vật cầm riêng trong cùng cảnh](MIXED-OWNERSHIP-HANDOFF.md). Đã viết complete-run binding closure, union center channels và hand masks theo phase; chín callbacks mới chưa chạy. Combo tester đã trả static review; không có runtime/hình/chuyển động/video acceptance. Các mốc bên dưới là lịch sử.
+
 Cập nhật source0.80: [renderer/camera/relation dùng chung bake đã kiểm](OWNERSHIP-CONSUMERS-HANDOFF.md). Đã chặn bake hỏng, paint bị sửa và relation khác revision; năm regression callbacks mới chưa chạy. Hình, chuyển động, production và toàn ba luồng vẫn chưa nghiệm thu. Các mốc bên dưới là lịch sử.
 
 Cập nhật source0.79: [đúng người, đúng vật và entity motion](ENTITY-MOTION-HANDOFF.md). Prop IDs theo từng diễn viên; relation/flow dùng canonical entity, không chọn theo tên prop của người đầu tiên. Đã sửa thêm explicit legacy primary binding. Source vẫn chưa nghiệm thu native art/motion/video và toàn luồng. Các mốc dưới đây là lịch sử.

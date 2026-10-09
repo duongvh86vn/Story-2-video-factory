@@ -1,5 +1,7 @@
 # Đúng người, đúng vật và đúng chuyển động — source0.79
 
+Cập nhật source0.81: [mixed ownership](MIXED-OWNERSHIP-HANDOFF.md) giữ riêng canonical và independent channel, gộp union keyframes và kiểm đầy đủ original runs. Chín callbacks mới NOT RUN; phim và production chưa nghiệm thu. Phần bên dưới là lịch sử.
+
 Cập nhật source0.80: [renderer/camera/relation dùng chung bake đã kiểm](OWNERSHIP-CONSUMERS-HANDOFF.md). Đã chặn bake hỏng, paint bị sửa và relation khác revision; năm regression callbacks mới chưa chạy. Hình, chuyển động, production và toàn ba luồng vẫn chưa nghiệm thu. Các mốc bên dưới là lịch sử.
 
 Tiếp tục sản phẩm câu chuyện → kịch bản, kịch bản nguyên văn hoặc WAV → video có diễn viên thực hiện câu chuyện. Source0.79 nối tiếp [camera revision0.78](CAMERA-REVISION-HANDOFF.md), xử lý giới hạn alias mà agent đã nêu: hai người dùng cùng tên prop cục bộ không được làm renderer lấy nhầm chuyển động của nhau. Đây là thay đổi source, chưa có video nghiệm thu.

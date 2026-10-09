@@ -1,6 +1,6 @@
 import type {Shot,Storyboard,Narration} from '../core/schemas.js';
 import {hash} from '../core/utils.js';
-export const SOURCE_PROP_BINDING_VERSION='source-prop-binding-4';
+export const SOURCE_PROP_BINDING_VERSION='source-prop-binding-5';
 /** Structural cache input only. It never samples geometry, approves binding,
  * rewrites narration or treats source/final gates as satisfied. A sibling
  * model/role/cue/art/action/clock edit invalidates every affected source slice. */

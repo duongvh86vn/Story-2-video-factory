@@ -14,6 +14,10 @@ import {boundProp,propPerformer,assertPropAliasCoverage} from './prop-owner.js';
 import {SOURCE_PROP_BINDING_VERSION} from './source-prop-identity.js';
 import {partAnchor} from '../host/controller.js';
 import {validateSourceGripWorld} from './source-grip-world.js';
+import {validateSourceOwnershipTimelines} from './source-ownership.js';
+import {ownershipBindingPartition} from './ownership-bindings.js';
+import {ownershipBindingContext} from './ownership-binding-context.js';
+import {validateSourceWorld} from './source-world.js';
 
 type Binding=CinematicPlan['propBindings'][number];
 const fail=(shot:Shot,message:string):never=>{throw new Error(`${shot.id}: needs-source-prop-binding: ${message}`);};
@@ -57,11 +61,38 @@ function citedContact(shot:Shot,ownerId:string,gesture:Gesture,partId:string,nar
  * the still-pending world/event/effect renderer contract. */
 export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,narration:Narration|undefined):void{
   const c=shot.cinematic;if(!c)return;
+  const spans=[...(c.actorScene?.primary&&c.performance.sourceManipulation?[c.performance.sourceManipulation]:[]),
+    ...(c.actorScene?.supporting.flatMap(a=>a.performance.sourceManipulation?[a.performance.sourceManipulation]:[])??[])];
+  const mixed=!!c.sourceOwnership?.length||!!board?.shots.some(s=>s.cinematic?.sourceOwnership?.length&&spans.some(span=>s.startMs<span.endMs&&s.endMs>span.startMs));
+  if(!mixed)return validateOriginalSourceBindings(shot,board,narration);
+  if(!board||!narration)return fail(shot,'mixed original entities require complete storyboard and original narration');
+  const context=ownershipBindingContext(shot,board);
+  // Establish ALL canonical exemptions before any worker skips an alias.
+  // In particular, a third owner introduced in a later camera is not omitted.
+  for(const slice of context){
+    if(slice.cinematic?.sourceOwnership)validateSourceOwnershipTimelines(slice,board,narration);
+    validateSourceWorld(slice,board,narration);
+    assertPropAliasCoverage(slice);
+    if(slice.cinematic?.sourceOwnership)ownershipBindingPartition(slice);
+    else for(const binding of slice.cinematic!.propBindings){
+      const owner=boundProp(slice,binding);
+      if(binding.ownerId!==owner.id||!owner.character||!owner.performance.sourceManipulation)return fail(slice,'mixed history has an unsourced independent alias');
+    }
+  }
+  for(const slice of context)validateOriginalSourceBindings(slice,board,narration);
+}
+
+/** Private complete-run worker; no public skip/exemption parameter. */
+function validateOriginalSourceBindings(shot:Shot,board:Storyboard|undefined,narration:Narration|undefined):void{
+  const c=shot.cinematic;if(!c)return;
   const sourceOwners=[...(c.actorScene?.primary&&c.performance.sourceManipulation?[{id:c.actorScene.primary.id,performance:c.performance}]:[]),
     ...(c.actorScene?.supporting.filter(a=>a.performance.sourceManipulation).map(a=>({id:a.character.id,performance:a.performance}))??[])];
   if(!sourceOwners.length){if(c.performance.sourceManipulation)return fail(shot,'original contact requires a visible sourced story actor');return;}
   if(!board||!narration)return fail(shot,'complete storyboard and original narration are required for model evidence');
   if(board.shots.filter(s=>s.id===shot.id).length!==1||hash(board.shots.find(s=>s.id===shot.id))!==hash(shot))return fail(shot,'candidate differs from its authoritative complete storyboard');
+  if(c.sourceOwnership)validateSourceOwnershipTimelines(shot,board,narration);
+  const partition=c.sourceOwnership?ownershipBindingPartition(shot):undefined;
+  const canonicalAliases=new Set(partition?.canonical.map(b=>JSON.stringify([b.ownerId,b.propId]))??[]);
   for(const sourceOwner of sourceOwners){
     const source=sourceOwner.performance.sourceManipulation!,clock=actorViewActingClock(board,shot,sourceOwner.id);
     if(!clock?.manipulationMotion)return fail(shot,'missing complete original actor contact clock');
@@ -71,12 +102,23 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
     if(end!==source.endMs)return fail(shot,'model source camera coverage is incomplete');
     for(const slice of slices){
       assertPropAliasCoverage(slice);
-      const bindings=slice.cinematic!.propBindings;
+      if(slice.cinematic?.sourceOwnership)validateSourceOwnershipTimelines(slice,board,narration);
+      const bindings=slice.cinematic?.sourceOwnership?ownershipBindingPartition(slice).local:slice.cinematic!.propBindings;
       if(new Set(bindings.map(b=>b.partId)).size!==bindings.length)return fail(slice,'ambiguous visible prop/model/painter ownership');
     }
     for(const prop of performanceProps(sourceOwner.performance)){
       const current=c.propBindings.filter(b=>b.propId===prop.id&&b.ownerId===sourceOwner.id);
       if(current.length!==1)return fail(shot,'each original prop needs exactly one explicit person/model binding');
+      // Canonical grips were checked by the full ownership validator. In
+      // particular a receiver's own original grip origin is not a new world
+      // origin of the shared entity. Validate only independent entities below.
+      if(canonicalAliases.has(JSON.stringify([sourceOwner.id,prop.id]))){
+        const registration=(slice:Shot)=>slice.cinematic?.sourceOwnership?.flatMap(source=>source.grips.filter(g=>g.actorId===sourceOwner.id&&g.propId===prop.id).map(grip=>({source,grip})))??[];
+        const original=registration(shot);
+        if(original.length!==1)return fail(shot,'canonical alias has no unique original registration');
+        for(const slice of slices)if(hash(registration(slice))!==hash(original))return fail(slice,'canonical/local registration changed within one original actor run');
+        continue;
+      }
       const canonical=descriptor(shot,current[0]!),p=canonical.owner.performance,offset=prop.gripOffset??{x:0,y:0};
       if(canonical.owner.id!==sourceOwner.id||!canonical.owner.character)return fail(shot,'original model person is not visible');
       if(!hasBodyViewManipulation(actorProfile(canonical.owner.character)))return fail(shot,'original model requires explicit own native manipulation selection');
@@ -87,6 +129,7 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
         const matches=slice.cinematic?.propBindings.filter(b=>b.propId===prop.id&&b.ownerId===sourceOwner.id)??[];
         if(matches.length!==1)return fail(slice,'original model binding missing, duplicated or assigned to another person');
         const binding=matches[0]!,next=descriptor(slice,binding),owned=next.owner;
+        if(slice.cinematic?.sourceOwnership?.some(s=>s.partId===binding.partId))return fail(slice,'independent original entity changed to a canonical alias at a camera cut');
         if(hash(owned.performance.stage)!==hash(slice.cinematic!.performance.stage)||owned.performance.durationMs!==slice.endMs-slice.startMs||owned.performance.leadCharacterId!==owned.id)return fail(slice,'original model has a different scene stage/clock/person');
         if(hash(next.identity)!==hash(canonical.identity))return fail(slice,'original entity/model/art/source/size/origin identity changed at a cut');
         if(!owned.performance.sourceManipulation||hash(owned.performance.sourceManipulation)!==hash(source)||owned.id!==sourceOwner.id)return fail(slice,'original contact source/person changed at a cut');
@@ -118,6 +161,6 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
 }
 export const sourcePropBindingDescription={version:SOURCE_PROP_BINDING_VERSION,
   scope:'complete original story-person/model/entity/art/source/action/clock binding and physical entry/exit candidate',
-  rule:'explicit binding ownerId on every source slice; stable canonical model origin/size/art/evidence and complete original narration witness; physical positions from actual original prop frame; explicit own authored handle matches actual original gripOffset; original person/model share one stage/floor and world cannot independently transform a physically bound entity',
+  rule:'explicit binding ownerId on every source slice; stable original model origin/size/art/evidence and complete narration witness; own physical frame/grip/world authority; canonical aliases are audited by complete ownership before exemption from independent-origin rules; mixed scenes validate complete connected source runs including owners introduced in later cameras',
   pending:['original world/event/interaction runtime and film acceptance','integrated source production audit and shared/sequential ownership','full runtime/art/motion/video/input/resume acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false};

@@ -1,5 +1,7 @@
 # Renderer, camera và đường nối dùng chung bake đã kiểm — source0.80
 
+Cập nhật source0.81: [mixed ownership](MIXED-OWNERSHIP-HANDOFF.md) bổ sung candidate contract cho vật chung cùng vật riêng, clock channels và phase hand masks. Nội dung source0.80 bên dưới là lịch sử; runtime/art/motion/full-factory acceptance vẫn pending.
+
 Sản phẩm vẫn là câu chuyện → kịch bản, kịch bản nguyên văn hoặc WAV → video có các diễn viên thực hiện câu chuyện. Source0.80 nối tiếp [source0.79](ENTITY-MOTION-HANDOFF.md), sửa ba điểm đọc dữ liệu của canonical ownership. Đây là sửa source và hợp đồng dữ liệu; chưa có nghiệm thu hình/chuyển động/video.
 
 ## Đã sửa

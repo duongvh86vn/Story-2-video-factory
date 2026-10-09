@@ -1111,7 +1111,7 @@
             },
             "producer": {
               "type": "string",
-              "const": "story-direction-2.2.43"
+              "const": "story-direction-2.2.44"
             },
             "shotId": {
               "type": "string",

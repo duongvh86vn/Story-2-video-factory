@@ -10,6 +10,7 @@ import {OwnershipPaintSchema} from '../packages/director/ownership-paint-schemas
 import {ownershipEntityId,ownershipPalmId,ownershipGlyph} from '../packages/director/ownership-reference.js';
 import {suppressOwnershipCopies,ownershipRelationFrames,type OwnershipLayer} from '../library/shots/ownership-layer.js';
 import {OWNERSHIP_RENDER_VERSION,type CompiledOwnership} from '../packages/director/ownership-compile.js';
+import {ownershipPalmMaskId} from '../packages/director/ownership-palm-mask.js';
 
 // Synthetic geometry exercises serializer/interpolation invariants only. This
 // is not a native actor, physics fixture, production scene or approved artwork.
@@ -83,12 +84,14 @@ test('painter tuple namespaces and entity lookup stay unambiguous',()=>{
   shot.cinematic!.sourceOwnership!.push(source());assert.throws(()=>ownershipGlyph(shot,'basket'));
 });
 
-test('only generated alias paint is suppressed; original hand and free slots remain',()=>{
-  const shot={id:'one'} as Shot,layer:OwnershipLayer={beforeActors:'',afterActors:'',calls:[],entities:[],aliasIds:['prop-grip'],slotIds:['hand-left-prop-slot'],motionVerified:false,productionApproval:false};
+test('only generated alias paint is suppressed; original hand and independently masked prop slots remain',()=>{
+  const slotId='hand-left-prop-slot',maskId=ownershipPalmMaskId(slotId);
+  const shot={id:'one'} as Shot,layer:OwnershipLayer={beforeActors:'',afterActors:'',calls:[],entities:[],aliasIds:['prop-grip'],slotIds:[slotId],slotMasks:[{slotId,maskId,states:[{timeMs:0,opacity:1}]}],motionVerified:false,productionApproval:false};
   const html='<defs><g id="hand-left"><path d="M0 0H1"/></g></defs><g id="hand-left-back-slot"><use href="#hand-left"/></g><g id="prop-grip"><rect width="24" height="22"/></g><g id="hand-left-prop-slot" opacity="0"><use href="#hand-left"/></g>';
   const result=suppressOwnershipCopies(shot,html,layer);
   assert.ok(result.includes('<g id="hand-left"><path'));assert.ok(result.includes('id="hand-left-back-slot"><use'));
-  assert.equal(result.includes('<rect'),false);assert.equal((result.match(/data-canonical-empty-alias/g)??[]).length,2);
+  assert.equal(result.includes('<rect'),false);assert.equal((result.match(/data-canonical-empty-alias/g)??[]).length,1);
+  assert.match(result,/data-ownership-slot-mask="hand-left-prop-slot"/);assert.match(result,/<g id="hand-left-prop-slot" opacity="0"><use href="#hand-left"\/>/);
   assert.throws(()=>suppressOwnershipCopies(shot,html+html,layer));
   assert.throws(()=>suppressOwnershipCopies(shot,html.replace('<rect width="24" height="22"/>','<g><rect/></g>'),layer));
 });
