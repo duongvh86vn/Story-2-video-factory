@@ -7,6 +7,12 @@ import type { ScriptGenerationReportSchema } from '../../packages/orchestrator/s
 import type { z } from 'zod';
 import type { FactoryConfig } from '../../packages/core/config.js';
 import type { WindowsVoiceCatalog } from '../../packages/voice/catalog.js';
+import type { SourceProductionAudit } from '../../packages/director/source-production-audit.js';
+
+export interface SourceProductionAuditDocument extends SourceProductionAudit {
+  fileReceipts:Record<string,string>;narrationFile:string;revisionChecked:true;
+  freshness:'optimistic end-of-read comparison; not an OS snapshot, asset/audio receipt or publication authority';
+}
 
 export interface VoiceCatalog {
   windows:WindowsVoiceCatalog;

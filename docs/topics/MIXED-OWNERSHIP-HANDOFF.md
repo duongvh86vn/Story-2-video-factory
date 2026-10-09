@@ -1,5 +1,7 @@
 # Vật chung và vật cầm riêng trong cùng cảnh — source0.81
 
+**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+
 Mục tiêu vẫn là câu chuyện → kịch bản, kịch bản nguyên văn hoặc WAV → video với diễn viên sống trong câu chuyện. Source0.81 nối tiếp [source0.80](OWNERSHIP-CONSUMERS-HANDOFF.md), bổ sung candidate contract cho cảnh có vật trao/cùng cầm và các vật được cầm riêng. Ví dụ Lila trao giỏ cho Karo rồi cầm bát; đây là tình huống kiểm chứng tool tổng quát, không giới hạn nội dung vào một câu chuyện. Chưa nghiệm thu hình, tiếp xúc, chuyển động hoặc video.
 
 ## Phần source đã viết

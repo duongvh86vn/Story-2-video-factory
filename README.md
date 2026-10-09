@@ -1,5 +1,7 @@
 # Story-to-Video Factory — diễn viên trong câu chuyện
 
+**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](docs/topics/ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+
 **Hiện hành0.43 — 08/10/2026, source candidate:** thêm `npm run tracer:native-seat` xuất scene/master và tùy chọn ảnh/video draft60fps cho ca hai diễn viên ngồi–đứng–đi, dùng cùng canonical với test và không bootstrap sơ đồ máy móc. Cue SRT diagnostic im lặng mặc định; WAV tùy chọn giữ bytes/clock và vẫn cần kiểm nội dung/speaker. Scene guard nhận viền SVG hở bounded, cache security4. Builder/test/tracer/browser/media chưa chạy; productionReady=false/productionRig=null, không final/DONE hoặc nghiệm thu độ mượt. [Cách chạy và artifact](docs/topics/NATIVE-SEAT-TRACER.md).
 
 Chủ đề tiền sử 0.20: tách cuff/cổ tay khỏi palm/grip, migrate chain theo landmark nguồn, giữ contact và nối mitten theo cẳng tay. Sửa preset frontal hết reach, khai báo pole/offset rõ và painter slot discrete; bổ sung kiểm shaft khi nội suy. DOM tĩnh có 144 ô: 138 SVG, sáu head-turn bị chặn. Không chứng minh video mượt; grasp, pose/secondary motion và runtime còn thiếu. `productionReady=false`. [Source, evidence và lệnh server/test](docs/topics/WRIST-PALM-IMPLEMENTATION.md).

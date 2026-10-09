@@ -1,4 +1,4 @@
-import type { ArtifactDocument, ProjectDetail, ProjectSummary, SceneDocument, UploadedAsset,VoiceCatalog } from '../../server/contracts.js';
+import type { ArtifactDocument, ProjectDetail, ProjectSummary, SceneDocument, UploadedAsset,VoiceCatalog,SourceProductionAuditDocument } from '../../server/contracts.js';
 import type { Job } from '../../server/jobs.js';
 import type { ProjectStatus } from '../../../packages/core/schemas.js';
 import type {ActorDefinition} from '../../../packages/actors/schemas.js';
@@ -32,6 +32,7 @@ export const api = {
   saveMotionCatalog:(name:string,catalog:SpriteMotionCatalog,revision:string|null)=>request<SpriteMotionCatalogSnapshot>(`${projectUrl(name)}/motions/catalog`,{method:'PUT',body:JSON.stringify({catalog,revision})}),
   create: (name: string, example: boolean, mode: 'diagram' | 'story-cinematic',topic?:'prehistoric-life') => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example, topic,presentation: { mode } }) }),
   project: (name: string) => request<ProjectDetail>(projectUrl(name)),
+  sourceAudit:(name:string)=>request<SourceProductionAuditDocument>(`${projectUrl(name)}/source-audit`),
   run: (name: string, until: ProjectStatus, shotIds?: string[],retryModelErrors=false,sceneRepairAttempts?:number) => request<{ job: Job }>(`${projectUrl(name)}/run`, { method: 'POST', body: JSON.stringify({ until, ...(shotIds ? { shotIds } : {}),...(retryModelErrors?{retryModelErrors:true}:{}),...(sceneRepairAttempts===undefined?{}:{sceneRepairAttempts}) }) }),
   approve: (name: string, kind: 'storyboard' | 'characters' | 'host') => request<ProjectSummary>(`${projectUrl(name)}/approve`, { method: 'POST', body: JSON.stringify({ kind }) }),
   locks: (name: string, locked: Record<string, boolean>) => request<ProjectSummary>(`${projectUrl(name)}/locks`, { method: 'PATCH', body: JSON.stringify({ locked }) }),

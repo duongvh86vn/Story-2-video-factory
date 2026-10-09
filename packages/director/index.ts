@@ -30,6 +30,10 @@ import {validateSpriteScenePlan} from '../motion/scene-validation.js';
 import {sourceInteractionDescriptor} from './source-interactions.js';
 import {validatePerformanceContinuity} from './continuity.js';
 import {currentCameraDirectionReport} from './camera-direction-report.js';
+import {validateSourceWorld} from './source-world.js';
+import {validateSourcePropBindings} from './source-prop-binding.js';
+import {validateSourceOwnershipTimelines} from './source-ownership.js';
+import {assertOriginalAuditContext,hasOriginalSource} from './source-audit-context.js';
 
 const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'curious',mechanism:'effort',process:'understanding',
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
@@ -215,6 +219,26 @@ export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,con
 
 export function validateCinematicShot(shot:Shot,profile:HostProfile,config:FactoryConfig,board?:Storyboard,narration?:Narration):void {
   validateCinematicActorShot(shot,profile,config,true,board,shot,narration);
+}
+
+/** Separate diagnostic entry, never a production validator override. All
+ * original binding/world checks precede the private actor-only worker; callers
+ * cannot supply exemptions or approval flags. Non-source rows still use the
+ * ordinary production validator. No artifact or accepted receipt is created. */
+export function validateSourceCinematicCandidate(shot:Shot,profile:HostProfile,config:FactoryConfig,board:Storyboard,narration:Narration){
+  assertOriginalAuditContext(board,narration,[shot]);
+  if(!hasOriginalSource(shot))validateCinematicShot(shot,profile,config,board,narration);
+  else{
+    validateSourceWorld(shot,board,narration);
+    if(shot.cinematic?.sourceOwnership)validateSourceOwnershipTimelines(shot,board,narration);
+    if(shot.cinematic?.sourceOwnership||[shot.cinematic?.performance,...(shot.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation))
+      validateSourcePropBindings(shot,board,narration);
+    else validatePropBindings(shot,board,narration); // World-only rows retain ordinary local binding checks.
+    if(hash(shot.cinematic!.continuity.models)!==hash(modelExitParts(shot,board,narration).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))
+      throw new Error(`${shot.id}: model continuity disagrees with its original source candidate`);
+    validateCinematicActorShot(shot,profile,config,false,board,shot,narration);
+  }
+  return {scope:'original-source-candidate' as const,productionReady:false as const,productionApproval:false as const,motionVerified:false as const};
 }
 
 /** Shared model exits belong to the scene; supporting actors do not rewind the primary prop motion. */

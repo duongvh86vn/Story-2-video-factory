@@ -9,7 +9,7 @@ import type { ExplanationBeat, Visualization } from './schemas.js';
 import { ExplanationBeatSchema } from './schemas.js';
 import { fold,validateSceneIntent } from './plan.js';
 import { thermalEvidence } from './thermal.js';
-import { validateCinematicShot, validateModelContinuity } from '../director/index.js';
+import { validateCinematicShot, validateSourceCinematicCandidate, validateModelContinuity } from '../director/index.js';
 
 import { EXPLAINER_RECIPES } from './recipes.js';
 import { validateAuthoredVisualSources } from './visual-sources.js';
@@ -18,6 +18,7 @@ import {actorProfile,shotPerformer,validateActorCast} from '../actors/model.js';
 import {validateStoryActingCoverage} from '../director/story-coverage.js';
 import {sourceInteractionDescriptor} from '../director/source-interactions.js';
 import {sourceWorldEvent} from '../director/source-world.js';
+import {assertOriginalAuditContext} from '../director/source-audit-context.js';
 export { EXPLAINER_RECIPES } from './recipes.js';
 export function explainerShot(id: string, startMs: number, endMs: number, beat: Beat, narration: Narration, profile: HostProfile, rig: HostRig): Shot {
   const b = ExplanationBeatSchema.parse({ ...beat, beatId: beat.id });
@@ -92,6 +93,20 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
   });
 }
 export function validateExplainerStoryboard(board: Storyboard, narration: Narration, beats: Beat[], baseProfile: HostProfile, baseRig: HostRig, config: FactoryConfig,options:{fragment?:boolean;sourceBoard?:Storyboard}={}): void {
+  checkExplainerStoryboard(board,narration,beats,baseProfile,baseRig,config,options,validateCinematicShot);
+}
+
+/** Read-only candidate diagnostics share every explainer rule, but can never
+ * create production acceptance. Exact fragments retain their complete source
+ * board; caller-controlled validator callbacks are not part of the public API. */
+export function validateSourceCandidateStoryboard(board:Storyboard,narration:Narration,beats:Beat[],baseProfile:HostProfile,baseRig:HostRig,config:FactoryConfig,sourceBoard:Storyboard=board){
+  assertOriginalAuditContext(sourceBoard,narration,board.shots);
+  const fragment=hash(board)!==hash(sourceBoard);
+  checkExplainerStoryboard(board,narration,beats,baseProfile,baseRig,config,{fragment,sourceBoard},validateSourceCinematicCandidate);
+  return {scope:'original-source-candidate' as const,productionReady:false as const,productionApproval:false as const,motionVerified:false as const};
+}
+
+function checkExplainerStoryboard(board:Storyboard,narration:Narration,beats:Beat[],baseProfile:HostProfile,baseRig:HostRig,config:FactoryConfig,options:{fragment?:boolean;sourceBoard?:Storyboard},cinematic:(shot:Shot,profile:HostProfile,config:FactoryConfig,board:Storyboard,narration:Narration)=>unknown):void {
   // A diagnostic fragment retains the actual complete source run, substituting
   // the candidate under review so stale siblings cannot approve another phase.
   const phaseBoard=options.sourceBoard?{shots:options.sourceBoard.shots.filter(s=>!board.shots.some(current=>current.id===s.id)).concat(board.shots).sort((a,b)=>a.startMs-b.startMs)}:board;
@@ -102,7 +117,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     if(config.presentation.mode==='story-cinematic'&&config.presentation.character_mode==='actors'&&!shot.cinematic?.actorScene)throw new Error(`${shot.id}: actors mode requires a story actor scene; replan the old presenter storyboard`);
     const {profile,rig}=shotPerformer(shot,baseProfile,baseRig);
     const h = shot.host, v = shot.visualization;
-    if(config.presentation.mode==='story-cinematic')validateCinematicShot(shot,profile,config,phaseBoard,narration);
+    if(config.presentation.mode==='story-cinematic')cinematic(shot,profile,config,phaseBoard,narration);
     else if(shot.cinematic)throw new Error(`${shot.id}: cinematic shot requires story-cinematic presentation`);
     if (!h || !v || !shot.explanationGoal || !shot.narrationSegmentIds?.length || !shot.sourceRefs?.length || shot.captionRegion !== 'bottom-safe') throw new Error(`${shot.id}: incomplete explainer specification`);
     const actorScene=shot.cinematic?.actorScene,intent=shot.cinematic?.sceneIntent;

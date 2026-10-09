@@ -57,6 +57,7 @@ import {motionWorkbench} from '../../packages/motion/workbench.js';
 import {loadSpriteMotionCatalog,saveSpriteMotionCatalog} from '../../packages/motion/catalog.js';
 import {importActorSpeech,listActorSpeech,loadActorSpeech,actorSpeechSheetBytes} from '../../packages/motion/speech-import.js';
 import {MotionCatalogSaveSchema} from '../../packages/motion/catalog-schemas.js';
+import {readSourceProductionAudit} from './source-audit.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; coordinatorLoader?: () => Promise<Coordinator>; logger?: boolean; }
 type Named = { name: string };
@@ -531,6 +532,12 @@ export async function buildServer(options: ServerOptions = {}) {
   app.get<{ Params: Named & { artifact: string } }>('/api/projects/:name/artifacts/:artifact', async (request, reply) => {
     const doc = await readArtifact(await rootFor(request.params.name), request.params.artifact);
     reply.header('ETag', `"${doc.revision}"`); return doc;
+  });
+  app.get<{Params:Named}>('/api/projects/:name/source-audit',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);
+    const result=await readSourceProductionAudit(await rootFor(request.params.name));
+    reply.header('Cache-Control','no-store');
+    return result;
   });
   app.put<{ Params: Named & { artifact: string } }>('/api/projects/:name/artifacts/:artifact', async request => {
     const body = z.object({ data: z.unknown(), revision: z.string().optional() }).strict().parse(request.body);

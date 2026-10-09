@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.82-original-source-audit",
+  "precedingSourceSHA": "fb42859f291d278bde099a3656a7a2141682ee77",
+  "producer": "story-direction-2.2.45",
+  "scope": "unapproved read-only original source diagnostic implementation and delivery; no product acceptance",
+  "candidateSourceHashes": {
+    "apps/server/contracts.ts": "aea677b308312f1d2561cf4e20c13f8e22c454d266f22b2f478cb2113ce4b131",
+    "apps/server/index.ts": "e41c79d282db0098d81e82bb8cb88e982d3ce279473ed65f31638a7bcead7018",
+    "apps/server/source-audit.ts": "2b4a036f5ec262f44bbd985a0b9cd7d435efc10c7e40da0a9496b5b5435aca92",
+    "apps/studio/src/api.ts": "0a71742a03ccdbfb02ea4e8437c4470fa4c890e0144108f90740928b8854059b",
+    "apps/studio/src/main.ts": "074fb1946f0c19d5c62bd9b95940d4ce2385c2827da8f9ec09417e2e70cb6811",
+    "apps/studio/src/source-audit.ts": "6ee7eb72dacbd66c28af19eac87b1c944d3bdb26f0fec1d654f96d3062555cb3",
+    "packages/director/index.ts": "8e603303cd1f56d78c364081572a402f8245379781091bca4224f0831e3af84f",
+    "packages/director/schemas.ts": "06df655230432d4299adafab3c49b79324a6faf0250fb1797f4edec1df171bdd",
+    "packages/director/source-audit-context.ts": "e5c4acf6f54ed0d59cf7feedc9187a3e5b8929eb71cb076ea66cfd02b8428ccb",
+    "packages/director/source-production-audit.ts": "522cc3a3b42a50c43cf9b6c06c22a45e9f47fe734afd45d8b72e0ed9c9371cfc",
+    "packages/explainer/storyboard.ts": "03e2fdd5e401262d8b50630aeb15488eaac7751a5b1b04155b6c99ef29ae34da",
+    "packages/topics/prehistoric-life.ts": "e6c1433111a0f8addead30b90ba53365522a258518d1699977ad8bbcecba91f4",
+    "scripts/prehistoric-pack.ts": "e29bc11ad038eb1b5a3b432b0dbbfd4d65ceee50c97cfde8e65c8b90c60d80be",
+    "tests/original-source-audit.test.ts": "23ea67265f9ba04e821815a5d3c357bcf4ba9da1b60bad83afb99b36a1c9badf",
+    "library/schemas/shot.schema.json": "5f77af0c4d3e5a7559cc8bf806a10cf87509925b3092cd6da572f0677f2ecfab",
+    "library/schemas/storyboard.schema.json": "45603b4139d3d42bc09a998e7ddd38d3ff9ced3d3fd4955c1749e0d2bdaa3e20",
+    "library/topics/prehistoric-life/manifest.json": "263ba9d2206b68df6cc79150d4699b2066f0671a0b7b3eca00108e7f4b75b084"
+  },
+  "checks": [
+    {
+      "command": "npm run build",
+      "handle": "a68d85/session54543/completiondca76d",
+      "exitCode": 0,
+      "decisiveOutput": "Vite7.3.6;52 modules;index-wxy3CKPP.js233.88kB/73.21gzip;635ms",
+      "scope": "fresh compile/bundle after parent camera fix; no callbacks/render/server"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "handle": "c83720/session92700/completion582551",
+      "exitCode": 0,
+      "decisiveOutput": "tsc -p tsconfig.tests.json",
+      "scope": "typecheck only; ten new callbacks NOT RUN"
+    },
+    {
+      "command": "npm run schemas",
+      "handle": "eee057",
+      "exitCode": 0,
+      "decisiveOutput": "tsx library/schemas/export.ts",
+      "scope": "JSON schema definition export only; no schema-instance business/geometry validation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "handle": "85af57",
+      "exitCode": 0,
+      "decisiveOutput": "references6,candidates12,headCandidates6,garmentCandidates2,rejected7,productionReadyfalse",
+      "scope": "static existing PNG/JSON/source metadata only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/original-source-audit-static-v1.mjs",
+      "handle": "64c247/session46634/completionc2f6c7",
+      "exitCode": 0,
+      "decisiveOutput": "{\"rasters\":294,\"heads\":18,\"headMetadata\":27,\"uniqueMappedHashes\":112,\"mappedEntries\":244,\"availableBankFields\":9,\"newCallbacks\":10}",
+      "scope": "raw Git/source bytes/header/JSON/code hashes only; no business imports"
+    },
+    {
+      "command": "git diff --check",
+      "handle": "56bfbc",
+      "exitCode": 0,
+      "decisiveOutput": "",
+      "scope": "whitespace before final record write; staged whitespace checked separately"
+    }
+  ],
+  "testsExecuted": false,
+  "newCallbacksDeclared": 10,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "artworkApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "wholeGoalComplete": false,
+  "pending": [
+    "actual emitted original SVG/GSAP/geometry/contact/seek consistency",
+    "faithful own native faces/hair/costumes/limbs/vivid world and acting/camera film quality",
+    "rotating tools/canonical airborne ownership/changing depth contracts as required",
+    "story→script/exact script/original WAV and voices EN primary/VI/JA/KO/external-local TTS",
+    "resume/rebuild/locks and final MP4/audio/subtitle/thumbnail/review/QC"
+  ]
+}

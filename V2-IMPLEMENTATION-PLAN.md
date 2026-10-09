@@ -1,5 +1,7 @@
 # Kế hoạch V2.2 — diễn viên trong câu chuyện
 
+**Cập nhật source0.82:** [Kiểm tra cảnh trên nguồn gốc](docs/topics/ORIGINAL-SOURCE-AUDIT-HANDOFF.md). Studio/API có báo cáo chỉ đọc theo cảnh và actual diễn viên, full context/acting/source/camera, raw revision receipts; không tự duyệt hoặc mở final. Producer2.2.45; 10 callbacks mới NOT RUN; runtime/art/motion/toàn sản phẩm vẫn chờ model test. Các mốc cũ bên dưới là lịch sử.
+
 **Hiện hành0.44 — 08/10/2026:** source gaze theo ID diễn viên dùng original physical eye clock, không static root/feedback hoặc vẽ lại mặt. Full target source/identity/world/visibility/fingerprint, timing lunge, publication/cache/camera/schema và tracer2 đã nối;13 callback mới NOT RUN. Build/typecheck và source review chỉ kiểm source; native art/motion/audio/video/ba input/full final còn chờ. [Handoff](docs/topics/NATIVE-ACTOR-GAZE-HANDOFF.md), [plan hiện hành](docs/plans/2026-10-08-actor-gaze.md).
 
 Chủ đề tiền sử 0.20: tách cuff/cổ tay khỏi palm/grip, migrate chain theo landmark nguồn, giữ contact và nối mitten theo cẳng tay. Sửa preset frontal hết reach, khai báo pole/offset rõ và painter slot discrete; bổ sung kiểm shaft khi nội suy. DOM tĩnh có 144 ô: 138 SVG, sáu head-turn bị chặn. Không chứng minh video mượt; grasp, pose/secondary motion và runtime còn thiếu. `productionReady=false`. [Source, evidence và lệnh server/test](docs/topics/WRIST-PALM-IMPLEMENTATION.md).
