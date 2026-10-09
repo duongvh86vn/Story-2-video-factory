@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.77-ownership-observation",
+  "version": "forest-tribe-0.78-camera-revision",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -67,16 +67,19 @@
     }
   },
   "cameraRepair": {
-    "version": "camera-repair-1",
+    "version": "camera-repair-2",
     "feedback": "high camera-layout review issues route to models.camera within the existing review/call/cost budgets",
     "authority": "selected unlocked cameras only; complete source/story/cast/clock/world and other shot cameras remain unchanged",
     "publication": "canonical storyboard, camera report and derived plans publish together; source/configuration/assets/locks are checked before and after",
+    "sourceRevisions": "old canonical revision before publication; newly validated camera-only planning revision after publication; old rendered scenes and review receipts are never rebound",
     "acceptance": "camera changes require scene rebuild, fresh draft and review; geometry or provider success is not film acceptance",
     "approved": false,
     "productionReady": false,
     "motionVerified": false,
     "codeHashes": {
-      "packages/director/camera-repair.ts": "fa22a46bc8c2c46714d3b0441a6e52702a29eb88c97264ee03211e3f5cbe7a17",
+      "packages/director/camera-repair.ts": "6cd057ab995d267fbe9f93000ec625fcea9fcf6610c6285b20291ce4cde3c0eb",
+      "packages/director/camera-repair-source.ts": "9fb3c6bdaae4de87b6d230d32b59fbde62c1149c5ae2822da90b3ac4cdc30ff4",
+      "packages/actors/speech-clock.ts": "15035687e1a402c31d2348c754baa61adae232aab60348f49a034c33c495a21a",
       "packages/director/camera-direction.ts": "6c63edd07328f17ed0f6aa3462ff983a33fe87e7be9f2de1abd9a72ce29c7ae0",
       "packages/director/index.ts": "45457afedfa45c91bc3e1b38c9f278bacefadebe1194e084ecf1c38068eac54c",
       "packages/director/artwork-repair.ts": "0f781c5d0d6c075b860d7a452152a99a127ffbffce2b23de4ceb96a6afdf8a63",
@@ -299,7 +302,7 @@
       "packages/director/ownership-compile.ts": "91069678723165b253c5779a714100926be80a2739871eea3656597572d29380",
       "packages/director/camera.ts": "b286ceddc0e856e521c4d91ea5580bb7e4d8f5d6723200acebd78515ab04525f",
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
-      "packages/director/camera-repair.ts": "fa22a46bc8c2c46714d3b0441a6e52702a29eb88c97264ee03211e3f5cbe7a17",
+      "packages/director/camera-repair.ts": "6cd057ab995d267fbe9f93000ec625fcea9fcf6610c6285b20291ce4cde3c0eb",
       "packages/director/props.ts": "dbf417a6799ad864a4de8a82679ff75f4ea5da2c9c6f1058709af9a221941148",
       "packages/director/index.ts": "45457afedfa45c91bc3e1b38c9f278bacefadebe1194e084ecf1c38068eac54c",
       "packages/director/story-coverage.ts": "369a4fc0623051c4c9d90f2ccd0ffb64504a24abe2225c968ccb59a4500052f6",
@@ -774,7 +777,7 @@
       "packages/host/schemas.ts": "6777a38cb36bfae1451b1408ba92c0198afcc558ac51369d67ff16d0e2bc9243",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/body-workbench.ts": "9247143df6f5cc439e0fd80434dcc2a9c3cab016fb2255e4f31de4fcd3ea97a2",
-      "packages/topics/prehistoric-life.ts": "4621807a5ea023f872ca208b1e775f9dfba76f36dde8262d0e0fc5a86bf74aeb",
+      "packages/topics/prehistoric-life.ts": "6956835ca52f3b2580391f522a37eddab9a5362e3ed0934c95dce40200d47fbd",
       "packages/director/acting-brief.ts": "f77657a4c3e294ed54e8626abda658f6510bf597cb2eb35cfbaa7948bb8500fb",
       "packages/director/schemas.ts": "f7558323a247c6f599e4774af4b24b96939af0bb9ac236e766625a8bde3ef2d2",
       "library/shots/cinematic.ts": "a351de18f4a3a37a6d6cf0dad60fa1f906af11333a23532f14b150dc1ea872eb",
@@ -806,7 +809,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "4621807a5ea023f872ca208b1e775f9dfba76f36dde8262d0e0fc5a86bf74aeb",
+      "packages/topics/prehistoric-life.ts": "6956835ca52f3b2580391f522a37eddab9a5362e3ed0934c95dce40200d47fbd",
       "packages/director/acting-brief.ts": "f77657a4c3e294ed54e8626abda658f6510bf597cb2eb35cfbaa7948bb8500fb"
     }
   },
@@ -1050,7 +1053,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "4621807a5ea023f872ca208b1e775f9dfba76f36dde8262d0e0fc5a86bf74aeb",
+      "packages/topics/prehistoric-life.ts": "6956835ca52f3b2580391f522a37eddab9a5362e3ed0934c95dce40200d47fbd",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",

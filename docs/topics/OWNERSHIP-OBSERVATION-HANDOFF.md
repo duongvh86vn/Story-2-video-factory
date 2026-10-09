@@ -1,5 +1,7 @@
 # Camera, tương tác và continuity của vật chung — source0.77
 
+Cập nhật source0.78: [camera repair theo đúng revision](CAMERA-REVISION-HANDOFF.md). Đã tách binding trước/sau sửa camera; scene/review cũ vẫn mất hiệu lực. Combo 9router `tester` gọi được và trả `gpt-6-luna`; chỉ kiểm kết nối. Runtime/video và full-product acceptance vẫn chờ model người dùng. Các mốc bên dưới là lịch sử bàn giao.
+
 Mục tiêu sản phẩm vẫn là câu chuyện → kịch bản, kịch bản nguyên văn hoặc WAV → video có diễn viên trong câu chuyện. Source0.77 nối tiếp [renderer0.76](OWNERSHIP-RENDER-HANDOFF.md). Không đổi ảnh, mặt, tóc, trang phục hoặc màu gốc; nam phụ trọc/không râu và nữ phụ giữ nguyên.
 
 **Đã viết và kiểm tra source; chưa nghiệm thu runtime/video.** Camera, model entry/exit, interaction và acting coverage đã có nhánh đọc một canonical entity. `needs-source-prop-binding` và topic productionReady=false vẫn chặn production. Không có API full-scene study hoặc cờ bỏ validator. Build/typecheck không chứng minh người que đã mượt hoặc ba input đã xuất final thành công.

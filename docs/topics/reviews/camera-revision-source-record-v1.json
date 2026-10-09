@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.78-camera-revision",
+  "precedingSourceSHA": "56dfa3d349de7ceea1b0ca042aef1f42dbe6b617",
+  "scope": "Camera-only planning revision publication bugfix; independent frozen ownership source advice and tester combo connectivity; no runtime or film acceptance",
+  "features": [
+    "Separate exact original/candidate camera planning source snapshots before/after transaction",
+    "Retained whole source/assets/config/lock checks and camera-only authority",
+    "Old rendered scene and review identities remain invalidated by camera edits, including sibling source slices",
+    "Report stores both planning revisions; rebuild/draft/fresh review still required",
+    "Explicit bare-prop alias incompatibility retained until all renderer lookups are owner-qualified"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "b701b7/session3223/completion67034c",
+      "decisiveOutput": "Vite7.3.6; 51 modules; index.html0.91kB/0.51gzip, CSS17.11kB/4.44gzip, JS index-BonvFjap.js231.18kB/72.27gzip; built in556ms",
+      "scope": "compile/bundle only; no source edits after this check"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "5f575c/session33995/completion4dbdfc",
+      "decisiveOutput": "tsc -p tsconfig.tests.json; completion output empty",
+      "scope": "typecheck only; tests/fixtures/callbacks not executed"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "77e616",
+      "decisiveOutput": "tsx library/schemas/export.ts",
+      "scope": "schema definitions only; generated files unchanged"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "39989c",
+      "decisiveOutput": "references6/candidates12/headCandidates6/garmentCandidates2/rejected7/productionReadyfalse",
+      "scope": "static existing asset inventory and manifest"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/camera-revision-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "9fef75/session84484/completion50d9eb",
+      "record": "camera-revision-static-record-v1.json",
+      "scope": "raw original raster/header/JSON/code-hash/guard comparison only; no business or geometry execution"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "7ea868",
+      "decisiveOutput": "no whitespace errors; source diff printed separately",
+      "scope": "whitespace; index will also be checked"
+    },
+    {
+      "command": "frozen source review and unrelated inventory comparison",
+      "exitCode": 0,
+      "handle": "f1c36c",
+      "decisiveOutput": "3 source review inputs match original base; 52 unrelated untracked preserved",
+      "scope": "raw bytes only"
+    }
+  ],
+  "ownedPaths": [
+    "docs/topics/CAMERA-REVISION-HANDOFF.md",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/DIRECTOR-CAMERA-AGENTS.md",
+    "docs/topics/OWNERSHIP-OBSERVATION-HANDOFF.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/camera-revision-agent-record-v1.json",
+    "docs/topics/reviews/camera-revision-source-record-v1.json",
+    "docs/topics/reviews/camera-revision-static-record-v1.json",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/director/camera-repair-source.ts",
+    "packages/director/camera-repair.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/camera-repair-source.test.ts"
+  ],
+  "sourceHashes": {
+    "packages/director/camera-repair-source.ts": "9fb3c6bdaae4de87b6d230d32b59fbde62c1149c5ae2822da90b3ac4cdc30ff4",
+    "packages/director/camera-repair.ts": "6cd057ab995d267fbe9f93000ec625fcea9fcf6610c6285b20291ce4cde3c0eb",
+    "packages/topics/prehistoric-life.ts": "6956835ca52f3b2580391f522a37eddab9a5362e3ed0934c95dce40200d47fbd",
+    "scripts/prehistoric-pack.ts": "2ee1faeb6925977f03aa9285dc7c0da1d7cfa608f42a8b8c82331d05ee62a752",
+    "tests/camera-repair-source.test.ts": "9d35079e56a0614716be30fb57fcc17fd02ecbbe41d428bc0add5760ce80f76e"
+  },
+  "agent": {
+    "record": "camera-revision-agent-record-v1.json",
+    "task": "ownership-source-audit-v1",
+    "calls": 1,
+    "retries": 0,
+    "requestedModel": "cx/gpt-6.1-sol",
+    "responseModel": "gpt-6.1-sol",
+    "requestedReasoningEffort": "xhigh",
+    "backendReasoningEffort": "not independently confirmed",
+    "requestedMaxOutputTokens": 4200,
+    "outputCapEnforced": false,
+    "usage": {
+      "promptTokens": 9796,
+      "completionTokens": 5723,
+      "totalTokens": 15519
+    },
+    "frozenSourceSHA": "56dfa3d349de7ceea1b0ca042aef1f42dbe6b617",
+    "reviewedSourceFiles": 3,
+    "wholeDiffReviewed": false,
+    "proposalExecuted": false,
+    "parentDisposition": "Retain explicit alias-ID limitation; no isolated guard removal. Parent independently authored camera correction."
+  },
+  "testerConnectivity": {
+    "requestedModel": "tester",
+    "httpStatus": 200,
+    "ok": true,
+    "responseModel": "gpt-6-luna",
+    "reply": "TESTER_OK",
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 37,
+      "completion_tokens": 7,
+      "total_tokens": 44
+    },
+    "elapsedMs": 1377,
+    "purpose": "connectivity only",
+    "testsExecuted": false
+  },
+  "testDeclarations": {
+    "file": "tests/camera-repair-source.test.ts",
+    "newCallbacks": 6,
+    "callbacksExecuted": 0,
+    "status": "DECLARED / NOT RUN",
+    "scope": "Revision snapshot, source scene binding and camera-only authority contracts; no end-to-end repair/transaction or native geometry/film acceptance"
+  },
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT INVOKED",
+    "geometry": "NOT INVOKED",
+    "server": "NOT STARTED",
+    "browser": "NOT USED",
+    "APIProductionPipeline": "NOT RUN",
+    "TTS": "NOT RUN",
+    "ASR": "NOT RUN",
+    "audio": "NOT GENERATED",
+    "video": "NOT RENDERED",
+    "acceptance": "delegated to human test model"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "remaining": [
+    "Actual camera repair provider wait/publication/rollback/rebuild/current review/final/QC acceptance",
+    "Integrated original production source semantics and own native art/motion acceptance; original guard retained",
+    "Preflight vs renderer envelope with real actor breakpoints, actual SVG/GSAP contact, seeks/role swaps/depth/report equivalence",
+    "Owner-qualified prop lookup support, rotating tools/airborne/mixed bindings/changing depth contracts",
+    "Full arbitrary story/exact script/original WAV, EN primary/VI/JA/KO/external-local TTS, resume/locks/rebuild and final MP4/audio/subtitle/thumbnail/QC acceptance"
+  ]
+}

@@ -1,5 +1,7 @@
 # Đạo diễn và camera — source0.76
 
+Cập nhật source0.78: [camera repair theo đúng revision](CAMERA-REVISION-HANDOFF.md). Đã tách binding trước/sau sửa camera; scene/review cũ vẫn mất hiệu lực. Combo 9router `tester` gọi được và trả `gpt-6-luna`; chỉ kiểm kết nối. Runtime/video và full-product acceptance vẫn chờ model người dùng. Các mốc bên dưới là lịch sử bàn giao.
+
 Cập nhật source0.77: [camera/tương tác/continuity của vật chung](OWNERSHIP-OBSERVATION-HANDOFF.md). Nhánh observation đã viết; production và nghiệm thu art/motion/video vẫn chờ. Phần source0.76 trở về trước dưới đây là lịch sử bàn giao.
 
 Cập nhật0.76: [ownership renderer candidate](OWNERSHIP-RENDER-HANDOFF.md). Một geometry/paint authority, explicit own depth/anchor và original fps/actor breakpoints. Camera envelope/interaction/coverage/continuity integration còn thiếu; không gỡ guard và chưa test phim.

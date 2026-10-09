@@ -1,5 +1,7 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
+Cập nhật source0.78: [camera repair theo đúng revision](CAMERA-REVISION-HANDOFF.md). Đã tách binding trước/sau sửa camera; scene/review cũ vẫn mất hiệu lực. Combo 9router `tester` gọi được và trả `gpt-6-luna`; chỉ kiểm kết nối. Runtime/video và full-product acceptance vẫn chờ model người dùng. Các mốc bên dưới là lịch sử bàn giao.
+
 Cập nhật source0.77: [camera/tương tác/continuity của vật chung](OWNERSHIP-OBSERVATION-HANDOFF.md). Nhánh observation đã viết; production và nghiệm thu art/motion/video vẫn chờ. Phần source0.76 trở về trước dưới đây là lịch sử bàn giao.
 
 Cập nhật hiện hành source0.76: [renderer một entity chung và bàn tay gốc](OWNERSHIP-RENDER-HANDOFF.md). Đã viết adaptive bake, explicit depth/viewport grip anchor, một glyph, own source palms và center chung cho label/shadow/foreground/relation/world/effect, candidate report/cache. Production vẫn chặn trước nhánh renderer vì camera/interaction/coverage/continuity/integrated audit và runtime/art/motion/full-input/voice/resume/final QC chưa nghiệm thu. Một task 9router GPT-6.1 Sol đã trả bake module; parent tích hợp. 10 test mới DECLARED/NOT RUN. PNG/nét/mặt/màu/costume, nam phụ trọc không râu và nữ không đổi; productionReady=false, productionRig=null, availableBanks[] và needs-source-prop-binding giữ nguyên.
