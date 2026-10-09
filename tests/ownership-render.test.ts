@@ -94,8 +94,8 @@ test('only generated alias paint is suppressed; original hand and free slots rem
 });
 
 test('relations use one canonical entity channel independent of repeated local grip names',()=>{
-  const original=source(),bake=bakeOwnership(original,1000,1300,60,[],resolver(original,t=>({x:t,y:30}))),shot={id:'one',startMs:1000,endMs:1300} as Shot;
-  const item={version:OWNERSHIP_RENDER_VERSION,source:original,bake,aliases:[{actorId:'person-a',propId:'shared-name'},{actorId:'person-b',propId:'shared-name'}]} as unknown as CompiledOwnership;
+  const original=source(),bake=bakeOwnership(original,1000,1300,60,[],resolver(original,t=>({x:t,y:30}))),shot={id:'one',startMs:1000,endMs:1300,cinematic:{sourceOwnership:[original]}} as unknown as Shot;
+  const item={version:OWNERSHIP_RENDER_VERSION,source:original,bake,paint:{sourceId:original.id},shotHash:hash(shot),motionVerified:false,productionApproval:false,aliases:[{actorId:'person-a',propId:'shared-name'},{actorId:'person-b',propId:'shared-name'}]} as unknown as CompiledOwnership;
   const frames=ownershipRelationFrames(shot,new Map([['basket',item]]));
   assert.equal(frames[0]!.timeMs,0);assert.equal(frames.at(-1)!.timeMs,300);
   for(const frame of frames)assert.deepEqual(Object.keys(frame.centers),['basket']);

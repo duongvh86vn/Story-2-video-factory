@@ -6,7 +6,8 @@ import {hash} from '../packages/core/utils.js';
 import {ownershipPhaseAt} from '../packages/director/source-ownership-projection.js';
 import type {SourceOwnership} from '../packages/director/source-ownership-schemas.js';
 import {OWNERSHIP_RENDER_VERSION,type CompiledOwnership} from '../packages/director/ownership-compile.js';
-import {ownershipBakeAt,ownershipBakeCenterBounds} from '../packages/director/ownership-bake-query.js';
+import {ownershipBakeAt,ownershipBakeCenterBounds,ownershipBakeSnapshot} from '../packages/director/ownership-bake-query.js';
+import {renderOwnershipLayer,ownershipRelationFrames} from '../library/shots/ownership-layer.js';
 import {ownershipScene} from '../packages/director/ownership-scene.js';
 import {modelEntryParts,modelExitParts} from '../packages/director/props.js';
 import {interactionPreviewTimes,type SourceInteractionRecord} from '../packages/director/source-interactions.js';
@@ -84,4 +85,62 @@ test('model entry and exit read one drawn canonical center, not an arbitrary fir
 test('review evidence includes shared authority boundaries without inventing contact at a cut',()=>{
   const source={contactMs:1100,releaseMs:1600,ownership:{transitionTimesMs:[1200,1400,1600]}} as SourceInteractionRecord;
   assert.deepEqual(interactionPreviewTimes({startMs:1200,endMs:1500},[{reachMs:1300,sourceManipulation:source}],10),[1200,1210,1300,1390,1400,1410,1499]);
+});
+
+test('consumer snapshots copy source phases, centers and every palm without changing the caller',()=>{
+  const f=fixture(),snapshot=ownershipBakeSnapshot(f.item);
+  snapshot.source.grips[0]!.actorId='changed';snapshot.source.phases[0]!.startMs++;
+  snapshot.samples[0]!.center.x=999;snapshot.samples[0]!.palms.giver!.x=999;
+  assert.equal(f.source.grips[0]!.actorId,'mina');assert.equal(f.source.phases[0]!.startMs,1000);
+  assert.equal(f.item.bake.samples[0]!.center.x,100);assert.equal(f.item.bake.samples[0]!.palms.giver!.x,100);
+  f.item.bake.samples[0]!.center.x=101;
+  assert.equal(ownershipBakeSnapshot(f.item).samples[0]!.center.x,101);
+  assert.equal(snapshot.samples[0]!.center.x,999);
+});
+
+test('renderer and relation consumers reject the same damaged bake as observations before artwork work',()=>{
+  for(const change of [
+    (item:CompiledOwnership)=>{item.bake.samples.pop();},
+    (item:CompiledOwnership)=>{item.bake.samples[1]!.timeMs=item.bake.samples[0]!.timeMs;},
+    (item:CompiledOwnership)=>{item.bake.samples.splice(2,1);},
+    (item:CompiledOwnership)=>{item.bake.samples[2]!.activeGripIds=['giver'];},
+    (item:CompiledOwnership)=>{item.bake.samples[2]!.authorityGripId='receiver';},
+    (item:CompiledOwnership)=>{item.bake.samples[0]!.center.x=NaN;},
+    (item:CompiledOwnership)=>{delete item.bake.samples[0]!.palms.receiver;},
+  ]){
+    const f=fixture();change(f.item);let artworkCalls=0;
+    assert.throws(()=>ownershipBakeCenterBounds(f.item),/needs-source-prop-binding/);
+    assert.throws(()=>ownershipRelationFrames(f.shot,f.compiled),/needs-source-prop-binding/);
+    assert.throws(()=>renderOwnershipLayer(f.shot,f.compiled,()=>{artworkCalls++;return '';}),/needs-source-prop-binding/);
+    assert.equal(artworkCalls,0);
+  }
+});
+
+test('renderer and relations reject palm accessors without invoking them',()=>{
+  const f=fixture();let getterCalls=0;
+  Object.defineProperty(f.item.bake.samples[1]!.palms,'giver',{enumerable:true,get(){getterCalls++;return {x:0,y:0};}});
+  assert.throws(()=>ownershipRelationFrames(f.shot,f.compiled),/needs-source-prop-binding/);
+  assert.throws(()=>renderOwnershipLayer(f.shot,f.compiled,()=>''),/needs-source-prop-binding/);
+  assert.equal(getterCalls,0);
+});
+
+test('renderer rejects a changed depth plan even if the original paint receipt is retained',()=>{
+  for(const change of [
+    (item:CompiledOwnership)=>{item.paint.entityPlane='behind-actors';},
+    (item:CompiledOwnership)=>{item.paint.grips[1]!.gripId=item.paint.grips[0]!.gripId;},
+  ]){
+    const f=fixture();f.item.paint=structuredClone(f.item.paint);change(f.item);
+    assert.throws(()=>renderOwnershipLayer(f.shot,f.compiled,()=>''),/different canonical revision/);
+  }
+});
+
+test('relation frames are bound to the canonical shot revision and retain the exact bake centers',()=>{
+  const f=fixture(),frames=ownershipRelationFrames(f.shot,f.compiled);
+  assert.deepEqual(frames.map(frame=>frame.timeMs),f.item.bake.samples.map(sample=>sample.timeMs-f.shot.startMs));
+  for(const [index,frame]of frames.entries())assert.deepEqual(frame.centers.basket,f.item.bake.samples[index]!.center);
+  const changed=structuredClone(f.shot);changed.visualization!.parts[0]!.x=.2;
+  assert.throws(()=>ownershipRelationFrames(changed,f.compiled),/revision\/clock differs/);
+  assert.throws(()=>ownershipRelationFrames(f.shot,new Map()),/require every canonical entity/);
+  const unrelated=fixture();unrelated.source.grips[0]!.actorId='unrelated';unrelated.item.shotHash=hash(f.shot);
+  assert.throws(()=>ownershipRelationFrames(f.shot,unrelated.compiled),/revision\/clock differs/);
 });

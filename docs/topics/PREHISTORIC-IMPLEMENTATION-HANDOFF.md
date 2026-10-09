@@ -1,5 +1,7 @@
 # Bàn giao source WIP — Cuộc sống thời tiền sử
 
+Cập nhật source0.80: [renderer/camera/relation dùng chung bake đã kiểm](OWNERSHIP-CONSUMERS-HANDOFF.md). Đã chặn bake hỏng, paint bị sửa và relation khác revision; năm regression callbacks mới chưa chạy. Hình, chuyển động, production và toàn ba luồng vẫn chưa nghiệm thu. Các mốc bên dưới là lịch sử.
+
 Cập nhật source0.79: [đúng người, đúng vật và entity motion](ENTITY-MOTION-HANDOFF.md). Prop IDs theo từng diễn viên; relation/flow dùng canonical entity, không chọn theo tên prop của người đầu tiên. Đã sửa thêm explicit legacy primary binding. Source vẫn chưa nghiệm thu native art/motion/video và toàn luồng. Các mốc dưới đây là lịch sử.
 
 Cập nhật source0.78: [camera repair theo đúng revision](CAMERA-REVISION-HANDOFF.md). Đã tách binding trước/sau sửa camera; scene/review cũ vẫn mất hiệu lực. Combo 9router `tester` gọi được và trả `gpt-6-luna`; chỉ kiểm kết nối. Runtime/video và full-product acceptance vẫn chờ model người dùng. Các mốc bên dưới là lịch sử bàn giao.

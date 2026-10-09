@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.79-entity-motion",
+  "version": "forest-tribe-0.80-ownership-consumers",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -21,7 +21,7 @@
       "packages/qc/index.ts": "04c155d5270f17c54e5e2e40b76b09e2fe81ca60aad90ee8648719cfae37319e",
       "apps/server/artifacts.ts": "468346f784e8c0e53a62d3eecfc9d400f4dfbe41cdff32b62e71e0e2bcb1001c",
       "library/schemas/index.ts": "b7532e3b751996e57baeed04d8ce60e18258afbf1418f5705ea7981b1dc3f474",
-      "scripts/dev-nine-router.ts": "e2440f5907bd727672c3696a8973b8a1f7a188d43b4c66c28c4eace93eceb1df"
+      "scripts/dev-nine-router.ts": "99973294cc9f42e5fce4ec4a0acb517e92390fbeb327cc0b02c05d34267dd0a7"
     }
   },
   "sourceGripWorld": {
@@ -125,7 +125,7 @@
       "apps/server/contracts.ts": "9d378a49561f1ca2b4c503f6ffb6fcd2e6acf00650637de901fb4af60490cbb4",
       "apps/server/index.ts": "c1e1d30437c4efadd03b7fe4e6fa1214b951c9ba7c3339212c6c1a7da03e15f8",
       "apps/studio/src/main.ts": "6217dcf01ebe902629166d913ae06bc6f6487291b52e57e62ba25cf7835a8d13",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "library/schemas/index.ts": "b7532e3b751996e57baeed04d8ce60e18258afbf1418f5705ea7981b1dc3f474"
     }
   },
@@ -152,7 +152,7 @@
       "packages/director/actions.ts": "bf7a90fa1bae11426edc2a381b09e46c96ea4cca6981127c33957b34921cb3f5",
       "packages/director/story-coverage.ts": "369a4fc0623051c4c9d90f2ccd0ffb64504a24abe2225c968ccb59a4500052f6",
       "packages/director/index.ts": "45457afedfa45c91bc3e1b38c9f278bacefadebe1194e084ecf1c38068eac54c",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
       "packages/host/controller.ts": "12fa7ad2c7463e567bc0502789f1ff0ed0fc9613be058ec7018c2a6b933c274b",
       "packages/explainer/storyboard.ts": "7e0e603fabf5009ae6fb90b92c66c5c686c8331bd350c7e110ac725db7fd24ab",
@@ -212,7 +212,7 @@
       "packages/scenes/index.ts": "9c059521b95e0855ccc113620b7a8f95a0ac513bd537fe5efa69547cce5e3b0f",
       "packages/scenes/source-publication.ts": "0de47346be7ebd2aa70d987aecf9c6dcd02bfc1ad61e42d3b7db835bc32ebba2",
       "packages/director/artwork-repair.ts": "0f781c5d0d6c075b860d7a452152a99a127ffbffce2b23de4ceb96a6afdf8a63",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "packages/director/props.ts": "c002fde4acb36afa67bc7b4b8cef729d39e4a35f01a471bfd5997bbfd76735f5",
       "packages/director/index.ts": "45457afedfa45c91bc3e1b38c9f278bacefadebe1194e084ecf1c38068eac54c",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
@@ -238,7 +238,7 @@
       "packages/director/prop-owner.ts": "c5ce737c469fdd7b43751305c08bc29d78d2e3f38d29fa751168e261d7af6cd7",
       "packages/director/props.ts": "c002fde4acb36afa67bc7b4b8cef729d39e4a35f01a471bfd5997bbfd76735f5",
       "packages/director/index.ts": "45457afedfa45c91bc3e1b38c9f278bacefadebe1194e084ecf1c38068eac54c",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "packages/director/creative.ts": "830ddaddb3d7da0eec1d7f81a89730ea6ed9ac7082813e8065aa72d68d65a260",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
       "packages/actors/speech-clock.ts": "15035687e1a402c31d2348c754baa61adae232aab60348f49a034c33c495a21a",
@@ -272,7 +272,7 @@
       "packages/director/source-ownership.ts": "e711627def1fc2d621626978f90e935dc071d3dc388da43cada310078b4144cf",
       "packages/director/source-prop-identity.ts": "ac16b339b3c6d899a0762f4d0d36f985c2c04c77902bdeae6aa0af124b528ebe",
       "packages/director/props.ts": "c002fde4acb36afa67bc7b4b8cef729d39e4a35f01a471bfd5997bbfd76735f5",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
       "library/schemas/index.ts": "b7532e3b751996e57baeed04d8ce60e18258afbf1418f5705ea7981b1dc3f474"
     }
@@ -292,14 +292,14 @@
     "motionVerified": false,
     "productionApproval": false,
     "codeHashes": {
-      "packages/director/ownership-bake-query.ts": "08519bd22968a45698aa7fe951557eb6472a1eb5475d32a335b416378c1cee47",
-      "packages/director/ownership-render-version.ts": "20190d4bdef8c21ed057544d74c0de70891d22bb944b9708623b80518b2fc09e",
+      "packages/director/ownership-bake-query.ts": "85ddab598f88954d0d04d7f5ce06f6a3bafd9a1e31efb1f8786cce99795de86e",
+      "packages/director/ownership-render-version.ts": "ffbf70491406531365b65b583315422a9f4bb6ca8ab66c512ff16c14ad40e4f0",
       "packages/director/ownership-scene.ts": "65bd94305e3758695f501a6df83180b361f03192bb03a8454ee7876a1ed38257",
       "packages/director/ownership-interactions.ts": "ea166eb933a82df0e20ad651ab9b5b6a47c575865fa8b0081c8c9528a70c7e16",
       "packages/director/source-interaction-version.ts": "fa253c3f877fda07191266ac211541b465bd9dae653da84f1458e9145adac599",
       "packages/director/source-interactions.ts": "b54e8447356a1e6c8b3ba865870b908c9fab0d205fafe68274a020465dab0e21",
       "packages/director/source-prop-identity.ts": "ac16b339b3c6d899a0762f4d0d36f985c2c04c77902bdeae6aa0af124b528ebe",
-      "packages/director/ownership-compile.ts": "94afbe02b492c77b8d3d682d238fa2c6f79eb50ed283b8a830dda17ed4e2e5ff",
+      "packages/director/ownership-compile.ts": "495daa654f6efc00630fadf8525f5ed8a5c224237077461fdd8d3fcf68307826",
       "packages/director/camera.ts": "b286ceddc0e856e521c4d91ea5580bb7e4d8f5d6723200acebd78515ab04525f",
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
       "packages/director/camera-repair.ts": "6cd057ab995d267fbe9f93000ec625fcea9fcf6610c6285b20291ce4cde3c0eb",
@@ -316,11 +316,11 @@
     }
   },
   "ownershipRenderer": {
-    "version": "canonical-ownership-render-3",
+    "version": "canonical-ownership-render-4",
     "status": "candidate",
     "geometry": "single entity from original ownership; shared palms agree, boundaries checked before interpolation; own original actor compiler breakpoints and a common original fps clock",
     "paint": "explicit ownershipPaint for each entity and own original grip; own authored normalized viewport grip anchor matches physical stage offset; entity behind/in front of actors, each palm before/after entity; no inference from left/right, near/far or camera primary",
-    "interpolation": "measured sampled spatial error <=0.2px at interval probes; discrete grip/authority never tween; bounded refinement fails closed",
+    "interpolation": "measured sampled spatial error <=0.2px at interval probes; discrete grip/authority never tween; bounded refinement fails closed; renderer and relations consume fresh validated bake snapshots, same checks as observations",
     "pending": [
       "actual source geometry/bake/SVG/runtime and film acceptance",
       "source observation integration runtime, publication/review/QC and complete production audit",
@@ -333,16 +333,16 @@
     "productionApproval": false,
     "codeHashes": {
       "packages/director/ownership-bake.ts": "4ac414758056727a4e70b7d9b722e78f82e4af2b8e810e5e6ab06e075602f6fa",
-      "packages/director/ownership-compile.ts": "94afbe02b492c77b8d3d682d238fa2c6f79eb50ed283b8a830dda17ed4e2e5ff",
+      "packages/director/ownership-compile.ts": "495daa654f6efc00630fadf8525f5ed8a5c224237077461fdd8d3fcf68307826",
       "packages/director/ownership-paint-schemas.ts": "3166db4c92c0e854165d3648aadc67fa1151410a36da8c3054ae4bb2c19213ca",
       "packages/director/ownership-reference.ts": "d3e0b39eae68c609a99b3adc0282985f585c606bf01d2c7e11e67d68d752cf3c",
-      "library/shots/ownership-layer.ts": "30f0117663a291562d0958fda1be22bb6db347b047016a62ddd6ff14f60ddc69",
+      "library/shots/ownership-layer.ts": "18e4f6ad7b936d4f41c458e53dfe2c76b907fcdc08d240a8074f0e304cb70ae5",
       "library/shots/cinematic.ts": "20a3139e95f371dbc5800b745381ecb2900b5125b7b857600dc187e5bc23f0ce",
       "library/shots/source-world-timeline.ts": "bbac66b63571d9f53dfeaa58c3763145cde104ad92aa742712592d30899bc1f8",
       "library/shots/cinematic-models.ts": "4c9fbcfd3db4053af15373b894e5ceab9ea6fa8fed028c0d6086a68efe15b5a2",
       "packages/scenes/index.ts": "9c059521b95e0855ccc113620b7a8f95a0ac513bd537fe5efa69547cce5e3b0f",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "library/schemas/index.ts": "b7532e3b751996e57baeed04d8ce60e18258afbf1418f5705ea7981b1dc3f474"
     }
   },
@@ -370,7 +370,7 @@
     "codeHashes": {
       "packages/director/source-manipulation-actions.ts": "c14229201ff78b0d995019d8760bd904b281691d6e1dea7d39fce2c856711571",
       "packages/director/index.ts": "45457afedfa45c91bc3e1b38c9f278bacefadebe1194e084ecf1c38068eac54c",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "packages/host/schemas.ts": "6777a38cb36bfae1451b1408ba92c0198afcc558ac51369d67ff16d0e2bc9243",
       "packages/director/acting-repair.ts": "6d3d0a2aed15c2f3657c9a1c56e6ab4cfadd693c245edd9d5c250a3ddcf307c1",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
@@ -400,7 +400,7 @@
       "packages/director/prop-motion.ts": "58933e0bf73d92505712a7d1cfd23a43bff5b84b91712aff1d88c5d21146fb50",
       "packages/director/camera.ts": "b286ceddc0e856e521c4d91ea5580bb7e4d8f5d6723200acebd78515ab04525f",
       "packages/director/index.ts": "45457afedfa45c91bc3e1b38c9f278bacefadebe1194e084ecf1c38068eac54c",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
       "library/shots/cinematic.ts": "20a3139e95f371dbc5800b745381ecb2900b5125b7b857600dc187e5bc23f0ce",
       "library/shots/cinematic-models.ts": "4c9fbcfd3db4053af15373b894e5ceab9ea6fa8fed028c0d6086a68efe15b5a2",
@@ -779,9 +779,9 @@
       "packages/host/schemas.ts": "6777a38cb36bfae1451b1408ba92c0198afcc558ac51369d67ff16d0e2bc9243",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/body-workbench.ts": "9247143df6f5cc439e0fd80434dcc2a9c3cab016fb2255e4f31de4fcd3ea97a2",
-      "packages/topics/prehistoric-life.ts": "875ef58577386eef379a1488194ef0dba28cdc79f478acec4318222f636d0d22",
+      "packages/topics/prehistoric-life.ts": "48d316f5326a2d7320d87e1710d0a9aa7bf651f94037ee1c2a2a58179b54f83f",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df",
-      "packages/director/schemas.ts": "c885fc640b4bda52bf4f62e5867e10b29fe2145314a8c06de52f15c954f80fb9",
+      "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
       "library/shots/cinematic.ts": "20a3139e95f371dbc5800b745381ecb2900b5125b7b857600dc187e5bc23f0ce",
       "library/shots/cinematic-models.ts": "4c9fbcfd3db4053af15373b894e5ceab9ea6fa8fed028c0d6086a68efe15b5a2",
       "library/prompts/creative-director.md": "8f6a293fc8331990c181fb99f76318aaa9ea10852c3e5744edb6ba8a58c797ca",
@@ -811,7 +811,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "875ef58577386eef379a1488194ef0dba28cdc79f478acec4318222f636d0d22",
+      "packages/topics/prehistoric-life.ts": "48d316f5326a2d7320d87e1710d0a9aa7bf651f94037ee1c2a2a58179b54f83f",
       "packages/director/acting-brief.ts": "16ac6c3924eb424b77d55424c8e358051fb12f929da75f1cf3be9cce7c5808df"
     }
   },
@@ -1055,7 +1055,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "875ef58577386eef379a1488194ef0dba28cdc79f478acec4318222f636d0d22",
+      "packages/topics/prehistoric-life.ts": "48d316f5326a2d7320d87e1710d0a9aa7bf651f94037ee1c2a2a58179b54f83f",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",

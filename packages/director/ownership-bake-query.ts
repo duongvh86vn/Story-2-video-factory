@@ -77,8 +77,11 @@ function phaseState(source: SourceOwnership, timeMs: number) {
   };
 }
 
-/** Revalidate and copy on every read; caller-owned objects may have changed. */
-function validated(item: CompiledOwnership) {
+/** Revalidate and copy on every consumer entry. Renderer serialization,
+ * relations and observations must reject the same malformed candidate bake.
+ * This snapshot owns its source/points/phase data; it does not certify contact,
+ * bind a complete storyboard or confer art/motion/production acceptance. */
+export function ownershipBakeSnapshot(item: CompiledOwnership) {
   const root = record(item, 'compiled ownership');
   if (own(root, 'version') !== OWNERSHIP_RENDER_VERSION) {
     fail('stale ownership render version');
@@ -184,7 +187,7 @@ function interpolate(a: Point, b: Point, fraction: number): Point {
 /** Candidate-only DRAWN geometry; no physical sampling, contact proof or approval. */
 export function ownershipBakeAt(item: CompiledOwnership, globalTimeMs: number): OwnershipBakeSample {
   finite(globalTimeMs, 'globalTimeMs');
-  const bake = validated(item);
+  const bake = ownershipBakeSnapshot(item);
   if (globalTimeMs < bake.startMs || globalTimeMs > bake.endMs) fail('query time is outside the bake');
   let upper = 0;
   while (bake.samples[upper]!.timeMs < globalTimeMs) upper += 1;
@@ -216,7 +219,7 @@ export function ownershipBakeAt(item: CompiledOwnership, globalTimeMs: number): 
 export function ownershipBakeCenterBounds(item: CompiledOwnership): {
   left: number; right: number; top: number; bottom: number;
 } {
-  const { samples } = validated(item);
+  const { samples } = ownershipBakeSnapshot(item);
   const first = samples[0]!.center;
   let left = first.x, right = first.x, top = first.y, bottom = first.y;
   for (const sample of samples) {

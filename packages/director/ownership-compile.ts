@@ -93,6 +93,6 @@ export function compileSourceOwnership(shot:Shot,board:Storyboard,narration:Narr
 export const ownershipRenderDescription={version:OWNERSHIP_RENDER_VERSION,status:'candidate',
   geometry:'single entity from original ownership; shared palms agree, boundaries checked before interpolation; own original actor compiler breakpoints and a common original fps clock',
   paint:'explicit ownershipPaint for each entity and own original grip; own authored normalized viewport grip anchor matches physical stage offset; entity behind/in front of actors, each palm before/after entity; no inference from left/right, near/far or camera primary',
-  interpolation:'measured sampled spatial error <=0.2px at interval probes; discrete grip/authority never tween; bounded refinement fails closed',
+  interpolation:'measured sampled spatial error <=0.2px at interval probes; discrete grip/authority never tween; bounded refinement fails closed; renderer and relations consume fresh validated bake snapshots, same checks as observations',
   pending:['actual source geometry/bake/SVG/runtime and film acceptance','source observation integration runtime, publication/review/QC and complete production audit','rotating tools/airborne drops and full faithful art/motion/input/voice/resume/final acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false,productionApproval:false};

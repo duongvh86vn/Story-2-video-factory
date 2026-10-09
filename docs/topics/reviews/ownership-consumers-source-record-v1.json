@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.80-ownership-consumers",
+  "precedingSourceSHA": "7ab5d24eef8591779ced711b3bffa1e17e1bade4",
+  "candidateSourceHashes": {
+    "packages/director/ownership-bake-query.ts": "85ddab598f88954d0d04d7f5ce06f6a3bafd9a1e31efb1f8786cce99795de86e",
+    "library/shots/ownership-layer.ts": "18e4f6ad7b936d4f41c458e53dfe2c76b907fcdc08d240a8074f0e304cb70ae5",
+    "packages/director/ownership-render-version.ts": "ffbf70491406531365b65b583315422a9f4bb6ca8ab66c512ff16c14ad40e4f0",
+    "packages/director/schemas.ts": "1d8f0d2f5e8319e2172118540c930cc62e2b10f019745e779587dabedc0aa32c",
+    "packages/topics/prehistoric-life.ts": "48d316f5326a2d7320d87e1710d0a9aa7bf651f94037ee1c2a2a58179b54f83f",
+    "packages/director/ownership-compile.ts": "495daa654f6efc00630fadf8525f5ed8a5c224237077461fdd8d3fcf68307826",
+    "tests/ownership-render.test.ts": "ea80c6383ee395ea8d4e339b102f09b4d958e85e0bfa19ebaa40c34bc24958b8",
+    "tests/ownership-observation.test.ts": "776645d096720df0eff8f6b2babe474ccddc53ef887c334a0cf32148a6a3aa81",
+    "scripts/dev-nine-router.ts": "99973294cc9f42e5fce4ec4a0acb517e92390fbeb327cc0b02c05d34267dd0a7",
+    "library/schemas/shot.schema.json": "c69bb1d2b2dac11a2cb723e2aa56b1697cce670a1f8c708f94ba9780a52d6e28",
+    "library/schemas/storyboard.schema.json": "5b65be52b009f835e4fad75f4a38a23315c2832d648be1d59ab20345bc44ead9",
+    "library/topics/prehistoric-life/manifest.json": "f7a299f45c6b92d875d7dfa0840d0ed4fd91b9a7261e2016cf1696f92e59810e"
+  },
+  "changes": [
+    "Common fresh descriptor-validated candidate bake snapshot for serializer, relation channels and camera/query",
+    "Hash the actual consumed paint snapshot and canonical depth plan; reject stale receipt and duplicate grip substitution",
+    "Relations require complete entity coverage and exact supplied whole-shot/source revision",
+    "Narrow library/shots TypeScript allowlist for source assistance; one completed bounded source-only review;no returned code execution",
+    "Producer2.2.43 / renderer4 / topic0.80 cache and schema/manifest migration"
+  ],
+  "checks": [
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "730bae",
+      "decisiveOutput": "> tsx library/schemas/export.ts",
+      "scope": "schema definition export only; producer2.2.43;two generated files changed"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "3bf45f/session79836/completion0cacc2",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\n✓ 51 modules transformed.\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-D6NJtX6B.js   231.18 kB │ gzip: 72.27 kB\n✓ built in 566ms",
+      "scope": "fresh compile/bundle after all TypeScript and test declarations; no runtime/renderer callbacks"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "353746/session42121/completion10f3af",
+      "decisiveOutput": "> tsc -p tsconfig.tests.json;completion output empty",
+      "scope": "typecheck only; no tests/callbacks/fixtures executed"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "0e2fb5",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "static asset/JSON metadata inventory and source code hashes"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/ownership-consumers-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "d78b52/session87788/completion07f29c",
+      "record": "ownership-consumers-static-record-v1.json",
+      "scope": "raw bytes/header/JSON/schema literal/source guard only; no business imports/geometry"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "77edee",
+      "decisiveOutput": "",
+      "scope": "whitespace before final source-record write;staged whitespace checked separately"
+    },
+    {
+      "command": "owned path/untracked inventory comparison",
+      "exitCode": 0,
+      "handle": "cf05a6",
+      "decisiveOutput": "18 tracked changes;4 new owned paths;52 unrelated untracked preserved",
+      "scope": "filesystem/Git inventory only"
+    }
+  ],
+  "newCallbacksDeclared": 5,
+  "callbacksExecuted": 0,
+  "existingTestDeclarationsUpdated": [
+    "tests/ownership-render.test.ts"
+  ],
+  "independentSourceReview": "ownership-consumers-agent-record-v1.json;five frozen source0.79 files,three confirmed findings;final parent amendments not independently re-reviewed;wholeDiffReviewed=false",
+  "testerConnectivity": {
+    "alreadyVerified": true,
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "reply": "TESTER_OK",
+    "purpose": "connection only, not rerun in this goal turn",
+    "testsExecuted": false
+  },
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT RUN",
+    "geometry": "NOT RUN",
+    "server": "NOT RUN",
+    "browser": "NOT RUN",
+    "renderer": "NOT RUN",
+    "tts": "NOT RUN",
+    "asr": "NOT RUN",
+    "audio": "NOT RUN",
+    "mp4": "NOT RUN",
+    "nativeArtMotionAcceptance": "pending",
+    "fullFactoryAcceptance": "pending"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "handoff": "../OWNERSHIP-CONSUMERS-HANDOFF.md"
+}
