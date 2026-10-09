@@ -16,6 +16,8 @@ import { validateAuthoredVisualSources } from './visual-sources.js';
 import { canonicalExplanationEvidence } from './citations.js';
 import {actorProfile,shotPerformer,validateActorCast} from '../actors/model.js';
 import {validateStoryActingCoverage} from '../director/story-coverage.js';
+import {sourceInteractionDescriptor} from '../director/source-interactions.js';
+import {sourceWorldEvent} from '../director/source-world.js';
 export { EXPLAINER_RECIPES } from './recipes.js';
 export function explainerShot(id: string, startMs: number, endMs: number, beat: Beat, narration: Narration, profile: HostProfile, rig: HostRig): Shot {
   const b = ExplanationBeatSchema.parse({ ...beat, beatId: beat.id });
@@ -153,6 +155,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
       for (const t of [a.target, a.secondTarget].filter(Boolean)) if (t!.modelId !== v.modelId || !ids.has(t!.partId)) throw new Error(`${shot.id}: missing gesture target`);
       if (['point', 'operate-model', 'walk-to-marker', 'compare'].includes(a.type) && !a.target) throw new Error(`${shot.id}: targeted action has no target`);
       if (a.type === 'compare' && (!a.secondTarget || a.target?.partId === a.secondTarget.partId)) throw new Error(`${shot.id}: compare requires two different targets`);
+      if(a.sourceManipulation){sourceInteractionDescriptor(shot,performer.profile.id,a,phaseBoard,narration);continue;}
       const entryDrop=performer.performance?.gestures.some(g=>g.action==='drop'&&g.startMs===0&&g.contactMs===0&&a.startMs===shot.startMs&&a.contactMs===shot.startMs&&g.endMs+shot.startMs===a.endMs&&rigHand(g)===rigHand(a));
       if (a.type === 'operate-model' && (a.contactMs === undefined || a.contactMs < a.startMs || a.contactMs === a.startMs&&!entryDrop || a.contactMs >= a.endMs)) throw new Error(`${shot.id}: operation requires a contact after approach`);
     }}
@@ -175,6 +178,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
       if(e.contactHands&&new Set(e.contactHands).size!==e.contactHands.length)throw new Error(`${shot.id}: duplicate required contact hand`);
       if(e.contactActorId&&!performers.some(performer=>performer.profile.id===e.contactActorId))throw new Error(`${shot.id}: unknown contact actor ${e.contactActorId}`);
       if(!shot.cinematic&&e.contactHands?.includes('left'))throw new Error(`${shot.id}: left-hand contact requires the cinematic renderer`);
+      if(e.sourceWorld){sourceWorldEvent(shot,e);continue;}
       if(e.contactRequired&&!shot.cinematic?.spriteStage){
         const eligible=performers.filter(performer=>!e.contactActorId||performer.profile.id===e.contactActorId);
         const contacted=eligible.some(performer=>{

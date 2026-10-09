@@ -103,5 +103,5 @@ export const sourceWorldDescription={version:SOURCE_WORLD_VERSION,selection:'exp
   statePolicy:'thermal paint persists until the next sourced state; reveals persist after first appearance; highlight/particle windows remain bounded',
   history:'thermal/control/effect/flow/motion phase uses original global time, including history before a camera cut; no re-contact or local event restart',
   evidence:'complete original storyboard/model/entity/art/relation/stage identity and exact native person/source/gesture/hand/narration contact witnesses',
-  pending:['source action groups, interaction geometry, fixed-operate targets and acting coverage production contract','world/render/cache/resume geometry/runtime/film acceptance'],
+  pending:['fixed-operate geometry, API continuity and interaction/world runtime acceptance','world/render/cache/resume geometry/runtime/film acceptance'],
   approved:false,productionReady:false,motionVerified:false,productionBinding:'needs-source-prop-binding'};

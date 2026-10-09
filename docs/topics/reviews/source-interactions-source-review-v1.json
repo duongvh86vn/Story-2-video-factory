@@ -1,0 +1,166 @@
+{
+  "version": "source-interactions-source-review-1",
+  "sourceVersion": "forest-tribe-0.70-source-interactions",
+  "scope": "bounded frozen complete4 sources + partial wiring only; no whole-patch/runtime/geometry/art/motion/film acceptance",
+  "rawProposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [
+        {
+          "file": "packages/director/source-interactions.ts",
+          "line": 125,
+          "severity": "high",
+          "issue": "False contact time window evidence: for source actions where original contact occurred in a prior camera slice (inherited contact/hold), preview times still query [contactMs - step, contactMs, contactMs + step] relative to shot bounds, but contactMs is outside the current shot, while action.contactMs is left undefined on inherited slices, causing preview verification and contact sheets to sample missing or inconsistent boundary frames.",
+          "proposedSourceChange": "In interactionPreviewTimes, verify whether source.contactMs falls within [shot.startMs, shot.endMs) before generating contact sample triplets, and ensure inherited contact slices generate valid transition boundary evidence based on action.startMs and slice bounds rather than out-of-slice global contact timestamps."
+        },
+        {
+          "file": "packages/director/source-interactions.ts",
+          "line": 105,
+          "severity": "medium",
+          "issue": "Self-verifying geometry and scope clock mismatch: samplePhysicalPerformance evaluates prop target position using global timestamp (global - s.startMs) while actor profile and clock bindings in samplePhysicalPerformance expect shot-relative timing, leading to distorted errorPx recomputations when contactMs spans cuts.",
+          "proposedSourceChange": "Constrain the physical performance evaluation in sample() to use normalized shot-local offsets: (global - s.startMs) must strictly align with the sampled shot's startMs and ensure the clock's manipulationMotion track is evaluated relative to the containing shot's duration."
+        },
+        {
+          "file": "packages/director/story-coverage.ts",
+          "line": 32,
+          "severity": "medium",
+          "issue": "Inherited hold/flight drop validation defect: hasSourceManipulationActing rejects pick-place and drop operations when releaseMs/landingMs are defined on the complete source gesture but evaluated across cutaway shots where the local slice is an inherited carry/hold prior to release.",
+          "proposedSourceChange": "In hasSourceManipulationActing, allow slice coverage during the 'held' phase without requiring that releaseMs and landingMs fall within the current slice interval, provided the canonical source gesture retains valid complete releaseMs and landingMs within the global cue window."
+        }
+      ],
+      "reviewScope": "source-only",
+      "runtimeExecuted": false,
+      "artOrMotionAccepted": false
+    },
+    "usage": {
+      "promptTokens": 18560,
+      "completionTokens": 470,
+      "totalTokens": 19030
+    },
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "source-only-review",
+    "fingerprint": "41fed6030c0dbd9fe43ee6affad6f603404f7d3d58739083657f5f817eaac87c",
+    "slot": 1,
+    "prompt": "Review only the supplied complete original transport action grouping, source person/model/grip/cue descriptor, original/current physical geometry report, canonical review recomputation, cross-cut contact/release/landing evidence and original manipulation acting coverage. Wiring excerpts are explicitly partial. Identify concrete source-evidenced defects, particularly false contact at cut, source time vs local time, source ownership, self-verifying geometry, inherited hold/flight, missing original evidence and compatibility. The original native source production guard MUST remain; fixed operate geometry/API role continuity and runtime/art/final acceptance are pending. No tools/execution/tests/callbacks/fixtures/schema-instance geometry/samplers/renderers/browser/server/API pipeline/TTS/ASR/media. No face warp/mirror/guessed yaw/default bank, autoapproval or narration rewrites. Return JSON {findings:[{file,line,severity,issue,proposedSourceChange}],reviewScope:\"source-only\",runtimeExecuted:false,artOrMotionAccepted:false}. No detached edits or runtime claims.",
+    "sources": [
+      {
+        "file": "packages/director/source-interactions.ts",
+        "sha256": "20884a2741088c6f5423e34c8ad532935678aba2532de800ce558e9323f20e9a"
+      },
+      {
+        "file": "packages/director/actions.ts",
+        "sha256": "37d82e103b4418247de8ae768a22a0db288bdcc83eb74587de25390e6fb3a90c"
+      },
+      {
+        "file": "packages/director/story-coverage.ts",
+        "sha256": "ec19a53a28f2af197450aabea9f28a4bf82065c6ee87d4e38f427b02acd5f140"
+      },
+      {
+        "file": "packages/director/source-prop-binding.ts",
+        "sha256": "e29faac70e421826247d50527288039074c88eebbc5e27834cd3470533d9a832"
+      },
+      {
+        "file": "docs/topics/reviews/source-interactions-review-inputs-v2.md",
+        "sha256": "1c30621ecbbb0cc48959d0ce2390cf7de3735e5d4c9a070e282f7324b3c78582"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-09T03:58:24.435Z"
+  },
+  "decisions": [
+    {
+      "finding": 0,
+      "status": "rejected",
+      "reason": "Each original timestamp is admitted only by add() when inside the owning half-open camera interval; slice entry/exit and representative evidence already included. Requiring the central contact to lie in the current shot before including its before/after timestamps would lose genuine evidence at cuts."
+    },
+    {
+      "finding": 1,
+      "status": "clock defect rejected; parent strengthened independent contact witness",
+      "reason": "samplePhysicalPerformance already receives global-s.startMs and the actual containing shot actor clock, exactly the required local offset. Compiler checks original source target/body grip constraints. Parent additionally reports/measures original declared world grip/model origin and compiler constraint error, instead of reporting only a palm-derived prop grip. This source change was not independently re-reviewed or run."
+    },
+    {
+      "finding": 2,
+      "status": "rejected",
+      "reason": "hasSourceManipulationActing checks only presence of releaseMs/landingMs on complete original descriptor; no requirement places those marks inside the local slice. Acting window tests positive overlap with the source cue/beat. Actual release/landing cue fit still validated on original source."
+    }
+  ],
+  "postFreezeChanges": [
+    {
+      "file": "packages/director/source-interactions.ts",
+      "beforeSHA256": "20884a2741088c6f5423e34c8ad532935678aba2532de800ce558e9323f20e9a",
+      "afterSHA256": "84e214590b7aaef824e9b159a28c41d2f84a3bd774409f0a3086854f5f477f7c",
+      "kind": "independent original declared world grip/model origin and compiler constraint witness"
+    },
+    {
+      "file": "packages/director/actions.ts",
+      "beforeSHA256": "37d82e103b4418247de8ae768a22a0db288bdcc83eb74587de25390e6fb3a90c",
+      "afterSHA256": "bf7a90fa1bae11426edc2a381b09e46c96ea4cca6981127c33957b34921cb3f5",
+      "kind": "use browser-safe shared clock validation; server retains full source/body and action schema validation; grouping source hash removed (canonical source descriptor still hashes source)"
+    }
+  ],
+  "parentOnlyTestChange": {
+    "file": "tests/source-interactions.test.ts",
+    "kind": "assert independent constraint field and tamper error by nonzero delta",
+    "reviewed": false
+  },
+  "reviewedFinalSource": false,
+  "helperCalls": 1,
+  "outputCapTokens": 2200,
+  "actualRequestRetries": 0,
+  "localOversizePreparation": {
+    "handle": "fafcc7",
+    "exitCode": 1,
+    "totalCharacters": 66453,
+    "reason": "local context cap; no task/request reservation/HTTP/model call",
+    "frozenUnsentFile": "docs/topics/reviews/source-interactions-review-inputs-v1.md",
+    "sha256": "3e66100eba1140d5f756e9a36707912c9db8f613c4cd2824c3535b572bc5422d"
+  },
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "additionalParentChanges": [
+    {
+      "file": "packages/director/source-action-clock.ts",
+      "kind": "shared pure clock projection/validation extracted for Studio; no Node dependency, geometry or approval",
+      "sha256": "c94545584a0341c2a99c9a4fb4df2a5edb431b64f039c18696564f3c44301f3d",
+      "reviewed": false
+    },
+    {
+      "file": "packages/director/source-manipulation-actions.ts",
+      "kind": "server uses the same pure math; retains full validateManipulationSourcePlan and HostActionSchema parse",
+      "sha256": "5b0d2d7c971c2c1bea0dd7d79350b368bb1cd1391f867b0588d0cd9becb93791",
+      "reviewed": false
+    },
+    {
+      "file": "apps/studio/src/cinematic.ts",
+      "kind": "show both performers and original vs slice action clocks",
+      "sha256": "dd3981d83409738e1605bbb9ed08472a51c64f94046a159758c1fd863074135a",
+      "reviewed": false
+    }
+  ],
+  "intermediateBuildFailure": {
+    "handle": "4c31bc/session67084/completion7c2807",
+    "exitCode": 1,
+    "reason": "Shared action grouping pulled Node core/utils/crypto through source validator into Studio bundle; fixed by shared pure clock module, not polyfills or removed server validation"
+  },
+  "finalBuild": {
+    "handle": "108a76/session50161/completion9aae5b",
+    "exitCode": 0,
+    "modules": 49,
+    "builtMs": 561
+  },
+  "finalTypecheck": {
+    "handle": "9ef798/session78012/completion4e73d4",
+    "exitCode": 0,
+    "callbacksExecuted": 0
+  }
+}

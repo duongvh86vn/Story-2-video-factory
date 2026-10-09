@@ -26,6 +26,7 @@ import {buildRig} from '../host/rig.js';
 import {writeActorAssets} from '../actors/assets.js';
 import {sceneSeats} from '../stage/seats.js';
 import {validateSpriteScenePlan} from '../motion/scene-validation.js';
+import {sourceInteractionDescriptor} from './source-interactions.js';
 
 const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'curious',mechanism:'effort',process:'understanding',
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
@@ -256,7 +257,11 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
     if(p.gestures.length||p.props.length||actions.some(a=>a.type!=='idle'||a.target))throw new Error(`${shot.id}: mechanism-only shot cannot contain primary actor actions`);
     return;
   }
-  for(const {action:a,gestures:group} of cinematicActionGroups(actions,p,shot.startMs)){
+  for(const {action:a,gestures:group,sourceManipulation} of cinematicActionGroups(actions,p,shot.startMs)){
+    if(sourceManipulation){
+      sourceInteractionDescriptor(clockSourceShot,profile.id,a,board,narration);
+      continue; // Original gesture times remain source-relative, not local clips.
+    }
     if(a.type==='idle'){
       if(a.target||a.secondTarget||a.contactMs!==undefined||p.gestures.some(g=>(!a.hand||rigHand(g)===a.hand)&&g.startMs<a.endMs-shot.startMs&&g.endMs>a.startMs-shot.startMs))throw new Error(`${shot.id}: idle interval cannot own an arm gesture, target or contact; use performance.walks/postures for body motion`);
       continue;

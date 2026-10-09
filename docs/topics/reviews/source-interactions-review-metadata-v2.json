@@ -1,0 +1,95 @@
+{
+  "version": "source-interactions-review-input-2",
+  "scope": "bounded frozen complete4 sources and partial wiring; source-only",
+  "sourceVersion": "forest-tribe-0.70-source-interactions",
+  "precedingSourceSHA": "edcd6f654a4f5b2ac979a7288723eb6cecdceeb5",
+  "sources": [
+    {
+      "file": "packages/director/source-interactions.ts",
+      "sha256": "20884a2741088c6f5423e34c8ad532935678aba2532de800ce558e9323f20e9a"
+    },
+    {
+      "file": "packages/director/actions.ts",
+      "sha256": "37d82e103b4418247de8ae768a22a0db288bdcc83eb74587de25390e6fb3a90c"
+    },
+    {
+      "file": "packages/director/story-coverage.ts",
+      "sha256": "ec19a53a28f2af197450aabea9f28a4bf82065c6ee87d4e38f427b02acd5f140"
+    },
+    {
+      "file": "packages/director/source-prop-binding.ts",
+      "sha256": "e29faac70e421826247d50527288039074c88eebbc5e27834cd3470533d9a832"
+    },
+    {
+      "file": "docs/topics/reviews/source-interactions-review-inputs-v2.md",
+      "sha256": "1c30621ecbbb0cc48959d0ce2390cf7de3735e5d4c9a070e282f7324b3c78582"
+    }
+  ],
+  "wiringExcerpts": [
+    {
+      "file": "library/shots/cinematic.ts",
+      "startLine": 205,
+      "endLine": 223,
+      "fileSHA256": "ad4eef9475e87b5350f174032046d1bce28a2bf862493e26818d68bafe37d1e0"
+    },
+    {
+      "file": "packages/review/index.ts",
+      "startLine": 111,
+      "endLine": 118,
+      "fileSHA256": "f9c20a770fbaa5dd7176886f37c96726e874839274ffc09948c7e4170f1c890f"
+    },
+    {
+      "file": "packages/review/index.ts",
+      "startLine": 228,
+      "endLine": 234,
+      "fileSHA256": "f9c20a770fbaa5dd7176886f37c96726e874839274ffc09948c7e4170f1c890f"
+    },
+    {
+      "file": "packages/review/index.ts",
+      "startLine": 257,
+      "endLine": 266,
+      "fileSHA256": "f9c20a770fbaa5dd7176886f37c96726e874839274ffc09948c7e4170f1c890f"
+    },
+    {
+      "file": "packages/director/index.ts",
+      "startLine": 265,
+      "endLine": 279,
+      "fileSHA256": "ac2a600f49e03fcf02ece767500bcd83a7f9d84a7b57133ed3a1f95339c5feee"
+    },
+    {
+      "file": "packages/explainer/storyboard.ts",
+      "startLine": 147,
+      "endLine": 161,
+      "fileSHA256": "1d7f34e669c0114014b295889f568d863aedc4631848cc8df8dec456e61e9e00"
+    },
+    {
+      "file": "packages/explainer/storyboard.ts",
+      "startLine": 177,
+      "endLine": 191,
+      "fileSHA256": "1d7f34e669c0114014b295889f568d863aedc4631848cc8df8dec456e61e9e00"
+    },
+    {
+      "file": "packages/director/props.ts",
+      "startLine": 53,
+      "endLine": 66,
+      "fileSHA256": "e7fbd76dc2739306832c7fc88b83c44cbbb04291ea81f739ed9583ff66498e3b"
+    }
+  ],
+  "priorLocalPreparation": {
+    "handle": "fafcc7",
+    "exitCode": 1,
+    "totalCharacters": 66453,
+    "reason": "local context cap; no task/request reservation/HTTP/model call",
+    "frozenUnsentFile": "docs/topics/reviews/source-interactions-review-inputs-v1.md",
+    "sha256": "3e66100eba1140d5f756e9a36707912c9db8f613c4cd2824c3535b572bc5422d"
+  },
+  "totalCharacters": 53514,
+  "model": "ag/gemini-3.8-flash-low",
+  "outputCap": 2200,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false
+}

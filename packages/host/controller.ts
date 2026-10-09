@@ -2,6 +2,7 @@ import type { Shot } from '../core/schemas.js';
 import type { HostProfile, HostRig } from './schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 import { ModelHandleAnchorSchema } from '../director/art-direction-schemas.js';
+import type {SourceInteractionRecord} from '../director/source-interactions.js';
 
 export const HOST_CONTROLLER_VERSION = 'host-controller-2.1.1';
 const radians = (n: number) => n * Math.PI / 180;
@@ -10,7 +11,7 @@ const clamp = (n: number, low: number, high: number) => Math.max(low, Math.min(h
 export interface Anchor { x: number; y: number; }
 export interface HostGeometry { controllerVersion: string; profileHash: string; rigHash: string; shotId: string; hostHeightRatio: number;
   interactions: Array<{ actorId?:string; handSide?:'left'|'right'; type: string; startMs: number; reachMs: number; endMs: number; partId: string; target: Anchor; hand: Anchor; errorPx: number; root: Anchor; gaze: Anchor; contactMs?: number;
-    sourceGesture?:{id:string;originalReachMs:number;originalRecoverMs:number;samplePhase:'approach'|'hold'|'recovery';contactVerified:false} }> }
+    sourceGesture?:{id:string;originalReachMs:number;originalRecoverMs:number;samplePhase:'approach'|'hold'|'recovery';contactVerified:false};sourceManipulation?:SourceInteractionRecord }> }
 
 /** Two fixed-length bones. All calculations run at compile time, never in scene JS. */
 export function solveArm(dx: number, dy: number): { upper: number; lower: number; hand: Anchor; reachable: boolean } {

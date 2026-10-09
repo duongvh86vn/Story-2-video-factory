@@ -62,7 +62,7 @@ export function validatePropBindings(shot:Shot,board?:Storyboard,narration?:Narr
   if(c.propBindings.length!==declared.length)throw new Error(`${shot.id}: every animated prop requires a sourced model binding`);
   const svgIds=c.propBindings.map(binding=>boundProp(shot,binding).svgId);
   if(new Set(svgIds).size!==svgIds.length)throw new Error(`${shot.id}: bound prop namespaces collide; use unambiguous actor/prop IDs`);
-  if(sourceSelected)throw new Error(`${shot.id}: needs-source-prop-binding: original entity/action/evidence binding is checked; source event/effect/interaction/coverage world contract remains pending and cannot enter production`);
+  if(sourceSelected)throw new Error(`${shot.id}: needs-source-prop-binding: original entity/action/evidence binding is checked; source event/effect/interaction/coverage production still requires fixed operate geometry and API continuity; cannot enter production`);
   const pickup=pickupPart(shot),ids=new Set<string>(),parts=new Set<string>();
   for(const binding of c.propBindings){
     const owned=boundProp(shot,binding),{prop,performance:p}=owned,part=shot.visualization!.parts.find(p=>p.id===binding.partId);

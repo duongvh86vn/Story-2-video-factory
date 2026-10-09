@@ -1,0 +1,187 @@
+{
+  "version": "source-interactions-source-record-1",
+  "sourceVersion": "forest-tribe-0.70-source-interactions",
+  "precedingSourceSHA": "edcd6f654a4f5b2ac979a7288723eb6cecdceeb5",
+  "scope": "source-only; exact committed/published SHA and owned byte hashes recorded externally after delivery; no geometry/runtime/art/motion/film/full-factory acceptance",
+  "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+  "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+  "checks": [
+    {
+      "command": "npm run build",
+      "handle": "108a76/session50161/completion9aae5b",
+      "exitCode": 0,
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\n49 modules transformed.\n../../dist/studio/assets/index-CMRh80gG.js   222.95 kB │ gzip: 69.92 kB\nbuilt in 561ms",
+      "scope": "source build only; no browser/server"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "handle": "9ef798/session78012/completion4e73d4",
+      "exitCode": 0,
+      "decisiveOutput": "tsc -p tsconfig.tests.json; final completion output empty",
+      "scope": "typecheck only; callbacks/fixtures not invoked"
+    },
+    {
+      "command": "npm run schemas",
+      "handle": "a84f9b",
+      "exitCode": 0,
+      "scope": "export only; no schema-instance geometry"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "handle": "a6c3e9",
+      "exitCode": 0,
+      "decisiveOutput": {
+        "references": 6,
+        "candidates": 12,
+        "headCandidates": 6,
+        "garmentCandidates": 2,
+        "rejected": 7,
+        "productionReady": false
+      },
+      "scope": "static manifest only"
+    },
+    {
+      "command": "raw fs/Git byte/PNG header/JSON/source declaration inspection",
+      "handle": "dad0a2",
+      "exitCode": 0,
+      "record": "docs/topics/reviews/source-interactions-static-record-v1.json",
+      "decisiveOutput": {
+        "trackedImages": 232,
+        "actualPNG": 131,
+        "existingJPEGNamedPNG": 101,
+        "unchangedHeadDefinitions": 18,
+        "manifestCodeHashes": 98,
+        "newInteractionHashes": 13,
+        "emptyAvailableBankFields": 8,
+        "newCallbacksDeclared": 8,
+        "oldCallbacksDeclared": 7,
+        "callbacksExecuted": 0,
+        "productionReady": false
+      },
+      "scope": "scalar hash values matched actual tracked code/data bytes; mapped hash groups checked by path; no sampler/function evaluation"
+    },
+    {
+      "command": "git diff --check",
+      "handle": "8d6bef",
+      "exitCode": 0,
+      "scope": "source whitespace only"
+    }
+  ],
+  "intermediateFailures": [
+    {
+      "handle": "3078b9/session16984/completioncde8e5",
+      "exitCode": 1,
+      "reason": "literal version type widened in descriptor; fixed explicit Omit<SourceInteractionDescriptor,fingerprint> type"
+    },
+    {
+      "handle": "29dbd9/session97299/completion83602e",
+      "exitCode": 1,
+      "reason": "same literal version typing issue"
+    },
+    {
+      "handle": "4c31bc/session67084/completion7c2807",
+      "exitCode": 1,
+      "reason": "Node dependency imported by browser grouping; fixed pure shared clock module, full server checks retained"
+    }
+  ],
+  "review": {
+    "record": "docs/topics/reviews/source-interactions-source-review-v1.json",
+    "model": "ag/gemini-3.8-flash-low",
+    "helperCalls": 1,
+    "handle": "a964e9/session60422/completion50699b",
+    "usage": {
+      "promptTokens": 18560,
+      "completionTokens": 470,
+      "totalTokens": 19030
+    },
+    "outputCapTokens": 2200,
+    "images": [],
+    "reviewedFinalSource": false,
+    "scope": "bounded frozen complete4 sources + partial wiring only; no whole-patch/runtime/geometry/art/motion/film acceptance",
+    "postFreezeChanges": [
+      {
+        "file": "packages/director/source-interactions.ts",
+        "beforeSHA256": "20884a2741088c6f5423e34c8ad532935678aba2532de800ce558e9323f20e9a",
+        "afterSHA256": "84e214590b7aaef824e9b159a28c41d2f84a3bd774409f0a3086854f5f477f7c",
+        "kind": "independent original declared world grip/model origin and compiler constraint witness"
+      },
+      {
+        "file": "packages/director/actions.ts",
+        "beforeSHA256": "37d82e103b4418247de8ae768a22a0db288bdcc83eb74587de25390e6fb3a90c",
+        "afterSHA256": "bf7a90fa1bae11426edc2a381b09e46c96ea4cca6981127c33957b34921cb3f5",
+        "kind": "use browser-safe shared clock validation; server retains full source/body and action schema validation; grouping source hash removed (canonical source descriptor still hashes source)"
+      }
+    ],
+    "additionalParentChanges": [
+      {
+        "file": "packages/director/source-action-clock.ts",
+        "kind": "shared pure clock projection/validation extracted for Studio; no Node dependency, geometry or approval",
+        "sha256": "c94545584a0341c2a99c9a4fb4df2a5edb431b64f039c18696564f3c44301f3d",
+        "reviewed": false
+      },
+      {
+        "file": "packages/director/source-manipulation-actions.ts",
+        "kind": "server uses the same pure math; retains full validateManipulationSourcePlan and HostActionSchema parse",
+        "sha256": "5b0d2d7c971c2c1bea0dd7d79350b368bb1cd1391f867b0588d0cd9becb93791",
+        "reviewed": false
+      },
+      {
+        "file": "apps/studio/src/cinematic.ts",
+        "kind": "show both performers and original vs slice action clocks",
+        "sha256": "dd3981d83409738e1605bbb9ed08472a51c64f94046a159758c1fd863074135a",
+        "reviewed": false
+      }
+    ],
+    "actualRequestRetries": 0,
+    "autoApply": false,
+    "localPreparation": {
+      "handle": "fafcc7",
+      "exitCode": 1,
+      "totalCharacters": 66453,
+      "reason": "local context cap; no task/request reservation/HTTP/model call",
+      "frozenUnsentFile": "docs/topics/reviews/source-interactions-review-inputs-v1.md",
+      "sha256": "3e66100eba1140d5f756e9a36707912c9db8f613c4cd2824c3535b572bc5422d"
+    }
+  },
+  "callbacks": {
+    "newFile": "tests/source-interactions.test.ts",
+    "newDeclared": 8,
+    "priorFile": "tests/source-prop-binding.test.ts",
+    "priorDeclared": 7,
+    "sharedFixture": "tests/fixtures/source-interaction-fixture.ts",
+    "executed": 0,
+    "status": "NOT RUN; fixture/calibration/schema instances/samplers/reports only inside callback functions"
+  },
+  "static": {
+    "record": "docs/topics/reviews/source-interactions-static-record-v1.json",
+    "originalImagesUnchanged": true,
+    "headDefinitionsUnchanged": 18,
+    "male": {
+      "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+      "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2"
+    },
+    "female": {
+      "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+      "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7"
+    }
+  },
+  "pending": [
+    "Fixed original operate geometry and API per-person role continuity",
+    "Shared/sequential ownership, tool poses and own-model view/head banks",
+    "Geometry/runtime/optical source cuts, seeks, scene cap, cache/resume/repair and real film acceptance",
+    "Full story/script/original WAV +legacy SRT, EN/VI/JA/KO external-local TTS and final MP4/audio/subtitle/reports/QC acceptance"
+  ],
+  "geometryInvoked": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "goalComplete": false,
+  "handoff": "docs/topics/SOURCE-INTERACTIONS-HANDOFF.md"
+}

@@ -29,6 +29,7 @@ import {actorSpeechSheetBytes} from '../motion/speech-import.js';
 import {validateSpriteCamera} from '../motion/camera.js';
 import type {SpriteSceneGeometry} from '../motion/scene.js';
 import {renderCinematic} from '../../library/shots/cinematic.js';
+import {interactionPreviewTimes,validateSourceInteractionGeometry} from '../director/source-interactions.js';
 type SceneGeometry=HostGeometry|SpriteSceneGeometry;
 
 interface PreviewFrame { shotId:string; fraction:number; timeMs:number; path:string; hash:string; }
@@ -110,7 +111,7 @@ export async function createPreviews(projectRoot:string,config:FactoryConfig,sto
     }
     if(shot.host){
       const geometry=await readJson<SceneGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`)),times=new Set<number>(),step=Math.ceil(1000/config.rendering.final.fps);
-      for(const action of geometry.interactions)for(const time of [action.reachMs-step,action.reachMs,action.reachMs+step])times.add(Math.max(shot.startMs,Math.min(shot.endMs-1,time)));
+      for(const time of interactionPreviewTimes(shot,geometry.interactions,step))times.add(time);
       for(const time of eventPreviewTimes(shot))times.add(time);
       for(const timeMs of [...times].sort((a,b)=>a-b)){
         const file=`previews/${shot.id}/action-${timeMs}.png`;
@@ -226,7 +227,8 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
         :geometry.hostHeightRatio<.25||geometry.hostHeightRatio>.4;
       if(cinematic)cameraReports.set(shot.id,validateCamera(shot,performer.profile,actorViewActingClock(storyboard,shot,performer.profile.id)));
       if(geometry.rigHash!==performer.rig.rigHash||geometry.profileHash!==performer.profile.profileHash||heightInvalid)issues.push(issue(shot,cinematic?.actorScene?'actor-identity':'host-identity','high','Performer geometry/profile identity is inconsistent.','Recompile the actor and shot.'));
-      for(const action of geometry.interactions)if(action.type==='operate-model'&&(action.errorPx>2||action.contactMs===undefined||action.contactMs!==action.reachMs))issues.push(issue(shot,'host-contact','high',`${action.partId}: invalid contact geometry/timing`,'Adjust the model anchor or host action and rebuild.'));
+      try{validateSourceInteractionGeometry(shot,storyboard,n,geometry.interactions);}catch(error){issues.push(issue(shot,'host-contact','high',String(error),'Rebuild from the complete original actor/model/contact source.'));}
+      for(const action of geometry.interactions)if(!action.sourceManipulation&&action.type==='operate-model'&&(action.errorPx>2||action.contactMs===undefined||action.contactMs!==action.reachMs))issues.push(issue(shot,'host-contact','high',`${action.partId}: invalid contact geometry/timing`,'Adjust the model anchor or host action and rebuild.'));
     }
     if(voice?.status!=='ready')warnings.push(`Silent draft only: ${voice?.status}. Final requires a ready voice.`);
   }
@@ -253,7 +255,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
         if(hash(await fs.readFile(await safeRealPath(projectRoot,frame.path)))!==frame.hash)throw new Error(`Action snapshot changed: ${frame.path}`);actionTimes.add(`${frame.shotId}:${frame.timeMs}`);}
       const step=Math.ceil(1000/config.rendering.final.fps);
       for(const shot of storyboard.shots){const geometry=await readJson<SceneGeometry>(path.join(projectRoot,`scenes/${shot.id}/host-geometry.json`));
-        for(const action of geometry.interactions)for(const sample of [action.reachMs-step,action.reachMs,action.reachMs+step])if(!actionTimes.has(`${shot.id}:${Math.max(shot.startMs,Math.min(shot.endMs-1,sample))}`))throw new Error(`${shot.id}: missing before/during/after target evidence`);
+        for(const sample of interactionPreviewTimes(shot,geometry.interactions,step))if(!actionTimes.has(`${shot.id}:${sample}`))throw new Error(`${shot.id}: missing before/during/after target evidence`);
         const eventTimes=eventPreviewTimes(shot);
         for(const sample of eventTimes)if(!actionTimes.has(`${shot.id}:${sample}`))throw new Error(`${shot.id}: missing timed event evidence`);
         const sheet=`previews/${shot.id}/action-sheet.jpg`;if((geometry.interactions.length||eventTimes.length)&&(!manifest.sheetHashes[sheet]||hash(await fs.readFile(await safeRealPath(projectRoot,sheet)))!==manifest.sheetHashes[sheet]))throw new Error(`${shot.id}: missing/stale action sheet`);

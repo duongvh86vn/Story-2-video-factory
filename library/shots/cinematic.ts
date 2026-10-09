@@ -34,6 +34,7 @@ import {sceneLabels} from './scene-labels.js';
 import {renderSpriteScene} from '../../packages/motion/scene.js';
 import type {ActorMotion} from '../../packages/motion/schemas.js';
 import {sourceWorldFrames,sourceWorldModelTimeline} from './source-world-timeline.js';
+import {sourceInteractionGeometry} from '../../packages/director/source-interactions.js';
 
 function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w:number,h:number):string{
   return part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
@@ -208,7 +209,9 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity,sourceClock:primaryClock,actingClock:primaryActingClock}]),
     ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,
       activity:performerSpeech.get(actor.character.id)!.activity,sourceClock:performerSpeech.get(actor.character.id)!.sourceClock,actingClock:performerSpeech.get(actor.character.id)!.actingClock}))];
-  for(const performer of performers)for(const {action:a,gestures} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs))if(a.target)for(const [index,g] of gestures.entries()){
+  for(const performer of performers)for(const {action:a,gestures,sourceManipulation} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs)){
+    if(sourceManipulation){geometry.interactions.push(sourceInteractionGeometry(shot,performer.id,a,board,narration));continue;}
+    if(a.target)for(const [index,g] of gestures.entries()){
     const target=index===1?a.secondTarget!:a.target;
     const sourceGesture=g.sourceSpan?viewSourceGestureDefinition(g):undefined;
     const reach=sourceGesture?Math.max(g.startMs,Math.min(g.endMs,sourceGesture.reachMs-shot.startMs)):g.contactMs??Math.min(g.endMs-1,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
@@ -219,6 +222,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
         samplePhase:reach+shot.startMs<sourceGesture.reachMs?'approach' as const:reach+shot.startMs>sourceGesture.recoverMs?'recovery' as const:'hold' as const,contactVerified:false as const}}:{}),
       ...(a.contactMs===undefined?{}:{contactMs:a.contactMs})});
   }
+    }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});
   return {files,geometry,report:{...result.compiled.report,...(worldFrames?{sourceWorld:{version:c.sourceWorld!.version,id:c.sourceWorld!.id,originalStartMs:c.sourceWorld!.startMs,originalEndMs:c.sourceWorld!.endMs,sourceHash:hash(c.sourceWorld),entry:worldFrames[0]!.phase,exit:worldFrames.at(-1)!.phase,scope:"original-global-phase-candidate",motionVerified:false}}:{}),camera:validateCamera(shot,profile,primaryActingClock,{worldShot:shot,board}),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>({partId,...(c.propBindings.find(binding=>binding.partId===partId)?{propId:c.propBindings.find(binding=>binding.partId===partId)!.propId}:{})}))}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
     const owner=originalPropGesture(shot,binding),prop=owner.prop,g=owner.gesture,source=owner.performance.sourceManipulation;

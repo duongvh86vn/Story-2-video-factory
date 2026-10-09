@@ -6,6 +6,7 @@ import type {ActorDefinition} from '../actors/schemas.js';
 import {isWholeSourceStatement} from '../explainer/plan.js';
 import {ApprovalRequired} from '../orchestrator/state-machine.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
+import {sourceInteractionDescriptor} from './source-interactions.js';
 
 type Acting=NonNullable<SceneIntent['acting']>[number];
 export function actingSourceWindows(expected:Acting,beat:Beat,narration:Narration,interval:Pick<Shot,'startMs'|'endMs'>=beat){
@@ -18,7 +19,19 @@ export function actingSourceWindows(expected:Acting,beat:Beat,narration:Narratio
   });
 }
 
-function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],speakingSegmentIds:string[],shot:Shot,beat:Beat,narration:Narration):boolean{
+export function hasSourceManipulationActing(expected:Acting,actions:NonNullable<Shot['host']>['actions'],shot:Shot,beat:Beat,narration:Narration,board:Storyboard):boolean{
+  if(expected.kind!=='manipulation')return false;
+  const windows=actingSourceWindows(expected,beat,narration,shot);
+  return actions.filter(a=>a.sourceManipulation&&expected.targetIds?.includes(a.target?.partId??'')).some(action=>{
+    const original=sourceInteractionDescriptor(shot,expected.participantId,action,board,narration),cue=narration.segments.find(s=>s.id===original.narrationAnchor)!;
+    if(original.operation!==expected.operation||!isWholeSourceStatement(expected.statement,cue.text)||!expected.sourceRefs.some(ref=>ref.kind==='narration'&&ref.segmentId===cue.id&&isWholeSourceStatement(expected.statement,ref.quote)))return false;
+    if(expected.operation==='drop'&&(original.releaseMs===undefined||original.landingMs===undefined)||expected.operation==='pick-place'&&original.releaseMs===undefined)return false;
+    // A beat may cover an inherited hold/flight. Original contact/release are
+    // still inside the complete actual cue, never re-timed into this beat.
+    return windows.some(w=>w.id===cue.id&&action.startMs<w.endMs&&action.endMs>w.startMs);
+  });
+}
+function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],speakingSegmentIds:string[],shot:Shot,beat:Beat,narration:Narration,board:Storyboard):boolean{
   const kind=expected.kind;
   if(shot.cinematic?.spriteStage){
     const windows=actingSourceWindows(expected,beat,narration,shot);
@@ -44,6 +57,7 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
   });
   if(kind==='locomotion')return body.walks.some(clip=>bodyOverlaps(clip)&&Math.abs(clip.toX-clip.fromX)>.01&&
     (expected.movement==='run'?clip.gait==='run':expected.movement==='walk'?clip.gait!=='run':true));
+  if(kind==='manipulation'&&p.sourceManipulation)return hasSourceManipulationActing(expected,actions,shot,beat,narration,board);
   if(kind==='manipulation'&&expected.operation==='drop')return p.gestures.some(clip=>clip.action==='drop'&&clip.releaseMs!==undefined&&clip.landingMs!==undefined&&clip.propId&&p.props.some(prop=>prop.id===clip.propId)&&actions.some(action=>action.type==='operate-model'&&expected.targetIds?.includes(action.target?.partId??'')&&action.contactMs===shot.startMs+clip.contactMs!&&action.startMs===shot.startMs+clip.startMs&&action.endMs===shot.startMs+clip.endMs&&windows.some(window=>window.id===action.narrationAnchor&&shot.startMs+clip.releaseMs!>=window.startMs&&shot.startMs+clip.landingMs!<=window.endMs)));
   if(kind==='manipulation')return p.gestures.some(clip=>overlaps(clip)&&['operate','pick-place','carry'].includes(clip.action)&&clip.contactMs!==undefined&&
     shot.startMs+clip.contactMs>=beat.startMs&&shot.startMs+clip.contactMs<beat.endMs&&actions.some(action=>action.type==='operate-model'&&
@@ -88,7 +102,7 @@ export function validateStoryActingCoverage(board:Storyboard,beats:Beat[],narrat
       }
       if(!performances.length){failures.push(`${beat.id}: needs-layout: missing story actor ${participant.name}; cutaways cannot replace the entire accepted actor situation`);continue;}
       for(const expected of intent.acting?.filter(acting=>acting.participantId===participant.id)??[])
-        if(!performances.some(({shot,performance,actions,speakingSegmentIds})=>hasPerformance(expected,performance,actions,speakingSegmentIds,shot,beat,narration)))
+        if(!performances.some(({shot,performance,actions,speakingSegmentIds})=>hasPerformance(expected,performance,actions,speakingSegmentIds,shot,beat,narration,board)))
           failures.push(`${beat.id}: needs-motion: ${participant.name} has no ${expected.kind} performance for its sourced statement; preserve narration and repair the actual acting. Required evidence: ${JSON.stringify({participantId:participant.id,statement:expected.statement,movement:expected.movement,operation:expected.operation,targetIds:expected.targetIds??[],sourceWindows:actingSourceWindows(expected,beat,narration),clock:"sourceWindows and actor actions are narration-global; performance clips are shot-local"})}`);
     }
   }
