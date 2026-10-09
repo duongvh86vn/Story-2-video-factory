@@ -40,15 +40,15 @@ export function sourceWorldModelTimeline(shot:Shot,frames:SourceWorldFrame[]):st
     const binding=c.propBindings.find(b=>b.partId===part.id),canonicalGlyph=ownershipGlyph(shot,part.id),glyph=canonicalGlyph?`#${canonicalGlyph}`:binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`;
     const foreground=c.artDirection?.models.some(m=>m.partId===part.id&&m.foregroundSvg!==undefined),state=(frame:SourceWorldFrame)=>frame.phase.models[part.id]!;
     const targets=(suffix:string)=>[glyph+suffix,...(foreground?[`#foreground-object-${i}${suffix}`]:[])];
-    calls.push(...sourceWorldTrack(frames,selector(`#object-${i} .focus-${i}`),f=>({opacity:state(f).focus}),true));
-    for(const base of new Set([`#object-${i}`,glyph,...(foreground?[`#foreground-object-${i}`]:[])]))calls.push(...sourceWorldTrack(frames,selector(base),f=>({opacity:state(f).visible}),true));
     const contactFrame=c.artDirection?.models.find(m=>m.partId===part.id)?.contactFrame;
+    calls.push(...sourceWorldTrack(frames,selector(contactFrame?`${glyph} .contact-model-underlay .focus-${i}`:`#object-${i} .focus-${i}`),f=>({opacity:state(f).focus}),true));
+    for(const base of new Set([`#object-${i}`,glyph,...(foreground?[`#foreground-object-${i}`]:[])]))calls.push(...sourceWorldTrack(frames,selector(base),f=>({opacity:state(f).visible}),true));
     if(contactFrame){
       const scale=binding&&!canonicalGlyph?boundProp(shot,binding).performance.scale:1;
       for(const target of targets(' .contact-model-root'))calls.push(...modelContactTimeline(shot,part.id,selector(target),part.width*c.performance.stage.width/scale,part.height*c.performance.stage.height/scale));
     }else for(const target of targets(' .motion'))calls.push(...sourceWorldTrack(frames,selector(target),f=>({rotation:state(f).rotation,x:state(f).x,opacity:state(f).opacity})));
-    for(const [name,key] of [['hot','hot'],['cold','cold'],['hot-coat','hotCoat'],['cold-coat','coldCoat']] as const)for(const target of targets(` .thermal-${name}`))calls.push(...sourceWorldTrack(frames,selector(target),f=>({opacity:state(f)[key]}),!name.endsWith('coat')));
-    calls.push(...sourceWorldTrack(frames,selector(`#object-${i} .energy-effect`),f=>({opacity:state(f).energy})));
+    for(const [name,key] of [['hot','hot'],['cold','cold'],['hot-coat','hotCoat'],['cold-coat','coldCoat']] as const)for(const target of contactFrame?[`${glyph} .contact-model-effects .thermal-${name}`]:targets(` .thermal-${name}`))calls.push(...sourceWorldTrack(frames,selector(target),f=>({opacity:state(f)[key]}),!name.endsWith('coat')));
+    calls.push(...sourceWorldTrack(frames,selector(contactFrame?`${glyph} .contact-model-effects .energy-effect`:`#object-${i} .energy-effect`),f=>({opacity:state(f).energy})));
     if(!binding&&rendersModelControl(shot,part.id)){
       calls.push(`tl.set(${JSON.stringify(selector(`#object-${i} .control-turn`))},{svgOrigin:"0 0"},0);`);
       calls.push(...sourceWorldTrack(frames,selector(`#object-${i} .control-turn`),f=>({rotation:state(f).control})));

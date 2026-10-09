@@ -10,8 +10,9 @@ import {sampleSourceWorldPhase} from './source-world-phase.js';
 import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeSnapshot} from './ownership-bake-query.js';
 import type {ActorCompilations} from './source-spear-emitted.js';
+import type {ProjectedBounds} from './model-decorations.js';
 
-export const PROJECTED_MODEL_GEOMETRY_VERSION='projected-model-geometry-1';
+export const PROJECTED_MODEL_GEOMETRY_VERSION='projected-model-geometry-2';
 export type ProjectedPoint={x:number;y:number};
 export interface ProjectedModelShape {center:ProjectedPoint;quad:[ProjectedPoint,ProjectedPoint,ProjectedPoint,ProjectedPoint];visible:boolean;opacity:number;}
 const fail=(message:string):never=>{throw new Error(`needs-source-prop-binding: projected model geometry ${message}`);};
@@ -55,7 +56,7 @@ export function projectedModelGeometry(input:Shot,board:Storyboard|undefined,nar
     const r=emittedTransformTrack(owner.performance,actorProfile(owner.character).profileHash,c.actorScene!.primary?.id===id?'':`actor-${id}-`,keys,compiled);
     readers.set(id,r);return r;
   };
-  const entries=new Map<string,{times:number[];at:(timeMs:number)=>ProjectedModelShape;identity:unknown}>();
+  const entries=new Map<string,{times:number[];at:(timeMs:number)=>ProjectedModelShape;envelope:(bounds?:ProjectedBounds)=>ProjectedBounds;centerEnvelope:()=>ProjectedBounds;identity:unknown}>();
   for(const part of v.parts){
     if(entries.has(part.id))return fail('has duplicate entity IDs');
     const art=c.artDirection?.models.find(m=>m.partId===part.id),item=canonical?.get(part.id),binding=c.propBindings.find(b=>b.partId===part.id),owner=binding&&!item?boundProp(shot,binding):undefined;
@@ -84,11 +85,38 @@ export function projectedModelGeometry(input:Shot,board:Storyboard|undefined,nar
       if(!frame&&phase&&(phase.rotation!==0||phase.x!==0||phase.opacity!==1))return fail('a moving legacy endpoint needs its own explicit whole projected frame');
       return {center,quad,visible:phase?.visible!==0,opacity:local?.opacity??1};
     };
-    entries.set(part.id,{times,at,identity:{part,art,slice:slice?.fingerprint,emitted:emitted?.fingerprint,bake}});
+    const envelope=(declared:ProjectedBounds):ProjectedBounds=>{
+      if(!Object.values(declared).every(Number.isFinite)||declared.left>declared.right||declared.top>declared.bottom)return fail('has invalid internal overlay/center bounds');
+      let left=Infinity,right=-Infinity,top=Infinity,bottom=-Infinity;
+      const include=(p:ProjectedPoint)=>{left=Math.min(left,p.x);right=Math.max(right,p.x);top=Math.min(top,p.y);bottom=Math.max(bottom,p.y);};
+      // AttrPlugin interpolates the six serialized matrix coefficients, not
+      // decomposed rotation/scale. Each fixed corner is affine on an interval;
+      // endpoint extrema plus coefficient rounding pad cover that local box.
+      // Actual parent rotation is bounded separately by the radius below.
+      for(const t of contact?.times??[0,duration])for(const x of [declared.left,declared.right])for(const y of [declared.top,declared.bottom]){
+        const p={x:(x-.5)*w,y:(y-.5)*h};include(contact?contactMatrixPoint(contact.at(t).matrix,p):p);
+      }
+      const pad=.000051*(Math.max(Math.abs((declared.left-.5)*w),Math.abs((declared.right-.5)*w))+Math.max(Math.abs((declared.top-.5)*h),Math.abs((declared.bottom-.5)*h))+1);
+      left-=pad;right+=pad;top-=pad;bottom+=pad;
+      let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity,maxScale=0;
+      for(const t of times){const p=parent({x:0,y:0},t);minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);if(emitted)maxScale=Math.max(maxScale,emitted.at(`prop-${binding!.propId}`,t).scale);}
+      if(emitted){
+        // The actual parent rotates a local box: a circle around its serialized
+        // translation conservatively covers every intermediate angle/scale.
+        const r=Math.hypot(Math.max(Math.abs(left),Math.abs(right)),Math.max(Math.abs(top),Math.abs(bottom)))*(maxScale+.000051)+.000051;
+        return {left:minX-r,right:maxX+r,top:minY-r,bottom:maxY+r};
+      }
+      return {left:minX+left-.000051,right:maxX+right+.000051,top:minY+top-.000051,bottom:maxY+bottom+.000051};
+    };
+    entries.set(part.id,{times,at,envelope:(bounds)=>envelope(bounds??art?.contactFrame?.bounds??{left:-.03,right:1.03,top:-.03,bottom:1.03}),
+      centerEnvelope:()=>{const p=art?.contactFrame?.anchors.center??{x:.5,y:.5};return envelope({left:p.x,right:p.x,top:p.y,bottom:p.y});},
+      identity:{part,art,slice:slice?.fingerprint,emitted:emitted?.fingerprint,bake}});
   }
   return {version:PROJECTED_MODEL_GEOMETRY_VERSION,shotHash:hash(shot),durationMs:duration,
     times:(partId:string)=>{const e=entries.get(partId);if(!e)return fail('missing own relation entity');return [...e.times];},
     at:(partId:string,timeMs:number)=>{const e=entries.get(partId);if(!e)return fail('missing own relation entity');return e.at(timeMs);},
+    envelope:(partId:string,bounds?:ProjectedBounds)=>{const e=entries.get(partId);if(!e)return fail('missing own overlay entity');return e.envelope(bounds);},
+    centerEnvelope:(partId:string)=>{const e=entries.get(partId);if(!e)return fail('missing own center entity');return e.centerEnvelope();},
     fingerprint:hash({shot,board,narration,entries:[...entries].map(([id,e])=>({id,identity:e.identity}))}),
     scope:'supplied-emitted-parent/projected-declared-bound-candidate' as const,continuousGeometryVerified:false as const,motionVerified:false as const,productionApproval:false as const};
 }
@@ -96,5 +124,5 @@ export const projectedModelGeometryDescription={version:PROJECTED_MODEL_GEOMETRY
   authority:'exact renderer supplied own-actor emitted transforms and supplied validated canonical bake; own explicit projected frame/declared bounds, fixed stage parent or actual physical parent applied once',
   relations:'explicit projected endpoints use adaptive quadratic/arrow paths and original-world flow progress; separate source/target opacity parents and discrete source reveal visibility; legacy endpoint bounds remain logical rectangles, not inferred artwork contours',
   limits:'finite .2px probes/.17,.5,.83, depth12/12000 retained frames; no continuous/pixel/depth/browser/film acceptance; legacy moving endpoint needs its own explicit projected whole frame',
-  pending:['projected label/focus/energy/thermal/shadow following and camera envelope integration','actual fractional/reverse/cut SVG/GSAP seeks, owned/canonical targets and depth/film acceptance','native artwork/acting and full three-input factory acceptance'],
+  pending:['actual generated overlay/label/shadow/camera seeking, text metrics and depth/light acceptance','actual fractional/reverse/cut SVG/GSAP seeks, owned/canonical targets and depth/film acceptance','native artwork/acting and full three-input factory acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false,productionApproval:false};

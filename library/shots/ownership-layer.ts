@@ -33,7 +33,8 @@ export function renderOwnershipLayer(shot:Shot,compiled:ReadonlyMap<string,Compi
     const part=shot.visualization!.parts.find(p=>p.id===partId),model=c.models.find(m=>m.partId===partId),index=shot.visualization!.parts.findIndex(p=>p.id===partId);
     if(!part||!model)return fail(shot,'missing actual canonical entity descriptor or samples');
     const width=part.width*c.performance.stage.width,height=part.height*c.performance.stage.height,entityId=ownershipEntityId(source.id);
-    const front=customModelForegroundArt(shot,partId,width,height),art=customModelArt(shot,partId,width,height)??cinematicModel(part,model,width,height).svg;
+    const contactFrame=c.artDirection?.models.find(m=>m.partId===partId)?.contactFrame;
+    const front=customModelForegroundArt(shot,partId,width,height),art=customModelArt(shot,partId,width,height,!!contactFrame)??cinematicModel(part,model,width,height).svg;
     const palms=new Map<string,string>();
     for(const grip of source.grips){
       const alias=item.aliases.find(a=>a.actorId===grip.actorId&&a.propId===grip.propId&&a.hand===grip.hand);
@@ -45,7 +46,7 @@ export function renderOwnershipLayer(shot:Shot,compiled:ReadonlyMap<string,Compi
     }
     if(allIds.has(entityId))return fail(shot,'entity namespace collision');allIds.add(entityId);
     const before=paint.grips.filter(g=>g.depth==='before-entity').map(g=>palms.get(g.gripId)).join(''),after=paint.grips.filter(g=>g.depth==='after-entity').map(g=>palms.get(g.gripId)).join('');
-    const markup=`<g data-ownership-source="${escapeHtml(source.id)}" data-entity-plane="${paint.entityPlane}">${before}<g id="${entityId}" data-prop-entity="${escapeHtml(partId)}" data-canonical-ownership="true" fill="none" stroke="#644931" stroke-width="${c.performance.stage.height*.003}" stroke-linecap="round" stroke-linejoin="round">${art}${thermal(part,width,height)}</g>${after}${front?`<g id="foreground-object-${index}" data-sourced-foreground="${escapeHtml(partId)}">${front}</g>`:''}</g>`;
+    const markup=`<g data-ownership-source="${escapeHtml(source.id)}" data-entity-plane="${paint.entityPlane}">${before}<g id="${entityId}" data-prop-entity="${escapeHtml(partId)}" data-canonical-ownership="true" fill="none" stroke="#644931" stroke-width="${c.performance.stage.height*.003}" stroke-linecap="round" stroke-linejoin="round">${art}${contactFrame?'':thermal(part,width,height)}</g>${after}${front?`<g id="foreground-object-${index}" data-sourced-foreground="${escapeHtml(partId)}">${front}</g>`:''}</g>`;
     if(paint.entityPlane==='behind-actors')result.beforeActors+=markup;else result.afterActors+=markup;
     result.entities.push({partId,entityId,sourceId:source.id,plane:paint.entityPlane,palmIds:source.grips.map(g=>ownershipPalmId(source.id,g.id))});
     for(const [i,sample] of bake.samples.entries()){
@@ -53,8 +54,10 @@ export function renderOwnershipLayer(shot:Shot,compiled:ReadonlyMap<string,Compi
       result.calls.push(`tl.${previous?'to':'set'}(${JSON.stringify(selector(shot,entityId))},${JSON.stringify(vars)},${at});`);
       if(front)result.calls.push(`tl.${previous?'to':'set'}(${JSON.stringify(selector(shot,'foreground-object-'+index))},${JSON.stringify(vars)},${at});`);
       const x=part.x*c.performance.stage.width,y=part.y*c.performance.stage.height,delta={attr:{transform:`translate(${sample.center.x-x} ${sample.center.y-y})`},...(previous?{duration:(sample.timeMs-previous.timeMs)/1000,ease:'none'}:{immediateRender:true})};
-      result.calls.push(`tl.${previous?'to':'set'}(${JSON.stringify(selector(shot,'object-'+index))},${JSON.stringify(delta)},${at});`);
-      result.calls.push(`tl.${previous?'to':'set'}(${JSON.stringify(selector(shot,'object-'+index,' .bound-model-shadow'))},${JSON.stringify({...delta,attr:{transform:`translate(0 ${y-sample.center.y})`}})},${at});`);
+      if(!contactFrame){
+        result.calls.push(`tl.${previous?'to':'set'}(${JSON.stringify(selector(shot,'object-'+index))},${JSON.stringify(delta)},${at});`);
+        result.calls.push(`tl.${previous?'to':'set'}(${JSON.stringify(selector(shot,'object-'+index,' .bound-model-shadow'))},${JSON.stringify({...delta,attr:{transform:`translate(0 ${y-sample.center.y})`}})},${at});`);
+      }
       // Discrete visibility is written at the exact current sample, never
       // tweened from an earlier ownership phase or moved to camera entry.
       for(const grip of source.grips)if(!previous||previous.activeGripIds.includes(grip.id)!==sample.activeGripIds.includes(grip.id))

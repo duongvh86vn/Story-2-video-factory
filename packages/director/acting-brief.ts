@@ -14,6 +14,7 @@ import {sourceSpearInteractionDescription} from './source-spear-interactions.js'
 import {modelContactDescription} from './model-contact-motion.js';
 import {sourceSpearEmittedDescription} from './source-spear-emitted.js';
 import {projectedModelGeometryDescription} from './projected-model-geometry.js';
+import {projectedOverlayDescription} from './projected-model-overlays.js';
 import {physicalPerformanceDescription} from '../animation/compiler.js';
 import {sourceManipulationActionDescription} from './source-manipulation-actions.js';
 import {sourcePropBindingDescription} from './source-prop-binding.js';
@@ -48,7 +49,7 @@ export function creativeActingBrief(beats:Beat[],narration:Narration,profile:Hos
       rule:'A gaze uses either target:{x,y} for a fixed world point OR actorTarget:{id,anchor:eyes}, never both. Actor eye following requires explicitly registered native eyes/body/expression target and native eyes on the looking actor. Resolve the real complete visible target run, root/stage/scale/view, sourceBody support/motion and original expression/breath clock through camera/primary changes. No self/missing/hidden target, source approximation or gaze feedback. Behind the fixed native view still requires matching authored view/turn; this candidate supplies pupil direction only, not head/body turning or optical/production acceptance. Do not replace a sourced turn with pupil movement.'},
     nativeSeating:{candidate:nativeSeatDescription,selected:hasBodyViewSeat(profile),lockedActors:lockedActors.filter(hasBodyViewSeat).map(actor=>actor.id),rule:'Only an explicitly selected registered-seated-v1 native actor/view with registered-locomotion-v1 may sit/hold/rise. Define physical seat supports with matching facing, fixed reachable hips/soles and transitions at least1500ms. One complete shot uses local supports/postures. Camera cuts through a moving or held seated action require identical complete sourceBody.supports/postures/entryPosture on every visible actor slice in the continuous run, with empty local physical tracks. Primary/supporting and speaker changes retain each actor identity, root/view/stage/scale and source clock. Approach/hold/rise reserve a seat for one actor; stand fully before walking/running/jumping or another actor taking that seat. Preserve the original torso/belt/head and common opaque fold surface. Runtime equivalence and art remain unaccepted; never infer coverage, change sourced obligations to narration or claim motion/art/final acceptance.'},
     sourceWorld:sourceWorldDescription,
-    projectedModelContact:modelContactDescription,emittedToolObservation:sourceSpearEmittedDescription,projectedRelations:projectedModelGeometryDescription,
+    projectedModelContact:modelContactDescription,emittedToolObservation:sourceSpearEmittedDescription,projectedRelations:projectedModelGeometryDescription,projectedOverlays:projectedOverlayDescription,
     sourceOwnership:sourceOwnershipDescription,
     ownershipRenderer:ownershipRenderDescription,
     ownershipObservation:ownershipObservationDescription,

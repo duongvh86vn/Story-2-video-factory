@@ -27,7 +27,10 @@ import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeCenterBounds} from './ownership-bake-query.js';
 import {sourceSpearBinding} from './source-spear-bindings.js';
 import {sourceSpearInteractionGeometry} from './source-spear-interactions.js';
-import {modelContactBounds} from './model-contact-motion.js';
+import {cameraModelLabel} from './model-label.js';
+export {cameraModelLabel} from './model-label.js';
+import {projectedOverlayCameraBounds} from './projected-model-overlays.js';
+import type {projectedModelGeometry} from './projected-model-geometry.js';
 
 export const CAMERA_VIEWPORT={left:.04,right:.96,top:.14,bottom:.80,centerY:.46,pan:.025} as const;
 export interface CameraMatrix { scale:number; x:number; y:number; }
@@ -129,13 +132,6 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
   return {head,feet,body:bodyBounds,props,propCenters,ratio};
 }
 
-/** Keep wrapping and clearance identical to the production model labels. */
-export function cameraModelLabel(part:NonNullable<Shot['visualization']>['parts'][number],height:number,width:number){
-  const font=height*.021,maxChars=Math.max(12,Math.floor(part.width*width/font*1.6)),lines:string[]=[];let line='';
-  for(const word of part.label.split(/\s+/)){if(line&&line.length+word.length+1>maxChars){lines.push(line);line='';}line=line?`${line} ${word}`:word;}if(line)lines.push(line);
-  return {font,lines,labelY:part.y*height+part.height*height*.56,labelHeight:lines.length*font*1.15};
-}
-
 /** Pure local-clock transform. Host, contact anchors, props and floor share this matrix. */
 export function cameraMatrixAt(camera:CinematicCamera,stage:{width:number;height:number},durationMs:number,timeMs:number):CameraMatrix {
   CameraSchema.parse(camera);finite(timeMs);finite(durationMs);finite(stage.width);finite(stage.height);
@@ -225,7 +221,7 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
 export class CameraFramingError extends Error {constructor(message:string){super(message);this.name='CameraFramingError';}}
 /** Compute the real source envelopes without consulting framing. This preflight
  * prevents an early bad anchor/angle from concealing missing source geometry. */
-export interface CameraSourceContext {worldShot:Shot;board?:Storyboard;narration?:Narration;ownership?:OwnershipScene;}
+export interface CameraSourceContext {worldShot:Shot;board?:Storyboard;narration?:Narration;ownership?:OwnershipScene;projected?:ReturnType<typeof projectedModelGeometry>;}
 export function cameraSourceGeometry(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:CameraSourceContext){
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera source requires canonical cinematic data`);
   const bounds=cameraHostBounds(c.performance,profile,actingClock),worldShot=context?.worldShot??shot,world=worldShot.cinematic;
@@ -279,20 +275,12 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
     const motion=centers.get(part.id)??props.get(part.id);
     return motion??{left:part.x*width,right:part.x*width,top:part.y*height,bottom:part.y*height};
   };
+  const overlayBounds=new Map<string,ReturnType<typeof projectedOverlayCameraBounds>>();
+  const projectedOverlays=(part:NonNullable<Shot['visualization']>['parts'][number])=>{let b=overlayBounds.get(part.id);if(!b){b=projectedOverlayCameraBounds(context?.worldShot??shot,part.id,centers.get(part.id)??props.get(part.id),context?.projected);overlayBounds.set(part.id,b);}return b;};
   const modelBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
     if(rigidParts.has(part.id))return props.get(part.id)!; // Complete shaft/tip/butt, not a center to expand again.
     const frame=c.artDirection?.models.find(m=>m.partId===part.id)?.contactFrame;
-    if(frame){
-      const source=context?.worldShot??shot,canonical=c.sourceOwnership?.some(s=>s.partId===part.id),binding=c.propBindings.find(b=>b.partId===part.id);
-      if(!binding&&!canonical)return modelContactBounds(source,part.id);
-      const b=movingBounds(part),f=frame.bounds;
-      if(canonical)return {left:b.left+(f.left-.5)*part.width*width,right:b.right+(f.right-.5)*part.width*width,top:b.top+(f.top-.5)*part.height*height,bottom:b.bottom+(f.bottom-.5)*part.height*height};
-      // Independent props retain their actual owner rotation/rounded scale.
-      // A conservative circle encloses the declared artwork at every angle.
-      const scale=boundProp(source,binding!).performance.scale,ratio=Number(scale.toFixed(4))/scale;
-      const radius=Math.hypot(Math.max(Math.abs(f.left-.5),Math.abs(f.right-.5))*part.width*width,Math.max(Math.abs(f.top-.5),Math.abs(f.bottom-.5))*part.height*height)*ratio+.001;
-      return {left:b.left-radius,right:b.right+radius,top:b.top-radius,bottom:b.bottom+radius};
-    }
+    if(frame)return projectedOverlays(part).model;
     const b=movingBounds(part);return {left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top-part.height*height*.6,bottom:b.bottom+part.height*height*.6};
   };
   const modelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>boundsInView(modelBounds(part));
@@ -306,6 +294,9 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
     if(!rendersModelLabel(shot,part.id))return;
     const {font,lines,labelY,labelHeight}=cameraModelLabel(part,height,width);
     if(lines.length>4)fail(`model ${part.id} label is too long for the cinematic stage.`);
+    if(c.artDirection?.models.some(m=>m.partId===part.id&&m.contactFrame)){
+      if(!boundsInView(projectedOverlays(part).label!))fail(`model ${part.id} projected upright label leaves the safe viewport/subtitle clearance.`);return;
+    }
     const b=movingBounds(part),labelOffset=labelY-part.y*height;
     if(!boundsInView({left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top+labelOffset-font,bottom:b.bottom+labelOffset+labelHeight}))fail(`model ${part.id} label leaves the safe viewport/subtitle clearance; use a wider framing or replan its layout.`);
   };
@@ -370,5 +361,5 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
   return {framing:camera.framing,focus:camera.focus??'ensemble',viewport:CAMERA_VIEWPORT,worldHostHeightRatio:worldRatio,
     screenHostHeightRatio:{start:worldRatio*camera.startScale,end:worldRatio*camera.endScale},
     minimumScreenHostHeightRatio:{start:bounds.ratio.min*camera.startScale,end:bounds.ratio.min*camera.endScale},
-    groundScreenY:matrices.map(matrix=>cameraPoint({x:p.root.x,y:groundY},matrix).y),intentionalBodyCrop:camera.framing==='close'};
+    groundScreenY:matrices.map(matrix=>cameraPoint({x:p.root.x,y:groundY},matrix).y),intentionalBodyCrop:camera.framing==='close',...(overlayBounds.size?{projectedOverlays:[...overlayBounds].map(([partId,bounds])=>({partId,...bounds}))}:{})};
 }

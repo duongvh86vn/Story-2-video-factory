@@ -8,36 +8,14 @@ import {contactMatrixPoint,createContactMotionSampler,modelContactSlice} from '.
 import {svgLinearNumber,emittedTransformTrack} from '../packages/animation/svg-transform-track.js';
 import {renderProjectedRelation} from '../library/shots/projected-relations.js';
 import {cinematicRelations} from '../library/shots/cinematic-models.js';
-import {projectedContactFixture} from './helpers/projected-contact-fixture.js';
+import {projectedRelationsFixture as fixture,suppliedProjectedActors as supplied} from './helpers/projected-relations-fixture.js';
 import {projectSourceWorldEvents} from '../packages/director/source-world-projection.js';
 import {sourceActor} from '../packages/director/source-actor.js';
 import {actorProfile} from '../packages/actors/model.js';
-import {actorViewActingClock} from '../packages/actors/view-acting-clock.js';
-import {compilePerformance} from '../packages/animation/compiler.js';
-import type {ActorCompilations} from '../packages/director/source-spear-emitted.js';
-import type {Shot} from '../packages/core/schemas.js';
 import {OWNERSHIP_RENDER_VERSION,type CompiledOwnership} from '../packages/director/ownership-compile.js';
 import type {SourceOwnership} from '../packages/director/source-ownership-schemas.js';
 
 function curve(x:number):RelationCurve{return {start:{x,y:10},control:{x:x+40,y:-20},end:{x:x+80,y:20},arrow:[{x:x+80,y:20},{x:x+70,y:10},{x:x+70,y:30}]};}
-function fixture(){
-  const f=projectedContactFixture(),ref=f.board.shots[0]!.sourceRefs![0]!;
-  for(const s of f.board.shots){
-    s.visualization!.parts.push({id:'emitter',label:'emitter',kind:'object',x:.12,y:.22,width:.08,height:.1,sourceRefs:[ref]});
-    s.cinematic!.models.push({partId:'emitter',variant:'conceptual',sourceRefs:[ref]});
-    const art=s.cinematic!.artDirection!.models[0]!;art.contactFrame!.anchors.center={x:.6,y:.55};
-    s.cinematic!.artDirection!.models.push({...structuredClone(art),partId:'emitter'});
-    s.visualization!.relations=[{from:'emitter',to:'target',kind:'transfer',sourceRefs:[ref]}];
-    s.cinematic!.sourceWorld!.events.push({id:'original-flow',type:'flow',targetId:'emitter',relationTo:'target',startMs:1200,endMs:3800,narrationAnchor:'cue',contactRequired:false,motion:'none',sourceRefs:[ref]},
-      {id:'target-pulse',type:'part-motion',targetId:'target',startMs:500,endMs:3000,narrationAnchor:'cue',contactRequired:false,motion:'pulse',sourceRefs:[ref]});
-    s.visualization!.events=projectSourceWorldEvents(s.cinematic!.sourceWorld!,s.startMs,s.endMs);
-  }
-  return f;
-}
-function supplied(f:ReturnType<typeof fixture>,s:Shot):ActorCompilations{
-  const c=s.cinematic!,ids=[c.actorScene!.primary!.id,...c.actorScene!.supporting.map(a=>a.character.id)];
-  return new Map(ids.map(id=>{const o=sourceActor(s,id);return [id,compilePerformance(o.performance,actorProfile(o.character),{method:'segment-draft',windowMs:20,intervals:[]},c.actorScene!.primary!.id===id?'':`actor-${id}-`,undefined,actorViewActingClock(f.board,s,id))];}));
-}
 function callData(line:string){const m=line.match(/^tl\.(set|to)\(("(?:\\.|[^"\\])*"),(\{.*\}),([^,]+)\);$/);assert.ok(m);return {method:m[1],selector:JSON.parse(m[2]!) as string,vars:JSON.parse(m[3]!) as {attr?:{d?:string;transform?:string};opacity?:number;duration?:number},at:Number(m[4])};}
 
 test('retained adaptive intervals meet finite probes and never report rejected coarse gaps as accepted',()=>{

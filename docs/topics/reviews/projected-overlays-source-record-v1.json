@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.88-projected-overlays",
+  "precedingSourceSHA": "d81c10b4ca6a23114cd380212c322ab7351882ab",
+  "scope": "source build/typecheck/schema definitions/raw inventory/source-only advice; no runtime/native/art/motion/film/full-factory acceptance",
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "3250f1",
+      "session": 13458,
+      "completionChunk": "abdeb4",
+      "decisiveOutput": "vite v7.3.6; 56 modules; index-BTJfXvmi.js 243.74kB/gzip76.02; built in593ms"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "9f6e88",
+      "session": 23825,
+      "completionChunk": "4f92bd",
+      "scope": "tsc -p tsconfig.tests.json; no callbacks executed"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "10c698",
+      "scope": "schema definitions only; no instance validation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "3ccf98",
+      "scope": "raw image/header/hash/JSON/static description inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/projected-overlays-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "9e4766",
+      "session": 93097,
+      "completionChunk": "766401",
+      "scope": "raw source-text/byte/header/JSON inventory only; no project business imports"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "chunk": "94b1a1"
+    }
+  ],
+  "sourceAdvice": {
+    "record": "docs/topics/reviews/projected-overlays-advice-record-v1.json",
+    "requestedModel": "tester",
+    "returnedModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 13680,
+    "totalTokens": 9898,
+    "startChunk": "427f60",
+    "session": 81555,
+    "completionChunk": "abadb5",
+    "issuesReported": 1,
+    "disposition": "Compared with coefficient-linear local matrix contract; concern about decomposed rotation not applicable as stated. Parent added source comments; actual browser/continuous/pixel/film validation remains pending.",
+    "finalIntegrationIndependentlyReviewed": false
+  },
+  "connectionCheck": {
+    "chunk": "89466f",
+    "requestedModel": "tester",
+    "returnedModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 1572,
+    "reply": "TESTER_OK",
+    "totalTokens": 2514,
+    "testsExecuted": false
+  },
+  "rawInventory": {
+    "trackedImages": 294,
+    "actualPNG": 131,
+    "actualJPEG": 163,
+    "allOriginalImageBytesUnchanged": true,
+    "headDefinitions": 18,
+    "headMetadata": 27,
+    "mappedSourceHashes": 133,
+    "mappedSourceEntries": 337,
+    "availableBankFields": 9
+  },
+  "callbacks": {
+    "tests/source-spear-model.test.ts": 8,
+    "tests/source-spear-actions.test.ts": 8,
+    "tests/model-contact-frame.test.ts": 8,
+    "tests/source-spear-emitted.test.ts": 4,
+    "tests/projected-relations.test.ts": 9,
+    "tests/projected-model-overlays.test.ts": 8
+  },
+  "newCallbacksDeclared": 8,
+  "priorRelationCallbacksRefactored": 9,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "compilerInvoked": false,
+  "browserOpened": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44.131Z",
+    "acceptsCurrentSource": false
+  },
+  "ownedPaths": 34,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/PROJECTED-OVERLAYS-HANDOFF.md",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "actual SVG/GSAP/fractional/random/reverse/cut/60fps native film and owned/canonical/foreground/depth/light/font-metric acceptance",
+    "faithful native Lila/Karo faces/hair/costume/soft anatomical limbs, partner gaze, turns and vivid environments; own supporting cast",
+    "integrated source production audit; never lift needs-source-prop-binding in isolation",
+    "arbitrary story/topic→script, exact script, original WAV/legacy SRT; EN primary/VI/JA/KO/external-local HTTP/command TTS",
+    "resume/rebuild/approved locks, review/repair and final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/QC"
+  ]
+}

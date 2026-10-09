@@ -1,0 +1,45 @@
+{
+  "requestedModel": "tester",
+  "returnedModel": "gpt-6-luna",
+  "httpStatus": 200,
+  "elapsedMs": 13680,
+  "usage": {
+    "prompt_tokens": 8780,
+    "completion_tokens": 1118,
+    "total_tokens": 9898
+  },
+  "taskSha256": "8e37e7cc111d8f9bfe843246605de0dd4cba64126373f8ccc848acf57d0bd3bf",
+  "files": [
+    {
+      "file": "packages/director/projected-model-overlays.ts",
+      "sha256": "10a49f0486d94cf8a381d7c810374482cdf4c454ee96d6962ab92861ce1760db"
+    },
+    {
+      "file": "packages/director/model-decorations.ts",
+      "sha256": "ca5267e8d181dab7450f70522b6e45d28d10b115d564bcd7fdaa5d899bfdf611"
+    },
+    {
+      "file": "packages/director/model-label.ts",
+      "sha256": "c5adc02e39a425112298f3c444f4e25162bfc805afb55da4b9527e256c733159"
+    },
+    {
+      "file": "packages/director/projected-model-geometry.ts",
+      "sha256": "cd63efd61fead32fcbf0817e4e12cc1d7a2c71daf4f5f72d3be0d830c560eb33"
+    }
+  ],
+  "answer": "{\"connection\":\"ok\",\"issues\":[{\"file\":\"packages/director/projected-model-geometry.ts\",\"problem\":\"`envelope()` evaluates the contact transform only at `contact.times`, then bounds the transformed corners at those samples. If the interpolated contact matrix rotates or scales between frames, intermediate geometry can extend beyond this envelope, so it is not a conservative camera bound.\",\"fix\":\"Bound the full interpolated transform interval (for example, with a rotation/scale-safe radius bound), or adaptively sample and inflate by a proven interpolation error bound.\"}]}",
+  "scope": "snapshot source-only advice; no callbacks/tests/runtime/film executed",
+  "testsExecuted": false,
+  "approved": false,
+  "parentDisposition": {
+    "issuesReported": 1,
+    "status": "not adopted as stated; compared with actual coefficient-linear interpolation contract",
+    "reason": "Local AttrPlugin transform is matrix(a b c d e f) with ease:none; createContactMotionSampler interpolates those same six coefficients. Each fixed corner is affine between breakpoints; rounding pad is included. Emitted parent rotation has a separate radius envelope. Actual browser/continuous/pixel/film acceptance still pending.",
+    "sourceReferences": [
+      "packages/director/model-contact-motion.ts: interpolate/modelContactTimeline",
+      "packages/director/projected-model-geometry.ts: envelope",
+      "packages/animation/svg-transform-track.ts: svgLinearNumber"
+    ],
+    "finalIntegrationIndependentlyReviewed": false
+  }
+}

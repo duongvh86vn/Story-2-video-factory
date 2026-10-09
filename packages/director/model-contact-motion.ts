@@ -122,16 +122,22 @@ export function modelContactHeldAnchor(shots:readonly Shot[],partId:string,ancho
   if(end!==holdEndMs)return fail(camera,'fixed hold lacks complete original coverage');
   return target;
 }
-export function modelContactBounds(shot:Shot,partId:string){
-  const slice=modelContactSlice(shot,partId),d=descriptor(shot,partId),b=d.frame.bounds;
+/** Internal camera bounds may include generated effects or a zero-area own
+ * center point. They never change the authored physical contact registration. */
+export function modelContactLocalBounds(shot:Shot,partId:string,bounds?:{left:number;right:number;top:number;bottom:number},width?:number,height?:number){
+  const slice=modelContactSlice(shot,partId,width,height),d=descriptor(shot,partId,width,height),b=bounds??d.frame.bounds;
+  if(![b.left,b.right,b.top,b.bottom].every(Number.isFinite)||b.left>b.right||b.top>b.bottom)return fail(shot,'invalid own local camera envelope');
   let left=Infinity,right=-Infinity,top=Infinity,bottom=-Infinity;
   for(const f of slice.frames)for(const x of [b.left,b.right])for(const y of [b.top,b.bottom]){
     const p=contactMatrixPoint(f.matrix,{x:(x-.5)*d.w,y:(y-.5)*d.h});
     left=Math.min(left,p.x);right=Math.max(right,p.x);top=Math.min(top,p.y);bottom=Math.max(bottom,p.y);
   }
-  const x=d.part.x*d.c.performance.stage.width,y=d.part.y*d.c.performance.stage.height;
   const quantizationPad=.000051*(Math.max(Math.abs((b.left-.5)*d.w),Math.abs((b.right-.5)*d.w))+Math.max(Math.abs((b.top-.5)*d.h),Math.abs((b.bottom-.5)*d.h))+1);
-  return {left:x+left-quantizationPad,right:x+right+quantizationPad,top:y+top-quantizationPad,bottom:y+bottom+quantizationPad};
+  return {left:left-quantizationPad,right:right+quantizationPad,top:top-quantizationPad,bottom:bottom+quantizationPad};
+}
+export function modelContactBounds(shot:Shot,partId:string){
+  const d=descriptor(shot,partId),b=modelContactLocalBounds(shot,partId),x=d.part.x*d.c.performance.stage.width,y=d.part.y*d.c.performance.stage.height;
+  return {left:x+b.left,right:x+b.right,top:y+b.top,bottom:y+b.bottom};
 }
 export function modelContactTimeline(shot:Shot,partId:string,selector:string,width?:number,height?:number):string[]{
   const {frames}=modelContactSlice(shot,partId,width,height),calls:string[]=[];

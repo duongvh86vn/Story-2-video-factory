@@ -3,6 +3,7 @@ import { escapeHtml, hash } from '../core/utils.js';
 import { ArtDirectionSchema, ArtEasingSchema, rendersModelControl, type ArtDirection, type ArtKeyframe } from './art-direction-schemas.js';
 import {MODEL_CONTACT_FRAME_VERSION} from './model-contact-reference.js';
 import {modelContactSlice} from './model-contact-motion.js';
+import {modelProjectedDecorations} from './model-decorations.js';
 export { ArtDirectionSchema, type ArtDirection } from './art-direction-schemas.js';
 export const ARTWORK_RENDER_VERSION='passive-svg-2.2.6';
 /** Only shots opting into incoming-keyframe easing acquire this renderer identity. */
@@ -44,7 +45,7 @@ export function artworkSvg(svg:string,prefix:string):string {
       const key=a[1]!.toLowerCase(),value=decodeAttribute(a[2]??a[3]??'');tail=tail.slice(a[0].length);
       if(attributes.has(key))throw new Error('Art SVG duplicate attribute');attributes.set(key,value);
       if(/^on|^data-(?:composition|duration|start|width|height)|^(?:href|xlink:href|src|style|autoplay)$/i.test(key))throw new Error('Art SVG executable/resource/factory attributes are forbidden');
-      if(key==='class'&&/\b(?:camera-rig|environment|performer|ground-shadow|contact-model-root)\b/.test(value))throw new Error('Art SVG uses a reserved factory class');
+      if(key==='class'&&/\b(?:camera-rig|environment|performer|ground-shadow|contact-model-(?:root|underlay|effects|label|shadow))\b/.test(value))throw new Error('Art SVG uses a reserved factory class');
       if(key==='id'){
         if(!/^[a-z][\w.-]*$/i.test(value)||ids.has(value))throw new Error('Art SVG IDs must be valid and unique');
         ids.add(value);
@@ -173,16 +174,18 @@ function modelViewportAttributes(canonical:string):string{
   return root[1]!.replace(/\s(?:x|y|width|height)="[^"]*"/g,'');
 }
 
-export function customModelArt(shot:Shot,partId:string,width:number,height:number):string|undefined {
-  return projectedModelArt(shot,partId,width,height,false);
+export function customModelArt(shot:Shot,partId:string,width:number,height:number,decorations=false):string|undefined {
+  return projectedModelArt(shot,partId,width,height,false,decorations);
 }
 export function customModelForegroundArt(shot:Shot,partId:string,width:number,height:number):string|undefined {
   return projectedModelArt(shot,partId,width,height,true);
 }
-function projectedModelArt(shot:Shot,partId:string,width:number,height:number,foreground:boolean):string|undefined {
+function projectedModelArt(shot:Shot,partId:string,width:number,height:number,foreground:boolean,decorations=false):string|undefined {
   const model=shot.cinematic?.artDirection?.models.find(model=>model.partId===partId);
   if(!model||(foreground&&model.foregroundSvg===undefined))return undefined;
-  const frame=(html:string)=>model.contactFrame?`<g class="contact-model-root" data-model-contact-frame="${MODEL_CONTACT_FRAME_VERSION}" transform="matrix(1 0 0 1 0 0)">${html}</g>`:html;
+  if(decorations&&!model.contactFrame)throw new Error('needs-source-prop-binding: generated projected decorations require an explicit whole frame');
+  const d=decorations?modelProjectedDecorations(shot,partId,width,height):undefined;
+  const frame=(html:string)=>model.contactFrame?`<g class="contact-model-root" data-model-contact-frame="${MODEL_CONTACT_FRAME_VERSION}" transform="matrix(1 0 0 1 0 0)">${d?.underlay??''}${html}${d?.overlay??''}</g>`:html;
   let svg=artworkSvg(foreground?model.foregroundSvg!:model.svg,`${shot.id}.art.model.${partId}${foreground?'.foreground':''}`);
   if(foreground)validateSharedModelSpace(artworkSvg(model.svg,`${shot.id}.art.model.${partId}`),svg,model.projection);
   if(model.projection==='model-viewport'){

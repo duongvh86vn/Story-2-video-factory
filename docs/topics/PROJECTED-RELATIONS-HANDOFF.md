@@ -2,6 +2,8 @@
 
 `forest-tribe-0.87-projected-relations`, producer `story-direction-2.2.50`, cinematic models `2.2.7`. Tiếp nối [contact frame source0.86](EMITTED-CONTACT-HANDOFF.md). Đây là source candidate, **chưa nghiệm thu runtime, video hoặc toàn tool**.
 
+Hiện hành: [source0.88 — overlay/camera candidate](PROJECTED-OVERLAYS-HANDOFF.md) đã bổ sung phần source nhãn/focus/nhiệt/năng lượng/bóng; nghiệm thu vẫn chờ. Nội dung dưới đây ghi đúng phạm vi source0.87.
+
 ## Phần đã viết
 
 - `projectedModelGeometry` nhận storyboard/narration đúng revision, compilation thực của từng diễn viên và canonical bake do renderer cung cấp. Fixed parent dùng stage; independent owned dùng chính kênh translate/rotate/scale đã serialize; canonical dùng chính clock/center bake đang vẽ. Chỉ áp dụng parent một lần. Không tự chạy compiler hoặc thay bằng physical center gần giống.
