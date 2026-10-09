@@ -7,6 +7,7 @@ import {isWholeSourceStatement} from '../explainer/plan.js';
 import {ApprovalRequired} from '../orchestrator/state-machine.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {sourceInteractionDescriptor} from './source-interactions.js';
+import {sourceSpearOperation} from './source-spear-interactions.js';
 
 type Acting=NonNullable<SceneIntent['acting']>[number];
 export function actingSourceWindows(expected:Acting,beat:Beat,narration:Narration,interval:Pick<Shot,'startMs'|'endMs'>=beat){
@@ -30,6 +31,15 @@ export function hasSourceManipulationActing(expected:Acting,actions:NonNullable<
     // A beat may cover an inherited hold/flight. Original contact/release are
     // still inside the complete actual cue, never re-timed into this beat.
     return windows.some(w=>w.id===cue.id&&action.startMs<w.endMs&&action.endMs>w.startMs);
+  });
+}
+export function hasSourceSpearActing(expected:Acting,actions:NonNullable<Shot['host']>['actions'],shot:Shot,beat:Beat,narration:Narration,board:Storyboard):boolean{
+  if(expected.kind!=='manipulation'||!['hold-tool','thrust-tool'].includes(expected.operation??''))return false;
+  const windows=actingSourceWindows(expected,beat,narration,shot);
+  return actions.filter(a=>a.sourceSpear&&expected.targetIds?.includes(a.target?.partId??'')).some(action=>{
+    const original=sourceSpearOperation(shot,expected.participantId,action,board,narration);
+    return original.operation===expected.operation&&isWholeSourceStatement(expected.statement,original.cue.text)&&expected.sourceRefs.some(r=>r.kind==='narration'&&r.segmentId===original.cue.id&&isWholeSourceStatement(expected.statement,r.quote))&&
+      windows.some(w=>w.id===original.cue.id&&action.startMs<w.endMs&&action.endMs>w.startMs);
   });
 }
 function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Shot['host']>['actions'],speakingSegmentIds:string[],shot:Shot,beat:Beat,narration:Narration,board:Storyboard):boolean{
@@ -58,6 +68,7 @@ function hasPerformance(expected:Acting,p:PerformancePlan,actions:NonNullable<Sh
   });
   if(kind==='locomotion')return body.walks.some(clip=>bodyOverlaps(clip)&&Math.abs(clip.toX-clip.fromX)>.01&&
     (expected.movement==='run'?clip.gait==='run':expected.movement==='walk'?clip.gait!=='run':true));
+  if(kind==='manipulation'&&['hold-tool','thrust-tool'].includes(expected.operation??''))return hasSourceSpearActing(expected,actions,shot,beat,narration,board);
   if(kind==='manipulation'&&p.sourceManipulation)return hasSourceManipulationActing(expected,actions,shot,beat,narration,board);
   if(kind==='manipulation'&&expected.operation==='drop')return p.gestures.some(clip=>clip.action==='drop'&&clip.releaseMs!==undefined&&clip.landingMs!==undefined&&clip.propId&&p.props.some(prop=>prop.id===clip.propId)&&actions.some(action=>action.type==='operate-model'&&expected.targetIds?.includes(action.target?.partId??'')&&action.contactMs===shot.startMs+clip.contactMs!&&action.startMs===shot.startMs+clip.startMs&&action.endMs===shot.startMs+clip.endMs&&windows.some(window=>window.id===action.narrationAnchor&&shot.startMs+clip.releaseMs!>=window.startMs&&shot.startMs+clip.landingMs!<=window.endMs)));
   if(kind==='manipulation')return p.gestures.some(clip=>overlaps(clip)&&['operate','pick-place','carry'].includes(clip.action)&&clip.contactMs!==undefined&&

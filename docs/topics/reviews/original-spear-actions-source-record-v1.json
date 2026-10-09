@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.85-original-spear-actions",
+  "precedingSourceSHA": "6bc25983511c3e25a37687d26a51669d5c801eb8",
+  "sourceOnly": true,
+  "environment": {
+    "node": "v24.19.0",
+    "shell": "PowerShell",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+    "protectedServerPort": 8850
+  },
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "699e87",
+      "session": 51184,
+      "intermediateChunk": "96a954",
+      "completionChunk": "09cfdc",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 55 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-DXoVja_y.js   242.41 kB │ gzip: 75.58 kB\n✓ built in 614ms\n"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "cc889a",
+      "session": 90864,
+      "completionChunk": "8c308e",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "typecheck only; includes final 1200px fixture declaration; no callbacks invoked"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "b35d3b",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n\n",
+      "scope": "definition export only; no schema instances"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "a4c452",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "existing artwork metadata/hash inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/original-spear-actions-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "3e787c",
+      "session": 71888,
+      "completionChunk": "c1d893",
+      "scope": "raw bytes/header/JSON and literal guard/definition checks only"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "chunk": "4d644c",
+      "decisiveOutput": ""
+    }
+  ],
+  "note": "After source build, only the declared test fixture stage width changed to1200 for original full-length shafts; final test:typecheck includes that declaration. No package source changed after the final build.",
+  "testsDeclared": 8,
+  "previousModelCallbacksDeclared": 8,
+  "sourceCallbacksTotal": 16,
+  "testsExecuted": 0,
+  "fixturesInvoked": false,
+  "schemaInstancesValidated": false,
+  "geometryInvoked": false,
+  "samplerOrCompilerRun": false,
+  "rendererRun": false,
+  "serverStarted": false,
+  "TTSOrASRRun": false,
+  "videoRendered": false,
+  "sourceAdviceCalls": 1,
+  "adviceModel": "gpt-6-luna",
+  "adviceHTTPStatus": 200,
+  "adviceTokens": 12112,
+  "adviceRecord": "docs/topics/reviews/original-spear-actions-advice-record-v1.json",
+  "independentlyReviewedFinalIntegration": false,
+  "staticRecord": "docs/topics/reviews/original-spear-actions-static-record-v1.json",
+  "staticSummary": {
+    "originalRasters": 294,
+    "allOriginalImageBytesUnchanged": true,
+    "headDefinitions": 18,
+    "headMetadata": 27,
+    "mappedSourceHashes": 121,
+    "mappedSourceEntries": 297,
+    "availableBankFields": 9
+  },
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44Z",
+    "acceptsCurrentSource": false
+  },
+  "handoff": "docs/topics/ORIGINAL-SPEAR-ACTIONS-HANDOFF.md",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "actual original shaft/tip/target/palm physical versus emitted SVG/GSAP equivalence, moving owned/canonical target and dynamic fixed artwork/depth anchor acceptance",
+    "faithful native faces/hair/costumes, soft anatomical limbs and actual continuous turns/opposite tool poses with vivid layered environment",
+    "full/reverse/fractional seek and true 60fps film motion acceptance",
+    "arbitrary story/topic→script, exact script and original WAV plus legacy SRT; EN/VI/JA/KO/external-local TTS",
+    "resume/rebuild/locks, actual audio/subtitles/MP4/thumbnail/storyboard/asset manifest/review/final QC"
+  ]
+}

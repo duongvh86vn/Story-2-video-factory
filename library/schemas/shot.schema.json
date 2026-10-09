@@ -331,7 +331,9 @@
                       "think",
                       "react",
                       "summarize",
-                      "walk-to-marker"
+                      "walk-to-marker",
+                      "hold-tool",
+                      "thrust-tool"
                     ]
                   },
                   "startMs": {
@@ -433,6 +435,32 @@
                     "required": [
                       "sourceId",
                       "gestureId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sourceSpear": {
+                    "type": "object",
+                    "properties": {
+                      "sourceId": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "trackId": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "shaftPartId": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      }
+                    },
+                    "required": [
+                      "sourceId",
+                      "trackId",
+                      "shaftPartId"
                     ],
                     "additionalProperties": false
                   }
@@ -819,6 +847,10 @@
                     "minItems": 1,
                     "maxItems": 2
                   },
+                  "contactEffector": {
+                    "type": "string",
+                    "const": "spear-tip"
+                  },
                   "sourceWorld": {
                     "type": "object",
                     "properties": {
@@ -1003,7 +1035,9 @@
                           "contact",
                           "pick-place",
                           "carry",
-                          "drop"
+                          "drop",
+                          "hold-tool",
+                          "thrust-tool"
                         ]
                       },
                       "kind": {
@@ -1111,7 +1145,7 @@
             },
             "producer": {
               "type": "string",
-              "const": "story-direction-2.2.47"
+              "const": "story-direction-2.2.48"
             },
             "shotId": {
               "type": "string",
@@ -7646,7 +7680,9 @@
                                 "think",
                                 "react",
                                 "summarize",
-                                "walk-to-marker"
+                                "walk-to-marker",
+                                "hold-tool",
+                                "thrust-tool"
                               ]
                             },
                             "startMs": {
@@ -7748,6 +7784,32 @@
                               "required": [
                                 "sourceId",
                                 "gestureId"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "sourceSpear": {
+                              "type": "object",
+                              "properties": {
+                                "sourceId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "trackId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                "shaftPartId": {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                }
+                              },
+                              "required": [
+                                "sourceId",
+                                "trackId",
+                                "shaftPartId"
                               ],
                               "additionalProperties": false
                             }
@@ -8016,7 +8078,9 @@
                                     "contact",
                                     "pick-place",
                                     "carry",
-                                    "drop"
+                                    "drop",
+                                    "hold-tool",
+                                    "thrust-tool"
                                   ]
                                 },
                                 "kind": {
@@ -8354,6 +8418,10 @@
                         "minItems": 1,
                         "maxItems": 2
                       },
+                      "contactEffector": {
+                        "type": "string",
+                        "const": "spear-tip"
+                      },
                       "id": {
                         "type": "string",
                         "maxLength": 96,
@@ -8389,6 +8457,38 @@
                         },
                         "minItems": 1,
                         "maxItems": 2
+                      },
+                      "spearContact": {
+                        "type": "object",
+                        "properties": {
+                          "sourceId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "trackId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "shaftPartId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "actorId": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          }
+                        },
+                        "required": [
+                          "sourceId",
+                          "trackId",
+                          "shaftPartId",
+                          "actorId"
+                        ],
+                        "additionalProperties": false
                       }
                     },
                     "required": [
@@ -9092,7 +9192,9 @@
                           "contact",
                           "pick-place",
                           "carry",
-                          "drop"
+                          "drop",
+                          "hold-tool",
+                          "thrust-tool"
                         ]
                       },
                       "kind": {

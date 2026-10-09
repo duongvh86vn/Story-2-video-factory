@@ -17,6 +17,8 @@ import {SOURCE_INTERACTION_VERSION} from './source-interaction-version.js';
 import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeAt} from './ownership-bake-query.js';
 import {sourceOwnershipFrame} from './source-ownership.js';
+import {sourceSpearInteractionGeometry,type SourceSpearInteractionRecord} from './source-spear-interactions.js';
+import {validateSpearActionSlices} from './source-spear-actions.js';
 export {SOURCE_INTERACTION_VERSION} from './source-interaction-version.js';
 
 type Action=ShotHost['actions'][number];
@@ -164,11 +166,20 @@ export function validateSourceInteractionGeometry(shot:Shot,board:Storyboard,nar
   const expected=owners.flatMap(o=>o.actions.filter(a=>a.sourceManipulation).map(a=>sourceInteractionGeometry(shot,o.id,a,board,narration)));
   const actual=interactions.filter(a=>a.sourceManipulation),sort=(records:typeof actual)=>[...records].sort((a,b)=>(a.actorId+':'+a.sourceManipulation!.gestureId).localeCompare(b.actorId+':'+b.sourceManipulation!.gestureId));
   if(hash(sort(actual))!==hash(sort(expected)))return fail(shot,'geometry differs from its canonical original contact/slice; rebuild rather than editing the report');
+  for(const o of owners)validateSpearActionSlices(o.performance,o.actions,shot.startMs);
+  const tools=owners.flatMap(o=>o.actions.filter(a=>a.sourceSpear).map(a=>sourceSpearInteractionGeometry(shot,o.id,a,board,narration))),supplied=interactions.filter(a=>a.sourceSpear);
+  const sortTools=(rows:typeof supplied)=>[...rows].sort((a,b)=>(a.actorId+':'+a.sourceSpear!.trackId).localeCompare(b.actorId+':'+b.sourceSpear!.trackId));
+  if(hash(sortTools(tools))!==hash(sortTools(supplied)))return fail(shot,'tool geometry differs from original actor/shaft/target/cue/contact; serialized flags cannot approve it');
 }
-export function interactionPreviewTimes(shot:Pick<Shot,'startMs'|'endMs'>,interactions:readonly {reachMs:number;sourceManipulation?:SourceInteractionRecord}[],step:number):number[]{
+export function interactionPreviewTimes(shot:Pick<Shot,'startMs'|'endMs'>,interactions:readonly {reachMs:number;sourceManipulation?:SourceInteractionRecord;sourceSpear?:SourceSpearInteractionRecord}[],step:number):number[]{
   if(!Number.isFinite(step)||step<=0)throw new Error('Invalid interaction evidence frame step');
   const times=new Set<number>(),add=(time:number)=>{if(time>=shot.startMs&&time<shot.endMs)times.add(time);};
   for(const action of interactions){
+    if(action.sourceSpear){
+      const s=action.sourceSpear;add(shot.startMs);add(shot.endMs-1);add(action.reachMs);
+      for(const at of [s.startMs,s.readyMs,s.contactMs,s.recoverMs,s.endMs].filter((t):t is number=>t!==undefined))for(const time of [at-step,at,at+step])add(time);
+      continue;
+    }
     const source=action.sourceManipulation;
     if(source){
       add(shot.startMs);add(shot.endMs-1);add(action.reachMs);
@@ -180,6 +191,6 @@ export function interactionPreviewTimes(shot:Pick<Shot,'startMs'|'endMs'>,intera
 export const sourceInteractionDescription={version:SOURCE_INTERACTION_VERSION,
   rule:'actual original person/source/gesture/hand/entity/grip/cue; unchanged complete original action through camera and primary/supporting swaps',
   geometry:'original contact sampled in its actual camera slice; current held/approach/released/landed/recovery state uses the actual physical source frame; fixed center/explicit authored handle remains independent of the palm, without new contact at entry or narration/face evaluation',
-  review:'recompute canonical source records; actual original contact/release/landing evidence sampled only in the owning camera slice',
+  review:'recompute canonical source and separate tool records; actual original palm contact/release/landing or spear ready/tip-contact/recovery evidence sampled only in their actual camera slice; later tool samples reference the original strike point without another contact claim',
   pending:['full integrated source production audit and runtime/API/geometry acceptance','canonical ownership observation runtime and full art/motion/film/factory acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false};

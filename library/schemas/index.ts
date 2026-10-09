@@ -38,11 +38,13 @@ import {ReviewAttemptSchema,ReviewSourceSchema,ReviewInputSchema,ReviewEvidenceS
 import {SourceOwnershipSchema} from '../../packages/director/source-ownership-schemas.js';
 import {OwnershipPaintSchema} from '../../packages/director/ownership-paint-schemas.js';
 import {SourceSpearBindingSchema} from '../../packages/director/source-spear-binding-schemas.js';
+import {SpearActionRefSchema,SpearWorldContactSchema} from '../../packages/director/source-spear-action-reference.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
   'spear-source':SpearSourceSchema,
   'source-spear-binding':SourceSpearBindingSchema,
+  'spear-action-ref':SpearActionRefSchema,'spear-world-contact':SpearWorldContactSchema,
   'source-ownership':SourceOwnershipSchema,
   'ownership-paint':OwnershipPaintSchema,
   'review-attempt':ReviewAttemptSchema,'review-source':ReviewSourceSchema,'review-input':ReviewInputSchema,'review-evidence':ReviewEvidenceSchema,'final-evidence':FinalEvidenceSchema,

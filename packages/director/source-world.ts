@@ -9,6 +9,7 @@ import {validateManipulationActionSlices} from './source-manipulation-actions.js
 import {SourceWorldSchema,type SourceWorld,type SourceWorldEvent} from './source-world-schemas.js';
 import {SOURCE_WORLD_VERSION} from './source-world-reference.js';
 import {sourceFixedOperation} from './source-fixed-operation.js';
+import {sourceSpearReaction} from './source-spear-interactions.js';
 import {projectSourceWorldEvents} from './source-world-projection.js';
 export {projectSourceWorldEvents} from './source-world-projection.js';
 
@@ -55,7 +56,8 @@ export function validateSourceWorld(shot:Shot,board?:Storyboard,narration?:Narra
     if(event.type==='state'&&(!event.state||event.contactRequired||event.motion!=='none'||!part.states?.some(s=>s.value===event.state&&hash(s.sourceRefs)===hash(event.sourceRefs))))return fail(shot,'thermal state is not the actual sourced state');
     if(event.state&&event.type!=='state')return fail(shot,'thermal value requires a state event');
     if(world.events.some(other=>other!==event&&other.targetId===event.targetId&&other.startMs<event.endMs&&other.endMs>event.startMs&&((event.motion!=='none'&&other.motion===event.motion)||(event.type==='state'&&other.type==='state')||(event.type==='flow'&&other.type==='flow'&&event.relationTo===other.relationTo))))return fail(shot,'overlapping events own the same model property');
-    if(!event.contactRequired){if(event.contacts||event.contactActorId||event.contactHands)return fail(shot,'passive event cannot claim contact ownership');continue;}
+    if(!event.contactRequired){if(event.contacts||event.contactActorId||event.contactHands||event.spearContact||event.contactEffector)return fail(shot,'passive event cannot claim contact ownership');continue;}
+    if(event.spearContact){sourceSpearReaction(shot,event,board,narration);continue;}
     if(!event.contactActorId||!event.contactHands?.length||new Set(event.contactHands).size!==event.contactHands.length||event.contacts?.length!==event.contactHands.length)return fail(shot,'reaction requires explicit original person and exact required hands');
     const hands=new Set<string>();
     for(const contact of event.contacts!){
@@ -98,6 +100,6 @@ export function sourceWorldIdentity(shot:Shot,board:Storyboard,narration:Narrati
 export const sourceWorldDescription={version:SOURCE_WORLD_VERSION,selection:'explicit cinematic.sourceWorld with complete original global events; visualization.events are exact sourceId/eventId camera intersections',
   statePolicy:'thermal paint persists until the next sourced state; reveals persist after first appearance; highlight/particle windows remain bounded',
   history:'thermal/control/effect/flow/motion phase uses original global time, including history before a camera cut; no re-contact or local event restart',
-  evidence:'complete original storyboard/model/entity/art/relation/stage identity and exact native person/source/gesture/hand/narration contact witnesses',
+  evidence:'complete original storyboard/model/entity/art/relation/stage identity and exact native person/source/gesture/hand or independently targeted spear-tip/narration contact witnesses; tip contact is not a palm/control action',
   pending:['integrated source production audit and API/interaction/world runtime acceptance','world/render/cache/resume geometry/runtime/film acceptance'],
   approved:false,productionReady:false,motionVerified:false,productionBinding:'needs-source-prop-binding'};

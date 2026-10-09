@@ -40,7 +40,7 @@ export function sampleSourceWorldPhase(world:SourceWorld,parts:Visualization['pa
     }
     // Explicit contact-driven source events own the control response; a camera
     // slice cannot turn it again merely because its action continues.
-    for(const e of world.events.filter(e=>e.contactRequired&&(e.contactPartId??e.targetId)===part.id))state.control=Math.max(state.control,65*sine(progress(globalMs,e.startMs,e.startMs+120)));
+    for(const e of world.events.filter(e=>e.contactRequired&&!e.spearContact&&e.contactEffector!=='spear-tip'&&(e.contactPartId??e.targetId)===part.id))state.control=Math.max(state.control,65*sine(progress(globalMs,e.startMs,e.startMs+120)));
     models[part.id]=state;
   }
   for(const e of world.events.filter(e=>e.type==='flow')){

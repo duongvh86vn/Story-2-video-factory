@@ -60,7 +60,9 @@
                         "contact",
                         "pick-place",
                         "carry",
-                        "drop"
+                        "drop",
+                        "hold-tool",
+                        "thrust-tool"
                       ]
                     }
                   },

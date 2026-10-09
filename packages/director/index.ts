@@ -28,6 +28,8 @@ import {actorDefinitions} from '../actors/locks.js';
 import {sceneSeats} from '../stage/seats.js';
 import {validateSpriteScenePlan} from '../motion/scene-validation.js';
 import {sourceInteractionDescriptor} from './source-interactions.js';
+import {sourceSpearInteractionGeometry} from './source-spear-interactions.js';
+import {validateSpearActionSlices} from './source-spear-actions.js';
 import {validatePerformanceContinuity} from './continuity.js';
 import {currentCameraDirectionReport} from './camera-direction-report.js';
 import {validateSourceWorld} from './source-world.js';
@@ -52,7 +54,7 @@ export function cinematicSetting(text:string,fallback:CinematicPlan['setting']='
 
 /** Choreographs inside the immutable audio interval. No dialogue generation or retiming. */
 export function directCinematicShot(input:Shot,beat:Beat,profile:HostProfile,config:FactoryConfig,entry?:Point,context?:{seed?:boolean;setting?:CinematicPlan['setting'];facing?:'front'|'left'|'right';parts?:NonNullable<Shot['visualization']>['parts'];nextControlId?:string}):Shot {
-  if(input.cinematic?.sourceWorld||[input.cinematic?.performance,...(input.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation))
+  if(input.cinematic?.sourceWorld||[input.cinematic?.performance,...(input.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation||p?.sourceSpear))
     throw new Error(`${input.id}: needs-source-prop-binding: original carried model/world cannot be replaced by an offline local placement seed; preserve/replan its sourced complete actor/model world contract`);
   const shot=structuredClone(input),v=shot.visualization,h=shot.host;
   if(!v||!h||!shot.sourceRefs?.length)throw new Error(`${shot.id}: cinematic direction requires sourced explanation and approved host`);
@@ -262,6 +264,7 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   }
   validatePerformanceContinuity(shot);
   validateManipulationActionSlices(p,shot.host?.actions??[],shot.startMs);
+  validateSpearActionSlices(p,shot.host?.actions??[],shot.startMs);
   if(validateWorld)validatePropBindings(shot,board,narration);
   if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot,board,narration).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
   if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
@@ -283,7 +286,11 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
     if(p.gestures.length||p.props.length||actions.some(a=>a.type!=='idle'||a.target))throw new Error(`${shot.id}: mechanism-only shot cannot contain primary actor actions`);
     return;
   }
-  for(const {action:a,gestures:group,sourceManipulation} of cinematicActionGroups(actions,p,shot.startMs)){
+  for(const {action:a,gestures:group,sourceManipulation,sourceSpear} of cinematicActionGroups(actions,p,shot.startMs)){
+    if(sourceSpear){
+      sourceSpearInteractionGeometry(clockSourceShot,profile.id,a,board,narration);
+      continue; // Physical shaft track owns both palms, not local gestures.
+    }
     if(sourceManipulation){
       sourceInteractionDescriptor(clockSourceShot,profile.id,a,board,narration);
       continue; // Original gesture times remain source-relative, not local clips.

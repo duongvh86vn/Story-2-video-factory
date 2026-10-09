@@ -1,0 +1,38 @@
+{
+  "$ref": "#/definitions/spear-world-contact",
+  "definitions": {
+    "spear-world-contact": {
+      "type": "object",
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "trackId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "shaftPartId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "actorId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        }
+      },
+      "required": [
+        "sourceId",
+        "trackId",
+        "shaftPartId",
+        "actorId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

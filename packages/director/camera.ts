@@ -26,6 +26,7 @@ import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeCenterBounds} from './ownership-bake-query.js';
 import {sourceSpearBinding} from './source-spear-bindings.js';
+import {sourceSpearInteractionGeometry} from './source-spear-interactions.js';
 
 export const CAMERA_VIEWPORT={left:.04,right:.96,top:.14,bottom:.80,centerY:.46,pan:.025} as const;
 export interface CameraMatrix { scale:number; x:number; y:number; }
@@ -258,6 +259,7 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
   const camera=CameraSchema.parse(c.camera),p=c.performance,{width,height,groundY}=p.stage;
   const actionGroups=cinematicActionGroups(shot.host?.actions??[],p,shot.startMs);
   const contactGroups=actionGroups.filter(group=>group.sourceManipulation&&group.gestures.some(g=>['operate','pick-place','carry','drop'].includes(g.action)&&g.target&&g.contactMs!==undefined));
+  const toolContacts=actionGroups.filter(group=>group.sourceSpear&&group.action.type==='thrust-tool');
   const localContacts=p.gestures.filter(g=>['operate','pick-place','carry','drop'].includes(g.action)&&g.target&&g.contactMs!==undefined);
   const fail=(message:string):never=>{throw new CameraFramingError(`${shot.id}: camera ${message}`);};
   if(shot.camera.angle!=='eye-level')fail('supports only eye-level 2D framing; other angles require a different renderer.');
@@ -321,7 +323,16 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       labelInView(part);
     }
   }else {
-    if(!contactGroups.length&&!localContacts.length)fail('contact close requires a validated contact action.');
+    if(!contactGroups.length&&!localContacts.length&&!toolContacts.length)fail('contact close requires a validated contact action.');
+    for(const group of toolContacts){
+      const actual=context?.worldShot??shot,actorId=c.actorScene?.primary?.id??profile.id;
+      const record=sourceSpearInteractionGeometry(actual,actorId,group.action,context?.board,context?.narration).sourceSpear!;
+      const part=actual.visualization?.parts.find(part=>part.id===group.action.target?.partId),shaft=bounds.props[record.propId];
+      if(!part||!modelInView(part))fail('original tool contact close crops its intended target.');
+      labelInView(part!);
+      if(!shaft||!boundsInView({left:shaft.left-8*p.scale,right:shaft.right+8*p.scale,top:shaft.top-8*p.scale,bottom:shaft.bottom+8*p.scale}))fail('original tool contact close crops shaft/tip/gripping palms.');
+      if(group.action.contactMs!==undefined&&!inView(record.originalContact!.target,12*p.scale))fail('actual original tip contact target is cropped.');
+    }
     for(const g of p.gestures)if(g.target&&!inView(g.target,12*p.scale))fail(`${g.id} target/hand is cropped; contact close must show explanatory targets.`);
     const localActions=new Map(actionGroups.filter(group=>!group.sourceManipulation).flatMap(group=>group.gestures.map(g=>[g.id,group.action] as const)));
     for(const g of localContacts){

@@ -2070,7 +2070,9 @@
                   "think",
                   "react",
                   "summarize",
-                  "walk-to-marker"
+                  "walk-to-marker",
+                  "hold-tool",
+                  "thrust-tool"
                 ]
               },
               "minItems": 1

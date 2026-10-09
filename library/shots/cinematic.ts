@@ -38,6 +38,7 @@ import {renderSpriteScene} from '../../packages/motion/scene.js';
 import type {ActorMotion} from '../../packages/motion/schemas.js';
 import {sourceWorldFrames,sourceWorldModelTimeline} from './source-world-timeline.js';
 import {sourceInteractionGeometry} from '../../packages/director/source-interactions.js';
+import {sourceSpearInteractionGeometry} from '../../packages/director/source-spear-interactions.js';
 import {compileSourceOwnership} from '../../packages/director/ownership-compile.js';
 import {ownershipGlyph} from '../../packages/director/ownership-reference.js';
 import {renderOwnershipLayer,suppressOwnershipCopies,ownershipRelationFrames} from './ownership-layer.js';
@@ -234,7 +235,8 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   const performers=[...(c.actorScene?.primary===null?[]:[{id:profile.id,profile,performance:p,actions:shot.host!.actions,activity:localActivity,sourceClock:primaryClock,actingClock:primaryActingClock}]),
     ...(c.actorScene?.supporting??[]).map(actor=>({id:actor.character.id,profile:actorProfile(actor.character),performance:actor.performance,actions:actor.actions,
       activity:performerSpeech.get(actor.character.id)!.activity,sourceClock:performerSpeech.get(actor.character.id)!.sourceClock,actingClock:performerSpeech.get(actor.character.id)!.actingClock}))];
-  for(const performer of performers)for(const {action:a,gestures,sourceManipulation} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs)){
+  for(const performer of performers)for(const {action:a,gestures,sourceManipulation,sourceSpear} of cinematicActionGroups(performer.actions,performer.performance,shot.startMs)){
+    if(sourceSpear){geometry.interactions.push(sourceSpearInteractionGeometry(shot,performer.id,a,board,narration));continue;}
     if(sourceManipulation){geometry.interactions.push(sourceInteractionGeometry(shot,performer.id,a,board,narration,ownership));continue;}
     if(a.target)for(const [index,g] of gestures.entries()){
     const target=index===1?a.secondTarget!:a.target;
@@ -254,7 +256,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     const tool=sourceSpearBinding(shot,binding);
     if(tool)return {...binding,scope:'original rigid tool entity/model candidate',actorId:tool.owner.id,ownerScale:tool.owner.performance.scale,artwork:tool.declared.artwork,
       originalSource:{sourceId:tool.source.id,sourceHash:hash(tool.source),trackId:tool.track.id,originalStartMs:tool.source.startMs,originalEndMs:tool.source.endMs,
-        clock:'complete original shaft/body phase; center and unwrapped angle use actual emitted owner transform',motionVerified:false},pending:'original action/tip-contact/cue/world-reaction and native art/runtime/film acceptance'};
+        clock:'complete original shaft/body phase; center and unwrapped angle use actual emitted owner transform',motionVerified:false},pending:'original tool action/tip contact/whole cue/reaction physical candidate; emitted contact, native art/runtime/film acceptance pending'};
     const owner=originalPropGesture(shot,binding),prop=owner.prop,g=owner.gesture,source=owner.performance.sourceManipulation;
     return {...binding,...(ownership?.has(binding.partId)?{scope:'physical-grip-alias-only; drawn entity is in sourceOwnership report'}:{}),actorId:owner.id,ownerScale:owner.performance.scale,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs,
       ...(source?{originalSource:{sourceId:source.id,sourceHash:hash(source),originalStartMs:source.startMs,originalEndMs:source.endMs,contactGlobalMs:source.startMs+g.contactMs!,releaseGlobalMs:g.releaseMs===undefined?null:source.startMs+g.releaseMs,clock:'reported clip times are original source-relative; sampled positions follow the actual shot slice',motionVerified:false}}:{})};

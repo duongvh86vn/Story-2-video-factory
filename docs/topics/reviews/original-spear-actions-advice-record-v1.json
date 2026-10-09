@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "httpStatus": 200,
+  "elapsedMs": 4137,
+  "modelRequested": "tester",
+  "modelReturned": "gpt-6-luna",
+  "usage": {
+    "prompt_tokens": 11902,
+    "completion_tokens": 210,
+    "total_tokens": 12112
+  },
+  "answer": "{\"issues\":[{\"file\":\"packages/director/source-spear-action-clock.ts\",\"reason\":\"A selected action with `endMs <= startMs` can evade hand-overlap checks. If it matches an expected slice, validation does not require positive duration, so a zero-length action may pass despite not representing the original track interval.\",\"suggestion\":\"Require safe-integer action clocks with `endMs > startMs` before overlap checks.\"},{\"file\":\"packages/director/source-spear-interactions.ts\",\"reason\":\"`sourceSpearReaction` finds the first matching actor/track shot, then requires that shot to contain the exact action. If the track begins in a later shot, a valid original contact can be rejected based on board ordering rather than the action’s actual owning slice.\",\"suggestion\":\"Search matching actor/track history for the unique exact action instead of selecting the first shot containing the track.\"}],\"limits\":[\"Source review only; no runtime, emitted-contact, artwork-anchor, native-art, or film acceptance performed.\"]}",
+  "sources": [
+    {
+      "file": "packages/director/source-spear-action-clock.ts",
+      "sha256": "b9cbe8164ca1b125ac7b2453947a480073b3ca0066951a4fae0bab23ee281062"
+    },
+    {
+      "file": "packages/director/source-spear-interactions.ts",
+      "sha256": "f629c7fa2c70039ab6f7ff00dcbe7f091ff5305344715fb8d8f471ec101e3797"
+    },
+    {
+      "file": "packages/director/source-world-schemas.ts",
+      "sha256": "6d52c3043b46771851c4fc330670bc17bcea990257516a76189add27a5a9f7b9"
+    },
+    {
+      "file": "packages/director/source-world.ts",
+      "sha256": "8e3ddfa9e5882746b9bfc2dbc3a606df70d6f5176dde933650d0d3d6dd8c9bbe"
+    },
+    {
+      "file": "packages/director/source-grip-world.ts",
+      "sha256": "340d8eb0227391d8ef3ab2e2b2f7d873ee26038983afc46dbfba718557736adc"
+    }
+  ],
+  "testsExecuted": false,
+  "geometryInvoked": false,
+  "repositoryChangedByAgent": false,
+  "approved": false,
+  "sourceVersion": "forest-tribe-0.85-original-spear-actions",
+  "scope": "bounded source-only advisory, not callback/runtime/film/independent integration acceptance",
+  "parentDisposition": [
+    {
+      "issue": 1,
+      "status": "original selected zero-duration case already rejected; companion clock validation additionally strengthened",
+      "reason": "Expected slices are strictly positive and selected action start/end compare exactly. Server additionally parses HostActionSchema. Malformed companion clocks could bypass an overlap test in the standalone browser helper, so all companion safe half-open clocks are now validated."
+    },
+    {
+      "issue": 2,
+      "status": "described later-start track cannot occur under current complete-source schema; search now directly names actual contact camera",
+      "reason": "SpearSourceSchema forces track.startMs=0 and track.endMs=source duration. Each valid source camera therefore has the track action. Selection now uses unique camera containing the original contact rather than first matching array row; complete original board/source checks remain mandatory."
+    }
+  ],
+  "independentlyReviewedFinalIntegration": false,
+  "finalChangesAfterAdvice": [
+    "all companion action safe half-open clocks",
+    "actual original contact camera selection",
+    "reaction actual original world-event membership and causal relation evidence",
+    "source descriptors and handoff updated"
+  ],
+  "finalIntegrationSourceHashes": {
+    "apps/studio/src/cinematic.ts": "31f51c09d096eda8d345fd43535d6fd018e3c6c443a27eed13f9ec7424e5443b",
+    "library/schemas/index.ts": "1033aa7152e12b4fd8e305187e079902ab68db97274f489fc2dda0b221e1dbb3",
+    "library/shots/cinematic.ts": "72bbfaf4a17d0be67656eb72ab1b0d8322b698209db46148c2c840437490e0af",
+    "packages/director/acting-brief.ts": "2d19870e76e39c3e5c09c62e8a17ef3a07b1d560c1bede2eea6e48077986db21",
+    "packages/director/actions.ts": "1061adae7fade944e1072aa4b289390f2d18429c2a969e71dc5537c5d5eccab2",
+    "packages/director/camera.ts": "8453209d0f585f38df1d55a1727554decde51848f82bd189478e921cba5cb944",
+    "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
+    "packages/director/schemas.ts": "4d8087ed17317c63e1fc366069f6cabc686b39b80d8fc91b42a89c10ef91ef5d",
+    "packages/director/source-interactions.ts": "ede6f8269863a4514eb172fa4a47aa49b231ee8b092dec4f33e64a83abc8c426",
+    "packages/director/source-production-audit.ts": "5aeafc3dfdf27608786bc8e5e0181667e0cc510917eec0f8e9457742ad860f39",
+    "packages/director/source-spear-action-clock.ts": "09a4b53e6cd9fe1a68dd1243c22c61acafd848dccfd34a858f78e279a708685f",
+    "packages/director/source-spear-action-reference.ts": "48bd598dbfab7c4b25d067cc325b635acfa4d539fe42210b033177b4f2a74269",
+    "packages/director/source-spear-actions.ts": "c236a48979dad35668e1a590eec730f10cb12f77d3f1569b696f9970eb7b2324",
+    "packages/director/source-spear-bindings.ts": "6625078fdaf04617a854cefe91fd1fd6af5fc4e91cdea99e6568c042b1f62d55",
+    "packages/director/source-spear-interactions.ts": "2fa7ebe3041607e1794a125f7b6e18534664a174273bddfd2571a0f79843081c",
+    "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
+    "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
+    "packages/director/source-world-schemas.ts": "6d52c3043b46771851c4fc330670bc17bcea990257516a76189add27a5a9f7b9",
+    "packages/director/source-world.ts": "f925efc075355fa80278df0dccab324d6b3346605858d065dce78c9fd910d426",
+    "packages/director/story-coverage.ts": "f007c10cb891a010a0e4b587db211c710f2407040114ec141780ab1c46429afb",
+    "packages/explainer/plan.ts": "a562a3339f91393e36caeef1d30a9821ff26f2c3dabb895efb62b4613bdd76fd",
+    "packages/explainer/schemas.ts": "ea369418415b2226e0725cc02f2e272373eee27a359f9cf6d5655fa74cb918ba",
+    "packages/host/controller.ts": "100696011e50690a126f73bb3863e17549733483e6fe0f79b82b23282fb8684a",
+    "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067",
+    "packages/topics/prehistoric-life.ts": "2dfa331aa5b563ad11d1e91e58dec5c6d6ab7de7722e95a128f188e90b775754",
+    "scripts/prehistoric-pack.ts": "76d668f2e4bea5d55cab0bb0c60edd3d1b6d6bd74e93a5aaa8ab4ee25fc1600a",
+    "tests/helpers/original-spear-fixture.ts": "966bfe2af65f435f16eab1ff94891935c94e5b342a690715c4d204bc30dabdde",
+    "tests/source-spear-actions.test.ts": "33218411c9c799621a551856a39b7b61bc7c8e75aa03a5583924d0c49dc37de6",
+    "tests/source-spear-model.test.ts": "89d6147439297a30ccd4b4c2648cb82dd2f4c809bbcd1b558c40a4d3568dd057"
+  }
+}

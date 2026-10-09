@@ -108,5 +108,5 @@ export function validateSourceSpearBindings(shot:Shot,board:Storyboard|undefined
 export const sourceSpearBindingDescription={version:SOURCE_SPEAR_BINDING_VERSION,
   field:'cinematic.sourceSpearBindings',glyph:'exact existing forest-spear-grips-4 physical wood/stone/ties; one actor-owned glyph, same emitted compiler transform; no scaled conceptual replacement',
   identity:'complete actor/body/tool and entity/model/evidence/origin/logical shaft dimensions repeated through every camera/lead-support swap',
-  pending:['original action/tip-contact/cue/world-reaction integration','native tool pose/art/motion and actual SVG/GSAP/runtime/film acceptance','integrated source production acceptance'],
+  pending:['emitted shaft/target/contact equivalence for the original action/cue/tip-reaction candidate','native tool pose/art/motion and actual SVG/GSAP/runtime/film acceptance','integrated source production acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false,productionApproval:false};

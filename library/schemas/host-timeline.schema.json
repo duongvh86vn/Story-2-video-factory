@@ -93,7 +93,9 @@
                             "think",
                             "react",
                             "summarize",
-                            "walk-to-marker"
+                            "walk-to-marker",
+                            "hold-tool",
+                            "thrust-tool"
                           ]
                         },
                         "startMs": {
@@ -195,6 +197,32 @@
                           "required": [
                             "sourceId",
                             "gestureId"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "sourceSpear": {
+                          "type": "object",
+                          "properties": {
+                            "sourceId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "trackId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "shaftPartId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            }
+                          },
+                          "required": [
+                            "sourceId",
+                            "trackId",
+                            "shaftPartId"
                           ],
                           "additionalProperties": false
                         }

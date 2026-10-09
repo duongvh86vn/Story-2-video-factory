@@ -11,6 +11,8 @@ import {inspectCastCameras} from './cast-camera.js';
 import {validateModelContinuity} from './index.js';
 import {assertOriginalAuditContext,hasOriginalSource} from './source-audit-context.js';
 import {validateSourceSpearBindings} from './source-spear-bindings.js';
+import {validateSourceSpearActions} from './source-spear-interactions.js';
+import {validateSourceWorld} from './source-world.js';
 
 export const SOURCE_PRODUCTION_AUDIT_VERSION='original-source-audit-1';
 export interface SourceProductionAuditInput {
@@ -68,6 +70,8 @@ export function inspectSourceProductionCandidate(input:SourceProductionAuditInpu
     const scene=shot.cinematic?.actorScene,actual=[...new Set([...(scene?.primary?[scene.primary.id]:[]),...(scene?.supporting.map(a=>a.character.id)??[])])];
     check('model-continuity',()=>validateModelContinuity(board.shots[index-1],shot,board,narration),shot.id);
     check('original-spear-model-binding',()=>validateSourceSpearBindings(shot,board,narration),shot.id);
+    check('original-spear-action-tip',()=>validateSourceSpearActions(shot,board,narration),shot.id);
+    check('original-world-contact',()=>validateSourceWorld(shot,board,narration),shot.id);
     check('explainer-original-candidate',()=>{validateSourceCandidateStoryboard({shots:[shot]},narration,beats,profile,rig,config,board);},shot.id);
     // A source/art failure in one checker must not erase camera findings for
     // other actual people. The camera checker itself names dependency failures.

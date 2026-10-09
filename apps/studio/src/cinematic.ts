@@ -15,14 +15,19 @@ export function cinematicReview(input: { shot: Shot; narration: string; locale: 
   const poseLabel=(pose:string)=>({stand:label('Đứng','Standing'),crouch:label('Cúi thấp','Crouching'),lean:label('Nghiêng người','Leaning'),seated:label('Ngồi','Seated')}[pose]??pose);
   const performers=[...(c.actorScene?.primary===null?[]:[{name:c.actorScene?.primary?.name??c.leadCharacterId,p:c.performance,actions:shot.host?.actions??[]}]),...(c.actorScene?.supporting??[]).map(a=>({name:a.character.name,p:a.performance,actions:a.actions}))];
   const body=performers.filter(a=>a.p.entryPosture||a.p.postures?.length||a.p.supports?.length).map(a=>`<p>${escape(a.name)} · ${label('Tư thế','Body posture')}: ${escape(poseLabel(a.p.entryPosture?.pose??'stand'))}${(a.p.postures??[]).map(p=>` → ${escape(poseLabel(p.pose))} (${seconds(p.startMs)}–${seconds(p.endMs)})`).join('')}${a.p.supports?.length?` · ${label('Ghế có điểm tựa','Supported seats')}: ${a.p.supports.length}`:''}</p>`).join('');
-  const actions = performers.flatMap(actor=>cinematicActionGroups(actor.actions,actor.p,shot.startMs).flatMap(group=>group.gestures.map(g => {
+  const actions = performers.flatMap(actor=>cinematicActionGroups(actor.actions,actor.p,shot.startMs).flatMap(group=>{
+    if(group.sourceSpear){
+      const a=group.action,s=group.sourceSpear,target=parts.find(p=>p.id===a.target?.partId)?.label??a.target?.partId??'',track=actor.p.sourceSpear!.spears.find(t=>t.id===s.trackId)!;
+      return [`<li>${escape(actor.name)} · ${escape(track.twoHand?label('Hai tay cầm cán','Both hands grip shaft'):label('Một tay cầm cán','One hand grips shaft'))} · ${escape(a.type==='hold-tool'?label('Cầm giáo','Hold spear'):label('Đâm giáo','Thrust spear'))} → ${escape(target)} · ${label('clock lời kể gốc','original narration clock')} ${seconds(s.startMs)}–${seconds(s.endMs)}${s.contactMs===undefined?'':` · ${label('mũi giáo chạm ở clock gốc','original tip contact')} ${seconds(s.contactMs)}`} · ${label('đoạn đang xem','visible slice')} ${seconds(a.startMs-shot.startMs)}–${seconds(a.endMs-shot.startMs)} · ${label('Chưa nghiệm thu chuyển động','Motion acceptance pending')}</li>`];
+    }
+    return group.gestures.map(g => {
     const a=group.action,source=group.sourceManipulation;
     const id=a.secondTarget&&group.gestures.indexOf(g)===1?a.secondTarget.partId:a.target?.partId;
     const target=parts.find(p=>p.id===id)?.label??label('Người xem','Viewer');
     const hand=rigHand(g)==='left'?label('Tay phía trái','Left rig hand'):label('Tay phía phải','Right rig hand');
     const start=source?.startMs??g.startMs,end=source?.endMs??g.endMs,contact=source?.contactMs??g.contactMs;
     return `<li>${escape(actor.name)} · ${escape(hand)} · ${escape(g.action)} → ${escape(target)} · ${seconds(start)}–${seconds(end)}${contact===undefined?'':` · ${label('tiếp xúc','contact')} ${seconds(contact)}`}${source?` · ${label('hành động xuyên cảnh, đoạn đang xem','original action, visible slice')} ${seconds(a.startMs-shot.startMs)}–${seconds(a.endMs-shot.startMs)}`:''}</li>`;
-  }))).join('');
+  });})).join('');
   return `<div class="cinematic-review">
     ${design}${body}
     <section aria-label="${label('Lời kể','Narration')}"><h3>${label('Lời kể','Narration')}</h3><p>${escape(narration)}</p><details><summary>${label('Nguồn','Sources')}</summary><ul>${c.sourceRefs.map(ref => `<li>${escape(ref.kind)} · ${escape(ref.segmentId ?? '')}<p>${escape(ref.quote)}</p></li>`).join('')}</ul></details></section>

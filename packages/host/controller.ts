@@ -3,6 +3,7 @@ import type { HostProfile, HostRig } from './schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 import { ModelHandleAnchorSchema } from '../director/art-direction-schemas.js';
 import type {SourceInteractionRecord} from '../director/source-interactions.js';
+import type {SourceSpearInteractionRecord} from '../director/source-spear-interactions.js';
 
 export const HOST_CONTROLLER_VERSION = 'host-controller-2.1.1';
 const radians = (n: number) => n * Math.PI / 180;
@@ -11,7 +12,7 @@ const clamp = (n: number, low: number, high: number) => Math.max(low, Math.min(h
 export interface Anchor { x: number; y: number; }
 export interface HostGeometry { controllerVersion: string; profileHash: string; rigHash: string; shotId: string; hostHeightRatio: number;
   interactions: Array<{ actorId?:string; handSide?:'left'|'right'; type: string; startMs: number; reachMs: number; endMs: number; partId: string; target: Anchor; hand: Anchor; errorPx: number; root: Anchor; gaze: Anchor; contactMs?: number;
-    sourceGesture?:{id:string;originalReachMs:number;originalRecoverMs:number;samplePhase:'approach'|'hold'|'recovery';contactVerified:false};sourceManipulation?:SourceInteractionRecord }> }
+    sourceGesture?:{id:string;originalReachMs:number;originalRecoverMs:number;samplePhase:'approach'|'hold'|'recovery';contactVerified:false};sourceManipulation?:SourceInteractionRecord;sourceSpear?:SourceSpearInteractionRecord }> }
 
 /** Two fixed-length bones. All calculations run at compile time, never in scene JS. */
 export function solveArm(dx: number, dy: number): { upper: number; lower: number; hand: Anchor; reachable: boolean } {
@@ -32,6 +33,7 @@ export function partAnchor(shot: Shot, partId: string, kind: 'center' | 'handle'
 }
 export function hostController(shot: Shot, profile: HostProfile, rig: HostRig, width: number, height: number, activity: SpeechActivity): { js: string; pointers: string; geometry: HostGeometry } {
   if (!shot.host || !shot.visualization) throw new Error('Host controller requires an explainer shot');
+  if(shot.host.actions.some(a=>a.sourceSpear||['hold-tool','thrust-tool'].includes(a.type)))throw new Error(`${shot.id}: needs-source-prop-binding: original tool actions require their own cinematic actor/shaft clock; legacy host poses cannot replace them`);
   const scope = `[data-composition-id="${shot.id}"]`, target = (s: string) => JSON.stringify(`${scope} ${s}`), scale = height * .36 / rig.viewBox[3], bodyScale = profile.appearance.bodyScale;
   const pivot=(id:string)=>rig.parts.find(p=>p.id===id)!.pivot,shoulderY=pivot('arm-right-upper').y;
   const base = { x: width * .055, y: height * .39 }, calls: string[] = [], lines: string[] = [];

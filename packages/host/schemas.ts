@@ -3,9 +3,10 @@ import { Id, RigHandSchema } from '../core/identifiers.js';
 import {NativeHeadBankSchema} from '../animation/native-head-bank.js';
 import {PREHISTORIC_SUPPORTING_MODELS,prehistoricSupportingModel} from '../topics/supporting-models.js';
 import {isSupportingNativeHeadVersion,nativeHeadIdentityMatches} from '../animation/native-head-identity.js';
+import {SpearActionRefSchema} from '../director/source-spear-action-reference.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
-export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker'] as const;
+export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker','hold-tool','thrust-tool'] as const;
 const Color = z.string().regex(/^#[0-9a-fA-F]{6}$/);
 export const HostProfileSchema = z.object({
   id: Id, version: z.number().int().positive(), kind: z.enum(HostKinds), role: z.enum(['explainer-host','story-actor']),
@@ -56,11 +57,15 @@ export const HostActionSchema = z.object({ type: z.enum(HostActions), startMs: z
   hand:RigHandSchema.optional(),
   endMs: z.number().int().positive(), narrationAnchor: Id.optional(), target: TargetSchema.optional(),
   secondTarget: TargetSchema.optional(), contactMs: z.number().int().nonnegative().optional(),
-  sourceManipulation:ManipulationActionRefSchema.optional() })
+  sourceManipulation:ManipulationActionRefSchema.optional(),sourceSpear:SpearActionRefSchema.optional() })
   .superRefine((action,ctx)=>{
     if(action.endMs<=action.startMs)ctx.addIssue({code:'custom',message:'Host action interval must be positive'});
     if(action.sourceManipulation&&(action.type!=='operate-model'||!action.hand||!action.narrationAnchor||!action.target||action.target.anchor==='label'||action.secondTarget))
       ctx.addIssue({code:'custom',path:['sourceManipulation'],message:'Original contact action requires operate-model, explicit own hand, cue and one model center/handle target'});
+    if(Boolean(action.sourceSpear)!==['hold-tool','thrust-tool'].includes(action.type)||action.sourceSpear&&(!action.hand||!action.narrationAnchor||!action.target||action.target.anchor==='label'||action.secondTarget||action.sourceManipulation))
+      ctx.addIssue({code:'custom',path:['sourceSpear'],message:'Tool action requires its explicit original source/track/shaft, hand, cue and one center/handle target; no generic contact reference'});
+    if(action.type==='hold-tool'&&(action.contactMs!==undefined||action.target?.anchor!=='center'||action.target.partId!==action.sourceSpear?.shaftPartId))
+      ctx.addIssue({code:'custom',message:'Holding an entry-attached shaft targets that entity center and does not invent a contact'});
   });
 export const ShotHostSchema = z.object({ id: Id, profileVersion: z.number().int().positive(), rigHash: z.string(),
   presence: z.enum(['beside-model', 'inset', 'absent']), actions: z.array(HostActionSchema).min(1) });

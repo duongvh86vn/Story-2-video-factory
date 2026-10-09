@@ -1,5 +1,7 @@
 # Giáo của diễn viên trong cảnh — source0.84
 
+Hiện hành source0.85 có original action/cue/target/tip-reaction physical candidate, exact cuts và review records: xem [bàn giao hành động giáo](ORIGINAL-SPEAR-ACTIONS-HANDOFF.md). Source bên dưới giữ lịch sử; emitted contact, native art/motion/runtime/film/full factory chưa nghiệm thu.
+
 Source `forest-tribe-0.84-original-spear-model`, producer `story-direction-2.2.47`, binding `source-spear-binding-1`, source props `source-prop-binding-6`, bound model `bound-model-motion-2.2.7`. Phần này bổ sung entity/model và renderer vào [clock giáo source0.83](ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Đây là code chưa được nghiệm thu chuyển động/video.
 
 ## Đã triển khai trong source

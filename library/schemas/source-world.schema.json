@@ -134,6 +134,10 @@
                 "minItems": 1,
                 "maxItems": 2
               },
+              "contactEffector": {
+                "type": "string",
+                "const": "spear-tip"
+              },
               "id": {
                 "type": "string",
                 "maxLength": 96,
@@ -169,6 +173,38 @@
                 },
                 "minItems": 1,
                 "maxItems": 2
+              },
+              "spearContact": {
+                "type": "object",
+                "properties": {
+                  "sourceId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "trackId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "shaftPartId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "actorId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "trackId",
+                  "shaftPartId",
+                  "actorId"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [

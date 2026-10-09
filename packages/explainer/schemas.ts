@@ -13,7 +13,7 @@ export const SceneIntentSchema = z.object({
   action:z.string().trim().min(1).max(2000),objective:z.string().trim().min(1).max(2000),
   result:z.string().trim().min(1).max(2000).optional(),sourceRefs:z.array(SourceRefSchema).min(1),
   acting:z.array(z.object({participantId:Id,
-    movement:z.enum(['walk','run','jump']).optional(),operation:z.enum(['contact','pick-place','carry','drop']).optional(),
+    movement:z.enum(['walk','run','jump']).optional(),operation:z.enum(['contact','pick-place','carry','drop','hold-tool','thrust-tool']).optional(),
     kind:z.enum(['locomotion','manipulation','posture','observation','indication','speech','reaction','hold','unsupported']),
     statement:z.string().trim().min(1).max(2000),sourceRefs:z.array(SourceRefSchema).min(1),targetIds:z.array(Id).min(1).max(8).optional(),
   }).strict()).max(16).optional(),
@@ -44,7 +44,7 @@ export const VisualizationEventSchema = z.object({ type: z.enum(['highlight', 'p
   targetId: Id, narrationAnchor: Id, startMs: z.number().int().nonnegative(), endMs: z.number().int().positive(),
   contactRequired: z.boolean().default(false), motion: z.enum(['translate', 'rotate', 'pulse', 'none']).default('none'),
   sourceRefs: z.array(SourceRefSchema).min(1),state:z.enum(['hot','cold']).optional(),relationTo:Id.optional(),contactPartId:Id.optional(),
-  contactActorId:Id.optional(),contactHands:z.array(RigHandSchema).min(1).max(2).optional(),sourceWorld:SourceWorldRefSchema.optional() });
+  contactActorId:Id.optional(),contactHands:z.array(RigHandSchema).min(1).max(2).optional(),contactEffector:z.literal('spear-tip').optional(),sourceWorld:SourceWorldRefSchema.optional() });
 export const VisualizationSchema = z.object({ type: z.enum(VisualMethods), modelId: Id,
   parts: z.array(VisualizationPartSchema).max(8), relations: z.array(RelationSchema).max(16),
   events: z.array(VisualizationEventSchema), provenance: z.literal('visualization'),
