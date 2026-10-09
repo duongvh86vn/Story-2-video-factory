@@ -12,15 +12,21 @@ import {validateSourcePropBindings} from './source-prop-binding.js';
 import {boundProp} from './prop-owner.js';
 import {sourceActor as person} from './source-actor.js';
 import {sourceFixedOperation} from './source-fixed-operation.js';
+import {ownershipInteractionDescriptor,type OwnershipInteraction} from './ownership-interactions.js';
+import {SOURCE_INTERACTION_VERSION} from './source-interaction-version.js';
+import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
+import {ownershipBakeAt} from './ownership-bake-query.js';
+import {sourceOwnershipFrame} from './source-ownership.js';
+export {SOURCE_INTERACTION_VERSION} from './source-interaction-version.js';
 
 type Action=ShotHost['actions'][number];
-export const SOURCE_INTERACTION_VERSION='source-interaction-2';
 export type SourceInteractionPhase='approach'|'held'|'released'|'landed'|'recovery';
 const fail=(shot:Shot,message:string):never=>{throw new Error(shot.id+': needs-source-prop-binding: original interaction '+message);};
 export interface SourceInteractionDescriptor {
   version:typeof SOURCE_INTERACTION_VERSION;actorId:string;sourceId:string;sourceHash:string;gestureId:string;hand:RigHand;operation:string;
   partId:string;targetKind:'bound-prop'|'fixed-model';propId?:string;narrationAnchor:string;cueHash:string;modelHash:string;startMs:number;endMs:number;contactMs:number;releaseMs?:number;landingMs?:number;recoveryMs?:number;
   sliceStartMs:number;sliceEndMs:number;inheritedContact:boolean;entryPhase:SourceInteractionPhase;exitPhase:SourceInteractionPhase;fingerprint:string;
+  ownership?:OwnershipInteraction;
 }
 export interface SourceInteractionRecord extends SourceInteractionDescriptor {
   sampleMs:number;phase:SourceInteractionPhase;modelCenter:Anchor;gripConstraintErrorPx?:number;originalContact:{shotId:string;sampleMs:number;target:Anchor;hand:Anchor;modelCenter:Anchor;errorPx:number;constraintErrorPx:number};
@@ -50,6 +56,7 @@ export function sourceInteractionDescriptor(shot:Shot,actorId:string,action:Acti
       entryPhase:phase(action.startMs,fixed.contactMs,undefined,undefined,fixed.recoverMs),exitPhase:phase(action.endMs,fixed.contactMs,undefined,undefined,fixed.recoverMs)};
     return {...descriptor,fingerprint:hash({descriptor,original:fixed.run,narration})};
   }
+  if(shot.cinematic?.sourceOwnership?.some(s=>s.partId===action.target!.partId))return ownershipInteractionDescriptor(shot,actorId,action,board,narration);
   validateSourcePropBindings(shot,board,narration);
   const bindings=shot.cinematic!.propBindings.filter(b=>b.ownerId===actorId&&b.propId===g.propId&&b.partId===action.target!.partId);
   if(bindings.length!==1)return fail(shot,'target is not the explicit original prop entity');
@@ -81,8 +88,31 @@ export function sourceInteractionDescriptor(shot:Shot,actorId:string,action:Acti
 }
 /** Actual source palm/prop geometry at the original contact and the visible
  * slice. No speech/face evaluation or invented target after release. */
-export function sourceInteractionGeometry(shot:Shot,actorId:string,action:Action,board:Storyboard|undefined,narration:Narration|undefined):HostGeometry['interactions'][number]{
+export function sourceInteractionGeometry(shot:Shot,actorId:string,action:Action,board:Storyboard|undefined,narration:Narration|undefined,compiled?:OwnershipScene):HostGeometry['interactions'][number]{
   const d=sourceInteractionDescriptor(shot,actorId,action,board,narration);
+  if(d.ownership){
+    const entities=ownershipScene(shot,board,narration,compiled),entity=entities.get(d.partId)!;
+    const grip=entity.source.grips.find(g=>g.id===d.ownership!.gripId)!;
+    const sample=(slice:Shot,global:number)=>{
+      const owner=person(slice,actorId),clock=actorViewActingClock(board!,slice,actorId);
+      if(!clock?.manipulationMotion)return fail(slice,'canonical ownership sample lost its original person clock');
+      const body=samplePhysicalPerformance(owner.performance,actorProfile(owner.character),global-slice.startMs,clock);
+      const current=slice.id===shot.id?entity:ownershipScene(slice,board,narration).get(d.partId)!;
+      const drawn=ownershipBakeAt(current,global),target={x:drawn.center.x+grip.gripOffset.x,y:drawn.center.y+grip.gripOffset.y},hand=body.hands[d.hand];
+      return {body,drawn,target,hand,errorPx:Math.hypot(hand.x-target.x,hand.y-target.y)};
+    };
+    const contactShot=board!.shots.find(s=>s.startMs<=d.contactMs&&s.endMs>d.contactMs);
+    if(!contactShot)return fail(shot,'canonical ownership original contact camera is absent');
+    const originalFrame=sourceOwnershipFrame(contactShot,entity.source.id,d.contactMs,board!,narration!);
+    const witness=originalFrame.grips.find(g=>g.gripId===grip.id);
+    if(!witness)return fail(shot,'original contact is not an active physical ownership grip');
+    const original=sample(contactShot,d.contactMs),sampleMs=action.contactMs??action.startMs,at=sample(shot,sampleMs),currentPhase=phase(sampleMs,d.contactMs,d.releaseMs);
+    const originalError=Math.hypot(original.hand.x-witness.originalContact.target.x,original.hand.y-witness.originalContact.target.y),constraint=original.body.contactErrors[d.hand],currentConstraint=at.body.contactErrors[d.hand];
+    if(!Number.isFinite(originalError)||originalError>1||!Number.isFinite(constraint)||constraint>1||original.errorPx>1||currentPhase==='held'&&(!at.drawn.activeGripIds.includes(grip.id)||!Number.isFinite(at.errorPx)||at.errorPx>1||!Number.isFinite(currentConstraint)||currentConstraint>1))return fail(shot,'actual original palm and canonical drawn entity disagree; do not move the hand to conceal the error');
+    return {actorId,handSide:d.hand,type:action.type,startMs:action.startMs,reachMs:sampleMs,endMs:action.endMs,partId:d.partId,target:at.target,hand:at.hand,errorPx:at.errorPx,root:at.body.root,gaze:at.target,
+      ...(action.contactMs===undefined?{}:{contactMs:action.contactMs}),sourceManipulation:{...d,sampleMs,phase:currentPhase,modelCenter:at.drawn.center,...(currentPhase==='held'?{gripConstraintErrorPx:currentConstraint}:{}),
+        originalContact:{shotId:contactShot.id,sampleMs:d.contactMs,target:witness.originalContact.target,hand:original.hand,modelCenter:original.drawn.center,errorPx:originalError,constraintErrorPx:constraint},scope:'original-physical-geometry-candidate',contactVerified:false,motionVerified:false}};
+  }
   if(d.targetKind==='fixed-model'){
     const sample=(slice:Shot,global:number)=>{
       const owner=person(slice,actorId),clock=actorViewActingClock(board!,slice,actorId);
@@ -142,7 +172,7 @@ export function interactionPreviewTimes(shot:Pick<Shot,'startMs'|'endMs'>,intera
     const source=action.sourceManipulation;
     if(source){
       add(shot.startMs);add(shot.endMs-1);add(action.reachMs);
-      for(const at of [source.contactMs,source.releaseMs,source.landingMs,source.recoveryMs].filter((t):t is number=>t!==undefined))for(const time of [at-step,at,at+step])add(time);
+      for(const at of [source.contactMs,source.releaseMs,source.landingMs,source.recoveryMs,...(source.ownership?.transitionTimesMs??[])].filter((t):t is number=>t!==undefined))for(const time of [at-step,at,at+step])add(time);
     }else for(const time of [action.reachMs-step,action.reachMs,action.reachMs+step])add(Math.max(shot.startMs,Math.min(shot.endMs-1,time)));
   }
   return [...times].sort((a,b)=>a-b);
@@ -151,5 +181,5 @@ export const sourceInteractionDescription={version:SOURCE_INTERACTION_VERSION,
   rule:'actual original person/source/gesture/hand/entity/grip/cue; unchanged complete original action through camera and primary/supporting swaps',
   geometry:'original contact sampled in its actual camera slice; current held/approach/released/landed/recovery state uses the actual physical source frame; fixed center/explicit authored handle remains independent of the palm, without new contact at entry or narration/face evaluation',
   review:'recompute canonical source records; actual original contact/release/landing evidence sampled only in the owning camera slice',
-  pending:['full integrated source production audit and runtime/API/geometry acceptance','shared/sequential ownership and full runtime/art/motion/film/factory acceptance'],
+  pending:['full integrated source production audit and runtime/API/geometry acceptance','canonical ownership observation runtime and full art/motion/film/factory acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false};

@@ -1,6 +1,6 @@
 import type {Shot,Storyboard,Narration} from '../core/schemas.js';
 import {hash} from '../core/utils.js';
-import {samplePhysicalPerformance} from '../animation/compiler.js';
+import {samplePhysicalPerformance,gestureRecoveryStart} from '../animation/compiler.js';
 import {actorProfile} from '../actors/model.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {sourceActor} from './source-actor.js';
@@ -11,8 +11,9 @@ import {validateSourceGripWorld} from './source-grip-world.js';
 import {OwnershipPaintSchema,type OwnershipPaint} from './ownership-paint-schemas.js';
 import {bakeOwnership,type OwnershipBake} from './ownership-bake.js';
 import type {SourceOwnership} from './source-ownership-schemas.js';
+import {OWNERSHIP_RENDER_VERSION} from './ownership-render-version.js';
+export {OWNERSHIP_RENDER_VERSION} from './ownership-render-version.js';
 
-export const OWNERSHIP_RENDER_VERSION='canonical-ownership-render-1';
 export interface CompiledOwnership {
   version:typeof OWNERSHIP_RENDER_VERSION;source:SourceOwnership;paint:OwnershipPaint;bake:OwnershipBake;
   aliases:Array<{actorId:string;propId:string;svgId:string;hand:'left'|'right';handSvgId:string;slotSvgId:string}>;
@@ -77,7 +78,13 @@ export function compileSourceOwnership(shot:Shot,board:Storyboard,narration:Narr
       }));
       return {timeMs:global,center:frame.center,palms,activeGripIds:frame.grips.map(g=>g.gripId),...(frame.authorityGripId===undefined?{}:{authorityGripId:frame.authorityGripId})};
     };
-    const bake=bakeOwnership(source,canonical.startMs,canonical.endMs,canonical.cinematic!.performance.fps,actorBreakpoints,resolve);
+    // Observation queries (contact and action entry) must be mandatory samples
+    // even when a diagnostic has no rendered actor compiler to supply frames.
+    const semanticTimes=[...people.values()].flatMap(({actor})=>{
+      const original=actor.performance.sourceManipulation!;
+      return original.gestures.flatMap(g=>[g.startMs,g.contactMs,g.releaseMs,g.landingMs,g.endMs,gestureRecoveryStart(g)].filter((at):at is number=>at!==undefined).map(at=>original.startMs+at));
+    }).filter(at=>at>=source.startMs&&at<=source.endMs);
+    const bake=bakeOwnership(source,canonical.startMs,canonical.endMs,canonical.cinematic!.performance.fps,[...actorBreakpoints,...semanticTimes],resolve);
     result.set(source.partId,{version:OWNERSHIP_RENDER_VERSION,source,paint,bake,aliases,shotHash:hash(canonical),sourceHash:hash({source,original,voice}),paintHash:hash(paint),motionVerified:false,productionApproval:false});
   }
   return result;
@@ -87,5 +94,5 @@ export const ownershipRenderDescription={version:OWNERSHIP_RENDER_VERSION,status
   geometry:'single entity from original ownership; shared palms agree, boundaries checked before interpolation; own original actor compiler breakpoints and a common original fps clock',
   paint:'explicit ownershipPaint for each entity and own original grip; own authored normalized viewport grip anchor matches physical stage offset; entity behind/in front of actors, each palm before/after entity; no inference from left/right, near/far or camera primary',
   interpolation:'measured sampled spatial error <=0.2px at interval probes; discrete grip/authority never tween; bounded refinement fails closed',
-  pending:['actual source geometry/bake/SVG/runtime and film acceptance','camera/interaction/coverage/continuity/publication/review/QC integration and complete production audit','rotating tools/airborne drops and full faithful art/motion/input/voice/resume/final acceptance'],
+  pending:['actual source geometry/bake/SVG/runtime and film acceptance','source observation integration runtime, publication/review/QC and complete production audit','rotating tools/airborne drops and full faithful art/motion/input/voice/resume/final acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false,productionApproval:false};

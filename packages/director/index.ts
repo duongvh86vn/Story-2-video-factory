@@ -238,12 +238,12 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   validatePerformanceContinuity(shot);
   validateManipulationActionSlices(p,shot.host?.actions??[],shot.startMs);
   if(validateWorld)validatePropBindings(shot,board,narration);
-  if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot,board).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
+  if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot,board,narration).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
   if(c.camera.framing!==shot.camera.shotSize||c.camera.movement!==shot.camera.movement)throw new Error(`${shot.id}: camera plan differs from shot`);
   validatePerformance(p,profile);
   if(sourceBodyPlan(p).supports?.length&&(!c.actorScene?.primary||!c.artDirection||!['authored','model'].includes(c.artDirection.origin)))throw new Error(`${shot.id}: seated acting requires a story actor and authored/model stage direction`);
   sceneSeats(shot);
-  validateCamera(shot,profile,actingClock,{worldShot:clockSourceShot,board});
+  validateCamera(shot,profile,actingClock,{worldShot:clockSourceShot,board,narration});
   if(c.actorScene?.primary!==null)validateComparisonReadability(shot,profile,actingClock);
   for(const actor of c.actorScene?.supporting??[]){
     const actorDefinition=actorProfile(actor.character,profile);
@@ -288,11 +288,18 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
   if(consumed.size!==p.gestures.length)throw new Error(`${shot.id}: missing performance action`);
 }
 
-export function validateModelContinuity(previous:Shot|undefined,next:Shot,board?:Storyboard):void{
+export function validateModelContinuity(previous:Shot|undefined,next:Shot,board?:Storyboard,narration?:Narration):void{
   if(!previous?.cinematic||!next.cinematic)return;
-  if(next.cinematic.actorScene?.continuity==='cut')return;
-  const priorParts=modelExitParts(previous,board);
-  for(const part of modelEntryParts(next,board)){const prior=priorParts.find(p=>p.id===part.id);if(prior&&hash([part.x,part.y,part.width,part.height])!==hash([prior.x,prior.y,prior.width,prior.height]))throw new Error(`${next.id}: model ${part.id} teleports at the cut; preserve its world transform`);}
+  const ownership=previous.cinematic.sourceOwnership?.length||next.cinematic.sourceOwnership?.length;
+  if(next.cinematic.actorScene?.continuity==='cut'&&!ownership)return;
+  const priorParts=modelExitParts(previous,board,narration);
+  for(const part of modelEntryParts(next,board,narration)){
+    const source=next.cinematic.sourceOwnership?.find(s=>s.partId===part.id)??previous.cinematic.sourceOwnership?.find(s=>s.partId===part.id);
+    if(next.cinematic.actorScene?.continuity==='cut'&&!source)continue;
+    const prior=priorParts.find(p=>p.id===part.id);
+    if(source&&previous.endMs!==next.startMs)throw new Error(`${next.id}: needs-source-prop-binding: canonical ownership camera boundary has a gap`);
+    if(prior&&hash([part.x,part.y,part.width,part.height])!==hash([prior.x,prior.y,prior.width,prior.height]))throw new Error(`${next.id}: model ${part.id} teleports at the cut; preserve its world transform`);
+  }
 }
 
 export async function writeCinematicPlans(root:string,board:Storyboard,options:{actorCast?:ReturnType<typeof ActorCastManifestSchema.parse>}={}):Promise<void> {

@@ -92,7 +92,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
               c.continuity.exit=bodyRootAt(c.performance,shot.startMs,c.performance.durationMs);});
             c.continuity.facing=[...(c.performance.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??c.performance.facing??'front';
           }
-          c.continuity.models=modelExitParts(shot,board).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
+          c.continuity.models=modelExitParts(shot,board,context.narration).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
         }
       }
       const prior=board.shots[i-1]?.cinematic;
@@ -106,9 +106,9 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       // Per-shot diagnostics retain the full canonical world for persistent subjects and recaps.
       check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true,sourceBoard:board}));
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
-      check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot,board));
+      check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot,board,context.narration));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
-      if(!shot.cinematic?.spriteStage)check(()=>validateCastCameras(shot,context.profile,board));
+      if(!shot.cinematic?.spriteStage)check(()=>validateCastCameras(shot,context.profile,board,context.narration));
       let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;
       let speech:Awaited<ReturnType<typeof loadSpriteSceneSpeech>>;
       try{motions=await loadSpriteSceneMotions(root,shot);speech=await loadSpriteSceneSpeech(root,shot,motions);}catch(error){failures.add(String(error));}

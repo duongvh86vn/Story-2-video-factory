@@ -26,6 +26,7 @@ export function hasSourceManipulationActing(expected:Acting,actions:NonNullable<
     const original=sourceInteractionDescriptor(shot,expected.participantId,action,board,narration),cue=narration.segments.find(s=>s.id===original.narrationAnchor)!;
     if((original.operation==='operate'?'contact':original.operation)!==expected.operation||!isWholeSourceStatement(expected.statement,cue.text)||!expected.sourceRefs.some(ref=>ref.kind==='narration'&&ref.segmentId===cue.id&&isWholeSourceStatement(expected.statement,ref.quote)))return false;
     if(expected.operation==='drop'&&(original.releaseMs===undefined||original.landingMs===undefined)||expected.operation==='pick-place'&&original.releaseMs===undefined)return false;
+    if(original.ownership&&!windows.some(w=>w.id===cue.id&&original.ownership!.activeIntervals.some(p=>p.startMs<w.endMs&&p.endMs>w.startMs)))return false;
     // A beat may cover an inherited hold/flight. Original contact/release are
     // still inside the complete actual cue, never re-timed into this beat.
     return windows.some(w=>w.id===cue.id&&action.startMs<w.endMs&&action.endMs>w.startMs);

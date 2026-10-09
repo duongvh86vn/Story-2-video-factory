@@ -229,7 +229,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
         ?!Number.isFinite(geometry.hostHeightRatio)||Math.abs(geometry.hostHeightRatio-rigMetrics(performer.profile).height*cinematic.performance.scale/cinematic.performance.stage.height)>1e-6
         :geometry.hostHeightRatio<.25||geometry.hostHeightRatio>.4;
       if(cinematic){
-        try{const report=inspectCastCameras(shot,host.profile,storyboard);cameraReports.set(shot.id,report);
+        try{const report=inspectCastCameras(shot,host.profile,storyboard,n);cameraReports.set(shot.id,report);
           for(const defect of report.issues)issues.push(issue(shot,defect.type,'high',`${defect.actorId??defect.role}: ${defect.message}`,defect.type==='camera-layout'?'Replan only the camera while preserving sourced acting, contact and subtitle clearance.':'Restore the original cast/world/clock/geometry; camera cropping cannot repair this source defect.'));
         }catch(error){issues.push(issue(shot,'camera-source','high',String(error),'Restore the complete canonical cast/world/clock before camera review.'));}
       }
@@ -323,4 +323,3 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
   const review:Review={pass:!unique.some(issue=>issue.severity==='high'),issues:unique,mode:hasVision?'combined':'rule-based',warnings:[...new Set(warnings)]};
   return commitReviewEvidence(projectRoot,config,storyboard,evidence,review);
 }
-

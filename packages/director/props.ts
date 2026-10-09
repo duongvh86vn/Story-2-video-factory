@@ -11,6 +11,8 @@ import {sourceInteractionDescriptor} from './source-interactions.js';
 import {sourceActor} from './source-actor.js';
 import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 import {validateSourceOwnershipTimelines} from './source-ownership.js';
+import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
+import {ownershipBakeAt} from './ownership-bake-query.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
 export const PROP_BINDING_VERSION='bound-model-motion-2.2.4';
@@ -38,9 +40,12 @@ export function pickupPart(shot:Shot){
   const ref=part.sourceRefs.find(ref=>{const text=fold(ref.quote);return new RegExp(`\\b(?:ta|chung ta|nguoi dan)\\s+nhac\\s+${label}\\b[^.!?;]*\\bdat\\s+${label}\\b[^.!?;]*\\bsang ben phai\\b`).test(text);});
   return ref?{part,ref}:undefined;
 }
-function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard):NonNullable<Shot['visualization']>['parts']{
+function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene):NonNullable<Shot['visualization']>['parts']{
   const owners=new Map<string,ReturnType<typeof sourceBoundPropFrame>['frame']>();
+  const canonical=shot.cinematic?.sourceOwnership?ownershipScene(shot,board,narration,compiled):undefined;
   return (shot.visualization?.parts??[]).map(part=>{
+    const entity=canonical?.get(part.id);
+    if(entity){const at=ownershipBakeAt(entity,exit?shot.endMs:shot.startMs),stage=shot.cinematic!.performance.stage;return {...part,x:at.center.x/stage.width,y:at.center.y/stage.height};}
     const binding=shot.cinematic?.propBindings.find(b=>b.partId===part.id),owned=binding&&boundProp(shot,binding),prop=owned?.prop,p=owned?.performance;
     if(binding&&owned&&p?.sourceManipulation){
       let frame=owners.get(owned.id);if(!frame){frame=sourceBoundPropFrame(shot,binding,exit?p.durationMs:0,board).frame;owners.set(owned.id,frame);}
@@ -50,16 +55,16 @@ function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard):NonNullable<Shot
     return exit&&prop?.destination&&p?{...part,x:prop.destination.x/p.stage.width,y:prop.destination.y/p.stage.height}:part;
   });
 }
-export function modelExitParts(shot:Shot,board?:Storyboard){return modelPartsAt(shot,true,board);}
-export function modelEntryParts(shot:Shot,board?:Storyboard){return modelPartsAt(shot,false,board);}
+export function modelExitParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){return modelPartsAt(shot,true,board,narration,compiled);}
+export function modelEntryParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){return modelPartsAt(shot,false,board,narration,compiled);}
 export function validatePropBindings(shot:Shot,board?:Storyboard,narration?:Narration):void{
   const c=shot.cinematic;if(!c)return;
   if(c.sourceOwnership){
     if(!board||!narration)throw new Error(`${shot.id}: needs-source-prop-binding: candidate ownership needs the complete storyboard and original narration`);
     validateSourceOwnershipTimelines(shot,board,narration);
-    // Candidate aliases are NOT additional painted props. The single-entity
-    // renderer and integrated world/camera/coverage audit remain prerequisites.
-    throw new Error(`${shot.id}: needs-source-prop-binding: shared/sequential ownership is a semantic/geometry candidate; one-entity compiler/renderer integration and runtime/art/motion acceptance are pending`);
+    // Canonical entity renderer/observations exist as source candidates. The
+    // integrated production semantics and actual art/motion remain unaccepted.
+    throw new Error(`${shot.id}: needs-source-prop-binding: shared/sequential ownership renderer/observations are candidates; integrated production audit and runtime/art/motion acceptance are pending`);
   }
   validateSourceWorld(shot,board,narration);
   const performances=[c.performance,...(c.actorScene?.supporting.map(a=>a.performance)??[])];

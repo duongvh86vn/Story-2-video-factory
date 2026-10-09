@@ -197,7 +197,7 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
     const spoken = narration.segments.reduce((n, s) => n + Math.max(0, Math.min(s.endMs, shot.endMs) - Math.max(s.startMs, shot.startMs)), 0);
     speech += spoken; if (h.presence !== 'absent') visible += spoken;
   }
-  if(config.presentation.mode==='story-cinematic')for(const [i,shot] of board.shots.entries())validateModelContinuity(board.shots[i-1],shot,phaseBoard);
+  if(config.presentation.mode==='story-cinematic')for(const [i,shot] of board.shots.entries())validateModelContinuity(board.shots[i-1],shot,phaseBoard,narration);
   if (!board.shots.some(s=>s.cinematic?.actorScene)&&speech && visible / speech < config.presentation.minimum_host_speech_visibility) throw new Error('Insufficient host visibility during narration');
   if (!board.shots.some(s=>s.cinematic?.actorScene)&&config.presentation.require_meaningful_host_action_per_beat) for (const beat of beats) {
     if (!board.shots.some(s => s.beatIds.includes(beat.id) && s.host?.presence !== 'absent' && s.host?.actions.some(a => !['idle', 'greet', 'react'].includes(a.type)))) throw new Error(`${beat.id}: no explanatory host action`);

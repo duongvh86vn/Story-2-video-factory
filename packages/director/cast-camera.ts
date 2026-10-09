@@ -1,11 +1,12 @@
-import type {Shot,Storyboard} from '../core/schemas.js';
+import type {Shot,Storyboard,Narration} from '../core/schemas.js';
 import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {actorProfile} from '../actors/model.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {CameraFramingError,cameraSourceGeometry,validateCamera} from './camera.js';
+import {ownershipScene} from './ownership-scene.js';
 
-export const CAST_CAMERA_VERSION='cast-camera-1';
+export const CAST_CAMERA_VERSION='cast-camera-2';
 export type CastCameraRole='primary'|'supporting'|'presenter'|'world'|'object-only';
 export interface CastCameraReport{
   version:typeof CAST_CAMERA_VERSION;
@@ -31,30 +32,34 @@ function cameraSubjects(shot:Shot,base:HostProfile,board:Storyboard){
   if(new Set(ids).size!==ids.length)throw new Error(`${shot.id}: cast camera requires unique visible person IDs`);
   return {c,rows};
 }
-export function validateCastCameraSources(shot:Shot,base:HostProfile,board:Storyboard):void{
+export function validateCastCameraSources(shot:Shot,base:HostProfile,board:Storyboard,narration?:Narration):void{
   const {c,rows}=cameraSubjects(shot,base,board),errors:string[]=[];
+  const ownership=c.sourceOwnership?ownershipScene(shot,board,narration):undefined;
   for(const row of rows)try{
     if(hash(row.shot.cinematic!.performance.stage)!==hash(c.performance.stage))throw new Error('actor and original world require the same physical stage/floor');
-    cameraSourceGeometry(row.shot,row.profile(),row.id===null?undefined:actorViewActingClock(board,shot,row.id),{worldShot:shot,board});
+    cameraSourceGeometry(row.shot,row.profile(),row.id===null?undefined:actorViewActingClock(board,shot,row.id),{worldShot:shot,board,narration,ownership});
   }catch(error){errors.push(`${row.id??row.role}: ${error instanceof Error?error.message:String(error)}`);}
   if(errors.length)throw new Error(`${shot.id}: needs-camera-source:\n`+errors.join('\n'));
 }
-export function inspectCastCameras(shot:Shot,base:HostProfile,board:Storyboard):CastCameraReport{
+export function inspectCastCameras(shot:Shot,base:HostProfile,board:Storyboard,narration?:Narration):CastCameraReport{
   const {c,rows}=cameraSubjects(shot,base,board);
   const result:CastCameraReport={version:CAST_CAMERA_VERSION,actors:[],issues:[],visualAcceptance:false,motionVerified:false,productionApproval:false};
+  let ownership:ReturnType<typeof ownershipScene>|undefined;
+  try{if(c.sourceOwnership)ownership=ownershipScene(shot,board,narration);}
+  catch(error){result.issues.push({actorId:null,role:'world',type:'camera-source',message:error instanceof Error?error.message:String(error)});return result;}
   for(const row of rows){
     try{
       if(hash(row.shot.cinematic!.performance.stage)!==hash(c.performance.stage))throw new Error('actor and original world require the same physical stage/floor');
       const profile=row.profile(),clock=row.id===null?undefined:actorViewActingClock(board,shot,row.id);
-      const report=validateCamera(row.shot,profile,clock,{worldShot:shot,board});
+      const report=validateCamera(row.shot,profile,clock,{worldShot:shot,board,narration,ownership});
       result.actors.push({actorId:row.id,role:row.role,report});
     }catch(error){result.issues.push({actorId:row.id,role:row.role,type:error instanceof CameraFramingError?'camera-layout':'camera-source',message:error instanceof Error?error.message:String(error)});}
   }
   return result;
 }
 
-export function validateCastCameras(shot:Shot,base:HostProfile,board:Storyboard):CastCameraReport{
-  const result=inspectCastCameras(shot,base,board);
+export function validateCastCameras(shot:Shot,base:HostProfile,board:Storyboard,narration?:Narration):CastCameraReport{
+  const result=inspectCastCameras(shot,base,board,narration);
   if(result.issues.length)throw new Error(`${shot.id}: camera cast validation failed:\n`+result.issues.map(issue=>`- ${issue.actorId??issue.role}: ${issue.message}`).join('\n'));
   return result;
 }

@@ -1,5 +1,7 @@
 # Một đồ vật chung và bàn tay đúng nguồn — source0.76
 
+Cập nhật source0.77: [camera/tương tác/continuity của vật chung](OWNERSHIP-OBSERVATION-HANDOFF.md). Nhánh observation đã viết; production và nghiệm thu art/motion/video vẫn chờ. Phần source0.76 trở về trước dưới đây là lịch sử bàn giao.
+
 Mục tiêu vẫn là ba input câu chuyện → kịch bản, kịch bản nguyên văn và WAV → video diễn viên trong câu chuyện. Source0.76 viết tiếp renderer của [ownership0.75](SHARED-OWNERSHIP-HANDOFF.md); không giới hạn nội dung vào máy móc hoặc một cảnh đưa giỏ mẫu.
 
 **Đã viết source, chưa chạy runtime:** nhánh một canonical entity, adaptive bake, paint theo grip gốc, label/shadow/foreground/relation/effect dùng center chung, candidate report và cache version. Production renderer vẫn đi qua validator trước nhánh ấy; `needs-source-prop-binding` tiếp tục chặn. Chưa có full-scene study API hoặc phép xuất final cho ownership. Các helper có thể được model test gọi riêng; chưa coi chúng là nghiệm thu video.

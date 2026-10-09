@@ -1,4 +1,4 @@
-import type { Shot,Storyboard } from '../core/schemas.js';
+import type { Shot,Storyboard,Narration } from '../core/schemas.js';
 import type { HostProfile } from '../host/schemas.js';
 import type { PerformancePlan, Point } from '../animation/schemas.js';
 import { rigMetrics } from '../animation/rig.js';
@@ -22,6 +22,8 @@ import { cinematicActionGroups } from './actions.js';
 import {boundProp} from './props.js';
 import {actorProfile} from '../actors/model.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
+import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
+import {ownershipBakeCenterBounds} from './ownership-bake-query.js';
 
 export const CAMERA_VIEWPORT={left:.04,right:.96,top:.14,bottom:.80,centerY:.46,pan:.025} as const;
 export interface CameraMatrix { scale:number; x:number; y:number; }
@@ -211,12 +213,18 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
 export class CameraFramingError extends Error {constructor(message:string){super(message);this.name='CameraFramingError';}}
 /** Compute the real source envelopes without consulting framing. This preflight
  * prevents an early bad anchor/angle from concealing missing source geometry. */
-export function cameraSourceGeometry(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:{worldShot:Shot;board?:Storyboard}){
+export interface CameraSourceContext {worldShot:Shot;board?:Storyboard;narration?:Narration;ownership?:OwnershipScene;}
+export function cameraSourceGeometry(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:CameraSourceContext){
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera source requires canonical cinematic data`);
   const bounds=cameraHostBounds(c.performance,profile,actingClock),worldShot=context?.worldShot??shot,world=worldShot.cinematic;
   if(!world)throw new Error(`${shot.id}: camera source requires the original world`);
   const ownerBounds=new Map<string,ReturnType<typeof cameraHostBounds>>(),props=new Map<string,Bounds>();
+  if(world.sourceOwnership){
+    const entities=ownershipScene(worldShot,context?.board,context?.narration,context?.ownership);
+    for(const [partId,item] of entities)props.set(partId,ownershipBakeCenterBounds(item));
+  }
   for(const binding of world.propBindings){
+    if(world.sourceOwnership?.some(source=>source.partId===binding.partId))continue; // Explicit aliases share the canonical baked entity.
     if(props.has(binding.partId))throw new Error(`${shot.id}: camera source model has duplicate bindings ${binding.partId}`);
     const owner=boundProp(worldShot,binding);
     if(!ownerBounds.has(owner.id)){
@@ -230,10 +238,13 @@ export function cameraSourceGeometry(shot:Shot,profile:HostProfile,actingClock?:
   }
   return {bounds,props};
 }
-export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:{worldShot:Shot;board?:Storyboard}) {
+export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:CameraSourceContext) {
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera requires canonical cinematic data`);
   const {bounds,props}=cameraSourceGeometry(shot,profile,actingClock,context);
   const camera=CameraSchema.parse(c.camera),p=c.performance,{width,height,groundY}=p.stage;
+  const actionGroups=cinematicActionGroups(shot.host?.actions??[],p,shot.startMs);
+  const contactGroups=actionGroups.filter(group=>group.sourceManipulation&&group.gestures.some(g=>['operate','pick-place','carry','drop'].includes(g.action)&&g.target&&g.contactMs!==undefined));
+  const localContacts=p.gestures.filter(g=>['operate','pick-place','carry','drop'].includes(g.action)&&g.target&&g.contactMs!==undefined);
   const fail=(message:string):never=>{throw new CameraFramingError(`${shot.id}: camera ${message}`);};
   if(shot.camera.angle!=='eye-level')fail('supports only eye-level 2D framing; other angles require a different renderer.');
   if(camera.anchor.x<0||camera.anchor.x>width||camera.anchor.y<0||camera.anchor.y>height)fail('anchor must be inside the world stage.');
@@ -283,7 +294,7 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       labelInView(part);
     }
   }else if(camera.focus==='face'){
-    if(p.gestures.some(g=>['operate','pick-place','carry','drop'].includes(g.action)))fail('face close would hide contact; use contact focus or medium.');
+    if(contactGroups.length||p.gestures.some(g=>['operate','pick-place','carry','drop'].includes(g.action)))fail('face close would hide contact; use contact focus or medium.');
     if(!p.expressions.some(e=>c.actorScene?e.mood!=='neutral':['curious','thinking','surprised','understanding'].includes(e.mood)))fail('face close requires an informative expression/reaction.');
     if(!boundsInView(bounds.head))fail('face close crops the face; move the anchor to the face, preserving subtitle clearance.');
   }else if(camera.focus==='object'){
@@ -293,14 +304,26 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       labelInView(part);
     }
   }else {
-    const contacts=p.gestures.filter(g=>['operate','pick-place','carry','drop'].includes(g.action)&&g.target&&g.contactMs!==undefined);
-    if(!contacts.length)fail('contact close requires a validated contact action.');
+    if(!contactGroups.length&&!localContacts.length)fail('contact close requires a validated contact action.');
     for(const g of p.gestures)if(g.target&&!inView(g.target,12*p.scale))fail(`${g.id} target/hand is cropped; contact close must show explanatory targets.`);
-    const actions=new Map(cinematicActionGroups(shot.host?.actions??[],p,shot.startMs).flatMap(group=>group.gestures.map(g=>[g.id,group.action] as const)));
-    for(const g of contacts){
-      const a=actions.get(g.id),part=shot.visualization?.parts.find(part=>part.id===a?.target?.partId);
+    const localActions=new Map(actionGroups.filter(group=>!group.sourceManipulation).flatMap(group=>group.gestures.map(g=>[g.id,group.action] as const)));
+    for(const g of localContacts){
+      const a=localActions.get(g.id),part=shot.visualization?.parts.find(part=>part.id===a?.target?.partId);
       if(!part||!modelInView(part))fail('contact close crops its manipulated object.');
       labelInView(part!);
+    }
+    for(const group of contactGroups){
+      const a=group.action,part=shot.visualization?.parts.find(part=>part.id===a.target?.partId);
+      if(!part||!modelInView(part))fail('contact close crops its manipulated object.');
+      labelInView(part!);
+      const original=(context?.worldShot??shot).cinematic?.sourceOwnership?.find(s=>s.partId===part!.id);
+      if(original){
+        const person=c.actorScene?.primary?.id??profile.id,grip=original.grips.find(g=>g.actorId===person&&g.sourceId===a.sourceManipulation?.sourceId&&g.gestureId===a.sourceManipulation.gestureId);
+        const envelope=props.get(part!.id);
+        if(!grip||!envelope)throw new Error(`${shot.id}: needs-source-prop-binding: camera contact has no canonical person/grip envelope`);
+        const pad=12*p.scale;
+        if(!boundsInView({left:envelope.left+grip.gripOffset.x-pad,right:envelope.right+grip.gripOffset.x+pad,top:envelope.top+grip.gripOffset.y-pad,bottom:envelope.bottom+grip.gripOffset.y+pad}))fail('canonical grip/hand is cropped during its motion.');
+      }else if(group.sourceManipulation)for(const g of group.gestures)if(g.target&&!inView(g.target,12*p.scale))fail(`${g.id} original contact target/hand is cropped.`);
     }
   }
   return {framing:camera.framing,focus:camera.focus??'ensemble',viewport:CAMERA_VIEWPORT,worldHostHeightRatio:worldRatio,

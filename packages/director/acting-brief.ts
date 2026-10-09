@@ -16,6 +16,7 @@ import {sourceFixedOperationDescription} from './source-fixed-operation.js';
 import {sourceGripWorldDescription} from './source-grip-world.js';
 import {sourceOwnershipDescription} from './source-ownership.js';
 import {ownershipRenderDescription} from './ownership-compile.js';
+import {ownershipObservationDescription} from './ownership-scene.js';
 import {cameraDirectionDescription} from './camera-direction-schemas.js';
 import {castCameraDescription} from './cast-camera.js';
 import {cameraRepairDescription} from './camera-repair.js';
@@ -42,6 +43,7 @@ export function creativeActingBrief(beats:Beat[],narration:Narration,profile:Hos
     sourceWorld:sourceWorldDescription,
     sourceOwnership:sourceOwnershipDescription,
     ownershipRenderer:ownershipRenderDescription,
+    ownershipObservation:ownershipObservationDescription,
     sourceInteraction:sourceInteractionDescription,
     fixedSourceOperation:sourceFixedOperationDescription,
     sourceManipulation:{candidate:sourceManipulationDescription,actionProjection:sourceManipulationActionDescription,modelBinding:sourcePropBindingDescription,gripWorld:sourceGripWorldDescription,physicalGeometry:physicalPerformanceDescription,productionBinding:'PENDING/needs-source-prop-binding. Compiler/actor clock6 can evaluate explicit complete sourceManipulation with identical sourceBody and empty local props/contact. Source action schema/projection preserves original gesture reference/hand/cue/clock without fake re-contact; Original person/entity/model/art/cue binding and actual geometry entry/exit have a complete source candidate. Original world phases, source action groups, physical interaction records and acting coverage have source candidates. Fixed center/explicit own authored handle contact/recovery and per-person API continuity now have source candidates. Bound props may use an explicit own authored handle matching their original physical gripOffset. The original person/model share one physical stage/floor. Original transform/reveal/flow history cannot add a second geometry track to a fixed grip or physically bound entity. Full integrated source production audit and runtime/art/film acceptance remain pending. Physical camera/release queries evaluate original body/head/attention geometry, not voice or facial frames. Do not author this as a production workaround, remove its source fields/gates, or replace a sourced cross-cut transport obligation with pointing or a completed local placement.'},

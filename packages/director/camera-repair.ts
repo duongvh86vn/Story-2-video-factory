@@ -60,7 +60,7 @@ export async function repairCinematicCameras(root:string,config:FactoryConfig,ro
   const protectedShots=board.shots.filter(s=>!targets.has(s.id)||lockedShot(original.state,s));
   // Validate original person/world geometry independently of a bad crop, before
   // entering a provider request. A framing error cannot mask missing source.
-  for(const shot of board.shots)if(shot.cinematic&&!shot.cinematic.spriteStage)validateCastCameraSources(shot,original.host.profile,board);
+  for(const shot of board.shots)if(shot.cinematic&&!shot.cinematic.spriteStage)validateCastCameraSources(shot,original.host.profile,board,original.narration);
   const bindings=new Map(board.shots.map(s=>[s.id,rigSpeechPublicationBinding(s,original.narration,board)]));
   const stagedRoot=path.join(root,'work/artwork-transactions',randomUUID());
   const stagedReport=path.relative(root,path.join(stagedRoot,'work/camera-direction-report.json')).split(path.sep).join('/');
@@ -72,7 +72,7 @@ export async function repairCinematicCameras(root:string,config:FactoryConfig,ro
       validateExplainerStoryboard(value,original.narration,original.beats,original.host.profile,original.host.rig,config);
       for(const shot of value.shots){
         assertRigSpeechPublicationBinding(shot,original.narration,value,bindings.get(shot.id));
-        if(shot.cinematic&&!shot.cinematic.spriteStage)validateCastCameras(shot,original.host.profile,value);
+        if(shot.cinematic&&!shot.cinematic.spriteStage)validateCastCameras(shot,original.host.profile,value,original.narration);
       }
       return value;
     },
