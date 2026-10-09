@@ -50,11 +50,18 @@ export const HostRigSchema = z.object({ id: Id, profileVersion: z.number().int()
   poses: z.record(z.object({ rotations: z.record(z.number()), rootX: z.number().default(0), gaze: z.number().default(0) })) });
 export type HostRig = z.infer<typeof HostRigSchema>;
 export const TargetSchema = z.object({ modelId: Id, partId: Id, anchor: z.enum(['center', 'handle', 'label']).default('center') });
+/** Reference to an immutable original contact clip, never a new local contact. */
+export const ManipulationActionRefSchema=z.object({sourceId:Id,gestureId:Id}).strict();
 export const HostActionSchema = z.object({ type: z.enum(HostActions), startMs: z.number().int().nonnegative(),
   hand:RigHandSchema.optional(),
   endMs: z.number().int().positive(), narrationAnchor: Id.optional(), target: TargetSchema.optional(),
-  secondTarget: TargetSchema.optional(), contactMs: z.number().int().nonnegative().optional() })
-  .refine(action => action.endMs > action.startMs, 'Host action interval must be positive');
+  secondTarget: TargetSchema.optional(), contactMs: z.number().int().nonnegative().optional(),
+  sourceManipulation:ManipulationActionRefSchema.optional() })
+  .superRefine((action,ctx)=>{
+    if(action.endMs<=action.startMs)ctx.addIssue({code:'custom',message:'Host action interval must be positive'});
+    if(action.sourceManipulation&&(action.type!=='operate-model'||!action.hand||!action.narrationAnchor||!action.target||action.target.anchor!=='center'||action.secondTarget))
+      ctx.addIssue({code:'custom',path:['sourceManipulation'],message:'Original contact action requires operate-model, explicit own hand, cue and one model center target'});
+  });
 export const ShotHostSchema = z.object({ id: Id, profileVersion: z.number().int().positive(), rigHash: z.string(),
   presence: z.enum(['beside-model', 'inset', 'absent']), actions: z.array(HostActionSchema).min(1) });
 export type ShotHost = z.infer<typeof ShotHostSchema>;

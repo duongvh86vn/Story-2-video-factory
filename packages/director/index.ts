@@ -4,6 +4,7 @@ import { ShotSchema, StoryboardSchema, type Beat, type Shot, type Storyboard } f
 import { exists, hash, readJson, writeJson,writeAtomic } from '../core/utils.js';
 import {rigHand} from '../core/identifiers.js';
 import {cinematicActionGroups} from './actions.js';
+import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 import type { HostProfile } from '../host/schemas.js';
 import { partAnchor } from '../host/controller.js';
 import { rigMetrics } from '../animation/rig.js';
@@ -229,6 +230,7 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
     return;
   }
   if(hash(c.continuity.entry)!==hash(bodyRootAt(p,shot.startMs,0))||Math.abs(c.continuity.exit.x-bodyRootAt(p,shot.startMs,p.durationMs).x)>.01||c.continuity.exit.y!==p.stage.groundY)throw new Error(`${shot.id}: cinematic continuity disagrees with locomotion`);
+  validateManipulationActionSlices(p,shot.host?.actions??[],shot.startMs);
   if(validateWorld)validatePropBindings(shot);
   if(validateWorld&&hash(c.continuity.models)!==hash(modelExitParts(shot).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))throw new Error(`${shot.id}: model continuity disagrees with stage transforms`);
   const exitFacing=[...(p.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??p.facing??'front';

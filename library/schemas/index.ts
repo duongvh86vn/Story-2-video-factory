@@ -6,7 +6,7 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import { StorySchema, NarrationSchema, CharacterBibleSchema, ChapterSchema, BeatSchema, ShotSchema, StoryboardSchema, AssetManifestSchema, SceneFilesSchema, ReviewSchema, ProjectStateSchema } from '../../packages/core/schemas.js';
 import { ChapterPlanSchema, BeatPlanSchema } from '../../packages/story/schemas.js';
 import { ScriptDocumentSchema } from '../../packages/ingest/script.js';
-import { HostProfileSchema, HostRigSchema, HostTimelineSchema } from '../../packages/host/schemas.js';
+import { HostProfileSchema, HostRigSchema, HostTimelineSchema,ManipulationActionRefSchema } from '../../packages/host/schemas.js';
 import { ExplanationPlanSchema } from '../../packages/explainer/schemas.js';
 import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/schemas.js';
 import {SpeechSourceClockSchema} from '../../packages/animation/speech-clock.js';
@@ -34,6 +34,7 @@ import {NativeRearMotionSchema} from '../../packages/animation/native-head-follo
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
+  'manipulation-action-ref':ManipulationActionRefSchema,
   story: StorySchema, narration: NarrationSchema, 'character-bible': CharacterBibleSchema,
   chapters: z.array(ChapterSchema), beats: z.array(BeatSchema), shot: ShotSchema,
   storyboard: StoryboardSchema, 'asset-manifest': AssetManifestSchema,

@@ -420,6 +420,26 @@
                         "contactMs": {
                           "type": "integer",
                           "minimum": 0
+                        },
+                        "sourceManipulation": {
+                          "type": "object",
+                          "properties": {
+                            "sourceId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            },
+                            "gestureId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            }
+                          },
+                          "required": [
+                            "sourceId",
+                            "gestureId"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -1076,7 +1096,7 @@
                   },
                   "producer": {
                     "type": "string",
-                    "const": "story-direction-2.2.34"
+                    "const": "story-direction-2.2.35"
                   },
                   "shotId": {
                     "type": "string",
@@ -7342,6 +7362,26 @@
                                   "contactMs": {
                                     "type": "integer",
                                     "minimum": 0
+                                  },
+                                  "sourceManipulation": {
+                                    "type": "object",
+                                    "properties": {
+                                      "sourceId": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                      },
+                                      "gestureId": {
+                                        "type": "string",
+                                        "maxLength": 96,
+                                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                      }
+                                    },
+                                    "required": [
+                                      "sourceId",
+                                      "gestureId"
+                                    ],
+                                    "additionalProperties": false
                                   }
                                 },
                                 "required": [

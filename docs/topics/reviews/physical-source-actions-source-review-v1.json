@@ -1,0 +1,75 @@
+{
+  "version": "physical-source-actions-source-review-1",
+  "sourceVersion": "forest-tribe-0.67-physical-source-actions",
+  "scope": "bounded frozen source excerpts and one declaration file only; no geometry/runtime/art/motion/film acceptance",
+  "rawProposal": {
+    "version": "dev-nine-router-proposal-1",
+    "status": "proposal-not-applied",
+    "response": {
+      "findings": [
+        {
+          "file": "packages/director/source-manipulation-actions.ts",
+          "line": 47,
+          "severity": "error",
+          "issue": "In `validateManipulationActionSlices`, the overlap check `other.startMs<action.endMs&&other.endMs>action.startMs` allows half-open intervals to overlap concurrently, but for idle actions with unspecified hand (`!other.hand&&other.type==='idle'`), it checks `rigHand(other)===rigHand(action)`. However, `rigHand(other)` throws on undefined hand, or conversely, if evaluated, it conflicts; furthermore, an idle action with unspecified hand spans both hands and should conflict with any active contact hand during the slice interval. More crucially, line 47 tests `rigHand(other)===rigHand(action)` only when `!other.hand&&other.type==='idle'` is false, but if `other.hand` is undefined and `other.type!=='idle'`, `rigHand(other)` throws.",
+          "proposedSourceChange": "    if(actions.some(other=>other!==raw&&!other.sourceManipulation&&((!other.hand&&other.type==='idle')||(other.hand&&rigHand(other)===rigHand(action)))&&other.startMs<action.endMs&&other.endMs>action.startMs))\n      throw new Error('needs-source-action: another shot-local action owns the original contact hand');"
+        }
+      ],
+      "reviewScope": "source-only",
+      "runtimeExecuted:false": false,
+      "runtimeExecuted": false,
+      "artOrMotionAccepted": false
+    },
+    "usage": {
+      "promptTokens": 20367,
+      "completionTokens": 343,
+      "totalTokens": 20710
+    },
+    "model": "ag/gemini-3.8-flash-low",
+    "purpose": "source-only-review",
+    "fingerprint": "5a66d602ec115bcaa333ea6126b0912882e4ed0286cb0bf9b5ca1052b92798ad",
+    "slot": 1,
+    "prompt": "Review source0.67 for concrete correctness regressions in physical camera/release queries and explicit original contact action slices. Runtime/testing is exclusively human tester: do not execute anything. Render voice/source guards and production needs-source-prop-binding MUST stay; source action target/cue evidence/model continuity intentionally pending. No identity art edits, pose mirrors, schema gate removal, inferred source clock/yaw/audio or silent-render fallback. Compare render geometry with new geometry branch and original release context; assess half-open contact ownership and unchanged repair schema innerType compatibility. Tests are declarations only. Return JSON {findings:[{file,line,severity,issue,proposedSourceChange}],reviewScope:\"source-only\",runtimeExecuted:false,artOrMotionAccepted:false}. Only actionable defects with exact source evidence; no detached fixes or acceptance claims.",
+    "sources": [
+      {
+        "file": "docs/topics/reviews/physical-source-actions-review-inputs-v1.md",
+        "sha256": "b17ca705dbe2515eda8644569f1be30a24ad7a9726e839b66d50346230ec41d1"
+      },
+      {
+        "file": "tests/physical-performance.test.ts",
+        "sha256": "bd64cdbf6f42184923171412f32b9fc4c04673a39031f657419070e40f63401f"
+      }
+    ],
+    "references": [],
+    "scope": "source-static-advice-only",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "createdAt": "2026-10-09T02:08:06.262Z"
+  },
+  "decisions": [
+    {
+      "finding": 0,
+      "status": "rejected",
+      "reason": "rigHand is a total accessor, packages/core/identifiers.ts:6 value.hand??right, not a throwing function. Unbound idle short-circuits and occupies both hands; non-idle without hand preserves legacy default right. Proposed guard other.hand would silently permit an actual default-right conflict.",
+      "sourceEvidence": {
+        "file": "packages/core/identifiers.ts",
+        "line": 6,
+        "text": "export const rigHand=(value:{hand?:RigHand}):RigHand=>value.hand??'right';"
+      }
+    }
+  ],
+  "postFreezeChanges": [
+    "source action clarifying comment",
+    "one declared default-right/idle/half-open regression callback; not executed"
+  ],
+  "reviewedFinalSource": false,
+  "helperCalls": 1,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false
+}

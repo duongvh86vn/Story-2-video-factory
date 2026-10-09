@@ -2,7 +2,7 @@ import type { Shot,Storyboard } from '../core/schemas.js';
 import type { HostProfile } from '../host/schemas.js';
 import type { PerformancePlan, Point } from '../animation/schemas.js';
 import { rigMetrics } from '../animation/rig.js';
-import { samplePerformance } from '../animation/compiler.js';
+import { samplePhysicalPerformance } from '../animation/compiler.js';
 import { validateViewActingClock, VIEW_GAZE_RAMP_MS, VIEW_BREATH_RAMP_MS, type ViewActingClock } from '../animation/view-acting-clock.js';
 import { VIEW_EXPRESSION_RAMP_MS } from '../animation/view-expression-track.js';
 import { sourceBodyPlan, bodyTrackOffsetMs, bodyRootAt } from '../animation/view-source-body.js';
@@ -72,7 +72,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
   }
   const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
   for(const time of [...times].filter(at=>Number.isFinite(at)&&at>=0&&at<=p.durationMs)){
-    const frame=samplePerformance(p,profile,time,{method:'segment-draft',windowMs:20,intervals:[]},undefined,actingClock);
+    const frame=samplePhysicalPerformance(p,profile,time,actingClock);
     for(const [id,prop] of Object.entries(frame.props)){
       const bound=props[id]??=emptyBounds();include(bound,prop.point);
       if(prop.tip){include(bound,prop.tip,6*p.scale);include(bound,{x:2*prop.point.x-prop.tip.x,y:2*prop.point.y-prop.tip.y},3*p.scale);}
@@ -82,7 +82,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     const x=Number(match[1]),y=Number(match[2]),angle=Number(match[3])*Math.PI/180,scale=Number(match[4]),local=emptyBounds();
     if(usesCutoutHead(profile)){
       const c=cutoutHeadRegistration(profile);
-      const headBounds=hasBodyViewSecondary(profile)?nativeSecondaryBounds(profile,registeredBodyView(profile),frame.face):c.bounds;
+      const headBounds=hasBodyViewSecondary(profile)?nativeSecondaryBounds(profile,registeredBodyView(profile),frame.surfaceState):c.bounds;
       for(const px of [headBounds.left,headBounds.right])for(const py of [headBounds.top,headBounds.bottom]){
         const dx=(px-c.neck.x)*c.scale,dy=(py-c.neck.y)*c.scale;
         include(local,{x:x+(dx*Math.cos(angle)-dy*Math.sin(angle))*scale,y:y+(dx*Math.sin(angle)+dy*Math.cos(angle))*scale});

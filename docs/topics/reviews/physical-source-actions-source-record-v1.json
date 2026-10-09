@@ -1,0 +1,162 @@
+{
+  "version": "physical-source-actions-source-record-1",
+  "sourceVersion": "forest-tribe-0.67-physical-source-actions",
+  "precedingSourceSHA": "2162893f6b950afdd5034b271beb34f68ff97617",
+  "scope": "source build/typecheck/schema export/static bytes only; runtime/geometry/art/motion/film/full-flow acceptance not executed",
+  "checks": [
+    {
+      "command": "npm run build:core",
+      "startChunk": "12be37",
+      "session": 30170,
+      "completionChunk": "b78a2d",
+      "exitCode": 0,
+      "scope": "intermediate physical sampler source only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "chunk": "34c413",
+      "exitCode": 1,
+      "reason": "Missing closing brace in newly declared isolated Shot fixture, fixed before final checks; no callbacks executed."
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "d927cd",
+      "session": 71112,
+      "completionChunk": "3ac9d9",
+      "exitCode": 0,
+      "scope": "intermediate revision before final descriptions/comment/default-right regression declaration"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "01ac29",
+      "session": 10831,
+      "completionChunk": "47e5cd",
+      "exitCode": 0,
+      "scope": "intermediate typecheck; no callbacks"
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "1bd2a0",
+      "session": 49153,
+      "completionChunk": "96a22b",
+      "exitCode": 0,
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 46 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-bnSjqx_J.js   219.27 kB │ gzip: 68.98 kB\n✓ built in 541ms\n",
+      "scope": "final source build only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "2d8abc",
+      "session": 70296,
+      "completionChunk": "50cc6e",
+      "exitCode": 0,
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "final typecheck only; completion empty; callbacks0"
+    },
+    {
+      "command": "npm run schemas",
+      "chunk": "7b2b38",
+      "exitCode": 0,
+      "scope": "schema export only, no instance validation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "b53d73",
+      "exitCode": 0,
+      "scope": "static existing asset metadata and source hashes; no poses/rendering"
+    },
+    {
+      "command": "static fs/Git raw byte/header/hash inspection",
+      "chunk": "680dfd",
+      "exitCode": 1,
+      "reason": "Initial checker incorrectly assumed every existing .png extension was PNG format. Corrected inspection records original JPEG signatures without changing bytes."
+    },
+    {
+      "command": "static fs/Git raw byte/header/hash inspection",
+      "chunk": "cc1061",
+      "exitCode": 1,
+      "reason": "Initial checker incorrectly expected availableBanks at manifest root. Original root also had no field; actual eight nested bank arrays remain empty. Checker corrected; no source gate change."
+    },
+    {
+      "command": "static fs/Git raw byte/header/hash inspection",
+      "chunk": "7853de",
+      "exitCode": 0,
+      "scope": "232 tracked .png-extension files unchanged;131 actual PNG headers and101 existing JPEG-named screenshots,18 head JSON unchanged;44 unique current manifest code hashes;8 empty bank arrays;9 declarations0 executed"
+    }
+  ],
+  "helper": {
+    "model": "ag/gemini-3.8-flash-low",
+    "calls": 1,
+    "chunk": "ac3502",
+    "exitCode": 0,
+    "usage": {
+      "promptTokens": 20367,
+      "completionTokens": 343,
+      "totalTokens": 20710
+    },
+    "frozenInputs": "physical-source-actions-review-metadata-v1.json",
+    "review": "physical-source-actions-source-review-v1.json",
+    "scope": "source excerpts and physical test declarations only",
+    "finalSourceIndependentlyReviewed": false,
+    "preparation": [
+      {
+        "chunk": "57d4f3",
+        "exitCode": 1,
+        "reason": "First full3-file packet exceeded local55000-char budget, frozen MD written but no task/HTTP request."
+      },
+      {
+        "chunk": "e2e1dd",
+        "exitCode": 1,
+        "reason": "Missing task folder after rejected preparation; no HTTP request, reservation or retry."
+      },
+      {
+        "chunk": "2b196a",
+        "exitCode": 0,
+        "reason": "Valid2-source packet,53666 chars; one actual model call."
+      }
+    ]
+  },
+  "staticRecord": "physical-source-actions-static-record-v1.json",
+  "callbacksDeclared": 9,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "sourceActionEvidence": "reference/hand/clock only; cue/model/entity/reaction/continuity binding pending",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "ownedPaths": [
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/PHYSICAL-SOURCE-ACTIONS-HANDOFF.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/physical-source-actions-review-inputs-v1.md",
+    "docs/topics/reviews/physical-source-actions-review-metadata-v1.json",
+    "docs/topics/reviews/physical-source-actions-source-record-v1.json",
+    "docs/topics/reviews/physical-source-actions-source-review-v1.json",
+    "docs/topics/reviews/physical-source-actions-static-record-v1.json",
+    "library/schemas/host-timeline.schema.json",
+    "library/schemas/index.ts",
+    "library/schemas/manipulation-action-ref.schema.json",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/animation/compiler.ts",
+    "packages/animation/forest-body-art.ts",
+    "packages/director/acting-brief.ts",
+    "packages/director/camera.ts",
+    "packages/director/index.ts",
+    "packages/director/schemas.ts",
+    "packages/director/source-manipulation-actions.ts",
+    "packages/host/schemas.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/physical-performance.test.ts",
+    "tests/source-manipulation-actions.test.ts"
+  ],
+  "goalComplete": false,
+  "delivery": "Full source/remote SHA and byte equality are recorded after commit in external goal state and final response; source-record cannot contain its own future Git SHA."
+}

@@ -1,0 +1,91 @@
+{
+  "version": "physical-source-actions-review-inputs-1",
+  "precedingSourceSHA": "2162893f6b950afdd5034b271beb34f68ff97617",
+  "sourceVersion": "forest-tribe-0.67-physical-source-actions",
+  "inputs": [
+    {
+      "file": "packages/animation/compiler.ts",
+      "fullTextSHA256": "306024aefbe697abf8b2aa5da7b93086c22a474a68dcff4d53ccdd243ad216f6",
+      "ranges": [
+        [
+          691,
+          748
+        ],
+        [
+          887,
+          1110
+        ]
+      ],
+      "excerptSHA256": "8b6d30260d8f51ad047b31c629d8770ed708d87b670a29fece2d9ab54cf8ec84"
+    },
+    {
+      "file": "packages/director/camera.ts",
+      "fullTextSHA256": "ca33edc94c90cf48f161bd1c9357cf274d470fab0e2de2148a0fa41f066c51f1",
+      "ranges": [
+        [
+          1,
+          100
+        ]
+      ],
+      "excerptSHA256": "bb51c97d06e121f1a2c0c1555ef45b2f087dabb2b4b6f0edd926c71dc04b62d9"
+    },
+    {
+      "file": "packages/host/schemas.ts",
+      "fullTextSHA256": "f484a43ad7b05c3842e33fd7482a1da81b892c55331db9ed62b90fe52d8edf91",
+      "ranges": [
+        [
+          59,
+          84
+        ]
+      ],
+      "excerptSHA256": "9c60d3fd6e76c3b3dfadd9d65144aa060f08682bb2a3c14fc19a5836e0644049"
+    },
+    {
+      "file": "packages/director/source-manipulation-actions.ts",
+      "fullTextSHA256": "5424a11cb28abcea3f9f3421014cd0459d54d4dfb88fa070f180f449c324548f",
+      "ranges": "full",
+      "excerptSHA256": "5424a11cb28abcea3f9f3421014cd0459d54d4dfb88fa070f180f449c324548f"
+    },
+    {
+      "file": "packages/director/props.ts",
+      "fullTextSHA256": "435610d1391c0dab61a3e08ad8a9dd28f6e010f8502a0c1fcf102a51466bd9e4",
+      "ranges": [
+        [
+          59,
+          67
+        ]
+      ],
+      "excerptSHA256": "a2ebea5f61328a60cef0283c2ace08c46aa78c7424118c0c10889da0a1541607"
+    },
+    {
+      "file": "packages/director/index.ts",
+      "fullTextSHA256": "ee6a035be8c9a2024f45432f016b3bcb3e77c130d66c11871ea3d5b1ea3de6e5",
+      "ranges": [
+        [
+          230,
+          236
+        ]
+      ],
+      "excerptSHA256": "e58acb4f1b5f51f58cff2efd1d8470d4c2eccc1ca03eaf06842cc32cd81d2188"
+    }
+  ],
+  "packetSHA256": "b3b137ac41dd3eba28bd94c2793d07e167d0df9942a786ec3241d19855063e7a",
+  "providedSources": [
+    {
+      "file": "docs/topics/reviews/physical-source-actions-review-inputs-v1.md",
+      "sha256": "b17ca705dbe2515eda8644569f1be30a24ad7a9726e839b66d50346230ec41d1"
+    },
+    {
+      "file": "tests/physical-performance.test.ts",
+      "sha256": "bd64cdbf6f42184923171412f32b9fc4c04673a39031f657419070e40f63401f"
+    }
+  ],
+  "totalChars": 53666,
+  "inputPreparation": "first full3-file packet rejected locally above55000 chars; nonexistent packet invocation made no HTTP request; final packet2 files",
+  "geometryInvoked": false,
+  "callbacksExecuted": 0,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": []
+}
