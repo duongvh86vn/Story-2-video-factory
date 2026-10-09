@@ -7,6 +7,7 @@ import {ActorSceneSchema} from '../actors/schemas.js';
 import {SpriteStageSchema} from '../motion/stage-schemas.js';
 import {SourceWorldSchema} from './source-world-schemas.js';
 import {SourceOwnershipSchema} from './source-ownership-schemas.js';
+import {OwnershipPaintSchema} from './ownership-paint-schemas.js';
 
 export const DIRECTION_VERSION='story-direction-2.2.41';
 export const CINEMATIC_PLAN_FILES=['story-direction.json','stage-plan.json','performance-plan.json','camera-plan.json','creative-direction-report.json','camera-direction-report.json','actor-cast.json','actor-timeline.json'] as const;
@@ -35,6 +36,7 @@ export const CinematicPlanSchema=z.object({
   spriteStage:SpriteStageSchema.optional(),
   sourceWorld:SourceWorldSchema.optional(),
   sourceOwnership:z.array(SourceOwnershipSchema).min(1).max(16).optional(),
+  ownershipPaint:z.array(OwnershipPaintSchema).min(1).max(16).optional(),
   sceneIntent:SceneIntentSchema.optional(),
   models:z.array(CinematicModelSchema),
   propBindings:z.array(z.object({propId:Id,partId:Id,ownerId:Id.optional(),role:z.literal('illustrative-model'),sourceRefs:z.array(SourceRefSchema).min(1)}).strict()).default([]),
@@ -43,6 +45,7 @@ export const CinematicPlanSchema=z.object({
   camera:CameraSchema,
   performance:PerformancePlanSchema,
 }).strict().superRefine((c,ctx)=>{
+  if(c.ownershipPaint&&!c.sourceOwnership)ctx.addIssue({code:'custom',path:['ownershipPaint'],message:'Ownership paint requires an explicit original ownership timeline; never infer one'});
   if(c.models.length&&!c.attentionPartId)ctx.addIssue({code:'custom',path:['attentionPartId'],message:'A scene with models requires object attention.'});
   if(!c.models.length){
     if(!c.sceneIntent?.participants.length||!(c.actorScene?.primary||c.actorScene?.supporting.length))

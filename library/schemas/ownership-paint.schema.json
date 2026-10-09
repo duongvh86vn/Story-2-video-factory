@@ -1,0 +1,115 @@
+{
+  "$ref": "#/definitions/ownership-paint",
+  "definitions": {
+    "ownership-paint": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "ownership-paint-1"
+        },
+        "sourceId": {
+          "type": "string",
+          "maxLength": 96,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+        },
+        "entityPlane": {
+          "type": "string",
+          "enum": [
+            "behind-actors",
+            "in-front-of-actors"
+          ]
+        },
+        "grips": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "gripId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "depth": {
+                "type": "string",
+                "enum": [
+                  "before-entity",
+                  "after-entity"
+                ]
+              },
+              "anchor": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "gripId",
+              "depth",
+              "anchor"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "narration",
+                  "source"
+                ]
+              },
+              "segmentId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              }
+            },
+            "required": [
+              "kind",
+              "quote"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "version",
+        "sourceId",
+        "entityPlane",
+        "grips",
+        "sourceRefs"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

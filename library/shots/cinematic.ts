@@ -35,13 +35,16 @@ import {renderSpriteScene} from '../../packages/motion/scene.js';
 import type {ActorMotion} from '../../packages/motion/schemas.js';
 import {sourceWorldFrames,sourceWorldModelTimeline} from './source-world-timeline.js';
 import {sourceInteractionGeometry} from '../../packages/director/source-interactions.js';
+import {compileSourceOwnership} from '../../packages/director/ownership-compile.js';
+import {ownershipGlyph} from '../../packages/director/ownership-reference.js';
+import {renderOwnershipLayer,suppressOwnershipCopies,ownershipRelationFrames} from './ownership-layer.js';
 
-function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w:number,h:number):string{
+export function modelThermal(part:NonNullable<Shot['visualization']>['parts'][number],w:number,h:number):string{
   return part.states?.length?`<g class="thermal-coat">${(['hot','cold'] as const).map(state=>`<rect class="thermal-${state}-coat" x="${-w*.36}" y="${-h*.33}" width="${w*.72}" height="${h*.66}" rx="8" fill="${state==='hot'?'#D65332':'#3394C5'}" opacity="0" stroke="none"/>`).join('')}</g><g class="thermal-hot" opacity="0" stroke="#BF482B">${[-.2,0,.2].map(px=>`<path d="M${w*px} ${-h*.4}q${w*.08} ${-h*.08} 0 ${-h*.16}"/>`).join('')}</g><g class="thermal-cold" opacity="0" stroke="#237CA6"><path d="M0 ${-h*.37}V${-h*.58}M${-w*.08} ${-h*.43}L${w*.08} ${-h*.53}M${-w*.08} ${-h*.53}L${w*.08} ${-h*.43}"/></g>`:'';
 }
 
 function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,board?:Storyboard):{
-  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;propId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[];sourceWorld?:Record<string,unknown>};
+  files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;propId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[];sourceWorld?:Record<string,unknown>;sourceOwnership?:Record<string,unknown>};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
   validateCinematicShot(shot,profile,config,board,narration);
@@ -96,6 +99,11 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     const props=performanceProps(actor.performance).map(prop=>`<g id="${prefix}prop-${prop.id}"></g>`).join('');
     return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}${props}${namespaceRigSvg(propHandSlotsSvg(definition),prefix)}</g>`;
   }).join('');
+  // The production validator above still blocks unaccepted ownership. This
+  // branch is its real one-entity renderer implementation, not a gate override.
+  const ownership=c.sourceOwnership?compileSourceOwnership(shot,board!,narration!,[...ownerCompilations.values()].flatMap(owner=>owner.frames.map(f=>shot.startMs+f.timeMs))):undefined;
+  const ownershipLayer=ownership?renderOwnershipLayer(shot,ownership,modelThermal):undefined;
+  if(ownershipLayer)calls.push(...ownershipLayer.calls);
   const propArt=new Map<string,string>(),foregroundModels:string[]=[];
   const foregroundParts=new Set(art?.models.filter(model=>model.foregroundSvg!==undefined).map(model=>model.partId));
   const modelTargets=(partId:string,base:string,suffix:string)=>[selector(`${base} ${suffix}`),...(foregroundParts.has(partId)?[selector(`#foreground-object-${v.parts.findIndex(part=>part.id===partId)} ${suffix}`)]:[])];
@@ -106,13 +114,13 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     const illustration=cinematicModel(part,model,w,h);
     const authoredGlyph=customModelArt(shot,part.id,w,h);
     if(authoredGlyph){illustration.svg=authoredGlyph;illustration.motionAnchors=[...authoredGlyph.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion'))?[{selector:'.motion',...customModelMotionOrigin(shot,part.id)}]:[];}
-    const binding=c.propBindings.find(binding=>binding.partId===part.id),showLabel=rendersModelLabel(shot,part.id);
-    const foreground=customModelForegroundArt(shot,part.id,w,h);
+    const binding=c.propBindings.find(binding=>binding.partId===part.id),canonicalGlyph=ownershipGlyph(shot,part.id),showLabel=rendersModelLabel(shot,part.id);
+    const foreground=canonicalGlyph?undefined:customModelForegroundArt(shot,part.id,w,h);
     if(foreground){
       foregroundModels.push(`<g id="foreground-object-${i}" data-sourced-foreground="${escapeHtml(part.id)}"${binding?` data-bound-prop-id="${escapeHtml(binding.propId)}"`:''} transform="translate(${x} ${y})">${foreground}</g>`);
       if([...foreground.matchAll(/class="([^"]*)"/g)].some(match=>match[1]!.split(/\s+/).includes('motion')))calls.push(`tl.set(${selector(`#foreground-object-${i} .motion`)},{svgOrigin:${JSON.stringify(`${customModelMotionOrigin(shot,part.id).x} ${customModelMotionOrigin(shot,part.id).y}`)}},0);`);
     }
-    if(binding){
+    if(binding&&!canonicalGlyph){
       const owner=boundProp(shot,binding),scale=owner.performance.scale,compiled=ownerCompilations.get(owner.id);
       if(!compiled)throw new Error(`${shot.id}: bound model has no compiled owner ${owner.id}`);
       const art=cinematicModel(part,model,w/scale,h/scale);
@@ -128,7 +136,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
         calls.push(`tl.${method}(${selector(`#object-${i} .bound-model-shadow`)},${JSON.stringify({attr:{transform:`translate(0 ${-deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
       }
     }
-    for(const anchor of illustration.motionAnchors)calls.push(`tl.set(${selector(`${binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`} ${anchor.selector}`)},{svgOrigin:${JSON.stringify(`${anchor.x} ${anchor.y}`)}},0);`);
+    for(const anchor of illustration.motionAnchors)calls.push(`tl.set(${selector(`${canonicalGlyph?`#${canonicalGlyph}`:binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`} ${anchor.selector}`)},{svgOrigin:${JSON.stringify(`${anchor.x} ${anchor.y}`)}},0);`);
     const {font,lines,labelY,labelHeight}=cameraModelLabel(part,height,width);
     if(showLabel&&lines.length>4)throw new Error(`${shot.id}: model label too long for the cinematic stage`);
     if(showLabel&&labelY+labelHeight>height*.79)throw new Error(`${shot.id}: cinematic label crosses subtitle clearance`);
@@ -139,7 +147,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     return `<g id="object-${i}" data-entity-id="${escapeHtml(part.id)}" data-model-variant="${model.variant}" fill="none" stroke="#644931" stroke-width="${height*.003}" stroke-linecap="round" stroke-linejoin="round"><ellipse ${binding?'class="bound-model-shadow" ':''}data-model-shadow="${escapeHtml(part.id)}" cx="${x+w*.08}" cy="${binding?p.stage.groundY-4:y+h*.53}" rx="${w*.48}" ry="${h*.09}" fill="${palette.ink}" opacity=".14" stroke="none"/><g class="focus-${i}" opacity="0"><ellipse cx="${x}" cy="${y}" rx="${w*.53}" ry="${h*.6}" fill="${palette.accent}" opacity=".35" stroke="none"/></g><g transform="translate(${x} ${y})">${binding?'':illustration.svg+thermal}<ellipse class="energy-effect" rx="${w*.4}" ry="${h*.4}" fill="#F0C545" opacity="0" stroke="none"/></g>${!binding&&!art&&focal&&c.setting==='workshop'?`<path d="M${x-w*.5} ${y+h*.5}H${x+w*.5}M${x-w*.45} ${y+h*.5}V${p.stage.groundY}M${x+w*.45} ${y+h*.5}V${p.stage.groundY}" stroke="#765438"/>`:''}${control}${showLabel?`<g class="model-label"><rect x="${x-w*.56}" y="${labelY-font}" width="${w*1.12}" height="${labelHeight+font*.35}" rx="6" fill="${palette.surface}" stroke="none"/><text x="${x}" y="${labelY}" text-anchor="middle" stroke="none" fill="${palette.ink}" font-family="${escapeHtml(sceneText.fontFamily)}" font-size="${font}">${lines.map((text,j)=>`<tspan x="${x}" dy="${j?font*1.15:0}">${escapeHtml(text)}</tspan>`).join('')}</text></g>`:''}</g>`;
   }).join('');
   const supportingBindings=c.propBindings.filter(binding=>boundProp(shot,binding).prefix);
-  const relationClock=supportingBindings.length?compiledPropFrames(result.compiled.frames,new Map(c.propBindings.map(binding=>{
+  const relationClock=ownership?ownershipRelationFrames(shot,ownership):supportingBindings.length?compiledPropFrames(result.compiled.frames,new Map(c.propBindings.map(binding=>{
     const owner=boundProp(shot,binding);return [binding.propId,ownerCompilations.get(owner.id)!.frames] as const;
   }))):result.compiled.frames;
   const worldFrames=c.sourceWorld?sourceWorldFrames(shot):undefined;
@@ -148,10 +156,10 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   if(worldFrames)calls.push(...sourceWorldModelTimeline(shot,worldFrames));
   for(const e of c.sourceWorld?[]:v.events){
     const i=v.parts.findIndex(part=>part.id===e.targetId),start=(e.startMs-shot.startMs)/1000,end=(e.endMs-shot.startMs)/1000,span=end-start;
-    const binding=c.propBindings.find(binding=>binding.partId===e.targetId),motionTargets=modelTargets(e.targetId,binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`,'.motion');
+    const binding=c.propBindings.find(binding=>binding.partId===e.targetId),canonicalGlyph=ownershipGlyph(shot,e.targetId),motionTargets=modelTargets(e.targetId,canonicalGlyph?`#${canonicalGlyph}`:binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`,'.motion');
     calls.push(`tl.set(${selector(`.focus-${i}`)},{opacity:1},${start});tl.set(${selector(`.focus-${i}`)},{opacity:0},${end});`);
     if(e.type==='state'){
-      const thermalTarget=binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`;
+      const thermalTarget=canonicalGlyph?`#${canonicalGlyph}`:binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`;
       for(const state of ['hot','cold'])for(const target of modelTargets(e.targetId,thermalTarget,`.thermal-${state}-coat`))calls.push(`tl.to(${target},{opacity:${e.state===state?.62:0},duration:${Math.min(.28,span)},ease:"sine.inOut"},${start});`);
       const hotTargets=modelTargets(e.targetId,thermalTarget,'.thermal-hot'),coldTargets=modelTargets(e.targetId,thermalTarget,'.thermal-cold');
       for(const [index,target] of hotTargets.entries())calls.push(`tl.set(${target},{opacity:${e.state==='hot'?1:0}},${start});tl.set(${coldTargets[index]},{opacity:${e.state==='cold'?1:0}},${start});`);
@@ -193,9 +201,10 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
       let base=file.content;
       if(art&&!background)base=base.replace(/<rect width="[^"]+" height="[^"]+" fill="url\(#stage-light\)"\/>/, '').replace(/<path d="M0 [^"]+" stroke="#8F7852" stroke-width="2"\/>/,'');
       const content=base.replace('</defs>',`<clipPath id="${clip}"><rect x="0" y="${top}" width="${width}" height="${bottom-top}"/></clipPath></defs>${art&&!background?`<rect width="${width}" height="${height}" fill="${palette.background}"/>`:''}<g data-stage-plane="background">${planes.background.html}</g><g clip-path="url(#${clip})"><g class="camera-rig" data-light-direction="upper-left" data-framing="${c.camera.framing}" data-focus="${c.camera.focus??'ensemble'}">${planes.worldBackground.html?`<g data-stage-plane="background" data-art-space="world">${planes.worldBackground.html}</g>`:''}`)
-        .replace('<ellipse id="ground-shadow"',`<g data-stage-plane="midground">${!background&&!art?decoration:''}${planes.midground.html}${connections}${objects}</g><ellipse id="ground-shadow"`)
-        .replace('</svg></div>',`${supporting}<g data-stage-plane="foreground">${foregroundModels.join('')}${foreground}</g></g></g><g data-stage-plane="overlay">${planes.overlay.html}</g>${title}</svg></div>`);
+        .replace('<ellipse id="ground-shadow"',`<g data-stage-plane="midground">${!background&&!art?decoration:''}${planes.midground.html}${connections}${objects}${ownershipLayer?.beforeActors??''}</g><ellipse id="ground-shadow"`)
+        .replace('</svg></div>',`${supporting}${ownershipLayer?.afterActors??''}<g data-stage-plane="foreground">${foregroundModels.join('')}${foreground}</g></g></g><g data-stage-plane="overlay">${planes.overlay.html}</g>${title}</svg></div>`);
       let authored=content;for(const [id,svg] of propArt)authored=authored.replace(new RegExp(`<g id="${id.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}">[\\s\\S]*?</g>`),()=>svg);
+      if(ownershipLayer)authored=suppressOwnershipCopies(shot,authored,ownershipLayer);
       if(c.actorScene?.primary===null)authored=authored.replace('<g id="performer"','<g opacity="0" id="performer"').replace('<ellipse id="ground-shadow"','<ellipse visibility="hidden" id="ground-shadow"');
       else if(c.actorScene?.primary)authored=authored.replace('<g id="performer"',`<g data-actor-id="${escapeHtml(c.actorScene.primary.id)}" id="performer"`);
       return {...file,content:authored};
@@ -224,9 +233,10 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   }
     }
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});
-  return {files,geometry,report:{...result.compiled.report,...(worldFrames?{sourceWorld:{version:c.sourceWorld!.version,id:c.sourceWorld!.id,originalStartMs:c.sourceWorld!.startMs,originalEndMs:c.sourceWorld!.endMs,sourceHash:hash(c.sourceWorld),entry:worldFrames[0]!.phase,exit:worldFrames.at(-1)!.phase,scope:"original-global-phase-candidate",motionVerified:false}}:{}),camera:validateCamera(shot,profile,primaryActingClock,{worldShot:shot,board}),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>({partId,...(c.propBindings.find(binding=>binding.partId===partId)?{propId:c.propBindings.find(binding=>binding.partId===partId)!.propId}:{})}))}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
+  const ownershipReport=ownership&&ownershipLayer?{scope:'canonical-render-candidate',entities:ownershipLayer.entities,bakes:[...ownership.values()].map(item=>({sourceId:item.source.id,partId:item.source.partId,sourceHash:item.sourceHash,paintHash:item.paintHash,frames:item.bake.samples.length,entry:item.bake.samples[0],exit:item.bake.samples.at(-1),maxMeasuredGapPx:item.bake.maxMeasuredGapPx,gapLimitPx:item.bake.gapLimitPx})),contactVerified:false,motionVerified:false,productionApproval:false}:undefined;
+  return {files,geometry,report:{...result.compiled.report,...(ownershipReport?{sourceOwnership:ownershipReport}:{}),...(worldFrames?{sourceWorld:{version:c.sourceWorld!.version,id:c.sourceWorld!.id,originalStartMs:c.sourceWorld!.startMs,originalEndMs:c.sourceWorld!.endMs,sourceHash:hash(c.sourceWorld),entry:worldFrames[0]!.phase,exit:worldFrames.at(-1)!.phase,scope:"original-global-phase-candidate",motionVerified:false}}:{}),camera:validateCamera(shot,profile,primaryActingClock,{worldShot:shot,board}),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>({partId,...(c.propBindings.find(binding=>binding.partId===partId)?{propId:c.propBindings.find(binding=>binding.partId===partId)!.propId}:{})}))}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
     const owner=originalPropGesture(shot,binding),prop=owner.prop,g=owner.gesture,source=owner.performance.sourceManipulation;
-    return {...binding,actorId:owner.id,ownerScale:owner.performance.scale,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs,
+    return {...binding,...(ownership?{scope:'physical-grip-alias-only; drawn entity is in sourceOwnership report'}:{}),actorId:owner.id,ownerScale:owner.performance.scale,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs,
       ...(source?{originalSource:{sourceId:source.id,sourceHash:hash(source),originalStartMs:source.startMs,originalEndMs:source.endMs,contactGlobalMs:source.startMs+g.contactMs!,releaseGlobalMs:g.releaseMs===undefined?null:source.startMs+g.releaseMs,clock:'reported clip times are original source-relative; sampled positions follow the actual shot slice',motionVerified:false}}:{})};
   })}:{})}};
 }

@@ -1,5 +1,7 @@
 # Hai người đưa, nhận và cùng cầm đồ vật — source0.75
 
+Mốc tiếp theo0.76: [renderer một canonical entity](OWNERSHIP-RENDER-HANDOFF.md) đã viết source; camera/interaction/coverage/continuity/audit và runtime vẫn pending. Các quy tắc nguồn0.75 dưới đây tiếp tục giữ.
+
 Mục tiêu vẫn là tool nhận câu chuyện, kịch bản nguyên văn hoặc WAV rồi dựng các diễn viên trong câu chuyện đó. Một vật được đưa từ người này sang người kia phải giữ identity, vị trí và kích thước. Đây là phần nền của diễn xuất chung, không phải một kịch bản mẫu cố định.
 
 **Trạng thái:** contract, projection, kiểm nguồn và hàm đo hình học đã được viết; runtime chưa chạy. Renderer một entity, lớp tay, camera/coverage/interaction dùng chung ownership và nghiệm thu video còn thiếu. Không khẳng định hai nhân vật đã diễn mượt hoặc handoff đã dùng được trong production. `needs-source-prop-binding`, `productionReady=false`, `productionRig=null`, các `availableBanks=[]` và mọi duyệt hình/chuyển động vẫn giữ.

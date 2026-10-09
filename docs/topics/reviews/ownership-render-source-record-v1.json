@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.76-ownership-render",
+  "precedingSourceSHA": "d17edaadec5e8d4b8e6e5d3a07f3b1a292c6dc98",
+  "scope": "Candidate canonical entity/palm renderer primitives and guarded integration; not runtime, motion, film or full product acceptance",
+  "features": [
+    "Explicit sourced entity plane, grip depth and normalized artwork anchor; no left/right depth inference",
+    "Original global-clock fps grid, mandatory source/actor boundaries and adaptive center/all-palm interpolation; fail closed on depth or total resolved-time limits",
+    "Complete original source/contact/world validation and in-memory canonical board/narration snapshot before candidate bake",
+    "One canonical world-sized entity with original own actor palm definitions; remove duplicate generic alias paint while preserving free-hand painters",
+    "Canonical labels/shadow/energy/foreground/relations/effects/world channels and cache version/report metadata",
+    "Original production validation remains before the new branch; no skipValidation or full-scene study API"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "7bc640/session90593/completiondfe2db",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 51 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-BonvFjap.js   231.18 kB │ gzip: 72.27 kB\n✓ built in 547ms\n",
+      "scope": "compile/bundle only; no TS source changed afterwards"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "23fb94/session2199/completion0edfe3",
+      "decisiveOutput": "",
+      "scope": "completion output empty; typecheck only, no tests/callbacks/fixtures run"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "2f7ff5",
+      "scope": "schema-definition export only; no project/pose instance evaluation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "bd62be",
+      "scope": "static inventory/manifest only; references6/candidates12/head6/garment2/rejected7/productionReadyfalse"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/ownership-render-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "9abc5e/session41071/completion157617; callback-count clarification fdbeff/session67448/completiona604cc",
+      "record": "ownership-render-static-record-v1.json",
+      "scope": "raw images/header/JSON metadata/code hash/guard literal only; no business or geometry execution"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "751848",
+      "scope": "whitespace only; index check also required"
+    }
+  ],
+  "ownedPaths": [
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/CURRENT-REVIEW-FINAL-HANDOFF.md",
+    "docs/topics/DIRECTOR-CAMERA-AGENTS.md",
+    "docs/topics/OWNERSHIP-RENDER-HANDOFF.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SHARED-OWNERSHIP-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/ownership-render-agent-record-v1.json",
+    "docs/topics/reviews/ownership-render-source-record-v1.json",
+    "docs/topics/reviews/ownership-render-static-record-v1.json",
+    "library/schemas/index.ts",
+    "library/schemas/ownership-paint.schema.json",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/shots/cinematic-models.ts",
+    "library/shots/cinematic.ts",
+    "library/shots/ownership-layer.ts",
+    "library/shots/source-world-timeline.ts",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/director/acting-brief.ts",
+    "packages/director/ownership-bake.ts",
+    "packages/director/ownership-compile.ts",
+    "packages/director/ownership-paint-schemas.ts",
+    "packages/director/ownership-reference.ts",
+    "packages/director/schemas.ts",
+    "packages/scenes/index.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/ownership-render.test.ts"
+  ],
+  "sourceHashes": {
+    "library/schemas/index.ts": "b7532e3b751996e57baeed04d8ce60e18258afbf1418f5705ea7981b1dc3f474",
+    "library/shots/cinematic-models.ts": "5b5cacdcb90df3a90948380d20cb236e80d11add1a660232db8638acc92a3868",
+    "library/shots/cinematic.ts": "d32556604b2840aaf4b9b2ae467add8d893cb18b65a1029794fefcba937662bc",
+    "library/shots/ownership-layer.ts": "5bf5b9a58014a55a29f50acf3a79f6981651b3b62e4cc479bc44d8590bd06ba8",
+    "library/shots/source-world-timeline.ts": "bbac66b63571d9f53dfeaa58c3763145cde104ad92aa742712592d30899bc1f8",
+    "packages/director/acting-brief.ts": "e970f8edd164ba942ecac0adfcbd5a7a8d0b00b1d3b6799ececa9e6b616ae891",
+    "packages/director/ownership-bake.ts": "4ac414758056727a4e70b7d9b722e78f82e4af2b8e810e5e6ab06e075602f6fa",
+    "packages/director/ownership-compile.ts": "d4d074995ce066fd7bd1cb044bbb55913ffb2e9246aacd5cf67e4bbe55e24fa4",
+    "packages/director/ownership-paint-schemas.ts": "3166db4c92c0e854165d3648aadc67fa1151410a36da8c3054ae4bb2c19213ca",
+    "packages/director/ownership-reference.ts": "d3e0b39eae68c609a99b3adc0282985f585c606bf01d2c7e11e67d68d752cf3c",
+    "packages/director/schemas.ts": "f7558323a247c6f599e4774af4b24b96939af0bb9ac236e766625a8bde3ef2d2",
+    "packages/scenes/index.ts": "9c059521b95e0855ccc113620b7a8f95a0ac513bd537fe5efa69547cce5e3b0f",
+    "packages/topics/prehistoric-life.ts": "1238070e383ff45e9d490b1dae66cb6784de7173a34a381da9472cfec57eab09",
+    "scripts/prehistoric-pack.ts": "a1112e70b397999b864902da8e861a88bfeb8706ba239e0b58482175ad2ff1e0",
+    "tests/ownership-render.test.ts": "e3b65ebba8270712a1f8aa93e53618cc67fd4686a6359120e61b33d0f1055236"
+  },
+  "agent": {
+    "record": "ownership-render-agent-record-v1.json",
+    "task": "ownership-baker-v1",
+    "calls": 1,
+    "retries": 0,
+    "responseModel": "gpt-6.1-sol",
+    "requestedReasoningEffort": "xhigh",
+    "backendReasoningEffort": "not independently confirmed",
+    "requestedOutputTokens": 6500,
+    "outputCapEnforced": false,
+    "usage": {
+      "promptTokens": 9118,
+      "completionTokens": 14588,
+      "totalTokens": 23706
+    },
+    "filesProposed": 1,
+    "integration": "Parent checked frozen input hashes, integrated bake proposal, authored compile/paint/layer/cache/report/test wiring. Agent did not review the complete parent integration."
+  },
+  "testDeclarations": {
+    "newCallbacks": 10,
+    "previousOwnershipCallbacks": 10,
+    "callbacksExecuted": 0,
+    "tests": "DECLARED / NOT RUN",
+    "scope": "Synthetic bake/paint/namespace/alias/relation contracts only; no native geometry or full scene acceptance"
+  },
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT INVOKED",
+    "geometry": "NOT INVOKED",
+    "server": "NOT STARTED",
+    "browser": "NOT USED",
+    "APIProductionPipeline": "NOT RUN",
+    "TTS": "NOT RUN",
+    "ASR": "NOT RUN",
+    "audio": "NOT GENERATED",
+    "video": "NOT RENDERED",
+    "acceptance": "delegated to human test model"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "remaining": [
+    "Canonical ownership camera envelope, interactions, action coverage and model entry/exit continuity",
+    "Integrated original source production audit and source-aware repair/publication/review/QC before any production release",
+    "Actual actor palms vs emitted SVG/GSAP, original camera cuts, role swaps, seek behavior and runtime profiling; probe evidence is not continuous proof",
+    "Faithful own art/face/head/hair/limbs/costume/vivid world and normal-speed video acceptance",
+    "Arbitrary story/exact script/original WAV, EN primary/VI/JA/KO/external-local TTS, resume/locks/rebuild and final MP4/audio/subtitle/QC acceptance"
+  ]
+}

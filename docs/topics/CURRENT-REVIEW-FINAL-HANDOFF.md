@@ -1,6 +1,8 @@
 # Review đúng bản cảnh và final — source0.74
 
-Source hiện hành0.75 bổ sung [shared ownership candidate](SHARED-OWNERSHIP-HANDOFF.md); renderer/production/runtime vẫn pending. Các receipt source0.74 dưới đây tiếp tục bắt buộc.
+Source hiện hành0.76: [ownership renderer](OWNERSHIP-RENDER-HANDOFF.md), còn guard và runtime/art/motion/full-product acceptance. Các receipt/current-review source0.74 vẫn bắt buộc.
+
+Mốc0.75 bổ sung [shared ownership candidate](SHARED-OWNERSHIP-HANDOFF.md); renderer/production/runtime vẫn pending. Các receipt source0.74 dưới đây tiếp tục bắt buộc.
 
 Mục tiêu vẫn là đưa câu chuyện, kịch bản nguyên văn hoặc WAV vào và dựng diễn viên trong chính câu chuyện, với hình và chuyển động đạt chất lượng mẫu. Source0.74 nối bằng chứng preview/review/final cho pipeline chung; chưa chứng minh nhân vật đã mượt hay chủ đề tiền sử đã dùng được đến final.
 

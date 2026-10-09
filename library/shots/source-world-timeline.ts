@@ -3,6 +3,7 @@ import {hash} from '../../packages/core/utils.js';
 import {sampleSourceWorldPhase,type SourceWorldPhase} from '../../packages/director/source-world-phase.js';
 import {boundProp} from '../../packages/director/prop-owner.js';
 import {rendersModelControl} from '../../packages/director/art-direction-schemas.js';
+import {ownershipGlyph} from '../../packages/director/ownership-reference.js';
 
 export interface SourceWorldFrame {timeMs:number;phase:SourceWorldPhase;}
 /** Original breakpoints + a measured fps grid. Generated JS never contains
@@ -35,7 +36,7 @@ export function sourceWorldModelTimeline(shot:Shot,frames:SourceWorldFrame[]):st
   const c=shot.cinematic!,scope=`[data-composition-id="${shot.id}"]`,calls:string[]=[];
   const selector=(s:string)=>`${scope} ${s.replace(/#([a-zA-Z][\w.-]*)/g,(_,id:string)=>`[id=${JSON.stringify(id)}]`)}`;
   for(const [i,part] of shot.visualization!.parts.entries()){
-    const binding=c.propBindings.find(b=>b.partId===part.id),glyph=binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`;
+    const binding=c.propBindings.find(b=>b.partId===part.id),canonicalGlyph=ownershipGlyph(shot,part.id),glyph=canonicalGlyph?`#${canonicalGlyph}`:binding?`#${boundProp(shot,binding).svgId}`:`#object-${i}`;
     const foreground=c.artDirection?.models.some(m=>m.partId===part.id&&m.foregroundSvg!==undefined),state=(frame:SourceWorldFrame)=>frame.phase.models[part.id]!;
     const targets=(suffix:string)=>[glyph+suffix,...(foreground?[`#foreground-object-${i}${suffix}`]:[])];
     calls.push(...sourceWorldTrack(frames,selector(`#object-${i} .focus-${i}`),f=>({opacity:state(f).focus}),true));

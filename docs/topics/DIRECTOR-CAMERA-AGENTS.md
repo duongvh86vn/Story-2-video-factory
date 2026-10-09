@@ -1,6 +1,8 @@
-# Đạo diễn và camera — source0.75
+# Đạo diễn và camera — source0.76
 
-Cập nhật0.75: [ownership candidate](SHARED-OWNERSHIP-HANDOFF.md). Một canonical entity, own actor/hand/source clock và explicit shared authority; camera/renderer/coverage integration còn thiếu, không bỏ guard production. Agent 9router đã trả schema/projection, chưa test hình học hay video.
+Cập nhật0.76: [ownership renderer candidate](OWNERSHIP-RENDER-HANDOFF.md). Một geometry/paint authority, explicit own depth/anchor và original fps/actor breakpoints. Camera envelope/interaction/coverage/continuity integration còn thiếu; không gỡ guard và chưa test phim.
+
+Mốc0.75: [ownership candidate](SHARED-OWNERSHIP-HANDOFF.md). Một canonical entity, own actor/hand/source clock và explicit shared authority; camera/renderer/coverage integration còn thiếu, không bỏ guard production. Agent 9router đã trả schema/projection, chưa test hình học hay video.
 
 Mốc0.74: [review đúng revision và final](CURRENT-REVIEW-FINAL-HANDOFF.md). Receipt chưa là nghiệm thu hình hoặc chuyển động.
 
