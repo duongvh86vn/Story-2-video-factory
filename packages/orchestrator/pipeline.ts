@@ -35,6 +35,7 @@ import { CINEMATIC_PLAN_FILES, CINEMATIC_EXPORT_FILES, DIRECTION_VERSION } from 
 import { ARTWORK_RENDER_VERSION } from '../director/art-direction.js';
 import { requireFinalStoryDirection } from '../director/story-coverage.js';
 import { writeCinematicPlans } from '../director/index.js';
+import {repairCinematicCameras} from '../director/camera-repair.js';
 import { environmentLibraryFingerprint, prepareCinematicEnvironments } from '../stage/index.js';
 import { readStoryboardForDirection } from '../storyboard/director.js';
 import {actorAssetHashes,exportActorAssets} from '../actors/assets.js';
@@ -326,7 +327,9 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             let review=await readJson(path.join(root,'work/review.json'),ReviewSchema);
             while(review.issues.some(i=>i.severity==='high') && state.reviewIteration<config.workflow.max_review_iterations) {
               state.reviewIteration++;await saveState(root,state);store.saveState(state);
-              await repairScenes(root,config,router,await board(),await characters(),await assets(),review.issues.filter(i=>i.severity==='high'),{sceneRepairAttempts:options.sceneRepairAttempts});
+              const repair=await repairCinematicCameras(root,config,router,await board(),review.issues.filter(i=>i.severity==='high'));
+              if(repair.shotIds.length)await buildScenes(root,config,router,repair.board,await characters(),await assets(),{shotIds:repair.shotIds,force:true});
+              await repairScenes(root,config,router,await board(),await characters(),await assets(),repair.remainingIssues,{sceneRepairAttempts:options.sceneRepairAttempts});
               await buildMaster(root,config,await board(),await voiced(),await assets()); const validation=await engine.validate(); if(!validation.pass) throw new Error(`Repaired master invalid: ${validation.errors.join('\n')}`);
               await retryRender(config,()=>engine.renderDraft()); await createPreviews(root,config,await board());
               review=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); await writeJson(path.join(root,'work/review.json'),review); store.review(review); await saveState(root,state);

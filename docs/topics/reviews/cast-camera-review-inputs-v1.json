@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.73-cast-camera-audit",
+  "sources": [
+    {
+      "file": "packages/director/cast-camera.ts",
+      "sha256": "32a9101d4bbc5baae5a54c759093d253c7eaa60de82ede261729f117b16d58b4",
+      "characters": 4193
+    },
+    {
+      "file": "packages/director/camera-direction.ts",
+      "sha256": "1791bc3c2d4c77f2b617b50316fb1ed19119f3e36db686a1568936b85ee4507c",
+      "characters": 6684
+    },
+    {
+      "file": "packages/director/camera-repair.ts",
+      "sha256": "dbd558df24ba240eb4ec68b489d06a4345b47899c79155ea11bb8e76fb95ae62",
+      "characters": 8649
+    },
+    {
+      "file": "tests/cast-camera.test.ts",
+      "sha256": "b8d2b4e618f58cc35811f24321ad81f1d723673c8c03e9d5d409b39ebac87b8b",
+      "characters": 5403
+    },
+    {
+      "file": "docs/topics/reviews/cast-camera-source-context-v1.md",
+      "sha256": "7d4b514ba73b509812d198df5e7fcd0f1969a45f21d9898331b6e6bc7f50588d",
+      "characters": 24377
+    }
+  ],
+  "excerpts": [
+    {
+      "file": "packages/director/camera.ts",
+      "sha256": "65835ddc049f7f387daac5e2de014afe4f91389f8d73d6b4dac739e0cbe97a12",
+      "startLine": 207,
+      "endLine": 241,
+      "excerptSHA": "7ab05133b16dab53df7e6e03d0d8b8e32f0751d087e0f363449d2a8e8b432e71"
+    },
+    {
+      "file": "packages/director/index.ts",
+      "sha256": "cd155f36f084cfd0e0c9a1c3053a52259795ed3d06bf7d6fa1f5a79f75f115ba",
+      "startLine": 297,
+      "endLine": 325,
+      "excerptSHA": "bc676866a1285659d5320a7de65ee531e233bbfc6c43276e4e99d18cfb4d5636"
+    },
+    {
+      "file": "packages/review/index.ts",
+      "sha256": "069c2b19d0511e4e034a590079e3179b72bbfa1c8819689f0329bfd7d10b2f1e",
+      "startLine": 222,
+      "endLine": 233,
+      "excerptSHA": "467c2ebb910bf830bd75d285d3589b2217710ef9410f2eb157f538e69818cd25"
+    },
+    {
+      "file": "packages/review/index.ts",
+      "sha256": "069c2b19d0511e4e034a590079e3179b72bbfa1c8819689f0329bfd7d10b2f1e",
+      "startLine": 276,
+      "endLine": 282,
+      "excerptSHA": "e42ed717661eb2e17e95e977dfcffb86334979f2d850c7c2b45d49ae9d1979b9"
+    },
+    {
+      "file": "packages/orchestrator/pipeline.ts",
+      "sha256": "36732c9eac39c54a9302af9f6b57d353eacf7515284d98599f71b067032e4111",
+      "startLine": 324,
+      "endLine": 342,
+      "excerptSHA": "6cd531e2d847f94dd90bcb0d92041caec4fd35e7d43d9330ae30fb121fed1ddd"
+    },
+    {
+      "file": "packages/director/artwork-repair.ts",
+      "sha256": "0f781c5d0d6c075b860d7a452152a99a127ffbffce2b23de4ceb96a6afdf8a63",
+      "startLine": 163,
+      "endLine": 215,
+      "excerptSHA": "df38361125e67c66c516f054c8670d542b6ee9fe14631c10f2b4aefe828b6d2b"
+    },
+    {
+      "file": "library/prompts/camera-director.md",
+      "sha256": "7de0340b1a4a513ad421b08a270df25561dc2c79d388ec8d86b69843ed41808a",
+      "startLine": 1,
+      "endLine": 12,
+      "excerptSHA": "fe856ff171a85a72984b391ec17696dd4d8904729837ff02f0269d75d26e52c5"
+    },
+    {
+      "file": "tests/camera-direction.test.ts",
+      "sha256": "f775dbb182f6e3daaa685bf3cd2c53c1e5c507fd5e1c966b77b58473015631b5",
+      "startLine": 136,
+      "endLine": 158,
+      "excerptSHA": "1885c47e2652e6c9c69634b0cb97a32892148b91ad23c117c3519ca808f0a4b1"
+    }
+  ],
+  "scope": "source-only partial audit; no runtime or acceptance",
+  "providerCallsAuthorized": 1,
+  "maxOutputTokens": 2200,
+  "images": [],
+  "productionReady": false,
+  "approved": false,
+  "contextDeliveryAdjustment": {
+    "file": "docs/topics/reviews/cast-camera-source-context-v1.md",
+    "reviewedSHA": "7d4b514ba73b509812d198df5e7fcd0f1969a45f21d9898331b6e6bc7f50588d",
+    "deliveredSHA": "138b88b9325cce647fb1fcdd60b07d3ab8b13e6d16627e19147ef375bc34a75a",
+    "change": "Removed trailing spaces after numbered blank excerpt lines and the final blank line for Git whitespace checks; no project source or prompt changed; this is a delivery-format adjustment, not a repeated model review."
+  }
+}

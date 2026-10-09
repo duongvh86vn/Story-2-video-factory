@@ -23,7 +23,8 @@ import { cueExpressions } from './emotion.js';
 import { validateArtDirection } from './art-direction.js';
 import {actorProfile,seedActorShot} from '../actors/model.js';
 import {buildRig} from '../host/rig.js';
-import {writeActorAssets} from '../actors/assets.js';
+import {writeActorAssets,ActorCastManifestSchema} from '../actors/assets.js';
+import {actorDefinitions} from '../actors/locks.js';
 import {sceneSeats} from '../stage/seats.js';
 import {validateSpriteScenePlan} from '../motion/scene-validation.js';
 import {sourceInteractionDescriptor} from './source-interactions.js';
@@ -294,10 +295,15 @@ export function validateModelContinuity(previous:Shot|undefined,next:Shot,board?
   for(const part of modelEntryParts(next,board)){const prior=priorParts.find(p=>p.id===part.id);if(prior&&hash([part.x,part.y,part.width,part.height])!==hash([prior.x,prior.y,prior.width,prior.height]))throw new Error(`${next.id}: model ${part.id} teleports at the cut; preserve its world transform`);}
 }
 
-export async function writeCinematicPlans(root:string,board:Storyboard):Promise<void> {
+export async function writeCinematicPlans(root:string,board:Storyboard,options:{actorCast?:ReturnType<typeof ActorCastManifestSchema.parse>}={}):Promise<void> {
   const canonical=StoryboardSchema.parse(board),shots=canonical.shots.filter(s=>s.cinematic);
   {
-    await writeActorAssets(root,canonical);
+    if(options.actorCast){
+      const cast=ActorCastManifestSchema.parse(options.actorCast),definitions=actorDefinitions(canonical);
+      if(new Set(cast.actors.map(a=>a.character.id)).size!==cast.actors.length||hash(cast.actors.map(a=>a.character).sort((a,b)=>a.id.localeCompare(b.id)))!==hash(definitions.sort((a,b)=>a.id.localeCompare(b.id))))throw new Error('Existing actor cast does not match canonical characters');
+      // Camera-only revisions retain every existing rig/profile/asset byte.
+      await writeJson(path.join(root,'work/actor-cast.json'),{...cast,storyboardHash:hash(canonical)});
+    }else await writeActorAssets(root,canonical);
     await writeJson(path.join(root,'work/actor-timeline.json'),{version:1,storyboardHash:hash(canonical),shots:shots.map(s=>({shotId:s.id,startMs:s.startMs,endMs:s.endMs,scene:s.cinematic!.actorScene}))});
   }
   const reportFile=path.join(root,'work/creative-direction-report.json'),previous=await exists(reportFile)?await readJson<Record<string,unknown>>(reportFile):{};

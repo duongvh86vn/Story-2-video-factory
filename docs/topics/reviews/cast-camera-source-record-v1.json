@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.73-cast-camera-audit",
+  "directionVersion": "story-direction-2.2.41",
+  "castCameraVersion": "cast-camera-1",
+  "cameraRepairVersion": "camera-repair-1",
+  "cameraVersion": "camera-direction-1",
+  "precedingSourceSHA": "8770a4b2e0e056a72b2fd079e4299e1d2034f38a",
+  "scope": "source implementation/build/typecheck/schema/static metadata and owned-byte publication only; full arbitrary-story product and video are unfinished/unaccepted",
+  "features": [
+    "Full primary/supporting person camera diagnostics use original complete world and person clocks",
+    "Typed framing versus source errors; independent original source geometry preflight before camera provider",
+    "Selected unlocked camera-only repair with feedback; original actor assets retained",
+    "Canonical board/derived plans/camera report journaled together with source/settings/locks/asset publication checks",
+    "Scene rebuild, fresh draft and review required after camera repair; existing shared budgets and source/art/voice/final gates"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "efbf86/session77013/completion4843d6",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 49 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-CZzEFLsv.js   225.07 kB │ gzip: 70.44 kB\n✓ built in 695ms\n",
+      "scope": "compile/bundle only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "204741/session60685/completion97bbda",
+      "initialOutput": "> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json",
+      "decisiveOutput": "",
+      "scope": "typecheck only; no callbacks or fixtures"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "795dcd",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n\n",
+      "scope": "schema export only"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "fafbf8",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "static inventory/manifest; no fixture/geometry"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/cast-camera-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "91c2d9/session84772/completionf729f7",
+      "record": "cast-camera-static-record-v1.json",
+      "scope": "raw original image/header/metadata/code hashes only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/record-cast-camera-review-v1.mjs",
+      "exitCode": 0,
+      "handle": "85db1f",
+      "decisiveOutput": "{\"reviewCalls\":1,\"usage\":{\"promptTokens\":12940,\"completionTokens\":1843,\"totalTokens\":14783},\"sourceFindings\":3,\"amendmentsIndependentlyReReviewed\":false,\"originalHeadFaceMetadataUnchanged\":57,\"runtimeRun\":false}\n",
+      "scope": "source proposal record plus raw original head/face metadata hash comparison"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "c55389",
+      "decisiveOutput": "",
+      "scope": "whitespace only"
+    }
+  ],
+  "sourceHashes": {
+    "library/prompts/camera-director.md": "7de0340b1a4a513ad421b08a270df25561dc2c79d388ec8d86b69843ed41808a",
+    "packages/director/acting-brief.ts": "aa9443d437ede6e9cd281c914c348dd49e81b2b778ca102e753603fb98eddce8",
+    "packages/director/camera-direction.ts": "6c63edd07328f17ed0f6aa3462ff983a33fe87e7be9f2de1abd9a72ce29c7ae0",
+    "packages/director/camera-repair.ts": "8242669149e76f9f9fcd4e7aec5c916b46e6ba0f8b8d9fe90c1bdb3afebaa928",
+    "packages/director/camera.ts": "ac81ca73dcb89b1b0e25d61cf10321bc474895729ee82de5912c7b75b015b83c",
+    "packages/director/cast-camera.ts": "fc746749cc7a5e2e542e7e0b75af2ea136257299e06f1bf542412d3fd378d523",
+    "packages/director/creative.ts": "8c566a24db5d3d485e65ac02338120a263be0bc591e2743d6a960ae7a45ab1f1",
+    "packages/director/index.ts": "cd155f36f084cfd0e0c9a1c3053a52259795ed3d06bf7d6fa1f5a79f75f115ba",
+    "packages/director/schemas.ts": "7ededd5836e76feb6cc2fd7515326453f697dbae7260c426e223cd8701ce7fd9",
+    "packages/orchestrator/pipeline.ts": "36732c9eac39c54a9302af9f6b57d353eacf7515284d98599f71b067032e4111",
+    "packages/review/index.ts": "069c2b19d0511e4e034a590079e3179b72bbfa1c8819689f0329bfd7d10b2f1e",
+    "packages/topics/prehistoric-life.ts": "3288a64ceb9d89b853858bd6c8d39210e2f0a8883f07240d862be969888709df",
+    "scripts/prehistoric-pack.ts": "95e2e313e59a3a75b3f42fc5699bbc303ece9a53564b0dbd524eb894fc562219",
+    "tests/camera-direction.test.ts": "4973d948b18c81bb43e92ab3f1cccb37daf1ff335a8ba5b4d0e085ff34034aca",
+    "tests/cast-camera.test.ts": "78ca291ff7c97ce5fac099ef39f5791b2b09e6c50c7876a74eda65a3b89c5a8e"
+  },
+  "ownedPaths": [
+    "docs/topics/CAST-CAMERA-REPAIR-HANDOFF.md",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/DIRECTOR-CAMERA-AGENTS.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/cast-camera-review-inputs-v1.json",
+    "docs/topics/reviews/cast-camera-source-context-v1.md",
+    "docs/topics/reviews/cast-camera-source-record-v1.json",
+    "docs/topics/reviews/cast-camera-source-review-v1.json",
+    "docs/topics/reviews/cast-camera-static-record-v1.json",
+    "library/prompts/camera-director.md",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/director/acting-brief.ts",
+    "packages/director/camera-direction.ts",
+    "packages/director/camera-repair.ts",
+    "packages/director/camera.ts",
+    "packages/director/cast-camera.ts",
+    "packages/director/creative.ts",
+    "packages/director/index.ts",
+    "packages/director/schemas.ts",
+    "packages/orchestrator/pipeline.ts",
+    "packages/review/index.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/camera-direction.test.ts",
+    "tests/cast-camera.test.ts"
+  ],
+  "review": "cast-camera-source-review-v1.json",
+  "reviewStatus": "one partial source-only GPT review; parent amended three findings; final amendments not independently re-reviewed",
+  "historicalFailures": [
+    {
+      "command": "npm run test:typecheck",
+      "handle": "8bf811/session88897/completion31c09d",
+      "exitCode": 1,
+      "reason": "New test mock generic router type and incorrect suggestion field; corrected to typed mock and ReviewIssue.repair; final check passed"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/stage-cast-camera-delivery-v1.mjs",
+      "handles": [
+        "df6961",
+        "fbdfb2"
+      ],
+      "exitCode": 1,
+      "reason": "Git staged whitespace check first reported spaces after numbered blank lines, then a final blank line in frozen review context; delivery-format cleanup recorded separately without a repeated model review"
+    }
+  ],
+  "staticRecord": "cast-camera-static-record-v1.json",
+  "testDeclarations": {
+    "newCallbacks": 9,
+    "castCamera": 6,
+    "cameraDirectionAdded": 3,
+    "currentCameraDirectionTotal": 13,
+    "callbacksExecuted": 0
+  },
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT INVOKED",
+    "geometry": "NOT INVOKED",
+    "server": "NOT STARTED",
+    "browser": "NOT USED",
+    "APIProductionPipeline": "NOT RUN",
+    "TTS": "NOT RUN",
+    "ASR": "NOT RUN",
+    "audio": "NOT GENERATED",
+    "video": "NOT RENDERED",
+    "acceptance": "delegated to human test model"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "visualAcceptance": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "remaining": [
+    "Full integrated original semantic production audit; do not remove the source gate as an isolated patch",
+    "Shared/sequential ownership and faithful own art/pose/head/hair/garment/views/world",
+    "Human current-SHA runtime camera repair transaction, asset preservation, mixed feedback and video acceptance",
+    "Full story/script/original WAV, EN+VI/JA/KO/external-local TTS, resume/rebuild/locks and final/audio/subtitle/QC"
+  ]
+}

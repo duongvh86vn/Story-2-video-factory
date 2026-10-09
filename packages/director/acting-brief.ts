@@ -15,6 +15,8 @@ import {sourceInteractionDescription} from './source-interactions.js';
 import {sourceFixedOperationDescription} from './source-fixed-operation.js';
 import {sourceGripWorldDescription} from './source-grip-world.js';
 import {cameraDirectionDescription} from './camera-direction-schemas.js';
+import {castCameraDescription} from './cast-camera.js';
+import {cameraRepairDescription} from './camera-repair.js';
 import {BODY_SOURCE_VERSION} from '../animation/schemas.js';
 import {nativeSecondaryDescription,hasBodyViewSecondary} from '../animation/body-view-secondary.js';
 import {nativeSeatDescription,hasBodyViewSeat} from '../animation/body-view-seat.js';
@@ -27,6 +29,7 @@ export function creativeActingBrief(beats:Beat[],narration:Narration,profile:Hos
   const unitProfile={...profile,appearance:{...profile.appearance,headScale:1,bodyScale:1}};
   return {
     filmRoles:cameraDirectionDescription,
+    castCamera:castCameraDescription,cameraRepair:cameraRepairDescription,
     nativeHeadSource:{candidate:nativeHeadBankDescription,selected:hasNativeHeadBank(profile),lockedActors:lockedActors.filter(hasNativeHeadBank).map(a=>a.id),
       explicitSelections:[{actor:profile,scope:'seed-profile'},...lockedActors.map(actor=>({actor,scope:'locked-story-actor'}))].filter(s=>hasNativeHeadBank(s.actor)).map(({actor:a,scope})=>{const bank=a.appearance.bodyHeadBank!;return {scope,actorId:a.id,modelId:bank.actor,bankId:bank.id,version:bank.version,fingerprint:bank.fingerprint,
         sourceFace:isNativeHeadFaceVersion(bank.version),capabilities:bank.capabilities,productionReady:bank.productionReady};}),

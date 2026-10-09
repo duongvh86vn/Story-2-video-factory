@@ -1,4 +1,6 @@
-# Đạo diễn và camera — source0.72
+# Đạo diễn và camera — source0.73
+
+Cập nhật0.73: [camera cho toàn cast và vòng sửa](CAST-CAMERA-REPAIR-HANDOFF.md). Chẩn đoán đo từng người từ original clock của chính họ; source geometry kiểm độc lập với framing. High camera-layout trở về role camera, camera-source chặn trước mọi call sửa; candidate giữ nguồn/diễn xuất/lock và actor asset bytes. Canonical camera/board/plan/report publish cùng transaction, rồi rebuild/draft/review mới. Chưa nghiệm thu runtime hoặc video.
 
 Mục tiêu là video sinh động của câu chuyện người dùng đưa vào. Nhân vật đóng vai trong câu chuyện; đạo diễn và camera không biến họ thành người dẫn chuyên giải thích. Bộ tiền sử dùng Lila, Karo và quần chúng đúng tạo hình, trang phục, nét vẽ và màu của nguồn đã chọn. Chủ đề máy móc/món ăn trong fixture không giới hạn tool.
 
@@ -55,9 +57,9 @@ models:
 ~~~powershell
 Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1'
 git rev-parse HEAD
-node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/camera-direction.test.ts tests/source-grip-world.test.ts tests/source-fixed-operation.test.ts tests/source-interactions.test.ts tests/source-prop-binding.test.ts tests/source-world.test.ts tests/cinematic-studio.test.ts
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/cast-camera.test.ts tests/camera-direction.test.ts tests/source-grip-world.test.ts tests/source-fixed-operation.test.ts tests/source-interactions.test.ts tests/source-prop-binding.test.ts tests/source-world.test.ts tests/cinematic-studio.test.ts
 $env:STUDIO_PORT='8861'
-$env:STUDIO_PROJECTS_ROOT='C:/Users/Duongvh-pc/.codex/tmp/story-factory-source072-test-projects'
+$env:STUDIO_PROJECTS_ROOT='C:/Users/Duongvh-pc/.codex/tmp/story-factory-source073-test-projects'
 npm run studio
 ~~~
 
@@ -65,7 +67,7 @@ Nếu thiếu dependencies, model test dùng `npm ci` tại C worktree. Mở `ht
 
 ## Nghiệm thu còn cần
 
-Mười camera callbacks và bảy grip-world callbacks mới **DECLARED / NOT RUN**. Model test ghi full SHA, command/exit/output, pass/fail/skip và đường dẫn artifact thật. Cần kiểm:
+Source0.72 có mười camera callbacks và bảy grip-world callbacks **DECLARED / NOT RUN**. Source0.73 thêm sáu cast-camera và ba camera-direction callbacks, cũng **DECLARED / NOT RUN**. Model test ghi full SHA, command/exit/output, pass/fail/skip và đường dẫn artifact thật. Cần kiểm:
 
 1. Script, WAV và story-to-script dùng cùng pipeline; model nhận nguyên narration/clock và complete board, không thêm thoại/vai/hành động ngoài nguồn.
 2. Đạo diễn và camera gọi đúng role/model, tổng calls/cost nằm trong giới hạn; explicit camera settings, kế thừa/reset và toggle qua Studio/API/CLI đúng.
@@ -74,4 +76,4 @@ Mười camera callbacks và bảy grip-world callbacks mới **DECLARED / NOT R
 5. Report hiện hành gắn đúng hash; sau edit report cũ báo stale, export không trình bày camera rationale như approval.
 6. Film thật normal speed/60fps: hướng màn hình/eyeline, contact không bị crop/che, người nghe có reaction đúng clock, máy chuyển mượt không gây chóng mặt, viền/màu/mặt/khớp và phụ đề rõ. Source geometry và ảnh tĩnh không chứng minh độ mượt.
 
-Build/typecheck/schema/static inventory được ghi riêng tại `reviews/grip-camera-source-record-v1.json`; kết quả V1 không nghiệm thu luồng mới. Việc thêm camera là một phần triển khai tool, chưa là tuyên bố video đạt mẫu của người dùng.
+Source0.73 build/typecheck/schema/static inventory ghi tại `reviews/cast-camera-source-record-v1.json`; source0.72 giữ lịch sử ở `reviews/grip-camera-source-record-v1.json`. Kết quả V1 không nghiệm thu luồng mới. Việc thêm camera là một phần triển khai tool, chưa là tuyên bố video đạt mẫu của người dùng.

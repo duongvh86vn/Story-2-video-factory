@@ -1,6 +1,5 @@
-import path from 'node:path';
 import type {FactoryConfig} from '../core/config.js';
-import type {Beat,Narration,Shot,Storyboard} from '../core/schemas.js';
+import type {Beat,Narration,ReviewIssue,Shot,Storyboard} from '../core/schemas.js';
 import {hash,writeJson} from '../core/utils.js';
 import type {HostProfile,HostRig} from '../host/schemas.js';
 import type {ModelRouter} from '../models/registry.js';
@@ -8,6 +7,7 @@ import {loadPrompt} from '../story/prompts.js';
 import {planWithValidation} from '../story/request.js';
 import {CAMERA_VIEWPORT} from './camera.js';
 import {CAMERA_DIRECTION_VERSION,CameraDirectionSchema,type CameraDirection,cameraDirectionDescription} from './camera-direction-schemas.js';
+import {outputPath} from '../render/process.js';
 
 /** Camera authority is structural, not an instruction the model may override. */
 export function applyCameraDirection(board:Storyboard,value:CameraDirection,locks:Shot[]):Storyboard{
@@ -31,7 +31,7 @@ export function applyCameraDirection(board:Storyboard,value:CameraDirection,lock
 
 /** Also check the domain normalizer: it must not restage a source to fit a crop. */
 export function assertCameraOnlyChange(before:Storyboard,after:Storyboard,locks:Shot[]):void{
-  const strip=(board:Storyboard)=>({shots:board.shots.map(shot=>{
+  const strip=(board:Storyboard)=>({...board,shots:board.shots.map(shot=>{
     const {camera:_camera,cinematic,...rest}=shot;
     if(!cinematic)return rest;
     const {camera:_cinematicCamera,...world}=cinematic;
@@ -46,18 +46,21 @@ export function assertCameraOnlyChange(before:Storyboard,after:Storyboard,locks:
 export interface CameraDirectionContext{
   narration:Narration;beats:Beat[];profile:HostProfile;rig:HostRig;
   origin:'model'|'authored'|'offline';
+  repairFeedback?:ReviewIssue[];
   validate:(board:Storyboard)=>Storyboard|Promise<Storyboard>;
 }
-export async function directCameraStoryboard(root:string,config:FactoryConfig,router:ModelRouter,board:Storyboard,locks:Shot[],context:CameraDirectionContext):Promise<Storyboard>{
-  const file=path.join(root,'work/camera-direction-report.json');
+export async function directCameraStoryboard(root:string,config:FactoryConfig,router:ModelRouter,board:Storyboard,locks:Shot[],context:CameraDirectionContext,options:{reportPath?:string}={}):Promise<Storyboard>{
+  const file=await outputPath(root,options.reportPath??'work/camera-direction-report.json');
   const base={version:CAMERA_DIRECTION_VERSION,directorRole:'storyboard',cameraRole:'camera',inputStoryboardHash:hash(board),
     narrationHash:hash(context.narration),beatsHash:hash(context.beats),locksHash:hash(locks),configuredProvider:config.models.camera.provider,configuredModel:config.models.camera.model,
+    ...(context.repairFeedback?{task:'camera-repair',feedbackHash:hash(context.repairFeedback)}:{}),
     visualAcceptance:false,motionVerified:false,productionApproval:false};
   const skip=context.origin==='authored'?'authored-cameras':!config.presentation.camera_agent?'disabled':context.origin==='offline'||router.isMock('camera')?'offline':board.shots.every(s=>locks.some(lock=>lock.id===s.id))?'all-shots-locked':undefined;
   if(skip){await writeJson(file,{...base,status:skip,providerCalled:false,storyboardHash:hash(board),warning:'Existing cameras retained; no camera model quality or video acceptance is claimed.'});return board;}
   const system=await loadPrompt('camera-director');
   const request={system,prompt:'Return camera-only direction for every unlocked shot. Keep all other canonical fields unchanged. Match the supported camera schema, act on the specific story, preserve locks and original acting/contact clocks, and explain shot purpose and continuity. The complete storyboard is authoritative data.',
-    context:{task:'camera-direction',contract:cameraDirectionDescription,storyboard:board,narration:context.narration,beats:context.beats,
+    context:{task:context.repairFeedback?'camera-repair':'camera-direction',contract:cameraDirectionDescription,storyboard:board,narration:context.narration,beats:context.beats,
+      ...(context.repairFeedback?{reviewFeedback:context.repairFeedback,repairScope:'Only unlocked cameras in this repair batch. Unselected shots are locked unchanged. Do not move actors/world, rewrite source or hide acting/identity defects to satisfy framing.'}:{}),
       lockedShots:locks,profile:context.profile,rigHash:context.rig.rigHash,dimensions:config.rendering.final,viewport:CAMERA_VIEWPORT,
       designBrief:config.presentation.design_brief??'',characterMode:config.presentation.character_mode}};
   const binding={producer:CAMERA_DIRECTION_VERSION,storyboardHash:hash(board),narrationHash:hash(context.narration),

@@ -23,13 +23,12 @@ import { ExplanationBeatSchema, SourceRefSchema, VisualizationSchema } from '../
 import { ShotHostSchema } from '../host/schemas.js';
 import { CinematicPlanSchema } from './schemas.js';
 import { canonicalExplanationEvidence, normalizeCreativeSourceRefs } from '../explainer/citations.js';
-import {bindActorShot,shotPerformer} from '../actors/model.js';
+import {bindActorShot} from '../actors/model.js';
 import {actorRigResourcePaths} from '../actors/rig-resources.js';
 import {castDesignAdvisories} from '../actors/design.js';
 import {actorDefinitions,actorLockKey,assertActorLocks} from '../actors/locks.js';
 import type {ActorDefinition} from '../actors/schemas.js';
-import {validateCamera} from './camera.js';
-import {actorViewActingClock} from '../actors/view-acting-clock.js';
+import {validateCastCameras} from './cast-camera.js';
 import {bodyRootAt} from '../animation/view-source-body.js';
 import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
@@ -109,7 +108,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot,board));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
-      if(!shot.cinematic?.spriteStage)check(()=>{const profile=shotPerformer(shot,context.profile,context.rig).profile;validateCamera(shot,profile,actorViewActingClock(board,shot,profile.id),{worldShot:shot,board});});
+      if(!shot.cinematic?.spriteStage)check(()=>validateCastCameras(shot,context.profile,board));
       let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;
       let speech:Awaited<ReturnType<typeof loadSpriteSceneSpeech>>;
       try{motions=await loadSpriteSceneMotions(root,shot);speech=await loadSpriteSceneSpeech(root,shot,motions);}catch(error){failures.add(String(error));}

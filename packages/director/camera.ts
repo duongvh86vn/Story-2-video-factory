@@ -206,15 +206,40 @@ export function planCamera(performance:PerformancePlan,profile:HostProfile,optio
 }
 
 /** Geometric envelopes cover both transform endpoints, bounded pan and the complete locomotion path. */
+/** Only framing failures belong to a camera-only repair. Missing body/source
+ * geometry must retain its own blocker instead of being hidden by a crop. */
+export class CameraFramingError extends Error {constructor(message:string){super(message);this.name='CameraFramingError';}}
+/** Compute the real source envelopes without consulting framing. This preflight
+ * prevents an early bad anchor/angle from concealing missing source geometry. */
+export function cameraSourceGeometry(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:{worldShot:Shot;board?:Storyboard}){
+  const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera source requires canonical cinematic data`);
+  const bounds=cameraHostBounds(c.performance,profile,actingClock),worldShot=context?.worldShot??shot,world=worldShot.cinematic;
+  if(!world)throw new Error(`${shot.id}: camera source requires the original world`);
+  const ownerBounds=new Map<string,ReturnType<typeof cameraHostBounds>>(),props=new Map<string,Bounds>();
+  for(const binding of world.propBindings){
+    if(props.has(binding.partId))throw new Error(`${shot.id}: camera source model has duplicate bindings ${binding.partId}`);
+    const owner=boundProp(worldShot,binding);
+    if(!ownerBounds.has(owner.id)){
+      const definition=owner.character?actorProfile(owner.character):profile;
+      const clock=context?.board?actorViewActingClock(context.board,worldShot,owner.id):owner.id===profile.id?actingClock:undefined;
+      ownerBounds.set(owner.id,cameraHostBounds(owner.performance,definition,clock));
+    }
+    const motion=ownerBounds.get(owner.id)!.props[binding.propId];
+    if(!motion)throw new Error(`${shot.id}: camera source bound model ${binding.partId} has no motion envelope from its real owner.`);
+    props.set(binding.partId,motion);
+  }
+  return {bounds,props};
+}
 export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:{worldShot:Shot;board?:Storyboard}) {
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera requires canonical cinematic data`);
+  const {bounds,props}=cameraSourceGeometry(shot,profile,actingClock,context);
   const camera=CameraSchema.parse(c.camera),p=c.performance,{width,height,groundY}=p.stage;
-  const fail=(message:string):never=>{throw new Error(`${shot.id}: camera ${message}`);};
+  const fail=(message:string):never=>{throw new CameraFramingError(`${shot.id}: camera ${message}`);};
   if(shot.camera.angle!=='eye-level')fail('supports only eye-level 2D framing; other angles require a different renderer.');
   if(camera.anchor.x<0||camera.anchor.x>width||camera.anchor.y<0||camera.anchor.y>height)fail('anchor must be inside the world stage.');
   const delta=camera.endScale-camera.startScale;
   if(camera.movement==='push-in'&&delta<=0||camera.movement==='pull-out'&&delta>=0||['locked','pan-left','pan-right'].includes(camera.movement)&&delta!==0)fail('movement contradicts its start/end scale.');
-  const bounds=cameraHostBounds(p,profile,actingClock),worldRatio=bounds.ratio.max;
+  const worldRatio=bounds.ratio.max;
   const matrices=[cameraMatrixAt(camera,p.stage,p.durationMs,0),cameraMatrixAt(camera,p.stage,p.durationMs,p.durationMs)];
   const inView=(point:Point,padX=0,padY=padX)=>matrices.every(matrix=>{
     const screen=cameraPoint(point,matrix);
@@ -222,20 +247,8 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
       screen.y-padY*matrix.scale>=height*CAMERA_VIEWPORT.top-.01&&screen.y+padY*matrix.scale<=height*CAMERA_VIEWPORT.bottom+.01;
   });
   const boundsInView=(b:Bounds)=>inView({x:b.left,y:b.top})&&inView({x:b.right,y:b.bottom});
-  const worldShot=context?.worldShot??shot,world=worldShot.cinematic!,ownerBounds=new Map<string,ReturnType<typeof cameraHostBounds>>();
   const movingBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
-    const binding=world.propBindings.find(b=>b.partId===part.id);
-    let motion:Bounds|undefined;
-    if(binding){
-      const owner=boundProp(worldShot,binding);
-      if(!ownerBounds.has(owner.id)){
-        const definition=owner.character?actorProfile(owner.character):profile;
-        const clock=context?.board?actorViewActingClock(context.board,worldShot,owner.id):owner.id===profile.id?actingClock:undefined;
-        ownerBounds.set(owner.id,cameraHostBounds(owner.performance,definition,clock));
-      }
-      motion=ownerBounds.get(owner.id)!.props[binding.propId];
-      if(!motion)fail(`bound model ${part.id} has no motion envelope from its real owner.`);
-    }
+    const motion=props.get(part.id);
     return motion??{left:part.x*width,right:part.x*width,top:part.y*height,bottom:part.y*height};
   };
   const modelBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{

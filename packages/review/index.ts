@@ -18,10 +18,9 @@ import { BeatSchema, NarrationSchema } from '../core/schemas.js';
 import { z } from 'zod';
 import { VoiceReportSchema,ActivitySchema } from '../voice/index.js';
 import type { HostGeometry } from '../host/controller.js';
-import { validateCamera } from '../director/camera.js';
+import {inspectCastCameras} from '../director/cast-camera.js';
 import { rigMetrics } from '../animation/rig.js';
 import {actorProfile,shotPerformer} from '../actors/model.js';
-import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {castDesignAdvisories} from '../actors/design.js';
 import {hostPreviewSvg} from '../host/rig.js';
 import {loadSpriteSceneMotions,loadSpriteSceneSpeech,spriteSceneSheetBytes} from '../motion/scene-source.js';
@@ -202,7 +201,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
   const explainer=config.content.mode==='narrated-explainer';
   const host=explainer?await loadHost(projectRoot):undefined;
   const voice=explainer?await readJson(path.join(projectRoot,'work/voice-report.json'),VoiceReportSchema):undefined;
-  const cameraReports=new Map<string,ReturnType<typeof validateCamera>|ReturnType<typeof validateSpriteCamera>>();
+  const cameraReports=new Map<string,ReturnType<typeof inspectCastCameras>|ReturnType<typeof validateSpriteCamera>>();
   if(explainer&&host){
     const n=await readJson(path.join(projectRoot,'work/narration.json'),NarrationSchema),beats=await readJson(path.join(projectRoot,'work/beats.json'),z.array(BeatSchema));
     const spriteActivity=storyboard.shots.some(shot=>shot.cinematic?.spriteStage?.actors.some(actor=>actor.clips.some(clip=>clip.speech)))?await readJson(path.join(projectRoot,'work/speech-activity.json'),ActivitySchema):undefined;
@@ -225,7 +224,11 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
       const heightInvalid=cinematic
         ?!Number.isFinite(geometry.hostHeightRatio)||Math.abs(geometry.hostHeightRatio-rigMetrics(performer.profile).height*cinematic.performance.scale/cinematic.performance.stage.height)>1e-6
         :geometry.hostHeightRatio<.25||geometry.hostHeightRatio>.4;
-      if(cinematic)cameraReports.set(shot.id,validateCamera(shot,performer.profile,actorViewActingClock(storyboard,shot,performer.profile.id),{worldShot:shot,board:storyboard}));
+      if(cinematic){
+        try{const report=inspectCastCameras(shot,host.profile,storyboard);cameraReports.set(shot.id,report);
+          for(const defect of report.issues)issues.push(issue(shot,defect.type,'high',`${defect.actorId??defect.role}: ${defect.message}`,defect.type==='camera-layout'?'Replan only the camera while preserving sourced acting, contact and subtitle clearance.':'Restore the original cast/world/clock/geometry; camera cropping cannot repair this source defect.'));
+        }catch(error){issues.push(issue(shot,'camera-source','high',String(error),'Restore the complete canonical cast/world/clock before camera review.'));}
+      }
       if(geometry.rigHash!==performer.rig.rigHash||geometry.profileHash!==performer.profile.profileHash||heightInvalid)issues.push(issue(shot,cinematic?.actorScene?'actor-identity':'host-identity','high','Performer geometry/profile identity is inconsistent.','Recompile the actor and shot.'));
       try{validateSourceInteractionGeometry(shot,storyboard,n,geometry.interactions);}catch(error){issues.push(issue(shot,'host-contact','high',String(error),'Rebuild from the complete original actor/model/contact source.'));}
       for(const action of geometry.interactions)if(!action.sourceManipulation&&action.type==='operate-model'&&(action.errorPx>2||action.contactMs===undefined||action.contactMs!==action.reachMs))issues.push(issue(shot,'host-contact','high',`${action.partId}: invalid contact geometry/timing`,'Adjust the model anchor or host action and rebuild.'));
@@ -272,7 +275,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
     for(let start=0;start<storyboard.shots.length;start+=batchSize) {
       const shots=storyboard.shots.slice(start,start+batchSize),ids=new Set(shots.map(shot=>shot.id));
       const batchCameraReports=shots.flatMap(shot=>{const report=cameraReports.get(shot.id);return report?[{shotId:shot.id,...report}]:[];});
-      const framingInstructions=batchCameraReports.length?' Use cameraReports as declared cinematic framing intent; sprite reports are sampled candidate checks. Actor scenes have no fixed body-size or presence quota. Inspect the visible focus and flag hidden contact, cropped face/hand/object, caption intrusion or source contradictions; deliberate body cropping in a close shot is allowed. Sprite reference crops are candidate asset frames, not approved source identity sheets. Registration/state/source declarations do not prove pixel motion or anatomy. Draft review cannot release them for final.':'';
+      const framingInstructions=batchCameraReports.length?' Camera reports contain per-person geometry diagnostics for the actual original cast/world clocks; a null world/object-only row is not an invented presenter. Review every visible primary and supporting actor. Sprite reports are sampled candidate checks. These diagnostics are not film, anatomy or motion acceptance. Use type camera-layout for defects solvable by changing only a rig camera; identity, floor, body/hand/target or source defects need their own issue type and must not be concealed by cropping. Actor scenes have no fixed body-size or presence quota. Inspect the visible focus and flag hidden contact, cropped face/hand/object, caption intrusion or source contradictions; deliberate body cropping in a close shot is allowed. Sprite reference crops are candidate asset frames, not approved source identity sheets. Registration/state/source declarations do not prove pixel motion or anatomy. Draft review cannot release them for final.':'';
       const designInstructions=' Review story-specific staging and visual legibility: visible pose, gaze and expression for the intended action; readable focal subject, cast identification, prop interaction and environment. Do not impose a palette, costume, camera quota, presenter, or machinery theme. In actorScene, each accepted actor definition/reference governs identity; the base host sheet is a rig fallback, not a shared costume or mascot lock. Report only defects visible in these samples. Still sheets cannot prove fluid movement, full-film continuity or audio synchrony.';
       const images:Array<{path:string;mimeType?:string}>=[];
       if(start===0) images.push({path:await safeRealPath(projectRoot,'previews/contact-sheet-global.jpg'),mimeType:'image/jpeg'});

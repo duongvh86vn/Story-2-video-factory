@@ -15,6 +15,7 @@ import {planningCacheIdentity,reuseAcceptedPlanning} from '../packages/story/pla
 import {CameraDirectionSchema,CAMERA_DIRECTION_VERSION,type CameraDirection} from '../packages/director/camera-direction-schemas.js';
 import {applyCameraDirection,assertCameraOnlyChange,directCameraStoryboard} from '../packages/director/camera-direction.js';
 import {currentCameraDirectionReport} from '../packages/director/camera-direction-report.js';
+import {repairCinematicCameras} from '../packages/director/camera-repair.js';
 import {SettingsPatchSchema} from '../packages/orchestrator/settings.js';
 import {sourceInteractionFixture} from './fixtures/source-interaction-fixture.js';
 
@@ -131,4 +132,33 @@ test('storyboard revision keeps old camera rationale historical and exports curr
   const refreshed=currentCameraDirectionReport(changed,previous);assert.equal(refreshed.status,'canonical-revised');assert.equal(refreshed.storyboardHash,hash(changed));
   assert.equal(refreshed.priorDirectedStoryboardHash,oldHash);assert.deepEqual(refreshed.priorDirection,direction);assert.equal(refreshed.direction,undefined);
   assert.equal(refreshed.agentDecisionCurrent,false);assert.equal(refreshed.providerCalled,false);assert.equal(refreshed.visualAcceptance,false);
+});
+
+test('repair feedback changes request identity and only selected unlocked cameras can change',async t=>{
+  const f=harness(),root=await temporary(t),protectedShot=f.board.shots[1]!,feedback=[{shotId:f.board.shots[0]!.id,type:'camera-layout',severity:'high' as const,description:'Listener head cropped in the previous draft',repair:'Widen this camera'}];
+  f.router.structured=(async(_role:unknown,input:ModelRequest)=>{f.requests.push(input);return plan(f.board,[protectedShot.id]);}) as ModelRouter['structured'];
+  await writeJson(path.join(root,'work/camera-direction-report.json'),{status:'previous-draft',storyboardHash:hash(f.board)});
+  const result=await directCameraStoryboard(root,f.config,f.router,f.board,[protectedShot],{...f.context,repairFeedback:feedback},{reportPath:'work/artwork-transactions/human-test/work/camera-direction-report.json'});
+  assert.deepEqual(result.shots[1],protectedShot);assertCameraOnlyChange(f.board,result,[protectedShot]);
+  assert.deepEqual((f.requests[0]!.context as {reviewFeedback:unknown}).reviewFeedback,feedback);
+  assert.equal((f.requests[0]!.context as {task:string}).task,'camera-repair');
+  const accepted=await readJson<Record<string,unknown>>(path.join(root,'work/camera-direction-report.json'));assert.equal(accepted.status,'previous-draft');
+  const staged=await readJson<Record<string,unknown>>(path.join(root,'work/artwork-transactions/human-test/work/camera-direction-report.json'));
+  assert.equal(staged.task,'camera-repair');assert.equal(staged.feedbackHash,hash(feedback));assert.equal(staged.productionApproval,false);
+});
+
+test('camera repair source defects block before provider and unchanged non-camera feedback is retained',async t=>{
+  const f=harness(),root=await temporary(t),nonCamera=[{shotId:f.board.shots[0]!.id,type:'actor-identity',severity:'high' as const,description:'Original costume changed',repair:'Restore original source'}];
+  const untouched=await repairCinematicCameras(root,f.config,f.router,f.board,nonCamera);assert.deepEqual(untouched.remainingIssues,nonCamera);assert.deepEqual(untouched.shotIds,[]);
+  const camera={...nonCamera[0]!,type:'camera-layout'},source={...nonCamera[0]!,type:'camera-source'};
+  await assert.rejects(()=>repairCinematicCameras(root,f.config,f.router,f.board,[source]),/needs-camera-source/);assert.equal(f.getCalls(),0);
+  await assert.rejects(()=>repairCinematicCameras(root,f.config,f.router,f.board,[camera,source]),/needs-camera-source/);assert.equal(f.getCalls(),0);
+  f.config.presentation.camera_agent=false;
+  await assert.rejects(()=>repairCinematicCameras(root,f.config,f.router,f.board,[camera]),/enabled real camera agent/);assert.equal(f.getCalls(),0);
+});
+
+test('camera-only guard retains every top-level canonical field outside cameras',()=>{
+  const f=sourceInteractionFixture(),changed=structuredClone(f.board) as Storyboard&{canonicalSource?:string};
+  changed.canonicalSource='an unrelated replacement source';
+  assert.throws(()=>assertCameraOnlyChange(f.board,changed,[]),/cannot change/);
 });

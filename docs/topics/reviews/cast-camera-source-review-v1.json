@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.73-cast-camera-audit",
+  "precedingSourceSHA": "8770a4b2e0e056a72b2fd079e4299e1d2034f38a",
+  "scope": "one bounded partial source-only GPT review; parent source amendments; no whole-product/runtime/art/film acceptance",
+  "request": "runtime/dev-agents/source-cast-camera-v1/cast-camera-source-review-v1.json",
+  "command": "node --import tsx scripts/dev-nine-router.ts --task runtime/dev-agents/source-cast-camera-v1/cast-camera-source-review-v1.json",
+  "dispatchHandle": "cce1db/session86392",
+  "completionHandle": "42fb58",
+  "exitCode": 0,
+  "model": "cx/gpt-6.1-sol",
+  "usage": {
+    "promptTokens": 12940,
+    "completionTokens": 1843,
+    "totalTokens": 14783
+  },
+  "prompt": "Review only supplied frozen SOURCE bytes for actionable defects. New all-person camera diagnostics must preserve original full world/person clock. Camera repair may modify only selected unlocked cameras, never narration/cuts/acting/art/source/world/other cameras; high camera-source defects must block before model calls. Evaluate shared budgets, fresh review requirement, stale source/config/locks/asset and interrupted canonical-plan/report publication, and preservation of original actor assets. Source/art/voice/final readiness gates must remain false; never propose removing them as an isolated fix. Tests are DECLARED ONLY and must not be run or sampled. Output JSON {findings:[{severity,file,line,claim,evidence,suggestedSourceChange}],scopeLimitations:[]}. No tools/commands/runtime or code autoapplication. Prefer at most four proven important findings; distinguish partial supplied excerpts from full-file review.",
+  "inputFingerprint": "47e49b1661049ef02d01240995a2bfc6995500c426aaf901505052870c57ef2e",
+  "inputSources": [
+    {
+      "file": "packages/director/cast-camera.ts",
+      "sha256": "32a9101d4bbc5baae5a54c759093d253c7eaa60de82ede261729f117b16d58b4"
+    },
+    {
+      "file": "packages/director/camera-direction.ts",
+      "sha256": "1791bc3c2d4c77f2b617b50316fb1ed19119f3e36db686a1568936b85ee4507c"
+    },
+    {
+      "file": "packages/director/camera-repair.ts",
+      "sha256": "dbd558df24ba240eb4ec68b489d06a4345b47899c79155ea11bb8e76fb95ae62"
+    },
+    {
+      "file": "tests/cast-camera.test.ts",
+      "sha256": "b8d2b4e618f58cc35811f24321ad81f1d723673c8c03e9d5d409b39ebac87b8b"
+    },
+    {
+      "file": "docs/topics/reviews/cast-camera-source-context-v1.md",
+      "sha256": "7d4b514ba73b509812d198df5e7fcd0f1969a45f21d9898331b6e6bc7f50588d"
+    }
+  ],
+  "response": {
+    "findings": [
+      {
+        "severity": "high",
+        "file": "packages/director/camera-repair.ts",
+        "line": 30,
+        "claim": "A high camera-source issue does not block the repair boundary when the batch contains no high camera-layout issue.",
+        "evidence": "The function returns immediately when feedback.length is zero, before checking for high camera-source issues on line 31. Consequently, a source-only batch is returned as remainingIssues. The supplied pipeline excerpt then passes remainingIssues to repairScenes at line 332 rather than stopping at the required source blocker. Whether that downstream function makes model calls cannot be determined from the supplied bytes.",
+        "suggestedSourceChange": "Move the high camera-source rejection ahead of the no-camera-feedback return. Preserve source-only issues as blocking defects, and require their resolution before any repair role can spend model calls. Do not weaken source, artwork, voice, contact, or final-readiness gates."
+      },
+      {
+        "severity": "high",
+        "file": "packages/director/camera.ts",
+        "line": 216,
+        "claim": "Early framing failures can conceal camera-source defects and route a source-invalid shot into a camera model call before source validation.",
+        "evidence": "In the supplied excerpt, angle, anchor, and movement checks throw CameraFramingError at lines 216–219 before cameraHostBounds at line 220 or original-world bound-owner checks at lines 228–240. inspectCastCameras catches only the first error for each actor and classifies CameraFramingError as camera-layout. Thus a shot with both a framing failure and a missing source motion envelope can report only camera-layout. repairCinematicCameras performs its complete cast validation inside the directCameraStoryboard validation callback, after planning has been requested, rather than preflighting the original source before that request.",
+        "suggestedSourceChange": "Separate source/world/person-clock validation from framing validation. Collect source defects independently of early framing failures, and preflight the original complete storyboard before entering camera planning. Any high source defect must block the model call; only framing defects should reach camera-only repair. Preserve the original world, actor clocks, assets, and all readiness gates."
+      },
+      {
+        "severity": "medium",
+        "file": "packages/director/camera-direction.ts",
+        "line": 34,
+        "claim": "The camera-only assertion excludes every top-level storyboard property other than shots from its comparison.",
+        "evidence": "strip reconstructs each storyboard as only {shots: ...}. Therefore changes to any other top-level canonical fields are invisible to the hash comparison at line 40. directCameraStoryboard applies this assertion to the object returned by context.validate, so the exported guard does not enforce its stated whole-storyboard camera-only boundary. applyCameraDirection itself clones the board and changes only camera fields; the defect is in the subsequent structural assertion.",
+        "suggestedSourceChange": "Clone or structurally preserve the entire storyboard, removing only each shot's camera and cinematic.camera fields before comparison. Continue comparing protected shots in full. This makes the assertion reject every non-camera change without relying on the current set of top-level schema fields."
+      }
+    ],
+    "scopeLimitations": [
+      "Static review only of the supplied frozen bytes. No tools, commands, execution, tests, fixtures, sampling, or source autoapplication were used. Tests were treated as declared-only source.",
+      "cast-camera.ts, camera-direction.ts, camera-repair.ts, and cast-camera.test.ts were supplied as full texts. camera.ts, director/index.ts, review/index.ts, orchestrator/pipeline.ts, artwork-repair.ts, the camera prompt, and camera-direction.test.ts were reviewed only through the bounded excerpts embedded in the supplied document.",
+      "The shown repair loop consumes the shared review-iteration counter and schedules a new draft and review after repair. ModelRouter and planWithValidation implementations were not supplied, so shared call/cost enforcement and accepted-plan cache freshness could not be verified.",
+      "The shown publication code journals canonical files and attempts conflict-aware rollback; recovery invocation on every resume path was not supplied. Crash recovery and publication concurrency guarantees therefore cannot be established from these excerpts.",
+      "The repair snapshot checks storyboard, configuration, state, narration, character data, host data, voice report, cast, and declared actor-asset hashes before and after publication. The actor-cast reuse branch preserves existing asset references rather than regenerating assets. Completeness of asset enumeration and binding of review feedback to a current draft/source revision cannot be verified from the supplied dependencies.",
+      "No source, artwork, voice, visual, motion, production, or final readiness is established by this review; those acceptance gates must remain false."
+    ]
+  },
+  "parentAmendments": [
+    {
+      "finding": 1,
+      "status": "confirmed-source-fixed",
+      "change": "High camera-source rejection precedes the no-camera-feedback return; source-only and mixed batches block before repair roles."
+    },
+    {
+      "finding": 2,
+      "status": "confirmed-source-fixed",
+      "change": "Original world/owner/body/prop source geometry is computed independently before framing checks; repair preflights the complete cast/source before requesting a provider. A framing error cannot mask a missing original motion envelope."
+    },
+    {
+      "finding": 3,
+      "status": "exported-guard-hardening-source-fixed",
+      "change": "Camera-only comparison retains the whole storyboard object and excludes only the two camera fields per shot; current schema contains shots only, exported assertion now also protects other canonical fields."
+    }
+  ],
+  "finalSourceHashes": {
+    "packages/director/camera-repair.ts": "8242669149e76f9f9fcd4e7aec5c916b46e6ba0f8b8d9fe90c1bdb3afebaa928",
+    "packages/director/cast-camera.ts": "fc746749cc7a5e2e542e7e0b75af2ea136257299e06f1bf542412d3fd378d523",
+    "packages/director/camera.ts": "ac81ca73dcb89b1b0e25d61cf10321bc474895729ee82de5912c7b75b015b83c",
+    "packages/director/camera-direction.ts": "6c63edd07328f17ed0f6aa3462ff983a33fe87e7be9f2de1abd9a72ce29c7ae0",
+    "tests/cast-camera.test.ts": "78ca291ff7c97ce5fac099ef39f5791b2b09e6c50c7876a74eda65a3b89c5a8e",
+    "tests/camera-direction.test.ts": "4973d948b18c81bb43e92ab3f1cccb37daf1ff335a8ba5b4d0e085ff34034aca"
+  },
+  "finalAmendmentsIndependentlyReReviewed": false,
+  "calls": 1,
+  "images": 0,
+  "callbacksExecuted": 0,
+  "geometryInvoked": false,
+  "rendered": false,
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "goalComplete": false,
+  "contextDeliveryAdjustment": {
+    "file": "docs/topics/reviews/cast-camera-source-context-v1.md",
+    "reviewedSHA": "7d4b514ba73b509812d198df5e7fcd0f1969a45f21d9898331b6e6bc7f50588d",
+    "deliveredSHA": "138b88b9325cce647fb1fcdd60b07d3ab8b13e6d16627e19147ef375bc34a75a",
+    "change": "Removed trailing spaces after numbered blank excerpt lines and the final blank line for Git whitespace checks; no project source or prompt changed; this is a delivery-format adjustment, not a repeated model review."
+  }
+}
