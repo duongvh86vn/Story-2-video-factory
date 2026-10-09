@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import { exists, safePath } from './utils.js';
 import { LANGUAGE_TAG, primaryLanguage } from './languages.js';
 
-export const RoleNames = ['planner','storyboard','coder','repair','visual_review','fallback'] as const;
+export const RoleNames = ['planner','storyboard','camera','coder','repair','visual_review','fallback'] as const;
 export type ModelRole = typeof RoleNames[number];
 export const ModelSettingsSchema = z.object({ provider: z.enum(['gateway','openai-compatible','gemini','deepseek','ollama','litellm','claude-cli','codex-cli','mock']).default('mock'), model: z.string().min(1,'Set a real model ID in the corresponding environment variable or configuration').default('mock'), base_url: z.string().optional(), api_key_env: z.string().default('MODEL_GATEWAY_KEY'), temperature: z.number().min(0).max(2).default(0.2), vision: z.boolean().default(false), timeout_ms: z.number().positive().default(120000), input_cost_per_million: z.number().nonnegative().default(0), output_cost_per_million: z.number().nonnegative().default(0),
   command:z.string().min(1).optional(),max_call_cost_usd:z.number().positive().optional() });
@@ -39,6 +39,7 @@ export const ConfigSchema = z.object({
     character_mode:z.enum(['actors','presenter']).default('presenter'),
     actor_renderer:z.enum(['rig','sprite']).optional(),
     design_brief:z.string().max(6000).optional(),
+    camera_agent:z.boolean().default(true),
     minimum_host_speech_visibility: z.number().min(0).max(1).default(0.70),
     maximum_host_absence_seconds: z.number().nonnegative().default(6),
     require_meaningful_host_action_per_beat: z.boolean().default(true) }).strict().default({}),
@@ -49,7 +50,7 @@ export const ConfigSchema = z.object({
     source: z.string().default('input/source.md'), narration: z.string().default('input/narration.wav'), subtitles: z.string().default('input/narration.srt') }).strict().default({}),
   script_generation: z.object({ kind: z.enum(['auto','factual','fiction']).default('auto'),
     target_seconds: z.number().int().min(10).max(300).default(60), brief: z.string().max(6000).default('') }).strict().default({}),
-  models: z.object({planner:ModelSettingsSchema.default({}),storyboard:ModelSettingsSchema.default({}),coder:ModelSettingsSchema.default({}),repair:ModelSettingsSchema.default({}),visual_review:ModelSettingsSchema.default({}),fallback:ModelSettingsSchema.default({})}).default({}),
+  models: z.object({planner:ModelSettingsSchema.default({}),storyboard:ModelSettingsSchema.default({}),camera:ModelSettingsSchema.nullish(),coder:ModelSettingsSchema.default({}),repair:ModelSettingsSchema.default({}),visual_review:ModelSettingsSchema.default({}),fallback:ModelSettingsSchema.default({})}).default({}).transform(models=>({...models,camera:models.camera??structuredClone(models.storyboard)})),
   rendering: z.object({ engine: z.literal('hyperframes').default('hyperframes'), draft: Profile.default({ width: 960, height: 540, fps: 15, quality: 'draft' }), final: Profile.default({ width: 1920, height: 1080, fps: 30, quality: 'delivery' }), timeout_ms: z.number().positive().default(1800000), docker: z.boolean().default(false), max_duration_seconds: z.number().positive().default(300), max_shots: z.number().int().positive().default(100), workers: z.number().int().positive().default(2) }).default({}),
   workflow: z.object({ automatic: z.boolean().default(true), require_host_approval: z.literal(true).default(true), require_storyboard_approval: z.boolean().default(false), require_character_approval: z.boolean().default(false), max_review_iterations: z.number().int().nonnegative().default(2), max_model_calls: z.number().int().positive().default(250), max_model_cost_usd: z.number().nonnegative().optional(), max_generated_assets_per_shot: z.number().int().nonnegative().default(3), max_scene_bytes: z.number().int().positive().default(2000000), allow_rule_based_review: z.boolean().default(true) }).default({}),
   retry: z.object({ structured_output: z.number().int().nonnegative().default(2), scene_generation: z.number().int().nonnegative().default(2), scene_repair: z.number().int().nonnegative().default(3), render: z.number().int().nonnegative().default(1) }).default({}),

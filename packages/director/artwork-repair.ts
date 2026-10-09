@@ -115,6 +115,8 @@ export async function persistCinematicArtworkRepair(root:string,config:FactoryCo
   const json=(value:unknown)=>JSON.stringify(value,null,2)+'\n';
   pending.set('work/storyboard.json',json(board));pending.set('work/storyboard.md',storyboardMarkdown(board,beats));
   await writeJson(path.join(stagedRoot,'work/creative-direction-report.json'),report);
+  const cameraReportFile=path.join(root,'work/camera-direction-report.json');
+  if(await exists(cameraReportFile))await writeJson(path.join(stagedRoot,'work/camera-direction-report.json'),await readJson(cameraReportFile));
   await writeCinematicPlans(stagedRoot,board);
   await writeHostTimeline(stagedRoot,board,narration,profile,rig,voice.synchronization);
   for(const file of await walk(path.join(stagedRoot,'work')))pending.set(path.relative(stagedRoot,file).split(path.sep).join('/'),await fs.readFile(file,'utf8'));

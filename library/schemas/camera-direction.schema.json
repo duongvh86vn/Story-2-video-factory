@@ -1,0 +1,135 @@
+{
+  "$ref": "#/definitions/camera-direction",
+  "definitions": {
+    "camera-direction": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "camera-direction-1"
+        },
+        "shots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "shotId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+              },
+              "camera": {
+                "type": "object",
+                "properties": {
+                  "framing": {
+                    "type": "string",
+                    "enum": [
+                      "wide",
+                      "medium",
+                      "close"
+                    ]
+                  },
+                  "movement": {
+                    "type": "string",
+                    "enum": [
+                      "locked",
+                      "push-in",
+                      "pull-out",
+                      "pan-left",
+                      "pan-right"
+                    ]
+                  },
+                  "focus": {
+                    "type": "string",
+                    "enum": [
+                      "ensemble",
+                      "face",
+                      "contact",
+                      "object"
+                    ]
+                  },
+                  "anchor": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number"
+                      },
+                      "y": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "designIntent": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  "startScale": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 10
+                  },
+                  "endScale": {
+                    "type": "number",
+                    "minimum": 0.1,
+                    "maximum": 10
+                  }
+                },
+                "required": [
+                  "framing",
+                  "movement",
+                  "anchor",
+                  "startScale",
+                  "endScale"
+                ],
+                "additionalProperties": false
+              },
+              "purpose": {
+                "type": "string",
+                "enum": [
+                  "establish",
+                  "interaction",
+                  "reaction",
+                  "action",
+                  "detail",
+                  "transition",
+                  "hold"
+                ]
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1200
+              },
+              "continuity": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1200
+              }
+            },
+            "required": [
+              "shotId",
+              "camera",
+              "purpose",
+              "rationale",
+              "continuity"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "version",
+        "shots"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

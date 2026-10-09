@@ -10,8 +10,7 @@ import {gestureRecoveryStart} from '../animation/compiler.js';
 import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 import {isWholeSourceStatement} from '../explainer/plan.js';
 import {sourceActor} from './source-actor.js';
-import {projectSourceWorldEvents} from './source-world-projection.js';
-import {sourceFlowImplicitMotion} from './source-world-phase.js';
+import {validateSourceGripWorld} from './source-grip-world.js';
 
 type Action=ShotHost['actions'][number];
 export const SOURCE_FIXED_OPERATION_VERSION='source-fixed-operation-1';
@@ -44,12 +43,7 @@ export function sourceFixedOperation(shot:Shot,actorId:string,action:Action,boar
       for(const ref of refs)if(ref.kind==='narration'&&!narration.segments.some(n=>n.id===ref.segmentId&&n.text.normalize('NFC').includes(ref.quote.normalize('NFC'))))return fail(slice,'entity quote is absent from original narration');
     }
     if(hash(c.sourceWorld)!==hash(shot.cinematic!.sourceWorld))return fail(slice,'fixed target lost its original world history at a cut');
-    if(c.sourceWorld&&hash(slice.visualization!.events)!==hash(projectSourceWorldEvents(c.sourceWorld,slice.startMs,slice.endMs)))return fail(slice,'fixed target events are not exact original world projections');
-    if(!c.sourceWorld&&slice.visualization!.events.some(e=>e.targetId===partId))return fail(slice,'cross-cut fixed target events require complete original world history');
-    const events=c.sourceWorld?.events??[],reveals=events.filter(e=>e.targetId===partId&&e.type==='reveal');
-    if(reveals.length&&!reveals.some(e=>e.startMs<=contactMs))return fail(slice,'fixed target is not visible at its original contact');
-    if(events.some(e=>e.targetId===partId&&e.startMs<recoverMs&&(e.motion==='rotate'||e.motion==='translate'&&e.endMs>contactMs)))return fail(slice,'fixed grip cannot move or retain prior rotation while the actual hand owns contact');
-    if(c.sourceWorld&&events.some(e=>e.type==='flow'&&e.relationTo===partId&&e.startMs+(e.endMs-e.startMs)*.55<recoverMs&&sourceFlowImplicitMotion(c.sourceWorld!,e,part)==='rotate'))return fail(slice,'fixed grip cannot inherit an implicit flow rotation before recovery');
+    validateSourceGripWorld(slice,part,contactMs,recoverMs);
     const anchor=partAnchor(slice,partId,action.target!.anchor,stage.width,stage.height);
     if(Math.hypot(anchor.x-g.target!.x,anchor.y-g.target!.y)>1e-6&&Math.hypot(Math.round(anchor.x*1000)/1000-g.target!.x,Math.round(anchor.y*1000)/1000-g.target!.y)>1e-6)return fail(slice,'declared model anchor differs from the original physical hand target');
     return {part,model,art:drawing??null,anchor,identity:{part,model,art:drawing??null,stage,setting:c.setting,environmentAssetId:c.environmentAssetId,palette:c.artDirection.palette,useEnvironment:c.artDirection.useEnvironment}};

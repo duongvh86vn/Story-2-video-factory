@@ -3,6 +3,8 @@
 models:
   planner: { provider: mock, model: offline-planner, temperature: 0.3 }
   storyboard: { provider: mock, model: offline-director, temperature: 0.5 }
+  # storyboard is the creative director. Omit camera (or use null) to inherit
+  # its provider/settings; an explicit camera model runs a separate camera pass.
   coder: { provider: mock, model: offline-recipes, temperature: 0.2 }
   repair: { provider: mock, model: offline-repair, temperature: 0.1 }
   visual_review: { provider: mock, model: offline-review, vision: false, temperature: 0.1 }

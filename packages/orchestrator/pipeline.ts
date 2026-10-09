@@ -72,6 +72,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
   const cinematic=config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'
     ?{animation:ANIMATION_VERSION,director:DIRECTION_VERSION,artwork:ARTWORK_RENDER_VERSION,models:CINEMATIC_MODEL_VERSION,props:PROP_BINDING_VERSION,seats:SEAT_SUPPORT_VERSION,environments:await environmentLibraryFingerprint(),
       creativePrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/creative-director.md'))),
+      cameraPrompt:hash(await fs.readFile(path.join(await findRepoRoot(),'library/prompts/camera-director.md'))),
       authoredDirection:await exists(path.join(root,'input/art-direction.json'))?hash(await fs.readFile(path.join(root,'input/art-direction.json'))):null,
       ...(catalog&&(catalog.revision!==null||config.presentation.actor_renderer==='sprite')?{spriteMotionCatalog:catalog.snapshotHash}:{})}:undefined;
   const vocabularyRevision=config.content.mode==='narrated-explainer'&&await exists(path.join(root,'work/narration.json'))

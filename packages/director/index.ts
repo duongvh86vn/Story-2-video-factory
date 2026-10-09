@@ -28,6 +28,7 @@ import {sceneSeats} from '../stage/seats.js';
 import {validateSpriteScenePlan} from '../motion/scene-validation.js';
 import {sourceInteractionDescriptor} from './source-interactions.js';
 import {validatePerformanceContinuity} from './continuity.js';
+import {currentCameraDirectionReport} from './camera-direction-report.js';
 
 const moods:Record<NonNullable<Shot['visualization']>['type'],Mood>={question:'curious',mechanism:'effort',process:'understanding',
   evolution:'curious',comparison:'thinking',breakdown:'thinking','event-sequence':'concerned',summary:'confident'};
@@ -304,6 +305,9 @@ export async function writeCinematicPlans(root:string,board:Storyboard):Promise<
   await writeJson(reportFile,{...previous,version:22,producer:DIRECTION_VERSION,storyboardHash:hash(canonical),
     origin:origins.length===1?origins[0]:'mixed',shots:shots.map(s=>({shotId:s.id,origin:s.cinematic!.artDirection?.origin??'offline',brief:s.cinematic!.artDirection?.brief??null})),
     warning:'Creative origin describes the design source. Technical QC does not constitute visual acceptance.'});
+  const cameraReportFile=path.join(root,'work/camera-direction-report.json');
+  const previousCamera=await exists(cameraReportFile)?await readJson<Record<string,unknown>>(cameraReportFile):{};
+  await writeJson(cameraReportFile,currentCameraDirectionReport(canonical,previousCamera));
   for(const [file,value] of Object.entries({
     'story-direction.json':shots.map(s=>({...s.cinematic,performance:undefined})),
     'stage-plan.json':shots.map(s=>({shotId:s.id,...s.cinematic!.performance.stage,setting:s.cinematic!.setting,environmentAssetId:s.cinematic!.environmentAssetId,artDirection:s.cinematic!.artDirection,provenance:'illustration',parts:s.visualization!.parts,models:s.cinematic!.models,relations:s.visualization!.relations})),

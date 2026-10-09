@@ -37,6 +37,7 @@ export interface ProjectDetail extends ProjectSummary {
     'story-direction'?: unknown; 'stage-plan'?: unknown; 'performance-plan'?: unknown; 'camera-plan'?: unknown;
     'environment-provenance'?: unknown; 'performance-report'?: unknown; 'animation-library'?: unknown;
     'creative-direction-report'?: unknown;
+    'camera-direction-report'?: unknown;
     'actor-cast'?: unknown; 'actor-timeline'?: unknown;
   };
   production: unknown;
@@ -46,6 +47,7 @@ export interface ProjectDetail extends ProjectSummary {
   settings: { topic:FactoryConfig['topic']; topicReadiness?:{productionReady:boolean;artwork:string}; revision: string; language: string; contentMode: FactoryConfig['content']['mode']; input: FactoryConfig['input']; host: FactoryConfig['host']; voice: Omit<FactoryConfig['voice'],'command'|'command_args'>; automatic: boolean;
     presentation: FactoryConfig['presentation'];
     creativeModel:Omit<FactoryConfig['models']['storyboard'],'command'>;
+    cameraModel:Omit<FactoryConfig['models']['camera'],'command'>;
     scriptModel:Omit<FactoryConfig['models']['planner'],'command'>; scriptGeneration:FactoryConfig['script_generation'];
     format: { width: number; height: number; fps: number }; approvalRequired: { storyboard: boolean; characters: boolean; host: boolean } };
 }

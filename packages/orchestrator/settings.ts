@@ -11,7 +11,8 @@ import { LANGUAGE_TAG, primaryLanguage } from '../core/languages.js';
 export const PresentationPatchSchema = z.object({ mode: ConfigSchema.shape.presentation.removeDefault().shape.mode.removeDefault().optional(),
   character_mode:ConfigSchema.shape.presentation.removeDefault().shape.character_mode.removeDefault().optional(),
   actor_renderer:ConfigSchema.shape.presentation.removeDefault().shape.actor_renderer,
-  design_brief:ConfigSchema.shape.presentation.removeDefault().shape.design_brief }).strict().refine(patch=>patch.mode!==undefined||patch.character_mode!==undefined||patch.actor_renderer!==undefined||patch.design_brief!==undefined,'Choose presentation, character, movement renderer or supply a design brief');
+  camera_agent:ConfigSchema.shape.presentation.removeDefault().shape.camera_agent.removeDefault().optional(),
+  design_brief:ConfigSchema.shape.presentation.removeDefault().shape.design_brief }).strict().refine(patch=>patch.mode!==undefined||patch.character_mode!==undefined||patch.actor_renderer!==undefined||patch.design_brief!==undefined||patch.camera_agent!==undefined,'Choose presentation, character, movement renderer, camera agent or supply a design brief');
 export const CreativeModelPatchSchema=ModelSettingsSchema.pick({provider:true,model:true,base_url:true,api_key_env:true,temperature:true,timeout_ms:true,vision:true}).partial().strict();
 export const SettingsPatchSchema = z.object({ revision: z.string().optional(),
   input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']), story: z.enum(['input/story.txt','input/story.md']).optional(), idea: z.enum(['input/idea.txt','input/idea.md']).optional(), script: z.enum(['input/script.txt','input/script.md']).optional() }).strict().optional(),
@@ -20,7 +21,7 @@ export const SettingsPatchSchema = z.object({ revision: z.string().optional(),
   host: z.enum(['mini-robot','stick-man','custom']).optional(), language: z.string().regex(LANGUAGE_TAG).optional(),
   voice: ConfigSchema.shape.voice.removeDefault().partial().strict().optional(), automatic: z.boolean().optional(),
   presentation: PresentationPatchSchema.optional(),
-  models:z.object({storyboard:CreativeModelPatchSchema.optional(),planner:CreativeModelPatchSchema.optional(),coder:CreativeModelPatchSchema.optional(),repair:CreativeModelPatchSchema.optional(),visual_review:CreativeModelPatchSchema.optional(),fallback:CreativeModelPatchSchema.optional()}).strict().optional(),
+  models:z.object({storyboard:CreativeModelPatchSchema.optional(),camera:CreativeModelPatchSchema.nullish(),planner:CreativeModelPatchSchema.optional(),coder:CreativeModelPatchSchema.optional(),repair:CreativeModelPatchSchema.optional(),visual_review:CreativeModelPatchSchema.optional(),fallback:CreativeModelPatchSchema.optional()}).strict().optional(),
 }).strict();
 export type SettingsPatch = z.infer<typeof SettingsPatchSchema>;
 export async function updateSettings(root: string, update: SettingsPatch): Promise<void> {
@@ -54,7 +55,7 @@ export async function updateSettings(root: string, update: SettingsPatch): Promi
   const changedNarration=hash({input:config.input,authoring:['idea','story'].includes(effectiveMode)?{topic:config.topic,settings:config.script_generation,model:config.models.planner}:undefined,voice:effectiveMode==='wav'?undefined:config.voice,language:config.project.language})!==hash({input:nextConfig.input,authoring:['idea','story'].includes(effectiveMode)?{topic:nextConfig.topic,settings:nextConfig.script_generation,model:nextConfig.models.planner}:undefined,voice:effectiveMode==='wav'?undefined:nextConfig.voice,language:nextConfig.project.language});
   const changedHost=hash(config.host)!==hash(nextConfig.host);
   const changedPresentation=hash({presentation:config.presentation,topic:config.topic})!==hash({presentation:nextConfig.presentation,topic:nextConfig.topic});
-  const changedDirector=hash(config.models.storyboard)!==hash(nextConfig.models.storyboard);
+  const changedDirector=hash({director:config.models.storyboard,camera:config.models.camera})!==hash({director:nextConfig.models.storyboard,camera:nextConfig.models.camera});
   if(changedNarration||changedHost||changedPresentation||changedDirector||patch.automatic!==undefined&&patch.automatic!==config.workflow.automatic)await invalidateProject(root,changedNarration?'NEW':changedHost||changedPresentation||changedDirector?'TIMED':'STORYBOARDED');
   await writeAtomic(file,YAML.stringify(merged));
 }

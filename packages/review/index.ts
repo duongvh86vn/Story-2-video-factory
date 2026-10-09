@@ -225,7 +225,7 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
       const heightInvalid=cinematic
         ?!Number.isFinite(geometry.hostHeightRatio)||Math.abs(geometry.hostHeightRatio-rigMetrics(performer.profile).height*cinematic.performance.scale/cinematic.performance.stage.height)>1e-6
         :geometry.hostHeightRatio<.25||geometry.hostHeightRatio>.4;
-      if(cinematic)cameraReports.set(shot.id,validateCamera(shot,performer.profile,actorViewActingClock(storyboard,shot,performer.profile.id)));
+      if(cinematic)cameraReports.set(shot.id,validateCamera(shot,performer.profile,actorViewActingClock(storyboard,shot,performer.profile.id),{worldShot:shot,board:storyboard}));
       if(geometry.rigHash!==performer.rig.rigHash||geometry.profileHash!==performer.profile.profileHash||heightInvalid)issues.push(issue(shot,cinematic?.actorScene?'actor-identity':'host-identity','high','Performer geometry/profile identity is inconsistent.','Recompile the actor and shot.'));
       try{validateSourceInteractionGeometry(shot,storyboard,n,geometry.interactions);}catch(error){issues.push(issue(shot,'host-contact','high',String(error),'Rebuild from the complete original actor/model/contact source.'));}
       for(const action of geometry.interactions)if(!action.sourceManipulation&&action.type==='operate-model'&&(action.errorPx>2||action.contactMs===undefined||action.contactMs!==action.reachMs))issues.push(issue(shot,'host-contact','high',`${action.partId}: invalid contact geometry/timing`,'Adjust the model anchor or host action and rebuild.'));

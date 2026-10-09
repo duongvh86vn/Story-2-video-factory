@@ -33,9 +33,11 @@ import {NativeHeadPaintSchema} from '../../packages/animation/native-head-paint.
 import {NativeRearMotionSchema} from '../../packages/animation/native-head-follow.js';
 import {SourceWorldSchema,SourceWorldEventSchema,SourceWorldContactSchema} from '../../packages/director/source-world-schemas.js';
 import {SourceWorldRefSchema} from '../../packages/director/source-world-reference.js';
+import {CameraDirectionSchema} from '../../packages/director/camera-direction-schemas.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
+  'camera-direction':CameraDirectionSchema,
   'source-world':SourceWorldSchema,'source-world-event':SourceWorldEventSchema,'source-world-contact':SourceWorldContactSchema,'source-world-ref':SourceWorldRefSchema,
   'manipulation-action-ref':ManipulationActionRefSchema,
   story: StorySchema, narration: NarrationSchema, 'character-bible': CharacterBibleSchema,

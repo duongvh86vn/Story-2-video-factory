@@ -277,6 +277,7 @@ export async function buildServer(options: ServerOptions = {}) {
       settings: {revision:hash(await fs.readFile(await boundPath(root,'project.yaml'))),language:config.project.language,contentMode:config.content.mode,topic:config.topic,...(config.topic.id?{topicReadiness:prehistoricReadiness}:{}),input:config.input,host:config.host,
         voice:((({command,command_args,...rest})=>rest)(config.voice)),automatic:config.workflow.automatic,presentation:config.presentation,format:config.rendering.final,
         creativeModel:((({command,...rest})=>rest)(config.models.storyboard)),
+        cameraModel:((({command,...rest})=>rest)(config.models.camera)),
         scriptModel:((({command,...rest})=>rest)(config.models.planner)),scriptGeneration:config.script_generation,
         approvalRequired:{storyboard:config.workflow.require_storyboard_approval||!config.workflow.automatic,characters:config.workflow.require_character_approval,host:config.workflow.require_host_approval}},
     };

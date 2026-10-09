@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "baseSHA": "016f3dbdd9a579f7206a80493505f083eacf9f7c",
+  "requests": [
+    {
+      "id": "camera-source-review-v1",
+      "packet": "runtime/dev-agents/source-grip-camera-v1/camera-source-review-v1.json",
+      "packetHash": "1a011cd6dc43c8afb2bb438c7804a31a0ed2e17171641bbd0b34120eaa5ae42a",
+      "sources": [
+        {
+          "file": "packages/director/camera-direction.ts",
+          "sha256": "92da4bef63600078d1b08b31310d7760b3577ae92524278c8a5bb231457b3553",
+          "chars": 6127
+        },
+        {
+          "file": "packages/director/camera-direction-schemas.ts",
+          "sha256": "4f8d2a52b400b070baf1be95709a3fed1630994815fa9da36f7d315a27853b6c",
+          "chars": 1825
+        },
+        {
+          "file": "packages/director/creative.ts",
+          "sha256": "be6646b4787444439f69c383f207bcaa791985504e52c8cd4e557fbeb5173630",
+          "chars": 28899
+        },
+        {
+          "file": "packages/story/planning-cache.ts",
+          "sha256": "c38c53b35782848edf3da22452ae8aa3683a8445f09992828f5613ba13b334ea",
+          "chars": 8025
+        },
+        {
+          "file": "docs/topics/reviews/camera-source-review-context-v1.md",
+          "sha256": "8b63d1d057e8db644d0dafbf4566b613add8224aaf551f8f38cfb001703220ff",
+          "chars": 5710
+        }
+      ],
+      "totalChars": 50586,
+      "status": "prepared-source-only-review",
+      "runtime": "NOT RUN"
+    },
+    {
+      "id": "grip-world-source-review-v1",
+      "packet": "runtime/dev-agents/source-grip-camera-v1/grip-world-source-review-v1.json",
+      "packetHash": "aee04a8e480763106301cabbcacf96929c00c78c42150dff942bbe5f23c0dbaf",
+      "sources": [
+        {
+          "file": "packages/director/source-grip-world.ts",
+          "sha256": "340d8eb0227391d8ef3ab2e2b2f7d873ee26038983afc46dbfba718557736adc",
+          "chars": 3045
+        },
+        {
+          "file": "packages/director/source-prop-binding.ts",
+          "sha256": "6408a94a2bd08f9919327fac1d8f7317c2a80a77c6308b02730164c7c8360a44",
+          "chars": 13402
+        },
+        {
+          "file": "packages/director/source-fixed-operation.ts",
+          "sha256": "1254977d6b256d30df16fce7805bab453eac1ebb461952ec66a49b0447756b48",
+          "chars": 8036
+        },
+        {
+          "file": "packages/director/camera.ts",
+          "sha256": "ca33edc94c90cf48f161bd1c9357cf274d470fab0e2de2148a0fa41f066c51f1",
+          "chars": 26143
+        },
+        {
+          "file": "packages/director/source-actor.ts",
+          "sha256": "467cb2988f60638561c08f2c7eb6723a0a0b141a0c5b70920a1de2f8920d8f20",
+          "chars": 959
+        },
+        {
+          "file": "docs/topics/reviews/grip-world-source-review-context-v1.md",
+          "sha256": "6993ff918109ebec3a5fca33521ca6ba5bd12c8e1964238a58491819e33f52cd",
+          "chars": 1121
+        }
+      ],
+      "totalChars": 52706,
+      "status": "prepared-source-only-review",
+      "runtime": "NOT RUN"
+    },
+    {
+      "id": "camera-source-review-gpt-v1",
+      "packet": "runtime/dev-agents/source-grip-camera-v1/camera-source-review-gpt-v1.json",
+      "packetHash": "e557758b6ae91bbfc0867721b59894ad80d767b0857e16f787d208b004618280",
+      "sources": [
+        {
+          "file": "packages/director/camera-direction.ts",
+          "sha256": "92da4bef63600078d1b08b31310d7760b3577ae92524278c8a5bb231457b3553",
+          "chars": 6127
+        },
+        {
+          "file": "packages/director/camera-direction-schemas.ts",
+          "sha256": "4f8d2a52b400b070baf1be95709a3fed1630994815fa9da36f7d315a27853b6c",
+          "chars": 1825
+        },
+        {
+          "file": "packages/director/creative.ts",
+          "sha256": "be6646b4787444439f69c383f207bcaa791985504e52c8cd4e557fbeb5173630",
+          "chars": 28899
+        },
+        {
+          "file": "packages/story/planning-cache.ts",
+          "sha256": "c38c53b35782848edf3da22452ae8aa3683a8445f09992828f5613ba13b334ea",
+          "chars": 8025
+        },
+        {
+          "file": "docs/topics/reviews/camera-source-review-context-v1.md",
+          "sha256": "8b63d1d057e8db644d0dafbf4566b613add8224aaf551f8f38cfb001703220ff",
+          "chars": 5710
+        }
+      ],
+      "totalChars": 50586,
+      "status": "prepared-source-only-review",
+      "runtime": "NOT RUN",
+      "model": "cx/gpt-6.1-sol",
+      "reason": "One separately bounded source reviewer after Opus camera request returned invalid_response; no automatic same-model retry"
+    }
+  ],
+  "automaticRetry": false,
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false
+}

@@ -17,7 +17,7 @@ const repairPrefix='\n\nDomain validation failed: ';
  * bare/edited aggregate artifacts are never promoted to an accepted checkpoint. */
 export async function reuseAcceptedPlanning<T,R>(root:string,config:FactoryConfig,role:ModelRole,stage:string,request:ModelRequest,
   schema:ZodType<T,ZodTypeDef,any>,normalize:(value:T)=>R|Promise<R>,binding:unknown):Promise<{result:R}|undefined> {
-  if(role!=='planner'||! /^(?:story-analysis|character-bible|chapters|beats-[a-zA-Z0-9_.-]+)$/.test(stage))return;
+  if(!(role==='planner'&&/^(?:story-analysis|character-bible|chapters|beats-[a-zA-Z0-9_.-]+)$/.test(stage)||role==='camera'&&stage==='camera-direction'))return;
   const identity=planningCacheIdentity(config,role,request,schema,binding),jsonSchema=jsonSchemaFor(schema);
   let journal:AttemptRecord[];
   try {journal=(await fs.readFile(await safeRealPath(root,'logs/model-calls.jsonl'),'utf8')).trim().split(/\r?\n/u).filter(Boolean).map(line=>JSON.parse(line));}catch{return;}
@@ -43,6 +43,9 @@ export async function reuseAcceptedPlanning<T,R>(root:string,config:FactoryConfi
       if(!exactContext&&!characterCheckpoint)continue;
       const receiptBaseRequest=characterCheckpoint?{...request,context:input.context}:request;
       const receiptIdentity=characterCheckpoint?planningCacheIdentity(config,role,receiptBaseRequest,schema,binding):identity;
+      // Camera is a new role with an exact-settings contract, not a migration
+      // path for historical planner receipts lacking generation settings proof.
+      if(role==='camera'&&(receipt.cacheIdentity!==receiptIdentity||receipt.baseRequestHash!==hash(receiptBaseRequest)))continue;
       if(input.prompt!==request.prompt&&!input.prompt.startsWith(request.prompt+repairPrefix))continue;
       if(receipt.cacheIdentity!==undefined&&receipt.cacheIdentity!==receiptIdentity||receipt.baseRequestHash!==undefined&&receipt.baseRequestHash!==hash(receiptBaseRequest))continue;
       const requestHash=hash({role,operation:'structured',input,schema:jsonSchema,routing:candidates.map(candidate=>{

@@ -34,6 +34,7 @@ import {bodyRootAt} from '../animation/view-source-body.js';
 import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
 import {creativeActingBrief} from './acting-brief.js';
+import {directCameraStoryboard} from './camera-direction.js';
 import {applyTopicCast,topicContext,requireTopicProductionReady} from '../topics/prehistoric-life.js';
 import {loadSpriteSceneMotions,loadSpriteSceneSpeech} from '../motion/scene-source.js';
 import {loadSpriteMotionCatalog,validateSpriteCatalogSelection} from '../motion/catalog.js';
@@ -108,7 +109,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot,board));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
-      if(!shot.cinematic?.spriteStage)check(()=>{const profile=shotPerformer(shot,context.profile,context.rig).profile;validateCamera(shot,profile,actorViewActingClock(board,shot,profile.id));});
+      if(!shot.cinematic?.spriteStage)check(()=>{const profile=shotPerformer(shot,context.profile,context.rig).profile;validateCamera(shot,profile,actorViewActingClock(board,shot,profile.id),{worldShot:shot,board});});
       let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;
       let speech:Awaited<ReturnType<typeof loadSpriteSceneSpeech>>;
       try{motions=await loadSpriteSceneMotions(root,shot);speech=await loadSpriteSceneSpeech(root,shot,motions);}catch(error){failures.add(String(error));}
@@ -123,7 +124,9 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     return board;
   };
   const report=async (board:Storyboard,origin:'model'|'authored'|'offline',inputHash:string)=>{
+    board=await directCameraStoryboard(root,config,router,board,locks,{...context,origin,validate:value=>normalize(value,origin==='authored'?'authored':'model')});
     await writeJson(reportFile,{version:22,producer:DIRECTION_VERSION,origin,inputHash,storyboardHash:hash(board),
+      roles:{director:'storyboard',camera:'camera'},cameraReport:'work/camera-direction-report.json',
       visualAdvisories:castDesignAdvisories(board),
       configuredProvider:origin==='model'?config.models.storyboard.provider:null,configuredModel:origin==='model'?config.models.storyboard.model:null,
       canonicalFields:origin==='model'?['literal narration citations resolved to full original cues; static artwork citations included in shot provenance','scene/performance IDs and renderer recipe','model variants/evidence from sourced visualization','2D camera metadata','continuity from actual performance/model exit transforms']:[],
@@ -157,7 +160,12 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
   const cacheFile=path.join(root,'work/creative-storyboard-cache.json');
   if(await exists(cacheFile)){
     const cached=await readJson<{inputHash:string;storyboard:unknown}>(cacheFile);
-    if(cached.inputHash===inputHash){try{return await report(await normalize(StoryboardSchema.parse(cached.storyboard),'model'),'model',inputHash);}catch{/* Invalid edits are regenerated through the configured real role. */}}
+    if(cached.inputHash===inputHash){
+      let valid:Storyboard|undefined;
+      try{valid=await normalize(StoryboardSchema.parse(cached.storyboard),'model');}catch{/* Invalid director edits require regeneration. */}
+      // A camera provider/budget failure must not be treated as a rejected director design.
+      if(valid)return report(valid,'model',inputHash);
+    }
   }
   // A model response rejected by an earlier validator can become valid after a renderer repair.
   // Reuse only matching current request data/instructions; never relabel edited or unrelated output.
@@ -168,14 +176,15 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     for(const file of files){
       const attempt=await readJson<{status:string;request?:{system:string;context:unknown};response?:unknown;binding?:unknown}>(file);
       if(attempt.status!=='domain-rejected'||!attempt.response||hash(attempt.binding)!==hash(binding)||hash(attempt.request?.context)!==hash(requestContext)||attempt.request?.system!==generationSystem)continue;
-      try{
-        const board=await normalize(StoryboardSchema.parse(attempt.response),'model');
-        await writeJson(cacheFile,{inputHash,storyboard:board,revalidatedAttempt:path.relative(root,file).split(path.sep).join('/')});
-        return report(board,'model',inputHash);
-      }catch(error){
+      let board:Storyboard|undefined;
+      try{board=await normalize(StoryboardSchema.parse(attempt.response),'model');}catch(error){
         // Resume a matching rejected design with every current failure, keeping its creative work.
         // No response is edited or accepted here; the configured model still supplies the repair.
         initialRepair??={previous:attempt.response,feedback:error instanceof Error?error.message:String(error)};
+      }
+      if(board){
+        await writeJson(cacheFile,{inputHash,storyboard:board,revalidatedAttempt:path.relative(root,file).split(path.sep).join('/')});
+        return report(board,'model',inputHash);
       }
     }
   }

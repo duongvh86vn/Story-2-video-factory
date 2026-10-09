@@ -12,6 +12,8 @@ import {hasBodyViewManipulation} from '../animation/native-contact-arm.js';
 import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 import {boundProp,propPerformer} from './prop-owner.js';
 import {SOURCE_PROP_BINDING_VERSION} from './source-prop-identity.js';
+import {partAnchor} from '../host/controller.js';
+import {validateSourceGripWorld} from './source-grip-world.js';
 
 type Binding=CinematicPlan['propBindings'][number];
 const fail=(shot:Shot,message:string):never=>{throw new Error(`${shot.id}: needs-source-prop-binding: ${message}`);};
@@ -92,7 +94,13 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
         for(const ref of binding.sourceRefs)if(ref.kind==='narration'&&!narration.segments.some(s=>s.id===ref.segmentId&&s.text.normalize('NFC').includes(ref.quote.normalize('NFC'))))return fail(slice,'model source quote is not in the original narration');
         validateManipulationActionSlices(owned.performance,owned.actions,slice.startMs);
         const actions=owned.actions.filter(a=>a.sourceManipulation?.sourceId===source.id&&a.sourceManipulation.gestureId===owned.gesture.id);
-        if(actions.some(a=>a.target?.partId!==binding.partId||a.target.modelId!==slice.visualization!.modelId||a.target.anchor!=='center'||rigHand(a)!==rigHand(owned.gesture)))return fail(slice,'original contact action targets a different sourced entity/hand');
+        if(actions.some(a=>a.target?.partId!==binding.partId||a.target.modelId!==slice.visualization!.modelId||a.target.anchor==='label'||rigHand(a)!==rigHand(owned.gesture)))return fail(slice,'original contact action targets a different sourced entity/hand');
+        for(const action of actions){
+          if(action.target!.anchor==='handle'&&!next.art?.handleAnchor)return fail(slice,'original transport handle requires its explicit authored artwork anchor');
+          const anchor=partAnchor(slice,binding.partId,action.target!.anchor,p.stage.width,p.stage.height),grip={x:prop.origin.x+offset.x*p.scale,y:prop.origin.y+offset.y*p.scale};
+          if(Math.hypot(anchor.x-grip.x,anchor.y-grip.y)>1e-6&&Math.hypot(Math.round(anchor.x*1000)/1000-grip.x,Math.round(anchor.y*1000)/1000-grip.y)>1e-6)return fail(slice,'authored center/handle differs from the original physical prop grip');
+        }
+        validateSourceGripWorld(slice,next.part,source.startMs+owned.gesture.contactMs!,source.startMs+(owned.gesture.releaseMs??owned.gesture.endMs),{startMs:source.startMs,endMs:source.endMs});
         const other=[...(slice.host?.actions??[]),...(slice.cinematic?.actorScene?.supporting.flatMap(a=>a.actions)??[])].filter(a=>[a.target,a.secondTarget].some(t=>t?.partId===binding.partId)&&!actions.includes(a));
         if(other.some(a=>a.endMs>source.startMs+owned.gesture.contactMs!))return fail(slice,'another fixed target/action cannot follow an original moving model');
         // The full source statement can be declared on the contact-owning slice;
@@ -109,6 +117,6 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
 }
 export const sourcePropBindingDescription={version:SOURCE_PROP_BINDING_VERSION,
   scope:'complete original story-person/model/entity/art/source/action/clock binding and physical entry/exit candidate',
-  rule:'explicit binding ownerId on every source slice; stable canonical model origin/size/art/evidence and complete original narration witness; physical positions from actual original prop frame',
+  rule:'explicit binding ownerId on every source slice; stable canonical model origin/size/art/evidence and complete original narration witness; physical positions from actual original prop frame; explicit own authored handle matches actual original gripOffset; original person/model share one stage/floor and world cannot independently transform a physically bound entity',
   pending:['original world/event/interaction runtime and film acceptance','integrated source production audit and shared/sequential ownership','full runtime/art/motion/video/input/resume acceptance'],
   productionBinding:'needs-source-prop-binding',approved:false,productionReady:false,motionVerified:false};

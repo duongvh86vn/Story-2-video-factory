@@ -92,6 +92,10 @@
               "type": "string",
               "maxLength": 6000
             },
+            "camera_agent": {
+              "type": "boolean",
+              "default": true
+            },
             "minimum_host_speech_visibility": {
               "type": "number",
               "minimum": 0,
@@ -702,6 +706,79 @@
               },
               "additionalProperties": false,
               "default": {}
+            },
+            "camera": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "enum": [
+                        "gateway",
+                        "openai-compatible",
+                        "gemini",
+                        "deepseek",
+                        "ollama",
+                        "litellm",
+                        "claude-cli",
+                        "codex-cli",
+                        "mock"
+                      ],
+                      "default": "mock"
+                    },
+                    "model": {
+                      "type": "string",
+                      "minLength": 1,
+                      "default": "mock"
+                    },
+                    "base_url": {
+                      "type": "string"
+                    },
+                    "api_key_env": {
+                      "type": "string",
+                      "default": "MODEL_GATEWAY_KEY"
+                    },
+                    "temperature": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 2,
+                      "default": 0.2
+                    },
+                    "vision": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "timeout_ms": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "default": 120000
+                    },
+                    "input_cost_per_million": {
+                      "type": "number",
+                      "minimum": 0,
+                      "default": 0
+                    },
+                    "output_cost_per_million": {
+                      "type": "number",
+                      "minimum": 0,
+                      "default": 0
+                    },
+                    "command": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "max_call_cost_usd": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "coder": {
               "type": "object",
