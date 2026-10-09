@@ -21,7 +21,7 @@ import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNative
 import {nativeHeadSources,nativeHeadPixelScale} from './native-head-bank.js';
 import {nativeHeadTrackTimes} from './native-head-track.js';
 import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,bodyViewMouthLevel,validateBodyViewMouthActivity,bodyViewMouthDescription,BODY_VIEW_MOUTH_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS} from './body-view-mouth.js';
-import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
+import {validateSpeechSourceClock,speechSourceClockDescription,projectSpeechActivity,type SpeechSourceClock} from './speech-clock.js';
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
 import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
@@ -33,11 +33,13 @@ import {hasNativeHeadRear,hasNativeHeadSecondary,nativeHeadBankRearState,nativeH
 import {nativeHeadPaintDescription} from './native-head-paint.js';
 import {nativeRearFollowDescription} from './native-head-follow.js';
 import {moodPoses,expressionPose,type ExpressionPose} from './expression-pose.js';
-import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
-import {viewSourceGestureDefinition,sourceViewGestureAt} from './view-source-gesture.js';
+import {validateViewActingClock,sourceViewGazeAt,viewActingClockDescription,projectViewGazes,VIEW_GAZE_RAMP_MS,VIEW_BREATH_RAMP_MS,type ViewActingClock} from './view-acting-clock.js';
+import {viewSourceGestureDefinition,sourceViewGestureAt,projectViewSourceGestures} from './view-source-gesture.js';
 import {type ViewGazeTarget,ViewGazeTargetSchema,VIEW_ACTOR_GAZE_VERSION,viewGazeTargetTimes} from './view-gaze-target.js';
 import {VIEW_ACTING_CLOCK_VERSION,validateViewActingClockSource} from './view-acting-clock.js';
 import {sourceBodyPlan,validateBodySourcePlan} from './view-source-body.js';
+import {validateManipulationSourcePlan,manipulationSourcePlan,performanceProps,sourceManipulationTime,sourceManipulationGestureAt,sourceManipulationDescription} from './view-source-manipulation.js';
+import {projectViewExpressions} from './view-expression-track.js';
 import {sampleLunge,samplePhysicalLunge,type PhysicalLungeClock} from './lunge.js';
 import {usesReferenceBody,referenceBodyDescription,referenceBodyHeadAttachment,referenceGarmentMotion} from './forest-body-art.js';
 import {legGeometry} from './body-geometry.js';
@@ -142,6 +144,10 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
 export function validatePerformance(plan: PerformancePlan, profile:HostProfile):void {
   PerformancePlanSchema.parse(plan);
   if(plan.gazes.some(g=>'actorTarget' in g)&&(!usesBodyView(profile)||!hasBodyViewEyes(profile)&&!hasNativeHeadEyes(profile)))throw new Error('needs-actor-gaze: actor references require the registered native eye/body candidate');
+  if(plan.sourceManipulation){
+    if(!hasBodyViewManipulation(profile))throw new Error('needs-source-manipulation: select the explicit native manipulation candidate');
+    validateManipulationSourcePlan(plan);validatePerformance(manipulationSourcePlan(plan),profile);
+  }
   if(plan.sourceBody){validateFixedBodyView(plan,profile);validatePerformance(sourceBodyPlan(plan),profile);}
   validateReferenceHead(profile,[plan.headView,...(plan.headTurns??[]).map(turn=>turn.direction)]);
   if(usesReferenceBody(profile)&&plan.turns?.length)throw new Error('needs-body-view: source body v1 has a fixed authored torso; full body turns require side/rear artwork.');
@@ -683,14 +689,33 @@ function sourceChinPoint(plan:PerformancePlan,profile:HostProfile,timeMs:number,
 }
 
 /** Pure random-access evaluation: no state accumulated from previous frames. */
+/** Release may precede this camera shot. Re-evaluate the real original owned
+ * palm under the full run/body/head/attention/speech context, never clamp its
+ * time to the current cut or invent a release anchor. Props remain immutable.
+ * Supplied speech data is retained for the discarded face evaluation; this
+ * geometry query does not create or certify narration outside that data. */
+function originalManipulationContext(plan:PerformancePlan,clock:ViewActingClock,activity:SpeechActivity,sourceClock?:SpeechSourceClock){
+  if(!plan.sourceManipulation)throw new Error('needs-source-manipulation: missing original ownership');
+  validateViewActingClock(plan,clock);
+  if(activity.intervals.length&&!sourceClock)throw new Error('needs-source-manipulation: original release needs the owned narration activity clock');
+  const start=clock.runStartMs,end=clock.runEndMs;
+  const full:PerformancePlan={...plan,durationMs:end-start,gazes:projectViewGazes(clock.gazes,start,end),
+    gestures:projectViewSourceGestures(clock.gestures,start,end,start,end),expressions:clock.expressions?projectViewExpressions(clock.expressions,start,end):[]};
+  return {plan:full,clock:{...clock,startMs:start,endMs:end},sourceClock:sourceClock?{...sourceClock,startMs:start,endMs:end}:undefined,
+    activity:sourceClock?projectSpeechActivity(sourceClock.activity,start,end):activity};
+}
 export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity,sourceClock?:SpeechSourceClock,actingClock?:ViewActingClock):FrameState {
+  return samplePerformanceState(plan,profile,time,activity,sourceClock,actingClock,true);
+}
+function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:number,activity:SpeechActivity,sourceClock:SpeechSourceClock|undefined,actingClock:ViewActingClock|undefined,includeProps:boolean):FrameState {
+  if(plan.sourceManipulation){validateManipulationSourcePlan(plan);if(!hasBodyViewManipulation(profile)||!actingClock)throw new Error('needs-source-manipulation: native selection and complete owned clock required');}
   if(plan.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
   if(plan.sourceBody&&!actingClock)throw new Error('needs-view-body-phase: source body requires its complete storyboard/run context');
   if(plan.sourceHead&&!actingClock)throw new Error('needs-head-source-phase: source head requires its complete storyboard/run context');
   if(plan.gestures.some(g=>g.sourceSpan)&&!actingClock)throw new Error('needs-view-gesture-phase: source gesture requires its complete storyboard/run context');
   if(actingClock){
-    if(!usesBodyView(profile)||!hasNativeHeadBank(profile)&&!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)&&!hasBodyViewLocomotion(profile)&&!hasBodyViewSecondary(profile))throw new Error('needs-view-acting-phase: select a registered native head/mouth/eyes/locomotion/secondary candidate');
+    if(!usesBodyView(profile)||!hasNativeHeadBank(profile)&&!hasBodyViewSpeech(profile)&&!hasBodyViewEyes(profile)&&!hasBodyViewLocomotion(profile)&&!hasBodyViewSecondary(profile)&&!hasBodyViewManipulation(profile))throw new Error('needs-view-acting-phase: select a registered native head/mouth/eyes/locomotion/secondary/manipulation candidate');
     if(actingClock.ownerId!==profile.id)throw new Error('needs-view-acting-phase: actor profile mismatch');
     validateViewActingClock(plan,actingClock);
     if((hasBodyViewExpressions(profile)||hasNativeHeadBank(profile))&&!actingClock.expressions)throw new Error('needs-view-expression-phase: selected expressions/head bank need the complete original run track');
@@ -703,9 +728,10 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
   if(usesBodyView(profile)&&activity.intervals.length&&!hasBodyViewSpeech(profile)&&!hasNativeHeadSpeech(profile))throw new Error('needs-view-voice-animation: authored-view speech requires an explicit registered mouth candidate');
   if(hasBodyViewManipulation(profile))validateNativeContactBodyClock(plan,actingClock);
   const t=clamp(time,0,plan.durationMs),{physical,m,s,root,walk,emotion,pose,air,orientation,bodyPosture,lean,pelvis,bend,kneeSeatWeight,seatProgress}=bodyStateAt(plan,profile,t,actingClock);
+  const propTime=sourceManipulationTime(plan,actingClock,t),propGestures=plan.sourceManipulation?.gestures??plan.gestures;
   const resolvedGesture=(side:RigHand)=>{
-    const source=actingClock?sourceViewGestureAt(actingClock.gestures,t+actingClock.startMs,side):undefined,gesture=source??gestureAt(plan,t,side);
-    return {gesture,timeMs:source?t+actingClock!.startMs:t,entryTimeMs:source?source.startMs-actingClock!.startMs:gesture?.startMs??0};
+    const source=actingClock?sourceViewGestureAt(actingClock.gestures,t+actingClock.startMs,side):undefined,contact=sourceManipulationGestureAt(plan,actingClock,t,side),gesture=source??contact??gestureAt(plan,t,side);
+    return {gesture,timeMs:source?t+actingClock!.startMs:contact?propTime:t,entryTimeMs:source?source.startMs-actingClock!.startMs:contact?contact.startMs+plan.sourceManipulation!.startMs-actingClock!.startMs:gesture?.startMs??0};
   };
   const gestureStates={left:resolvedGesture('left'),right:resolvedGesture('right')};
   const transforms:Record<string,string>={},face:FrameState['face']={},hands={} as FrameState['hands'];
@@ -826,7 +852,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     // contract while making ink/bones stop at the measured source cuff.
     const wrist=handAttachment?mix(arm.joint,arm.end,lengths.lower*s/lowerToGrip):arm.end;
     if(spear&&arm.error>.01)throw new Error(`${spear.track.id}: ${side} hand cannot reach spear grip at ${t}ms (${arm.error.toFixed(2)}px)`);
-    if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
+    if(gesture&&contacts(gesture)&&gestureTime>=gesture.contactMs!&&gestureTime<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
     // Frontal candidates use the full planar arm, with no knee-style depth
     // shortening to disguise a folded elbow. Authored depth/profile arms are
     // still pending; the shape guard rejects an unconvincing reachable chain.
@@ -1003,7 +1029,7 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
   }
   const props:FrameState['props']={},contactErrors:FrameState['contactErrors']={left:0,right:0};let contactError=0;
-  for(const prop of plan.props){
+  for(const prop of includeProps?performanceProps(plan):[]){
     const spear=spearStates.find(c=>c.track.propId===prop.id);
     if(spear){
       const state=spear.state;
@@ -1014,36 +1040,37 @@ export function samplePerformance(plan:PerformancePlan,profile:HostProfile,time:
     }
     let point=prop.origin,attached=false;
     const offset=prop.gripOffset??{x:0,y:0};
-    for(const g of chronological(plan.gestures).filter(g=>attaches(g)&&g.propId===prop.id)){
-      if(g.releaseMs!==undefined&&t>=g.releaseMs){
+    for(const g of chronological(propGestures).filter(g=>attaches(g)&&g.propId===prop.id)){
+      if(g.releaseMs!==undefined&&propTime>=g.releaseMs){
         if(g.action==='drop'){
           // Evaluate the actual hand without prop recursion; no assumed release anchor.
-          const bare={...plan,props:[]},release=samplePerformance(bare,profile,g.releaseMs,activity,sourceClock,actingClock).hands[rigHand(g)];
-          const prior=samplePerformance(bare,profile,Math.max(0,g.releaseMs-1),activity,sourceClock,actingClock).hands[rigHand(g)];
+          const original=plan.sourceManipulation?originalManipulationContext(plan,actingClock!,activity,sourceClock):{plan,clock:actingClock,activity,sourceClock};
+          const release=samplePerformanceState(original.plan,profile,g.releaseMs,original.activity,original.sourceClock,original.clock,false).hands[rigHand(g)];
+          const prior=samplePerformanceState(original.plan,profile,Math.max(0,g.releaseMs-1),original.activity,original.sourceClock,original.clock,false).hands[rigHand(g)];
           const releasePoint={x:release.x-offset.x*s,y:release.y-offset.y*s},destination={x:g.destination!.x-offset.x*s,y:g.destination!.y-offset.y*s};
-          point=sampleFallingObject({releaseMs:g.releaseMs,landingMs:g.landingMs!,release:releasePoint,destination,velocityY:(release.y-prior.y)*1000,velocityX:(release.x-prior.x)*1000},t);
+          point=sampleFallingObject({releaseMs:g.releaseMs,landingMs:g.landingMs!,release:releasePoint,destination,velocityY:(release.y-prior.y)*1000,velocityX:(release.x-prior.x)*1000},propTime);
           if(point.x<0||point.x>plan.stage.width||point.y<0||point.y>plan.stage.groundY)throw new Error(g.id+': falling prop leaves the physical stage');
         }else point={x:g.destination!.x-offset.x*s,y:g.destination!.y-offset.y*s};
         attached=false;
       }
-      else if(t>=g.contactMs!){const hand=hands[rigHand(g)];point={x:hand.x-offset.x*s,y:hand.y-offset.y*s};attached=true;}
+      else if(propTime>=g.contactMs!){const hand=hands[rigHand(g)];point={x:hand.x-offset.x*s,y:hand.y-offset.y*s};attached=true;}
     }
     props[prop.id]={point,attached};transforms[`prop-${prop.id}`]=transform(point,0,s);
   }
   // Reuse this physical source palm above its real owned glyph while held.
   // Other arm/hand depth remains unchanged, and release restores that depth.
   if(hasBodyViewManipulation(profile))for(const side of ['left','right'] as const){
-    const held=plan.gestures.some(g=>attaches(g)&&rigHand(g)===side&&g.propId&&props[g.propId]?.attached&&t>=g.contactMs!&&
-      (g.releaseMs===undefined?t<=g.endMs:t<g.releaseMs));
+    const held=propGestures.some(g=>attaches(g)&&rigHand(g)===side&&g.propId&&props[g.propId]?.attached&&propTime>=g.contactMs!&&
+      (g.releaseMs===undefined?propTime<=g.endMs:propTime<g.releaseMs));
     face[`hand-${side}-prop-slot`]={opacity:held?1:0};
     if(held){face[`hand-${side}-front-slot`]={opacity:0};face[`hand-${side}-back-slot`]={opacity:0};}
   }
-  for(const side of ['left','right'] as const){const gesture=activeGestures[side];
-  if(gesture&&contacts(gesture)&&t>=gesture.contactMs!&&t<=recoveryStart(gesture)){
+  for(const side of ['left','right'] as const){const gesture=activeGestures[side],contactTime=gestureStates[side].timeMs;
+  if(gesture&&contacts(gesture)&&contactTime>=gesture.contactMs!&&contactTime<=recoveryStart(gesture)){
     const sourceShoulder=m.shoulders?.[side];
     const shoulder=toWorld(sourceShoulder?.x??m.shoulderOffset*(side==='left'?-1:1),sourceShoulder?.y??m.shoulderY-m.pelvisY);
     const anchor=add(shoulder,rotate({x:(gesture.carryOffset?.x??(side==='left'?-50:50))*s,y:(gesture.carryOffset?.y??35)*s},lean));
-    const expected=(gesture.action==='carry'||gesture.action==='drop')?goal(gesture,hands[side],chinAt(side),anchor,t,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((t-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
+    const expected=(gesture.action==='carry'||gesture.action==='drop')?goal(gesture,hands[side],chinAt(side),anchor,contactTime,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((contactTime-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
     contactErrors[side]=distance(hands[side],expected);contactError=Math.max(contactError,contactErrors[side]);
     if(contactErrors[side]>1)throw new Error(`${gesture.id}: ${side} hand misses contact anchor at ${t}ms (${contactErrors[side].toFixed(2)}px)`);
   }
@@ -1119,6 +1146,11 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
   if(actingClock)validateViewActingClock(plan,actingClock);
   const times=new Set<number>([0,plan.durationMs]);
   if(actingClock?.headMotion)for(const global of nativeHeadTrackTimes(actingClock.headMotion))for(const delta of [-.01,0,.01])times.add(global-actingClock.startMs+delta);
+  if(plan.sourceManipulation)for(const g of plan.sourceManipulation.gestures){
+    const offset=plan.sourceManipulation.startMs-actingClock!.startMs;
+    for(const at of [g.startMs,g.contactMs,g.releaseMs,g.landingMs,g.endMs,recoveryStart(g),g.action==='carry'||g.action==='drop'?g.contactMs!+CARRY_TRANSITION_MS:undefined,g.action==='carry'&&g.releaseMs!==undefined?g.releaseMs-CARRY_TRANSITION_MS:undefined])
+      if(at!==undefined)for(const delta of [-.01,0,.01])times.add(at+offset+delta);
+  }
   const physical=sourceBodyPlan(plan),motionOffset=plan.sourceBody?plan.sourceBody.startMs-actingClock!.startMs:0;
   const addSecondaryTime=(at:number)=>{times.add(at);if(hasBodyViewSecondary(profile)||hasNativeHeadSecondary(profile))for(const delay of SECONDARY_MOTION_DELAYS_MS)times.add(at+delay);};
   const addMotionTime=(at:number)=>{addSecondaryTime(at+motionOffset);if(hasBodyViewLocomotion(profile))times.add(at+motionOffset+VIEW_CLOTH_LAG_MS);};
@@ -1263,6 +1295,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       clock:actingClock?'complete original expression run':'shot-local diagnostic expressions',sourceTrackHash:hash(actingClock?.expressions??plan.expressions),audioVerified:false}}:{}),
     ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),
+    ...(plan.sourceManipulation?{sourceManipulation:{...sourceManipulationDescription,sourceHash:hash(plan.sourceManipulation),offsetMs:plan.sourceManipulation.startMs-actingClock!.startMs,source:plan.sourceManipulation}}:{}),
     ...(hasBodyViewManipulation(profile)?{bodyManipulation:{...nativeManipulationDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:'shot-local contact/release with current original body state; no cross-cut prop clock',contacts:plan.gestures.filter(isNativeContactGesture).map(g=>({id:g.id,hand:rigHand(g),action:g.action,window:nativeContactWindow(g)})),motionVerified:false}}:{}),
     ...(hasBodyViewSeat(profile)?{bodySeat:{...nativeSeatDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,

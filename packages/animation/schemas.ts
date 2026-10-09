@@ -80,6 +80,26 @@ export const GestureSchema = z.object({ ...Interval, id: Id,
   sourceSpan:GestureSourceSpanSchema.optional(),
   propId: Id.optional(), contactMs: Time.optional(), releaseMs: Time.optional(), landingMs:Time.optional(), carryOffset: PointSchema.optional(),
 }).strict();
+export const PropSchema=z.object({id:Id,origin:PointSchema,destination:PointSchema.optional(),gripOffset:PointSchema.optional(),attachedTo:z.enum(['left-hand','right-hand']).optional(),kind:z.enum(['generic','spear']).optional(),length:z.number().finite().min(50).max(600).optional()}).strict().superRefine((prop,ctx)=>{
+  if(prop.kind!=='spear'&&(prop.length??0)>200)ctx.addIssue({code:'custom',path:['length'],message:'Only a spear has the extended 600-unit shaft range.'});
+});
+export const MANIPULATION_SOURCE_VERSION='native-source-manipulation-1' as const;
+/** Complete actor-owned hand/object history; times are relative to startMs,
+ * never clipped/restarted by a shot. This is separate from point/think spans. */
+export const ManipulationSourceSchema=z.object({version:z.literal(MANIPULATION_SOURCE_VERSION),id:Id,startMs:Time,endMs:Time,
+  props:z.array(PropSchema).max(16),gestures:z.array(GestureSchema).min(1).max(32),
+}).strict().superRefine((source,ctx)=>{
+  const duration=source.endMs-source.startMs,props=new Set(source.props.map(p=>p.id));
+  if(duration<=0||props.size!==source.props.length||new Set(source.gestures.map(g=>g.id)).size!==source.gestures.length)ctx.addIssue({code:'custom',message:'Invalid original manipulation span or duplicate identity'});
+  if(source.props.some(p=>p.kind==='spear'))ctx.addIssue({code:'custom',path:['props'],message:'Original manipulation does not register a spear grip track'});
+  for(const g of source.gestures){
+    if(!['operate','pick-place','carry','drop'].includes(g.action)||!g.hand||g.elbowPole!=='rest'||g.sourceSpan||!g.target||g.contactMs===undefined||g.startMs<0||g.endMs>duration||g.endMs<=g.startMs)ctx.addIssue({code:'custom',path:['gestures'],message:'Original contact needs its own explicit action/hand/rest pole/target/clock'});
+    if(g.propId&&!props.has(g.propId)||g.action!=='operate'&&!g.propId)ctx.addIssue({code:'custom',path:['gestures'],message:'Original attachment needs a known own prop'});
+  }
+  for(const hand of ['left','right'] as const){let end=0;for(const g of source.gestures.filter(g=>g.hand===hand).sort((a,b)=>a.startMs-b.startMs)){if(g.startMs<end)ctx.addIssue({code:'custom',path:['gestures'],message:'Original hand ownership overlaps'});end=g.endMs;}}
+  for(const p of source.props)if(source.gestures.filter(g=>g.propId===p.id&&g.action!=='operate').length!==1)ctx.addIssue({code:'custom',path:['props'],message:'One complete own attachment per prop; handoff is not registered'});
+});
+export type ManipulationSource=z.infer<typeof ManipulationSourceSchema>;
 export const SpearTrackSchema=z.object({...Interval,id:Id,propId:Id,hand:RigHandSchema,
   action:z.enum(['hold','thrust']),grip:PointSchema,aim:PointSchema,
   twoHands:z.boolean().default(true),secondaryOffset:z.number().finite().min(-200).max(-10),
@@ -102,13 +122,12 @@ export const PerformancePlanSchema = z.object({
   supports:z.array(SeatSupportSchema).max(12).optional(),
   walks: z.array(WalkSchema), jumps:z.array(JumpSchema).max(16).optional(), gestures: z.array(GestureSchema),spears:z.array(SpearTrackSchema).max(8).optional(),
   sourceBody:BodySourceSchema.optional(),
+  sourceManipulation:ManipulationSourceSchema.optional(),
   sourceHead:NativeHeadTrackSchema.optional(),
   lunge:LungeSchema.optional(),
   expressions: z.array(z.object({ ...Interval, mood: z.enum(Moods) }).strict()),
   gazes: z.array(GazeSchema),
-  props: z.array(z.object({ id: Id, origin: PointSchema, destination: PointSchema.optional(), gripOffset: PointSchema.optional(), attachedTo:z.enum(['left-hand','right-hand']).optional(),kind:z.enum(['generic','spear']).optional(),length:z.number().finite().min(50).max(600).optional() }).strict().superRefine((prop,ctx)=>{
-    if(prop.kind!=='spear'&&(prop.length??0)>200)ctx.addIssue({code:'custom',path:['length'],message:'Only a spear has the extended 600-unit shaft range.'});
-  })),
+  props: z.array(PropSchema),
 }).strict();
 export type PerformancePlan = z.infer<typeof PerformancePlanSchema>;
 export type Gesture = z.infer<typeof GestureSchema>;

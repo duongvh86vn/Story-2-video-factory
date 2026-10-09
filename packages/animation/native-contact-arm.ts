@@ -6,9 +6,10 @@ import {bodyViewRegistrations} from './body-view-registration.js';
 import {forestHandRegistration,forestHandDescription} from './forest-hand.js';
 import {articulatedPoseFromDirections,type ArticulatedArmReference} from './arm-trajectory.js';
 import type {ViewActingClock} from './view-acting-clock.js';
+import {manipulationSourcePlan} from './view-source-manipulation.js';
 
 export const BODY_VIEW_MANIPULATION_SELECTION='registered-manipulation-v1' as const;
-export const NATIVE_CONTACT_ARM_VERSION='native-contact-angle-1' as const;
+export const NATIVE_CONTACT_ARM_VERSION='native-contact-angle-2' as const;
 const contactActions=['operate','pick-place','carry','drop'] as const;
 export const isNativeContactGesture=(g:Gesture)=>contactActions.some(action=>action===g.action);
 export const hasBodyViewManipulation=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodyManipulation===BODY_VIEW_MANIPULATION_SELECTION;
@@ -61,6 +62,7 @@ export function validateNativeManipulation(plan:PerformancePlan,profile:Pick<Hos
 export function validateNativeContactBodyClock(plan:PerformancePlan,clock?:ViewActingClock){
   if(plan.sourceBody&&(!clock||clock.ownerId!==plan.leadCharacterId||clock.endMs-clock.startMs!==plan.durationMs||clock.startMs<plan.sourceBody.startMs||clock.endMs>plan.sourceBody.endMs))
     throw new Error('needs-view-manipulation: original body contact needs its complete owned shot clock');
+  if(plan.sourceManipulation)validateNativeContactBodyClock(manipulationSourcePlan(plan));
   const body=plan.sourceBody,offset=body?body.startMs-clock!.startMs:0;
   for(const g of plan.gestures.filter(isNativeContactGesture)){
     const window=nativeContactWindow(g),lift=window.entering?0:250,lower=window.ownsExit?0:250;
@@ -111,7 +113,7 @@ export function sampleNativeContactArm(shoulder:Point,neutral:Point,activeTarget
   return {joint,end,upper:ua-90,lower:la-90,reachable:true,error};
 }
 export const nativeManipulationDescription={version:NATIVE_CONTACT_ARM_VERSION,selection:BODY_VIEW_MANIPULATION_SELECTION,
-  fingerprint:hash({version:NATIVE_CONTACT_ARM_VERSION,bindings:nativeManipulationBindings,handContract:forestHandDescription,branch:'explicit-rest-entry',approach:'quintic-angular',corridorDeg:90,bodyClock:'original body run/shot offset; same lift/lower/jump ownership rules',painter:'one stepped own palm slot after actual prop glyph',shapeFlexionDeg:125,contactTolerancePx:.001}),
+  fingerprint:hash({version:NATIVE_CONTACT_ARM_VERSION,bindings:nativeManipulationBindings,handContract:forestHandDescription,branch:'explicit-rest-entry',approach:'quintic-angular',corridorDeg:90,bodyClock:'original body run/shot offset; same lift/lower/jump ownership rules',sourceContactClock:'native-source-manipulation-1; unchanged full history and actual original release palm',painter:'one stepped own palm slot after actual prop glyph',shapeFlexionDeg:125,contactTolerancePx:.001}),
   bindings:nativeManipulationBindings,supported:['inspect','operate','pick-place','carry','drop'],
   contract:'Explicit own native body/view; each per-side source cuff/palm and fixed chain retained. elbowPole=rest is required for contact. C2 angle approach/recovery; the owned phase follows the real world/body-relative grip with fixed lengths. Shape limits and exact contact still apply. Existing forward native locomotion/seat selection is required for body movement.',
   scope:'shot-local per-person contact; complete in-shot placement still required by bound story models',

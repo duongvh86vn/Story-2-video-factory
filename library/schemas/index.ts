@@ -11,7 +11,7 @@ import { ExplanationPlanSchema } from '../../packages/explainer/schemas.js';
 import { VoiceReportSchema, ActivitySchema } from '../../packages/voice/schemas.js';
 import {SpeechSourceClockSchema} from '../../packages/animation/speech-clock.js';
 import {ViewActingClockSchema} from '../../packages/animation/view-acting-clock.js';
-import {BodySourceSchema,GestureSourceSpanSchema} from '../../packages/animation/schemas.js';
+import {BodySourceSchema,GestureSourceSpanSchema,ManipulationSourceSchema} from '../../packages/animation/schemas.js';
 import { ConfigSchema } from '../../packages/core/config.js';
 import { GeneratedDraftSchema, ScriptGenerationReportSchema } from '../../packages/orchestrator/script-generation.js';
 import {ActorMotionSchema,MotionRegistrationSchema,SpriteClipSchema} from '../../packages/motion/schemas.js';
@@ -40,7 +40,7 @@ export const schemaLibrary:Record<string,z.ZodTypeAny> = {
   'scene-files': SceneFilesSchema, review: ReviewSchema, 'project-state': ProjectStateSchema,
   'chapter-plan': ChapterPlanSchema, 'beat-plan': BeatPlanSchema,
   config:ConfigSchema,script:ScriptDocumentSchema,'host-profile':HostProfileSchema,'host-rig':HostRigSchema,'host-timeline':HostTimelineSchema,
-  'explanation-plan':ExplanationPlanSchema,'voice-report':VoiceReportSchema,'speech-activity':ActivitySchema,'speech-source-clock':SpeechSourceClockSchema,'view-acting-clock':ViewActingClockSchema,'gesture-source-span':GestureSourceSpanSchema,'body-source':BodySourceSchema,
+  'explanation-plan':ExplanationPlanSchema,'voice-report':VoiceReportSchema,'speech-source-clock':SpeechSourceClockSchema,'speech-activity':ActivitySchema,'view-acting-clock':ViewActingClockSchema,'gesture-source-span':GestureSourceSpanSchema,'body-source':BodySourceSchema,'manipulation-source':ManipulationSourceSchema,
   'generated-script':GeneratedDraftSchema,'script-generation':ScriptGenerationReportSchema,
   'actor-motion':ActorMotionSchema,'actor-motion-registration':MotionRegistrationSchema,'sprite-clip':SpriteClipSchema,
   'sprite-stage':SpriteStageSchema,

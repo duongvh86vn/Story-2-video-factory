@@ -19,7 +19,7 @@ export function sourceBodyPlan(plan:PerformancePlan):PerformancePlan{
   if(plan.sourceBody===undefined)return plan;
   validateBodySourcePlan(plan);
   const source=plan.sourceBody;
-  return {...plan,sourceBody:undefined,durationMs:source.endMs-source.startMs,
+  return {...plan,sourceBody:undefined,sourceManipulation:undefined,durationMs:source.endMs-source.startMs,
     walks:source.walks,jumps:source.jumps,postures:source.postures,entryPosture:source.entryPosture,supports:source.supports,
     gestures:[],gazes:[],expressions:[]};
 }

@@ -56,6 +56,10 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     if(g.action==='carry')for(const at of [g.contactMs!+250,(g.releaseMs??g.endMs)-250])if(at>=g.startMs&&at<=g.endMs)times.add(at);
   }
   if(actingClock){
+    if(actingClock.manipulationMotion)for(const g of actingClock.manipulationMotion.gestures){
+      for(const at of [g.startMs,g.contactMs,g.releaseMs,g.landingMs,g.endMs,g.action==='carry'||g.action==='drop'?g.contactMs!+250:undefined,g.action==='carry'&&g.releaseMs!==undefined?g.releaseMs-250:undefined])
+        if(at!==undefined)for(const delta of [-.01,0,.01])times.add(actingClock.manipulationMotion.startMs+at-actingClock.startMs+delta);
+    }
     if(actingClock.headMotion)for(const global of nativeHeadTrackTimes(actingClock.headMotion))for(const delta of [-.01,0,.01])times.add(global-actingClock.startMs+delta);
     for(const source of actingClock.actorTargets??[])for(const at of viewGazeTargetTimes(source))times.add(at-actingClock.startMs);
     for(const g of actingClock.gestures)for(const at of [g.startMs,g.reachMs,g.recoverMs,g.endMs])times.add(at-actingClock.startMs);

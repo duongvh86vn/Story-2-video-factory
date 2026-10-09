@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.65-native-manipulation",
+  "version": "forest-tribe-0.66-source-manipulation-clock",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -21,22 +21,48 @@
     "runtimeVerified": false,
     "productionAcceptance": false,
     "codeHashes": {
-      "packages/director/props.ts": "b5b8e064c34c4bac08b941416df0c262ab4165d13fc22c66ddc60fdbf66ae82b",
+      "packages/director/props.ts": "435610d1391c0dab61a3e08ad8a9dd28f6e010f8502a0c1fcf102a51466bd9e4",
       "packages/director/prop-motion.ts": "d0351cb4e010eb3bddd2818cf9bfb9f94f1c091a45fa6ff350865f3bc4b62cc2",
-      "packages/director/camera.ts": "399bc3a0ecd5894a00de3025a355ec0a115ebaee5ab8d66036e27f866fc67e30",
+      "packages/director/camera.ts": "7a0f05a4d10e27338e5ade60bda35b397bf2ad12f1d48c34ce2af6360d922779",
       "packages/director/index.ts": "65aff5f300494a660271e9227f38506d0bb305a96fd5f59cfe1c4d411c84629e",
-      "packages/director/schemas.ts": "ac1da6804cb02a9631c68789ef5bfceac1fbbaa48df47c6d2093700a02651138",
-      "packages/director/acting-brief.ts": "7ab786fe0ab05c84c98cb9b5d98fd4f67d27e5c03bc85787df8eddb78c4f8d1b",
+      "packages/director/schemas.ts": "d666d9fd831b06e626fe447dfe2bae09e56a4f9bc0593fa84bb0c7fde110c024",
+      "packages/director/acting-brief.ts": "22ac3029aa5b857c8d9a3e6bb1766b620c73897d602c553cc13056e9967bd1f6",
       "library/shots/cinematic.ts": "a13b357b1bbdc48f72f0159b07f60b387a12c5def959f2fdb51042c9442effc7",
-      "library/shots/cinematic-models.ts": "9d28093dfc23ba675bf8c966f9d3260904a38c38dd73dba8803d12668aab428e",
+      "library/shots/cinematic-models.ts": "a64e973dd538508323d70186e4e331ee5112c22def6369a40a61444760de282a",
       "library/prompts/creative-director.md": "1b42f03f5facdbed149068abda15952a32f365c08669d2a3773cdf5b099d1c90",
       "apps/server/cinematic.ts": "ee9b45f5909b68a6a732705130bb767d6207618bd2dcf8962fb5ee7c0ffa49fa"
     }
   },
+  "sourceManipulation": {
+    "version": "native-source-manipulation-1",
+    "selection": "explicit performance.sourceManipulation",
+    "clock": "complete run-relative hand/prop history repeated byte-equivalently on every explicitly continuous actor camera slice; matching original sourceBody required",
+    "invariant": "source actor/cast/view/root/stage/scale and original body/action/hand/target/release/grip/prop identity stay authoritative; local props/contact cannot approximate or restart the source",
+    "scope": "single-person one complete attachment per prop; no cross-person/shared/sequential handoff or new tool pose",
+    "approved": false,
+    "productionReady": false,
+    "motionVerified": false,
+    "productionBinding": "needs-source-prop-binding",
+    "codeHashes": {
+      "packages/animation/view-source-manipulation.ts": "ce1b729014d6bf0854295221353b963679d7399d0421ccece5773c866f1bc45c",
+      "packages/animation/schemas.ts": "e567ad54c3cf95d4f04d9ef9c1e5ad9af291e35b98bf28e8b257840154a98c6f",
+      "packages/animation/compiler.ts": "67fb16349e9960c04ffe969ad88f73a109330056e13f2969c67cab828ee2327d",
+      "packages/animation/view-source-body.ts": "57a34a4593c922c9c66f93fcf767dd8aec5e7f900b91ed815e9fced0852b677e",
+      "packages/animation/view-acting-clock.ts": "0ef35a8989470a8333df620517c6a2064215c122a973d4772af47fb8142a4e4c",
+      "packages/animation/native-contact-arm.ts": "c8a44bd1b3365cab8f239b82de3ff8cf886d872fc9fbce5cced2aac02125da27",
+      "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
+      "packages/actors/view-acting-clock.ts": "62953cbce054fc8c2f4024f783a62cfe5ce134d470c2ee57ab8653a90a3c9bc8",
+      "packages/director/acting-repair.ts": "6d3d0a2aed15c2f3657c9a1c56e6ab4cfadd693c245edd9d5c250a3ddcf307c1",
+      "packages/director/acting-brief.ts": "22ac3029aa5b857c8d9a3e6bb1766b620c73897d602c553cc13056e9967bd1f6",
+      "packages/director/camera.ts": "7a0f05a4d10e27338e5ade60bda35b397bf2ad12f1d48c34ce2af6360d922779",
+      "packages/director/props.ts": "435610d1391c0dab61a3e08ad8a9dd28f6e010f8502a0c1fcf102a51466bd9e4",
+      "library/schemas/index.ts": "901cd056d9acf304a4e873cfd1c09064e9de597224c87d1b91896eec84dd601a"
+    }
+  },
   "nativeManipulation": {
-    "version": "native-contact-angle-1",
+    "version": "native-contact-angle-2",
     "selection": "registered-manipulation-v1",
-    "fingerprint": "243b93547ef6e694528caf775da570f2e6993cde4925a6f8c84e09ca913ada83",
+    "fingerprint": "cbfc2963f63ec92e732fb3418b5309c837d9a2473ae745e547ea95dc04691529",
     "bindings": {
       "bodyViews": {
         "lila": {
@@ -368,21 +394,21 @@
     "productionReady": false,
     "motionVerified": false,
     "codeHashes": {
-      "packages/animation/native-contact-arm.ts": "e5dfc47263da48440eb3df654586d3fa8e5c3393cb98765d684f9f1b46cf6c77",
-      "packages/animation/compiler.ts": "b341a0bbb77d26f51fe13314a46d44b2791e505f8b9ce2a75a26debd3b6bae55",
+      "packages/animation/native-contact-arm.ts": "c8a44bd1b3365cab8f239b82de3ff8cf886d872fc9fbce5cced2aac02125da27",
+      "packages/animation/compiler.ts": "67fb16349e9960c04ffe969ad88f73a109330056e13f2969c67cab828ee2327d",
       "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
       "packages/animation/rig.ts": "e28f5d076aa7211179582f7cb01db7fe0f6b675379004a869ac7dc97e586d96f",
-      "packages/animation/scene.ts": "934e89805cf0ea20471d278d8a4906d2352ef74c7841ba405bf32add8ace2fe4",
+      "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
       "packages/animation/body-view-art.ts": "79f315c05716d4e951e8a445cbc6b9bd73b4f0723b1f7f5bbc05551a663012e7",
-      "packages/animation/forest-body-art.ts": "dbcb213b8f2fe7d050505cdd90ba316f5383b958b6efd6896a324bb14051f2bf",
+      "packages/animation/forest-body-art.ts": "19b2db55a05722a8b3e8f1c91e1f1b3ef5d1ed156567e005a950bcf1729ec6d5",
       "packages/host/schemas.ts": "ce505440d4aaf32bddd7a29fbd70d89438349a49d694a3b044c647fe8d9b8df7",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/body-workbench.ts": "9247143df6f5cc439e0fd80434dcc2a9c3cab016fb2255e4f31de4fcd3ea97a2",
-      "packages/topics/prehistoric-life.ts": "2cf872ab907bed59c502f8234ca27164874597b609dc7d1522d03b80bff7f72c",
-      "packages/director/acting-brief.ts": "7ab786fe0ab05c84c98cb9b5d98fd4f67d27e5c03bc85787df8eddb78c4f8d1b",
-      "packages/director/schemas.ts": "ac1da6804cb02a9631c68789ef5bfceac1fbbaa48df47c6d2093700a02651138",
+      "packages/topics/prehistoric-life.ts": "75a1d40417727ad7d904b2bce069a9e6914f82a9d60ac01d2747d245daa4db70",
+      "packages/director/acting-brief.ts": "22ac3029aa5b857c8d9a3e6bb1766b620c73897d602c553cc13056e9967bd1f6",
+      "packages/director/schemas.ts": "d666d9fd831b06e626fe447dfe2bae09e56a4f9bc0593fa84bb0c7fde110c024",
       "library/shots/cinematic.ts": "a13b357b1bbdc48f72f0159b07f60b387a12c5def959f2fdb51042c9442effc7",
-      "library/shots/cinematic-models.ts": "9d28093dfc23ba675bf8c966f9d3260904a38c38dd73dba8803d12668aab428e",
+      "library/shots/cinematic-models.ts": "a64e973dd538508323d70186e4e331ee5112c22def6369a40a61444760de282a",
       "library/prompts/creative-director.md": "1b42f03f5facdbed149068abda15952a32f365c08669d2a3773cdf5b099d1c90",
       "apps/server/index.ts": "a02c4185653bc208e2a47fe9fac08680e2e7408fa4e071a4d108ddbe6502e0d6"
     }
@@ -410,8 +436,8 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "2cf872ab907bed59c502f8234ca27164874597b609dc7d1522d03b80bff7f72c",
-      "packages/director/acting-brief.ts": "7ab786fe0ab05c84c98cb9b5d98fd4f67d27e5c03bc85787df8eddb78c4f8d1b"
+      "packages/topics/prehistoric-life.ts": "75a1d40417727ad7d904b2bce069a9e6914f82a9d60ac01d2747d245daa4db70",
+      "packages/director/acting-brief.ts": "22ac3029aa5b857c8d9a3e6bb1766b620c73897d602c553cc13056e9967bd1f6"
     }
   },
   "primaryModel": "warm-skin-close-ups",
@@ -654,7 +680,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "2cf872ab907bed59c502f8234ca27164874597b609dc7d1522d03b80bff7f72c",
+      "packages/topics/prehistoric-life.ts": "75a1d40417727ad7d904b2bce069a9e6914f82a9d60ac01d2747d245daa4db70",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
@@ -8754,9 +8780,9 @@
           "motionVerified": false
         },
         "manipulationCandidate": {
-          "version": "native-contact-angle-1",
+          "version": "native-contact-angle-2",
           "selection": "registered-manipulation-v1",
-          "fingerprint": "243b93547ef6e694528caf775da570f2e6993cde4925a6f8c84e09ca913ada83",
+          "fingerprint": "cbfc2963f63ec92e732fb3418b5309c837d9a2473ae745e547ea95dc04691529",
           "bindings": {
             "bodyViews": {
               "lila": {
@@ -9088,7 +9114,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "60aa2a011a2f39427848dac7e1e620fecb9bd940acf211ed5717c899c15138b3",
+        "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -9102,13 +9128,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "caec312bc2d67f9ce85819bcba87728c778089d6aaad86311f668993f2d1efc6",
+      "fingerprint": "96b0c6fde6a3efd6e5b665afc09d3b9b005c15daebeca3e8944c269e7118eaeb",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "902d645ad598b8c941904715d3f79422a9b16f12aa8ea3f6bd04bfc295485903",
+    "fingerprint": "cc67f1a25c2de2147e17e5550854aabc25a18cc4c054e8abde7e9337b5a74144",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -9130,9 +9156,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-37",
+    "compilerVersion": "forest-source-body-motion-38",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "1b66232a3d04a47bb96ef41109817bd3db51a0cd4282a7b5efcff33b7f6fa763",
+    "fingerprint": "38e00edfd7bf10f184373ad5675d7383cba868aa3288175d49c62b5525719a07",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -10989,9 +11015,9 @@
         "motionVerified": false
       },
       "manipulationCandidate": {
-        "version": "native-contact-angle-1",
+        "version": "native-contact-angle-2",
         "selection": "registered-manipulation-v1",
-        "fingerprint": "243b93547ef6e694528caf775da570f2e6993cde4925a6f8c84e09ca913ada83",
+        "fingerprint": "cbfc2963f63ec92e732fb3418b5309c837d9a2473ae745e547ea95dc04691529",
         "bindings": {
           "bodyViews": {
             "lila": {
@@ -11323,7 +11349,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "60aa2a011a2f39427848dac7e1e620fecb9bd940acf211ed5717c899c15138b3",
+      "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
@@ -13093,9 +13119,9 @@
           "motionVerified": false
         },
         "manipulationCandidate": {
-          "version": "native-contact-angle-1",
+          "version": "native-contact-angle-2",
           "selection": "registered-manipulation-v1",
-          "fingerprint": "243b93547ef6e694528caf775da570f2e6993cde4925a6f8c84e09ca913ada83",
+          "fingerprint": "cbfc2963f63ec92e732fb3418b5309c837d9a2473ae745e547ea95dc04691529",
           "bindings": {
             "bodyViews": {
               "lila": {
@@ -13427,7 +13453,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "60aa2a011a2f39427848dac7e1e620fecb9bd940acf211ed5717c899c15138b3",
+        "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -13441,7 +13467,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "caec312bc2d67f9ce85819bcba87728c778089d6aaad86311f668993f2d1efc6",
+      "fingerprint": "96b0c6fde6a3efd6e5b665afc09d3b9b005c15daebeca3e8944c269e7118eaeb",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -13455,17 +13481,17 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "dbcb213b8f2fe7d050505cdd90ba316f5383b958b6efd6896a324bb14051f2bf",
+    "codeHash": "19b2db55a05722a8b3e8f1c91e1f1b3ef5d1ed156567e005a950bcf1729ec6d5",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-    "compilerCodeHash": "b341a0bbb77d26f51fe13314a46d44b2791e505f8b9ce2a75a26debd3b6bae55",
+    "compilerCodeHash": "67fb16349e9960c04ffe969ad88f73a109330056e13f2969c67cab828ee2327d",
     "rigCodeHash": "e28f5d076aa7211179582f7cb01db7fe0f6b675379004a869ac7dc97e586d96f",
-    "cameraCodeHash": "399bc3a0ecd5894a00de3025a355ec0a115ebaee5ab8d66036e27f866fc67e30",
-    "sourceBodyCodeHash": "d3b78d1283a37ea6e2470972ca33640e0bed46d1c6aa5ed8e43473ee56174e3c",
-    "actingClockCodeHash": "6292738077c3a0dbef468845ccea64fb37b9c60675d51b9695d2ab0f80caf124",
-    "actingBindingCodeHash": "b5fc56a68d7650ee9100b6f64d3958ad0e2719ddc41a25315c2b77fbe7eaaba7",
+    "cameraCodeHash": "7a0f05a4d10e27338e5ade60bda35b397bf2ad12f1d48c34ce2af6360d922779",
+    "sourceBodyCodeHash": "57a34a4593c922c9c66f93fcf767dd8aec5e7f900b91ed815e9fced0852b677e",
+    "actingClockCodeHash": "0ef35a8989470a8333df620517c6a2064215c122a973d4772af47fb8142a4e4c",
+    "actingBindingCodeHash": "62953cbce054fc8c2f4024f783a62cfe5ce134d470c2ee57ab8653a90a3c9bc8",
     "secondaryCodeHash": "baa043be6ac71977d560fe207902b6ef3ec48eaf21bb77c4c891eb9f99b39b51",
     "secondaryMotionCodeHash": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
     "viewCodeHash": "79f315c05716d4e951e8a445cbc6b9bd73b4f0723b1f7f5bbc05551a663012e7",
@@ -15253,9 +15279,9 @@
         "motionVerified": false
       },
       "manipulationCandidate": {
-        "version": "native-contact-angle-1",
+        "version": "native-contact-angle-2",
         "selection": "registered-manipulation-v1",
-        "fingerprint": "243b93547ef6e694528caf775da570f2e6993cde4925a6f8c84e09ca913ada83",
+        "fingerprint": "cbfc2963f63ec92e732fb3418b5309c837d9a2473ae745e547ea95dc04691529",
         "bindings": {
           "bodyViews": {
             "lila": {
@@ -15587,7 +15613,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "60aa2a011a2f39427848dac7e1e620fecb9bd940acf211ed5717c899c15138b3",
+      "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,

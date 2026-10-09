@@ -1,0 +1,204 @@
+{
+  "version": "source-manipulation-clock-source-record-1",
+  "sourceVersion": "forest-tribe-0.66-source-manipulation-clock",
+  "precedingSourceSHA": "e96c1f614c6806c5131af36655cfd020d2b8db33",
+  "scope": "source/bytes only; callbacks/fixtures/schema-instance geometry/builders/compilers/samplers/renderers/server/browser/model production pipeline/TTS/ASR/audio/video/MP4/tracer NOT RUN",
+  "checks": [
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "fc5abe",
+      "session": 41218,
+      "completionChunk": "9ed3df",
+      "exitCode": 1,
+      "reason": "Existing0.65 test fixture hardcoded clock5; new clock6 requires the version constant. Fixed declarations; no callbacks ran."
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "1d0615",
+      "session": 98280,
+      "completionChunk": "f03e77",
+      "exitCode": 0,
+      "viteModules": 46,
+      "scope": "intermediate before final guard/comment/brief changes"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "171249",
+      "session": 74634,
+      "completionChunk": "b0529d",
+      "exitCode": 1,
+      "reason": "Same hardcoded clock5 declarations; check was already running when constant repair applied; final fresh check passed."
+    },
+    {
+      "command": "npm run build",
+      "startChunk": "e9c07b",
+      "session": 86689,
+      "completionChunk": "f858f1",
+      "exitCode": 0,
+      "viteModules": 46,
+      "scope": "final source"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "68deb5",
+      "session": 2130,
+      "completionChunk": "89fd7d",
+      "exitCode": 0,
+      "newCallbacksDeclared": 7,
+      "callbacksExecuted": 0,
+      "scope": "final source"
+    },
+    {
+      "command": "npm run schemas",
+      "chunk": "d67302",
+      "exitCode": 0,
+      "instanceGeometryInvoked": false
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "15028c",
+      "exitCode": 0,
+      "scope": "static raw artwork/hash inventory only",
+      "geometryInvoked": false,
+      "compilerInvoked": false
+    },
+    {
+      "command": "Static raw-byte/hash/source and git diff --check inspection",
+      "chunk": "67ac4f",
+      "exitCode": 0,
+      "geometryInvoked": false,
+      "callbacksExecuted": 0
+    }
+  ],
+  "static": {
+    "version": "source-manipulation-clock-static-1",
+    "sourceVersion": "forest-tribe-0.66-source-manipulation-clock",
+    "precedingSourceSHA": "e96c1f614c6806c5131af36655cfd020d2b8db33",
+    "unchangedTrackedPNGs": 232,
+    "unchangedHeadDefinitions": 18,
+    "manifestCodeHashes": 60,
+    "newSourceManipulationHashes": 13,
+    "frozenProvidedSources": 3,
+    "frozenExcerptSources": 6,
+    "callbacksDeclared": 7,
+    "callbacksExecuted": 0,
+    "geometryInvoked": false,
+    "rendererInvoked": false,
+    "runtimeExecuted": false,
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "productionBinding": "needs-source-prop-binding",
+    "fullGoalComplete": false
+  },
+  "sourceReview": {
+    "file": "docs/topics/reviews/source-manipulation-clock-source-review-v1.json",
+    "frozenInputs": "docs/topics/reviews/source-manipulation-clock-review-inputs-v1.md",
+    "calls": 1,
+    "model": "ag/gemini-3.8-flash-low",
+    "usage": {
+      "promptTokens": 18523,
+      "completionTokens": 1337,
+      "totalTokens": 19860
+    },
+    "startChunk": "7f57e9",
+    "helperSession": 17014,
+    "completionChunk": "8c87e1",
+    "exitCode": 0,
+    "scope": "partial frozen source only; later edits are recorded separately, no runtime/art acceptance"
+  },
+  "toolingFailures": [
+    {
+      "chunk": "519b34",
+      "kind": "read-only file location",
+      "reason": "Guessed packages/director/acting-context.ts was absent; inspected actual packages/actors/view-acting-clock.ts. No source changed by failed read."
+    },
+    {
+      "chunk": "f504c7",
+      "kind": "atomic source-edit token",
+      "reason": "Scene used props.filter().map(), not a direct props.map(); no file was written by this failed edit. Corrected actual filter token."
+    }
+  ],
+  "sourceInspections": [
+    {
+      "kind": "edit token selection",
+      "reason": "Initial guard insertion selected validatePerformance rather than the private sampler. Corrected before final checks; native validation and sampler each keep explicit source/clock guards."
+    }
+  ],
+  "codeHashes": {
+    "packages/animation/view-source-manipulation.ts": "ce1b729014d6bf0854295221353b963679d7399d0421ccece5773c866f1bc45c",
+    "packages/animation/schemas.ts": "e567ad54c3cf95d4f04d9ef9c1e5ad9af291e35b98bf28e8b257840154a98c6f",
+    "packages/animation/compiler.ts": "67fb16349e9960c04ffe969ad88f73a109330056e13f2969c67cab828ee2327d",
+    "packages/animation/view-source-body.ts": "57a34a4593c922c9c66f93fcf767dd8aec5e7f900b91ed815e9fced0852b677e",
+    "packages/animation/view-acting-clock.ts": "0ef35a8989470a8333df620517c6a2064215c122a973d4772af47fb8142a4e4c",
+    "packages/animation/native-contact-arm.ts": "c8a44bd1b3365cab8f239b82de3ff8cf886d872fc9fbce5cced2aac02125da27",
+    "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
+    "packages/actors/view-acting-clock.ts": "62953cbce054fc8c2f4024f783a62cfe5ce134d470c2ee57ab8653a90a3c9bc8",
+    "packages/director/acting-repair.ts": "6d3d0a2aed15c2f3657c9a1c56e6ab4cfadd693c245edd9d5c250a3ddcf307c1",
+    "packages/director/acting-brief.ts": "22ac3029aa5b857c8d9a3e6bb1766b620c73897d602c553cc13056e9967bd1f6",
+    "packages/director/camera.ts": "7a0f05a4d10e27338e5ade60bda35b397bf2ad12f1d48c34ce2af6360d922779",
+    "packages/director/props.ts": "435610d1391c0dab61a3e08ad8a9dd28f6e010f8502a0c1fcf102a51466bd9e4",
+    "library/schemas/index.ts": "901cd056d9acf304a4e873cfd1c09064e9de597224c87d1b91896eec84dd601a"
+  },
+  "ownedPaths": [
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SOURCE-MANIPULATION-CLOCK-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/source-manipulation-clock-review-inputs-v1.md",
+    "docs/topics/reviews/source-manipulation-clock-source-record-v1.json",
+    "docs/topics/reviews/source-manipulation-clock-source-review-v1.json",
+    "library/schemas/index.ts",
+    "library/schemas/manipulation-source.schema.json",
+    "library/schemas/shot.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/schemas/view-acting-clock.schema.json",
+    "library/schemas/view-gaze-target.schema.json",
+    "library/shots/cinematic-models.ts",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/actors/view-acting-clock.ts",
+    "packages/animation/compiler.ts",
+    "packages/animation/forest-body-art.ts",
+    "packages/animation/native-contact-arm.ts",
+    "packages/animation/scene.ts",
+    "packages/animation/schemas.ts",
+    "packages/animation/view-acting-clock.ts",
+    "packages/animation/view-source-body.ts",
+    "packages/animation/view-source-manipulation.ts",
+    "packages/director/acting-brief.ts",
+    "packages/director/acting-repair.ts",
+    "packages/director/camera.ts",
+    "packages/director/props.ts",
+    "packages/director/schemas.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/native-manipulation.test.ts",
+    "tests/native-source-manipulation.test.ts"
+  ],
+  "tests": {
+    "newDeclared": 7,
+    "executed": 0,
+    "moduleLoadFixturesInvoked": false,
+    "status": "DECLARED/NOT RUN"
+  },
+  "geometry": "NOT RUN",
+  "renderer": "NOT RUN",
+  "server": "NOT STARTED",
+  "browser": "NOT RUN",
+  "audio": "NOT GENERATED",
+  "video": "NOT RENDERED",
+  "productionBinding": "PENDING/needs-source-prop-binding",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "fullFactory": "NOT ACCEPTED: arbitrary story->script/exact script/original WAV (+legacy SRT), narration, sourced actors/acting/world, review/repair, final MP4/audio/subtitle/QC. EN primary+VI/JA/KO/external-localTTS and locks/resume/rebuild remain required.",
+  "pending": [
+    "same sourced model/entity/action/continuity across every camera slice, original contact action references/projection and evidence coverage",
+    "canonical renderer/API/world/camera/event/thermal/label/shadow/foreground/model exits/cache/resume/review integration for this source clock",
+    "head-bank/voice sourceEntryHeld and all geometry/phase/painter/normal-speed native film acceptance",
+    "cross-person/shared/sequential handoff and authored own pose/view/finger/wrist/left-tool/anatomy/color/world quality",
+    "full3 input/language/TTS/resume/locks/final MP4/audio/subtitle/QC evidence"
+  ]
+}

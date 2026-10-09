@@ -15,6 +15,8 @@ import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../animation/view-gaze-tar
 import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 import {collectViewSourceBody,validateBodySourcePlan} from '../animation/view-source-body.js';
+import {collectViewSourceManipulation,validateManipulationSourcePlan} from '../animation/view-source-manipulation.js';
+import {hasBodyViewManipulation} from '../animation/native-contact-arm.js';
 import {hasNativeHeadBank,hasNativeHeadSecondary,validateNativeHeadBankTrack} from '../animation/body-head-bank.js';
 import {collectNativeHeadTracks} from '../animation/native-head-track.js';
 
@@ -25,7 +27,7 @@ function performer(shot:Shot,actorId:string){
   return candidates[0];
 }
 export function actorUsesViewActingClock(profile:Pick<HostProfile,'appearance'>):boolean{
-  return usesBodyView(profile)&&(hasNativeHeadBank(profile)||hasBodyViewSpeech(profile)||hasBodyViewEyes(profile)||hasBodyViewLocomotion(profile)||hasBodyViewSecondary(profile));
+  return usesBodyView(profile)&&(hasNativeHeadBank(profile)||hasBodyViewSpeech(profile)||hasBodyViewEyes(profile)||hasBodyViewLocomotion(profile)||hasBodyViewSecondary(profile)||hasBodyViewManipulation(profile));
 }
 /** Pure board binding. Adjacent clips only share attention/breath when their
  * cast, registered view and stage geometry agree and continuity is explicit. */
@@ -38,6 +40,7 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
   const entry=(s:Shot)=>{const a=performer(s,actorId);if(!a)return undefined;
     const p=PerformancePlanSchema.parse(a.performance);
     validateBodySourcePlan(p);
+    validateManipulationSourcePlan(p);
     validateNativeHeadBankTrack(p,a.character);
     if(p.sourceHead&&s.cinematic!.actorScene!.primary?.id===actorId&&s.host?.presence==='absent')throw new Error('needs-head-source-phase: source head actor is hidden in a declared camera slice');
     if(p.sourceBody&&s.cinematic!.actorScene!.primary?.id===actorId&&s.host?.presence==='absent')throw new Error('needs-view-body-phase: source body actor is hidden in a declared camera slice');
@@ -48,6 +51,7 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
       castHash:hash(cast.map(character=>ActorDefinitionSchema.parse(character))),geometryHash:hash({stage:p.stage,root:p.root,scale:p.scale,facing:p.facing??'front',headView:p.headView??null,kind:p.kind,profileHash:p.profileHash}),gazes:p.gazes,gestures:p.gestures,
       ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:p.expressions}:{}),
       sourceBody:p.sourceBody,
+      sourceManipulation:p.sourceManipulation,
       sourceHead:p.sourceHead,
       ...(hasBodyViewSecondary(currentActor.character)||hasNativeHeadSecondary(currentActor.character)?{secondaryLunge:p.lunge??null}:{}),
       ...(hasBodyViewLocomotion(currentActor.character)?{locomotion:{walks:p.walks,jumps:p.jumps??[],postures:p.postures??[],entryPosture:p.entryPosture??null}}:{})};
@@ -66,12 +70,14 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
   while(last+1<shots.length&&linked(last+1))last++;
   const run=entries.slice(first,last+1).map(e=>e!);
   const bodyMotion=collectViewSourceBody(run,run[0]!.startMs,run.at(-1)!.endMs);
+  const manipulationMotion=collectViewSourceManipulation(run,run[0]!.startMs,run.at(-1)!.endMs);
   const headMotion=collectNativeHeadTracks(run,run[0]!.startMs,run.at(-1)!.endMs);
   const clock:ViewActingClock={version:VIEW_ACTING_CLOCK_VERSION,ownerId:actorId,startMs:current.startMs,endMs:current.endMs,
     runStartMs:run[0]!.startMs,runEndMs:run.at(-1)!.endMs,sourceIdentityHash:hash({version:VIEW_ACTING_CLOCK_VERSION,actorId,run}),
     gazes:normalizeViewGazes(run.flatMap(e=>e.gazes.map(g=>({...g,startMs:g.startMs+e.startMs,endMs:g.endMs+e.startMs})))),
     gestures:collectViewSourceGestures(run,run[0]!.startMs,run.at(-1)!.endMs),
     ...(bodyMotion?{bodyMotion}:{}),
+    ...(manipulationMotion?{manipulationMotion}:{}),
     ...(headMotion?{headMotion}:{}),
     ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:normalizeViewExpressions(run.flatMap(e=>(e.expressions??[]).map(expression=>({...expression,startMs:expression.startMs+e.startMs,endMs:expression.endMs+e.startMs}))))}:{})};
   validateViewActingClockSource(currentActor.performance,clock);return clock;
@@ -102,7 +108,7 @@ export function actorViewActingClock(board:Storyboard,current:Shot,actorId:strin
       const thrust=p.lunge&&p.spears?.find(s=>s.id===p.lunge!.spearId);
       if(p.lunge&&(!thrust||thrust.action!=='thrust'||thrust.readyMs===undefined||thrust.contactMs===undefined||thrust.recoverMs===undefined))throw new Error('needs-actor-gaze: lunge target lost its owned original thrust clock');
       const lungeClock=thrust?{spearId:thrust.id,readyMs:thrust.readyMs!,contactMs:thrust.contactMs!,recoverMs:thrust.recoverMs!,endMs:thrust.endMs}:undefined;
-      p.expressions=projectViewExpressions(raw.expressions,raw.runStartMs,raw.runEndMs);p.gazes=[];p.gestures=[];p.props=[];p.spears=[];
+      p.expressions=projectViewExpressions(raw.expressions,raw.runStartMs,raw.runEndMs);p.gazes=[];p.gestures=[];p.props=[];p.spears=[];p.sourceManipulation=undefined;
       return viewGazeTarget({version:VIEW_ACTOR_GAZE_VERSION,actorId:id,startMs:raw.runStartMs,endMs:raw.runEndMs,sourceIdentityHash:raw.sourceIdentityHash,profile:actorProfile(target.character),performance:p,...(lungeClock?{lungeClock}:{})});
     });
     clock.sourceIdentityHash=hash({sourceIdentityHash:clock.sourceIdentityHash,actorTargets:clock.actorTargets.map(s=>({actorId:s.actorId,fingerprint:s.fingerprint}))});

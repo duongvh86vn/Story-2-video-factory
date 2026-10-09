@@ -14,6 +14,7 @@ import {rigMetrics} from '../packages/animation/rig.js';
 import {samplePerformance,compilePerformance,validatePerformance,solveChain} from '../packages/animation/compiler.js';
 import {articulatedArmReference,articulatedPoseFromDirections} from '../packages/animation/arm-trajectory.js';
 import {BODY_VIEW_MANIPULATION_SELECTION,registeredNativeManipulation,sampleNativeContactArm,nativeContactWindow,validateNativeContactBodyClock,nativeManipulationDescription} from '../packages/animation/native-contact-arm.js';
+import {VIEW_ACTING_CLOCK_VERSION} from '../packages/animation/view-acting-clock.js';
 import {bodyViewRegistrations} from '../packages/animation/body-view-registration.js';
 import {BODY_VIEW_LOCOMOTION_SELECTION} from '../packages/animation/body-view-cloth.js';
 import {bodyCalibrationPlan,bodyWorkbench,type BodyAction} from '../packages/topics/body-workbench.js';
@@ -161,7 +162,7 @@ test('native contact validates original body locomotion/jump windows in the owne
   const f=candidate('lila','three-quarter-right','carry','right',true),plan=structuredClone(f.plan);
   const source={version:'native-source-body-1' as const,id:'original-body',startMs:1000,endMs:6000,walks:plan.walks,jumps:[]};
   plan.sourceBody=source;plan.walks=[];
-  const clock={version:'native-view-acting-clock-5' as const,ownerId:plan.leadCharacterId,startMs:1000,endMs:5000,runStartMs:1000,runEndMs:6000,sourceIdentityHash:'a'.repeat(64),gazes:[],gestures:[],bodyMotion:source};
+  const clock={version:VIEW_ACTING_CLOCK_VERSION,ownerId:plan.leadCharacterId,startMs:1000,endMs:5000,runStartMs:1000,runEndMs:6000,sourceIdentityHash:'a'.repeat(64),gazes:[],gestures:[],bodyMotion:source};
   validateNativeContactBodyClock(plan,clock);
   const before=hash(plan);assert.throws(()=>validateNativeContactBodyClock(plan),/complete owned shot clock/);
   const early=structuredClone(plan);early.sourceBody!.walks[0]!.startMs=900;assert.throws(()=>validateNativeContactBodyClock(early,clock),/after lift/);

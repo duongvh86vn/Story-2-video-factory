@@ -3031,6 +3031,279 @@
               ],
               "additionalProperties": false
             },
+            "sourceManipulation": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "const": "native-source-manipulation-1"
+                },
+                "id": {
+                  "type": "string",
+                  "maxLength": 96,
+                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                },
+                "startMs": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "endMs": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "props": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "origin": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "destination": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "gripOffset": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "attachedTo": {
+                        "type": "string",
+                        "enum": [
+                          "left-hand",
+                          "right-hand"
+                        ]
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "generic",
+                          "spear"
+                        ]
+                      },
+                      "length": {
+                        "type": "number",
+                        "minimum": 50,
+                        "maximum": 600
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "origin"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "maxItems": 16
+                },
+                "gestures": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "startMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "endMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "id": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "address-viewer",
+                          "point",
+                          "inspect",
+                          "think",
+                          "operate",
+                          "pick-place",
+                          "carry",
+                          "drop",
+                          "react",
+                          "lead-next"
+                        ]
+                      },
+                      "target": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "destination": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "elbowPole": {
+                        "type": "string",
+                        "enum": [
+                          "rest",
+                          "reach"
+                        ]
+                      },
+                      "hand": {
+                        "type": "string",
+                        "enum": [
+                          "left",
+                          "right"
+                        ]
+                      },
+                      "sourceSpan": {
+                        "type": "object",
+                        "properties": {
+                          "startMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "endMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "id": {
+                            "type": "string",
+                            "maxLength": 96,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                          },
+                          "reachMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          "recoverMs": {
+                            "type": "integer",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "startMs",
+                          "endMs",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "propId": {
+                        "type": "string",
+                        "maxLength": 96,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                      },
+                      "contactMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "releaseMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "landingMs": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "carryOffset": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "startMs",
+                      "endMs",
+                      "id",
+                      "action"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "maxItems": 32
+                }
+              },
+              "required": [
+                "version",
+                "id",
+                "startMs",
+                "endMs",
+                "props",
+                "gestures"
+              ],
+              "additionalProperties": false
+            },
             "sourceHead": {
               "type": "object",
               "properties": {

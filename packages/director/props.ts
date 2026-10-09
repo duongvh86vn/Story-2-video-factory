@@ -60,6 +60,7 @@ export function modelExitParts(shot:Shot):NonNullable<Shot['visualization']>['pa
 export function validatePropBindings(shot:Shot):void{
   const c=shot.cinematic;if(!c)return;
   const performances=[c.performance,...(c.actorScene?.supporting.map(a=>a.performance)??[])];
+  if(performances.some(p=>p.sourceManipulation))throw new Error(`${shot.id}: needs-source-prop-binding: original contact clock requires sourced model/action/camera continuity binding; an unbound prop cannot enter production`);
   const declared=performances.flatMap(p=>p.props.map(prop=>prop.id));
   if(new Set(declared).size!==declared.length)throw new Error(`${shot.id}: prop IDs must be unique across the entire visible cast`);
   if(c.propBindings.length!==declared.length)throw new Error(`${shot.id}: every animated prop requires a sourced model binding`);
