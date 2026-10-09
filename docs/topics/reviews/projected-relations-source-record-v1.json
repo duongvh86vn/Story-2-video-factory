@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.87-projected-relations",
+  "precedingSourceSHA": "6206f4c1560726f45df070a180aeaaca237635ca",
+  "scope": "source build/typecheck/schema definitions/raw bytes/source-only advice; no runtime/geometry/art/motion/film/full factory acceptance",
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "ee11e2",
+      "session": 91166,
+      "completionChunk": "7d35a6",
+      "decisiveOutput": "vite v7.3.6; 56 modules; index-CiytZFZI.js 243.74 kB / gzip76.02; built in659ms"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "68beba",
+      "session": 17275,
+      "completionChunk": "a32772",
+      "scope": "tsc -p tsconfig.tests.json; no callback execution"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "b1d32c",
+      "scope": "schema definitions only; no instance validation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "31c975",
+      "scope": "raw images/header/hash/JSON inventory and static descriptions only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/projected-relations-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "db219d",
+      "session": 66864,
+      "completionChunk": "9b0238",
+      "scope": "raw byte/header/source-text/JSON inventory; no project imports"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "chunk": "0a6e78"
+    }
+  ],
+  "failedEarlierChecks": [
+    {
+      "command": "npm run test:typecheck",
+      "startChunk": "4a6e33",
+      "session": 88770,
+      "completionChunk": "0553eb",
+      "exitCode": 1,
+      "reason": "track version widened to string; corrected literal type before successful build/typecheck"
+    }
+  ],
+  "sourceAdvice": {
+    "record": "docs/topics/reviews/projected-relations-advice-record-v1.json",
+    "requestedModel": "tester",
+    "returnedModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 9568,
+    "totalTokens": 13525,
+    "chunk": "0b0801",
+    "issues": 1,
+    "implementationResponse": "Separate source/target opacity parents added; final integration not independently reviewed or executed"
+  },
+  "isolatedCodeAgent": {
+    "requestedModel": "cx/gpt-6.1-sol",
+    "reasoningEffort": "xhigh",
+    "result": "TimeoutError after 240000ms, no code/response metadata received",
+    "startChunk": "232c76",
+    "session": 51479,
+    "completionChunk": "ee4844",
+    "exitCode": 1
+  },
+  "rawInventory": {
+    "trackedImages": 294,
+    "actualPNG": 131,
+    "actualJPEG": 163,
+    "allOriginalImageBytesUnchanged": true,
+    "headDefinitions": 18,
+    "headMetadata": 27,
+    "mappedSourceHashes": 130,
+    "mappedSourceEntries": 324,
+    "availableBankFields": 9
+  },
+  "callbacks": {
+    "tests/source-spear-model.test.ts": 8,
+    "tests/source-spear-actions.test.ts": 8,
+    "tests/model-contact-frame.test.ts": 8,
+    "tests/source-spear-emitted.test.ts": 4,
+    "tests/projected-relations.test.ts": 9
+  },
+  "newCallbacksDeclared": 9,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "browserOpened": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44.131Z",
+    "acceptsCurrentSource": false
+  },
+  "ownedPaths": 27,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/PROJECTED-RELATIONS-HANDOFF.md",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "projected label/focus/energy/thermal/shadow and camera envelope integration",
+    "actual owned/canonical/target/depth/GSAP/fractional/reverse/cut/60fps film acceptance; synthetic canonical fixture is consumer wiring only",
+    "faithful native faces/hair/costume/soft anatomical limbs/continuous acting and vivid environment; original supporting cast",
+    "arbitrary story/topic→script, exact script/original WAV/legacy SRT, EN primary/VI/JA/KO/external-local TTS",
+    "resume/rebuild/locks; final MP4/audio/subtitle/thumbnail/storyboard/profile/timeline/manifest/review/QC"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "requestedModel": "tester",
+  "returnedModel": "gpt-6-luna",
+  "httpStatus": 200,
+  "elapsedMs": 9568,
+  "usage": {
+    "prompt_tokens": 12698,
+    "completion_tokens": 827,
+    "total_tokens": 13525
+  },
+  "taskSha256": "38a895cec227d55cc5dc592626e7fbd6324aa3fd05ec253595ebf75691c45538",
+  "files": [
+    {
+      "file": "packages/director/projected-model-geometry.ts",
+      "sha256": "d5e18630f3eee73d7a1d74c53afdf9f3901e1cab348c61b69b266366fd6f4b96"
+    },
+    {
+      "file": "packages/director/projected-relation-track.ts",
+      "sha256": "2b9cdeb93ac333cc26f65eaa57e191055115ad2118b097d9bd9b25e307235ba4"
+    },
+    {
+      "file": "library/shots/projected-relations.ts",
+      "sha256": "be5a83651409a66dec229dae88da9bcac7b1b23a0c79aafd4665a54f17f96b5b"
+    },
+    {
+      "file": "packages/animation/svg-transform-track.ts",
+      "sha256": "8c689e2737a14067a978bc6a53d6677867ae81db5578aa728a7de9478948a9c4"
+    },
+    {
+      "file": "packages/director/model-contact-motion.ts",
+      "sha256": "26dbcd66eba018e359e166ffe35c99e75bf6cb4ced962127997f8534deb53076"
+    }
+  ],
+  "answer": "{\"connection\":\"ok\",\"issues\":[{\"file\":\"library/shots/projected-relations.ts\",\"problem\":\"Relation visibility checks only `a.visible && b.visible`; it ignores each projected model’s `opacity`. A fully transparent endpoint can therefore leave its relation visible.\",\"fix\":\"Include endpoint opacity in the visibility decision, and emit opacity changes at the relevant geometry times so partially transparent endpoints are handled consistently.\"}]}",
+  "scope": "snapshot source-only advice; no callbacks/tests/runtime/film executed",
+  "testsExecuted": false,
+  "approved": false,
+  "implementationResponse": "Parent added separate from/to endpoint opacity groups; complete final integration not independently reviewed or executed.",
+  "additionalAgent": {
+    "requestedModel": "cx/gpt-6.1-sol",
+    "reasoningEffort": "xhigh",
+    "result": "TimeoutError after 240000ms; no code received, no returned model/usage/HTTP status known",
+    "startChunk": "232c76",
+    "session": 51479,
+    "completionChunk": "ee4844",
+    "exitCode": 1
+  },
+  "productionReady": false,
+  "productionApproval": false
+}

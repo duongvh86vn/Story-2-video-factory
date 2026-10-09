@@ -33,6 +33,18 @@ function interpolate(frames:readonly ContactMotionFrame[],timeMs:number,serializ
 export function contactMotionAt(frames:readonly ContactMotionFrame[],timeMs:number):ContactMotionFrame{
   validateFrames(frames);return interpolate(frames,timeMs);
 }
+/** Validate once and privately snapshot the exact emitted matrix clock. Queries
+ * remain binary, return fresh values and never clamp or evaluate a new phase. */
+export function createContactMotionSampler(frames:readonly ContactMotionFrame[]){
+  validateFrames(frames);
+  const copy:ContactMotionFrame[]=[];
+  for(let i=0;i<frames.length;i++){
+    if(!Object.hasOwn(frames,i))throw new Error('Contact track must be dense');
+    const f=frames[i]!;copy.push({timeMs:f.timeMs,matrix:[...f.matrix] as ContactMatrix,opacity:f.opacity});
+  }
+  return {times:copy.map(f=>f.timeMs),at:(timeMs:number)=>interpolate(copy,timeMs),
+    fingerprint:hash(copy),continuousGeometryVerified:false as const,motionVerified:false as const,productionApproval:false as const};
+}
 function descriptor(shot:Shot,partId:string,width?:number,height?:number){
   const c=shot.cinematic,parts=shot.visualization?.parts.filter(p=>p.id===partId)??[],models=c?.artDirection?.models.filter(m=>m.partId===partId)??[];
   if(!c||parts.length!==1||models.length!==1||!models[0]!.contactFrame)return fail(shot,'requires one actual sourced model/part and its explicit own frame');

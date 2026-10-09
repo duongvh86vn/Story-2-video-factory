@@ -1,5 +1,7 @@
 # Điểm chạm theo SVG được vẽ — source0.86
 
+**Tiếp nối hiện hành:** [source0.87 — projected relations](PROJECTED-RELATIONS-HANDOFF.md). Phạm vi dưới đây giữ nguyên snapshot0.86; các phần còn thiếu không phải nghiệm thu mới.
+
 Source `forest-tribe-0.86-emitted-contact`, producer `story-direction-2.2.49`. Tiếp nối [hành động giáo source0.85](ORIGINAL-SPEAR-ACTIONS-HANDOFF.md). Đây là source candidate; **chưa nghiệm thu runtime, video hoặc toàn sản phẩm**.
 
 ## Phần code đã bổ sung

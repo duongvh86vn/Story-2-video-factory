@@ -8,8 +8,9 @@ import {validateModelMotionFrames,type ModelMotionFrame} from '../../packages/di
 import {ownershipGlyph} from '../../packages/director/ownership-reference.js';
 import {boundProp} from '../../packages/director/props.js';
 import {sourceWorldTrack,type SourceWorldFrame} from './source-world-timeline.js';
+import {renderProjectedRelation,type ProjectedGeometry} from './projected-relations.js';
 
-export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.6';
+export const CINEMATIC_MODEL_VERSION='cinematic-models-2.2.7';
 type Part=NonNullable<Shot['visualization']>['parts'][number];
 export interface ModelIllustration {svg:string;motionAnchors:Array<{selector:string;x:number;y:number}>;}
 
@@ -60,10 +61,11 @@ export function modelRelationRadius(w:number,h:number,ux:number,uy:number,angle=
   const a=angle*Math.PI/180,x=ux*Math.cos(a)+uy*Math.sin(a),y=-ux*Math.sin(a)+uy*Math.cos(a);
   return Math.min(w*.53/Math.max(.001,Math.abs(x)),h*.53/Math.max(.001,Math.abs(y)));
 }
-export function cinematicRelations(shot:Shot,width:number,height:number,frames?:ModelMotionFrame[],worldFrames?:SourceWorldFrame[]) {
+export function cinematicRelations(shot:Shot,width:number,height:number,frames?:ModelMotionFrame[],worldFrames?:SourceWorldFrame[],projected?:ProjectedGeometry) {
   const v=shot.visualization!,html:string[]=[],calls:string[]=[],scope=`[data-composition-id="${shot.id}"]`;
+  const projectedReports:Array<ReturnType<typeof renderProjectedRelation>['report']>=[];
   const bindings=shot.cinematic?.propBindings??[];
-  if(bindings.length&&v.relations.length){
+  if(bindings.length&&v.relations.some(r=>!shot.cinematic?.artDirection?.models.some(m=>m.contactFrame&&(m.partId===r.from||m.partId===r.to)))){
     if(!frames)throw new Error(`${shot.id}: relation requires the actual compiled canonical entity centers`);
     validateModelMotionFrames(frames,bindings.map(b=>b.partId),shot.endMs-shot.startMs);
     for(const tool of shot.cinematic?.sourceSpearBindings??[])if(!frames.every(f=>Object.hasOwn(f.rotations??{},tool.partId)))
@@ -99,6 +101,10 @@ export function cinematicRelations(shot:Shot,width:number,height:number,frames?:
   };
   const curvePoint=(g:ReturnType<typeof geometryAt>,t:number)=>point((1-t)**2*g.start.x+2*(1-t)*t*g.control.x+t*t*g.end.x,(1-t)**2*g.start.y+2*(1-t)*t*g.control.y+t*t*g.end.y);
   for(const [i,r] of v.relations.entries()){
+    if(shot.cinematic?.artDirection?.models.some(m=>m.contactFrame&&(m.partId===r.from||m.partId===r.to))){
+      if(!projected)throw new Error(`${shot.id}: needs-source-prop-binding: relation requires actual emitted projected geometry`);
+      const relation=renderProjectedRelation(shot,r,i,height,projected);html.push(relation.html);calls.push(...relation.calls);projectedReports.push(relation.report);continue;
+    }
     const a=v.parts.find(p=>p.id===r.from)!,b=v.parts.find(p=>p.id===r.to)!;
     const dx=(b.x-a.x)*width,dy=(b.y-a.y)*height,length=Math.hypot(dx,dy);
     if(length<1)throw new Error(`${shot.id}: relation endpoints occupy the same stage anchor`);
@@ -169,5 +175,5 @@ export function cinematicRelations(shot:Shot,width:number,height:number,frames?:
     else if(!explicit&&b.kind==='engine')calls.push(`tl.to(${motion},{opacity:.3,duration:${remaining/2},ease:"sine.inOut"},${begin+span});tl.to(${motion},{opacity:1,duration:${remaining/2},ease:"sine.inOut"},${begin+span+remaining/2});`);
     }
   }
-  return {html:html.join(''),calls};
+  return {html:html.join(''),calls,projectedReports};
 }
