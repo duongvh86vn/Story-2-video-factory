@@ -1116,7 +1116,7 @@
                   },
                   "producer": {
                     "type": "string",
-                    "const": "story-direction-2.2.46"
+                    "const": "story-direction-2.2.47"
                   },
                   "shotId": {
                     "type": "string",
@@ -8854,6 +8854,98 @@
                         "sourceId",
                         "entityPlane",
                         "grips",
+                        "sourceRefs"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 16
+                  },
+                  "sourceSpearBindings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "version": {
+                          "type": "string",
+                          "const": "source-spear-binding-1"
+                        },
+                        "id": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "ownerId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "sourceId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "trackId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "propId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "partId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "artwork": {
+                          "type": "string",
+                          "const": "forest-spear-grips-4"
+                        },
+                        "sourceRefs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "narration",
+                                  "source"
+                                ]
+                              },
+                              "segmentId": {
+                                "type": "string",
+                                "maxLength": 96,
+                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                              },
+                              "quote": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "quote"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 32
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "id",
+                        "ownerId",
+                        "sourceId",
+                        "trackId",
+                        "propId",
+                        "partId",
+                        "artwork",
                         "sourceRefs"
                       ],
                       "additionalProperties": false

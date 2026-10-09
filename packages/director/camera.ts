@@ -25,6 +25,7 @@ import {actorProfile} from '../actors/model.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeCenterBounds} from './ownership-bake-query.js';
+import {sourceSpearBinding} from './source-spear-bindings.js';
 
 export const CAMERA_VIEWPORT={left:.04,right:.96,top:.14,bottom:.80,centerY:.46,pan:.025} as const;
 export interface CameraMatrix { scale:number; x:number; y:number; }
@@ -77,11 +78,12 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     }
     for(const at of [actingClock.runStartMs,actingClock.runStartMs+VIEW_BREATH_RAMP_MS,actingClock.runEndMs-VIEW_BREATH_RAMP_MS,actingClock.runEndMs])secondaryTime(at-actingClock.startMs);
   }
-  const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
+  const head=emptyBounds(),feet=emptyBounds(),bodyBounds=emptyBounds(),props:Record<string,Bounds>={},propCenters:Record<string,Bounds>={},ratio={min:Infinity,max:-Infinity},stroke=profile.appearance.strokeWidth/2;
   for(const time of [...times].filter(at=>Number.isFinite(at)&&at>=0&&at<=p.durationMs)){
     const frame=samplePhysicalPerformance(p,profile,time,actingClock);
     for(const [id,prop] of Object.entries(frame.props)){
       const bound=props[id]??=emptyBounds();include(bound,prop.point);
+      include(propCenters[id]??=emptyBounds(),prop.point);
       if(prop.tip){include(bound,prop.tip,6*p.scale);include(bound,{x:2*prop.point.x-prop.tip.x,y:2*prop.point.y-prop.tip.y},3*p.scale);}
     }
     const match=/^translate\(([-\d.]+) ([-\d.]+)\) rotate\(([-\d.]+)\) scale\(([-\d.]+)\)$/.exec(frame.transforms.head!);
@@ -122,7 +124,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     include(bodyBounds,{x:body.left,y:body.top});include(bodyBounds,{x:body.right,y:body.bottom});
     const height=(body.bottom-body.top)/p.stage.height;ratio.min=Math.min(ratio.min,height);ratio.max=Math.max(ratio.max,height);
   }
-  return {head,feet,body:bodyBounds,props,ratio};
+  return {head,feet,body:bodyBounds,props,propCenters,ratio};
 }
 
 /** Keep wrapping and clearance identical to the production model labels. */
@@ -226,10 +228,10 @@ export function cameraSourceGeometry(shot:Shot,profile:HostProfile,actingClock?:
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera source requires canonical cinematic data`);
   const bounds=cameraHostBounds(c.performance,profile,actingClock),worldShot=context?.worldShot??shot,world=worldShot.cinematic;
   if(!world)throw new Error(`${shot.id}: camera source requires the original world`);
-  const ownerBounds=new Map<string,ReturnType<typeof cameraHostBounds>>(),props=new Map<string,Bounds>();
+  const ownerBounds=new Map<string,ReturnType<typeof cameraHostBounds>>(),props=new Map<string,Bounds>(),centers=new Map<string,Bounds>(),rigidParts=new Set<string>();
   if(world.sourceOwnership){
     const entities=ownershipScene(worldShot,context?.board,context?.narration,context?.ownership);
-    for(const [partId,item] of entities)props.set(partId,ownershipBakeCenterBounds(item));
+    for(const [partId,item] of entities){const b=ownershipBakeCenterBounds(item);props.set(partId,b);centers.set(partId,b);}
   }
   for(const binding of world.propBindings){
     if(world.sourceOwnership?.some(source=>source.partId===binding.partId))continue; // Explicit aliases share the canonical baked entity.
@@ -243,12 +245,16 @@ export function cameraSourceGeometry(shot:Shot,profile:HostProfile,actingClock?:
     const motion=ownerBounds.get(owner.id)!.props[binding.propId];
     if(!motion)throw new Error(`${shot.id}: camera source bound model ${binding.partId} has no motion envelope from its real owner.`);
     props.set(binding.partId,motion);
+    const center=ownerBounds.get(owner.id)!.propCenters[binding.propId];
+    if(!center)throw new Error(`${shot.id}: camera source bound model has no actual center envelope`);
+    centers.set(binding.partId,center);
+    if(sourceSpearBinding(worldShot,binding))rigidParts.add(binding.partId);
   }
-  return {bounds,props};
+  return {bounds,props,centers,rigidParts};
 }
 export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewActingClock,context?:CameraSourceContext) {
   const c=shot.cinematic;if(!c)throw new Error(`${shot.id}: camera requires canonical cinematic data`);
-  const {bounds,props}=cameraSourceGeometry(shot,profile,actingClock,context);
+  const {bounds,props,centers,rigidParts}=cameraSourceGeometry(shot,profile,actingClock,context);
   const camera=CameraSchema.parse(c.camera),p=c.performance,{width,height,groundY}=p.stage;
   const actionGroups=cinematicActionGroups(shot.host?.actions??[],p,shot.startMs);
   const contactGroups=actionGroups.filter(group=>group.sourceManipulation&&group.gestures.some(g=>['operate','pick-place','carry','drop'].includes(g.action)&&g.target&&g.contactMs!==undefined));
@@ -267,10 +273,11 @@ export function validateCamera(shot:Shot,profile:HostProfile,actingClock?:ViewAc
   });
   const boundsInView=(b:Bounds)=>inView({x:b.left,y:b.top})&&inView({x:b.right,y:b.bottom});
   const movingBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
-    const motion=props.get(part.id);
+    const motion=centers.get(part.id)??props.get(part.id);
     return motion??{left:part.x*width,right:part.x*width,top:part.y*height,bottom:part.y*height};
   };
   const modelBounds=(part:NonNullable<Shot['visualization']>['parts'][number])=>{
+    if(rigidParts.has(part.id))return props.get(part.id)!; // Complete shaft/tip/butt, not a center to expand again.
     const b=movingBounds(part);return {left:b.left-part.width*width*.56,right:b.right+part.width*width*.56,top:b.top-part.height*height*.6,bottom:b.bottom+part.height*height*.6};
   };
   const modelInView=(part:NonNullable<Shot['visualization']>['parts'][number])=>boundsInView(modelBounds(part));

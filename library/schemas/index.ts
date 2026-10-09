@@ -37,10 +37,12 @@ import {CameraDirectionSchema} from '../../packages/director/camera-direction-sc
 import {ReviewAttemptSchema,ReviewSourceSchema,ReviewInputSchema,ReviewEvidenceSchema,FinalEvidenceSchema} from '../../packages/review/evidence-schemas.js';
 import {SourceOwnershipSchema} from '../../packages/director/source-ownership-schemas.js';
 import {OwnershipPaintSchema} from '../../packages/director/ownership-paint-schemas.js';
+import {SourceSpearBindingSchema} from '../../packages/director/source-spear-binding-schemas.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
   'spear-source':SpearSourceSchema,
+  'source-spear-binding':SourceSpearBindingSchema,
   'source-ownership':SourceOwnershipSchema,
   'ownership-paint':OwnershipPaintSchema,
   'review-attempt':ReviewAttemptSchema,'review-source':ReviewSourceSchema,'review-input':ReviewInputSchema,'review-evidence':ReviewEvidenceSchema,'final-evidence':FinalEvidenceSchema,

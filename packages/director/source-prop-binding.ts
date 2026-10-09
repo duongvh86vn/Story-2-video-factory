@@ -7,7 +7,6 @@ import {isWholeSourceStatement} from '../explainer/plan.js';
 import {actorProfile} from '../actors/model.js';
 import {actorViewActingClock} from '../actors/view-acting-clock.js';
 import {samplePhysicalPerformance} from '../animation/compiler.js';
-import {performanceProps} from '../animation/view-source-manipulation.js';
 import {hasBodyViewManipulation} from '../animation/native-contact-arm.js';
 import {validateManipulationActionSlices} from './source-manipulation-actions.js';
 import {boundProp,propPerformer,assertPropAliasCoverage} from './prop-owner.js';
@@ -18,6 +17,7 @@ import {validateSourceOwnershipTimelines} from './source-ownership.js';
 import {ownershipBindingPartition} from './ownership-bindings.js';
 import {ownershipBindingContext} from './ownership-binding-context.js';
 import {validateSourceWorld} from './source-world.js';
+import {sourceSpearBinding,validateSourceSpearBindings} from './source-spear-bindings.js';
 
 type Binding=CinematicPlan['propBindings'][number];
 const fail=(shot:Shot,message:string):never=>{throw new Error(`${shot.id}: needs-source-prop-binding: ${message}`);};
@@ -61,8 +61,9 @@ function citedContact(shot:Shot,ownerId:string,gesture:Gesture,partId:string,nar
  * the still-pending world/event/effect renderer contract. */
 export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,narration:Narration|undefined):void{
   const c=shot.cinematic;if(!c)return;
-  const spans=[...(c.actorScene?.primary&&c.performance.sourceManipulation?[c.performance.sourceManipulation]:[]),
-    ...(c.actorScene?.supporting.flatMap(a=>a.performance.sourceManipulation?[a.performance.sourceManipulation]:[])??[])];
+  validateSourceSpearBindings(shot,board,narration);
+  const spans=[...(c.actorScene?.primary?[c.performance.sourceManipulation,c.performance.sourceSpear].filter(s=>s!==undefined):[]),
+    ...(c.actorScene?.supporting.flatMap(a=>[a.performance.sourceManipulation,a.performance.sourceSpear].filter(s=>s!==undefined))??[])];
   const mixed=!!c.sourceOwnership?.length||!!board?.shots.some(s=>s.cinematic?.sourceOwnership?.length&&spans.some(span=>s.startMs<span.endMs&&s.endMs>span.startMs));
   if(!mixed)return validateOriginalSourceBindings(shot,board,narration);
   if(!board||!narration)return fail(shot,'mixed original entities require complete storyboard and original narration');
@@ -70,13 +71,14 @@ export function validateSourcePropBindings(shot:Shot,board:Storyboard|undefined,
   // Establish ALL canonical exemptions before any worker skips an alias.
   // In particular, a third owner introduced in a later camera is not omitted.
   for(const slice of context){
+    validateSourceSpearBindings(slice,board,narration);
     if(slice.cinematic?.sourceOwnership)validateSourceOwnershipTimelines(slice,board,narration);
     validateSourceWorld(slice,board,narration);
     assertPropAliasCoverage(slice);
     if(slice.cinematic?.sourceOwnership)ownershipBindingPartition(slice);
     else for(const binding of slice.cinematic!.propBindings){
       const owner=boundProp(slice,binding);
-      if(binding.ownerId!==owner.id||!owner.character||!owner.performance.sourceManipulation)return fail(slice,'mixed history has an unsourced independent alias');
+      if(binding.ownerId!==owner.id||!owner.character||!owner.performance.sourceManipulation&&!sourceSpearBinding(slice,binding))return fail(slice,'mixed history has an unsourced independent alias');
     }
   }
   for(const slice of context)validateOriginalSourceBindings(slice,board,narration);
@@ -106,7 +108,7 @@ function validateOriginalSourceBindings(shot:Shot,board:Storyboard|undefined,nar
       const bindings=slice.cinematic?.sourceOwnership?ownershipBindingPartition(slice).local:slice.cinematic!.propBindings;
       if(new Set(bindings.map(b=>b.partId)).size!==bindings.length)return fail(slice,'ambiguous visible prop/model/painter ownership');
     }
-    for(const prop of performanceProps(sourceOwner.performance)){
+    for(const prop of source.props){
       const current=c.propBindings.filter(b=>b.propId===prop.id&&b.ownerId===sourceOwner.id);
       if(current.length!==1)return fail(shot,'each original prop needs exactly one explicit person/model binding');
       // Canonical grips were checked by the full ownership validator. In

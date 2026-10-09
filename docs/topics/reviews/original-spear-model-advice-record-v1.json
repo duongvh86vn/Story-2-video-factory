@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "httpStatus": 200,
+  "elapsedMs": 2763,
+  "modelRequested": "tester",
+  "modelReturned": "gpt-6-luna",
+  "usage": {
+    "prompt_tokens": 7631,
+    "completion_tokens": 43,
+    "total_tokens": 7674
+  },
+  "answer": "{\"issues\":[],\"limits\":[\"Source-only review; no runtime or video acceptance performed. Production gate remains blocked pending source action/cue/tip reactions and native art/runtime/film acceptance.\"]}",
+  "sources": [
+    {
+      "file": "packages/director/prop-motion.ts",
+      "sha256": "b8cb327ebe8c77cafef450d57498747fab0043a44d9cd55a43df3b6629979c79"
+    },
+    {
+      "file": "packages/director/source-spear-bindings.ts",
+      "sha256": "3bc9fd3e6931f0bd29cb84b09ddb148553e9d449848752ec9456aff29f40de0b"
+    },
+    {
+      "file": "packages/director/ownership-bindings.ts",
+      "sha256": "281984872a55061e6eb63ffefcd1132a05412bd92e6277f3d0c6ae0000758eb7"
+    }
+  ],
+  "testsExecuted": false,
+  "geometryInvoked": false,
+  "repositoryChangedByAgent": false,
+  "approved": false,
+  "sourceVersion": "forest-tribe-0.84-original-spear-model",
+  "precedingSourceSHA": "b2959148c0bff181302d422f32780d3e61b4c0c5",
+  "purpose": "bounded source-only advisory, not runtime test",
+  "inputSnapshotSHA256": "1ba42937512b1025515f4413e90fd7ccb8d6ac7410fdb8ed0980aaed572a7768",
+  "responseSHA256": "61866803e03be66fcfc625ec296ae5bb4c67dde8295aec557a842dcdd87963c4",
+  "integration": "Parent wrote all code. Advisor read only prop-motion/source-spear-bindings/ownership-bindings snapshot. Parent later tightened dangling registrations and changed schemas/renderer/camera/prompts/metadata/docs/tests. Final integration was not independently reviewed. Parent additionally rejects nonfinite physical center/angle/tip and inherited emitted transform/prop values; all final callbacks remain NOT RUN.",
+  "independentlyReviewedFinalIntegration": false,
+  "rendererRun": false,
+  "productionReady": false,
+  "productionApproval": false,
+  "finalIntegrationSourceHashes": {
+    "library/schemas/index.ts": "8ddc1c28b41a152cb47ed6bad14dc5b10ccd4e79e963f00d4b6bae7dab9786f3",
+    "library/shots/cinematic-models.ts": "b9d0962c88dcf2890044a831ee5d06fc6f83b24c8c6d72769313bd3a0cf04f3c",
+    "library/shots/cinematic.ts": "fe17820d0b8c1e61c15461457fa5d846e09f94a3f9ee84ad4fd21e3985c7f4ae",
+    "packages/director/acting-brief.ts": "30e5ea16cfa2176b72469ba9d745bcbea1da2dc24593a27a30de5c068278e7ad",
+    "packages/director/camera.ts": "ad1ff9cfd419552efb70010103b5d51c2ebc745f01ff90c0b4e2b41498e7f9e0",
+    "packages/director/ownership-binding-context.ts": "d55bc71c6cbd7891797c0490acdbe97a8aab5bcb24a144a86daafd970567c2a1",
+    "packages/director/ownership-bindings.ts": "281984872a55061e6eb63ffefcd1132a05412bd92e6277f3d0c6ae0000758eb7",
+    "packages/director/prop-motion.ts": "7c6c2011d8d637011ad013b7ff35cdf6fed2ac6caac236c7d01288ab731560df",
+    "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
+    "packages/director/schemas.ts": "d7185a8f11df5125529c8efc6d201bc6876ac7f10947f26eb3fa860d8116a0af",
+    "packages/director/source-production-audit.ts": "f1a2fbabb99285cea5fd03e118e9698224f2577d1979eb2e0e409ca468e79250",
+    "packages/director/source-prop-binding.ts": "22366a18ffb66c39450e83007782f56be45526388a07b676dbf060adce727d57",
+    "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
+    "packages/director/source-spear-binding-schemas.ts": "9bf337eeb63949668c77839c89aaf0e700cf7453e184898bfef57686825d033f",
+    "packages/director/source-spear-bindings.ts": "36548877f3c18ab7d72c685ec3ad473ee3e6d07704ae3b0a3820333ea5ad2d84",
+    "packages/topics/prehistoric-life.ts": "ba2781db161af833c3e96951141375fe3cf8bf35e8fefc42a64f4f97c73db003",
+    "scripts/prehistoric-pack.ts": "29aecc0ba83f5a2849aff85ebe8421d85ec0580b05ecdc9201f339fc0da17258",
+    "tests/source-spear-model.test.ts": "5e1b4fbb19c4f6fd699a38bed9ae69ddd894c7e4bce1959fa2b2124cd903671b"
+  }
+}

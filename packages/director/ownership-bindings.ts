@@ -1,6 +1,7 @@
 import type {Shot} from '../core/schemas.js';
 import type {CinematicPlan} from './schemas.js';
 import {assertPropAliasCoverage,boundProp,propAliasIdentity} from './prop-owner.js';
+import {sourceSpearBinding} from './source-spear-bindings.js';
 
 type Binding=CinematicPlan['propBindings'][number];
 const fail=(shot:Shot,message:string):never=>{throw new Error(`${shot.id}: needs-source-prop-binding: ownership binding partition ${message}`);};
@@ -25,8 +26,10 @@ export function ownershipBindingPartition(shot:Shot):{canonical:Binding[];local:
   const result:{canonical:Binding[];local:Binding[]}={canonical:[],local:[]},seen=new Set<string>(),localParts=new Set<string>();
   for(const binding of c.propBindings){
     const owner=boundProp(shot,binding),alias=propAliasIdentity(owner.id,binding.propId);
-    if(binding.ownerId!==owner.id||!owner.character||!owner.performance.sourceManipulation)return fail(shot,'every mixed-scene alias needs its explicit visible original-source person');
+    const tool=sourceSpearBinding(shot,binding);
+    if(binding.ownerId!==owner.id||!owner.character||!owner.performance.sourceManipulation&&!tool)return fail(shot,'every mixed-scene alias needs its explicit visible original-source person');
     if(parts.has(binding.partId)){
+      if(tool)return fail(shot,'a rotating tool cannot substitute for a canonical shared grip');
       if(expected.get(alias)!==binding.partId||seen.has(alias))return fail(shot,'canonical binding does not match its exact original person/prop/entity grip');
       seen.add(alias);result.canonical.push(binding);
     }else{

@@ -53,12 +53,21 @@ const arrow=(tip:{x:number;y:number},from:{x:number;y:number},size:number)=>{
 };
 
 /** Directed relations use arrowheads; compare and part-of do not imply causality. */
+/** Ray to the logical local rectangle, rotated with the emitted rigid glyph.
+ * Dimensions are already world-scaled. This never adds a second tool scale. */
+export function modelRelationRadius(w:number,h:number,ux:number,uy:number,angle=0):number{
+  if(![w,h,ux,uy,angle].every(Number.isFinite)||w<=0||h<=0)throw new Error('Relation needs finite positive entity geometry');
+  const a=angle*Math.PI/180,x=ux*Math.cos(a)+uy*Math.sin(a),y=-ux*Math.sin(a)+uy*Math.cos(a);
+  return Math.min(w*.53/Math.max(.001,Math.abs(x)),h*.53/Math.max(.001,Math.abs(y)));
+}
 export function cinematicRelations(shot:Shot,width:number,height:number,frames?:ModelMotionFrame[],worldFrames?:SourceWorldFrame[]) {
   const v=shot.visualization!,html:string[]=[],calls:string[]=[],scope=`[data-composition-id="${shot.id}"]`;
   const bindings=shot.cinematic?.propBindings??[];
   if(bindings.length&&v.relations.length){
     if(!frames)throw new Error(`${shot.id}: relation requires the actual compiled canonical entity centers`);
     validateModelMotionFrames(frames,bindings.map(b=>b.partId),shot.endMs-shot.startMs);
+    for(const tool of shot.cinematic?.sourceSpearBindings??[])if(!frames.every(f=>Object.hasOwn(f.rotations??{},tool.partId)))
+      throw new Error(`${shot.id}: relation lacks the emitted rigid angle for ${tool.partId}`);
   }
   const centerAt=(part:Part,time:number)=>{
     const binding=bindings.find(binding=>binding.partId===part.id);
@@ -71,10 +80,20 @@ export function cinematicRelations(shot:Shot,width:number,height:number,frames?:
     const mix=left.timeMs===right.timeMs?0:Math.max(0,Math.min(1,(time-left.timeMs)/(right.timeMs-left.timeMs)));
     return point(a.x+(b.x-a.x)*mix,a.y+(b.y-a.y)*mix);
   };
+  const rotationAt=(part:Part,time:number)=>{
+    if(!frames?.length||!Object.hasOwn(frames[0]!.rotations??{},part.id))return 0;
+    if(time<frames[0]!.timeMs||time>frames.at(-1)!.timeMs)throw new Error(`${shot.id}: relation cannot clamp the rigid entity clock`);
+    let low=0,high=frames.length-1;
+    while(low<high){const middle=Math.floor((low+high)/2);if(frames[middle]!.timeMs<time)low=middle+1;else high=middle;}
+    const right=frames[low]!,left=frames[Math.max(0,low-1)]!,mix=left.timeMs===right.timeMs?0:(time-left.timeMs)/(right.timeMs-left.timeMs);
+    const a=left.rotations![part.id]!,b=right.rotations![part.id]!;
+    if(![a,b,mix].every(Number.isFinite)||mix<0||mix>1)throw new Error(`${shot.id}: relation has a missing original rotation channel`);
+    return a+(b-a)*mix;
+  };
   const geometryAt=(a:Part,b:Part,time:number)=>{
     const ca=centerAt(a,time),cb=centerAt(b,time),dx=cb.x-ca.x,dy=cb.y-ca.y,length=Math.hypot(dx,dy);
     if(length<1)throw new Error(`${shot.id}: relation endpoints overlap during model motion at ${time}ms`);
-    const ux=dx/length,uy=dy/length,radius=(part:Part)=>Math.min(part.width*width*.53/Math.max(.001,Math.abs(ux)),part.height*height*.53/Math.max(.001,Math.abs(uy)));
+    const ux=dx/length,uy=dy/length,radius=(part:Part)=>modelRelationRadius(part.width*width,part.height*height,ux,uy,rotationAt(part,time));
     const start=point(ca.x+ux*radius(a),ca.y+uy*radius(a)),end=point(cb.x-ux*radius(b),cb.y-uy*radius(b));
     return {start,end,control:point((start.x+end.x)/2,Math.min(start.y,end.y)-height*.055)};
   };

@@ -1,5 +1,7 @@
 # Clock gốc cho động tác cầm/đâm giáo — source0.83
 
+Hiện hành source0.84 có entity/model/native glyph và emitted rigid transform candidate; xem [bàn giao model giáo](ORIGINAL-SPEAR-MODEL-HANDOFF.md). Phần source0.83 bên dưới là lịch sử. Original action/cue/tip-contact/world reactions, art/motion/runtime/film/full factory vẫn chưa nghiệm thu.
+
 Source `forest-tribe-0.83-original-spear-clock`, producer `story-direction-2.2.46`, body compiler `forest-source-body-motion-40`, acting clock `native-view-acting-clock-7`, partner eye source `native-actor-gaze-source-3`. Đây là phần code chuyển động, chưa phải video hoặc tư thế đã nghiệm thu.
 
 ## Phần đã triển khai trong source

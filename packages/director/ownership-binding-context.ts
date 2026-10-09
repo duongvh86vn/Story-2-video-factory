@@ -12,9 +12,9 @@ export function ownershipBindingContext(shot:Shot,board:Storyboard):Shot[]{
   for(let index=0;index<queue.length;index++){
     const slice=queue[index]!,c=slice.cinematic;
     if(!c)return fail(slice,'an original source crosses a camera without cinematic data');
-    if(c.performance.sourceManipulation&&!c.actorScene?.primary)return fail(slice,'original primary source has no visible person');
-    const spans=[...(c.sourceOwnership??[]),...(c.actorScene?.primary&&c.performance.sourceManipulation?[c.performance.sourceManipulation]:[]),
-      ...(c.actorScene?.supporting.flatMap(a=>a.performance.sourceManipulation?[a.performance.sourceManipulation]:[])??[])];
+    if((c.performance.sourceManipulation||c.performance.sourceSpear)&&!c.actorScene?.primary)return fail(slice,'original primary source has no visible person');
+    const spans=[...(c.sourceOwnership??[]),...(c.actorScene?.primary?[c.performance.sourceManipulation,c.performance.sourceSpear].filter(s=>s!==undefined):[]),
+      ...(c.actorScene?.supporting.flatMap(a=>[a.performance.sourceManipulation,a.performance.sourceSpear].filter(s=>s!==undefined))??[])];
     for(const span of spans){
       if(!Number.isSafeInteger(span.startMs)||!Number.isSafeInteger(span.endMs)||span.startMs<0||span.endMs<=span.startMs)return fail(slice,'has an invalid complete original span');
       for(const candidate of board.shots)if(candidate.startMs<span.endMs&&candidate.endMs>span.startMs&&!included.has(candidate.id)){

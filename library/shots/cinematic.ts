@@ -28,7 +28,9 @@ import {compilePerformance} from '../../packages/animation/compiler.js';
 import {PROP_BINDING_VERSION,boundProp} from '../../packages/director/props.js';
 import {originalPropGesture} from '../../packages/director/source-prop-binding.js';
 import {performanceProps} from '../../packages/animation/view-source-manipulation.js';
-import {compiledModelFrames,mergeModelMotionFrames} from '../../packages/director/prop-motion.js';
+import {compiledModelFrames,compiledRigidProp,mergeModelMotionFrames} from '../../packages/director/prop-motion.js';
+import {sourceSpearBinding} from '../../packages/director/source-spear-bindings.js';
+import {spearSvg} from '../../packages/animation/spear.js';
 import {ownershipBindingPartition} from '../../packages/director/ownership-bindings.js';
 import {sceneSeats,SEAT_SUPPORT_VERSION} from '../../packages/stage/seats.js';
 import {sceneLabels} from './scene-labels.js';
@@ -97,7 +99,7 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     ownerCompilations.set(definition.id,compiled);
     actorReports.push({actorId:definition.id,profileHash:definition.profileHash,rigHash:buildRig(definition).rigHash,report:compiled.report});
     calls.push(compiled.js);
-    const props=performanceProps(actor.performance).map(prop=>`<g id="${prefix}prop-${prop.id}"></g>`).join('');
+    const props=performanceProps(actor.performance).map(prop=>actor.performance.sourceSpear?.spears.some(s=>s.propId===prop.id)?namespaceRigSvg(spearSvg(prop),prefix):`<g id="${prefix}prop-${prop.id}"></g>`).join('');
     return `<g data-actor-id="${escapeHtml(actor.character.id)}"><ellipse id="${prefix}ground-shadow" cx="0" cy="0" rx="54" ry="10" fill="${palette.ink}" opacity=".18"/>${namespaceRigSvg(performanceSvg(definition,'scene'),prefix)}${props}${namespaceRigSvg(propHandSlotsSvg(definition),prefix)}</g>`;
   }).join('');
   // The production validator above still blocks unaccepted ownership. This
@@ -124,16 +126,24 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
     if(binding&&!canonicalGlyph){
       const owner=boundProp(shot,binding),scale=owner.performance.scale,compiled=ownerCompilations.get(owner.id);
       if(!compiled)throw new Error(`${shot.id}: bound model has no compiled owner ${owner.id}`);
-      const art=cinematicModel(part,model,w/scale,h/scale);
-      art.svg=customModelArt(shot,part.id,w/scale,h/scale)??art.svg;
-      propArt.set(owner.svgId,`<g id="${owner.svgId}" data-prop-entity="${escapeHtml(part.id)}" data-prop-role="${binding.role}"${binding.ownerId?` data-prop-owner="${escapeHtml(owner.id)}"`:''} fill="none" stroke="#644931" stroke-width="${height*.003/scale}" stroke-linecap="round" stroke-linejoin="round">${art.svg}${modelThermal(part,w/scale,h/scale)}</g>`);
+      const tool=sourceSpearBinding(shot,binding),rigid=tool?{partId:part.id,ownerId:owner.id,propId:binding.propId,frames:compiled.frames,rigid:{transformKey:`prop-${binding.propId}`,scale}}:undefined;
+      if(tool){
+        // The actual owner layer already draws exactly one native wood/stone
+        // shaft with its compiler transform. No schematic replacement/clock.
+        illustration.motionAnchors=[];
+      }else{
+        const art=cinematicModel(part,model,w/scale,h/scale);
+        art.svg=customModelArt(shot,part.id,w/scale,h/scale)??art.svg;
+        propArt.set(owner.svgId,`<g id="${owner.svgId}" data-prop-entity="${escapeHtml(part.id)}" data-prop-role="${binding.role}"${binding.ownerId?` data-prop-owner="${escapeHtml(owner.id)}"`:''} fill="none" stroke="#644931" stroke-width="${height*.003/scale}" stroke-linecap="round" stroke-linejoin="round">${art.svg}${modelThermal(part,w/scale,h/scale)}</g>`);
+      }
       // Model labels, emphasis and effects share the exact adaptive prop clock.
       for(const [frameIndex,frame] of compiled.frames.entries()){
         const prop=frame.props[binding.propId]!,previous=compiled.frames[frameIndex-1],at=(previous?.timeMs??0)/1000;
+        const center=rigid?compiledRigidProp(frame,rigid).point:prop.point;
         const interpolation=previous?{duration:Number(((frame.timeMs-previous.timeMs)/1000).toFixed(6)),ease:'none'}:{immediateRender:true};
-        const method=previous?'to':'set',deltaY=prop.point.y-y;
-        calls.push(`tl.${method}(${selector(`#object-${i}`)},${JSON.stringify({attr:{transform:`translate(${prop.point.x-x} ${deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
-        if(foreground)calls.push(`tl.${method}(${selector(`#foreground-object-${i}`)},${JSON.stringify({attr:{transform:`translate(${prop.point.x} ${prop.point.y})`},...interpolation})},${Number(at.toFixed(6))});`);
+        const method=previous?'to':'set',deltaY=center.y-y;
+        calls.push(`tl.${method}(${selector(`#object-${i}`)},${JSON.stringify({attr:{transform:`translate(${center.x-x} ${deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
+        if(foreground)calls.push(`tl.${method}(${selector(`#foreground-object-${i}`)},${JSON.stringify({attr:{transform:`translate(${center.x} ${center.y})`},...interpolation})},${Number(at.toFixed(6))});`);
         calls.push(`tl.${method}(${selector(`#object-${i} .bound-model-shadow`)},${JSON.stringify({attr:{transform:`translate(0 ${-deltaY})`},...interpolation})},${Number(at.toFixed(6))});`);
       }
     }
@@ -151,7 +161,8 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   const independentClock=independentBindings.length?compiledModelFrames(result.compiled.frames,independentBindings.map(binding=>{
     const owner=boundProp(shot,binding),compiled=ownerCompilations.get(owner.id);
     if(!compiled)throw new Error(`${shot.id}: model ${binding.partId} lacks its actual owner ${owner.id} compilation`);
-    return {partId:binding.partId,ownerId:owner.id,propId:binding.propId,frames:compiled.frames};
+    return {partId:binding.partId,ownerId:owner.id,propId:binding.propId,frames:compiled.frames,
+      ...(sourceSpearBinding(shot,binding)?{rigid:{transformKey:`prop-${binding.propId}`,scale:owner.performance.scale}}:{})};
   })):undefined;
   const relationClock=ownership?mergeModelMotionFrames(p.durationMs,[{partIds:[...ownership.keys()],frames:ownershipRelationFrames(shot,ownership)},
     ...(independentClock?[{partIds:independentBindings.map(binding=>binding.partId),frames:independentClock}]:[])]):independentClock;
@@ -240,6 +251,10 @@ function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:S
   if(c.actorScene?.primary!==null)actorReports.unshift({actorId:profile.id,profileHash:profile.profileHash,rigHash:rig.rigHash,report:result.compiled.report});
   const ownershipReport=ownership&&ownershipLayer?{scope:'canonical-render-candidate',entities:ownershipLayer.entities,bakes:[...ownership.values()].map(item=>({sourceId:item.source.id,partId:item.source.partId,sourceHash:item.sourceHash,paintHash:item.paintHash,frames:item.bake.samples.length,entry:item.bake.samples[0],exit:item.bake.samples.at(-1),maxMeasuredGapPx:item.bake.maxMeasuredGapPx,gapLimitPx:item.bake.gapLimitPx})),contactVerified:false,motionVerified:false,productionApproval:false}:undefined;
   return {files,geometry,report:{...result.compiled.report,...(ownershipReport?{sourceOwnership:ownershipReport}:{}),...(worldFrames?{sourceWorld:{version:c.sourceWorld!.version,id:c.sourceWorld!.id,originalStartMs:c.sourceWorld!.startMs,originalEndMs:c.sourceWorld!.endMs,sourceHash:hash(c.sourceWorld),entry:worldFrames[0]!.phase,exit:worldFrames.at(-1)!.phase,scope:"original-global-phase-candidate",motionVerified:false}}:{}),camera:validateCamera(shot,profile,primaryActingClock,{worldShot:shot,board,narration,ownership}),actors:actorReports,...(foregroundParts.size?{modelForegroundVersion:MODEL_FOREGROUND_VERSION,foregroundModels:[...foregroundParts].map(partId=>{const canonical=ownership?.get(partId),binding=c.propBindings.find(binding=>binding.partId===partId);return canonical?{partId,ownershipSourceId:canonical.source.id}:binding?{partId,actorId:boundProp(shot,binding).id,propId:binding.propId}:{partId};})}:{}),...(seats.length?{seatSupportVersion:SEAT_SUPPORT_VERSION,seatSupports:seats}:{}),...(c.propBindings.length?{boundModelMotionVersion:PROP_BINDING_VERSION,boundModels:c.propBindings.map(binding=>{
+    const tool=sourceSpearBinding(shot,binding);
+    if(tool)return {...binding,scope:'original rigid tool entity/model candidate',actorId:tool.owner.id,ownerScale:tool.owner.performance.scale,artwork:tool.declared.artwork,
+      originalSource:{sourceId:tool.source.id,sourceHash:hash(tool.source),trackId:tool.track.id,originalStartMs:tool.source.startMs,originalEndMs:tool.source.endMs,
+        clock:'complete original shaft/body phase; center and unwrapped angle use actual emitted owner transform',motionVerified:false},pending:'original action/tip-contact/cue/world-reaction and native art/runtime/film acceptance'};
     const owner=originalPropGesture(shot,binding),prop=owner.prop,g=owner.gesture,source=owner.performance.sourceManipulation;
     return {...binding,...(ownership?.has(binding.partId)?{scope:'physical-grip-alias-only; drawn entity is in sourceOwnership report'}:{}),actorId:owner.id,ownerScale:owner.performance.scale,gestureId:g.id,action:g.action,hand:rigHand(g),gripOffset:prop.gripOffset??{x:0,y:0},origin:prop.origin,gripDestination:g.destination,placedCenter:prop.destination,contactMs:g.contactMs,releaseMs:g.releaseMs,
       ...(source?{originalSource:{sourceId:source.id,sourceHash:hash(source),originalStartMs:source.startMs,originalEndMs:source.endMs,contactGlobalMs:source.startMs+g.contactMs!,releaseGlobalMs:g.releaseMs===undefined?null:source.startMs+g.releaseMs,clock:'reported clip times are original source-relative; sampled positions follow the actual shot slice',motionVerified:false}}:{})};

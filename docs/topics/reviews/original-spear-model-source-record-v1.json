@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.84-original-spear-model",
+  "precedingSourceSHA": "b2959148c0bff181302d422f32780d3e61b4c0c5",
+  "sourceOnly": true,
+  "environment": {
+    "node": "v24.19.0",
+    "shell": "PowerShell",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1"
+  },
+  "checks": [
+    {
+      "command": "npm run build",
+      "handle": "867de9/session45432/completion756f12",
+      "exitCode": 0,
+      "output": "tsc core and Studio; Vite7.3.6,53 modules,index-CdzJx0hL.js237.06kB/74.15gzip,607ms",
+      "scope": "source compile/bundle only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "handle": "727a3c/session31889/completionad28e4",
+      "exitCode": 0,
+      "output": "tsc -p tsconfig.tests.json",
+      "scope": "typecheck only; callbacks NOT RUN",
+      "priorFailuresRepaired": [
+        "96bb07/ce0b84: missing Shot defaults and optional evidence; moved ShotSchema invocation inside human-owned fixture factory and used actual part evidence",
+        "80732a/768bf9: optional transform type in inherited-property negative case; corrected non-null type in the declared mutation"
+      ]
+    },
+    {
+      "command": "npm run schemas",
+      "handle": "6ca65c",
+      "exitCode": 0,
+      "output": "tsx library/schemas/export.ts",
+      "scope": "schema definition export only"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "handle": "4cb6dd",
+      "exitCode": 0,
+      "output": "references6,candidates12,headCandidates6,garmentCandidates2,rejected7,productionReadyfalse",
+      "scope": "raw image/hash/JSON metadata inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/original-spear-model-static-v1.mjs",
+      "handle": "f08e2b/session86399/completion3713a7",
+      "exitCode": 0,
+      "output": "294 unchanged original rasters;18 head definitions;27 head metadata;116 mapped code hashes/274 entries;9 empty availableBanks;8 new callbacks NOT RUN",
+      "scope": "raw bytes/header/JSON checks; no functional project imports or schema-instance/geometry evaluation"
+    }
+  ],
+  "testsDeclared": 8,
+  "testsExecuted": 0,
+  "fixturesInvoked": false,
+  "geometryInvoked": false,
+  "rendererRun": false,
+  "serverStarted": false,
+  "TTSOrASRRun": false,
+  "videoRendered": false,
+  "adviceRecord": "docs/topics/reviews/original-spear-model-advice-record-v1.json",
+  "independentlyReviewedFinalIntegration": false,
+  "staticRecord": "docs/topics/reviews/original-spear-model-static-record-v1.json",
+  "staticSummary": {
+    "originalRasters": 294,
+    "headDefinitions": 18,
+    "headMetadata": 27,
+    "mappedSourceHashes": 116,
+    "mappedSourceEntries": 274,
+    "availableBankFields": 9
+  },
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44Z",
+    "acceptsCurrentSource": false
+  },
+  "handoff": "docs/topics/ORIGINAL-SPEAR-MODEL-HANDOFF.md",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "original hold/thrust action/cue/actual tip-contact/world-reaction integration",
+    "actual emitted SVG/GSAP/palms/shaft/body/eyes/cloth/hair/camera/reverse seeks and film smoothness",
+    "faithful native tool pose/art/motion and opposite views/head turns/depth where required",
+    "all arbitrary story→script/exact script/original WAV, EN/VI/JA/KO/external-local TTS",
+    "resume/rebuild/locks and final MP4/audio/subtitle/thumbnail/review/QC"
+  ]
+}
