@@ -8061,6 +8061,334 @@
               ],
               "additionalProperties": false
             },
+            "sourceOwnership": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "const": "source-ownership-1"
+                  },
+                  "id": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "partId": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "startMs": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "endMs": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "grips": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "actorId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "sourceId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "gestureId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "propId": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "hand": {
+                          "type": "string",
+                          "enum": [
+                            "left",
+                            "right"
+                          ]
+                        },
+                        "gripOffset": {
+                          "type": "object",
+                          "properties": {
+                            "x": {
+                              "type": "number"
+                            },
+                            "y": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "x",
+                            "y"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "actorId",
+                        "sourceId",
+                        "gestureId",
+                        "propId",
+                        "hand",
+                        "gripOffset"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 64
+                  },
+                  "phases": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "world"
+                            },
+                            "center": {
+                              "type": "object",
+                              "properties": {
+                                "x": {
+                                  "type": "number"
+                                },
+                                "y": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "x",
+                                "y"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "rotationDeg": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "startMs",
+                            "endMs",
+                            "kind",
+                            "center",
+                            "rotationDeg"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "held"
+                            },
+                            "gripId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            }
+                          },
+                          "required": [
+                            "startMs",
+                            "endMs",
+                            "kind",
+                            "gripId"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "startMs": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "endMs": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "kind": {
+                              "type": "string",
+                              "const": "shared"
+                            },
+                            "gripIds": {
+                              "type": "array",
+                              "minItems": 2,
+                              "maxItems": 2,
+                              "items": [
+                                {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                },
+                                {
+                                  "type": "string",
+                                  "maxLength": 96,
+                                  "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                                }
+                              ]
+                            },
+                            "authorityGripId": {
+                              "type": "string",
+                              "maxLength": 96,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                            }
+                          },
+                          "required": [
+                            "startMs",
+                            "endMs",
+                            "kind",
+                            "gripIds",
+                            "authorityGripId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 256
+                  },
+                  "transitions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "timeMs": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "sourceRefs": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "narration",
+                                  "source"
+                                ]
+                              },
+                              "segmentId": {
+                                "type": "string",
+                                "maxLength": 96,
+                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                              },
+                              "quote": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 2000
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "quote"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "minItems": 1,
+                          "maxItems": 32
+                        },
+                        "narrationAnchor": {
+                          "type": "string",
+                          "maxLength": 96,
+                          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                        },
+                        "statement": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "operation": {
+                          "type": "string",
+                          "enum": [
+                            "pickup",
+                            "place",
+                            "handoff",
+                            "join",
+                            "release"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "timeMs",
+                        "sourceRefs",
+                        "narrationAnchor",
+                        "statement",
+                        "operation"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 255
+                  }
+                },
+                "required": [
+                  "version",
+                  "id",
+                  "partId",
+                  "startMs",
+                  "endMs",
+                  "grips",
+                  "phases",
+                  "transitions"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 16
+            },
             "sceneIntent": {
               "type": "object",
               "properties": {

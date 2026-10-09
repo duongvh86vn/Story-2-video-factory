@@ -7,7 +7,8 @@ export const SOURCE_PROP_BINDING_VERSION='source-prop-binding-2';
 export function sourcePropBindingIdentity(shot:Shot,board:Storyboard,narration:Narration){
   const c=shot.cinematic,owners=[...(c?.actorScene?.primary&&c.performance.sourceManipulation?[{id:c.actorScene.primary.id,source:c.performance.sourceManipulation}]:[]),
     ...(c?.actorScene?.supporting.filter(a=>a.performance.sourceManipulation).map(a=>({id:a.character.id,source:a.performance.sourceManipulation!}))??[])];
-  if(!owners.length)return undefined;
-  const original=board.shots.filter(s=>s.id!==shot.id).concat(shot).filter(s=>owners.some(o=>s.startMs<o.source.endMs&&s.endMs>o.source.startMs)).sort((a,b)=>a.startMs-b.startMs);
-  return {version:SOURCE_PROP_BINDING_VERSION,scope:'structural-cache-input-only',fingerprint:hash({owners,original,narration}),approved:false,motionVerified:false};
+  const ownership=c?.sourceOwnership??[];
+  if(!owners.length&&!ownership.length)return undefined;
+  const original=board.shots.filter(s=>s.id!==shot.id).concat(shot).filter(s=>owners.some(o=>s.startMs<o.source.endMs&&s.endMs>o.source.startMs)||ownership.some(o=>s.startMs<o.endMs&&s.endMs>o.startMs)).sort((a,b)=>a.startMs-b.startMs);
+  return {version:SOURCE_PROP_BINDING_VERSION,scope:'structural-cache-input-only',fingerprint:hash({owners,...(ownership.length?{ownership}:{}),original,narration}),approved:false,motionVerified:false};
 }

@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.75-ownership-candidate",
+  "precedingSourceSHA": "50d8a65177b42bb367d8ea375065a841d2580772",
+  "scope": "explicit single canonical entity ownership contract, source projection/context and diagnostic geometry candidates; not renderer or product acceptance",
+  "features": [
+    "Sourced world/held/shared original timeline; explicit actor/hand/source/gesture/prop grip aliases and authority",
+    "No instantaneous exclusive-owner swap, world/shared shortcut, duplicate physical alias or reacquisition of released original grip",
+    "Complete canonical storyboard, entity/model/art/stage/person/scale/source continuity and narration witnesses",
+    "Diagnostic own original physical palm/prop agreement and independent contact/boundary anchors without guessed grip or forced alignment",
+    "Ownership/sibling timelines participate in structural cache identity",
+    "Candidate production explicitly blocked while original source production guard remains"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "899791/session45515/completiona76ad0",
+      "decisiveOutput": "vite v7.3.6; 50 modules; index.html0.91kB/gzip0.51, CSS17.11kB/gzip4.44, JS index-BaRqoIw6.js230.42kB/gzip72.07; built in532ms",
+      "scope": "compile/bundle only; no TS source changed afterwards"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "bcee6d/session87380/completion54a31b",
+      "decisiveOutput": "tsc -p tsconfig.tests.json; completion output empty",
+      "scope": "typecheck only; no tests/callbacks/fixtures run"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "686022",
+      "decisiveOutput": "tsx library/schemas/export.ts",
+      "scope": "schema-definition export only, no project/pose instance evaluation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "ac4b7b",
+      "decisiveOutput": "references6/candidates12/head6/garment2/rejected7/productionReadyfalse",
+      "scope": "static inventory/manifest only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/ownership-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "d600ac/session78573/completion0c4ed7",
+      "record": "ownership-static-record-v1.json",
+      "scope": "existing raw images/headers/JSON metadata, mapped hashes and original guard literal; no business or geometry execution"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "e8dc97",
+      "scope": "whitespace only; index check also required"
+    }
+  ],
+  "ownedPaths": [
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/CURRENT-REVIEW-FINAL-HANDOFF.md",
+    "docs/topics/DIRECTOR-CAMERA-AGENTS.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SHARED-OWNERSHIP-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/ownership-agent-record-v1.json",
+    "docs/topics/reviews/ownership-source-record-v1.json",
+    "docs/topics/reviews/ownership-static-record-v1.json",
+    "library/schemas/index.ts",
+    "library/schemas/shot.schema.json",
+    "library/schemas/source-ownership.schema.json",
+    "library/schemas/storyboard.schema.json",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/director/acting-brief.ts",
+    "packages/director/props.ts",
+    "packages/director/schemas.ts",
+    "packages/director/source-ownership-projection.ts",
+    "packages/director/source-ownership-schemas.ts",
+    "packages/director/source-ownership.ts",
+    "packages/director/source-prop-identity.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/source-ownership.test.ts"
+  ],
+  "sourceHashes": {
+    "library/schemas/index.ts": "92887b9da3e0c7814b7d57c880ed1fc91a427f235b5ae9c476dbdd045c098b83",
+    "packages/director/acting-brief.ts": "7198cda7e0178994aa240a3e0f1533a3dd287a817f559e3211dcdea912b2dda4",
+    "packages/director/props.ts": "bd9db96ba5ca673ef333dc4ef138f6b1e1167827385d71bf9af958edb6b5c24f",
+    "packages/director/schemas.ts": "b51d4b42b413785796e7fc5f2e10ce27a6c7c4dec9f3e0e3a55ab52347079524",
+    "packages/director/source-ownership-projection.ts": "e1ab31084db36c1a979768f457b42273a1356869e205a5429a9a70b54ec911d9",
+    "packages/director/source-ownership-schemas.ts": "6cb2bfee03b0c86cdd6b69276e65f8a984f92ecaab649df26ce0a3676c4d8542",
+    "packages/director/source-ownership.ts": "dfe5c0e46116a070dd14cd2861c7848b4c75b2f68ddee4264f04d558d0622a45",
+    "packages/director/source-prop-identity.ts": "823abd50ca4562962f2024fc2ab358629098b493f312a8f5261abae812a130bb",
+    "packages/topics/prehistoric-life.ts": "db6dbaffa25c926cd218873399f20f104a8d49bb25b8e616b0f55ca8678415ff",
+    "scripts/prehistoric-pack.ts": "0987b063ad5e781a581bcc58688ee0ce2fe1a2e37c72a671a91aece5f970f1d5",
+    "tests/source-ownership.test.ts": "acce55aef4861257635fef236c809079ebbf58f4906c4c129f4b0078d64d12c0"
+  },
+  "agent": {
+    "record": "ownership-agent-record-v1.json",
+    "calls": 1,
+    "successfulSourceProposal": true,
+    "responseModel": "gpt-6.1-sol",
+    "requestedReasoningEffort": "xhigh",
+    "backendReasoningEffort": "not independently confirmed",
+    "requestedOutputTokens": 7000,
+    "usage": {
+      "promptTokens": 6061,
+      "completionTokens": 12199,
+      "totalTokens": 18260
+    },
+    "filesProposed": 2,
+    "integration": "Parent checked original input hashes and amended source; final parent changes not independently reviewed"
+  },
+  "testDeclarations": {
+    "newCallbacks": 10,
+    "callbacksExecuted": 0,
+    "tests": "DECLARED / NOT RUN",
+    "scope": "contract/projection/raw structural hash/context guard only; no actual geometry or film acceptance"
+  },
+  "initialFailure": {
+    "command": "npm run typecheck",
+    "handle": "a4b347",
+    "exitCode": 1,
+    "reason": "Optional narrationSegmentIds access; parent fixed optional check; fresh final build and test:typecheck passed"
+  },
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT INVOKED",
+    "geometry": "NOT INVOKED",
+    "server": "NOT STARTED",
+    "browser": "NOT USED",
+    "APIProductionPipeline": "NOT RUN",
+    "TTS": "NOT RUN",
+    "ASR": "NOT RUN",
+    "audio": "NOT GENERATED",
+    "video": "NOT RENDERED",
+    "acceptance": "delegated to human test model"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "remaining": [
+    "One-entity compiler/renderer, hand depth/foreground/model labels/relations/world/effects/camera/interaction/coverage integration",
+    "Integrated source production semantics and actual generic/rotating-tool/airborne/shared/sequence geometry acceptance",
+    "Faithful own art/face/head/hair/limbs/costume/color/world normal-speed video acceptance",
+    "Arbitrary story/exact script/original WAV, voice EN/VI/JA/KO/external-local TTS, resume/locks/rebuild and final MP4/audio/subtitle/QC"
+  ]
+}

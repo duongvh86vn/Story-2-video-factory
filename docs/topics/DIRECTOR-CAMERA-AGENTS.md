@@ -1,6 +1,8 @@
-# Đạo diễn và camera — source0.74
+# Đạo diễn và camera — source0.75
 
-Cập nhật0.74: [review đúng revision và final](CURRENT-REVIEW-FINAL-HANDOFF.md). Receipt chưa là nghiệm thu hình hoặc chuyển động.
+Cập nhật0.75: [ownership candidate](SHARED-OWNERSHIP-HANDOFF.md). Một canonical entity, own actor/hand/source clock và explicit shared authority; camera/renderer/coverage integration còn thiếu, không bỏ guard production. Agent 9router đã trả schema/projection, chưa test hình học hay video.
+
+Mốc0.74: [review đúng revision và final](CURRENT-REVIEW-FINAL-HANDOFF.md). Receipt chưa là nghiệm thu hình hoặc chuyển động.
 
 Mốc0.73: [camera cho toàn cast và vòng sửa](CAST-CAMERA-REPAIR-HANDOFF.md). Chẩn đoán đo từng người từ original clock của chính họ; source geometry kiểm độc lập với framing. High camera-layout trở về role camera, camera-source chặn trước mọi call sửa; candidate giữ nguồn/diễn xuất/lock và actor asset bytes. Canonical camera/board/plan/report publish cùng transaction, rồi rebuild/draft/review mới. Chưa nghiệm thu runtime hoặc video.
 

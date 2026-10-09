@@ -35,9 +35,11 @@ import {SourceWorldSchema,SourceWorldEventSchema,SourceWorldContactSchema} from 
 import {SourceWorldRefSchema} from '../../packages/director/source-world-reference.js';
 import {CameraDirectionSchema} from '../../packages/director/camera-direction-schemas.js';
 import {ReviewAttemptSchema,ReviewSourceSchema,ReviewInputSchema,ReviewEvidenceSchema,FinalEvidenceSchema} from '../../packages/review/evidence-schemas.js';
+import {SourceOwnershipSchema} from '../../packages/director/source-ownership-schemas.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
+  'source-ownership':SourceOwnershipSchema,
   'review-attempt':ReviewAttemptSchema,'review-source':ReviewSourceSchema,'review-input':ReviewInputSchema,'review-evidence':ReviewEvidenceSchema,'final-evidence':FinalEvidenceSchema,
   'camera-direction':CameraDirectionSchema,
   'source-world':SourceWorldSchema,'source-world-event':SourceWorldEventSchema,'source-world-contact':SourceWorldContactSchema,'source-world-ref':SourceWorldRefSchema,
