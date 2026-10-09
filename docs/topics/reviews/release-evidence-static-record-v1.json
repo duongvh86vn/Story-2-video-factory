@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.74-current-review-final",
+  "precedingSourceSHA": "6b2b5bda2f879eb174fc6beedeb584b8a8085b58",
+  "scope": "raw bytes/header/JSON metadata only; no project schema-instance validation or business imports",
+  "trackedImages": 294,
+  "actualPNG": 131,
+  "actualJPEG": 163,
+  "existingJPEGNamedPNG": 101,
+  "jpegNamedJPG": 62,
+  "allOriginalImageBytesUnchanged": true,
+  "imagesFingerprint": "246f62bf04ff7c8012b79fee8959a84a2fe6f047a6be3b9f7fc759988468c0ed",
+  "priorHeadDefinitionsUnchanged": 18,
+  "headDefinitionsFingerprint": "7d29d22382b302bd39440b53c909fdffe526425d0eda62e16895659c86dbe8d7",
+  "priorHeadMetadataUnchanged": 27,
+  "manifestMappedCodeHashes": 90,
+  "manifestMappedCodeEntries": 174,
+  "manifestScalarCodeHashes": 8,
+  "mappedReleaseEvidenceHashes": 8,
+  "mappedFilmAgentHashes": 18,
+  "mappedGripWorldHashes": 11,
+  "availableBankFields": 8,
+  "male": {
+    "file": "library/topics/prehistoric-life/supporting-actors/male-bald-v2.png",
+    "sha256": "32dc223fbf865c3797b0251b6cd683d1585bab56252cd7bc7f5a833ce36a39a2",
+    "width": 910,
+    "height": 1728
+  },
+  "female": {
+    "file": "library/topics/prehistoric-life/supporting-actors/female-haired-v1.png",
+    "sha256": "4604e94be7e2857b8dd5e2ef575196f8f623d5138da114f3b17ab06e925bfae7",
+    "width": 939,
+    "height": 1675
+  },
+  "callbacks": {
+    "tests/release-evidence.test.ts": 8
+  },
+  "newCallbacksDeclared": 8,
+  "priorReleaseCallbacks": 0,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "goalComplete": false,
+  "topicJSONMetadata": {
+    "compared": 117,
+    "rawEqual": 107,
+    "lineEndingOnly": [
+      "library/topics/prehistoric-life/body-views/inspection-v1.json",
+      "library/topics/prehistoric-life/body-views/karo-left-v1.json",
+      "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.json",
+      "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.json",
+      "library/topics/prehistoric-life/body-views/lila-left-v1.json",
+      "library/topics/prehistoric-life/body-views/lila-left-v2.json",
+      "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v1.json",
+      "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.json",
+      "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v1.json",
+      "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.json"
+    ],
+    "textEqualAfterLFNormalization": true,
+    "lineEndingDifferencesNotClaimedAsRawByteEquality": true,
+    "filesNotRewrittenByAudit": true
+  }
+}

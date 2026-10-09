@@ -4,9 +4,22 @@ import path from 'node:path';
 import test, { type TestContext } from 'node:test';
 import { produceMedia, ffmpeg, probe } from '../packages/audio/index.js';
 import { runQC, fullyWhitelisted } from '../packages/qc/index.js';
-import { hash } from '../packages/core/utils.js';
-import type { Asset, Narration, Storyboard } from '../packages/core/schemas.js';
+import { hash,writeJson } from '../packages/core/utils.js';
+import {StorySchema,type Asset,type Narration,type Storyboard} from '../packages/core/schemas.js';
+import type {FactoryConfig} from '../packages/core/config.js';
+import {beginReviewEvidence,captureReviewSource,commitReviewEvidence,recordFinalEvidence,requireCurrentPassingReview} from '../packages/review/evidence.js';
 import { config, shot, temporary } from './support.js';
+
+// Isolate technical FFmpeg measurements from the review/render boundaries.
+// These scene/preview byte markers are NOT drawings, motion or film acceptance.
+async function controlledEvidence(root:string,settings:FactoryConfig,narration:Narration,storyboard:Storyboard,assets:Asset[]=[]){
+  for(const [name,value]of Object.entries({'story':StorySchema.parse({title:'Controlled media measurement',story:'Synthetic media test pattern.'}),'storyboard':storyboard,'narration':narration,'character-bible':{characters:[]},'asset-manifest':{assets}}))await writeJson(path.join(root,'work',name+'.json'),value);
+  for(const file of ['scenes/index.html','scenes/master.js','previews/contact-sheet-global.jpg']){await fs.mkdir(path.dirname(path.join(root,file)),{recursive:true});await fs.writeFile(path.join(root,file),'CONTROLLED TECHNICAL BOUNDARY; NOT VISUAL ACCEPTANCE');}
+  const sheet='previews/contact-sheet-global.jpg';
+  await writeJson(path.join(root,'previews/manifest.json'),{sourceInputHash:hash(await captureReviewSource(root,settings,storyboard)),frames:[],sheetHashes:{[sheet]:hash(await fs.readFile(path.join(root,sheet)))}});
+  await commitReviewEvidence(root,settings,storyboard,await beginReviewEvidence(root,settings,storyboard),{pass:true,issues:[],mode:'rule-based',warnings:['Isolated media test boundary; visual/motion acceptance NOT RUN.']});
+  await recordFinalEvidence(root,settings,storyboard,await requireCurrentPassingReview(root,settings,storyboard));
+}
 
 async function fixture(t: TestContext) {
   const root = await temporary(t), settings = config();
@@ -29,6 +42,7 @@ for (const mode of ['none', 'burned', 'soft', 'both'] as const) {
     assert.equal(metadata.streams.filter(stream => stream.codec_type === 'subtitle').length, ['soft', 'both'].includes(mode) ? 1 : 0);
     const report = JSON.parse(await fs.readFile(path.join(root, 'work/media-report.json'), 'utf8'));
     assert.equal(report.captionsBurnedByFfmpeg, ['burned', 'both'].includes(mode)); assert.equal(report.normalization.applied, true);
+    await controlledEvidence(root,settings,narration,storyboard);
     const qc = await runQC(root, settings, narration, storyboard);
     assert.equal(qc.pass, true, JSON.stringify(qc.issues));
     const audio = (qc.video as any).audioAnalysis; assert.ok(Math.abs(Number(audio.integratedLufs) + 16) <= 2);
@@ -47,11 +61,13 @@ test('QC detects injected black/freeze/silence and accepts only complete explici
   const { root, settings, narration, storyboard } = await fixture(t);
   await produceMedia(root, settings, narration, storyboard, { assets: [] });
   await ffmpeg(root, settings, ['-y', '-f', 'lavfi', '-i', 'color=black:size=320x180:rate=15:duration=6', '-f', 'lavfi', '-i', 'anullsrc=r=48000:cl=stereo', '-t', '6', '-c:v', 'libx264', '-c:a', 'aac', '-pix_fmt', 'yuv420p', path.join(root, 'output/final.mp4')]);
+  await controlledEvidence(root,settings,narration,storyboard);
   const failed = await runQC(root, settings, narration, storyboard);
   const types = (failed.issues as Array<{ type: string }>).map(issue => issue.type);
   for (const type of ['black-frames', 'frozen-frames', 'unexpected-silence', 'missing-narration']) assert.ok(types.includes(type), type);
   storyboard.shots[0]!.intentionalBlack = true; storyboard.shots[0]!.intentionalStatic = true; storyboard.shots[0]!.motion = [];
   const intentional = { ...narration, mode: 'srt' as const, audioPath: undefined };
+  await controlledEvidence(root,settings,intentional,storyboard);
   assert.equal((await runQC(root, settings, intentional, storyboard)).pass, true);
   assert.equal(fullyWhitelisted({ startMs: 0, endMs: 6000 }, [{ startMs: 0, endMs: 2000 }, { startMs: 3000, endMs: 6000 }]), false);
   storyboard.shots[0]!.intentionalBlack = false; settings.qc.allowed_black = [{ startMs: 0, endMs: 2000 }];
@@ -62,6 +78,7 @@ test('QC rejects decoded full-scale clipping and excessive true peak', async t =
   const { root, settings, narration, storyboard } = await fixture(t);
   await produceMedia(root, settings, narration, storyboard, { assets: [] });
   await ffmpeg(root, settings, ['-y', '-i', path.join(root, 'work/rendered.mp4'), '-f', 'lavfi', '-i', "aevalsrc=exprs='sgn(sin(2*PI*1000*t))':s=48000:d=6", '-map', '0:v:0', '-map', '1:a:0', '-c:v', 'copy', '-c:a', 'aac', '-t', '6', path.join(root, 'output/final.mp4')]);
+  await controlledEvidence(root,settings,narration,storyboard);
   const qc = await runQC(root, settings, narration, storyboard); const types = (qc.issues as Array<{ type: string }>).map(issue => issue.type);
   assert.equal(qc.pass, false); assert.ok(types.includes('audio-clipping')); assert.ok(types.includes('true-peak'));
 });
@@ -87,6 +104,7 @@ test('approved BGM/SFX mix uses absolute SFX timing, ducking and normalization',
     return Number([...result.stderr.matchAll(/RMS level dB:\s*(-?[\d.]+)/g)].at(-1)?.[1]);
   };
   assert.ok(await rms(1.5) < await rms(4.7) - 3, 'Music should duck by more than 3 dB during voice');
+  await controlledEvidence(root,settings,narration,storyboard,assets);
   assert.equal((await runQC(root, settings, narration, storyboard)).pass, true);
   storyboard.shots[0]!.sfx[0]!.timeMs = 6000;
   await assert.rejects(produceMedia(root, settings, narration, storyboard, { assets }), /outside the shot/);

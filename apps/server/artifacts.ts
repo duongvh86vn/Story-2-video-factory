@@ -28,10 +28,15 @@ import type { CinematicArtifactStatus } from './contracts.js';
 import {assertActorLocks} from '../../packages/actors/locks.js';
 import {outdatedSceneInputs,lockedShot} from '../../packages/scenes/index.js';
 import {assertNoCandidateSpriteActors} from '../../packages/motion/scene-validation.js';
+import {requireCurrentReview,requireCurrentFinalEvidence} from '../../packages/review/evidence.js';
+import {ReviewAttemptSchema,ReviewEvidenceArtifactSchema,FinalEvidenceSchema} from '../../packages/review/evidence-schemas.js';
 import {readJson} from '../../packages/core/utils.js';
 
 interface ArtifactSpec { paths: string[]; schema?: z.ZodTypeAny; editable?: boolean; from?: ProjectStatus; text?: boolean; }
 export const ARTIFACTS: Record<string, ArtifactSpec> = {
+  'review-attempt.json':{paths:['work/review-attempt.json','output/review-attempt.json'],schema:ReviewAttemptSchema},
+  'review-evidence.json':{paths:['work/review-evidence.json','output/review-evidence.json'],schema:ReviewEvidenceArtifactSchema},
+  'final-evidence.json':{paths:['work/final-evidence.json','output/final-evidence.json'],schema:FinalEvidenceSchema},
   ...Object.fromEntries(CINEMATIC_EXPORT_FILES.map(name => [name, { paths: [`work/${name}`, `output/${name}`] }])),
   'script.txt': {paths:['input/script.txt'],editable:true,from:'NEW',text:true},
   'script.md': {paths:['input/script.md'],editable:true,from:'NEW',text:true},
@@ -297,6 +302,12 @@ export async function cinematicArtifactStatuses(root: string): Promise<Record<st
   return Object.fromEntries(await Promise.all(CINEMATIC_EXPORT_FILES.map(async name => [name, await cinematicArtifactStatus(root, name)])));
 }
 export async function currentDownload(root:string,name:string):Promise<boolean>{
+  if(['review-attempt.json','review-evidence.json','final-evidence.json'].includes(name)){
+    try{const config=await loadConfig(root),board=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);
+      if(name!=='final-evidence.json')await requireCurrentReview(root,config,board);else await requireCurrentFinalEvidence(root,config,board);
+      return true;
+    }catch{return false;}
+  }
   if(['generated-script.txt','script-generation.json'].includes(name)){
     const config=await loadConfig(root);if(!['idea','story'].includes(await resolveInputMode(root,config).catch(()=>null)??''))return false;
     const report=await optionalArtifact<z.infer<typeof ScriptGenerationReportSchema>>(root,'script-generation.json');
@@ -310,6 +321,9 @@ export async function currentDownload(root:string,name:string):Promise<boolean>{
   const state=await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root,'project-state.json');
   if(!state||States.indexOf(state.state)<States.indexOf(stage[name]!))return false;
   const config=await loadConfig(root);
+  if(name!=='draft.mp4'){
+    try{await requireCurrentFinalEvidence(root,config,await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema));}catch{return false;}
+  }
   if(config.content.mode==='narrated-explainer'){
     try{
       const board=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);

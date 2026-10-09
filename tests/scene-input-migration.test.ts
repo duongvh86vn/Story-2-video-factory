@@ -5,6 +5,9 @@ import os from 'node:os';
 import test from 'node:test';
 import {pathToFileURL} from 'node:url';
 import YAML from 'yaml';
+import {beginReviewEvidence,captureReviewSource,commitReviewEvidence,recordFinalEvidence,requireCurrentPassingReview} from '../packages/review/evidence.js';
+import type {FactoryConfig} from '../packages/core/config.js';
+import type {Storyboard} from '../packages/core/schemas.js';
 
 // Public checkpoint integration only. Synthetic draft/voice bytes are NOT media
 // acceptance. Every executable/provider/browser boundary is closed before imports.
@@ -34,15 +37,18 @@ test('public source-only scene migration preserves accepted checkpoint and ledge
     namedExports: { ...processBoundary, execute: forbidden('native-execute') },
   });
   t.mock.module(new URL('../packages/review/index.ts', import.meta.url).href, {
-    namedExports: { createPreviews: async (root:string) => { const bytes=Buffer.from('SYNTHETIC PREVIEW');await fs.mkdir(path.join(root,'previews'),{recursive:true});await fs.writeFile(path.join(root,'previews/contact-sheet-global.jpg'),bytes);await fs.writeFile(path.join(root,'previews/manifest.json'),JSON.stringify({frames:[],actions:[],sheetHashes:{'previews/contact-sheet-global.jpg':(await import('../packages/core/utils.js')).hash(bytes)}})); }, reviewProject: async (root:string) => { const review={pass:true,issues:[],mode:'rule-based',warnings:[]};await fs.writeFile(path.join(root,'work/review.json'),JSON.stringify(review));return review;} },
+    namedExports: {
+      createPreviews: async (root:string,cfg:FactoryConfig,sb:Storyboard) => { const bytes=Buffer.from('SYNTHETIC PREVIEW');await fs.mkdir(path.join(root,'previews'),{recursive:true});await fs.writeFile(path.join(root,'previews/contact-sheet-global.jpg'),bytes);await fs.writeFile(path.join(root,'previews/manifest.json'),JSON.stringify({sourceInputHash:hash(await captureReviewSource(root,cfg,sb)),frames:[],actions:[],sheetHashes:{'previews/contact-sheet-global.jpg':hash(bytes)}})); },
+      reviewProject: async (root:string,cfg:FactoryConfig,sb:Storyboard) => commitReviewEvidence(root,cfg,sb,await beginReviewEvidence(root,cfg,sb),{pass:true,issues:[],mode:'rule-based',warnings:[]}),
+    },
   });
   t.mock.module(new URL('../packages/audio/index.ts', import.meta.url).href, {
-    namedExports: { produceMedia: async (root:string) => {await fs.writeFile(path.join(root,'output/final.srt'),'SYNTHETIC SUBTITLES');await fs.writeFile(path.join(root,'output/thumbnail.png'),'SYNTHETIC THUMBNAIL');} },
+    namedExports: { produceMedia: async (root:string) => {await fs.copyFile(path.join(root,'work/rendered.mp4'),path.join(root,'output/final.mp4'));await fs.writeFile(path.join(root,'output/final.srt'),'SYNTHETIC SUBTITLES');await fs.writeFile(path.join(root,'output/thumbnail.png'),'SYNTHETIC THUMBNAIL');} },
   });
   t.mock.module(new URL('../packages/qc/index.ts', import.meta.url).href, {
     namedExports: { runQC: async () => ({pass:true,issues:[],video:{synthetic:true}}) },
   });
-  const { ConfigSchema } = await import('../packages/core/config.js');
+  const { ConfigSchema,loadConfig } = await import('../packages/core/config.js');
   const { BeatSchema, StorySchema, StoryboardSchema, NarrationSchema } = await import('../packages/core/schemas.js');
   const { exists, hash, readJson, writeJson, walk } = await import('../packages/core/utils.js');
   const { ModelRouter } = await import('../packages/models/registry.js');
@@ -67,7 +73,7 @@ test('public source-only scene migration preserves accepted checkpoint and ledge
   for(const method of ['snapshot','snapshots'] as const)t.mock.method(HyperFramesEngine.prototype,method,forbidden('engine-'+method));
   for(const method of ['renderDraft','renderFinal'] as const)t.mock.method(HyperFramesEngine.prototype,method,async function(this:InstanceType<typeof HyperFramesEngine>){
    const draft=method==='renderDraft';if(draft)draftCalls++;else finalCalls++;
-   const out=path.join(this.projectRoot,draft?'work/draft.mp4':'output/final.mp4');await fs.writeFile(out,'SYNTHETIC CONTROLLED MEDIA '+method);return {path:out,profile:draft?'draft':'final',renderer:'SYNTHETIC',version:'TEST',code:0,cacheKey:hash(out)};
+   const out=path.join(this.projectRoot,draft?'work/draft.mp4':'work/rendered.mp4');await fs.writeFile(out,'SYNTHETIC CONTROLLED MEDIA '+method);return {path:out,profile:draft?'draft':'final',renderer:'SYNTHETIC',version:'TEST',code:0,cacheKey:hash(out)};
   });
   const archive=process.env.SCENE_MIGRATION_BASELINE!;assert.ok(archive);
   const oldEngine=await import(pathToFileURL(path.join(archive,'packages/render/hyperframes.ts')).href);
@@ -162,6 +168,14 @@ test('public source-only scene migration preserves accepted checkpoint and ledge
     for(const name of names)if(await exists(path.join(root,'work',name)))await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name));
     if(mode==='VI-diagram')await writeJson(path.join(root,'work/performance-report.json'),{version:22,shots:[]});
     await exportActorAssets(root);
+    await fs.writeFile(path.join(root,'work/script.json'),'SYNTHETIC SCRIPT IDENTITY');await fs.writeFile(path.join(root,'work/transcript.txt'),text);
+    // Controlled revision boundary only; no pixel/media approval is claimed.
+    const evidenceConfig=await loadConfig(root);
+    await writeJson(path.join(root,'previews/manifest.json'),{sourceInputHash:hash(await captureReviewSource(root,evidenceConfig,board)),frames:[],actions:[],sheetHashes:{'previews/contact-sheet-global.jpg':hash(preview)}});
+    await commitReviewEvidence(root,evidenceConfig,board,await beginReviewEvidence(root,evidenceConfig,board),{pass:true,issues:[],mode:'rule-based',warnings:[]});
+    await fs.copyFile(path.join(root,'output/final.mp4'),path.join(root,'work/rendered.mp4'));
+    await recordFinalEvidence(root,evidenceConfig,board,await requireCurrentPassingReview(root,evidenceConfig,board));
+    for(const name of ['review-attempt.json','review-evidence.json','final-evidence.json'])await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name));
     await loadHost(root);await requireVoice(root,narration);
     const state=await loadState(root);state.state=mode==='JA-label'?'SCENES_READY':mode==='KO-label'?'FINAL_RENDERED':'DONE';state.reviewIteration=2;
     state.approvals={...state.approvals,host:true,hostHash:rig.rigHash,characters:true,storyboard:true};
@@ -175,7 +189,6 @@ test('public source-only scene migration preserves accepted checkpoint and ledge
     await fs.writeFile(path.join(root,'work/model-calls.jsonl'),'');
     const history=Array.from({length:30},(_,i)=>({version:1,event:'completed',id:'synthetic-'+i,callId:'synthetic-'+i,requestHash:'retained-'+i,timestamp:'2026-10-01T00:00:00Z',role:'storyboard',routedRole:'storyboard',provider:'mock',model:'synthetic-history-only',operation:'structured',attempt:1,promptHash:'retained',status:i%2?'error':'success',durationMs:1,costUsd:0}));
     await fs.writeFile(path.join(root,'logs/model-calls.jsonl'),history.map(row=>JSON.stringify(row)).join('\n')+'\n');assert.equal(router.usageSummary().calls,30);
-    await fs.writeFile(path.join(root,'work/script.json'),'SYNTHETIC SCRIPT IDENTITY');await fs.writeFile(path.join(root,'work/transcript.txt'),text);
     const protectedFiles=['project.yaml','input/'+config.input.subtitles,'work/input-document.json','work/story.json','work/narration.json','work/voiced-narration.json','work/voice-report.json','work/speech-activity.json','work/voice/approved.wav','work/storyboard.json','work/storyboard.md','work/character-bible.json','work/beats.json','work/explanation-plan.json','work/host-profile.json','work/host-rig.json','work/host-timeline.json','work/asset-manifest.json','work/actor-cast.json','work/actor-timeline.json','work/script.json','work/transcript.txt','logs/model-calls.jsonl','work/model-calls.jsonl','work/scene-repair-budget.json','work/qc-artwork-repairs.json'];
     const identities:Record<string,string>={};for(const file of protectedFiles)if(await exists(path.join(root,file)))identities[file]=hash(await fs.readFile(path.join(root,file)));
     for(const [file,value]of Object.entries(all))if(file.startsWith('assets/'))identities[file]=value;

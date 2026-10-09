@@ -8,6 +8,10 @@ import { ffmpeg, probe, type ProbeResult } from '../audio/ffmpeg.js';
 import { serializeSrt } from '../ingest/srt.js';
 import { requireVoice, VoiceReportSchema } from '../voice/index.js';
 import {assertNoCandidateSpriteActors} from '../motion/scene-validation.js';
+import {requireCurrentFinalEvidence} from '../review/evidence.js';
+import type {FinalEvidence} from '../review/evidence-schemas.js';
+import {NarrationSchema} from '../core/schemas.js';
+import {hash} from '../core/utils.js';
 
 export interface QCInterval {startMs:number;endMs:number;}
 export interface QCIssue {type:string;severity:'high'|'medium'|'low';description:string;startMs?:number;endMs?:number;}
@@ -44,6 +48,14 @@ export async function runQC(projectRoot:string,config:FactoryConfig,narration:Na
   const issues:QCIssue[]=[],warnings:string[]=[],detections:QCReport['detections']={black:[],freeze:[],silence:[]};
   let video:unknown=null,metadata:ProbeResult|undefined;
   const add=(type:string,description:string,interval?:QCInterval,severity:QCIssue['severity']='high')=>issues.push({type,severity,description,...interval});
+  let evidence:FinalEvidence|undefined;
+  const checkEvidence=async()=>{try{
+    const current=await requireCurrentFinalEvidence(projectRoot,config,storyboard,evidence);
+    const file=config.content.mode==='narrated-explainer'?'work/voiced-narration.json':'work/narration.json';
+    if(hash(await readJson(await safeRealPath(projectRoot,file),NarrationSchema))!==hash(NarrationSchema.parse(narration)))throw new Error('needs-current-review: QC narration differs from the canonical voice timeline');
+    evidence??=current;
+  }catch(error){add('release-evidence',redact(error instanceof Error?error.message:String(error)));}};
+  await checkEvidence();
   const srtOnly=narration.mode==='srt'&&!narration.audioPath;
   if(config.content.mode==='narrated-explainer'){try{await requireVoice(projectRoot,narration);}catch(error){add('voice',error instanceof Error?error.message:String(error));}}
   if(srtOnly) warnings.push('SRT-only source has no voice recording. Missing narration and planned silence are not QC failures.');
@@ -104,6 +116,7 @@ export async function runQC(projectRoot:string,config:FactoryConfig,narration:Na
   if(await exists(path.join(projectRoot,'work/media-report.json'))) {
     const media=await readJson<{warnings?:string[]}>(await safeRealPath(projectRoot,'work/media-report.json'));warnings.push(...media.warnings??[]);
   }
+  await checkEvidence();
   const report:QCReport={pass:!issues.some(issue=>issue.severity==='high'),issues,video,warnings:[...new Set(warnings)],detections};
   await writeJson(await outputPath(projectRoot,'output/qc-report.json'),report);await writeJson(await outputPath(projectRoot,'work/qc-report.json'),report);
   const rows=issues.length?issues.map(issue=>`- ${issue.severity.toUpperCase()} ${issue.type}: ${issue.description}`).join('\n'):'No QC failures detected.';

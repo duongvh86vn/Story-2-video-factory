@@ -8,6 +8,7 @@ import { renderRecipe, recipes } from '../library/shots/index.js';
 import { getStyle } from '../library/styles/index.js';
 import { validateSceneFiles } from '../packages/scenes/security.js';
 import { reviewProject, ruleReview } from '../packages/review/index.js';
+import {captureReviewSource} from '../packages/review/evidence.js';
 import { ModelRouter } from '../packages/models/registry.js';
 import { config, shot, temporary } from './support.js';
 
@@ -31,9 +32,11 @@ async function reviewFixture(t: TestContext) {
     await fs.writeFile(path.join(root, file), 'sheet'); sheetHashes[file] = hash(Buffer.from('sheet'));
   }
   const sources = await Promise.all(['index.html', 'style.css', 'scene.js', 'scene.json'].map(file => fs.readFile(path.join(directory, file))));
-  const manifest = { frames, sceneHashes: { shot001: hash(Buffer.concat(sources)) }, masterHash: hash(Buffer.concat(await Promise.all(masterFiles.map(file => fs.readFile(path.join(root, file)))))), global: 'previews/contact-sheet-global.jpg', sheetHashes };
-  await writeJson(path.join(root, 'previews/manifest.json'), manifest);
   const story = StorySchema.parse({ title: 'The mechanism', story: 'The mechanism moves.', style: { visual: 'Technical' } });
+  const storyboard={shots:[planned]},characters={characters:[]},assets={assets:[]};
+  for(const [name,value]of Object.entries({'story':story,'storyboard':storyboard,'character-bible':characters,'asset-manifest':assets,'narration':{mode:'srt',durationMs:4000,segments:[{id:'cue',startMs:0,endMs:4000,text:story.story}],words:[]}}))await writeJson(path.join(root,'work',name+'.json'),value);
+  const manifest = { sourceInputHash:hash(await captureReviewSource(root,settings,storyboard)),frames, sceneHashes: { shot001: hash(Buffer.concat(sources)) }, masterHash: hash(Buffer.concat(await Promise.all(masterFiles.map(file => fs.readFile(path.join(root, file)))))), global: 'previews/contact-sheet-global.jpg', sheetHashes };
+  await writeJson(path.join(root, 'previews/manifest.json'), manifest);
   return { root, settings, files, planned, manifest, story, storyboard: { shots: [planned] }, characters: { characters: [] }, assets: { assets: [] } };
 }
 

@@ -152,6 +152,10 @@ test('public FINAL checkpoint retains drafts and refuses incomplete story direct
     const previewBytes = Buffer.from('CONTROLLED CONTACT SHEET BYTES: NO SCREENSHOT');
     await fs.writeFile(path.join(root, 'previews/contact-sheet-global.jpg'), previewBytes);
     await writeJson(path.join(root, 'previews/manifest.json'), { frames: [], actions: [], sheetHashes: { 'previews/contact-sheet-global.jpg': hash(previewBytes) } });
+    // Deliberately unaccepted receipt: the earlier semantic final guard must
+    // reject before any evidence/render boundary. This cannot authorize final.
+    await writeJson(path.join(root,'work/review-evidence.json'),{status:'fixture-unverified',visualAcceptance:false,motionVerified:false,productionApproval:false});
+    await writeJson(path.join(root,'work/review-attempt.json'),{version:'release-evidence-1',attemptId:'00000000-0000-4000-8000-000000000000'});
     await loadHost(root); await requireVoice(root, narration);
     const actors = await actorAssetHashes(root); assert.equal(Object.keys(actors).length, 8, 'all four files for both actors');
     for (const [relative, expected] of Object.entries(actors)) assert.equal(hash(await fs.readFile(path.join(root, relative))), expected);
@@ -171,7 +175,7 @@ test('public FINAL checkpoint retains drafts and refuses incomplete story direct
     const required = ['work/input-document.json', 'work/story.json', 'work/narration.json', 'work/timeline.json', 'work/voiced-narration.json', 'work/voice-report.json', 'work/speech-activity.json',
       'work/character-bible.json', 'work/chapters.json', 'work/beats.json', 'work/host-profile.json', 'work/host-rig.json', 'work/explanation-plan.json', 'previews/host-preview-sheet.png',
       'work/storyboard.json', 'work/storyboard.md', 'work/host-timeline.json', ...CINEMATIC_PLAN_FILES.map(n => `work/${n}`), 'work/environment-provenance.json', 'work/animation-library.json',
-      'work/asset-manifest.json', 'scenes/index.html', 'work/performance-report.json', 'work/draft.mp4', 'previews/contact-sheet-global.jpg', 'previews/manifest.json', 'work/review.json'];
+      'work/asset-manifest.json', 'scenes/index.html', 'work/performance-report.json', 'work/draft.mp4', 'previews/contact-sheet-global.jpg', 'previews/manifest.json', 'work/review.json','work/review-attempt.json','work/review-evidence.json'];
     const state = await loadState(root); state.state = 'REPAIRED'; state.artifactHashes = {};
     state.reviewIteration = 1;
     state.approvals.host = true; state.approvals.hostHash = rig.rigHash;

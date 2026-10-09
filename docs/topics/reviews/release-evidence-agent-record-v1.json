@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "scope": "source-only advisory on two supplied files; not whole-repository or runtime acceptance",
+  "authorization": "human requested GPT6.1Sol xhigh agent through9router; no extra thread created",
+  "modelRequests": [
+    {
+      "id": "release-evidence-tests-v1",
+      "status": "failed",
+      "model": "cx/gpt-6.1-sol",
+      "responseModel": null,
+      "requestedReasoningEffort": "xhigh",
+      "requestTimeoutMs": 180000,
+      "usage": null,
+      "error": {
+        "code": "timeout",
+        "status": null
+      },
+      "fingerprint": "568c5b37f9d7822953947b5bb1a7c2cbae0b3d0f078a0d4c24ccad852948af33",
+      "sources": [
+        {
+          "file": "packages/review/evidence.ts",
+          "sha256": "b9d8b404bdb3352fb210d11a72c33ec3b9079789c5146f214b98b04f84c19689"
+        },
+        {
+          "file": "packages/review/evidence-schemas.ts",
+          "sha256": "69a95a427700ac164d132a59243c1cf4991bb45b19720122340137a3a1445746"
+        },
+        {
+          "file": "tests/support.ts",
+          "sha256": "b4e9431bbcb8ddf73d0fdb39d6b4a4459c51cd49d6f87eaa5ffb9bb356142ff2"
+        },
+        {
+          "file": "tests/review.test.ts",
+          "sha256": "33a3360d10765901ebe522161a7d3b74c58521d44fffee7fee5a01b1365d7c45"
+        }
+      ],
+      "createdAt": "2026-10-09T07:32:07.255Z"
+    },
+    {
+      "id": "release-evidence-tests-v2",
+      "status": "failed",
+      "model": "cx/gpt-6.1-sol",
+      "responseModel": null,
+      "requestedReasoningEffort": "xhigh",
+      "requestTimeoutMs": 600000,
+      "usage": null,
+      "error": {
+        "code": "network",
+        "status": null
+      },
+      "fingerprint": "1fc541d207a592f7ac89bbe19e5eab61abf64f6dec4185ad9834554849967792",
+      "sources": [
+        {
+          "file": "packages/review/evidence.ts",
+          "sha256": "b9d8b404bdb3352fb210d11a72c33ec3b9079789c5146f214b98b04f84c19689"
+        },
+        {
+          "file": "packages/review/evidence-schemas.ts",
+          "sha256": "69a95a427700ac164d132a59243c1cf4991bb45b19720122340137a3a1445746"
+        },
+        {
+          "file": "tests/support.ts",
+          "sha256": "b4e9431bbcb8ddf73d0fdb39d6b4a4459c51cd49d6f87eaa5ffb9bb356142ff2"
+        }
+      ],
+      "createdAt": "2026-10-09T07:39:20.161Z"
+    },
+    {
+      "id": "release-evidence-review-v3",
+      "status": "proposal-not-applied",
+      "model": "cx/gpt-6.1-sol",
+      "responseModel": "gpt-6.1-sol",
+      "requestedReasoningEffort": "xhigh",
+      "requestTimeoutMs": 600000,
+      "usage": {
+        "promptTokens": 3391,
+        "completionTokens": 11574,
+        "totalTokens": 14965
+      },
+      "error": null,
+      "fingerprint": "7cdfab7263585737ab6e1a7f36ac0061f2f90377c5b3d11eab95551fa6c7a31b",
+      "sources": [
+        {
+          "file": "packages/review/evidence.ts",
+          "sha256": "b9d8b404bdb3352fb210d11a72c33ec3b9079789c5146f214b98b04f84c19689"
+        },
+        {
+          "file": "packages/review/evidence-schemas.ts",
+          "sha256": "69a95a427700ac164d132a59243c1cf4991bb45b19720122340137a3a1445746"
+        }
+      ],
+      "createdAt": "2026-10-09T07:49:30.000Z"
+    }
+  ],
+  "successfulResponse": {
+    "summary": "Two medium-severity source-level gaps were identified: overlapping reviews are not bound to distinct attempts, and a reserved object key can silently remove a dynamically named input from source evidence. This assessment does not evaluate parent-owned integrations or demand an operating-system snapshot.",
+    "findings": [
+      {
+        "severity": "medium",
+        "file": "packages/review/evidence.ts",
+        "line": 59,
+        "description": "Review attempts share an unqualified 'reviewing' marker. If attempt A starts, then attempt B starts on the same unchanged input and publishes a failing/high-issue review, A's older passing response can subsequently commit: commitReviewEvidence checks input equality but never verifies which attempt owns the marker or published receipt. It unconditionally replaces B's review and evidence with A's pass. Similarly, A can replace B's unfinished marker after B's provider fails. A superseded response can therefore satisfy passing-review checks and cause incorrect resume. This requires overlapping attempts, not temporary source mutation and restoration.",
+        "suggestedFix": "Add a per-attempt generation stored separately from the published receipt. Return it alongside the input from beginReviewEvidence, carry it into commitReviewEvidence and ReviewEvidenceSchema, and require current-review checks to match the active generation. Commits must never advance or overwrite another attempt's active generation; generation-specific receipts can prevent late publication from replacing a newer receipt. Preserve every existing source, preview, pass and high-issue check."
+      },
+      {
+        "severity": "medium",
+        "file": "packages/review/evidence.ts",
+        "line": 37,
+        "description": "sourceFiles is an ordinary object populated with dynamic path keys. When a configured input path is exactly '__proto__', assigning its digest string invokes the inherited prototype setter rather than creating an own record entry. The file is read but its digest is omitted from the returned source evidence. With all other inputs unchanged, changing that file's bytes does not change the source/input hash, so an old preview manifest and review receipt remain indistinguishable from current evidence. The same insertion behavior applies to dynamic narration and approved-asset paths.",
+        "suggestedFix": "Route dynamic sourceFiles additions through a shared checked insertion helper that rejects the exact reserved '__proto__' key before insertion, including optional inputs. Apply the guard to configured inputs, narration audio paths and approved asset paths. If that filename must be supported, use a safe canonical key representation and ensure schema round-tripping preserves every entry; do not rely solely on changing the object's prototype."
+      }
+    ],
+    "testCases": [
+      "With identical source and preview input, begin A, begin B, commit B with pass=false or a high-severity issue, then attempt to commit A with pass=true. A must be rejected, and B's nonpassing review must remain authoritative.",
+      "Begin A and then B on identical input; let B fail without committing. A's late commit must not clear B's unfinished attempt or enable passing-review/final resume. A normal non-overlapping attempt must still complete under the existing revision checks.",
+      "Use '__proto__' as one dynamic configured input path. Either capture must reject that path explicitly, or changing only its bytes must invalidate existing source, preview and review evidence; no successfully captured source record may silently omit it.",
+      "Confirm that ordinary configured input, narration audio and approved-asset byte changes still invalidate evidence, and that the attempt-generation change retains all existing passing-review and high-issue rejection conditions."
+    ],
+    "scope": "two supplied files only",
+    "testsExecuted": false,
+    "productionApproval": false
+  },
+  "failedUsage": "unknown; not zero, no assurance a timed-out request stops backend charging",
+  "budget": {
+    "slotsUsed": 3,
+    "batchMaximum": 6,
+    "automaticRetries": false,
+    "requestedMaxTokensNotVerifiedBackendCap": true
+  },
+  "amendments": [
+    {
+      "finding": "superseded review attempt",
+      "assessment": "confirmed from source",
+      "change": "active generation only begins a new attempt; before/after publication/current/final checks bind attemptId; late responses cannot authorize final; redundant orchestrator review writes removed",
+      "test": "superseded provider newer FAIL/unfinished callback DECLARED/NOT RUN"
+    },
+    {
+      "finding": "reserved object key",
+      "assessment": "confirmed from source",
+      "change": "shared digest rejects exact __proto__ before optional/source/audio/approved-asset insertion, preventing a silently dropped dynamic record key",
+      "test": "configured input/narration audio/approved-asset callback DECLARED/NOT RUN"
+    }
+  ],
+  "laterParentChanges": "expected final receipt across QC/export and read-only API pending/stale marker support; source-only review does not validate parent integrations",
+  "amendmentsIndependentlyReReviewed": false,
+  "runtimeExecuted": false,
+  "testsExecuted": false,
+  "productionApproval": false,
+  "visualAcceptance": false,
+  "motionVerified": false,
+  "goalComplete": false
+}

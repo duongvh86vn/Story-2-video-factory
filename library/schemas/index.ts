@@ -34,9 +34,11 @@ import {NativeRearMotionSchema} from '../../packages/animation/native-head-follo
 import {SourceWorldSchema,SourceWorldEventSchema,SourceWorldContactSchema} from '../../packages/director/source-world-schemas.js';
 import {SourceWorldRefSchema} from '../../packages/director/source-world-reference.js';
 import {CameraDirectionSchema} from '../../packages/director/camera-direction-schemas.js';
+import {ReviewAttemptSchema,ReviewSourceSchema,ReviewInputSchema,ReviewEvidenceSchema,FinalEvidenceSchema} from '../../packages/review/evidence-schemas.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
+  'review-attempt':ReviewAttemptSchema,'review-source':ReviewSourceSchema,'review-input':ReviewInputSchema,'review-evidence':ReviewEvidenceSchema,'final-evidence':FinalEvidenceSchema,
   'camera-direction':CameraDirectionSchema,
   'source-world':SourceWorldSchema,'source-world-event':SourceWorldEventSchema,'source-world-contact':SourceWorldContactSchema,'source-world-ref':SourceWorldRefSchema,
   'manipulation-action-ref':ManipulationActionRefSchema,

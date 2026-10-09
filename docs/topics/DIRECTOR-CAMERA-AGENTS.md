@@ -1,6 +1,8 @@
-# Đạo diễn và camera — source0.73
+# Đạo diễn và camera — source0.74
 
-Cập nhật0.73: [camera cho toàn cast và vòng sửa](CAST-CAMERA-REPAIR-HANDOFF.md). Chẩn đoán đo từng người từ original clock của chính họ; source geometry kiểm độc lập với framing. High camera-layout trở về role camera, camera-source chặn trước mọi call sửa; candidate giữ nguồn/diễn xuất/lock và actor asset bytes. Canonical camera/board/plan/report publish cùng transaction, rồi rebuild/draft/review mới. Chưa nghiệm thu runtime hoặc video.
+Cập nhật0.74: [review đúng revision và final](CURRENT-REVIEW-FINAL-HANDOFF.md). Receipt chưa là nghiệm thu hình hoặc chuyển động.
+
+Mốc0.73: [camera cho toàn cast và vòng sửa](CAST-CAMERA-REPAIR-HANDOFF.md). Chẩn đoán đo từng người từ original clock của chính họ; source geometry kiểm độc lập với framing. High camera-layout trở về role camera, camera-source chặn trước mọi call sửa; candidate giữ nguồn/diễn xuất/lock và actor asset bytes. Canonical camera/board/plan/report publish cùng transaction, rồi rebuild/draft/review mới. Chưa nghiệm thu runtime hoặc video.
 
 Mục tiêu là video sinh động của câu chuyện người dùng đưa vào. Nhân vật đóng vai trong câu chuyện; đạo diễn và camera không biến họ thành người dẫn chuyên giải thích. Bộ tiền sử dùng Lila, Karo và quần chúng đúng tạo hình, trang phục, nét vẽ và màu của nguồn đã chọn. Chủ đề máy móc/món ăn trong fixture không giới hạn tool.
 
@@ -77,3 +79,5 @@ Source0.72 có mười camera callbacks và bảy grip-world callbacks **DECLARE
 6. Film thật normal speed/60fps: hướng màn hình/eyeline, contact không bị crop/che, người nghe có reaction đúng clock, máy chuyển mượt không gây chóng mặt, viền/màu/mặt/khớp và phụ đề rõ. Source geometry và ảnh tĩnh không chứng minh độ mượt.
 
 Source0.73 build/typecheck/schema/static inventory ghi tại `reviews/cast-camera-source-record-v1.json`; source0.72 giữ lịch sử ở `reviews/grip-camera-source-record-v1.json`. Kết quả V1 không nghiệm thu luồng mới. Việc thêm camera là một phần triển khai tool, chưa là tuyên bố video đạt mẫu của người dùng.
+
+Source0.74 giữ toàn bộ camera/source/art/voice guards và thêm revision evidence cho preview/review/final/QC/download. [Source record](reviews/release-evidence-source-record-v1.json) ghi rõ checks và runtime NOT RUN.

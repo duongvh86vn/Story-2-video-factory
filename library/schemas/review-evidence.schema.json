@@ -1,0 +1,109 @@
+{
+  "$ref": "#/definitions/review-evidence",
+  "definitions": {
+    "review-evidence": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "release-evidence-1"
+        },
+        "attemptId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "const": "accepted"
+        },
+        "reviewHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "inputHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "input": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string",
+              "const": "release-evidence-1"
+            },
+            "configurationHash": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "storyboardHash": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "sourceFiles": {
+              "type": "object",
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "sceneFiles": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "previewFiles": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          },
+          "required": [
+            "version",
+            "configurationHash",
+            "storyboardHash",
+            "sourceFiles",
+            "sceneFiles",
+            "previewFiles"
+          ],
+          "additionalProperties": false
+        },
+        "visualAcceptance": {
+          "type": "boolean",
+          "const": false
+        },
+        "motionVerified": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionApproval": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "attemptId",
+        "status",
+        "reviewHash",
+        "inputHash",
+        "input",
+        "visualAcceptance",
+        "motionVerified",
+        "productionApproval"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -16,6 +16,7 @@ import { resolveAssets } from '../assets/index.js';
 import { buildScenes, buildMaster, repairScenes, lockedShot, assertLockedSceneCompatibility, outdatedSceneInputs } from '../scenes/index.js';
 import { HyperFramesEngine } from '../render/hyperframes.js';
 import { createPreviews, reviewProject } from '../review/index.js';
+import {captureReviewInput,requireCurrentReview,requireCurrentPassingReview,recordFinalEvidence,requireCurrentFinalEvidence} from '../review/evidence.js';
 import { produceMedia } from '../audio/index.js';
 import { MEDIA_TEXT_VERSION } from '../captions/literal.js';
 import { runQC } from '../qc/index.js';
@@ -48,7 +49,7 @@ import {assertNoCandidateSpriteActors} from '../motion/scene-validation.js';
 import {loadSpriteMotionCatalog} from '../motion/catalog.js';
 
 export interface PipelineOptions { until?:ProjectStatus; force?:boolean; shotIds?:string[]; retryModelErrors?:boolean; sceneRepairAttempts?:number; onProgress?:(state:ProjectState)=>void; }
-const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json'] };
+const outputs:Partial<Record<ProjectStatus,string[]>>={ INGESTED:['work/story.json'], TIMED:['work/narration.json','work/timeline.json'], ANALYZED:['work/character-bible.json','work/chapters.json','work/beats.json'], STORYBOARDED:['work/storyboard.json','work/storyboard.md'], ASSETS_READY:['work/asset-manifest.json'], SCENES_READY:['scenes/index.html'], DRAFT_RENDERED:['work/draft.mp4','previews/contact-sheet-global.jpg','previews/manifest.json'], REVIEWED:['work/review.json','work/review-attempt.json','work/review-evidence.json'], FINAL_RENDERED:['output/final.mp4','output/final.srt','output/thumbnail.png','work/final-evidence.json'], QC_PASSED:['output/qc-report.json'], DONE:['output/production-report.md','output/storyboard.json','output/storyboard.md','output/character-bible.json','output/timeline.json','output/asset-manifest.json','output/review-attempt.json','output/review-evidence.json','output/final-evidence.json'] };
 function stageOutputs(state:ProjectState):Partial<Record<ProjectStatus,string[]>> {
   if ((state.specVersion ?? 1)<3) return outputs;
   const narrated={ ...outputs, INGESTED:['work/input-document.json'], TIMED:['work/story.json','work/narration.json','work/timeline.json','work/voiced-narration.json','work/voice-report.json','work/speech-activity.json'],
@@ -251,6 +252,23 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
         await appendLog(path.join(root,'logs/orchestrator.log'),{time:new Date().toISOString(),event:'scene-input-migration',previousState,state:state.state,shotIds});
       }
     }
+    // Receipt-only upgrades keep narration, approved locks and consumed budgets.
+    // Recreate only the earliest unverified preview/review/final boundary.
+    if(!finalDirectionBlocked&&stateIndex(state.state)>=stateIndex('DRAFT_RENDERED')){
+      const sb=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);
+      let rewind:ProjectStatus='SCENES_READY';
+      try{
+        await captureReviewInput(root,config,sb);
+        rewind='DRAFT_RENDERED';
+        if(stateIndex(state.state)>=stateIndex('REVIEWED'))await requireCurrentReview(root,config,sb);
+        rewind='REPAIRED';
+        if(stateIndex(state.state)>=stateIndex('FINAL_RENDERED'))await requireCurrentFinalEvidence(root,config,sb);
+      }catch(error){
+        const previousState=state.state;state.state=rewind;delete state.error;delete state.waitingFor;
+        for(const [stage,files]of Object.entries(stageOutputs(state)))if(stateIndex(stage as ProjectStatus)>stateIndex(state.state))for(const file of files)delete state.artifactHashes[file];
+        await appendLog(path.join(root,'logs/orchestrator.log'),{time:new Date().toISOString(),event:'release-evidence-migration',previousState,state:state.state,reason:redact(error instanceof Error?error.message:String(error),config)});
+      }
+    }
     state.reviewIteration=Math.max(state.reviewIteration,await qcArtworkRepairIteration(root,state));
     const router=new ModelRouter(config,root,{retryModelErrors:options.retryModelErrors}); const engine=new HyperFramesEngine(config,root);
     if (options.shotIds?.length) {
@@ -322,7 +340,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
           }
           case 'SCENES_READY': { const sb=await board(); const n=await voiced(); validateStoryboard(sb,n,await beats(),await characters()); const manifest=await assets(); await buildScenes(root,config,router,sb,await characters(),manifest); await buildMaster(root,config,sb,n,manifest); const validation=await engine.validate(); if(!validation.pass) throw new Error(`Master validation failed: ${validation.errors.join('\n')}`); break; }
           case 'DRAFT_RENDERED': { const sb=await board(), manifest=await assets(); await buildScenes(root,config,router,sb,await characters(),manifest); await buildMaster(root,config,sb,await voiced(),manifest); const validation=await engine.validate(); if(!validation.pass) throw new Error(`Master validation failed: ${validation.errors.join('\n')}`); const result=await retryRender(config,()=>engine.renderDraft()); store.render('draft',result.path); await createPreviews(root,config,sb); break; }
-          case 'REVIEWED': { const result=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); await writeJson(path.join(root,'work/review.json'),result); store.review(result); break; }
+          case 'REVIEWED': { const result=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); store.review(result); break; }
           case 'REPAIRED': {
             let review=await readJson(path.join(root,'work/review.json'),ReviewSchema);
             while(review.issues.some(i=>i.severity==='high') && state.reviewIteration<config.workflow.max_review_iterations) {
@@ -332,7 +350,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
               await repairScenes(root,config,router,await board(),await characters(),await assets(),repair.remainingIssues,{sceneRepairAttempts:options.sceneRepairAttempts});
               await buildMaster(root,config,await board(),await voiced(),await assets()); const validation=await engine.validate(); if(!validation.pass) throw new Error(`Repaired master invalid: ${validation.errors.join('\n')}`);
               await retryRender(config,()=>engine.renderDraft()); await createPreviews(root,config,await board());
-              review=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); await writeJson(path.join(root,'work/review.json'),review); store.review(review); await saveState(root,state);
+              review=await reviewProject(root,config,router,await board(),await story(),await characters(),await assets()); store.review(review); await saveState(root,state);
             }
             if(review.issues.some(i=>i.severity==='high') || !review.pass) throw new Error('Review failed after the configured repair budget; edit or unlock the affected shots before resuming'); break;
           }
@@ -343,7 +361,11 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
               const n=await narration(),{profile,rig}=await loadHost(root);validateExplainerStoryboard(sb,n,b,profile,rig,config);
             }
             if(config.content.mode==='narrated-explainer'){try{await requireVoice(root,await voiced());}catch(error){throw new ApprovalRequired('voice',String(error));}}
-            const result=await retryRender(config,()=>engine.renderFinal()); store.render('final',result.path); await produceMedia(root,config,await voiced(),await board(),await assets()); break; }
+            const sb=await board(),evidence=await requireCurrentPassingReview(root,config,sb);
+            const result=await retryRender(config,()=>engine.renderFinal());
+            await requireCurrentPassingReview(root,config,sb,evidence);
+            store.render('final',result.path);await produceMedia(root,config,await voiced(),sb,await assets());
+            await recordFinalEvidence(root,config,sb,evidence);break; }
           case 'QC_PASSED': {
             const sb=await board(),n=await voiced(),qc=await runQC(root,config,n,sb);
             await writeJson(path.join(root,'output/qc-report.json'),qc);await report(root,config,state,router);
@@ -371,7 +393,11 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             }
             break;
           }
-          case 'DONE': { const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(config.content.mode==='narrated-explainer'&&['idea','story'].includes((await readJson<{mode:string}>(path.join(root,'work/input-document.json'))).mode))names.push('script.json','generated-script.txt','script-generation.json');if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name)); await report(root,config,state,router); break; }
+          case 'DONE': {
+            const sb=await board(),evidence=await requireCurrentFinalEvidence(root,config,sb);
+            const names=['storyboard.json','storyboard.md','character-bible.json','timeline.json','asset-manifest.json','review-attempt.json','review-evidence.json','final-evidence.json',...(config.content.mode==='narrated-explainer'?['host-profile.json','host-timeline.json','voice-report.json','explanation-plan.json','narration.json','speech-activity.json']:[]),...(state.specVersion===4?CINEMATIC_EXPORT_FILES:[])];if(config.content.mode==='narrated-explainer'&&['idea','story'].includes((await readJson<{mode:string}>(path.join(root,'work/input-document.json'))).mode))names.push('script.json','generated-script.txt','script-generation.json');if(state.specVersion===4)await exportActorAssets(root);for(const name of names) await fs.copyFile(path.join(root,'work',name),path.join(root,'output',name));await report(root,config,state,router);
+            await requireCurrentFinalEvidence(root,config,sb,evidence);break;
+          }
         }
         transition(state,next);if(next==='TIMED')state.inputHash=(await inputFingerprint(root,config,hostHash)).all;
         if(next==='STORYBOARDED'||next==='ASSETS_READY')state.assetInputHash=await assetFingerprint(root); await artifactHashes(root,state); await saveState(root,state); store.saveState(state); store.finishJob(job); options.onProgress?.(state);

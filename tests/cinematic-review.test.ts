@@ -20,6 +20,7 @@ import { getStyle } from '../library/styles/index.js';
 import type { HostGeometry } from '../packages/host/controller.js';
 import { secureSceneFiles } from '../packages/scenes/security.js';
 import { reviewProject, createPreviews, eventPreviewTimes } from '../packages/review/index.js';
+import {captureReviewSource} from '../packages/review/evidence.js';
 import { HyperFramesEngine } from '../packages/render/hyperframes.js';
 import { temporary } from './support.js';
 
@@ -67,6 +68,7 @@ async function fixture(t:TestContext,framing:Framing='medium',textOverride?:stri
   }
   const board={shots:[shot]},characters={characters:[]},assets:AssetManifest={assets:[{id:shot.assetNeeds[0]!.id,type:'image',path:rig.assetPath,source:'template',status:'approved',hash:hash(await fs.readFile(path.join(root,rig.assetPath))),shotIds:[shot.id]}]};
   async function seal(){
+    for(const [name,value]of Object.entries({'story':story,'storyboard':board,'character-bible':characters,'asset-manifest':assets}))await writeJson(path.join(root,'work',name+'.json'),value);
     await writeJson(path.join(dir,'host-geometry.json'),geometry);
     const fractions=[0,.25,.5,.75,1],frames=[],actions=[],sheetHashes:Record<string,string>={};
     for(const fraction of fractions){
@@ -84,7 +86,7 @@ async function fixture(t:TestContext,framing:Framing='medium',textOverride?:stri
     const sourceNames=['index.html','style.css','scene.js','scene.json','host-geometry.json'];
     const sceneHash=hash(Buffer.concat(await Promise.all(sourceNames.map(file=>fs.readFile(path.join(dir,file))))));
     const masterHash=hash(Buffer.concat(await Promise.all(['scenes/index.html','scenes/master.js','work/master.json'].map(file=>fs.readFile(path.join(root,file))))));
-    await writeJson(path.join(root,'previews/manifest.json'),{frames,actions,sceneHashes:{shot1:sceneHash},masterHash,global:'previews/contact-sheet-global.jpg',sheetHashes});
+    await writeJson(path.join(root,'previews/manifest.json'),{sourceInputHash:hash(await captureReviewSource(root,config,board)),frames,actions,sceneHashes:{shot1:sceneHash},masterHash,global:'previews/contact-sheet-global.jpg',sheetHashes});
   }
   await seal();
   const review=(model:ModelRouter=router)=>reviewProject(root,config,model,board,story,characters,assets);
@@ -141,6 +143,7 @@ test('cinematic framing keeps caption, narrative source, target and scene-source
   ];
   for(const change of changes){
     Object.assign(f.shot,structuredClone(original));change(f.shot);
+    await f.seal();
     let reviewed:Awaited<ReturnType<typeof f.review>>;
     try{reviewed=await f.review();}
     catch(error){assert.match(String(error),/source|target|part|specification|cinematic/i);continue;}
@@ -153,16 +156,17 @@ test('cinematic framing keeps caption, narrative source, target and scene-source
 
 test('review refuses a medium camera that leaves the subtitle-safe ground region',async t=>{
   const f=await fixture(t,'medium');f.shot.cinematic!.camera.anchor.y-=130;
-  await assert.rejects(f.review(),/camera.*subtitle|camera.*host height/);
+  await f.seal();const result=await f.review();
+  assert.ok(result.issues.some(i=>i.severity==='high'&&i.type==='camera-layout'));
 });
 
 test('review rejects oversized wide framing and cropped face/contact focus even when close body cropping is intentional',async t=>{
   const wide=await fixture(t,'wide');wide.shot.cinematic!.camera.startScale=wide.shot.cinematic!.camera.endScale=1.12;
-  await assert.rejects(wide.review(),/wide host height must occupy 25–40%/);
+  await wide.seal();assert.ok((await wide.review()).issues.some(i=>i.severity==='high'&&i.type==='camera-layout'));
   const face=await fixture(t,'face');face.shot.cinematic!.camera.anchor.x=1200;
-  await assert.rejects(face.review(),/face close crops the face/);
+  await face.seal();assert.ok((await face.review()).issues.some(i=>i.severity==='high'&&i.type==='camera-layout'));
   const contact=await fixture(t,'contact');contact.shot.cinematic!.camera.anchor.y-=130;
-  await assert.rejects(contact.review(),/target\/hand is cropped/);
+  await contact.seal();assert.ok((await contact.review()).issues.some(i=>i.severity==='high'&&i.type==='camera-layout'));
 });
 
 test('diagram review retains the original inclusive 25–40% height thresholds',async t=>{

@@ -29,10 +29,11 @@ import {validateSpriteCamera} from '../motion/camera.js';
 import type {SpriteSceneGeometry} from '../motion/scene.js';
 import {renderCinematic} from '../../library/shots/cinematic.js';
 import {interactionPreviewTimes,validateSourceInteractionGeometry} from '../director/source-interactions.js';
+import {beginReviewEvidence,captureReviewSource,commitReviewEvidence} from './evidence.js';
 type SceneGeometry=HostGeometry|SpriteSceneGeometry;
 
 interface PreviewFrame { shotId:string; fraction:number; timeMs:number; path:string; hash:string; }
-interface PreviewManifest { frames:PreviewFrame[]; actions?:PreviewFrame[]; sceneHashes:Record<string,string>; masterHash:string; global:string; sheetHashes:Record<string,string>; }
+interface PreviewManifest { sourceInputHash:string; frames:PreviewFrame[]; actions?:PreviewFrame[]; sceneHashes:Record<string,string>; masterHash:string; global:string; sheetHashes:Record<string,string>; }
 const fractions=[0,.25,.5,.75,1] as const;
 /** Sample changes and consequences, beyond a hand's early reach window. */
 export function eventPreviewTimes(shot:Shot):number[]{
@@ -97,6 +98,7 @@ async function masterHash(root:string):Promise<string> {
   return hash(Buffer.concat(sources));
 }
 export async function createPreviews(projectRoot:string,config:FactoryConfig,storyboard:Storyboard):Promise<void> {
+  const sourceInputHash=hash(await captureReviewSource(projectRoot,config,storyboard));
   const engine=new HyperFramesEngine(config,projectRoot),frames:PreviewFrame[]=[],actions:PreviewFrame[]=[],sheetHashes:Record<string,string>={};
   const hashes=await sceneHashes(projectRoot,storyboard);
   const master=await masterHash(projectRoot);
@@ -129,7 +131,8 @@ export async function createPreviews(projectRoot:string,config:FactoryConfig,sto
   }
   const global='previews/contact-sheet-global.jpg';
   sheetHashes[global]=hash(await fs.readFile(await contactSheet(projectRoot,frames,global)));
-  await writeJson(await outputPath(projectRoot,'previews/manifest.json'),{frames,actions,sceneHashes:hashes,masterHash:master,global,sheetHashes} satisfies PreviewManifest);
+  if(hash(await captureReviewSource(projectRoot,config,storyboard))!==sourceInputHash)throw new Error('needs-current-review: source changed while capturing previews; recreate previews');
+  await writeJson(await outputPath(projectRoot,'previews/manifest.json'),{sourceInputHash,frames,actions,sceneHashes:hashes,masterHash:master,global,sheetHashes} satisfies PreviewManifest);
 }
 function tokens(text:string):Set<string> {return new Set(text.toLocaleLowerCase().match(/[\p{L}]{3,}/gu)??[]);}
 function issue(shot:Shot,type:string,severity:ReviewIssue['severity'],description:string,repair:string):ReviewIssue {return {shotId:shot.id,type,severity,description,repair};}
@@ -197,6 +200,7 @@ export async function ruleReview(root:string,config:FactoryConfig,storyboard:Sto
   return issues;
 }
 export async function reviewProject(projectRoot:string,config:FactoryConfig,router:ModelRouter,storyboard:Storyboard,story:Story,characters:CharacterBible,assets:AssetManifest):Promise<Review> {
+  const evidence=await beginReviewEvidence(projectRoot,config,storyboard,{story,characters,assets});
   const issues=await ruleReview(projectRoot,config,storyboard,story,characters,assets),warnings:string[]=[];
   const explainer=config.content.mode==='narrated-explainer';
   const host=explainer?await loadHost(projectRoot):undefined;
@@ -317,7 +321,6 @@ export async function reviewProject(projectRoot:string,config:FactoryConfig,rout
   } else warnings.push('No real vision model configured: character appearance, crop, readability and visual story contradictions have not been inspected. Rule-based checks only.');
   const unique=[...new Map(issues.map(issue=>[`${issue.shotId}:${issue.type}:${issue.description}`,issue])).values()];
   const review:Review={pass:!unique.some(issue=>issue.severity==='high'),issues:unique,mode:hasVision?'combined':'rule-based',warnings:[...new Set(warnings)]};
-  await writeJson(await outputPath(projectRoot,'work/review.json'),JSON.parse(redact(JSON.stringify(review))));
-  return review;
+  return commitReviewEvidence(projectRoot,config,storyboard,evidence,review);
 }
 

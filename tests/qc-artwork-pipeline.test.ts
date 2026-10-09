@@ -5,7 +5,9 @@ import path from 'node:path';
 import test from 'node:test';
 import YAML from 'yaml';
 import { creativeFixture } from './creative-fixture.js';
-import { NarrationSchema, StoryboardSchema, type AssetManifest, type Narration } from '../packages/core/schemas.js';
+import {beginReviewEvidence,captureReviewSource,commitReviewEvidence,recordFinalEvidence,requireCurrentPassingReview} from '../packages/review/evidence.js';
+import {loadConfig,type FactoryConfig} from '../packages/core/config.js';
+import { NarrationSchema, StoryboardSchema, type AssetManifest, type Narration,type Storyboard } from '../packages/core/schemas.js';
 import { exists, hash, readJson, writeJson } from '../packages/core/utils.js';
 import { ModelRouter } from '../packages/models/registry.js';
 import { buildScenes, buildMaster } from '../packages/scenes/index.js';
@@ -43,12 +45,15 @@ test('public QC artwork pipeline: reservation, rerender and rejection gates', as
     await fs.mkdir(path.join(root, 'previews'), { recursive: true });
     const bytes = Buffer.from('ISOLATED-PREVIEW-BOUNDARY');
     await fs.writeFile(path.join(root, 'previews/contact-sheet-global.jpg'), bytes);
-    await writeJson(path.join(root, 'previews/manifest.json'), { frames: [],
+    const cfg=await loadConfig(root),sb=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);
+    await writeJson(path.join(root, 'previews/manifest.json'), { sourceInputHash:hash(await captureReviewSource(root,cfg,sb)),frames: [],
       sheetHashes: { 'previews/contact-sheet-global.jpg': hash(bytes) } });
   };
   t.mock.module(new URL('../packages/review/index.ts', import.meta.url).href, { namedExports: {
     createPreviews: preview,
-    reviewProject: async () => { active.trace.push('review'); return { pass: true, issues: [], mode: 'rule-based', warnings: [] }; },
+    reviewProject: async (root:string,cfg:FactoryConfig,sb:Storyboard) => {
+      active.trace.push('review');return commitReviewEvidence(root,cfg,sb,await beginReviewEvidence(root,cfg,sb),{pass:true,issues:[],mode:'rule-based',warnings:[]});
+    },
   } });
   t.mock.module(new URL('../packages/audio/index.ts', import.meta.url).href, { namedExports: {
     produceMedia: async (root: string, _config: unknown, n: Narration) => {
@@ -126,6 +131,10 @@ test('public QC artwork pipeline: reservation, rerender and rejection gates', as
     await fs.writeFile(path.join(root, 'output/final.mp4'), oldFinal);
     await fs.writeFile(path.join(root, 'output/final.srt'), serializeSrt(n.segments));
     await fs.writeFile(path.join(root, 'output/thumbnail.png'), 'ISOLATED-THUMBNAIL');
+    await fs.writeFile(path.join(root,'work/rendered.mp4'),oldFinal);
+    const evidenceConfig=await loadConfig(root);
+    await commitReviewEvidence(root,evidenceConfig,board,await beginReviewEvidence(root,evidenceConfig,board),{pass:true,issues:[],mode:'rule-based',warnings:[]});
+    await recordFinalEvidence(root,evidenceConfig,board,await requireCurrentPassingReview(root,evidenceConfig,board));
     const state = await loadState(root); state.state = 'FINAL_RENDERED'; state.artifactHashes = {};
     if (mode === 'locked') state.locked[`scene:${f.shot.id}`] = true;
     await saveState(root, state);

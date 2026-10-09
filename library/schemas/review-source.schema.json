@@ -1,0 +1,52 @@
+{
+  "$ref": "#/definitions/review-source",
+  "definitions": {
+    "review-source": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "release-evidence-1"
+        },
+        "configurationHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "storyboardHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "sourceFiles": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "sceneFiles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      },
+      "required": [
+        "version",
+        "configurationHash",
+        "storyboardHash",
+        "sourceFiles",
+        "sceneFiles"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

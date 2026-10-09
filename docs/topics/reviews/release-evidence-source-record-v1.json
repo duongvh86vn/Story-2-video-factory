@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.74-current-review-final",
+  "precedingSourceSHA": "6b2b5bda2f879eb174fc6beedeb584b8a8085b58",
+  "scope": "project source/full scene resources/preview/review/final revision evidence and bounded GPT6.1Sol source assistance; product and film still unaccepted",
+  "features": [
+    "Preview source binding before/after captures includes actual image/font/audio/vendor assets",
+    "Provider-wait review source/preview rechecks; active attempt generation prevents superseded PASS publication",
+    "Reserved source record key rejected before optional or dynamic audio/asset insertion",
+    "Original review receipt held across final render/postprocess; actual raw render/MP4/SRT/thumbnail hashes",
+    "Original final receipt and canonical narration held across QC/export; stale final download denied",
+    "Receipt-only migration keeps valid narration/locks/consumed budgets; read-only pending/stale API view",
+    "Source assistance accepts explicit requested reasoning effort and bounded native HTTP total deadline with no auto retry or code application"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "5fe063/session62294/completionb8c09c",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\ntransforming...\n✓ 49 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-CZzEFLsv.js   225.07 kB │ gzip: 70.44 kB\n✓ built in 523ms\n",
+      "scope": "compile/bundle only; production source unchanged after this check"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "7918dd/session81267/completiona3913c",
+      "initialOutput": "> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json",
+      "decisiveOutput": "",
+      "scope": "typecheck only; no callback or fixture execution"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "b5f1ed",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n\n",
+      "scope": "schema definition export only"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "ff48ed",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "static inventory/manifest only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/release-evidence-static-audit-v1.mjs",
+      "exitCode": 0,
+      "handle": "704f91/session66474/completionc49b26",
+      "record": "release-evidence-static-record-v1.json",
+      "scope": "original raw raster/header/JSON/code hashes; no business or geometry execution"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/record-release-agent-v1.mjs",
+      "exitCode": 0,
+      "handle": "46b7ee",
+      "decisiveOutput": "{\"modelCalls\":3,\"successfulSourceReview\":1,\"responseModel\":\"gpt-6.1-sol\",\"usage\":{\"promptTokens\":3391,\"completionTokens\":11574,\"totalTokens\":14965},\"findings\":2,\"topicJSONCompared\":117,\"rawEqualTopicJSON\":107,\"lineEndingOnlyTopicJSON\":10,\"testsExecuted\":false,\"productionApproval\":false}\n",
+      "scope": "agent source advice record and raw/LF-normalized metadata checks; no metadata files rewritten"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "c4fcef",
+      "decisiveOutput": "",
+      "scope": "whitespace only; later index check also required"
+    }
+  ],
+  "sourceHashes": {
+    "apps/server/artifacts.ts": "468346f784e8c0e53a62d3eecfc9d400f4dfbe41cdff32b62e71e0e2bcb1001c",
+    "library/schemas/index.ts": "a54eb968fda4769100eb707e61c258dcce09c38b522e5601c42bf3f4098ae438",
+    "packages/orchestrator/pipeline.ts": "5ff37e8890b6e08850b0715e131b62a1840ba99bc4eb45caf14af1f2fc951176",
+    "packages/qc/index.ts": "04c155d5270f17c54e5e2e40b76b09e2fe81ca60aad90ee8648719cfae37319e",
+    "packages/review/evidence-schemas.ts": "df36a2199bf5d3e661c40906f7c3b191030313b436e9038343bf4dd3c36f5644",
+    "packages/review/evidence.ts": "906c6388bc4ca497aeeedb87f16daec093f69394995d1a3d9cd6b431e569563c",
+    "packages/review/index.ts": "573f65953e428693e0d213bd75c4557d45e45238b7fa2afa9ea178765a20c7e2",
+    "packages/topics/prehistoric-life.ts": "06e39b01daa088380716059be18fc0a7213d3af76eacb4cf4f3cebbcf7ea9a4c",
+    "scripts/dev-nine-router.ts": "e2440f5907bd727672c3696a8973b8a1f7a188d43b4c66c28c4eace93eceb1df",
+    "scripts/prehistoric-pack.ts": "b6412f9313697af1695f31b16f43f5e109a1b6dd63ab524e65d6528d265fd6d7",
+    "tests/cinematic-review.test.ts": "859505e66c01a258868e47843ce82ac6bbbc5c84342c8861764fd815665b1664",
+    "tests/media.test.ts": "d9d89f51bcbfbeafb73a90c1c46fb432ec248b7ffa882a6d1b627752a5a9f95b",
+    "tests/qc-artwork-pipeline.test.ts": "cb7f8ebf898ce10fb958677132fc2cb344d8ad2ca3bd49414ab73e8be91e188a",
+    "tests/release-evidence.test.ts": "2d9280a7a01bd6d9ae45e0e37d3f920791b50ab0f3c7bcdb8c6f0bcd3c9a0171",
+    "tests/review.test.ts": "4a5f148194f66b7bbe3bb781ee1cef28d84df21d59e3c572ef9e868020107cfc",
+    "tests/scene-input-migration.test.ts": "30bdedff45cbcc666cdbfbc64a0b64402b351556411eaa9ee17ef7b461b902fc",
+    "tests/story-acting-public-final.test.ts": "55e295e6771b8a2e64b993d1d2d8fd86751d607bb46cbbee7d480869ef0caef1"
+  },
+  "ownedPaths": [
+    "apps/server/artifacts.ts",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md",
+    "docs/topics/CURRENT-REVIEW-FINAL-HANDOFF.md",
+    "docs/topics/DIRECTOR-CAMERA-AGENTS.md",
+    "docs/topics/PREHISTORIC-IMPLEMENTATION-HANDOFF.md",
+    "docs/topics/SUPPORTING-ACTORS.md",
+    "docs/topics/reviews/release-evidence-agent-inputs-v1.json",
+    "docs/topics/reviews/release-evidence-agent-record-v1.json",
+    "docs/topics/reviews/release-evidence-source-record-v1.json",
+    "docs/topics/reviews/release-evidence-static-record-v1.json",
+    "library/schemas/final-evidence.schema.json",
+    "library/schemas/index.ts",
+    "library/schemas/review-attempt.schema.json",
+    "library/schemas/review-evidence.schema.json",
+    "library/schemas/review-input.schema.json",
+    "library/schemas/review-source.schema.json",
+    "library/topics/prehistoric-life/manifest.json",
+    "packages/orchestrator/pipeline.ts",
+    "packages/qc/index.ts",
+    "packages/review/evidence-schemas.ts",
+    "packages/review/evidence.ts",
+    "packages/review/index.ts",
+    "packages/topics/prehistoric-life.ts",
+    "scripts/dev-nine-router.ts",
+    "scripts/prehistoric-pack.ts",
+    "tests/cinematic-review.test.ts",
+    "tests/media.test.ts",
+    "tests/qc-artwork-pipeline.test.ts",
+    "tests/release-evidence.test.ts",
+    "tests/review.test.ts",
+    "tests/scene-input-migration.test.ts",
+    "tests/story-acting-public-final.test.ts"
+  ],
+  "agentRecord": "release-evidence-agent-record-v1.json",
+  "agentInputs": "release-evidence-agent-inputs-v1.json",
+  "staticRecord": "release-evidence-static-record-v1.json",
+  "testDeclarations": {
+    "newCallbacks": 8,
+    "callbacksExecuted": 0,
+    "updatedExistingFiles": 6,
+    "tests": "DECLARED / NOT RUN"
+  },
+  "historicalFailures": [
+    {
+      "handle": "c0383b/session28196/completion5ab80f",
+      "kind": "source-assistant",
+      "code": "timeout",
+      "usage": "unknown"
+    },
+    {
+      "handle": "18df6f/session31046/completion4a14d6",
+      "kind": "source-assistant",
+      "code": "network",
+      "usage": "unknown"
+    },
+    {
+      "handle": "5c3dc1",
+      "exitCode": 1,
+      "kind": "source-text-write",
+      "reason": "Windows direct overwrite UNKNOWN; preserved existing source then used checked same-file atomic rename;39506c exit0"
+    },
+    {
+      "handle": "219879",
+      "exitCode": 1,
+      "kind": "raw-metadata-audit",
+      "reason": "Broad raw JSON comparison detected existing line ending differences versus Git;46b7ee separately reports107 raw-equal and10 newline-only files out of117, with no metadata rewriting"
+    }
+  ],
+  "runtime": {
+    "tests": "NOT RUN",
+    "fixtures": "NOT INVOKED",
+    "geometry": "NOT INVOKED",
+    "server": "NOT STARTED",
+    "browser": "NOT USED",
+    "APIProductionPipeline": "NOT RUN",
+    "TTS": "NOT RUN",
+    "ASR": "NOT RUN",
+    "audio": "NOT GENERATED",
+    "video": "NOT RENDERED",
+    "acceptance": "delegated to human test model"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "visualAcceptance": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "goalComplete": false,
+  "limitations": [
+    "Optimistic source/metadata rechecks, not OS snapshots or compare-and-swap for edits outside pipeline reservation",
+    "Final amendments not independently re-reviewed; source agent saw only two frozen files",
+    "Source/build/hash evidence cannot approve faithful art/anatomy/gaze/motion/narration/content or final quality"
+  ],
+  "remaining": [
+    "Shared/sequential original prop ownership and full integrated original semantic production audit",
+    "Faithful own art/pose/head/hair/garment/views/world and actual normal-speed film acceptance",
+    "Human current-SHA runtime receipt/camera transaction/interruption/concurrent-edit/cache/lock/source acceptance",
+    "Full arbitrary story/script/original WAV, EN+VI/JA/KO/external-local TTS, resume/rebuild and final MP4/audio/subtitle/QC"
+  ]
+}

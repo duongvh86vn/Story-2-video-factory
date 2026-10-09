@@ -1,0 +1,83 @@
+{
+  "$ref": "#/definitions/final-evidence",
+  "definitions": {
+    "final-evidence": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "release-evidence-1"
+        },
+        "status": {
+          "type": "string",
+          "const": "produced"
+        },
+        "reviewEvidenceHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "reviewHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "inputHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "artifacts": {
+          "type": "object",
+          "properties": {
+            "work/rendered.mp4": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "output/final.mp4": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "output/final.srt": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "output/thumbnail.png": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "work/rendered.mp4",
+            "output/final.mp4",
+            "output/final.srt",
+            "output/thumbnail.png"
+          ],
+          "additionalProperties": false
+        },
+        "visualAcceptance": {
+          "type": "boolean",
+          "const": false
+        },
+        "motionVerified": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionApproval": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "version",
+        "status",
+        "reviewEvidenceHash",
+        "reviewHash",
+        "inputHash",
+        "artifacts",
+        "visualAcceptance",
+        "motionVerified",
+        "productionApproval"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

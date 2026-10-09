@@ -16,6 +16,7 @@ import {sourceGripWorldDescription} from '../packages/director/source-grip-world
 import {cameraDirectionDescription} from '../packages/director/camera-direction-schemas.js';
 import {castCameraDescription} from '../packages/director/cast-camera.js';
 import {cameraRepairDescription} from '../packages/director/camera-repair.js';
+import {releaseEvidenceDescription} from '../packages/review/evidence-schemas.js';
 import {ACTOR_PROP_OWNERSHIP_DESCRIPTION} from '../packages/director/props.js';
 import {referenceHeadDescription} from '../packages/animation/forest-head-art.js';
 import {referenceBodyDescription} from '../packages/animation/forest-body-art.js';
@@ -112,6 +113,7 @@ const garmentCandidates=await Promise.all(Object.entries(bodyPack.seatedGarments
   return {...measured,actor,approved:false,status:'candidate-authored-seated-folds'};
 }));
 await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSION,...prehistoricReadiness,
+  releaseEvidence:{...releaseEvidenceDescription,codeHashes:Object.fromEntries(await Promise.all(['packages/review/evidence-schemas.ts','packages/review/evidence.ts','packages/review/index.ts','packages/orchestrator/pipeline.ts','packages/qc/index.ts','apps/server/artifacts.ts','library/schemas/index.ts','scripts/dev-nine-router.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   sourceGripWorld:{...sourceGripWorldDescription,codeHashes:Object.fromEntries(await Promise.all(["packages/director/source-grip-world.ts","packages/director/source-prop-binding.ts","packages/director/source-fixed-operation.ts","packages/director/source-actor.ts","packages/director/source-world-projection.ts","packages/director/source-world-phase.ts","packages/director/camera.ts","packages/director/creative.ts","packages/review/index.ts","packages/director/source-prop-identity.ts","packages/director/acting-brief.ts"].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   castCamera:{...castCameraDescription,codeHashes:Object.fromEntries(await Promise.all(["packages/director/cast-camera.ts","packages/director/camera.ts","packages/director/creative.ts","packages/review/index.ts","packages/director/acting-brief.ts"].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
   cameraRepair:{...cameraRepairDescription,codeHashes:Object.fromEntries(await Promise.all(["packages/director/camera-repair.ts","packages/director/camera-direction.ts","packages/director/index.ts","packages/director/artwork-repair.ts","packages/orchestrator/pipeline.ts","packages/review/index.ts"].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
