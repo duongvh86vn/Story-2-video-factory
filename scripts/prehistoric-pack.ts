@@ -34,7 +34,7 @@ import {ACTOR_PROP_OWNERSHIP_DESCRIPTION} from '../packages/director/props.js';
 import {referenceHeadDescription} from '../packages/animation/forest-head-art.js';
 import {referenceBodyDescription} from '../packages/animation/forest-body-art.js';
 import {poseArtInventory} from '../packages/topics/pose-art-workbench.js';
-import {viewArtInventory} from '../packages/topics/view-art-workbench.js';
+import {viewArtInventory,viewArtDescription} from '../packages/topics/view-art-workbench.js';
 import {bodyViewDescription} from '../packages/animation/body-view-art.js';
 import {nativeSeatArtDescription,nativeSeatArtInventory} from '../packages/topics/native-seat-art.js';
 import {nativeSeatSurfaceInventory} from '../packages/topics/native-seat-surface-inventory.js';
@@ -179,7 +179,8 @@ await writeJson(path.join(dir,'manifest.json'),{version:PREHISTORIC_TOPIC_VERSIO
   poseArtwork:{scope:'static-artwork-only',inventory:'library/topics/prehistoric-life/pose-studies/inspection-v1.json',generatedImageCalls:14,staticVisionAdviceCalls:2,
     evidence:poseEvidence,approved:false,productionReady:false,generatedPosesIntegratedAsProductionRig:false,
     reviews:['docs/topics/reviews/gemini-pose-advice-v1.json','docs/topics/reviews/gemini-pose-advice-v3.json'],workflow:'docs/topics/AI-POSE-WORKFLOW.md'},
-  authoredViewArtwork:{scope:'static-artwork-only',generatedImageCalls:viewEvidence.length,staticVisionAdviceCalls:2,evidence:viewEvidence,
+  nativeViewCatalog:{...viewArtDescription,handoff:'docs/topics/RIGHT-PROFILE-ART-HANDOFF.md',codeHashes:Object.fromEntries(await Promise.all(['packages/topics/view-art-workbench.ts','apps/server/index.ts','library/schemas/index.ts'].map(async file=>[file,hash(await fs.readFile(path.join(repo,file)))])))},
+  authoredViewArtwork:{scope:'static-artwork-only',sourceRecords:viewEvidence.length,legacyStaticVisionAdviceCalls:2,builtInImageCallsThisSource:5,staticVisionAdviceAttemptsThisSource:2,evidence:viewEvidence,
     registered:false,registrationFlagScope:'all artwork approved/registered for production: false; raw generation metadata remains immutable',engineeringRegistrations:bodyViewDescription,approved:false,productionReady:false,integratedAsProductionRig:false,
     inventory:'library/topics/prehistoric-life/body-views/inspection-v1.json',workflow:'docs/topics/AUTHORED-VIEWS.md',
     reviews:['docs/topics/reviews/gemini-authored-views-advice-v1.json','docs/topics/reviews/gemini-authored-views-advice-v2.json']},

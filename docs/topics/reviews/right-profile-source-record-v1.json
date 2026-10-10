@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.90-right-profile-art",
+  "precedingSourceSHA": "9af2bdce167a884f266037f208e7bc1f1f764b38",
+  "scope": "Source build/typecheck/schema definition export/raw raster/header/hash/JSON inventory and bounded source-only advice. No runtime/art/motion/film/full-factory acceptance.",
+  "implementation": [
+    "Five own-source right profile PNGs with exact source/origin bytes, prompts, input roles/hashes and alpha inventory; edits can drift outside target so prior landmarks/registration never inherited",
+    "Seven required requested-source directions plus optional back; metadata coverage distinguishes missing source, engineering hash match and false production readiness",
+    "Own actor/view/version/provenance and source byte/header/canvas/MIME/link checks; latest decimal versions sorted without Number precision loss; API inventory and no-store gallery/images",
+    "Six meaningful callback declarations and source handoff; all callbacks NOT RUN"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "ccef61",
+      "session": 71984,
+      "completionChunk": "4e7b3a",
+      "decisiveOutput": "Vite7.3.6;56 modules; built in574ms"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "e4fc9b",
+      "session": 95774,
+      "completionChunk": "c27ae7",
+      "scope": "tsc -p tsconfig.tests.json only; empty completion output; no callbacks"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "abb0a6",
+      "scope": "schema definitions only"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "c31dba",
+      "scope": "raw raster/header/hash/static JSON descriptions; no timeline/geometry/compiler"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/right-profile-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "6e87dc",
+      "session": 27086,
+      "completionChunk": "ebe3c1",
+      "scope": "raw byte/header/alpha/reference hash/JSON inventory; project runtime logic not imported; source text CRLF normalized for Git comparison"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "performed during this source freeze"
+    }
+  ],
+  "sourceAdvice": {
+    "record": "docs/topics/reviews/right-profile-catalog-advice-v1.json",
+    "requestedModel": "tester",
+    "returnedModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 7583,
+    "totalTokens": 7795,
+    "completionChunk": "131772",
+    "findings": 1,
+    "disposition": "Shared exact decimal version ordering fixed; regression declared, NOT RUN; final edit not independently re-reviewed"
+  },
+  "artAdvice": {
+    "record": "docs/topics/reviews/right-profile-art-advice-v1.json",
+    "requestedModel": "gemini/gemini-3.8-flash",
+    "returnedModel": "gemini-3.8-flash",
+    "httpStatus": 200,
+    "attempts": 2,
+    "totalTokens": 16842,
+    "bothResponsesTruncated": true,
+    "scope": "Partial static image advice; final LilaV3/KaroV2 not independently reviewed. No art approval."
+  },
+  "rawInventory": {
+    "version": 1,
+    "sourceVersion": "forest-tribe-0.90-right-profile-art",
+    "precedingSourceSHA": "9af2bdce167a884f266037f208e7bc1f1f764b38",
+    "scope": "raw source bytes/PNG headers/alpha histograms/source-reference hashes/JSON metadata only; no project runtime imports, catalog invocation, schema-instance validation or geometry",
+    "existingTrackedImages": 294,
+    "existingActualPNG": 131,
+    "existingActualJPEG": 163,
+    "existingJPEGNamedPNG": 101,
+    "allOriginalImageBytesUnchanged": true,
+    "originalImagesFingerprint": "246f62bf04ff7c8012b79fee8959a84a2fe6f047a6be3b9f7fc759988468c0ed",
+    "newImages": 5,
+    "combinedOwnedAndOriginalImages": 299,
+    "combinedActualPNG": 136,
+    "combinedActualJPEG": 163,
+    "originalHeadDefinitionsUnchanged": 18,
+    "originalHeadMetadataUnchanged": 27,
+    "unchangedProductionPaths": 203,
+    "productionSourceComparison": "Git source text with pre-existing CRLF normalized; raster/header hashes are raw bytes",
+    "existingCRLFOnly": [
+      "library/shots/explainer.ts",
+      "library/shots/scene-labels.ts"
+    ],
+    "originalSourceProductionGuardRetained": true,
+    "topicProductionEntryRetained": true,
+    "originalWAVSRTVoiceAndPipelineUnchanged": true,
+    "newSourceFiles": [
+      {
+        "file": "library/topics/prehistoric-life/body-views/lila-right-v1.png",
+        "sha256": "352c678865b95353df20d76824ffe929d9a840fab5060e3c4634bbde19afcb15",
+        "width": 1024,
+        "height": 1536,
+        "rawPixelSha256": "174388e6a92b7f86b28a7bd83dbfd4080f040edecebfcaa0b835774db95318ae",
+        "opaquePixels": 0,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+        "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed",
+        "width": 1024,
+        "height": 1536,
+        "rawPixelSha256": "eccca59156e4a6cd62174745b258f56dd8b2921757326a90199d3bf80aef200e",
+        "opaquePixels": 0,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+        "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+        "width": 1024,
+        "height": 1536,
+        "rawPixelSha256": "11a4c52b974a0a1e80f1529bac552f23275723f8f757a295d8a54d3c449d7b14",
+        "opaquePixels": 0,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+        "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094",
+        "width": 910,
+        "height": 1728,
+        "rawPixelSha256": "f63027b11d5623567be6cfda409cee624438e773aabfc96a8e0e90590de97e20",
+        "opaquePixels": 1960,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+        "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+        "width": 910,
+        "height": 1727,
+        "rawPixelSha256": "40087492df3e0333fc8495f928981a474ce99b7df5ae063b04d7b2228737d3ff",
+        "opaquePixels": 2641,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      }
+    ],
+    "requiredRequestedSourceSlots": 14,
+    "presentRequestedSourceSlots": 8,
+    "missingRequestedSources": [
+      {
+        "actor": "lila",
+        "view": "front"
+      },
+      {
+        "actor": "lila",
+        "view": "back-three-quarter-left"
+      },
+      {
+        "actor": "lila",
+        "view": "back-three-quarter-right"
+      },
+      {
+        "actor": "karo",
+        "view": "front"
+      },
+      {
+        "actor": "karo",
+        "view": "back-three-quarter-left"
+      },
+      {
+        "actor": "karo",
+        "view": "back-three-quarter-right"
+      }
+    ],
+    "productionReadySlots": 0,
+    "manifestMappedCodeHashes": 146,
+    "manifestMappedCodeEntries": 363,
+    "availableBankFields": 10,
+    "newCallbacksDeclared": 6,
+    "callbacksExecuted": 0,
+    "fixtureInvoked": false,
+    "geometryInvoked": false,
+    "compilerInvoked": false,
+    "browserOpened": false,
+    "serverStarted": false,
+    "rendererRun": false,
+    "audioGenerated": false,
+    "videoRendered": false,
+    "existingTestReport": {
+      "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+      "length": 18063,
+      "lastWriteTimeUTC": "2026-10-01T06:23:44.131Z",
+      "acceptsCurrentSource": false
+    },
+    "productionBinding": "needs-source-prop-binding",
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "approved": false,
+    "motionVerified": false,
+    "productionApproval": false,
+    "fullGoalComplete": false
+  },
+  "ownedPaths": 30,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/RIGHT-PROFILE-ART-HANDOFF.md",
+  "newCallbacksDeclared": 6,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 5,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "Own faithful front/rear three-quarter source art and per-view landmarks/masks/occlusion/yaw/rig, continuous turns and full acting/contact/gaze/cloth/hair at normal speed",
+    "Vivid day/sunset/night and integrated props/world/depth/director/camera production path; source production guard remains",
+    "User model runs actual arbitrary story/topic→script, exact narration/dialogue script, original WAV/legacy SRT, EN/VI/JA/KO/external-local TTS, resume/locks/rebuild/review/repair and final MP4/audio/subtitles/thumbnail/manifest/QC; V1 report cannot accept this source"
+  ]
+}

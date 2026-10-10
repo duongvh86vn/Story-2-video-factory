@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.90-right-profile-art",
+  "precedingSourceSHA": "9af2bdce167a884f266037f208e7bc1f1f764b38",
+  "scope": "raw source bytes/PNG headers/alpha histograms/source-reference hashes/JSON metadata only; no project runtime imports, catalog invocation, schema-instance validation or geometry",
+  "existingTrackedImages": 294,
+  "existingActualPNG": 131,
+  "existingActualJPEG": 163,
+  "existingJPEGNamedPNG": 101,
+  "allOriginalImageBytesUnchanged": true,
+  "originalImagesFingerprint": "246f62bf04ff7c8012b79fee8959a84a2fe6f047a6be3b9f7fc759988468c0ed",
+  "newImages": 5,
+  "combinedOwnedAndOriginalImages": 299,
+  "combinedActualPNG": 136,
+  "combinedActualJPEG": 163,
+  "originalHeadDefinitionsUnchanged": 18,
+  "originalHeadMetadataUnchanged": 27,
+  "unchangedProductionPaths": 203,
+  "productionSourceComparison": "Git source text with pre-existing CRLF normalized; raster/header hashes are raw bytes",
+  "existingCRLFOnly": [
+    "library/shots/explainer.ts",
+    "library/shots/scene-labels.ts"
+  ],
+  "originalSourceProductionGuardRetained": true,
+  "topicProductionEntryRetained": true,
+  "originalWAVSRTVoiceAndPipelineUnchanged": true,
+  "newSourceFiles": [
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v1.png",
+      "sha256": "352c678865b95353df20d76824ffe929d9a840fab5060e3c4634bbde19afcb15",
+      "width": 1024,
+      "height": 1536,
+      "rawPixelSha256": "174388e6a92b7f86b28a7bd83dbfd4080f040edecebfcaa0b835774db95318ae",
+      "opaquePixels": 0,
+      "approved": false,
+      "registered": false,
+      "productionReady": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+      "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed",
+      "width": 1024,
+      "height": 1536,
+      "rawPixelSha256": "eccca59156e4a6cd62174745b258f56dd8b2921757326a90199d3bf80aef200e",
+      "opaquePixels": 0,
+      "approved": false,
+      "registered": false,
+      "productionReady": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+      "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+      "width": 1024,
+      "height": 1536,
+      "rawPixelSha256": "11a4c52b974a0a1e80f1529bac552f23275723f8f757a295d8a54d3c449d7b14",
+      "opaquePixels": 0,
+      "approved": false,
+      "registered": false,
+      "productionReady": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+      "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094",
+      "width": 910,
+      "height": 1728,
+      "rawPixelSha256": "f63027b11d5623567be6cfda409cee624438e773aabfc96a8e0e90590de97e20",
+      "opaquePixels": 1960,
+      "approved": false,
+      "registered": false,
+      "productionReady": false
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+      "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+      "width": 910,
+      "height": 1727,
+      "rawPixelSha256": "40087492df3e0333fc8495f928981a474ce99b7df5ae063b04d7b2228737d3ff",
+      "opaquePixels": 2641,
+      "approved": false,
+      "registered": false,
+      "productionReady": false
+    }
+  ],
+  "requiredRequestedSourceSlots": 14,
+  "presentRequestedSourceSlots": 8,
+  "missingRequestedSources": [
+    {
+      "actor": "lila",
+      "view": "front"
+    },
+    {
+      "actor": "lila",
+      "view": "back-three-quarter-left"
+    },
+    {
+      "actor": "lila",
+      "view": "back-three-quarter-right"
+    },
+    {
+      "actor": "karo",
+      "view": "front"
+    },
+    {
+      "actor": "karo",
+      "view": "back-three-quarter-left"
+    },
+    {
+      "actor": "karo",
+      "view": "back-three-quarter-right"
+    }
+  ],
+  "productionReadySlots": 0,
+  "manifestMappedCodeHashes": 146,
+  "manifestMappedCodeEntries": 363,
+  "availableBankFields": 10,
+  "newCallbacksDeclared": 6,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "compilerInvoked": false,
+  "browserOpened": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44.131Z",
+    "acceptsCurrentSource": false
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v1.png",
+      "sha256": "352c678865b95353df20d76824ffe929d9a840fab5060e3c4634bbde19afcb15",
+      "width": 1024,
+      "height": 1536,
+      "visibleBounds": {
+        "x": 227,
+        "y": 30,
+        "width": 603,
+        "height": 1467
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1104073,
+      "opaquePixels": 0
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+      "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed",
+      "width": 1024,
+      "height": 1536,
+      "visibleBounds": {
+        "x": 234,
+        "y": 29,
+        "width": 590,
+        "height": 1438
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1113902,
+      "opaquePixels": 0
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+      "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094",
+      "width": 910,
+      "height": 1728,
+      "visibleBounds": {
+        "x": 173,
+        "y": 21,
+        "width": 554,
+        "height": 1674
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1074649,
+      "opaquePixels": 1960
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+      "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+      "width": 910,
+      "height": 1727,
+      "visibleBounds": {
+        "x": 190,
+        "y": 22,
+        "width": 555,
+        "height": 1660
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1078123,
+      "opaquePixels": 2641
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+      "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+      "width": 1024,
+      "height": 1536,
+      "visibleBounds": {
+        "x": 234,
+        "y": 29,
+        "width": 587,
+        "height": 1479
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1109286,
+      "opaquePixels": 0
+    }
+  ],
+  "comparison": {
+    "scope": "raw pixel byte comparison only; no anatomical landmark, pose, geometry or semantic equivalence",
+    "lilaV2V3": {
+      "sameCanvas": true,
+      "changedPixels": 845341,
+      "changedBelowRow500": 513543
+    },
+    "karoV1V2": {
+      "originalCanvas": {
+        "width": 910,
+        "height": 1728
+      },
+      "newCanvas": {
+        "width": 910,
+        "height": 1727
+      },
+      "sameCanvas": false
+    },
+    "finding": "Targeted imagegen edits also changed non-target raster regions/canvas. Do not reuse prior registration, assert unchanged body/face or treat the prompt as an exact edit."
+  },
+  "builtInImageCalls": 5,
+  "sourceBytesUnmodified": true,
+  "artApproved": false,
+  "registered": false,
+  "motionVerified": false,
+  "productionReady": false
+}

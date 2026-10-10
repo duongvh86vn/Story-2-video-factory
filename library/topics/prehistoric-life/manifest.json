@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.89-explicit-dialogue-voices",
+  "version": "forest-tribe-0.90-right-profile-art",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -20,7 +20,7 @@
       "packages/orchestrator/pipeline.ts": "08bb2646e9ac2b51d294382c0bc1da4b1454a978d766c0b265a6d03dc39b1694",
       "packages/qc/index.ts": "04c155d5270f17c54e5e2e40b76b09e2fe81ca60aad90ee8648719cfae37319e",
       "apps/server/artifacts.ts": "0d29c1033e1d45e5e74c4e24dd8278d1bd6a44dc58f136aa62204f2c4c7b2144",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3",
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984",
       "scripts/dev-nine-router.ts": "99973294cc9f42e5fce4ec4a0acb517e92390fbeb327cc0b02c05d34267dd0a7"
     }
   },
@@ -123,10 +123,10 @@
       "packages/orchestrator/settings.ts": "ee403bec589e201839c3f0dcfa3325c65f9e2f94ad531e0e56fa71ab02fa2c68",
       "packages/orchestrator/pipeline.ts": "08bb2646e9ac2b51d294382c0bc1da4b1454a978d766c0b265a6d03dc39b1694",
       "apps/server/contracts.ts": "aea677b308312f1d2561cf4e20c13f8e22c454d266f22b2f478cb2113ce4b131",
-      "apps/server/index.ts": "924e9e7fae2a0aa29bc209019787dc20744cc31ed8a10663041cce75c0787734",
+      "apps/server/index.ts": "87927cf6e1a19e4c0efdbc664b02d365ba23950ddadde2894a553c2bc318b6be",
       "apps/studio/src/main.ts": "f73d9bed364ebfe172e6f8a576fd8487d670e6c4d99dade60ddf618dfa5454b8",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "sourceInteractions": {
@@ -216,7 +216,7 @@
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "projectedModelContact": {
@@ -249,7 +249,7 @@
       "library/shots/source-world-timeline.ts": "8c1c06449ce2f2b63eeedf8fe981e78ccda3b69885c736deff0b5a22ca4f2f12",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
       "packages/scenes/index.ts": "29263964b519c0e4a5381cb35296e442c799cb664383868b6883d68d6afaa317",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "projectedRelations": {
@@ -306,7 +306,7 @@
       "packages/orchestrator/script-generation.ts": "f09ef8c06f96b6756189f85fcfbc993ebfd17a6540b45b982dff7acb95f5921b",
       "packages/orchestrator/pipeline.ts": "08bb2646e9ac2b51d294382c0bc1da4b1454a978d766c0b265a6d03dc39b1694",
       "packages/orchestrator/settings.ts": "ee403bec589e201839c3f0dcfa3325c65f9e2f94ad531e0e56fa71ab02fa2c68",
-      "apps/server/index.ts": "924e9e7fae2a0aa29bc209019787dc20744cc31ed8a10663041cce75c0787734",
+      "apps/server/index.ts": "87927cf6e1a19e4c0efdbc664b02d365ba23950ddadde2894a553c2bc318b6be",
       "apps/server/artifacts.ts": "0d29c1033e1d45e5e74c4e24dd8278d1bd6a44dc58f136aa62204f2c4c7b2144",
       "apps/cli/index.ts": "51a8a1634e7155c250e47fcea97f8756fc6d8a99dd5107be4272a0dec6e8a98a",
       "apps/studio/src/main.ts": "f73d9bed364ebfe172e6f8a576fd8487d670e6c4d99dade60ddf618dfa5454b8",
@@ -419,7 +419,7 @@
       "packages/explainer/schemas.ts": "ea369418415b2226e0725cc02f2e272373eee27a359f9cf6d5655fa74cb918ba",
       "packages/explainer/plan.ts": "230c80194b47111baae77c7839f4976e640dc558e721701492d3ed650aacd532",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "sourceSpearBinding": {
@@ -452,7 +452,7 @@
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
       "library/shots/cinematic-models.ts": "f393718a0ee0bb64bb70d22a7ddb418ce4f7fcce39b3c34f7b4030fa336a2e67",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "sourcePropBinding": {
@@ -516,7 +516,7 @@
       "packages/director/source-audit-context.ts": "cc65696ca6490f91d35efbdb51af560b63412a50082cc7a05bc6e10f919a9da0",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "sourceProductionAudit": {
@@ -545,7 +545,7 @@
       "packages/director/story-coverage.ts": "f007c10cb891a010a0e4b587db211c710f2407040114ec141780ab1c46429afb",
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
       "apps/server/source-audit.ts": "2b4a036f5ec262f44bbd985a0b9cd7d435efc10c7e40da0a9496b5b5435aca92",
-      "apps/server/index.ts": "924e9e7fae2a0aa29bc209019787dc20744cc31ed8a10663041cce75c0787734",
+      "apps/server/index.ts": "87927cf6e1a19e4c0efdbc664b02d365ba23950ddadde2894a553c2bc318b6be",
       "apps/server/contracts.ts": "aea677b308312f1d2561cf4e20c13f8e22c454d266f22b2f478cb2113ce4b131",
       "apps/studio/src/api.ts": "d16f790ec99c68339984014c908b70e356ba8160478b681d7e787b683a014cfa",
       "apps/studio/src/source-audit.ts": "6ee7eb72dacbd66c28af19eac87b1c944d3bdb26f0fec1d654f96d3062555cb3",
@@ -577,7 +577,7 @@
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "ownershipObservation": {
@@ -653,7 +653,7 @@
       "packages/scenes/index.ts": "29263964b519c0e4a5381cb35296e442c799cb664383868b6883d68d6afaa317",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "physicalGeometry": {
@@ -684,7 +684,7 @@
       "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "actorPropOwnership": {
@@ -743,7 +743,7 @@
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
-      "library/schemas/index.ts": "b919d267d5c0399717198efe33a3085f227edea7f72508a672d16b3adb85dac3"
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
   },
   "nativeManipulation": {
@@ -1091,13 +1091,13 @@
       "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/body-workbench.ts": "9247143df6f5cc439e0fd80434dcc2a9c3cab016fb2255e4f31de4fcd3ea97a2",
-      "packages/topics/prehistoric-life.ts": "9ee9cc2e00fb15918f04d17fc8cbc419583ed8c012ca7e0aff63793fd5eb31e2",
+      "packages/topics/prehistoric-life.ts": "18957b4e0bbbe690849b224482734689ce661d7fbb8ac0172667215d1ee59b38",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
       "library/shots/cinematic-models.ts": "f393718a0ee0bb64bb70d22a7ddb418ce4f7fcce39b3c34f7b4030fa336a2e67",
       "library/prompts/creative-director.md": "60439dc233453561cb6d8c46b376d2a504d036bf4b4daddaeed9c18366b97a17",
-      "apps/server/index.ts": "924e9e7fae2a0aa29bc209019787dc20744cc31ed8a10663041cce75c0787734"
+      "apps/server/index.ts": "87927cf6e1a19e4c0efdbc664b02d365ba23950ddadde2894a553c2bc318b6be"
     }
   },
   "castNormalization": {
@@ -1123,7 +1123,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "9ee9cc2e00fb15918f04d17fc8cbc419583ed8c012ca7e0aff63793fd5eb31e2",
+      "packages/topics/prehistoric-life.ts": "18957b4e0bbbe690849b224482734689ce661d7fbb8ac0172667215d1ee59b38",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e"
     }
   },
@@ -1367,7 +1367,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "9ee9cc2e00fb15918f04d17fc8cbc419583ed8c012ca7e0aff63793fd5eb31e2",
+      "packages/topics/prehistoric-life.ts": "18957b4e0bbbe690849b224482734689ce661d7fbb8ac0172667215d1ee59b38",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
@@ -14423,10 +14423,42 @@
     ],
     "workflow": "docs/topics/AI-POSE-WORKFLOW.md"
   },
+  "nativeViewCatalog": {
+    "version": "native-view-art-catalog-2",
+    "requiredViews": [
+      "front",
+      "three-quarter-left",
+      "three-quarter-right",
+      "left",
+      "right",
+      "back-three-quarter-left",
+      "back-three-quarter-right"
+    ],
+    "optionalViews": [
+      "back"
+    ],
+    "directionAuthority": "requested drawing labels only; actual yaw/identity/pose and continuous turns remain unmeasured/unaccepted",
+    "provenance": "own primary + optional same-person edit and supplemental source hashes; original raster bytes retained",
+    "approved": false,
+    "registered": false,
+    "productionReady": false,
+    "productionRig": null,
+    "motionVerified": false,
+    "productionApproval": false,
+    "availableBanks": [],
+    "handoff": "docs/topics/RIGHT-PROFILE-ART-HANDOFF.md",
+    "codeHashes": {
+      "packages/topics/view-art-workbench.ts": "834a344d7aac7ab7dc4a8cc549230484e818d63be667f79363a6f6376192fbc8",
+      "apps/server/index.ts": "87927cf6e1a19e4c0efdbc664b02d365ba23950ddadde2894a553c2bc318b6be",
+      "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
+    }
+  },
   "authoredViewArtwork": {
     "scope": "static-artwork-only",
-    "generatedImageCalls": 9,
-    "staticVisionAdviceCalls": 2,
+    "sourceRecords": 14,
+    "legacyStaticVisionAdviceCalls": 2,
+    "builtInImageCallsThisSource": 5,
+    "staticVisionAdviceAttemptsThisSource": 2,
     "evidence": [
       {
         "actor": "karo",
@@ -14445,6 +14477,87 @@
         "reviewNotes": [
           "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
           "Profile có cổ/mũi/râu dài hơn nguồn; cần hiệu chỉnh tỷ lệ, không lấy nhận xét AI làm PASS."
+        ],
+        "hasAlpha": true,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "view": "right",
+        "version": "v1",
+        "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+        "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094",
+        "model": "builtin-imagegen",
+        "width": 910,
+        "height": 1728,
+        "status": "candidate-needs-identity-and-registration-review",
+        "actualTransparency": true,
+        "approved": false,
+        "productionReady": false,
+        "registered": false,
+        "provenance": {
+          "tool": "builtin-imagegen",
+          "generatedImageFile": "exec-388037a8-422a-4ff9-be86-e0e5c8e7a784.png",
+          "prompt": "Use case: identity-preserve.\nAsset type: ONE full-body native right-facing profile drawing of Karo for a reusable prehistoric story actor; not a redesigned person or an animation sheet.\nInput images: Image1 is the PRIMARY authoritative Karo face, warm colors, beard, hair, garment, two-legged shorts, black hands/feet and proportions. Image2 is SUPPLEMENTAL for simple hand-drawn view logic only; do not borrow its white face, simplified triangular tunic or other people.\nPrimary request: draw the SAME Karo as a genuine side-on profile facing SCREEN RIGHT. Head, nose, chest, hips and feet all point right. One visible near-side black oval eye, short natural nose in profile, friendly modest open smile with source-style white teeth nested inside the beard. Face must sit naturally within the hair/beard without long muzzle, protruding chin, separate floating mouth, stretched forehead or distorted eyes.\nInvariants: messy short dark chocolate hair with the original jagged tufts; dense dark-brown beard framing his warm orange-peach face; same brown one-shoulder hide tunic with the same anatomical bare shoulder as Image1; narrow brown cord belt; separate ragged brown SHORTS WITH TWO distinct cuff openings, never a single skirt; slim strong BLACK ink arms and legs; black thumbed mitten hands and large rounded black feet. Preserve full source head-to-body/hair/beard/torso/leg proportions, warm painted highlights/shadows and rich brown cloth with lively irregular black outlines.\nPose: neutral relaxed standing at rest, two arms hanging naturally with soft curvature and correct shoulders/elbows, no tightly folded backward elbow, no action/weapon. Slightly stagger near/far limbs so exactly two arms, two hands, two legs, both cuffs and both feet remain readable while retaining true profile depth. Both flat soles on ONE horizontal baseline; no crouch, walk, jump or extra limbs.\nComposition: one complete isolated person from every hair tip to both soles, centered on a genuine transparent RGBA background, generous transparent margin all around. No text, grid, panel, ground shadow, beige rectangle, scenery or checkerboard pixels.\nRendering/color: exact storybook ink/paint feel of Image1, warm saturated skin, dark chocolate hair/beard, earthy medium brown tunic/shorts, full dark garment outline and pure black limbs; opaque-looking interior artwork with clean alpha edges, no background glow or haze. No muscular/flesh-colored limbs, fur shoulder collar, leather boots, straps, jewellery, extra fingers or props.\nOnly change viewpoint into a newly drawn right profile. Do not mirror or shear/warp the original drawing.",
+          "referenceImages": [
+            {
+              "file": "docs/topics/assets/reference-karo-full.png",
+              "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+              "role": "primary"
+            },
+            {
+              "file": "docs/topics/assets/reference-forest-tribe-stick.png",
+              "sha256": "6d867ea606ac35dd08c12caaaf38da01feb8340cb3899ffa0949eb2343473164",
+              "role": "supplemental"
+            }
+          ],
+          "requestedView": "right",
+          "measuredYawDeg": null
+        },
+        "reviewNotes": [
+          "Giữ mẫu Karo có râu, áo một vai và quần hai ống; nose/beard/neck/tỷ lệ/cuff/foot/alpha cần đối chiếu, chưa identity/pose/contact approval.",
+          "Góc yêu cầu là profile phải; actual yaw/landmarks/rig/speech/blink/emotion/occlusion chưa đăng ký."
+        ],
+        "hasAlpha": true,
+        "productionAllowed": false
+      },
+      {
+        "actor": "karo",
+        "view": "right",
+        "version": "v2",
+        "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+        "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+        "model": "builtin-imagegen",
+        "width": 910,
+        "height": 1727,
+        "status": "candidate-needs-identity-and-registration-review",
+        "actualTransparency": true,
+        "approved": false,
+        "productionReady": false,
+        "registered": false,
+        "provenance": {
+          "tool": "builtin-imagegen",
+          "generatedImageFile": "exec-5e6cf069-54ca-4403-bdc6-71c507aa604d.png",
+          "prompt": "Use case: identity-preserve, precise garment correction.\nImage1 is the EDIT TARGET: the right-facing Karo profile candidate. Image2 is the authoritative original Karo reference. Keep Image1's face, one visible eye, eye/ear positions, beard, hair, warm skin, head size, shoulders, arms/mitten hands, black legs/feet, neutral rest stance, true right-facing view and colors unchanged. Do not lower the ear or redesign the face.\nChange ONLY the SHORTS below the belt. They must unmistakably be SHORTS WITH TWO distinct leg openings, matching Image2, not a single dress, apron or hanging triangular tunic flaps. Draw the near shorts leg as a short brown cylindrical hide cuff wrapping around its black stick leg, with an irregular ragged lower rim and a continuous dark ink outline. Show the separate far cuff slightly behind at the correct depth and a clear crotch separation, with its own black leg emerging from its opening. Keep source shorts length, earthy warm brown painted fur texture, narrow cord belt and asymmetry. Do not add bulky muscles, long trousers, leather straps, shoes or a fur shoulder collar.\nBoth soles remain flat on the same horizontal floor baseline, exactly two arms/two hands/two legs/two feet. Full character visible from every hair tip to both feet, generous transparent margins. Genuine transparent RGBA background, clean edge with no colored haze/ground shadow, no text, scenery, panels, checkerboard or props. Preserve all other artwork, contour details and warm saturation as closely as possible. This correction does not register or approve the image for animation.",
+          "referenceImages": [
+            {
+              "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+              "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094",
+              "role": "edit-target"
+            },
+            {
+              "file": "docs/topics/assets/reference-karo-full.png",
+              "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+              "role": "primary"
+            }
+          ],
+          "requestedView": "right",
+          "measuredYawDeg": null
+        },
+        "reviewNotes": [
+          "Bản sửa yêu cầu hai cuff riêng và viền quần, không sửa vị trí tai theo góp ý AI chưa đáng tin. Quần/occlusion/tỷ lệ/face/alpha/contact chưa nghiệm thu.",
+          "Prompt yêu cầu giữ phần khác, không chứng minh mọi pixel được giữ. Yaw/landmarks/rig/speech/blink/motion còn thiếu.",
+          "Canvas height V1=1728, V2=1727; imagegen repair was not pixel-constrained. Do not reuse source coordinates/registration from V1."
         ],
         "hasAlpha": true,
         "productionAllowed": false
@@ -14529,6 +14642,127 @@
           "Chưa đo/đăng ký joint, mask, canonical proportions hoặc occlusion; không dùng làm rig sản xuất.",
           "Bản sửa đã làm nét tay đen rõ hơn; attachment đuôi tóc và tỷ lệ đầu/thân giữa góc còn phải kiểm.",
           "Canvas output đã đổi so với edit target; không tái dùng registration cũ."
+        ],
+        "hasAlpha": true,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "view": "right",
+        "version": "v1",
+        "file": "library/topics/prehistoric-life/body-views/lila-right-v1.png",
+        "sha256": "352c678865b95353df20d76824ffe929d9a840fab5060e3c4634bbde19afcb15",
+        "model": "builtin-imagegen",
+        "width": 1024,
+        "height": 1536,
+        "status": "held-needs-sole-correction",
+        "actualTransparency": true,
+        "approved": false,
+        "productionReady": false,
+        "registered": false,
+        "provenance": {
+          "tool": "builtin-imagegen",
+          "generatedImageFile": "exec-b7378be6-d759-4ee9-9b7b-67e0d9aafc97.png",
+          "prompt": "Use case: identity-preserve.\nAsset type: one full-body native right-facing profile drawing for the reusable prehistoric actor Lila; an animation source candidate, not a character redesign or an animation frame sheet.\nInput images: Image1 is the PRIMARY identity, exact face/hair/clothing/limb/proportion/color reference. Image2 is SUPPLEMENTAL only for the drawn world's line style and anatomical view logic; never use its white face or simplified costume instead of Image1.\nPrimary request: redraw ONLY Lila from Image1 as a genuine side-on profile facing SCREEN RIGHT, standing at rest, head and torso both facing right. One eye visible on the near side, nose protruding right and a small friendly closed smile on the correct face plane. Do not show a frontal face or a third eye. Draw the same person and preserve the entire warm peach-orange skin and brown source shading.\nInvariants: exact recognizable tousled dark-brown silhouette, low tied long hair/ponytail and trailing long hair, brown tie, asymmetrical one-shoulder brown fur hide dress with the visible bare shoulder belonging to the same anatomical side as in Image1, braided waist belt and one continuous jagged skirt (not shorts), thick smooth BLACK stick arms and legs, black thumbed mitten hands and large black rounded feet, all in the source proportions. Preserve black hand/foot silhouettes and warm saturated hair/dress/skin values. Preserve the rough lively hand-drawn ink contour and warm painted texture; no vector-flat polygon treatment. Do not add flowers, jewellery, sleeves, footwear, extra fingers or props.\nPose: relaxed plausible shoulders, two arms with gentle natural curvature resting down, no sharply reversed elbow, no compressed upper arm. Two legs of source-consistent length with both large soles flat on the same baseline and modest near/far offset so the two legs and feet remain readable in profile. Head attached naturally to neck without a second neck, chin deformation or facial shear. No leaned running pose. Proper side-view depth/occlusion of far arm/leg.\nComposition: one isolated full character, from complete hair tips to both soles, centered with generous transparent margin on ALL sides, large enough to inspect facial ink and garment silhouette. Real transparent RGBA background, no beige patch, no checkerboard painted into pixels, no ground shadow. No text, sheet, grid, panels, borders, leaves or environment.\nColor: use Image1's rich dark chocolate hair, warm medium-earth brown hide, orange-peach face and black limbs. Clear warm light/shadow and lively non-pale saturation. Preserve natural two-dimensional storybook rendering.\nChange only viewpoint into a newly authored right profile. Do not mirror or warp the frontal reference.",
+          "referenceImages": [
+            {
+              "file": "docs/topics/assets/reference-lila-full.png",
+              "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+              "role": "primary"
+            },
+            {
+              "file": "docs/topics/assets/reference-forest-tribe-stick.png",
+              "sha256": "6d867ea606ac35dd08c12caaaf38da01feb8340cb3899ffa0949eb2343473164",
+              "role": "supplemental"
+            }
+          ],
+          "requestedView": "right",
+          "measuredYawDeg": null
+        },
+        "reviewNotes": [
+          "Hai bàn chân có chênh nền trong bản v1; giữ nguyên nguồn làm edit-target/provenance cho v2, không dùng v1 làm pose đứng đạt.",
+          "Góc yêu cầu là profile phải; chưa đo yaw/landmark, tỷ lệ/identity/texture/alpha/sole/contact chưa nghiệm thu."
+        ],
+        "hasAlpha": true,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "view": "right",
+        "version": "v2",
+        "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+        "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed",
+        "model": "builtin-imagegen",
+        "width": 1024,
+        "height": 1536,
+        "status": "candidate-needs-identity-and-registration-review",
+        "actualTransparency": true,
+        "approved": false,
+        "productionReady": false,
+        "registered": false,
+        "provenance": {
+          "tool": "builtin-imagegen",
+          "generatedImageFile": "exec-955a5722-42b9-4f71-bbba-2d6664a76737.png",
+          "prompt": "Use case: identity-preserve, precise pose correction.\nInput Image1 is the EDIT TARGET: the newly drawn right-facing full-body Lila. Input Image2 is her authoritative original identity reference, used only to preserve the same person, costume, dark limbs and proportions.\nChange ONLY the resting leg/foot placement in Image1, plus remove any background haze. Keep the beautiful profile face, one visible eye, warm orange-peach skin, closed smile, hair and tied ponytail, neckline, one-shoulder hide dress, waist belt, ragged single skirt and arms/hands unchanged. No facial redesign or new viewpoint.\nThe far foot is currently raised above the near foot. Correct her to a grounded neutral SIDE PROFILE stance facing SCREEN RIGHT: both large rounded BLACK feet must lie flat with their BOTTOM SOLES on exactly the same horizontal baseline; two readably separated legs of plausible equal anatomical length, softly relaxed, not bent backward or stretched. Keep both foot tips pointing right. Adjust the farther leg naturally at the hip/knee as needed to reach the shared floor; no pointy V knees, twisted ankle, crossing or third leg. Preserve the source's slim black ink leg thickness and thumbed mitten hands, not round dot extremities.\nOne complete isolated full character from hair tip to both soles with generous transparent margin. Genuine transparent RGBA background and clean alpha edge; no black/brown glow, solid background, ground shadow, text, props, checkerboard or extra panels. Preserve Image1's painted warm browns, expressive irregular black ink, proportions, contour and opaque-looking interior colors. This is a new sibling correction, not approval of any rig/animation.",
+          "referenceImages": [
+            {
+              "file": "library/topics/prehistoric-life/body-views/lila-right-v1.png",
+              "sha256": "352c678865b95353df20d76824ffe929d9a840fab5060e3c4634bbde19afcb15",
+              "role": "edit-target"
+            },
+            {
+              "file": "docs/topics/assets/reference-lila-full.png",
+              "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+              "role": "primary"
+            }
+          ],
+          "requestedView": "right",
+          "measuredYawDeg": null
+        },
+        "reviewNotes": [
+          "Bản sửa yêu cầu hai sole cùng baseline; chưa có pose/geometry/browser/runtime xác minh. Không khẳng định sửa đúng từng pixel hoặc đã đạt.",
+          "Đầu/tóc/trang phục và alpha còn phải đối chiếu source; màu và mũi/mắt/miệng không tự được duyệt từ prompt."
+        ],
+        "hasAlpha": true,
+        "productionAllowed": false
+      },
+      {
+        "actor": "lila",
+        "view": "right",
+        "version": "v3",
+        "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+        "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+        "model": "builtin-imagegen",
+        "width": 1024,
+        "height": 1536,
+        "status": "candidate-needs-identity-and-registration-review",
+        "actualTransparency": true,
+        "approved": false,
+        "productionReady": false,
+        "registered": false,
+        "provenance": {
+          "tool": "builtin-imagegen",
+          "generatedImageFile": "exec-cf7856c5-1d3b-4783-a80a-a18436497985.png",
+          "prompt": "Use case: identity-preserve, tiny facial contour correction.\nImage1 is the EDIT TARGET: Lila right-profile V2. Image2 is the authoritative original Lila. Change ONLY the small NOSE CONTOUR in Image1: reduce the round protruding nose to a very small, delicate profile bump, consistent with the minimalist little hook nose of the original person. Keep a genuine right-facing side profile with one visible eye; do not flatten into a frontal face. Do not shift eye, eyebrow, mouth, ear, chin, forehead or whole face. Keep the same warm orange-peach face, smile, exact head scale, hair and low tied ponytail.\nEverything below the head stays as in Image1, especially dress/one shoulder/belt, ragged single skirt, two black stick arms and mitten hands, legs and large soles on their shared ground baseline. No new pose or costume, no recoloring/desaturation, no beard, jewellery or prop.\nOne complete isolated full character from hair tips to soles, generous clear margins. True transparent RGBA background with clean alpha edges and no haze, shadow, text, panels, checkerboard or scenery. Preserve the painted warm brown texture and irregular black ink. This is a sibling source candidate only; not approval, registration or animation.",
+          "referenceImages": [
+            {
+              "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+              "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed",
+              "role": "edit-target"
+            },
+            {
+              "file": "docs/topics/assets/reference-lila-full.png",
+              "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+              "role": "primary"
+            }
+          ],
+          "requestedView": "right",
+          "measuredYawDeg": null
+        },
+        "reviewNotes": [
+          "Bản sửa contour mũi nhỏ hơn để bám nét mũi gốc; không gọi là pixel-identical, face/pose/sole/alpha cần đối chiếu thực.",
+          "Nguồn chỉ là artwork góc phải được yêu cầu, không là measured yaw hoặc rig/quay đầu/speech/blink/motion approval.",
+          "Raw byte comparison V2→V3: 513543 changed pixels at rows>=500, despite a nose-only request. Body/feet/cloth must be rechecked; old coordinates cannot be inherited."
         ],
         "hasAlpha": true,
         "productionAllowed": false

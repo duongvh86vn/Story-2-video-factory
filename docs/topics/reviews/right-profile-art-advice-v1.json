@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "attempts": [
+    {
+      "requestedModel": "gemini/gemini-3.8-flash",
+      "returnedModel": "gemini-3.8-flash",
+      "httpStatus": 200,
+      "elapsedMs": 24846,
+      "usage": {
+        "prompt_tokens": 7585,
+        "completion_tokens": 36,
+        "total_tokens": 7621,
+        "completion_tokens_details": {
+          "reasoning_tokens": 960
+        }
+      },
+      "taskSha256": "3d2aaafd017aa5bd2e8fc12ba11441c952a025918113a04653669e09d3a3fac0",
+      "files": [
+        {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+          "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed"
+        },
+        {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+          "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094"
+        }
+      ],
+      "answer": "```json\n{\n  \"scope\": \"static source artwork only\",\n  \"issues\": [\n    {\n      \"actor\": \"Lila\",\n      \"",
+      "scope": "static source-raster advice; no tests/geometry/runtime/rig/motion/film acceptance",
+      "testsExecuted": false,
+      "approved": false,
+      "productionReady": false
+    },
+    {
+      "requestedModel": "gemini/gemini-3.8-flash",
+      "returnedModel": "gemini-3.8-flash",
+      "httpStatus": 200,
+      "elapsedMs": 42253,
+      "usage": {
+        "prompt_tokens": 8874,
+        "completion_tokens": 347,
+        "total_tokens": 9221,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2249
+        }
+      },
+      "taskSha256": "3d2aaafd017aa5bd2e8fc12ba11441c952a025918113a04653669e09d3a3fac0",
+      "files": [
+        {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+          "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed"
+        },
+        {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+          "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094"
+        }
+      ],
+      "answer": "```json\n{\n  \"scope\": \"static source artwork only\",\n  \"issues\": [\n    {\n      \"actor\": \"Karo\",\n      \"issue\": \"Ear elevation and alignment mismatch\",\n      \"visibleEvidence\": \"In Image 4, Karo's ear is positioned high up on the head, aligning horizontally with his eyebrow and the top of his eye. In authoritative Image 3, his ear sits lower, aligning with the lower eye and upper beard line.\",\n      \"suggestedCorrection\": \"Lower the ear placement along the jaw/beard junction so it aligns with the lower half of the eye level.\"\n    },\n    {\n      \"actor\": \"Karo\",\n      \"issue\": \"Costume lower cuff structure ambiguity\",\n      \"visibleEvidence\": \"In Image 3, Karo wears shorts featuring two distinct leg cuff openings. In Image 4, the profile lower hem reads as flat jagged apron/tunic flaps rather than a defined cylindrical shorts leg opening encircling the leg.\",\n      \"suggestedCorrection\": \"Define the near-leg opening as a distinct shorts cuff silhouette wrapping around the stick leg to maintain the original shorts design.\"\n    },\n    {\n      \"actor\": \"Lila\",\n      \"issue\": \"Nose silhouette projection exaggeration\",\n      \"visibleEvidence\": \"In Image 1, Lila's nose is a very small, subtle hook stroke. In Image 2, her profile nose is drawn as an enlarged, rounded bulbous protrusion extending forward from the facial contour.\",\n      \"suggestedCorrection\": \"Scale down the profile nose contour to a smaller, more delicate bump consistent with her original minimalist facial",
+      "scope": "static source-raster advice; no tests/geometry/runtime/rig/motion/film acceptance",
+      "testsExecuted": false,
+      "approved": false,
+      "productionReady": false
+    }
+  ],
+  "reportedTotalTokens": 16842,
+  "completeJSONResponse": false,
+  "scope": "partial static raster advice only; neither response is a complete final review",
+  "dispositions": [
+    {
+      "issue": "Karo ear high",
+      "action": "not applied: visible ear lies below the visible eye in the candidate; the claim is unsupported as stated. Human source/art comparison still required.",
+      "approved": false
+    },
+    {
+      "issue": "Karo shorts cuff ambiguity",
+      "action": "new Karo right V2 requested distinct cuff/outline repair; new image not independently re-reviewed; actual shorts/contour/pose not accepted",
+      "approved": false
+    },
+    {
+      "issue": "Lila profile nose prominence (partial third issue)",
+      "action": "new Lila right V3 requested smaller nose contour; raw bytes show non-target body changes too, so no pixel-identity claim or old registration reuse",
+      "approved": false
+    }
+  ],
+  "finalIntegrationIndependentlyReviewed": false,
+  "testsExecuted": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionReady": false
+}

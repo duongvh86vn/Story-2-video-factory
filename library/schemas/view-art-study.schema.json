@@ -1,0 +1,175 @@
+{
+  "$ref": "#/definitions/view-art-study",
+  "definitions": {
+    "view-art-study": {
+      "type": "object",
+      "properties": {
+        "actor": {
+          "type": "string",
+          "enum": [
+            "lila",
+            "karo"
+          ]
+        },
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "three-quarter-left",
+            "three-quarter-right",
+            "left",
+            "right",
+            "back-three-quarter-left",
+            "back-three-quarter-right",
+            "back"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^v[1-9]\\d*$"
+        },
+        "file": {
+          "type": "string",
+          "maxLength": 180,
+          "pattern": "^(lila|karo)-(front|three-quarter-left|three-quarter-right|left|right|back-three-quarter-left|back-three-quarter-right|back)-v[1-9]\\d*\\.(png|jpg|webp)$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "model": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "width": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "status": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "actualTransparency": {
+          "type": "boolean"
+        },
+        "approved": {
+          "type": "boolean",
+          "const": false
+        },
+        "productionReady": {
+          "type": "boolean",
+          "const": false
+        },
+        "registered": {
+          "type": "boolean",
+          "const": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "string",
+              "const": "builtin-imagegen"
+            },
+            "generatedImageFile": {
+              "type": "string",
+              "pattern": "^exec-[a-f0-9-]+\\.png$"
+            },
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 16000
+            },
+            "referenceImages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "maxLength": 240
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "primary",
+                      "supplemental",
+                      "edit-target"
+                    ]
+                  }
+                },
+                "required": [
+                  "file",
+                  "sha256",
+                  "role"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 4
+            },
+            "requestedView": {
+              "type": "string",
+              "enum": [
+                "front",
+                "three-quarter-left",
+                "three-quarter-right",
+                "left",
+                "right",
+                "back-three-quarter-left",
+                "back-three-quarter-right",
+                "back"
+              ]
+            },
+            "measuredYawDeg": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "tool",
+            "generatedImageFile",
+            "prompt",
+            "referenceImages",
+            "requestedView",
+            "measuredYawDeg"
+          ],
+          "additionalProperties": false
+        },
+        "reviewNotes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 3000
+          },
+          "maxItems": 40,
+          "default": []
+        }
+      },
+      "required": [
+        "actor",
+        "view",
+        "version",
+        "file",
+        "sha256",
+        "model",
+        "width",
+        "height",
+        "status",
+        "actualTransparency",
+        "approved",
+        "productionReady",
+        "registered"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

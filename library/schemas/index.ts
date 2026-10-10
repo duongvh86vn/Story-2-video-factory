@@ -14,6 +14,7 @@ import {ViewActingClockSchema} from '../../packages/animation/view-acting-clock.
 import {BodySourceSchema,GestureSourceSpanSchema,ManipulationSourceSchema,SpearSourceSchema} from '../../packages/animation/schemas.js';
 import { ConfigSchema } from '../../packages/core/config.js';
 import { GeneratedDraftSchema, ScriptGenerationReportSchema } from '../../packages/orchestrator/script-generation.js';
+import {ViewArtStudySchema} from '../../packages/topics/view-art-workbench.js';
 import {ActorMotionSchema,MotionRegistrationSchema,SpriteClipSchema} from '../../packages/motion/schemas.js';
 import {SpriteStageSchema} from '../../packages/motion/stage-schemas.js';
 import {SpriteMotionCatalogSchema} from '../../packages/motion/catalog-schemas.js';
@@ -43,6 +44,7 @@ import {ModelContactFrameSchema} from '../../packages/director/model-contact-ref
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
+  'view-art-study':ViewArtStudySchema,
   'model-contact-frame':ModelContactFrameSchema,
   'spear-source':SpearSourceSchema,
   'source-spear-binding':SourceSpearBindingSchema,

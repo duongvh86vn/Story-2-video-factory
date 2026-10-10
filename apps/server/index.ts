@@ -39,7 +39,7 @@ import {headWorkbench,headWorkbenchManifest} from '../../packages/topics/head-wo
 import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,BODY_COLOUR_MODES,BODY_MOUTH_MODES,BODY_EYES_MODES,BODY_LOOK_MODES,BODY_EXPRESSION_MODES,BODY_MOTION_MODES,BODY_SECONDARY_MODES,BODY_SEAT_MODES,BODY_MANIPULATION_MODES,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
 import {viewRegistrationWorkbench} from '../../packages/topics/view-registration-workbench.js';
 import {poseArtWorkbench,poseArtImage} from '../../packages/topics/pose-art-workbench.js';
-import {viewArtWorkbench,viewArtImage} from '../../packages/topics/view-art-workbench.js';
+import {viewArtWorkbench,viewArtImage,viewArtInventory,viewArtCoverage} from '../../packages/topics/view-art-workbench.js';
 import {headTurnWorkbench,headTurnImage,headTurnEditorScript} from '../../packages/topics/head-turn-workbench.js';
 import {headTurnInventory,headTurnMaterial} from '../../packages/topics/head-turn-art.js';
 import {headCellArtDescription,headCellInventory,headCellMaterial,HeadCellFileSchema} from '../../packages/topics/head-cell-art.js';
@@ -374,7 +374,7 @@ export async function buildServer(options: ServerOptions = {}) {
     return reply.type(asset.type).header('Cache-Control','no-store').send(asset.bytes);
   });
   app.get('/api/topics/prehistoric-life/view-art',async(_request,reply)=>reply.type('text/html')
-    .header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(await viewArtWorkbench(repo)));
+    .header('Cache-Control','no-store').header('Content-Security-Policy',"default-src 'none'; img-src 'self'; style-src 'unsafe-inline'").send(await viewArtWorkbench(repo)));
   app.get<{Querystring:{file?:string}}>('/api/topics/prehistoric-life/head-turn-art',async(request,reply)=>{
     const file=HeadTurnFileSchema.optional().parse(request.query.file);
     return reply.type('text/html').header('Cache-Control','no-store')
@@ -401,9 +401,12 @@ export async function buildServer(options: ServerOptions = {}) {
     const body=HeadTurnCheckRequestSchema.parse(request.body),{record}=await headTurnMaterial(repo,body.source.file);
     return checkBoundHeadTurnDraft(body,record);
   });
+  app.get('/api/topics/prehistoric-life/view-art/inventory',async(_request,reply)=>{
+    const inventory=await viewArtInventory(repo);return reply.header('Cache-Control','no-store').send({inventory,coverage:viewArtCoverage(inventory)});
+  });
   app.get<{Params:{file:string}}>('/api/topics/prehistoric-life/view-art/:file',async(request,reply)=>{
     const asset=await viewArtImage(repo,request.params.file);
-    return reply.type(asset.type).header('Cache-Control','no-store').send(asset.bytes);
+    return reply.type(asset.type).header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').send(asset.bytes);
   });
   app.get<{Querystring:{variant?:string}}>('/api/topics/prehistoric-life/compare',async(request,reply)=>{
     const variant=z.enum(['cutout','assembly']).default('cutout').parse(request.query.variant);

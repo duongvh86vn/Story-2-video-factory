@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "scope": "source-only advice; no test execution or independent runtime/film acceptance",
+  "requestedModel": "tester",
+  "responseModel": "gpt-6-luna",
+  "httpStatus": 200,
+  "elapsedMs": 7583,
+  "usage": {
+    "prompt_tokens": 7151,
+    "completion_tokens": 644,
+    "total_tokens": 7795
+  },
+  "finishReason": "stop",
+  "reply": "{\"findings\":[{\"severity\":\"medium\",\"file\":\"packages/topics/view-art-workbench.ts\",\"issue\":\"Latest-version selection converts unbounded version numbers to JavaScript `Number`. Above `Number.MAX_SAFE_INTEGER`, distinct versions can compare equal, so coverage and the workbench may select an older source instead of the newest.\",\"fix\":\"Compare the numeric version suffixes as `BigInt` or normalized digit strings.\"}],\"limitations\":\"Source-only desk review; no code, tests, schemas, browser, API, rendering, fixtures, geometry, or image transforms run. Tests are DECLARED / NOT RUN.\"}",
+  "sourceHashes": {
+    "packages/topics/view-art-workbench.ts": "a12fc5349531492cdd84681e64eb85599c1bb7e99b0ac4055cc7f541ff1e065c",
+    "tests/view-art-catalog.test.ts": "6e7a51011873a9b9e46ee7baa667d1d2e35d8260207906fb07e84a4c4fc1bb96"
+  },
+  "testsExecuted": false,
+  "dispositions": [
+    {
+      "issue": "Unbounded decimal version suffix loses exact order when converted to Number",
+      "action": "Shared latestStudy compares digit length then decimal text, used by coverage and gallery. Added declaration covering MAX_SAFE_INTEGER and 100-digit boundaries; callback NOT RUN.",
+      "fixedInSource": true,
+      "independentlyReReviewed": false
+    }
+  ],
+  "finalIntegrationIndependentlyReviewed": false,
+  "productionReady": false
+}
