@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.96-own-front-profile-expressions",
+  "precedingSourceSHA": "9a1285c25753fca010ca322bd4160beea52beae8",
+  "scope": "own front/profile expression source integration only; no anatomy/art/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Six exact own-source registrations with eight visible brow glyphs; two front or one profile slot, no rear/hidden brow, borrowed3/4 cues, yaw inference or face mirror/warp.",
+    "Exact registered-basic-expressions-v1 requires own registered eyes/mouth; raw/schema/API guards reject unsupported actor/view/selection/capabilities.",
+    "Independent base-source brow/mouth/eye masks; permanent own expression layer replaces brows at neutral and mouth at silence. Old mouth layer suppressed; source mouth erased at opacity1.",
+    "Original activity amount and whole-cue ownership drive aperture; original emotion clock retained through existing actor run source. Clock10/report/cache/manifest bind new selection.",
+    "Legacy feature registrations, own body geometry, original actor clock and mouth shape/envelope/sample unchanged; no original image edits.",
+    "Eight meaningful callback declarations NOT RUN; real art/motion/audio/render/product acceptance pending."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "b7547e/session76625/completion2d365b",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 build\n> tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 62 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-YBzBZzdy.js   247.81 kB │ gzip: 77.29 kB\n✓ built in 659ms\n",
+      "scope": "source build only, no runtime acceptance"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "5175b4/session58483/completion01199d",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n",
+      "scope": "typecheck only; callbacks NOT RUN"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "5eb294",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n",
+      "scope": "definition export only; no schema instances"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "6f00c1",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "allowed source/header/hash/static JSON inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/own-view-expressions-static-v1.mjs",
+      "exitCode": 0,
+      "handle": "ee942e/session27098/completion6b2bf5",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.96-own-front-profile-expressions\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"mappedCodeHashes\":166,\"scalarCodeEntries\":46,\"ownExpressionSources\":6,\"visibleOwnBrowGlyphs\":8,\"browSkinStripsWithDarkPixels\":0,\"callbacksDeclared\":8,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}\n",
+      "scope": "raw header/bytes/JSON/source AST only; no project evaluation or tests"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "source freeze only"
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/own-view-expressions-static-record-v1.json",
+  "agentAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 5863,
+    "usage": {
+      "prompt_tokens": 14748,
+      "completion_tokens": 459,
+      "total_tokens": 15207
+    },
+    "finishReason": "stop",
+    "reply": "{\"findings\":[{\"file\":\"packages/animation/body-view-expressions.ts\",\"quote\":\"if(a.bodyExpressions!==BASIC_BODY_EXPRESSIONS_SELECTION||!isBasicExpressionView(a.bodyView)||basicBodyHasUnsupportedOptions(a)||a.bodyEyes!==BASIC_BODY_EYES_SELECTION||a.bodySpeech!==BASIC_BODY_SPEECH_SELECTION||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||a.sourceColour)throw basicBodyCapabilityError(a.bodyView,'selected own expression');\",\"reason\":\"The basic branch indexes `bodyViewBasicExpressionRegistration[a.characterVariant][a.bodyView]` without first validating `characterVariant` is `lila` or `karo`. A profile with another nonempty variant can pass these checks and fail at registration lookup rather than being rejected as unsupported.\",\"correction\":\"Validate the actor against the registration's supported actor keys before indexing, and return the capability error for unsupported actors.\"},{\"file\":\"packages/animation/body-view-expressions.ts\",\"quote\":\"const erase=`<defs><mask id=\\\"view-expression-source-mask\\\" ...>${c.brows.map(b=>`<path d=\\\"${b.clip}\\\" fill=\\\"black\\\"/>`).join('')}</mask></defs>`;\",\"reason\":\"The outer source mask erases every brow clip, but the brow ink replacement is emitted inside `view-expression-layer`. `bodyViewExpressionState` sets that layer opacity to 1 unconditionally, so this may be intentional as an always-visible expression layer; however, no expression-selection or pose gating is applied to the own-source brow replacements. The source brow is removed whenever this mode is selected, including a nominally neutral pose.\",\"correction\":\"Confirm that neutral expressions are intended to replace source brows; if not, make source erase and replacement visibility follow the same expression activation/state. Include the intended neutral behavior in the mode contract.\"}],\"missingContext\":[\"The supplied diff does not include the expression sampling/state construction or actor-clock routing changes, so retention of the original expression clock and cache-key coverage cannot be verified.\",\"The SVG composition excerpt does not establish whether the source-mask and replacement-layer IDs can coexist across multiple actors or rendered instances in a shared document.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshot": "C:/Users/Duongvh-pc/.codex/tmp/source096-review-snapshot.txt",
+    "sha256": "e8e483a8170a9a60f9cdc18eefa4318ce78dd7b3f7e8c83f6cc5e79005793c63",
+    "scope": "source snapshot only; no tests/art/runtime/production acceptance",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "dispositions": [
+      {
+        "finding": 1,
+        "status": "applied",
+        "evidence": "Raw basic expression guard now explicitly accepts only lila/karo before registration index. Added false/null/other actor callback declarations, NOT RUN."
+      },
+      {
+        "finding": 2,
+        "status": "not-applied",
+        "evidence": "Own expression mode intentionally owns visible brows permanently, including neutral pose; replacement layer1 and outer source erase permanent are coupled by exact mode selection. Native mode retains original image. Intent documented in handoff."
+      }
+    ]
+  },
+  "ownedPaths": 29,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/OWN-VIEW-EXPRESSIONS-HANDOFF.md",
+  "newCallbacksDeclared": 8,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 0,
+  "imagesEdited": false,
+  "environment": {
+    "node": "24.19.0",
+    "platform": "win32",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+    "diagnosticPort": 8851,
+    "serverStarted": false
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

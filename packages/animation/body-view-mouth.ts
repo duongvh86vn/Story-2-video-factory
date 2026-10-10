@@ -1,5 +1,6 @@
 import {isBasicBodyView,basicBodyCapabilityError,basicBodyHasUnsupportedOptions} from './body-view-basic-capabilities.js';
 import {BASIC_BODY_SPEECH_SELECTION,BASIC_BODY_MOUTH_VERSION,bodyViewBasicMouthRegistration,isBasicMouthView} from './body-view-basic-mouth-registration.js';
+import {BASIC_BODY_EXPRESSIONS_SELECTION} from './body-view-basic-expression-registration.js';
 import type {HostProfile} from '../host/schemas.js';
 import type {SpeechActivity} from '../voice/schemas.js';
 import {hash} from '../core/utils.js';
@@ -7,7 +8,7 @@ import {SPEECH_SOURCE_CLOCK_VERSION,SPEECH_ENVELOPE_ATTACK_MS,SPEECH_ENVELOPE_RE
 import {hasBodyViewRestSpeech,registeredBodyViewRestMouth,bodyViewRestMouthSvg,bodyViewRestMouthDescription} from './body-view-rest-mouth.js';
 
 export const BODY_VIEW_SPEECH_VERSION='registered-mouth-v1' as const;
-export const BODY_VIEW_MOUTH_VERSION='forest-fixed-view-mouth-4';
+export const BODY_VIEW_MOUTH_VERSION='forest-fixed-view-mouth-5';
 type Point={x:number;y:number};
 export type NativeMouthRegistration={sourceHash:string;sourceSize:readonly [number,number];kind:'skin-strip'|'native-rim';sourceErase?:boolean;resting?:'source-closed'|'closed-overlay';bounds:{x:number;y:number;width:number;height:number};
   clip:string;top:readonly [Point,Point,Point,Point];depth:number;lift:number;stroke:number;
@@ -84,7 +85,7 @@ export function bodyViewMouthSvg(profile:Pick<HostProfile,'appearance'>,source:{
   // reconstructed; source eyes/nose/hair and the original happy image remain.
   const repair=rest?'':c.strip?`<svg x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" viewBox="${c.strip.x} ${c.strip.y} ${c.strip.width} ${c.strip.height}" preserveAspectRatio="none"><image width="${source.width}" height="${source.height}" href="${source.url}"/></svg>`
     :`<path d="${c.clip}" fill="${c.interior}"/>`;
-  const permanent=!!rest||c.resting==='closed-overlay';
+  const permanent=!!rest||c.resting==='closed-overlay'||profile.appearance.bodyExpressions===BASIC_BODY_EXPRESSIONS_SELECTION;
   const erase=c.sourceErase?`<defs><mask id="view-mouth-source-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${source.width}" height="${source.height}" style="mask-type:luminance"><rect width="${source.width}" height="${source.height}" fill="white"/><g id="view-mouth-source-erase" opacity="${permanent?1:0}"><path d="${c.clip}" fill="black"/></g></mask></defs>`:'';
   return `${plate}${erase}<defs><clipPath id="view-mouth-region"><path d="${c.clip}"/></clipPath><clipPath id="view-mouth-aperture"><use href="#view-mouth-interior"/></clipPath></defs><g id="view-mouth-layer" opacity="${permanent?1:0}" clip-path="url(#view-mouth-region)" data-mouth-artwork="${BODY_VIEW_MOUTH_VERSION}">${repair}<path id="view-mouth-interior" d="${p['view-mouth-interior']}" fill="#211008" stroke="#160B05" stroke-width="${c.stroke}" stroke-linejoin="round"/><g clip-path="url(#view-mouth-aperture)"><path id="view-mouth-teeth" d="${p['view-mouth-teeth']}" fill="#FFF8E9"/><path id="view-mouth-tongue" d="${p['view-mouth-tongue']}" fill="#B3471F"/></g></g>`;
 }

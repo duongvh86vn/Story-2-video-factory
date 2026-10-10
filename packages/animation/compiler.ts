@@ -1330,7 +1330,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       blinkClock:sourceClock||actingClock?'source absolute time':'shot-local diagnostic time',sourcePhase:sourceClock?speechSourceClockDescription(sourceClock):null,
       targetMethod:'bounded direction from native eye center in head-local coordinates; fixed world target or complete actor original physical eye source; explicit targets behind view rejected',
       ...(actingClock?.actorTargets?.length?{actorGazeVersion:VIEW_ACTOR_GAZE_VERSION,targetSources:actingClock.actorTargets.map(t=>({actorId:t.actorId,fingerprint:t.fingerprint,sourceIdentityHash:t.sourceIdentityHash,startMs:t.startMs,endMs:t.endMs})),motionVerified:false}:{}),opticalGazeVerified:false}}:{}),
-    ...(hasBodyViewExpressions(profile)?{bodyExpressions:{...bodyViewExpressionsDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+    ...(hasBodyViewExpressions(profile)?{bodyExpressions:{...bodyViewExpressionsDescription,selection:profile.appearance.bodyExpressions!,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'complete original expression run':'shot-local diagnostic expressions',sourceTrackHash:hash(actingClock?.expressions??plan.expressions),audioVerified:false}}:{}),
     ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),

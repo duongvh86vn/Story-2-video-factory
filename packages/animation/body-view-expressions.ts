@@ -1,4 +1,7 @@
-import {isBasicBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
+import {isBasicBodyView,basicBodyCapabilityError,basicBodyHasUnsupportedOptions} from './body-view-basic-capabilities.js';
+import {BASIC_BODY_EXPRESSIONS_SELECTION,BASIC_BODY_EXPRESSIONS_VERSION,bodyViewBasicExpressionRegistration,isBasicExpressionView} from './body-view-basic-expression-registration.js';
+import {BASIC_BODY_EYES_SELECTION} from './body-view-basic-eyes-registration.js';
+import {BASIC_BODY_SPEECH_SELECTION} from './body-view-basic-mouth-registration.js';
 import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {registeredBodyViewEyes} from './body-view-eyes.js';
@@ -8,9 +11,10 @@ import {moodPoses} from './expression-pose.js';
 import {nativeBrowRegions} from './body-view-brow-regions.js';
 
 export const BODY_VIEW_EXPRESSIONS_SELECTION='registered-expressions-v1' as const;
-export const BODY_VIEW_EXPRESSIONS_VERSION='forest-native-expressions-1';
+export const BODY_VIEW_EXPRESSIONS_VERSION='forest-native-expressions-2';
 type Point={x:number;y:number};
-type Brow={center:Point;clip:string;strip:{x:number;y:number;width:number;height:number}};
+export type NativeBrowRegistration={slot?:'screen-left'|'screen-right';center:Point;clip:string;bounds?:{x:number;y:number;width:number;height:number};strip:{x:number;y:number;width:number;height:number}};
+type Brow=NativeBrowRegistration;
 /** Native screen slots, not physical arm labels. Tight erase masks follow the
  * existing ink, not a rectangular forehead crop. Nose/hair/jaw remain intact.
  * Sampling a nearby skin strip is provisional artwork, never identity approval. */
@@ -37,14 +41,19 @@ export const bodyViewBrowRegistration={
   },
 } as const satisfies Record<'lila'|'karo',Record<'three-quarter-left'|'three-quarter-right',readonly [Brow,Brow]>>;
 export type NativeExpressionPose={brow:number;browAngle:number;smile:number;frown:number;round:number;lid:number;eyeOpen:number};
-export function hasBodyViewExpressions(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyExpressions===BODY_VIEW_EXPRESSIONS_SELECTION;}
+export function hasBodyViewExpressions(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyExpressions===BODY_VIEW_EXPRESSIONS_SELECTION||profile.appearance.bodyExpressions===BASIC_BODY_EXPRESSIONS_SELECTION;}
 export function registeredBodyViewExpressions(profile:Pick<HostProfile,'appearance'>,sourceHash?:string){
   const a=profile.appearance;
-  if(isBasicBodyView(a.bodyView))throw basicBodyCapabilityError(a.bodyView,'expression');
-  if(!hasBodyViewExpressions(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour||a.bodyEyes!=='registered-eyes-v1'||a.bodySpeech!=='registered-rest-mouth-v1')throw new Error('needs-view-expression: native expressions require the exact native actor/view, registered eyes and resting speech');
+  if(isBasicBodyView(a.bodyView)){
+    if(a.bodyExpressions!==BASIC_BODY_EXPRESSIONS_SELECTION||!isBasicExpressionView(a.bodyView)||basicBodyHasUnsupportedOptions(a)||a.bodyEyes!==BASIC_BODY_EYES_SELECTION||a.bodySpeech!==BASIC_BODY_SPEECH_SELECTION||a.artworkVersion!=='forest-body-view-1'||a.characterVariant!=='lila'&&a.characterVariant!=='karo'||a.sourceColour)throw basicBodyCapabilityError(a.bodyView,'selected own expression');
+    const c=bodyViewBasicExpressionRegistration[a.characterVariant][a.bodyView],eyes=registeredBodyViewEyes(profile,sourceHash),mouth=registeredBodyViewMouth(profile,sourceHash);
+    if(c.sourceHash!==eyes.sourceHash||c.sourceHash!==mouth.sourceHash||c.sourceSize[0]!==eyes.sourceSize[0]||c.sourceSize[1]!==eyes.sourceSize[1])throw new Error('needs-view-expression: own feature source mismatch');
+    return {...c,mouth,ownBasic:true as const};
+  }
+  if(a.bodyExpressions!==BODY_VIEW_EXPRESSIONS_SELECTION||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour||a.bodyEyes!=='registered-eyes-v1'||a.bodySpeech!=='registered-rest-mouth-v1')throw new Error('needs-view-expression: native expressions require the exact native actor/view, registered eyes and resting speech');
   const eyes=registeredBodyViewEyes(profile,sourceHash),mouth=registeredBodyViewMouth(profile,sourceHash);
   const actor=a.characterVariant,view=a.bodyView;
-  return {sourceHash:eyes.sourceHash,sourceSize:eyes.sourceSize,brows:bodyViewBrowRegistration[actor][view].map((b,i)=>({...b,clip:nativeBrowRegions[actor][view]![i]!})),mouth};
+  return {sourceHash:eyes.sourceHash,sourceSize:eyes.sourceSize,brows:bodyViewBrowRegistration[actor][view].map((b,i)=>({...b,clip:nativeBrowRegions[actor][view]![i]!})),mouth,ownBasic:false as const};
 }
 const n=(v:number)=>Number(v.toFixed(5));
 /** Pure shape authoring shared by static art documents and the compiler. No
@@ -63,7 +72,11 @@ export function bodyViewExpressionState(profile:Pick<HostProfile,'appearance'>,p
   const c=registeredBodyViewExpressions(profile),paths=bodyViewExpressionPaths(profile,pose,amount),face:Record<string,{opacity?:number;x?:number;y?:number;rotation?:number}>={
     'view-mouth-layer':{opacity:0},'view-expression-layer':{opacity:1},'view-expression-mouth-teeth':{opacity:Math.max(0,1-pose.round)},
   };
-  for(const [i] of c.brows.entries())face['view-expression-brow-'+(i?'screen-right':'screen-left')]={y:n(Math.max(-8,Math.min(6,pose.brow))),rotation:n((i?1:-1)*Math.max(-24,Math.min(24,pose.browAngle)))};
+  if(c.ownBasic)face['view-mouth-source-erase']={opacity:1};
+  for(const [i,b] of c.brows.entries()){
+    const slot=('slot' in b?b.slot:undefined)??(i?'screen-right':'screen-left');
+    face['view-expression-brow-'+slot]={y:n(c.ownBasic?Math.max(-18,Math.min(14,pose.brow*2)):Math.max(-8,Math.min(6,pose.brow))),rotation:n((slot==='screen-right'?1:-1)*Math.max(-24,Math.min(24,pose.browAngle)))};
+  }
   return {paths:Object.fromEntries(Object.entries(paths).map(([id,d])=>[id.replace('view-mouth-','view-expression-mouth-')+(id==='view-mouth-teeth'?'-path':''),d])),face,
     eyeClosure:Math.max(0,Math.min(.8,pose.lid+Math.max(0,1-pose.eyeOpen)))};
 }
@@ -76,6 +89,12 @@ export function bodyViewExpressionsSvg(profile:Pick<HostProfile,'appearance'>,so
   const approved=(url:string,sha:string)=>url==='assets/rigs/'+sha+'.png'||/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(url);
   if(!approved(source.url,c.sourceHash))throw new Error('Unapproved expression image URL');
   const image=`<image width="${source.width}" height="${source.height}" href="${source.url}"/>`;
+  if(c.ownBasic){
+    const erase=`<defs><mask id="view-expression-source-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${source.width}" height="${source.height}" style="mask-type:luminance"><rect width="${source.width}" height="${source.height}" fill="white"/>${c.brows.map(b=>`<path d="${b.clip}" fill="black"/>`).join('')}</mask></defs>`;
+    const brows=c.brows.map(b=>{const id='view-expression-brow-'+b.slot,s=b.strip,q=b.bounds;return `<defs><clipPath id="${id}-glyph"><path d="${b.clip}"/></clipPath><clipPath id="${id}-repair"><path d="${b.clip}"/></clipPath></defs><g clip-path="url(#${id}-repair)"><svg x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" viewBox="${s.x} ${s.y} ${s.width} ${s.height}" preserveAspectRatio="none">${image}</svg></g><g transform="translate(${b.center.x} ${b.center.y})"><g id="${id}"><g transform="translate(${-b.center.x} ${-b.center.y})" clip-path="url(#${id}-glyph)" filter="url(#view-expression-ink)">${image}</g></g></g>`;}).join('');
+    const m=c.mouth,s=m.strip!,q=m.bounds,p=bodyViewExpressionPaths(profile,{brow:0,browAngle:0,smile:0,frown:0,round:0,lid:0,eyeOpen:1},0);
+    return `${erase}<g id="view-expression-layer" data-native-expression="${BODY_VIEW_EXPRESSIONS_VERSION}"><defs><filter id="view-expression-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -1.2 -2.4 -.4 0 2"/></filter><clipPath id="view-expression-mouth-region"><path d="${m.clip}"/></clipPath><clipPath id="view-expression-mouth-aperture"><use href="#view-expression-mouth-interior"/></clipPath></defs>${brows}<g clip-path="url(#view-expression-mouth-region)"><svg x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" viewBox="${s.x} ${s.y} ${s.width} ${s.height}" preserveAspectRatio="none">${image}</svg><path id="view-expression-mouth-interior" d="${p['view-mouth-interior']}" fill="#211008" stroke="#160B05" stroke-width="${m.stroke}" stroke-linejoin="round"/><g clip-path="url(#view-expression-mouth-aperture)"><g id="view-expression-mouth-teeth"><path id="view-expression-mouth-teeth-path" d="${p['view-mouth-teeth']}" fill="#FFF8E9"/></g><path id="view-expression-mouth-tongue" d="${p['view-mouth-tongue']}" fill="#B3471F"/></g></g></g>`;
+  }
   const brows=c.brows.map((b,i)=>{const id='view-expression-brow-'+(i?'screen-right':'screen-left'),s=b.strip;
     return `<defs><clipPath id="${id}-glyph"><path d="${b.clip}"/></clipPath><mask id="${id}-erase" maskUnits="userSpaceOnUse" x="0" y="0" width="${source.width}" height="${source.height}"><path d="${b.clip}" fill="white"/></mask></defs><g mask="url(#${id}-erase)"><svg x="${s.x-10}" y="${b.center.y-40}" width="${s.width+20}" height="85" viewBox="${s.x} ${s.y} ${s.width} ${s.height}" preserveAspectRatio="none">${image}</svg></g><g transform="translate(${b.center.x} ${b.center.y})"><g id="${id}"><g transform="translate(${-b.center.x} ${-b.center.y})" clip-path="url(#${id}-glyph)" filter="url(#view-expression-ink)">${image}</g></g></g>`;
   }).join('');
@@ -93,7 +112,8 @@ export function bodyViewExpressionsSvg(profile:Pick<HostProfile,'appearance'>,so
   const p=bodyViewExpressionPaths(profile,{brow:0,browAngle:0,smile:0,frown:0,round:0,lid:0,eyeOpen:1},0);
   return `<g id="view-expression-layer" data-native-expression="${BODY_VIEW_EXPRESSIONS_VERSION}"><defs><filter id="view-expression-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -1.2 -2.4 -.4 0 2"/></filter><clipPath id="view-expression-mouth-region"><path d="${m.clip}"/></clipPath><clipPath id="view-expression-mouth-aperture"><use href="#view-expression-mouth-interior"/></clipPath></defs>${brows}<g clip-path="url(#view-expression-mouth-region)">${repair}<path id="view-expression-mouth-interior" d="${p['view-mouth-interior']}" fill="#211008" stroke="#160B05" stroke-width="${m.stroke}" stroke-linejoin="round"/><g clip-path="url(#view-expression-mouth-aperture)"><g id="view-expression-mouth-teeth"><path id="view-expression-mouth-teeth-path" d="${p['view-mouth-teeth']}" fill="#FFF8E9"/></g><path id="view-expression-mouth-tongue" d="${p['view-mouth-tongue']}" fill="#B3471F"/></g></g></g>`;
 }
-export const bodyViewExpressionsDescription={version:BODY_VIEW_EXPRESSIONS_VERSION,selection:BODY_VIEW_EXPRESSIONS_SELECTION,brows:bodyViewBrowRegistration,measuredInkRegions:nativeBrowRegions,
-  fingerprint:hash({version:BODY_VIEW_EXPRESSIONS_VERSION,bodyViewBrowRegistration,nativeBrowRegions,moodPoses,mouth:'closed chord/smile/frown; chord height .55; activity-gated round aperture',restSkinStrips:{x:450,width:600,height:60,leftY:580,rightY:500},browInkDilation:2,inkAlpha:[-1.2,-2.4,-.4,0,2],browBounds:[-8,6,-24,24]}),
-  method:'native brow ink isolated within measured masks; bounded brow motion, original eye glyphs with lids, closed emotional mouth contour and activity-gated aperture',
+export const bodyViewExpressionsDescription={version:BODY_VIEW_EXPRESSIONS_VERSION,selection:BODY_VIEW_EXPRESSIONS_SELECTION,selections:[BODY_VIEW_EXPRESSIONS_SELECTION,BASIC_BODY_EXPRESSIONS_SELECTION],brows:bodyViewBrowRegistration,measuredInkRegions:nativeBrowRegions,
+  ownBasicExpressions:{version:BASIC_BODY_EXPRESSIONS_VERSION,selection:BASIC_BODY_EXPRESSIONS_SELECTION,registrations:bodyViewBasicExpressionRegistration,browScale:2,browBounds:[-18,14,-24,24],visibleBrowCount:8,rearExpressions:false,coordinateAuthority:'own-source manual cues, not measured anatomy or accepted artwork',approved:false,motionVerified:false,productionReady:false,availableBanks:[]},
+  fingerprint:hash({version:BODY_VIEW_EXPRESSIONS_VERSION,bodyViewBrowRegistration,bodyViewBasicExpressionRegistration,nativeBrowRegions,moodPoses,mouth:'closed chord/smile/frown; chord height .55; activity-gated round aperture',restSkinStrips:{x:450,width:600,height:60,leftY:580,rightY:500},browInkDilation:2,inkAlpha:[-1.2,-2.4,-.4,0,2],browBounds:[-8,6,-24,24],ownBasicBrowScale:2,ownBasicBrowBounds:[-18,14,-24,24]}),
+  method:'native brow ink isolated within legacy measured masks or explicitly selected own front/profile manual masks; bounded brow motion, original eye glyphs with lids, closed emotional mouth contour and activity-gated aperture',
   approved:false,productionReady:false,phonemeLipSync:false,limitations:['skin-strip/brow erase/closed-mouth colour and contour seams need artwork review','fixed head view; no continuous head/body turns','bounded eye closure cannot enlarge source eye glyphs','not laugh/body/cloth/locomotion or runtime/audio/video acceptance']};

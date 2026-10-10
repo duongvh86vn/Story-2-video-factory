@@ -6,7 +6,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "const": "native-view-acting-clock-9"
+          "const": "native-view-acting-clock-10"
         },
         "ownerId": {
           "type": "string",
@@ -3104,7 +3104,10 @@
                       },
                       "bodyExpressions": {
                         "type": "string",
-                        "const": "registered-expressions-v1"
+                        "enum": [
+                          "registered-expressions-v1",
+                          "registered-basic-expressions-v1"
+                        ]
                       },
                       "bodyMotion": {
                         "type": "string",

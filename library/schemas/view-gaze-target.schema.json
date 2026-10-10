@@ -2001,7 +2001,10 @@
                 },
                 "bodyExpressions": {
                   "type": "string",
-                  "const": "registered-expressions-v1"
+                  "enum": [
+                    "registered-expressions-v1",
+                    "registered-basic-expressions-v1"
+                  ]
                 },
                 "bodyMotion": {
                   "type": "string",
