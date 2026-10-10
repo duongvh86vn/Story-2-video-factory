@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.101-own-profile-manipulation",
+  "precedingSourceSHA": "bd184de0329dc65370440bc7923c114f1f89082b",
+  "scope": "exact own profile single-person manipulation/source clock integration only; no anatomy/art/grip/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Four exact own left/right PNG/SHA/canvas bindings; registered-profile-manipulation-v1. Own shoulders/rest/depth, unchanged same-person bones/cuff/palm/mitten/sole. No other-view ROI/landmark borrowing, face mirror/warp or inferred yaw.",
+    "Explicit own-view restPole from compiler entry fixes the hardcoded hand-side branch mismatch for Karo profile contacts. Legacy absent restPole retains old per-hand branch. Non +/-1 and changed branch reject. C2/quintic, fixed-length solve, reach/corridor/contact/shape/lift/lower kernels unchanged.",
+    "Original sourceManipulation plus sourceBody retains complete contact/grip/prop/release ownership through continuous cuts and actor role swaps. Exact stationary source body with no physical tracks may own contact without locomotion; actual walks/jumps/postures/supports/entry need own motion. No clock removal, local prop substitutes or release clamp.",
+    "Schema/API/workbench/director/report/cache/manifest bind exact selected source; clock15, body registration14, native contact3, forest compiler41. Own mode grants no front/rear contact/spear/seat/handoff/head-bank/supportingModel/continuous turns. Marker cannot pass sourced world production audit.",
+    "11 new callbacks DECLARED/NOT RUN. Previous front-secondary test/URL change only laughing→excited; no timings/assertions removed. Own source manual cues and static data do not prove anatomy/motion or art.",
+    "Manifest handoffDocument is separate from capability handoff=false, avoiding path overwrite. Build/typecheck/definitions/raw inventory and publication do not accept final video."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "e8b302/session25614/completion545163",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 build\n> tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 67 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-BC2WpnvH.js   249.57 kB │ gzip: 77.61 kB\n✓ built in 1.14s\n",
+      "scope": "source build only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "3ef625/session87381/completion2509e7",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "typecheck only; callbacks NOT RUN"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "fa6c86",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n\n",
+      "scope": "schema definition export only"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "23d744",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "explicitly allowed source/header/hash/static JSON inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/profile-manipulation-static-v1.mjs",
+      "exitCode": 0,
+      "handle": "5fa620",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.101-own-profile-manipulation\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"mappedCodeHashes\":177,\"scalarCodeEntries\":46,\"ownProfileSources\":4,\"callbacksDeclared\":11,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}\n",
+      "scope": "raw file/header/JSON/source AST inventory only; no project evaluation"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "freeze source whitespace check"
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/profile-manipulation-static-record-v1.json",
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 19247,
+    "usage": {
+      "prompt_tokens": 26297,
+      "completion_tokens": 1909,
+      "total_tokens": 28206
+    },
+    "finishReason": "stop",
+    "reply": "{\"findings\":[{\"file\":\"packages/animation/native-contact-arm.ts\",\"quote\":\"if(plan.sourceBody){\\n  if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate');\\n  validateBodySourcePlan(plan);\\n}\",\"reason\":\"A profile-view contact run must include `sourceBody`, and that original body clock is required even when it contains no locomotion. This unconditional gate therefore rejects stationary own-profile contact unless profile locomotion is also selected, although the stated requirement makes that selection necessary for carry movement—not contact alone. The nearby `unsupportedSource` condition also requires `ownMotion` for `sourceManipulation`, reinforcing the same restriction.\",\"correction\":\"Allow an own-profile `sourceBody`/`sourceManipulation` clock without locomotion when it has no body movement; require the separately selected own locomotion capability when the original body run contains walks or jumps.\"}],\"missingContext\":[\"The profile body registration/metrics entries and source-body validation implementation are not included, so their source-to-metrics consistency cannot be checked from this material.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshot": "C:/Users/Duongvh-pc/.codex/tmp/source101-review-snapshot.txt",
+    "sha256": "5d3032f17f37b008c53864f6dae9622fae3e5db322324c97fea5e9bfcf53dded",
+    "snapshotSections": 10,
+    "snapshotChars": 96610,
+    "scope": "bounded source-only advice; no tests/anatomy/art/runtime/production acceptance",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "handle": "0c5ac3/session42285/completionf19283",
+    "parentDisposition": {
+      "classification": "supported stationary-contact capability overconstraint; source correction implemented",
+      "finding": "Original stationary profile contact incorrectly required separate locomotion despite complete empty body clock",
+      "evidence": "Actual compiler validateFixedBodyView required hasBodyViewLocomotion for sourceBody and ownMotion for sourceManipulation. hasStationaryProfileContactSource now admits only exact own profile manipulation+matching source fields with empty walks/jumps/postures/supports/no entry; full clock/schema/source validators retained. Actual physical tracks still require own locomotion. Reviewer quote file attribution said native-contact-arm.ts but quoted code is compiler.ts; parent inspected both actual files.",
+      "acceptsFinalSource": false,
+      "testsExecuted": false,
+      "artAccepted": false
+    }
+  },
+  "earlierChecks": [
+    {
+      "rawInventory": "e5d3ae",
+      "exitCode": 1,
+      "reason": "Temporary reader used nonexistent descriptor marker; actual own geometry unchanged. Corrected marker and AST function source comparisons."
+    },
+    {
+      "rawInventory": "2137cf",
+      "exitCode": 1,
+      "reason": "Real manifest capability handoff=false overwritten by documentation path. Corrected new field to handoffDocument; fresh pack/raw inventory passed."
+    }
+  ],
+  "ownedPaths": 32,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/PROFILE-MANIPULATION-HANDOFF.md",
+  "newCallbacksDeclared": 11,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 0,
+  "imagesEdited": false,
+  "environment": {
+    "node": "24.19.0",
+    "platform": "win32",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+    "diagnosticPort": 8851,
+    "serverStarted": false
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

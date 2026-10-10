@@ -17,14 +17,14 @@ import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-vi
 /** Preserve the original expression run for selected own face/motion rigs;
  * motion alone keeps happy and does not grant expression artwork. */
 function keepsExpressionClock(profile:Pick<HostProfile,'appearance'>){
-  return hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(profile.appearance.bodyView)||profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(profile.appearance.bodyView)||hasOwnBodyLocomotion(profile)||hasOwnBodySecondary(profile);
+  return hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(profile.appearance.bodyView)||profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(profile.appearance.bodyView)||hasOwnBodyLocomotion(profile)||hasOwnBodySecondary(profile)||hasOwnBodyManipulation(profile);
 }
 import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 import {collectViewSourceBody,validateBodySourcePlan} from '../animation/view-source-body.js';
 import {collectViewSourceManipulation,validateManipulationSourcePlan} from '../animation/view-source-manipulation.js';
 import {collectViewSourceSpear,validateSpearSourcePlan,performanceSpears} from '../animation/view-source-spear.js';
-import {hasBodyViewManipulation} from '../animation/native-contact-arm.js';
+import {hasBodyViewManipulation,hasOwnBodyManipulation} from '../animation/native-contact-arm.js';
 import {hasNativeHeadBank,hasNativeHeadSecondary,validateNativeHeadBankTrack} from '../animation/body-head-bank.js';
 import {collectNativeHeadTracks} from '../animation/native-head-track.js';
 

@@ -1,5 +1,7 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
+**Cập nhật source0.101:** [Cầm/mang/đặt/thả vật ở góc nghiêng riêng](PROFILE-MANIPULATION-HANDOFF.md). Explicit `registered-profile-manipulation-v1` cho bốn own left/right PNG/SHA/canvas/shoulders/rest/depth; canonical cùng nhân vật cuff/palm/bones, actual contact/target/release, original sourceManipulation + sourceBody qua camera cut/đổi vai. Carry đi cần own profile locomotion cùng chiều; không cấp spear/handoff/front/rear/seat/head-bank/supportingModel/turns. Clock15/body compiler41/schema/API/director/report/cache/manifest cùng contract; fixture0.100 sửa mood `laughing`→`excited`, không thêm alias, timing/assertions/NOT RUN giữ nguyên. Anatomy/art/grip/viền/painter/motion và full story/script/WAV→video/voices/resume/final/QC còn mở; all gates false/null/empty, needs-source-prop-binding giữ nguyên.0.100 trở xuống là lịch sử.
+
 **Cập nhật source0.100:** [Tóc/râu chính diện từ đúng nguồn](FRONT-SECONDARY-HANDOFF.md). `registered-front-secondary-v1`, hai own PNG/SHA/canvas và bốn vùng crest/tail/beard; lower beard Karo có own UV contour giữ pixel cổ, shared face erase masks và original expression/secondary clock xuyên camera cut/đổi vai. Clock14/schema/API/workbench/director/report/cache/manifest cùng contract. Chưa nghiệm thu tạo hình/đường cắt/seam/anatomy/motion/video; không cấp locomotion/seat/tools/head-bank/supportingModel/turns. Tám callback DECLARED / NOT RUN; full story/script/WAV→video và EN/VI/JA/KO/external-localTTS/resume/final/QC còn mở. All gates false/null/empty, needs-source-prop-binding giữ nguyên;0.99 trở xuống là lịch sử.
 
 **Cập nhật source0.99:** [Đi/chạy/nhảy/cúi ở góc lưng riêng](REAR-LOCOMOTION-HANDOFF.md). Bốn own PNG/SHA/canvas garment cages, `registered-rear-locomotion-v1`; cùng native body/cloth kernel và original sourceBody qua camera cut/đổi vai. Clock13/schema/API/workbench/acting brief/report/cache/manifest cập nhật. Không cấp face/chin/secondary/seat/tools/turns; không mượn profile3/4 hoặc suy yaw. Tám callback DECLARED / NOT RUN. Khớp/viền áo/diễn xuất và toàn story/script/WAV→video vẫn chưa nghiệm thu; productionReady=false, productionRig=null, availableBanks=[] và needs-source-prop-binding giữ nguyên. Mốc0.98 trở xuống là lịch sử.
@@ -673,7 +675,7 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-### Hiện hành0.100 — source chưa nghiệm thu sản phẩm
+### Hiện hành0.101 — source chưa nghiệm thu sản phẩm
 
 | Hạng mục | Source hiện có | Chứng cứ còn thiếu |
 |---|---|---|
@@ -685,7 +687,7 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 | Bối cảnh/màu | Reference/palette và nguồn draft hiện có; vector cũ bị loại | World day/sunset/night có chiều sâu, nguồn sáng/bóng/contact và màu tươi trong final, không nền nhợt/slideshow |
 | EN chính + VI/JA/KO/TTS ngoài-local | Adapter/config/source contract hiện có;0.89 explicit actor voice ID cùng provider/ngôn ngữ, thiếu vai dừng trước TTS; WAV không bị buộc đổi thành TTS | Giọng đúng ngôn ngữ/speaker, TTS/API lỗi/clock/fit, audio-subtitle-duration và final gate thực |
 | Resume/rebuild/locks | Source/hash/cache/repair và lock guards WIP | Sửa script/voice/actor/shot giữ hoặc invalidate đúng artifact; không xuất final từ source/clock cũ |
-| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory ghi theo exact source/commit ở FRONT-SECONDARY-HANDOFF.md; handoff0.99 trở xuống là lịch sử. Không dùng báo cáo cũ hoặc V1 để nghiệm thu0.100 | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
+| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory ghi theo exact source/commit ở PROFILE-MANIPULATION-HANDOFF.md; handoff0.100 trở xuống là lịch sử. Không dùng báo cáo cũ hoặc V1 để nghiệm thu0.101 | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
 | Production | productionReady=false, productionRig=null, availableBanks=[] | Chỉ mở sau khi model test có evidence đáp ứng toàn bộ mục11 và bộ chủ đề thực sự dùng lại cho câu chuyện mới |
 
 Các nguyên liệu/definition đơn lẻ không thay bộ sản phẩm hoàn chỉnh. Nội dung tập lấy từ input người dùng; việc chưa có một tập đầu được chọn không là lý do bó tool vào demo món ăn/máy móc hoặc dừng các phần source độc lập.

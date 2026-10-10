@@ -16,11 +16,11 @@ import {hasBodyViewLocomotion,hasOwnBodyLocomotion,nativeClothSvg,nativeClothDes
 import {hasBodyViewSecondary,hasOwnBodySecondary,nativeSecondarySvg,nativeSecondaryDescription} from './body-view-secondary.js';
 import {hasBodyViewSeat,nativeSeatSvg,nativeSeatDescription} from './body-view-seat.js';
 import {hasNativeHeadBank,nativeHeadBankSvg,registeredNativeHeadBank,nativeHeadBankBounds} from './body-head-bank.js';
-import {nativeManipulationDescription} from './native-contact-arm.js';
+import {nativeManipulationDescription,hasBodyViewManipulation,hasOwnBodyManipulation} from './native-contact-arm.js';
 import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-13';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-14';
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These
  * engineering candidates use uniform head/body transforms. Their physical
@@ -56,6 +56,14 @@ export function registeredSecondaryBodyView(profile:Pick<HostProfile,'appearance
   if(!hasOwnBodySecondary(profile))return registeredDetailedBodyView(profile);
   const source=registeredBodyView(profile);
   if(source.view!=='front'&&source.view!=='left'&&source.view!=='right'||source.view!==a.bodyView)throw basicBodyCapabilityError(source.view,'own secondary');
+  return source;
+}
+export function registeredManipulationBodyView(profile:Pick<HostProfile,'appearance'>){
+  const a=profile.appearance;
+  if(!hasBodyViewManipulation(profile)||a.artworkVersion!==BODY_VIEW_VERSION||a.characterVariant!=='lila'&&a.characterVariant!=='karo')throw new Error('needs-view-manipulation: select the exact native actor and manipulation mode');
+  if(!hasOwnBodyManipulation(profile))return registeredDetailedBodyView(profile);
+  const source=registeredBodyView(profile);
+  if(source.view!=='left'&&source.view!=='right'||source.view!==a.bodyView)throw basicBodyCapabilityError(source.view,'own manipulation');
   return source;
 }
 export function bodyViewFacing(profile:Pick<HostProfile,'appearance'>){const view=registeredBodyView(profile).view;return view==='front'?'front':view==='three-quarter-left'||view==='left'||view==='back-left'?'left':'right';}

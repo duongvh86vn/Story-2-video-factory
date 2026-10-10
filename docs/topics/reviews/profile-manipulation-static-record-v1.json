@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.101-own-profile-manipulation",
+  "precedingSourceSHA": "bd184de0329dc65370440bc7923c114f1f89082b",
+  "scope": "raw header/hash/JSON/source-literal AST inventory only; no project imports, schema instances, fixtures, poses, samplers, compiler/camera evaluation, tests, server, browser, audio or video",
+  "originalRastersUnchanged": 307,
+  "actualPNG": 144,
+  "actualJPEG": 163,
+  "JPEGNamedPNG": 101,
+  "imageFingerprint": "3da9a2cdc700204d46f875a3f2b2f55866735e92053ec7b977434a71b2ebbe93",
+  "originalHeadDefinitionsUnchanged": 18,
+  "originalHeadMetadataUnchanged": 27,
+  "newImages": 0,
+  "protectedProductionPathsUnchanged": 216,
+  "ownProfileSourceCount": 4,
+  "ownProfileSources": [
+    {
+      "actor": "lila",
+      "view": "left",
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+      "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+      "width": 1173,
+      "height": 1341,
+      "shoulders": {
+        "left": {
+          "x": 552,
+          "y": 506
+        },
+        "right": {
+          "x": 602,
+          "y": 523
+        }
+      },
+      "restDirectionsDeg": {
+        "left": {
+          "upper": 100,
+          "lower": 94
+        },
+        "right": {
+          "upper": 81,
+          "lower": 88
+        }
+      },
+      "nearHand": "right",
+      "farHand": "left",
+      "coordinateAuthority": "own manual source cues; not measured anatomy/yaw/art/motion approval"
+    },
+    {
+      "actor": "lila",
+      "view": "right",
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+      "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+      "width": 1024,
+      "height": 1536,
+      "shoulders": {
+        "left": {
+          "x": 516,
+          "y": 567
+        },
+        "right": {
+          "x": 631,
+          "y": 593
+        }
+      },
+      "restDirectionsDeg": {
+        "left": {
+          "upper": 100,
+          "lower": 94
+        },
+        "right": {
+          "upper": 81,
+          "lower": 88
+        }
+      },
+      "nearHand": "left",
+      "farHand": "right",
+      "coordinateAuthority": "own manual source cues; not measured anatomy/yaw/art/motion approval"
+    },
+    {
+      "actor": "karo",
+      "view": "left",
+      "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+      "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+      "width": 910,
+      "height": 1728,
+      "shoulders": {
+        "left": {
+          "x": 432,
+          "y": 670
+        },
+        "right": {
+          "x": 526,
+          "y": 697
+        }
+      },
+      "restDirectionsDeg": {
+        "left": {
+          "upper": 100,
+          "lower": 94
+        },
+        "right": {
+          "upper": 81,
+          "lower": 88
+        }
+      },
+      "nearHand": "right",
+      "farHand": "left",
+      "coordinateAuthority": "own manual source cues; not measured anatomy/yaw/art/motion approval"
+    },
+    {
+      "actor": "karo",
+      "view": "right",
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+      "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+      "width": 910,
+      "height": 1727,
+      "shoulders": {
+        "left": {
+          "x": 420,
+          "y": 592
+        },
+        "right": {
+          "x": 556,
+          "y": 611
+        }
+      },
+      "restDirectionsDeg": {
+        "left": {
+          "upper": 100,
+          "lower": 94
+        },
+        "right": {
+          "upper": 81,
+          "lower": 88
+        }
+      },
+      "nearHand": "left",
+      "farHand": "right",
+      "coordinateAuthority": "own manual source cues; not measured anatomy/yaw/art/motion approval"
+    }
+  ],
+  "ownFixedBodyGeometryUnchanged": true,
+  "canonicalHandSourceUnchanged": true,
+  "C2ContactSolverReachCorridorKernelUnchanged": true,
+  "explicitAuthoredRestBranchChanged": true,
+  "stationaryOriginalContactGuardChanged": true,
+  "legacyClothFaceSecondaryDataUnchanged": true,
+  "physicalBodyKernelUnchanged": true,
+  "manualCoordinatesNotMeasured": true,
+  "manifestMappedCodeHashes": 177,
+  "manifestMappedEntries": 610,
+  "manifestScalarCodeEntries": 46,
+  "availableBankFields": 61,
+  "newCallbacksDeclared": 11,
+  "callbacksExecuted": 0,
+  "priorTestsUnchangedExceptExactFrontMoodCorrection": true,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "compilerInvoked": false,
+  "cameraEvaluatorInvoked": false,
+  "serverStarted": false,
+  "browserOpened": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

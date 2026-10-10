@@ -17,7 +17,7 @@ import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
-import {usesBodyView,registeredBodyView,registeredDetailedBodyView,registeredLocomotionBodyView,registeredSecondaryBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
+import {usesBodyView,registeredBodyView,registeredDetailedBodyView,registeredLocomotionBodyView,registeredSecondaryBodyView,registeredManipulationBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace,nativeHeadBankFacialState,nativeHeadBankFacialError} from './body-head-bank.js';
 import {nativeHeadSources,nativeHeadPixelScale} from './native-head-bank.js';
 import {nativeHeadTrackTimes} from './native-head-track.js';
@@ -26,7 +26,7 @@ import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSource
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription,bodyViewEyeCenter} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
 import {hasBodyViewLocomotion,hasOwnBodyLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
-import {hasBodyViewManipulation,isNativeContactGesture,validateNativeManipulation,validateNativeContactBodyClock,nativeContactWindow,sampleNativeContactArm,nativeManipulationDescription} from './native-contact-arm.js';
+import {hasBodyViewManipulation,hasOwnBodyManipulation,hasStationaryProfileContactSource,isNativeContactGesture,validateNativeManipulation,validateNativeContactBodyClock,nativeContactWindow,sampleNativeContactArm,nativeManipulationDescription} from './native-contact-arm.js';
 import {hasBodyViewSeat,nativeSeatState,nativeSeatMatrixError,nativeSeatDescription} from './body-view-seat.js';
 import {hasBodyViewSecondary,registeredNativeSecondary,nativeSecondaryState,nativeSecondaryMatrixError,nativeSecondaryDescription} from './body-view-secondary.js';
 import {sampleSecondaryMotion,SECONDARY_MOTION_DELAYS_MS} from './view-secondary-motion.js';
@@ -110,7 +110,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   validateNativeHeadBankTrack(plan,profile);
   if(hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.expressions&&!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-head-expression-phase: source emotions require the current original acting-clock compiler');
   if(plan.sourceBody){
-    if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate');
+    if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)&&!hasStationaryProfileContactSource(plan,profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate, or exact stationary own-profile contact');
     validateBodySourcePlan(plan);
   }
   if(plan.gestures.some(g=>g.sourceSpan)){
@@ -134,13 +134,14 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   }
   if(!usesBodyView(profile))return;
   if(isBasicBodyView(registeredBodyView(profile).view)){
-    const ownMotion=hasOwnBodyLocomotion(profile);
+    const ownMotion=hasOwnBodyLocomotion(profile),ownManipulation=hasOwnBodyManipulation(profile);
+    const stationaryContact=hasStationaryProfileContactSource(plan,profile),ownContactSource=ownManipulation&&(ownMotion||stationaryContact);
     const ownGestureSpan=ownMotion&&!isRearBodyView(registeredBodyView(profile).view);
-    const unsupportedSource=Object.entries(plan).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!(ownMotion&&key==='sourceBody'))||plan.gestures.some(g=>Object.entries(g).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!(ownGestureSpan&&key==='sourceSpan')));
-    if(unsupportedSource||performanceProps(plan).length||performanceSpears(plan).length)throw basicBodyCapabilityError(registeredBodyView(profile).view,'source action/ownership/tool/prop');
+    const unsupportedSource=Object.entries(plan).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!((ownMotion||stationaryContact)&&key==='sourceBody')&&!(ownContactSource&&key==='sourceManipulation'))||plan.gestures.some(g=>Object.entries(g).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!(ownGestureSpan&&key==='sourceSpan')));
+    if(unsupportedSource||performanceProps(plan).length&&!ownManipulation||performanceSpears(plan).length||ownManipulation&&performanceProps(plan).some(p=>p.kind==='spear'))throw basicBodyCapabilityError(registeredBodyView(profile).view,'source action/ownership/tool/prop');
     if(isRearBodyView(registeredBodyView(profile).view)&&plan.gestures.some(g=>g.action==='think'))throw basicBodyCapabilityError(registeredBodyView(profile).view,'visible chin contact');
   }
-  if(hasBodyViewManipulation(profile))validateNativeManipulation(plan,profile,registeredDetailedBodyView(profile));
+  if(hasBodyViewManipulation(profile))validateNativeManipulation(plan,profile,registeredManipulationBodyView(profile));
   if(plan.headTurns?.length)throw new Error('needs-head-turn-registration: authored head cells still need continuity repair, source landmarks and original head-clock registration; see /api/topics/prehistoric-life/head-turn-art');
   if(plan.headView!==registeredBodyView(profile).view||plan.turns?.length)throw new Error('needs-body-registration: candidate uses one matching fixed head/body view');
   if(hasBodyViewLocomotion(profile))validateNativeLocomotion(sourceBodyPlan(plan),profile,registeredLocomotionBodyView(profile));
@@ -1338,8 +1339,8 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),
     ...(plan.sourceManipulation?{sourceManipulation:{...sourceManipulationDescription,sourceHash:hash(plan.sourceManipulation),offsetMs:plan.sourceManipulation.startMs-actingClock!.startMs,source:plan.sourceManipulation}}:{}),
     ...(plan.sourceSpear?{sourceSpear:{...sourceSpearDescription,sourceHash:hash(plan.sourceSpear),offsetMs:plan.sourceSpear.startMs-actingClock!.startMs,source:plan.sourceSpear,motionVerified:false,productionApproval:false}}:{}),
-    ...(hasBodyViewManipulation(profile)?{bodyManipulation:{...nativeManipulationDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
-      clock:'shot-local contact/release with current original body state; no cross-cut prop clock',contacts:plan.gestures.filter(isNativeContactGesture).map(g=>({id:g.id,hand:rigHand(g),action:g.action,window:nativeContactWindow(g)})),motionVerified:false}}:{}),
+    ...(hasBodyViewManipulation(profile)?{bodyManipulation:{...nativeManipulationDescription,selection:profile.appearance.bodyManipulation!,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+      clock:plan.sourceManipulation?'complete original single-person hand/prop clock through explicitly continuous camera slices':'shot-local contact/release with current original body state; no cross-cut prop clock',sourceTrackHash:hash(plan.sourceManipulation??{gestures:plan.gestures,props:plan.props}),sourcePhase:actingClock?viewActingClockDescription(actingClock):null,contacts:(plan.sourceManipulation?.gestures??plan.gestures).filter(isNativeContactGesture).map(g=>({id:g.id,hand:rigHand(g),action:g.action,window:nativeContactWindow(g)})),motionVerified:false,audioVerified:false}}:{}),
     ...(hasBodyViewSeat(profile)?{bodySeat:{...nativeSeatDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       supportTrackHash:hash({supports:physical.supports??[],postures:physical.postures??[],entryPosture:physical.entryPosture??null}),clock:plan.sourceBody?'complete original physical support/body transfer through explicit continuous camera slices':'shot-local physical support transfer',sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     ...(hasBodyViewLocomotion(profile)?{bodyMotion:{...nativeClothDescription,selection:profile.appearance.bodyMotion!,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,

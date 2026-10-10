@@ -30,7 +30,7 @@ npm run studio
 Mở `http://127.0.0.1:8851`; Ctrl+C đúng terminal đó để dừng. Nếu cổng bận, chọn cổng khác và ghi report. URLs diagnostic chưa được implementation mở:
 
 - `/api/topics/prehistoric-life/body?view=front&action=point&timeMs=1771&mood=happy&secondary=registered-front-secondary-v1`
-- `/api/topics/prehistoric-life/body?view=front&action=think&timeMs=1771&mood=laughing&secondary=registered-front-secondary-v1&eyes=registered-basic-eyes-v1&mouth=registered-basic-mouth-v1&expressions=registered-basic-expressions-v1`
+- `/api/topics/prehistoric-life/body?view=front&action=think&timeMs=1771&mood=excited&secondary=registered-front-secondary-v1&eyes=registered-basic-eyes-v1&mouth=registered-basic-mouth-v1&expressions=registered-basic-expressions-v1`
 
 Workbench là diagnostic, không phải phim hoàn chỉnh hoặc bằng chứng có giọng.
 
@@ -51,3 +51,5 @@ Full story/script/dialogue/WAV/legacySRT, EN/VI/JA/KO/external-local TTS, source
 ## Kết quả source cuối
 
 Build, test:typecheck, schema definition export, source asset inventory và raw static inventory exit0. 307 raster nguyên byte (144PNG/163JPEG,101JPEG tênPNG),18 head definitions và27 head metadata giữ nguyên. Legacy cloth/face/secondary data và own fixed body geometry giữ nguyên; shared mesh/state/bounds/physical/temporal source không đổi. Optional own UV contour là thay đổi source selection; legacy rect SVG definitions giữ nguyên. Hai own front sources/bốn vùng bind PNG/SHA/canvas; lower beard Karo dùng cùng contour xóa tĩnh và cắt mảnh chuyển động. Raw warm-pixel heuristic zero trong final ROI không duyệt neck/segmentation/seam/anatomy. Manifest174 mapped code hashes/46 scalar entries đối chiếu source cuối. Tám callback mới chưa chạy. Freeze/stage28 đường dẫn riêng,52 untracked khác giữ nguyên. Tester bounded source advice HTTP200→gpt-6-luna; headClip concern đã được parent đối chiếu full SVG emission, chưa thiết lập lỗi; advice snapshot thiếu full emission/validation context. Không có nghiệm thu runtime/audio/render/video hoặc toàn factory.
+
+**Đính chính source0.101:** fixture và URL mood dùng `excited`, đúng `Moods` contract; `laughing` là nhãn tạo hình tham khảo, không là enum runtime. Giữ timing/clock/assertions và NOT RUN, không thêm alias hoặc viết lại narration để né test.

@@ -3664,7 +3664,10 @@
                             },
                             "bodyManipulation": {
                               "type": "string",
-                              "const": "registered-manipulation-v1"
+                              "enum": [
+                                "registered-manipulation-v1",
+                                "registered-profile-manipulation-v1"
+                              ]
                             },
                             "sourceColour": {
                               "type": "string",
@@ -5782,7 +5785,10 @@
                               },
                               "bodyManipulation": {
                                 "type": "string",
-                                "const": "registered-manipulation-v1"
+                                "enum": [
+                                  "registered-manipulation-v1",
+                                  "registered-profile-manipulation-v1"
+                                ]
                               },
                               "sourceColour": {
                                 "type": "string",

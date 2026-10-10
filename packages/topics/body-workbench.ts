@@ -1,5 +1,6 @@
 import {isBasicBodyView,basicBodyActionAllowed,basicBodyCapabilityError} from '../animation/body-view-basic-capabilities.js';
 import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from '../animation/body-view-profile-cloth-binding.js';
+import {PROFILE_BODY_MANIPULATION_SELECTION,isProfileManipulationView} from '../animation/body-view-profile-manipulation-binding.js';
 import {REAR_BODY_LOCOMOTION_SELECTION,isRearMotionView} from '../animation/body-view-rear-cloth-binding.js';
 import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
 import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-view-basic-mouth-registration.js';
@@ -45,7 +46,7 @@ export const BODY_SECONDARY_MODES=['rigid',BODY_VIEW_SECONDARY_SELECTION,PROFILE
 export type BodySecondaryMode=typeof BODY_SECONDARY_MODES[number];
 export const BODY_SEAT_MODES=['unregistered',BODY_VIEW_SEAT_SELECTION] as const;
 export type BodySeatMode=typeof BODY_SEAT_MODES[number];
-export const BODY_MANIPULATION_MODES=['unregistered',BODY_VIEW_MANIPULATION_SELECTION] as const;
+export const BODY_MANIPULATION_MODES=['unregistered',BODY_VIEW_MANIPULATION_SELECTION,PROFILE_BODY_MANIPULATION_SELECTION] as const;
 export type BodyManipulationMode=typeof BODY_MANIPULATION_MODES[number];
 const manipulationActions=['inspect','operate','pick-place','carry','drop'];
 export const BODY_LOOK_MODES=['rest','ahead','up','down'] as const;
@@ -73,11 +74,12 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   const ownSecondary=secondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(view)||secondary===FRONT_BODY_SECONDARY_SELECTION&&isFrontSecondaryView(view);
   if(secondary!=='rigid'&&!ownSecondary&&(secondary!==BODY_VIEW_SECONDARY_SELECTION||!authored||isBasicBodyView(view)))throw new Error('needs-view-secondary: select secondary registered for this own native body view');
   if(seat!=='unregistered'&&(seat!==BODY_VIEW_SEAT_SELECTION||!authored||motion!==BODY_VIEW_LOCOMOTION_SELECTION))throw new Error('needs-view-seat: seated candidate requires a native view and registered locomotion');
-  if(manipulation!=='unregistered'&&(manipulation!==BODY_VIEW_MANIPULATION_SELECTION||!authored))throw new Error('needs-view-manipulation: manipulation needs an explicit native body view');
-  if(manipulationActions.includes(action)&&manipulation!==BODY_VIEW_MANIPULATION_SELECTION)throw new Error('needs-view-manipulation: explicitly select registered-manipulation-v1');
+  const ownManipulation=manipulation===PROFILE_BODY_MANIPULATION_SELECTION&&isProfileManipulationView(view),ownManipulationAction=ownManipulation&&manipulationActions.includes(action);
+  if(manipulation!=='unregistered'&&!ownManipulation&&(manipulation!==BODY_VIEW_MANIPULATION_SELECTION||!authored))throw new Error('needs-view-manipulation: manipulation needs an explicit native body view');
+  if(manipulationActions.includes(action)&&manipulation!==BODY_VIEW_MANIPULATION_SELECTION&&!ownManipulation)throw new Error('needs-view-manipulation: explicitly select registered-manipulation-v1');
   if(action==='spear-lunge'&&view==='three-quarter-left')throw new Error('needs-lunge-pose: left-facing planted lunge has not been authored');
   if(colour!== 'cutout'&&(colour!==SOURCE_COLOUR_VERSION||authored))throw new Error('needs-source-colour-profile: original RGB candidate is registered only for source orientation');
-  if(isBasicBodyView(view)&&(mood!=='happy'&&!ownExpressions||!basicBodyActionAllowed(view,action)&&!ownMotionAction||mouth!=='silent'&&!(mouth===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(view))||eyes!=='native'&&!(eyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(view))||expressions!=='native'&&!ownExpressions||motion!=='rigid'&&!ownMotion||seat!=='unregistered'||secondary!=='rigid'&&!ownSecondary||manipulation!=='unregistered'))
+  if(isBasicBodyView(view)&&(mood!=='happy'&&!ownExpressions||!basicBodyActionAllowed(view,action)&&!ownMotionAction&&!ownManipulationAction||mouth!=='silent'&&!(mouth===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(view))||eyes!=='native'&&!(eyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(view))||expressions!=='native'&&!ownExpressions||motion!=='rigid'&&!ownMotion||seat!=='unregistered'||secondary!=='rigid'&&!ownSecondary||manipulation!=='unregistered'&&!ownManipulation))
     throw basicBodyCapabilityError(view,'selected action/face/motion (own front/profile face selections only, no rear face or detailed motion)');
   if(authored){
     if(mood!=='happy'&&expressions==='native')throw new Error('needs-view-expression: non-happy moods need explicit registered expressions');
@@ -86,7 +88,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
     if(view==='three-quarter-left'&&(action.startsWith('spear-')||action==='hunt-aim'||action==='hunt-chase'))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
     const moving=(motion===BODY_VIEW_LOCOMOTION_SELECTION||ownMotion)&&['walk','walk-left','run','run-left','jump','crouch'].includes(action);
     const seated=seat===BODY_VIEW_SEAT_SELECTION&&action.startsWith('sit-');
-    if(!fixed.includes(action)&&!rightTools.includes(action)&&!moving&&!seated&&!(manipulation===BODY_VIEW_MANIPULATION_SELECTION&&manipulationActions.includes(action)))throw new Error(action.startsWith('sit-')?'needs-view-seat: explicitly select registered-seated-v1':'needs-view-motion: select the registered candidate for this action; continuous turns remain pending');
+    if(!fixed.includes(action)&&!rightTools.includes(action)&&!moving&&!seated&&!((manipulation===BODY_VIEW_MANIPULATION_SELECTION||ownManipulation)&&manipulationActions.includes(action)))throw new Error(action.startsWith('sit-')?'needs-view-seat: explicitly select registered-seated-v1':'needs-view-motion: select the registered candidate for this action; continuous turns remain pending');
   }
   const source=colour==='cutout'?base:{...base,appearance:{...base.appearance,sourceColour:SOURCE_COLOUR_VERSION},profileHash:hash({source:base.profileHash,colour:sourceColourDescription.fingerprint})};
   const selectedView=view==='source'?'three-quarter-right':view;
@@ -97,7 +99,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   const motionProfile=motion==='rigid'?expressionProfile:{...expressionProfile,appearance:{...expressionProfile.appearance,bodyMotion:motion},profileHash:hash({source:expressionProfile.profileHash,selection:motion,motion:nativeClothDescription.fingerprint})};
   const seatProfile=seat==='unregistered'?motionProfile:{...motionProfile,appearance:{...motionProfile.appearance,bodySeat:BODY_VIEW_SEAT_SELECTION},profileHash:hash({source:motionProfile.profileHash,seat:nativeSeatDescription.fingerprint})};
   const secondaryProfile=secondary==='rigid'?seatProfile:{...seatProfile,appearance:{...seatProfile.appearance,bodySecondary:secondary},profileHash:hash({source:seatProfile.profileHash,selection:secondary,secondary:nativeSecondaryDescription.fingerprint})};
-  const profile=manipulation==='unregistered'?secondaryProfile:{...secondaryProfile,appearance:{...secondaryProfile.appearance,bodyManipulation:BODY_VIEW_MANIPULATION_SELECTION},profileHash:hash({source:secondaryProfile.profileHash,manipulation:nativeManipulationDescription.fingerprint})},m=rigMetrics(profile);
+  const profile=manipulation==='unregistered'?secondaryProfile:{...secondaryProfile,appearance:{...secondaryProfile.appearance,bodyManipulation:manipulation},profileHash:hash({source:secondaryProfile.profileHash,selection:manipulation,manipulation:nativeManipulationDescription.fingerprint})},m=rigMetrics(profile);
   const sitting=action.startsWith('sit-'),durationMs=bodyActionDuration(action);
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'body-calibration-'+actor,leadCharacterId:actor,profileHash:profile.profileHash,
     kind:'stick-man',durationMs,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
@@ -115,7 +117,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(manipulationActions.includes(action)){
     const shoulder=m.shoulders![gestureHand],chain=m.arms![gestureHand],reach=chain.upper+chain.lower+(m.handAttachment?.[gestureHand].length??0),side=gestureHand==='left'?-1:1;
     const target={x:plan.root.x+shoulder.x+side*reach*.55,y:plan.root.y+m.pelvisY+shoulder.y+reach*.48};
-    const direction=selectedView==='three-quarter-left'?-1:1,moved=action==='carry'&&motion===BODY_VIEW_LOCOMOTION_SELECTION?direction*18:0;
+    const direction=selectedView==='three-quarter-left'||selectedView==='left'?-1:1,moved=action==='carry'&&(motion===BODY_VIEW_LOCOMOTION_SELECTION||ownMotion)?direction*18:0;
     const destination={x:plan.root.x+shoulder.x+moved+side*reach*.72,y:plan.root.y+m.pelvisY+shoulder.y+reach*.35};
     const clip={id:'native-object-'+action,action:action as 'inspect'|'operate'|'pick-place'|'carry'|'drop',hand:gestureHand,elbowPole:'rest' as const,startMs:300,endMs:3700,target};
     if(action==='inspect')plan.gestures=[clip];
@@ -265,6 +267,7 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:Bod
     +'<p><strong>Thoại riêng góc chính diện/nghiêng — source0.95:</strong> chọn registered-basic-mouth-v1 ở front/left/right. Tín hiệu segment-draft chỉ là mô phỏng có nhãn, chưa có audio thật. Khi chưa chọn expressions, Lila giữ smile nguồn trong im lặng; Karo có contour khép riêng. Mask miệng, mắt và chân mày tách riêng; da/viền/môi/tóc/râu cần review hình và video, productionReady=false. Không phải phoneme lip-sync hoặc quay đầu liên tục.</p>'
     +'<p><strong>Miệng góc 3/4 — mốc 0.30:</strong> lựa chọn registered-mouth-v1 dùng tín hiệu giả lập có nhãn segment-draft; không có audio hoặc xác nhận lip-sync. Khoảng im lặng/level 0 trả lại ảnh happy gốc của view. Miệng, identity, mask và video còn chờ duyệt; productionReady=false.</p>'
     +'<p><strong>Biểu cảm — ứng viên 0.36:</strong> chọn registered-expressions-v1 cùng mắt native và miệng khép để xem các mood; nét mực chân mày lấy từ đúng PNG đang đăng ký. Mắt/mũi/đầu không bị kéo méo; màu da/viền ghép và diễn xuất còn chờ nghiệm thu.</p>'
+    +'<p><strong>Thao tác vật góc nghiêng — source0.101:</strong> chọn registered-profile-manipulation-v1 ở left/right. Inspect/operate/pick-place/carry/drop dùng đúng vai/hướng nghỉ của góc nguồn và canonical cuff/palm. Carry đi cần registered-profile-locomotion-v1 cùng chiều; contact/lift/lower/release giữ clock gốc sourceManipulation + sourceBody qua camera cut/đổi vai. Không cấp giáo, handoff, ngồi, head-bank/mẫu supportingModel hoặc quay liên tục. Tạo hình/khớp/grip/painter/motion/video chưa nghiệm thu.</p>'
     +'<p><strong>Tóc/râu chính diện — source0.100:</strong> chọn registered-front-secondary-v1 ở front, giữ đúng hai PNG gốc và cùng face erase masks. Bốn vùng crest/tail/beard; lower beard Karo dùng cùng own UV contour cho phần tĩnh và chuyển động để giữ cổ. Original expression/secondary clock xuyên camera cut/đổi vai. Không cấp locomotion/ngồi/tools/head-bank/mẫu supportingModel hoặc quay liên tục; tạo hình/viền/layer/chuyển động/video chưa nghiệm thu.</p>'
     +'<p><strong>Đi/chạy/nhảy/cúi góc lưng — source0.99:</strong> chọn registered-rear-locomotion-v1 ở back-left/back-right; walk-left/run-left cho back-left, walk/run cho back-right. Vạt áo lấy đúng ảnh của từng góc, cùng clock thân/đai/vạt và original sourceBody qua camera cut/đổi vai. Đầu/tóc giữ góc gốc; chưa có face overlays, chin contact, ngồi, tools hoặc quay liên tục. Chưa nghiệm thu tạo hình, khớp, chuyển động hay video.</p>'
     +'<p><strong>Đi/chạy/nhảy/cúi riêng góc nghiêng — source0.97:</strong> chọn registered-profile-locomotion-v1 ở left/right; walk-left/run-left cho left, walk/run cho right. Vạt áo dùng đúng ảnh từng góc, đai giữ nguyên và vạt theo chân trễ90ms. Complete sourceBody giữ clock qua camera cut/đổi primary–supporting. Mode profile không cấp front/rear motion, ngồi, cầm vật hoặc quay thân; chưa nghiệm thu khớp, chân/viền áo, chuyển động hay video.</p>'
