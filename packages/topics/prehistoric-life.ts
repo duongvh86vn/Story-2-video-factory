@@ -21,7 +21,7 @@ import {normalizeTopicActorAppearance,topicCastNormalizationDescription,TOPIC_RE
 import {readTopicProductionRelease,certifiedTopicAppearance,certifiedTopicDefault,topicProductionReleaseDescription} from './production-release.js';
 import {topicCastModels,topicCastModelDescription} from './cast-model.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.112-art-reuse';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.113-seated-rest-arms';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

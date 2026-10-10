@@ -42,6 +42,35 @@ function nativeRun(actor:Actor='lila',view:View='three-quarter-right',cuts=defau
 }
 const physicalState=(frame:ReturnType<typeof samplePerformance>)=>{const {timeMs:_,...state}=frame;return state;};
 
+test('native seated rest arms retain their own cuff/palm bones and original phase through cuts and reverse seeks',()=>{
+  const point=(value:string)=>{const numbers=value.match(/-?\d+(?:\.\d+)?/g)!.map(Number);return {x:numbers[0]!,y:numbers[1]!};};
+  const distance=(a:{x:number;y:number},b:{x:number;y:number})=>Math.hypot(a.x-b.x,a.y-b.y);
+  for(const actor of ['lila','karo'] as const)for(const view of ['three-quarter-left','three-quarter-right'] as const)for(const scale of [.75,1]){
+    const f=nativeRun(actor,view,defaultCuts,scale),metrics=rigMetrics(f.profile);
+    for(const [index,shot] of f.shots.entries()){
+      const plan=shot.cinematic!.performance,clock=actorViewActingClock(f.board,shot,actor);
+      for(const at of [0,plan.durationMs*.25,plan.durationMs*.5,plan.durationMs*.75,plan.durationMs]){
+        const frame=samplePerformance(plan,f.profile,at,silence,undefined,clock);
+        for(const hand of ['left','right'] as const){
+          const shoulder=point(frame.transforms[`arm-${hand}-upper`]!),elbow=point(frame.transforms[`arm-${hand}-lower`]!),wrist=frame.wrists![hand];
+          assert.ok(Math.abs(distance(shoulder,elbow)-metrics.arms![hand].upper*scale)<.01);
+          assert.ok(Math.abs(distance(elbow,wrist)-metrics.arms![hand].lower*scale)<.01);
+          assert.ok(Math.abs(distance(wrist,frame.hands[hand])-metrics.handAttachment![hand].length*scale)<.01);
+        }
+      }
+      const at=plan.durationMs*.5,expected=samplePerformance(plan,f.profile,at,silence,undefined,clock);
+      samplePerformance(plan,f.profile,plan.durationMs,silence,undefined,clock);samplePerformance(plan,f.profile,0,silence,undefined,clock);
+      assert.deepEqual(samplePerformance(plan,f.profile,at,silence,undefined,clock).hands,expected.hands);
+      if(index){
+        const prior=f.shots[index-1]!,p=prior.cinematic!.performance;
+        const before=samplePerformance(p,f.profile,p.durationMs,silence,undefined,actorViewActingClock(f.board,prior,actor));
+        const after=samplePerformance(plan,f.profile,0,silence,undefined,clock);
+        for(const hand of ['left','right'] as const){assert.ok(distance(before.hands[hand],after.hands[hand])<1e-6);assert.ok(distance(before.wrists![hand],after.wrists![hand])<1e-6);}
+      }
+    }
+  }
+});
+
 test('source seats are bounded, explicit and compatible with old unsupported body sources',()=>{
   const f=nativeRun(),p=f.shots[0]!.cinematic!.performance;
   assert.equal(BodySourceSchema.safeParse({version:BODY_SOURCE_VERSION,id:'old',startMs:0,endMs:10,walks:[]}).success,true);

@@ -17,6 +17,7 @@ import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
+import {seatedRestArm} from './seated-rest-arm.js';
 import {usesBodyView,registeredBodyView,registeredDetailedBodyView,registeredLocomotionBodyView,registeredSecondaryBodyView,registeredManipulationBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace,nativeHeadBankFacialState,nativeHeadBankFacialError} from './body-head-bank.js';
 import {nativeHeadSources,nativeHeadPixelScale} from './native-head-bank.js';
@@ -680,8 +681,10 @@ function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture
     runningChain={joint,end,upper:ua-90,lower:la-90,reachable:true,error:0};neutral=end;
   }
   const seated=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0));
-  const hip=toWorld(m.hips![side]),lap={x:hip.x+bend*m.legs![side].upper*s*.55,y:hip.y+8*s};neutral=mix(neutral,lap,seated);
-  const entry=runningChain??solveChain(shoulder,neutral,lengths.upper*s,lower,restPole);
+  const hip=toWorld(m.hips![side]),lap={x:hip.x+bend*m.legs![side].upper*s*.55,y:hip.y+8*s};
+  const seatedChain=isCurrentAnimation(plan.compilerVersion)&&seated>0?seatedRestArm(shoulder,neutral,lap,lengths.upper*s,lower,seated,restPole,solveChain):undefined;
+  neutral=seatedChain?.end??mix(neutral,lap,seated);
+  const entry=seatedChain??runningChain??solveChain(shoulder,neutral,lengths.upper*s,lower,restPole);
   const entryPose=articulatedPoseFromDirections(entry.upper+90,entry.lower+90);
   const pole=gesture.elbowPole==='reach'?-restPole:gesture.elbowPole==='rest'?restPole:Math.abs(entryPose.elbowDeg)<.0001?restPole:Math.sign(entryPose.elbowDeg);
   const headScale=profile.appearance.headScale*(usesCutoutHead(profile)?profile.appearance.bodyScale:m.headArtworkScale??1);
@@ -859,13 +862,16 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
       const joint=add(shoulder,rotate({x:lengths.upper*s,y:0},ua)),end=add(joint,rotate({x:lowerToGrip,y:0},la));
       authoredRun={joint,end,upper:ua-90,lower:la-90,reachable:true,error:0};neutral=end;
     }
+    let seatedChain:Chain|undefined;
     if(usesReferenceBody(profile)){
       const seatedWeight=clamp(Object.values(bodyPosture.seatWeights??{}).reduce((sum,weight)=>sum+weight,0));
       // A listening actor rests its hands on its own lap instead of carrying
       // the standing arm vector down beside a foot. Explicit gestures still
       // own the hand and override this default through the same arm solver.
       const lap={x:hip.x+bend*geometry.bones.upper*.55,y:hip.y+8*s};
-      neutral=mix(neutral,lap,seatedWeight);
+      if(isCurrentAnimation(plan.compilerVersion)&&seatedWeight>0)
+        seatedChain=seatedRestArm(shoulder,neutral,lap,lengths.upper*s,lowerToGrip,seatedWeight,m.armRestPole?.[side]??(i?1:-1),solveChain);
+      neutral=seatedChain?.end??mix(neutral,lap,seatedWeight);
     }
     const {gesture,timeMs:gestureTime,entryTimeMs}=gestureStates[side],chin=gesture?.action==='think'?chinAt(side):undefined;
     const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??(i?50:-50))*s,y:(gesture?.carryOffset?.y??35)*s},lean));
@@ -879,9 +885,10 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
     if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
     const expressiveSource=usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion)&&gesture&&!contacts(gesture);
     const nativeContact=hasBodyViewManipulation(profile)&&gesture&&isNativeContactGesture(gesture);
-    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):authoredRun&&!gesture?authoredRun:nativeContact
+    const restingChain=!gesture?(seatedChain??authoredRun):undefined;
+    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):restingChain?restingChain:nativeContact
       ?sampleNativeContactArm(shoulder,neutral,goal(gesture,neutral,chin,carryAnchor,Math.max(gesture.contactMs!,Math.min(gestureTime,nativeContactWindow(gesture).recoverMs)),s,shoulder),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),solveChain):expressiveSource
-      ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),authoredRun)
+      ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),seatedChain??authoredRun)
       :armPose(shoulder,neutral,target,sourceGesture,gestureTime,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder),m.armRestPole?.[side]);
     // Grip is a rigid continuation of the forearm, not a bone endpoint or a

@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.113-seated-rest-arms",
+  "precedingSourceSHA": "8b362d307a3080647d47b021afa85c38c2eb4435",
+  "sourceIdentity": "commit containing this source record; exact local/remote SHA is checked after publication",
+  "ownedPaths": 17,
+  "change": "Source-body seated rest wrists interpolate own fixed-length joint angles, retaining pole, original seat clock and continuous numeric angle branch. Frame and deterministic gesture-entry paths share the helper. Body compiler44/fingerprint/manifest updated; no raster regeneration or final acceptance.",
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "80a5ed",
+      "session": 98966,
+      "completionChunk": "abcb25",
+      "exitCode": 0,
+      "decisiveOutput": "69 modules transformed; built in 902ms"
+    },
+    "testTypes": {
+      "command": "npm run test:typecheck",
+      "startChunk": "02dd2c",
+      "session": 4294,
+      "completionChunk": "ef7e25",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "77256c",
+      "exitCode": 0,
+      "scope": "explicitly permitted static metadata/inventory only"
+    },
+    "raw": {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source113-static.mjs",
+      "chunk": "30e708",
+      "exitCode": 0,
+      "result": {
+        "sourceVersion": "forest-tribe-0.113-seated-rest-arms",
+        "scope": "raw Git/file/hash/JSON/TypeScript AST only; no helper/project/schema/geometry/pose/test/renderer execution",
+        "nodeVersion": "v24.19.0",
+        "bodyCompiler": "forest-source-body-motion-44",
+        "rasterFilesUnchanged": 121,
+        "newCallbacksDeclared": 6,
+        "callbacksExecuted": 0,
+        "sourceHashes": {
+          "packages/animation/compiler.ts": "32167320d0850a6db533122e50d9ca15a8cc2085a60e5ace8315f0c46a2740c2",
+          "packages/animation/seated-rest-arm.ts": "70dda29574f43d03dbe1296b107109b30200359c050f56633ce446b73d17b4df",
+          "packages/animation/forest-body-art.ts": "f4bde8b317415335b47baeef78ed0328d8b8a54716017350300adf35ef563148",
+          "tests/seated-rest-arm.test.ts": "c0d7b1b1cb9d291371971b2ba93eadcc45376a2351c90c5cc17cacb372daaa85",
+          "tests/native-source-seat.test.ts": "bc0e757e095cf61168afd589d13a91a332a975c8e20265c56a7c24afef933c35"
+        },
+        "manifestPhysicalHashesMatched": true,
+        "voiceInputSchemasUnchanged": true,
+        "newImageRequests": 0,
+        "productionReady": false,
+        "fullGoalComplete": false
+      }
+    },
+    "schemas": {
+      "changed": false,
+      "exportRun": false,
+      "reason": "No schema definitions changed"
+    }
+  },
+  "sourceAdvice": {
+    "coder": {
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "promptTokens": 3619,
+        "completionTokens": 1794,
+        "totalTokens": 5413
+      },
+      "startChunk": "4996f3",
+      "session": 23834,
+      "completionChunk": "220678",
+      "scope": "bounded standalone module proposal; no execution",
+      "parentCorrections": [
+        "Compiler chain angles need +90deg before direction evaluation",
+        "Inactive seat returns the old standing solve before checking its lap",
+        "Positive seat verifies actual endpoint error and fixed segment lengths",
+        "Preserve unwrapped upper/lower numeric branch at weight endpoints; added regression declaration"
+      ]
+    },
+    "tester": {
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "promptTokens": 4435,
+        "completionTokens": 583,
+        "totalTokens": 5018
+      },
+      "chunk": "a36fc9",
+      "scope": "source review of helper and first four unit declarations; integration supplied as prose",
+      "findings": [],
+      "limitations": [
+        "No concrete correctness issue is evident in the supplied implementation or tests. This review covers only the provided source; compiler integration and seat-clock behavior are described but not included for inspection.",
+        "No tests were executed. Visual clearance and production acceptance are outside this source-only review."
+      ],
+      "snapshot": "Precedes final numeric angle-branch fix, fifth unit declaration and native-source-seat callback; not a final-source or runtime verdict"
+    },
+    "totalTokens": 10431,
+    "retries": 0,
+    "fusion": false
+  },
+  "newCallbacksDeclared": 6,
+  "callbacksExecuted": 0,
+  "newImageRequests": 0,
+  "rasterFilesUnchanged": 121,
+  "unexecuted": [
+    "Six new callbacks and existing regression suites",
+    "Original body source / camera-cut / gesture-entry behavior against real native actor geometry",
+    "Both native-head tracer stagings, frames, MP4, real WAV and normal-speed review",
+    "Silhouette/torso/garment/prop clearance and elbows throughout sit/rise",
+    "Full story/script/WAV, EN/VI/JA/KO/local-external TTS, resume/locks/rebuild, final exports and QC"
+  ],
+  "progressEstimate": {
+    "overallPercent": 40,
+    "method": "rough weighted implementation estimate documented in PROJECT-PROGRESS.md; not test pass rate or accepted visual quality",
+    "previousNumericBaseline": null,
+    "deltaPercentagePoints": null,
+    "baseline": true
+  },
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "approved": false,
+  "motionVerified": false,
+  "productionReady": false,
+  "fullGoalComplete": false,
+  "handoff": "docs/topics/SEATED-REST-ARMS-HANDOFF.md",
+  "createdAt": "2026-10-10T15:39:44.590Z"
+}
