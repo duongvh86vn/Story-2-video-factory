@@ -1,0 +1,213 @@
+{
+  "startedAt": "2026-10-10T18:48:37.252Z",
+  "times": [
+    0,
+    450,
+    899,
+    100,
+    0,
+    899,
+    450
+  ],
+  "variants": {
+    "original": {
+      "errors": [],
+      "frames": [
+        {
+          "timeMs": 0,
+          "index": 0,
+          "file": "original-0-0.png",
+          "duration": 0.9,
+          "domSha256": "4aa8f33e7aade31e7ff89313c51bb916b3c6ca4d3ab87f62ec7b5bd827cf30da",
+          "pngSha256": "df3de5edcae8a43f64f88a25e344ae2de8e54b982df32211685e1c0bd8a0bdee"
+        },
+        {
+          "timeMs": 450,
+          "index": 1,
+          "file": "original-1-450.png",
+          "duration": 0.9,
+          "domSha256": "b4716b2f588af1a177dc2602b887a843afe5d1a2df5aa22a1ca3811e4d4ea7a3",
+          "pngSha256": "cde24c419ebb8489fb17109a9209e56023da4f0d1821fa311ae56973c091f901"
+        },
+        {
+          "timeMs": 899,
+          "index": 2,
+          "file": "original-2-899.png",
+          "duration": 0.9,
+          "domSha256": "a461f4b429c0eacc229c665de0c919e16cfbcb5e4a5b57d59e59a42299250d82",
+          "pngSha256": "bd1187b72018701dd4f6a67b8beaf208745061cefc7ffd8b8bcc9eb3df53da55"
+        },
+        {
+          "timeMs": 100,
+          "index": 3,
+          "file": "original-3-100.png",
+          "duration": 0.9,
+          "domSha256": "929b51103d4d35494a1b3a099bd75a42c69afddad79ee1dad411d31b6dc043e5",
+          "pngSha256": "660c3a558281780643f488234df2de96e68ca8f066c05baba7e9ff20a7162408"
+        },
+        {
+          "timeMs": 0,
+          "index": 4,
+          "file": "original-4-0.png",
+          "duration": 0.9,
+          "domSha256": "4aa8f33e7aade31e7ff89313c51bb916b3c6ca4d3ab87f62ec7b5bd827cf30da",
+          "pngSha256": "7c8ac5b657ef9599f41619920447908bede0baa4c180d116954ac3a6e39588ac"
+        },
+        {
+          "timeMs": 899,
+          "index": 5,
+          "file": "original-5-899.png",
+          "duration": 0.9,
+          "domSha256": "a461f4b429c0eacc229c665de0c919e16cfbcb5e4a5b57d59e59a42299250d82",
+          "pngSha256": "bd1187b72018701dd4f6a67b8beaf208745061cefc7ffd8b8bcc9eb3df53da55"
+        },
+        {
+          "timeMs": 450,
+          "index": 6,
+          "file": "original-6-450.png",
+          "duration": 0.9,
+          "domSha256": "b4716b2f588af1a177dc2602b887a843afe5d1a2df5aa22a1ca3811e4d4ea7a3",
+          "pngSha256": "ba57495fc75fce177af55ce217ea0b784e4ca61013e679a8e2803312e1612110"
+        }
+      ]
+    },
+    "packed": {
+      "errors": [],
+      "frames": [
+        {
+          "timeMs": 0,
+          "index": 0,
+          "file": "packed-0-0.png",
+          "duration": 0.9,
+          "domSha256": "4aa8f33e7aade31e7ff89313c51bb916b3c6ca4d3ab87f62ec7b5bd827cf30da",
+          "pngSha256": "df3de5edcae8a43f64f88a25e344ae2de8e54b982df32211685e1c0bd8a0bdee"
+        },
+        {
+          "timeMs": 450,
+          "index": 1,
+          "file": "packed-1-450.png",
+          "duration": 0.9,
+          "domSha256": "b4716b2f588af1a177dc2602b887a843afe5d1a2df5aa22a1ca3811e4d4ea7a3",
+          "pngSha256": "cde24c419ebb8489fb17109a9209e56023da4f0d1821fa311ae56973c091f901"
+        },
+        {
+          "timeMs": 899,
+          "index": 2,
+          "file": "packed-2-899.png",
+          "duration": 0.9,
+          "domSha256": "a461f4b429c0eacc229c665de0c919e16cfbcb5e4a5b57d59e59a42299250d82",
+          "pngSha256": "bd1187b72018701dd4f6a67b8beaf208745061cefc7ffd8b8bcc9eb3df53da55"
+        },
+        {
+          "timeMs": 100,
+          "index": 3,
+          "file": "packed-3-100.png",
+          "duration": 0.9,
+          "domSha256": "929b51103d4d35494a1b3a099bd75a42c69afddad79ee1dad411d31b6dc043e5",
+          "pngSha256": "660c3a558281780643f488234df2de96e68ca8f066c05baba7e9ff20a7162408"
+        },
+        {
+          "timeMs": 0,
+          "index": 4,
+          "file": "packed-4-0.png",
+          "duration": 0.9,
+          "domSha256": "4aa8f33e7aade31e7ff89313c51bb916b3c6ca4d3ab87f62ec7b5bd827cf30da",
+          "pngSha256": "7c8ac5b657ef9599f41619920447908bede0baa4c180d116954ac3a6e39588ac"
+        },
+        {
+          "timeMs": 899,
+          "index": 5,
+          "file": "packed-5-899.png",
+          "duration": 0.9,
+          "domSha256": "a461f4b429c0eacc229c665de0c919e16cfbcb5e4a5b57d59e59a42299250d82",
+          "pngSha256": "bd1187b72018701dd4f6a67b8beaf208745061cefc7ffd8b8bcc9eb3df53da55"
+        },
+        {
+          "timeMs": 450,
+          "index": 6,
+          "file": "packed-6-450.png",
+          "duration": 0.9,
+          "domSha256": "b4716b2f588af1a177dc2602b887a843afe5d1a2df5aa22a1ca3811e4d4ea7a3",
+          "pngSha256": "ba57495fc75fce177af55ce217ea0b784e4ca61013e679a8e2803312e1612110"
+        }
+      ]
+    }
+  },
+  "paidCalls": 0,
+  "productionAcceptance": false,
+  "comparisons": [
+    {
+      "timeMs": 0,
+      "index": 0,
+      "domEqual": true,
+      "pngEqual": true
+    },
+    {
+      "timeMs": 450,
+      "index": 1,
+      "domEqual": true,
+      "pngEqual": true
+    },
+    {
+      "timeMs": 899,
+      "index": 2,
+      "domEqual": true,
+      "pngEqual": true
+    },
+    {
+      "timeMs": 100,
+      "index": 3,
+      "domEqual": true,
+      "pngEqual": true
+    },
+    {
+      "timeMs": 0,
+      "index": 4,
+      "domEqual": true,
+      "pngEqual": true
+    },
+    {
+      "timeMs": 899,
+      "index": 5,
+      "domEqual": true,
+      "pngEqual": true
+    },
+    {
+      "timeMs": 450,
+      "index": 6,
+      "domEqual": true,
+      "pngEqual": true
+    }
+  ],
+  "repeatSeeks": {
+    "original": [
+      {
+        "timeMs": 0,
+        "deterministic": true
+      },
+      {
+        "timeMs": 450,
+        "deterministic": true
+      },
+      {
+        "timeMs": 899,
+        "deterministic": true
+      }
+    ],
+    "packed": [
+      {
+        "timeMs": 0,
+        "deterministic": true
+      },
+      {
+        "timeMs": 450,
+        "deterministic": true
+      },
+      {
+        "timeMs": 899,
+        "deterministic": true
+      }
+    ]
+  },
+  "completedAt": "2026-10-10T18:48:49.669Z"
+}

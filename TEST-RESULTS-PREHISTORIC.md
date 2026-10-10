@@ -1,6 +1,21 @@
 # Báo cáo kiểm tra — Cuộc sống thời tiền sử
 
-## Kết quả hiện hành — source0.114, 11/10/2026
+## Kết quả hiện hành — lượt source115, 11/10/2026
+
+**Đã gỡ chặn render cho đúng cảnh 0–900 ms đã đo; chưa nghiệm thu độ mượt hay toàn video.** Không gọi model/TTS trả phí, tạo ảnh hoặc thay server8850/checkout D. [Receipts và hash source](docs/validation/2026-10-11-prehistoric-source115/results.json).
+
+- **6 PASS / 0 FAIL** trong hai file test timeline/đường vẽ; build, app/Studio typecheck, test:typecheck và CLI help exit0.
+- Cảnh Lila-left `native-seat-canonical-0` giảm **16.481.788 → 1.803.343 byte**, dưới cap2.000.000. Giữ nguyên **61.739 lệnh GSAP** theo hash giá trị/thứ tự sau khôi phục; không giảm mesh/frame hoặc làm tròn chuyển động.
+- Security version6 nhận đúng đường miệng cubic compact khép kín và alpha filter cố định do renderer phát ra; giữ các guard còn lại. Artwork, registration, body compiler45 và topic0.114 giữ nguyên.
+- HyperFrames0.8.96 **lint/check PASS**, 4 snapshot và MP4 im lặng **0,9 giây, H.264 1280×720, 60 fps, 54 frames**. Probe và FFmpeg decode exit0. Tái dùng storyboard/source chẩn đoán đã lưu, không chạy mới một câu chuyện qua factory.
+- Chrome tua **0 → 450 → 899 → 100 → 0 → 899 → 450 ms**: **7/7 DOM hash và PNG hash bằng nhau** giữa bản gốc/bản đóng gói; thời điểm lặp giữ cùng trạng thái. Chỉ chứng minh đóng gói trung thực. Giữ cả receipt của harness trước bị timeout chờ timeline và lượt chạy lại thành công.
+- **Một ca hồi quy được chọn vẫn FAIL**: `factory renderer owns each native head resource...`. Kiểm cảnh đầu tiên qua, sau đó assertion `!resource.file.includes('/body-views/')` thất bại. `referenceHeadAssets()` cố ý trả cả body-view asset và native-head resources; cần tách hai loại trong phép kiểm rồi chạy lại toàn vòng shot. Không tính ca này PASS hay suy các shot sau đều dưới cap.
+
+Clip: `runtime/prehistoric-life/qa/source115-scene-data/packed-left/work/draft.mp4`; stream/hash nằm trong receipt media. Chưa có audio, final hoặc DONE. Không chạy lại toàn bộ regression56 ca; **40 PASS / 16 FAIL bên dưới vẫn thuộc source0.114**.
+
+[Công việc còn thiếu, môi trường và lệnh chạy](docs/topics/SCENE-BAKE-COMPACTION.md). Tiến độ vẫn **khoảng 40%, +0 điểm phần trăm**; chưa có cơ sở cộng điểm nghiệm thu chất lượng diễn hoạt/câu chuyện.
+
+## Kết quả trước — source0.114, 11/10/2026
 
 **Bộ regression ban đầu: 56 ca, 40 PASS / 16 FAIL / 0 SKIP**, so với 35 PASS / 21 FAIL ở source0.113. Ba ca tập trung mới PASS. Hai lượt render sau sửa vẫn FAIL tại kiểm cảnh; **chưa có MP4/frames để xem độ mượt**, chưa nghiệm thu sản phẩm.
 

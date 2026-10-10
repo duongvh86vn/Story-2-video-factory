@@ -1,0 +1,22 @@
+{
+  "startedAt": "2026-10-10T18:54:13.765Z",
+  "baseSha": "7c1347142e3a082988941149ff4ffce23b94c176",
+  "command": [
+    "node",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit",
+    "-p",
+    "tsconfig.json"
+  ],
+  "sourceFiles": {
+    "packages/scenes/security.ts": "bb59ba3e442cd4d2cbc2ccfec24a60206bbeaead3d5662ed56331c1944a553bd",
+    "packages/scenes/packed-timeline.ts": "2fdc157155f736c64a65284e3c7e928a4c0c30f26eabdb2c8a805bf0c0cd25af",
+    "packages/scenes/vendor/pako-inflate.ts": "b85d470e496edf837c9daf3ecb56c78e499c298eede6e98f46d511aa3f28d3c1",
+    "packages/scenes/vendor/pako-inflate.LICENSE": "3bc404ffa7888053253eedcc5a667619aa08dc1be0bea400e5ff28c51602180f",
+    "tests/scene-baked-path.test.ts": "563ff59323703295460ff5d9e27e04373baddd3ad1bca9d5ffee04906c41a4e2",
+    "tests/packed-timeline.test.ts": "0ddd925c1477c7495b594868ec4df019c5044c4bb778f6c45694622f2e64075f",
+    "scripts/native-seat-tracer.ts": "7ba4ee360b309b6d50d958642b2e7c4d805fba52fff5163152df26868449dfc3"
+  },
+  "paidCalls": 0,
+  "productionAcceptance": false
+}

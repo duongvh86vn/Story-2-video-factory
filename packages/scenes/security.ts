@@ -2,12 +2,13 @@ import ts from 'typescript';
 import type { SceneFiles, Shot } from '../core/schemas.js';
 import { SceneFilesSchema } from '../core/schemas.js';
 import {SOURCE_PREVIEW_SCOPE,SOURCE_PREVIEW_META,SOURCE_PREVIEW_LABEL} from './source-preview-scope.js';
+import {packTimelineScript,unpackTimelineCall} from './packed-timeline.js';
 
 export const SCENE_CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'";
 export const SCENE_FILENAMES = ['index.html','style.css','scene.js'] as const;
-export const SCENE_SECURITY_VERSION = 5;
+export const SCENE_SECURITY_VERSION = 6;
 const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','svgOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
-const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','image','use','filter','fecolormatrix','script']);
+const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','image','use','filter','fecolormatrix','fecomponenttransfer','fefunca','script']);
 
 function validTransform(value:string):boolean {
   const numeric='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
@@ -30,7 +31,7 @@ function validTransform(value:string):boolean {
 function validBakedCurve(value:string):boolean {
   const numeric='[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?';
   const point=numeric+'\\s+'+numeric,cubic='C'+point+'\\s+'+point+'\\s+'+point;
-  const curve=new RegExp('^M'+point+'(?:\\s+'+cubic+'){2,9}$'),polyline=new RegExp('^M'+point+'(?:L'+point+'){2,95}Z?$');
+  const curve=new RegExp('^M'+point+'(?:\\s*'+cubic+'){2,9}Z?$'),polyline=new RegExp('^M'+point+'(?:L'+point+'){2,95}Z?$');
   return value.length<=4096&&(curve.test(value)||polyline.test(value))
     &&(value.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/g)??[]).every(number=>Number.isFinite(Number(number))&&Math.abs(Number(number))<=100000);
 }
@@ -83,6 +84,15 @@ export function validateSceneScript(source: string, compositionId: string): stri
     }
     if (!ts.isExpressionStatement(statement)) {errors.push(`scene.js: ${ts.SyntaxKind[statement.kind]} is outside the allowed timeline contract`);continue;}
     const expression=statement.expression;
+    if(timeline){
+      try{
+        const expanded=unpackTimelineCall(statement.getText(file));
+        if(expanded!==null){
+          errors.push(...validateSceneScript(`const tl=gsap.timeline({paused:true});window.__timelines=window.__timelines||{};window.__timelines[${JSON.stringify(compositionId)}]=tl;${expanded}`,compositionId));
+          continue;
+        }
+      }catch(error){errors.push(`scene.js: invalid packed timeline: ${error instanceof Error?error.message:'decode failed'}`);continue;}
+    }
     if (ts.isBinaryExpression(expression) && expression.operatorToken.kind===ts.SyntaxKind.EqualsToken) {
       const left=expression.left.getText(file).replace(/\s/g,'');
       if (left==='window.__timelines' && expression.right.getText(file).replace(/\s/g,'')==='window.__timelines||{}') { initialized=true;continue; }
@@ -152,6 +162,8 @@ function inspectSceneFiles(input:SceneFiles,shot:Shot,maxBytes:number,allowedAss
       const values=(attributes.get('values')??'').trim().split(/\s+/).map(Number);
       if(attributes.get('type')!=='matrix'||values.length!==20||!values.every(value=>Number.isFinite(value)&&Math.abs(value)<=10))errors.push('SVG color matrix must contain 20 bounded finite numbers.');
     }
+    if(tag==='fecomponenttransfer'&&!raw.startsWith('/')&&attributes.size!==0)errors.push('SVG alpha transfer must use the fixed source-paint contract.');
+    if(tag==='fefunca'&&!raw.startsWith('/')&&(attributes.size!==2||attributes.get('type')!=='discrete'||attributes.get('tablevalues')!=='0 1'))errors.push('SVG alpha transfer must use the fixed source-paint contract.');
     if (tag==='script' && !raw.startsWith('/')) {
       const src=attributes.get('src'); if (src && !['vendor/gsap.min.js','scene.js'].includes(src)) errors.push('Only local GSAP and scene.js script tags are permitted');else if (src) scripts.push(src);
       if (attributes.has('type') && attributes.get('type')!=='text/javascript') errors.push('Module/importmap scripts are forbidden');
@@ -191,7 +203,10 @@ export function secureSceneFiles(input: SceneFiles): SceneFiles {
       const content=file.content.replace(/<meta\b[^>]*http-equiv\s*=\s*(["'])content-security-policy\1[^>]*>/gi,'').replace(/<head\b[^>]*>/i,`$&<meta http-equiv="Content-Security-Policy" content="${SCENE_CSP}">`);
       return {...file,content};
     }
-    if (file.path==='scene.js' && !/^\s*\(function\s*\(/.test(file.content)) return {...file,content:`(function(){\n${file.content}\n})();\n`};
+    if (file.path==='scene.js') {
+      const content=packTimelineScript(file.content);
+      return {...file,content:/^\s*\(function\s*\(/.test(content)?content:`(function(){\n${content}\n})();\n`};
+    }
     return file;
   })};
 }

@@ -1,5 +1,7 @@
 # Đối chiếu mặt trên thân — source0.55
 
+**Lượt source115 — 11/10/2026:** giữ nguyên workbench8/registration/artwork; đã có clip chẩn đoán0,9s sau sửa cap/security, chưa nghiệm thu mặt/pose hoặc phim. [Đóng gói cảnh và việc còn thiếu](SCENE-BAKE-COMPACTION.md). Các trạng thái source0.114 và trước đó bên dưới là lịch sử; xem báo cáo test hiện hành.
+
 **Hiện hành source0.114 — 11/10/2026:** workbench8 dùng các registration V2 sửa vùng xử lý/lấy màu trên đúng nguồn hiện có; xem [phạm vi sửa](HEAD-FACE-REGISTRATION-REPAIR.md). Các tên V1 bên dưới là hồ sơ cũ; catalog TypeScript hiện hành quyết định lựa chọn. Đã được phép chạy chẩn đoán cục bộ, kết quả thật và phần chưa đạt ghi trong [báo cáo test](../../TEST-RESULTS-PREHISTORIC.md). Schema qua không phải nghiệm thu mặt/pose/video; không tự chọn vào production.
 
 **Bổ sung source0.59 — 08/10/2026:** catalog/workbench4 nhận thêm quần chúng nam trọc không râu góc trái và nữ tóc ngang vai góc phải với own-model bank4, dùng body costume Karo/Lila. URL/default principal và renderer giữ cùng contract, không tự gán đầu mới cho production. Mẫu thiếu góc báo lỗi. [Nguồn, môi trường và lệnh kiểm cho model test](SUPPORTING-NATIVE-HEAD.md). Manual geometry, artwork và video NOT RUN/chưa nghiệm thu; giữ readiness false. Các mô tả source0.55–0.56 bên dưới là lịch sử principal.

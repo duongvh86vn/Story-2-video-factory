@@ -1,0 +1,14 @@
+✔ packed browser player preserves exact values, actor interleaving and duration sentinels (245.1502ms)
+✔ packing cannot hide forbidden targets, resources or executable callbacks (239.4067ms)
+✔ decoder rejects tampering, invalid order and decompression/expansion bounds (358.5314ms)
+✔ source alpha filter accepts only the fixed discrete alpha operation (4.4309ms)
+✔ scene guard accepts bounded open garment contours and closed polygons (12.6754ms)
+✔ open path permission retains finite, vertex, byte and literal-data bounds (7.3762ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1653.2351

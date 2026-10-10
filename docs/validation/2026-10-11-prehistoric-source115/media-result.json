@@ -1,0 +1,44 @@
+{
+  "completedAt": "2026-10-10T18:53:13.563Z",
+  "file": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source115-scene-data/packed-left/work/draft.mp4",
+  "sha256": "4d08343fe4d08395fb02377f22b0423e3e8d3877fd26df520455f0901e04c5d8",
+  "bytes": 261584,
+  "probe": {
+    "command": [
+      "C:/ffmpeg/bin/ffprobe.exe",
+      "-v",
+      "error",
+      "-show_streams",
+      "-show_format",
+      "-of",
+      "json",
+      "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source115-scene-data/packed-left/work/draft.mp4"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  "decode": {
+    "command": [
+      "C:/ffmpeg/bin/ffmpeg.exe",
+      "-v",
+      "error",
+      "-xerror",
+      "-i",
+      "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source115-scene-data/packed-left/work/draft.mp4",
+      "-map",
+      "0:v:0",
+      "-map",
+      "0:a?",
+      "-f",
+      "null",
+      "-"
+    ],
+    "exitCode": 0
+  },
+  "pass": true,
+  "scope": "900ms silent diagnostic only",
+  "audioStreams": 0,
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "fullStory": false
+}

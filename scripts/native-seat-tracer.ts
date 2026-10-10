@@ -1,5 +1,5 @@
 /** Opt-in diagnostic exporter. Never invoked by build, installation or Studio.
- * Runtime execution/media review are delegated to the user's test model. */
+ * Outputs remain unapproved diagnostics, never final/DONE. */
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -25,7 +25,7 @@ import {validateCinematicShot} from '../packages/director/index.js';
 import {validateStoryActingCoverage} from '../packages/director/story-coverage.js';
 import {cameraMatrixAt} from '../packages/director/camera.js';
 import {renderCinematic} from '../library/shots/cinematic.js';
-import {secureSceneFiles,validateSceneFiles,SCENE_SECURITY_VERSION} from '../packages/scenes/security.js';
+import {secureSceneFiles,validateSceneFiles,SCENE_SECURITY_VERSION,SCENE_FILENAMES} from '../packages/scenes/security.js';
 import {buildMaster} from '../packages/scenes/index.js';
 import {measureSpeech} from '../packages/voice/index.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
@@ -114,12 +114,17 @@ export async function exportNativeSeatTracer(repo:string,options:NativeSeatTrace
       const result=renderCinematic(shot,profile,rig,activity,config,undefined,narration,undefined,undefined,board),files=secureSceneFiles(result.files);
       const allowed=actorRigResourcePaths(shot,profile),bytes=files.files.reduce((sum,file)=>sum+Buffer.byteLength(file.content),0),errors=validateSceneFiles(files,shot,config.workflow.max_scene_bytes,allowed,config.rendering.final);
       const c=shot.cinematic!,actors=[c.actorScene!.primary!,...c.actorScene!.supporting.map(a=>a.character)];
-      const details={shotId:shot.id,startMs:shot.startMs,endMs:shot.endMs,sceneBytes:bytes,capBytes:config.workflow.max_scene_bytes,compileMs:Math.round(performance.now()-shotStarted),errors,
+      const details={shotId:shot.id,startMs:shot.startMs,endMs:shot.endMs,sceneBytes:bytes,fileBytes:Object.fromEntries(files.files.map(file=>[file.path,Buffer.byteLength(file.content)])),capBytes:config.workflow.max_scene_bytes,compileMs:Math.round(performance.now()-shotStarted),errors,
         securityVersion:SCENE_SECURITY_VERSION,publicationBinding:rigSpeechPublicationBinding(shot,narration,board),camera:c.camera,
         cameraEndpoints:[0,c.performance.durationMs].map(at=>({atMs:at,...cameraMatrixAt(c.camera,c.performance.stage,c.performance.durationMs,at)})),
         clocks:actors.map(character=>({actorId:character.id,clock:actorViewActingClock(board,shot,character.id)}))};
       report.shots.push(details);await writeJson(await outputPath(root,`work/scene-reports/${shot.id}.json`),{...details,performance:result.report});await save();
-      if(errors.length)throw new Error(`${shot.id}: scene validation failed: ${errors.join('; ')}`);
+      if(errors.length){
+        // Keep rejected bytes out of scenes/master, but preserve the exact emission
+        // for local diagnosis instead of forcing another expensive compilation.
+        for(const file of files.files)if(SCENE_FILENAMES.some(name=>name===file.path))await writeAtomic(await outputPath(root,`work/rejected-scenes/${shot.id}/${file.path}`),file.content);
+        throw new Error(`${shot.id}: scene validation failed: ${errors.join('; ')}`);
+      }
       for(const file of files.files)await writeAtomic(await outputPath(root,`scenes/${shot.id}/${file.path}`),file.content);
       await writeAtomic(await outputPath(root,`scenes/${shot.id}/vendor/gsap.min.js`),gsap);
       const resources=new Map(actors.flatMap(a=>[...referenceHeadAssets(a.appearance),...referenceBodyAssets(a.appearance)]).map(a=>[a.path,a]));

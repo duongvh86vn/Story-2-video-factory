@@ -1,0 +1,120 @@
+{
+  "time": "2026-10-10T18:29:38.803Z",
+  "durationMs": 111157.11839999999,
+  "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T18-03-13-906Z-24aaeba8-b049-4f5f-8366-3e52298180d1/work/",
+  "shotId": "native-seat-canonical-0",
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 243845,
+      "gzipBytes": 45359,
+      "sha256": "f4988787dd4e4312cbb2db6932b1f800e2203bb374b5eb0b373c51272e72062b"
+    },
+    {
+      "path": "style.css",
+      "bytes": 401,
+      "gzipBytes": 206,
+      "sha256": "69ab45a1e901180455d63218966b32a0c9212a8fd47c1e04ab1a3c8644cfb71a"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 16237542,
+      "gzipBytes": 2108790,
+      "sha256": "2b9f34f89dce25b0f410b273854c3df77eb0de781643a211b37f6432d8a17b5e"
+    }
+  ],
+  "errors": [
+    "Scene exceeds max_scene_bytes",
+    "Forbidden or malformed HTML tag: feComponentTransfer",
+    "Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/",
+    "Forbidden or malformed HTML tag: /feComponentTransfer",
+    "scene.js: tween values must be literal data with allowed animation properties"
+  ],
+  "rejectedCount": 63,
+  "rejected": [
+    {
+      "line": 28,
+      "text": "tl.set(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"native-face-0-mouth-aperture\\\"]\",{\"attr\":{\"d\":\"M667 628C716 682 810 685 855 638C810 685 716 682 667 628Z\"},\"immediateRender\":true},0);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 29,
+      "text": "tl.set(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"native-face-0-mouth-teeth\\\"]\",{\"attr\":{\"d\":\"M686.42157 645.23853C730.84083 676.98707 794.73677 679.34733 836.84563 652.75827C794.73677 679.34733 730.84083 676.98707 686.42157 645.23853Z\"},\"immediateRender\":true},0);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 30,
+      "text": "tl.set(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"native-face-0-mouth-tongue\\\"]\",{\"attr\":{\"d\":\"M741.384 683.5C741.384 683.5 795.80138 683.5 795.80138 683.5C795.80138 683.5 741.384 683.5 741.384 683.5Z\"},\"immediateRender\":true},0);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 19192,
+      "text": "tl.set(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-aperture\\\"]\",{\"attr\":{\"d\":\"M368 750C426 783 556 784 620 744C556 784 426 783 368 750Z\"},\"immediateRender\":true},0);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 19193,
+      "text": "tl.set(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-teeth\\\"]\",{\"attr\":{\"d\":\"M391.75194 760.48205C447.45446 779.62675 535.17914 779.66445 594.34726 756.64435C535.17914 779.66445 447.45446 779.62675 391.75194 760.48205Z\"},\"immediateRender\":true},0);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 19194,
+      "text": "tl.set(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-tongue\\\"]\",{\"attr\":{\"d\":\"M463.328 783.5C463.328 783.5 537.25515 783.5 537.25515 783.5C537.25515 783.5 463.328 783.5 463.328 783.5Z\"},\"immediateRender\":true},0);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 28042,
+      "text": "tl.to(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-aperture\\\"]\",{\"attr\":{\"d\":\"M368 750C426 782.65254 556 783.61166 620 744C556 783.61166 426 782.65254 368 750Z\"},\"duration\":0.008328300000000012,\"ease\":\"none\"},0.30001);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 28043,
+      "text": "tl.to(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-teeth\\\"]\",{\"attr\":{\"d\":\"M391.75194 760.37042C447.45446 779.30832 535.17914 779.32479 594.34726 756.52288C535.17914 779.32479 447.45446 779.30832 391.75194 760.37042Z\"},\"duration\":0.008328300000000012,\"ease\":\"none\"},0.30001);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 28044,
+      "text": "tl.to(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-tongue\\\"]\",{\"attr\":{\"d\":\"M463.328 783.1321C463.328 783.1321 537.25515 783.1321 537.25515 783.1321C537.25515 783.1321 463.328 783.1321 463.328 783.1321Z\"},\"duration\":0.008328300000000012,\"ease\":\"none\"},0.30001);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 28531,
+      "text": "tl.to(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-aperture\\\"]\",{\"attr\":{\"d\":\"M368 750C426 781.66915 556 782.51257 620 744C556 782.51257 426 781.66915 368 750Z\"},\"duration\":0.008328399999999988,\"ease\":\"none\"},0.3083383);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 28532,
+      "text": "tl.to(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-teeth\\\"]\",{\"attr\":{\"d\":\"M391.75194 760.05448C447.45446 778.40707 535.17914 778.36346 594.34726 756.17909C535.17914 778.36346 447.45446 778.40707 391.75194 760.05448Z\"},\"duration\":0.008328399999999988,\"ease\":\"none\"},0.3083383);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    },
+    {
+      "line": 28533,
+      "text": "tl.to(\"[data-composition-id=\\\"native-seat-canonical-0\\\"] [id=\\\"actor-karo-native-face-0-mouth-tongue\\\"]\",{\"attr\":{\"d\":\"M463.328 782.09086C463.328 782.09086 537.25515 782.09086 537.25515 782.09086C537.25515 782.09086 463.328 782.09086 463.328 782.09086Z\"},\"duration\":0.008328399999999988,\"ease\":\"none\"},0.3083383);",
+      "errors": [
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ]
+    }
+  ]
+}
