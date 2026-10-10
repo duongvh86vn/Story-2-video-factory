@@ -4,11 +4,13 @@ import {hash} from '../core/utils.js';
 import {GestureSourceSpanSchema,PointSchema,type Gesture} from './schemas.js';
 import {articulatedGestureWindow} from './arm-trajectory.js';
 
-export const VIEW_SOURCE_GESTURE_VERSION='native-source-gesture-1' as const;
+export const VIEW_SOURCE_GESTURE_VERSION='native-source-gesture-2' as const;
 export const VIEW_SOURCE_GESTURE_PROJECTION_VERSION='native-source-gesture-projection-1' as const;
 export const ViewSourceGestureSchema=z.object({id:Id,action:z.enum(['point','think']),hand:RigHandSchema,target:PointSchema.optional(),elbowPole:z.enum(['rest','reach']).optional(),
+  wristCurlDeg:z.number().finite().min(0).max(70).optional(),
   startMs:z.number().int().nonnegative(),endMs:z.number().int().positive(),reachMs:z.number().finite().nonnegative(),recoverMs:z.number().finite().nonnegative(),
 }).strict().superRefine((g,ctx)=>{
+  if(g.wristCurlDeg!==undefined&&g.action!=='think')ctx.addIssue({code:'custom',message:'Authored wrist curl is only registered for think'});
   if(g.reachMs<=g.startMs||g.recoverMs<g.reachMs||g.endMs<=g.recoverMs||g.action==='point'&&!g.target)ctx.addIssue({code:'custom',message:'Invalid native source gesture target/window'});
 });
 export type ViewSourceGesture=z.infer<typeof ViewSourceGestureSchema>;
@@ -16,7 +18,7 @@ export function viewSourceGestureDefinition(g:Gesture):ViewSourceGesture{
   if(!g.sourceSpan||g.action!=='point'&&g.action!=='think')throw new Error('needs-view-gesture-phase: only explicit source point/think is supported');
   if(g.contactMs!==undefined||g.releaseMs!==undefined||g.destination||g.propId||g.landingMs!==undefined||g.carryOffset)throw new Error('needs-view-gesture-phase: source motion timing cannot replace a contact/prop clock');
   const span=GestureSourceSpanSchema.parse(g.sourceSpan),window=articulatedGestureWindow({startMs:span.startMs,endMs:span.endMs,contactMs:span.reachMs,releaseMs:span.recoverMs});
-  return ViewSourceGestureSchema.parse({id:span.id,action:g.action,hand:rigHand(g),target:g.target,elbowPole:g.elbowPole,
+  return ViewSourceGestureSchema.parse({id:span.id,action:g.action,hand:rigHand(g),target:g.target,elbowPole:g.elbowPole,...(g.wristCurlDeg===undefined?{}:{wristCurlDeg:g.wristCurlDeg}),
     startMs:span.startMs,endMs:span.endMs,reachMs:window.reachMs,recoverMs:window.recoverMs});
 }
 export function validateViewGesturePiece(g:Gesture,shotStartMs:number,shotEndMs:number):ViewSourceGesture{
@@ -69,6 +71,7 @@ export function projectViewSourceGestures(track:readonly ViewSourceGesture[],sho
     if(end<=start)return [];
     const piece:Gesture={id:source.id,action:source.action,hand:source.hand,startMs:start-shotStartMs,endMs:end-shotStartMs,
       ...(source.target?{target:{...source.target}}:{}),...(source.elbowPole?{elbowPole:source.elbowPole}:{}),
+      ...(source.wristCurlDeg===undefined?{}:{wristCurlDeg:source.wristCurlDeg}),
       sourceSpan:{id:source.id,startMs:source.startMs,endMs:source.endMs,...(Number.isSafeInteger(source.reachMs)?{reachMs:source.reachMs}:{}),...(Number.isSafeInteger(source.recoverMs)?{recoverMs:source.recoverMs}:{})}};
     validateViewGesturePiece(piece,shotStartMs,shotEndMs);return [piece];
   });
@@ -77,5 +80,5 @@ export function projectViewSourceGestures(track:readonly ViewSourceGesture[],sho
 export function sourceViewGestureAt(track:readonly ViewSourceGesture[],absoluteTimeMs:number,hand:RigHand):Gesture|undefined{
   if(!Number.isFinite(absoluteTimeMs)||absoluteTimeMs<0||hand!=='left'&&hand!=='right')throw new Error('needs-view-gesture-phase: invalid source time/hand');
   const g=track.find(g=>g.hand===hand&&absoluteTimeMs>=g.startMs&&absoluteTimeMs<g.endMs);
-  return g?{id:g.id,action:g.action,hand:g.hand,target:g.target,elbowPole:g.elbowPole,startMs:g.startMs,endMs:g.endMs,contactMs:g.reachMs,releaseMs:g.recoverMs}:undefined;
+  return g?{id:g.id,action:g.action,hand:g.hand,target:g.target,elbowPole:g.elbowPole,...(g.wristCurlDeg===undefined?{}:{wristCurlDeg:g.wristCurlDeg}),startMs:g.startMs,endMs:g.endMs,contactMs:g.reachMs,releaseMs:g.recoverMs}:undefined;
 }

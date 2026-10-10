@@ -116,7 +116,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
     const chain=m.arms![gestureHand],reach=(chain.upper+chain.lower)*.75;
     plan.gestures=[{id:'point-target',action:'point',hand:gestureHand,startMs:300,endMs:3600,target:{x:210+shoulder.x+(gestureHand==='right'?reach:-reach),y:410+m.pelvisY+shoulder.y+16}}];
   }
-  if(action==='think')plan.gestures=[{id:'think-source',action:'think',hand:gestureHand,startMs:300,endMs:3600}];
+  if(action==='think')plan.gestures=[{id:'think-source',action:'think',hand:gestureHand,wristCurlDeg:70,startMs:300,endMs:3600}];
   if(manipulationActions.includes(action)){
     const shoulder=m.shoulders![gestureHand],chain=m.arms![gestureHand],reach=chain.upper+chain.lower+(m.handAttachment?.[gestureHand].length??0),side=gestureHand==='left'?-1:1;
     const target={x:plan.root.x+shoulder.x+side*reach*.55,y:plan.root.y+m.pelvisY+shoulder.y+reach*.48};

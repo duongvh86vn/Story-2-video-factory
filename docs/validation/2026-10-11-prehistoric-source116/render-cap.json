@@ -1,0 +1,33 @@
+{
+  "startedAt": "2026-10-10T19:34:45.811Z",
+  "staging": "lila-left",
+  "shotId": "native-seat-canonical-1",
+  "sourceRange": [
+    900,
+    2400
+  ],
+  "boardHash": "40eafc0c23c45edc44beee866645ec7291268506e7d043ce8915c298397d5aa7",
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "audio": "SILENT DIAGNOSTIC",
+  "paidCalls": 0,
+  "phase": "failed",
+  "bytes": [
+    {
+      "path": "index.html",
+      "bytes": 216937
+    },
+    {
+      "path": "style.css",
+      "bytes": 401
+    },
+    {
+      "path": "scene.js",
+      "bytes": 2073617
+    }
+  ],
+  "validationErrors": [
+    "Scene exceeds max_scene_bytes"
+  ],
+  "error": "Error: Scene safety/size validation failed"
+}

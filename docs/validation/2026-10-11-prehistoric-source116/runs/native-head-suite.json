@@ -1,0 +1,13 @@
+{
+  "name": "native-head-suite",
+  "startedAt": "2026-10-10T19:30:18.203Z",
+  "endedAt": "2026-10-10T19:35:50.683Z",
+  "exitCode": 1,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "tests/native-head-seat-tracer.test.ts"
+  ]
+}

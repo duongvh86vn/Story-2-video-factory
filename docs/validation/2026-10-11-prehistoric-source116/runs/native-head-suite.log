@@ -1,0 +1,37 @@
+✔ opposing native heads share the canonical seat run while old fixed-view overlays remain the default (24132.3993ms)
+✔ actor-owned mouths and actual rendered eye targets survive cuts, lead swaps and reverse seeks (26426.5699ms)
+✖ factory renderer owns each native head resource and namespace inside the shared scene cap (167075.1424ms)
+✔ publication refuses changed head ownership, target source or a conflicting speaker (17548.4247ms)
+✔ both screen layouts bind independent matching head/body sources and keep each sourced actor identity (41712.6115ms)
+✔ listener chin gestures use declared rig hands and full body/head/speech history across both layouts (53917.7981ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 332412.409
+
+✖ failing tests:
+
+test at tests\native-head-seat-tracer.test.ts:1:6957
+✖ factory renderer owns each native head resource and namespace inside the shared scene cap (167075.1424ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   'Scene exceeds max_scene_bytes'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-seat-tracer.test.ts:104:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Scene exceeds max_scene_bytes' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

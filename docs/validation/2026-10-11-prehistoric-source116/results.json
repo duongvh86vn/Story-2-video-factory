@@ -1,0 +1,643 @@
+{
+  "date": "2026-10-11",
+  "source": "0.116",
+  "baseCommit": "ede5236469bbd0d073fe3afeb31acacab805d3c8",
+  "branch": "codex/prehistoric-life",
+  "goal": "story/script/WAV -> actors in their story -> voiced final/QC",
+  "goalComplete": false,
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "progressEstimate": {
+    "percent": 40,
+    "deltaPercentagePoints": 0,
+    "uncertain": true
+  },
+  "paidCalls": 0,
+  "generatedArt": 0,
+  "userServer8850": "unchanged",
+  "sourceHashes": {
+    "TEST-RESULTS-PREHISTORIC.md": "9f7ed570a4d9570196d22b5c6c49f7e68f0d41c5aa3c573f45905cbde55fd396",
+    "benchmarks/native-seat-tracer.ts": "a5f5a4bf9c506feaf4b6cce94336cc14bd4cdb2ac780c375f74ce96a99835eae",
+    "docs/topics/CHIN-WRIST-DIAGNOSTIC.md": "4083b0f7e46ef0e55f249a069b61f14b4bc32319e1d6b04b205bfafde308a57e",
+    "docs/topics/CUOC-SONG-THOI-TIEN-SU.md": "f3018f46ae3438fa11d3b84b34db0772d91217a1ad06826f7c84204d14a6eb22",
+    "docs/topics/PROJECT-PROGRESS.md": "c1142e220441ae2c84f7ccbcea38aeec651a64f8b36342e488f5fd3acf20b376",
+    "library/topics/prehistoric-life/manifest.json": "5eac82c4aba262a5854e1f82c05160b5e3d2dfc76f6cc7b4b821e14c3467bd18",
+    "packages/animation/arm-trajectory.ts": "be2e783a7eca370f6db51e7ff62b1f9b28478f6fb4a1407d0945b50ff389ccab",
+    "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
+    "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
+    "packages/animation/schemas.ts": "3bcb1c126e002d218f62c14ddc33c7fc3e0d57f48a72019c9d45c7e2acbed155",
+    "packages/animation/source-arm.ts": "7537140571d6476f44f5348bfeb7c7c455fbd8f6c9f3a84732b344b06e4f79a7",
+    "packages/animation/view-source-gesture.ts": "cef70acd13c98b72b8b4b1f89233211e31bf29f02bdb72b24eb8a35349975082",
+    "packages/animation/wrist-contact.ts": "b350a8cd753f235af627c45d27ac5bd92537d5442d85a6ea3fd2c8d31e820bbd",
+    "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
+    "packages/director/acting-repair.ts": "e031a848437407bafce935a2061a3b39c04ea16ecceebc6a2c324d981fc3f0da",
+    "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e",
+    "packages/topics/native-dialogue-candidates.ts": "79c43028c014fa9fd72a94b12c72980752d617b5ee6d12fc68684484397691b9",
+    "packages/topics/prehistoric-life.ts": "ff7b8666b715c87980799709616cdd51fa99dfbf90f514fdceea666b16434c99",
+    "scripts/prehistoric-pack.ts": "27fd246e07c6debd492a7c5a1950df37a23d0eb3f5ceacfbc45282ae89b06145",
+    "tests/forest-hand.test.ts": "001ef7cffc72507daa5f135524ea3cfda647808ba37188cb274f07b25eeb6fbb",
+    "tests/forest-wrist-contact.test.ts": "f1acb1fefe414b3bf76abbcbda17972c661fae8a2d32d2157d5205fd5d6d60ec",
+    "tests/native-head-seat-tracer.test.ts": "4208cf384df79f8b44c18d2bbe45a0f8046f0de10e3569f633905defd6b6c11b"
+  },
+  "runs": {
+    "listener": {
+      "name": "listener",
+      "startedAt": "2026-10-10T19:26:56.591Z",
+      "endedAt": "2026-10-10T19:27:47.896Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=listener chin gestures",
+        "tests/native-head-seat-tracer.test.ts"
+      ]
+    },
+    "wrist": {
+      "name": "wrist",
+      "startedAt": "2026-10-10T19:28:37.851Z",
+      "endedAt": "2026-10-10T19:28:38.686Z",
+      "exitCode": 1,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "tests/forest-wrist-contact.test.ts"
+      ]
+    },
+    "wrist-v2": {
+      "name": "wrist-v2",
+      "startedAt": "2026-10-10T19:29:43.642Z",
+      "endedAt": "2026-10-10T19:29:44.476Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "tests/forest-wrist-contact.test.ts"
+      ]
+    },
+    "typecheck": {
+      "name": "typecheck",
+      "startedAt": "2026-10-10T19:27:08.102Z",
+      "endedAt": "2026-10-10T19:27:18.898Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "tsconfig.json"
+      ]
+    },
+    "focused": {
+      "name": "focused",
+      "startedAt": "2026-10-10T19:31:13.009Z",
+      "endedAt": "2026-10-10T19:31:14.040Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "tests/forest-wrist-contact.test.ts",
+        "tests/forest-arm-trajectory.test.ts",
+        "tests/native-source-gesture-project.test.ts"
+      ]
+    },
+    "native-head-suite": {
+      "name": "native-head-suite",
+      "startedAt": "2026-10-10T19:30:18.203Z",
+      "endedAt": "2026-10-10T19:35:50.683Z",
+      "exitCode": 1,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "tests/native-head-seat-tracer.test.ts"
+      ]
+    },
+    "source-gesture": {
+      "name": "source-gesture",
+      "startedAt": "2026-10-10T19:35:26.587Z",
+      "endedAt": "2026-10-10T19:35:33.239Z",
+      "exitCode": 1,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "tests/native-source-gesture.test.ts"
+      ]
+    },
+    "hand-think": {
+      "name": "hand-think",
+      "startedAt": "2026-10-10T19:35:28.184Z",
+      "endedAt": "2026-10-10T19:35:34.348Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=/think:",
+        "tests/forest-hand.test.ts"
+      ]
+    },
+    "build": {
+      "name": "build",
+      "startedAt": "2026-10-10T19:32:46.871Z",
+      "endedAt": "2026-10-10T19:33:11.087Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ]
+    },
+    "testtypes": {
+      "name": "testtypes",
+      "startedAt": "2026-10-10T19:34:32.563Z",
+      "endedAt": "2026-10-10T19:34:50.402Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.tests.json"
+      ]
+    },
+    "pack": {
+      "name": "pack",
+      "startedAt": "2026-10-10T19:41:17.213Z",
+      "endedAt": "2026-10-10T19:41:20.183Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "scripts/prehistoric-pack.ts"
+      ]
+    },
+    "render-left": {
+      "name": "render-left",
+      "startedAt": "2026-10-10T19:32:08.859Z",
+      "endedAt": "2026-10-10T19:32:36.291Z",
+      "exitCode": 1,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "C:/Users/Duongvh-pc/.codex/tmp/source116-render.mts",
+        "lila-left",
+        "1,2"
+      ]
+    },
+    "render-left-v2": {
+      "name": "render-left-v2",
+      "startedAt": "2026-10-10T19:34:20.904Z",
+      "endedAt": "2026-10-10T19:36:23.426Z",
+      "exitCode": 1,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "C:/Users/Duongvh-pc/.codex/tmp/source116-render.mts",
+        "lila-left",
+        "1,2"
+      ]
+    },
+    "qa-snapshots": {
+      "name": "qa-snapshots",
+      "startedAt": "2026-10-10T19:40:04.485Z",
+      "endedAt": "2026-10-10T19:41:00.186Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "C:/Users/Duongvh-pc/.codex/tmp/source116-snapshots.mts"
+      ]
+    },
+    "listener-final": {
+      "name": "listener-final",
+      "startedAt": "2026-10-10T19:40:16.115Z",
+      "endedAt": "2026-10-10T19:41:47.427Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "--test-name-pattern=listener chin gestures",
+        "tests/native-head-seat-tracer.test.ts"
+      ]
+    },
+    "focused-final": {
+      "name": "focused-final",
+      "startedAt": "2026-10-10T19:42:56.645Z",
+      "endedAt": "2026-10-10T19:42:57.585Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "--import",
+        "tsx",
+        "--test",
+        "tests/forest-wrist-contact.test.ts",
+        "tests/forest-arm-trajectory.test.ts",
+        "tests/native-source-gesture-project.test.ts"
+      ]
+    },
+    "build-final": {
+      "name": "build-final",
+      "startedAt": "2026-10-10T19:42:58.133Z",
+      "endedAt": "2026-10-10T19:43:20.824Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ]
+    },
+    "testtypes-final": {
+      "name": "testtypes-final",
+      "startedAt": "2026-10-10T19:42:59.649Z",
+      "endedAt": "2026-10-10T19:43:16.271Z",
+      "exitCode": 0,
+      "signal": null,
+      "args": [
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.tests.json"
+      ]
+    }
+  },
+  "summary": {
+    "focusedFinal": {
+      "pass": 17,
+      "fail": 0
+    },
+    "handThink": {
+      "pass": 2,
+      "fail": 0
+    },
+    "listenerFinal": {
+      "pass": 1,
+      "fail": 0,
+      "layouts": 2,
+      "includesSceneValidator": true
+    },
+    "nativeHeadEarlierStage": {
+      "pass": 5,
+      "fail": 1,
+      "remaining": "Scene exceeds max_scene_bytes",
+      "note": "Before benchmark idle/think metadata correction; not rerun as a complete suite after correction."
+    },
+    "nativeSourceGesture": {
+      "pass": 10,
+      "fail": 3,
+      "remaining": "Host action interval must be positive in canonical fixture"
+    },
+    "buildFinal": 0,
+    "testTypecheckFinal": 0,
+    "staticPack": 0,
+    "render": {
+      "sourceRange": [
+        900,
+        2400
+      ],
+      "totalBytes": 2290955,
+      "cap": 2000000,
+      "result": "FAIL",
+      "mp4": "NOT PRODUCED"
+    },
+    "snapshots": {
+      "count": 4,
+      "hyperframesLintCheck": "PASS",
+      "productionValidation": "FAIL (size)",
+      "purpose": "Only inspect size-rejected scene locally; never renderDraft/renderFinal."
+    }
+  },
+  "provenance": "Each run retains its actual raw log and exit receipt. Run-start source hashes exist only where a -source.json is present; final sourceHashes are a separate freeze, not retroactive run-start proof. Initial diagnostic mock measurements are not acceptance results and were never rendered. Full regression56, new audio/video/reference comparison and full production flows were not rerun.",
+  "visualObservation": "Karo palm is at chin but silhouette is hard to read under beard; flat diagnostic background is not accepted production art. Static images do not establish smoothness.",
+  "artifacts": [
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/listener.log",
+      "sha256": "61ebf3b84ca210a5746977fd0a77338581abf0d0d992e9935810e36b7c5f03b3",
+      "bytes": 233,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/listener.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/listener.json",
+      "sha256": "de12f5879ae9b9e7e1a198afe318e88aa05dd7019d23ca6f0c5e34bd71aee079",
+      "bytes": 295,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/listener.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/wrist.log",
+      "sha256": "e43e06598003fa86812483cac928c6cc29e9a6544a6700e26730dacd14806ddc",
+      "bytes": 1500,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/wrist.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/wrist.json",
+      "sha256": "3101bbdec68728f1b23aabff80f0daad42c120de334cfbd193bed8d5f652cbd0",
+      "bytes": 239,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/wrist.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/wrist-v2.log",
+      "sha256": "49f57ca6bd85f412d34152d2dcf41290f71b56f22ff60e8a61448a2e567aeea8",
+      "bytes": 544,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/wrist-v2.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/wrist-v2.json",
+      "sha256": "60896af75777c8da3e043d45a9bf0590fb0763936274b7c7589e38ec8db77a60",
+      "bytes": 242,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/wrist-v2.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/typecheck.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/typecheck.json",
+      "sha256": "7f39ccd21acda652958c21d8a7ce6de20db70c7b69b9716c16d68ed05235f91f",
+      "bytes": 246,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/typecheck.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/focused.log",
+      "sha256": "22dc02787d3a1ec7dc9b0f6d29cd0855faafcb88d79a1b5849edd101d978baee",
+      "bytes": 2137,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/focused.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/focused.json",
+      "sha256": "9bb138f47bcacffca024f79c0be24e14ee4aa7ae415430322f22a7120a198991",
+      "bytes": 335,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/focused.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/native-head-suite.log",
+      "sha256": "5f60040686d7c1e0f0d77a4c7f47a8f2f5bd0f5b4095e8eee05b1f5ce6016835",
+      "bytes": 1632,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/native-head-suite.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/native-head-suite.json",
+      "sha256": "f145a717b508de0e331a9d435652bf85dd6ee4d0f3358e65c248efca271d9dd0",
+      "bytes": 254,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/native-head-suite.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/source-gesture.log",
+      "sha256": "0704fbec48404360c6b6c9c13aaaf677c6dec38d3207ba59041ccae0ef970f98",
+      "bytes": 5777,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/source-gesture.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/source-gesture.json",
+      "sha256": "d3560d75c1299f1b445d75c005dceb75a61ecd760355430169aed057e19d0439",
+      "bytes": 249,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/source-gesture.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/hand-think.log",
+      "sha256": "5b0826df612139e0df11bf40f3092466d29970d0d0289e4b9aafcbfcda1f504e",
+      "bytes": 304,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/hand-think.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/hand-think.json",
+      "sha256": "aa3c0b51a7120c956071f1073be1a704b3922e271f7c4fec07b4fa0114e2de4e",
+      "bytes": 270,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/hand-think.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/build.log",
+      "sha256": "7c5097da589fedfba624ecf7be97f2bd0ee55b3d963a6a1af074c9b1614e9cda",
+      "bytes": 543,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/build.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/build.json",
+      "sha256": "36b00fa74bd82ff96c5f81bf98b3a1dffd204702b3740f339e579ea79bf3b52a",
+      "bytes": 243,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/build.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/testtypes.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/testtypes.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/testtypes.json",
+      "sha256": "2f56f30b65723208b3127625bfc5889f83d4d67c56d89cbd90ff48031372fdaf",
+      "bytes": 236,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/testtypes.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/pack.log",
+      "sha256": "d6e7b487cbbe86146b2b01f83028d953793f737284fceca7049eb91df4650cb3",
+      "bytes": 111,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/pack.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/pack.json",
+      "sha256": "b48781044b54ad63e4a5a2cb006232ca9ff90caa8482f3302ea71382da80ed12",
+      "bytes": 217,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/pack.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/pack-source.json",
+      "sha256": "0769de3265315e408ffee1d41fb4c41ca133e7dee9b6c56256c21078609dd48a",
+      "bytes": 133731,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/pack-source.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/render-left.log",
+      "sha256": "d1148c31a56cc9c56c213c3ef44d520bcbd96a5ca4e641a04125f1576d7323fa",
+      "bytes": 1441,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-left.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/render-left.json",
+      "sha256": "1cff924fa5f15c86762d11de68e6cc065a7ea736401a2ecfceeadb7e79abe736",
+      "bytes": 276,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-left.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/render-left-v2.log",
+      "sha256": "75b5d769dc13da74e5478f9f353de268be22333fbc2f0e65088a09e09df2509f",
+      "bytes": 516,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-left-v2.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/render-left-v2.json",
+      "sha256": "cd4fb20b74c4d059984a72d1328526a46d62e6a853a338357d8be9be1eae7b22",
+      "bytes": 279,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-left-v2.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/qa-snapshots.log",
+      "sha256": "b8e15a1770358c882a6d8844644d8ae100c99850257daba857513d1a747e3c66",
+      "bytes": 768,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/qa-snapshots.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/qa-snapshots.json",
+      "sha256": "1da2b5262d70e598f9701c6a0e6f2f2a060770e936e4eb924a9b6ea84eaa0f19",
+      "bytes": 252,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/qa-snapshots.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/qa-snapshots-source.json",
+      "sha256": "0769de3265315e408ffee1d41fb4c41ca133e7dee9b6c56256c21078609dd48a",
+      "bytes": 133731,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/qa-snapshots-source.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/listener-final.log",
+      "sha256": "0622195f7e30ea26d5ad86f08cf5617867ad6241697379f854f62f176dfa50e3",
+      "bytes": 234,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/listener-final.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/listener-final.json",
+      "sha256": "db0cb1c52b879b6a3b78975fa117428e6969c15c4471e5640bb4f87bf06fb675",
+      "bytes": 301,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/listener-final.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/listener-final-source.json",
+      "sha256": "0769de3265315e408ffee1d41fb4c41ca133e7dee9b6c56256c21078609dd48a",
+      "bytes": 133731,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/listener-final-source.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/focused-final.log",
+      "sha256": "67d922ed4d2076bd25552cf9d1532762f8b796a8a94215457f13027e95244a3f",
+      "bytes": 2137,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/focused-final.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/focused-final.json",
+      "sha256": "dc6b12d60732f945ec67dd789b762a7d59b415cbac1d1f06c73fdf97edf267b1",
+      "bytes": 341,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/focused-final.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/focused-final-source.json",
+      "sha256": "de896e56100c4ef75dcdebf901257b5675b96408d827f930a9810ca3a454b084",
+      "bytes": 133731,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/focused-final-source.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/build-final.log",
+      "sha256": "c2878a3486f3800d1c1b54d5bb05ad06b5ca2f11b004e215dade66d31987d7b4",
+      "bytes": 543,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/build-final.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/build-final.json",
+      "sha256": "8b95b8ea0d07e46ca8419195169a1df863bb3ead82607339e88371bf3927091b",
+      "bytes": 249,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/build-final.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/build-final-source.json",
+      "sha256": "de896e56100c4ef75dcdebf901257b5675b96408d827f930a9810ca3a454b084",
+      "bytes": 133731,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/build-final-source.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/testtypes-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/testtypes-final.log"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/testtypes-final.json",
+      "sha256": "f287c5050af23c1b12896fb76fefe453c8c4680a00cad54aebe5abb63dcac0d3",
+      "bytes": 242,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/testtypes-final.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/runs/testtypes-final-source.json",
+      "sha256": "de896e56100c4ef75dcdebf901257b5675b96408d827f930a9810ca3a454b084",
+      "bytes": 133731,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/testtypes-final-source.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/render-cap.json",
+      "sha256": "a62f43042ec5058b0ce4ae5fa1ffa1463458fc6e217d9db0329f027fe251277d",
+      "bytes": 693,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-lila-left/shot-1/report.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/snapshots.json",
+      "sha256": "6bb27125a5643e1ff8cee1f18f53906b6162d9092abe941ee4af97d8146895b8",
+      "bytes": 5618,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-lila-left/shot-1/snapshot-report.json"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/hyperframes.log",
+      "sha256": "8400382ebdaa7d9637ee1ca908b7fa51d90132943ea6a00f5fdefb5617823c03",
+      "bytes": 4953,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-lila-left/shot-1/work/logs/hyperframes.jsonl"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/qa-frames/0.png",
+      "sha256": "8a9edca590e0ac1ab7aae9c0bf6a52d519cad600cfb9e6ee18da2ef74dc9bcfd",
+      "bytes": 125238,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-lila-left/shot-1/qa-frames/0.png"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/qa-frames/300.png",
+      "sha256": "bfa3080f0542c430d2081118e10ae90246803f1106d009090a327bfca7fb7bb0",
+      "bytes": 125722,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-lila-left/shot-1/qa-frames/300.png"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/qa-frames/800.png",
+      "sha256": "3a167ff1b68607ef903fd5635a519ad91d3f9ca1c2a7a74a629beee0d3ff7d61",
+      "bytes": 125251,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-lila-left/shot-1/qa-frames/800.png"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/qa-frames/1499.png",
+      "sha256": "d984516afae82f00bfba25aa1bcf2efba2d0e6c4d81a6c50dca690ae03dacb62",
+      "bytes": 125260,
+      "source": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/runtime/prehistoric-life/qa/source116-chin/render-lila-left/shot-1/qa-frames/1499.png"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/harness/check.mjs",
+      "sha256": "ffd3c30d9e0fe3d107eca0b42000974635f5e85d9a2d5f772c4244aa93d8605a",
+      "bytes": 1663,
+      "source": "C:/Users/Duongvh-pc/.codex/tmp/source116-check.mjs"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/harness/render.mts",
+      "sha256": "d6049f79714fa0ed6e3346f0f7a682b16271e5ea86497a58150b57d5106c5e94",
+      "bytes": 4787,
+      "source": "C:/Users/Duongvh-pc/.codex/tmp/source116-render.mts"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source116/harness/snapshots.mts",
+      "sha256": "4ffc056a037c6b454e7193339c066e65408d23f4f28eedf4a12832a73a46705f",
+      "bytes": 2992,
+      "source": "C:/Users/Duongvh-pc/.codex/tmp/source116-snapshots.mts"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "qa-snapshots",
+  "startedAt": "2026-10-10T19:40:04.485Z",
+  "endedAt": "2026-10-10T19:41:00.186Z",
+  "exitCode": 0,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "C:/Users/Duongvh-pc/.codex/tmp/source116-snapshots.mts"
+  ]
+}

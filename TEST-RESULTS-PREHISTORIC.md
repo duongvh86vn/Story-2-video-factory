@@ -1,6 +1,17 @@
 # Báo cáo kiểm tra — Cuộc sống thời tiền sử
 
-## Kết quả hiện hành — lượt source115, 11/10/2026
+## Kết quả hiện hành — source0.116, 11/10/2026
+
+**Sửa hình học chống cằm; render vẫn bị chặn bởi cap cảnh, chưa có MP4 mới.** Được phép test/render chẩn đoán cục bộ. Không gọi model/TTS trả phí, sinh ảnh hoặc đổi server8850/checkout D.
+
+- 17/17 ca tập trung PASS, 2/2 hand/think PASS. Listener cuối PASS cả hai bố cục với validator cảnh, landmark cằm/cuff, source clock và random seek. Giới hạn khuỷu145° và chiều dài xương giữ nguyên.
+- Native-head trước sửa metadata chẩn đoán: **5 PASS / 1 FAIL** tại cap. Native-source-gesture: **10 PASS / 3 FAIL** ở interval hành động sai trong fixture canonical. Chưa chạy lại toàn regression56.
+- Build gồm core/Studio typecheck và Vite exit0; test:typecheck exit0; static pack exit0.
+- Source900–2400ms: **2.290.955 byte > cap2.000.000**; không xuất MP4. Bốn ảnh QA của cảnh bị lỗi dung lượng được xem riêng; lint/check của viewer PASS không thay production validation. Chưa nghiệm thu độ mượt hoặc so sánh phim mới với mẫu Facebook.
+
+[Chi tiết sửa, môi trường, lệnh và việc còn thiếu](docs/topics/CHIN-WRIST-DIAGNOSTIC.md). [Receipts](docs/validation/2026-10-11-prehistoric-source116/results.json). Tiến độ **khoảng40%, +0 điểm phần trăm**; toàn story/script/WAV→diễn viên→final/QC còn đang làm.
+
+## Kết quả trước — lượt source115, 11/10/2026
 
 **Đã gỡ chặn render cho đúng cảnh 0–900 ms đã đo; chưa nghiệm thu độ mượt hay toàn video.** Không gọi model/TTS trả phí, tạo ảnh hoặc thay server8850/checkout D. [Receipts và hash source](docs/validation/2026-10-11-prehistoric-source115/results.json).
 

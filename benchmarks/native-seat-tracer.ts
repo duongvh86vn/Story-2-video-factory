@@ -19,7 +19,7 @@ import type {NativeHeadBank} from '../packages/animation/native-head-bank.js';
 import {NATIVE_HEAD_SOURCE_VERSION} from '../packages/animation/native-head-track.js';
 import {registeredDetailedBodyView} from '../packages/animation/body-view-art.js';
 import {projectViewSourceGestures,type ViewSourceGesture} from '../packages/animation/view-source-gesture.js';
-import {NativeDialogueSelectionSchema,nativeDialogueLayouts,nativeDialogueThinkingWindows,nativeDialogueExpressionWindows,NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_HEAD_SEAT_TRACER_SCOPE,type NativeDialogueSelection} from '../packages/topics/native-dialogue-candidates.js';
+import {NativeDialogueSelectionSchema,nativeDialogueLayouts,nativeDialogueThinkingWindows,nativeDialogueThinkingWrist,nativeDialogueExpressionWindows,NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_HEAD_SEAT_TRACER_SCOPE,type NativeDialogueSelection} from '../packages/topics/native-dialogue-candidates.js';
 import {projectViewExpressions} from '../packages/animation/view-expression-track.js';
 
 export const NATIVE_SEAT_TRACER_VERSION='native-seat-tracer-2';
@@ -74,7 +74,7 @@ function buildNativeSeatTracer(heads?:Record<NativeSeatActor,NativeHeadBank>,sel
     }
     const character=ActorDefinitionSchema.parse({id:actor,name:actor,role:'illustration',kind:'stick-man',identity:'illustrative',appearance,sourceRefs:refs});
     f.plan.profileHash=actorProfile(character).profileHash;
-    const gestures:ViewSourceGesture[]=thinking?[{...nativeDialogueThinkingWindows[actor],action:'think',hand:registeredDetailedBodyView(character).nearHand}]:[];
+    const gestures:ViewSourceGesture[]=thinking?[{...nativeDialogueThinkingWindows[actor],action:'think',hand:registeredDetailedBodyView(character).nearHand,wristCurlDeg:nativeDialogueThinkingWrist[actor]}]:[];
     const expressions=emotional?nativeDialogueExpressionWindows[actor].map(e=>({...e})):[];
     return {character,plan:f.plan,gestures,expressions};
   });
@@ -95,7 +95,8 @@ function buildNativeSeatTracer(heads?:Record<NativeSeatActor,NativeHeadBank>,sel
       p.walks=[];p.jumps=[];p.postures=[];p.supports=[];delete p.entryPosture;
       p.gestures=projectViewSourceGestures(gestures,startMs,endMs,0,NATIVE_SEAT_TRACER_DURATION_MS);p.expressions=projectViewExpressions(expressions,startMs,endMs);
       p.gazes=[{startMs:0,endMs:p.durationMs,actorTarget:{id:character.id==='lila'?'karo':'lila',anchor:'eyes'}}];
-      return {character,performance:p,actions:[{type:'idle' as const,startMs,endMs}],speakingSegmentIds:segments.filter(cue=>cue===character.id+'-cue')};
+      const actions=p.gestures.length?p.gestures.map(g=>({type:'think' as const,hand:g.hand,startMs:startMs+g.startMs,endMs:startMs+g.endMs})):[{type:'idle' as const,startMs,endMs}];
+      return {character,performance:p,actions,speakingSegmentIds:segments.filter(cue=>cue===character.id+'-cue')};
     });
     const primary=actors[i%2]!,other=actors[1-i%2]!,p=primary.performance;
     const shot=ShotSchema.parse({id,startMs,endMs,beatIds:[beat.id],sceneType:'character-scene',subject:text,visualDescription:text,characters:actors.map(a=>a.character.id),camera:{shotSize:'wide',movement:'locked',angle:'eye-level'},

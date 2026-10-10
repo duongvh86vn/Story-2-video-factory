@@ -30,8 +30,8 @@ export function sourceSpearPairShape(front:ArmLandmarks,rear:ArmLandmarks,shaftA
   if(rearWristAlong>rearLength*.3+.01)throw new Error('needs-arm-pose: both spear wrists are carried in front of the shoulders');
   return {gripSpan,minimumSpan,rearElbowAlong,rearWristAlong};
 }
-export const sourceArmDescription={version:'forest-arm-role-shape-4',limits,
-  handEndpoints:'physical upper/lower chain ends at registered cuff; grip span uses distinct palm points; hand transform is rigid with the forearm tangent',
+export const sourceArmDescription={version:'forest-arm-role-shape-5',limits,
+  handEndpoints:'physical upper/lower chain ends at registered cuff; grip span uses distinct palm points; hand follows the forearm tangent unless the current source think command explicitly authors the registered terminal wrist hinge',
   shapes:'fixed XYZ lengths; reject excessive role-specific flexion and projected segments below 0.7 of the original; smooth C1 ink is not anatomy acceptance',
   roles:'active clip and current posture only; future run/seat must not change idle arms',
   layer:'chin-contact ink and mitten share explicit foreground slots, each with one physical definition; inactive arms/hands keep normal layers',

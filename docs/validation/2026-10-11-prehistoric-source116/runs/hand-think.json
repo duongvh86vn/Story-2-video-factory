@@ -1,0 +1,14 @@
+{
+  "name": "hand-think",
+  "startedAt": "2026-10-10T19:35:28.184Z",
+  "endedAt": "2026-10-10T19:35:34.348Z",
+  "exitCode": 0,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "--test-name-pattern=/think:",
+    "tests/forest-hand.test.ts"
+  ]
+}

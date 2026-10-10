@@ -1,0 +1,12 @@
+C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:298
+      if(a.target||a.secondTarget||a.contactMs!==undefined||p.gestures.some(g=>(!a.hand||rigHand(g)===a.hand)&&g.startMs<a.endMs-shot.startMs&&g.endMs>a.startMs-shot.startMs))throw new Error(`${shot.id}: idle interval cannot own an arm gesture, target or contact; use performance.walks/postures for body motion`);
+                                                                                                                                                                                     ^
+
+Error: native-seat-canonical-1: idle interval cannot own an arm gesture, target or contact; use performance.walks/postures for body motion
+    at validateCinematicActorShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:298:182)
+    at validateCinematicShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:223:3)
+    at renderRigCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:61:9)
+    at renderCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:299:10)
+    at <anonymous> (C:\Users\Duongvh-pc\.codex\tmp\source116-render.mts:23:16)
+
+Node.js v24.19.0

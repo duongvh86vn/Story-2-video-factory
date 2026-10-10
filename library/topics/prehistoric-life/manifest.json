@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.114-face-registration",
+  "version": "forest-tribe-0.116-chin-wrist",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -46,7 +46,7 @@
       "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
       "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497"
     }
   },
   "castCamera": {
@@ -63,7 +63,7 @@
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497"
     }
   },
   "cameraRepair": {
@@ -117,7 +117,7 @@
       "library/prompts/camera-director.md": "7de0340b1a4a513ad421b08a270df25561dc2c79d388ec8d86b69843ed41808a",
       "library/prompts/creative-director.md": "60439dc233453561cb6d8c46b376d2a504d036bf4b4daddaeed9c18366b97a17",
       "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/core/config.ts": "d0d9af6f29585379ac7dbba9a4e5d02fafdd96edb14001b36f0873abd393dc10",
       "packages/story/planning-cache.ts": "2128548e3671ab553409abe4c7406bfbbe93739c02e60f93f732c38946dff4f9",
       "packages/orchestrator/settings.ts": "91c982c4e0f956b1f75f866a0250f785a2f25ec77fbc3ea0a30a8bd52664b35d",
@@ -153,7 +153,7 @@
       "packages/director/story-coverage.ts": "f007c10cb891a010a0e4b587db211c710f2407040114ec141780ab1c46429afb",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/host/controller.ts": "ff89445ed0bc571d8ed0b0af9accfc748bef9284e3f2dee9173c10dca8d80bb5",
       "packages/explainer/storyboard.ts": "698ea99f12cf19fb812175bb8392345349f2ee34b15b22d8b935ebb38ba222f4",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
@@ -178,7 +178,7 @@
       "packages/director/continuity.ts": "10fc00d7c76e79d38fdbc674be58def424c18c2183be764be3b81c0415284b7e",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
       "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "apps/server/cinematic.ts": "0c326da064833b85f569efe7fd0d4674d9b59365286bf88ba98ca8ac707bbeb7",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd"
@@ -215,7 +215,7 @@
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "packages/director/props.ts": "c5644d388708d83560a55bb10558152e57b3cfe741af7fb330b485801f8b4336",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "library/schemas/index.ts": "d879d15304238a701996aa099d6f468757951ad1c9b6541de8e71667c195ea1e"
     }
   },
@@ -278,7 +278,7 @@
       "library/shots/cinematic-models.ts": "f393718a0ee0bb64bb70d22a7ddb418ce4f7fcce39b3c34f7b4030fa336a2e67",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df",
       "packages/scenes/index.ts": "29263964b519c0e4a5381cb35296e442c799cb664383868b6883d68d6afaa317",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497"
     }
   },
   "explicitDialogue": {
@@ -348,7 +348,7 @@
       "library/shots/ownership-layer.ts": "88fe4f37e2b6a18388c76a7162b2827c0cad4cded205e4334e59a1a78b3ca063",
       "library/shots/source-world-timeline.ts": "8c1c06449ce2f2b63eeedf8fe981e78ccda3b69885c736deff0b5a22ca4f2f12",
       "packages/scenes/index.ts": "29263964b519c0e4a5381cb35296e442c799cb664383868b6883d68d6afaa317",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497"
     }
   },
   "emittedSpearObservation": {
@@ -413,7 +413,7 @@
       "packages/director/story-coverage.ts": "f007c10cb891a010a0e4b587db211c710f2407040114ec141780ab1c46429afb",
       "packages/director/source-production-audit.ts": "9bdc9c64f9883b7c786162294fb7e392a5da080569acbf767265166fa6db98c9",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
       "packages/host/controller.ts": "ff89445ed0bc571d8ed0b0af9accfc748bef9284e3f2dee9173c10dca8d80bb5",
       "packages/explainer/schemas.ts": "ea369418415b2226e0725cc02f2e272373eee27a359f9cf6d5655fa74cb918ba",
@@ -478,7 +478,7 @@
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/explainer/storyboard.ts": "698ea99f12cf19fb812175bb8392345349f2ee34b15b22d8b935ebb38ba222f4",
       "packages/storyboard/director.ts": "69b5891e37a4ef0a2263403d77461640e28313ebcb8b1be6a4cbdc128b15b0da",
@@ -502,8 +502,8 @@
     "handoff": "docs/topics/ORIGINAL-SPEAR-CLOCK-HANDOFF.md",
     "codeHashes": {
       "packages/animation/view-source-spear.ts": "7b9a50038ca9fcc3c9cf3fd5a54299f467c57c294d1fd7c0715786b1f4b8f4cd",
-      "packages/animation/schemas.ts": "9fc90ee29457ed34f360a15a5ed6dcbde888b951033951e4b47f9247004f5ed5",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/schemas.ts": "3bcb1c126e002d218f62c14ddc33c7fc3e0d57f48a72019c9d45c7e2acbed155",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
@@ -514,8 +514,8 @@
       "packages/director/props.ts": "c5644d388708d83560a55bb10558152e57b3cfe741af7fb330b485801f8b4336",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/source-audit-context.ts": "cc65696ca6490f91d35efbdb51af560b63412a50082cc7a05bc6e10f919a9da0",
-      "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-repair.ts": "e031a848437407bafce935a2061a3b39c04ea16ecceebc6a2c324d981fc3f0da",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "library/schemas/index.ts": "d879d15304238a701996aa099d6f468757951ad1c9b6541de8e71667c195ea1e"
     }
   },
@@ -539,13 +539,13 @@
       "packages/scenes/source-preview-project.ts": "c64d114ba27b1811e492b3f0770a94ab5bc374bd32fa403bf5a9463ea19bf3f9",
       "scripts/source-preview.ts": "c730e88389b8bbad3120927a25d67c03d83d545c856825e3b98850bd9067425a",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df",
-      "packages/scenes/security.ts": "ddeb79fee87a07c84519683d70c382b859ff6490c6a45c7d762b9c2544746580",
+      "packages/scenes/security.ts": "bb59ba3e442cd4d2cbc2ccfec24a60206bbeaead3d5662ed56331c1944a553bd",
       "packages/director/source-audit-context.ts": "cc65696ca6490f91d35efbdb51af560b63412a50082cc7a05bc6e10f919a9da0",
       "packages/director/source-production-audit.ts": "9bdc9c64f9883b7c786162294fb7e392a5da080569acbf767265166fa6db98c9",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/actors/rig-resources.ts": "231083211b45120cdbea4860b03fe61933525a875ac171a16551e7e34811e193",
       "packages/animation/forest-head-art.ts": "7d2f08c1ad2a324375d23ab58f7ff75ff00f902ea31887e127e19977e3d48e36",
-      "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+      "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
       "tests/original-source-preview.test.ts": "f364f3b86f27e8bfec130d62ecb017da4e0ddd3b44eeed84b801d7b4d9805df6"
     }
   },
@@ -570,7 +570,7 @@
       "packages/director/source-prop-binding.ts": "22366a18ffb66c39450e83007782f56be45526388a07b676dbf060adce727d57",
       "packages/director/prop-motion.ts": "7c6c2011d8d637011ad013b7ff35cdf6fed2ac6caac236c7d01288ab731560df",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df"
     }
   },
@@ -631,7 +631,7 @@
       "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
       "packages/director/props.ts": "c5644d388708d83560a55bb10558152e57b3cfe741af7fb330b485801f8b4336",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "library/schemas/index.ts": "d879d15304238a701996aa099d6f468757951ad1c9b6541de8e71667c195ea1e"
     }
   },
@@ -665,7 +665,7 @@
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/story-coverage.ts": "f007c10cb891a010a0e4b587db211c710f2407040114ec141780ab1c46429afb",
       "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/explainer/storyboard.ts": "698ea99f12cf19fb812175bb8392345349f2ee34b15b22d8b935ebb38ba222f4",
       "packages/storyboard/director.ts": "69b5891e37a4ef0a2263403d77461640e28313ebcb8b1be6a4cbdc128b15b0da",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
@@ -706,7 +706,7 @@
       "library/shots/source-world-timeline.ts": "8c1c06449ce2f2b63eeedf8fe981e78ccda3b69885c736deff0b5a22ca4f2f12",
       "library/shots/cinematic-models.ts": "f393718a0ee0bb64bb70d22a7ddb418ce4f7fcce39b3c34f7b4030fa336a2e67",
       "packages/scenes/index.ts": "29263964b519c0e4a5381cb35296e442c799cb664383868b6883d68d6afaa317",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "library/schemas/index.ts": "d879d15304238a701996aa099d6f468757951ad1c9b6541de8e71667c195ea1e"
     }
@@ -718,10 +718,14 @@
     "voice": "no input, generated activity, expanded speech clock, mouth state or render fallback",
     "motionVerified": false,
     "codeHashes": {
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
+      "packages/animation/wrist-contact.ts": "b350a8cd753f235af627c45d27ac5bd92537d5442d85a6ea3fd2c8d31e820bbd",
+      "packages/animation/arm-trajectory.ts": "be2e783a7eca370f6db51e7ff62b1f9b28478f6fb4a1407d0945b50ff389ccab",
+      "packages/animation/source-arm.ts": "7537140571d6476f44f5348bfeb7c7c455fbd8f6c9f3a84732b344b06e4f79a7",
+      "packages/animation/view-source-gesture.ts": "cef70acd13c98b72b8b4b1f89233211e31bf29f02bdb72b24eb8a35349975082",
       "packages/animation/seated-rest-arm.ts": "70dda29574f43d03dbe1296b107109b30200359c050f56633ce446b73d17b4df",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004"
+      "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463"
     }
   },
   "sourceManipulationActions": {
@@ -738,8 +742,8 @@
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-repair.ts": "e031a848437407bafce935a2061a3b39c04ea16ecceebc6a2c324d981fc3f0da",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "library/schemas/index.ts": "d879d15304238a701996aa099d6f468757951ad1c9b6541de8e71667c195ea1e"
     }
   },
@@ -769,7 +773,7 @@
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df",
       "library/shots/cinematic-models.ts": "f393718a0ee0bb64bb70d22a7ddb418ce4f7fcce39b3c34f7b4030fa336a2e67",
       "library/prompts/creative-director.md": "60439dc233453561cb6d8c46b376d2a504d036bf4b4daddaeed9c18366b97a17",
@@ -788,15 +792,15 @@
     "productionBinding": "needs-source-prop-binding",
     "codeHashes": {
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
-      "packages/animation/schemas.ts": "9fc90ee29457ed34f360a15a5ed6dcbde888b951033951e4b47f9247004f5ed5",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/schemas.ts": "3bcb1c126e002d218f62c14ddc33c7fc3e0d57f48a72019c9d45c7e2acbed155",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
       "packages/animation/native-contact-arm.ts": "9e0dd079b6efc706eb2f2789bb95649d83ee7e528c1b35f9af9e573be85e889c",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
-      "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-repair.ts": "e031a848437407bafce935a2061a3b39c04ea16ecceebc6a2c324d981fc3f0da",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/props.ts": "c5644d388708d83560a55bb10558152e57b3cfe741af7fb330b485801f8b4336",
       "library/schemas/index.ts": "d879d15304238a701996aa099d6f468757951ad1c9b6541de8e71667c195ea1e"
@@ -1242,17 +1246,17 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/native-contact-arm.ts": "9e0dd079b6efc706eb2f2789bb95649d83ee7e528c1b35f9af9e573be85e889c",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
-      "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
+      "packages/animation/source-arm.ts": "7537140571d6476f44f5348bfeb7c7c455fbd8f6c9f3a84732b344b06e4f79a7",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+      "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b",
-      "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e",
+      "packages/topics/prehistoric-life.ts": "ff7b8666b715c87980799709616cdd51fa99dfbf90f514fdceea666b16434c99",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df",
       "library/shots/cinematic-models.ts": "f393718a0ee0bb64bb70d22a7ddb418ce4f7fcce39b3c34f7b4030fa336a2e67",
@@ -1273,13 +1277,13 @@
     "handoffDocument": "docs/topics/STORY-PERSON-MODELS-HANDOFF.md",
     "codeHashes": {
       "packages/topics/cast-model.ts": "b23d4d893d1b7c1a3a61029cd53dfa22ca10571ffe6e00d4889441daf6be1d6c",
-      "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+      "packages/topics/prehistoric-life.ts": "ff7b8666b715c87980799709616cdd51fa99dfbf90f514fdceea666b16434c99",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/production-release.ts": "28a1b79c22bd0e7ef8cbcce6a95ade3d0367bc490407e1b0895cea5d44513fc3",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/locks.ts": "2a443088eff6da47d20af2975f0fbc5fd818c1d1adeb8b11f4136cdb1a4fd0c5",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497"
     }
   },
   "castNormalization": {
@@ -1305,8 +1309,8 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
+      "packages/topics/prehistoric-life.ts": "ff7b8666b715c87980799709616cdd51fa99dfbf90f514fdceea666b16434c99",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497"
     }
   },
   "primaryModel": "warm-skin-close-ups",
@@ -1549,7 +1553,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+      "packages/topics/prehistoric-life.ts": "ff7b8666b715c87980799709616cdd51fa99dfbf90f514fdceea666b16434c99",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "f07c779af12fae1140d66c495b2f7536b567161a7bcc7d1ffac1a272fb3852a6",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
@@ -8397,12 +8401,12 @@
     "productionAcceptance": false,
     "finalExportAllowed": false,
     "builder": "benchmarks/native-seat-tracer.ts",
-    "builderHash": "fe8f29e49b544c9b7fc818f992356902d8d4337eb0094890dc5c85aea8a8b03b",
+    "builderHash": "a5f5a4bf9c506feaf4b6cce94336cc14bd4cdb2ac780c375f74ce96a99835eae",
     "exporter": "scripts/native-seat-tracer.ts",
-    "exporterHash": "3c79e8cb7ca0b0bc9b429db42e8c50c4809409468a01d86faf85545d887b209d",
+    "exporterHash": "7ba4ee360b309b6d50d958642b2e7c4d805fba52fff5163152df26868449dfc3",
     "handoff": "docs/topics/NATIVE-SEAT-TRACER.md",
     "opposingHeads": {
-      "version": "native-head-seat-tracer-5",
+      "version": "native-head-seat-tracer-6",
       "scope": "unapproved-native-head-seat-tracer",
       "stagings": {
         "lila-left": [
@@ -8499,11 +8503,11 @@
       "finalExportAllowed": false,
       "command": "npm run tracer:native-seat -- --native-heads",
       "builderFunction": "createNativeHeadSeatTracer",
-      "catalogCodeHash": "77531f48e49841fd2940bca4cfb1275d188eeed7f38da51acda74e55e2911c85",
+      "catalogCodeHash": "79c43028c014fa9fd72a94b12c72980752d617b5ee6d12fc68684484397691b9",
       "gestureProjection": {
         "version": "native-source-gesture-projection-1",
         "file": "packages/animation/view-source-gesture.ts",
-        "codeHash": "69f155480e51c4034ad3e99122c0b1d713d4a422733ee829c046a4f049a96b15"
+        "codeHash": "cef70acd13c98b72b8b4b1f89233211e31bf29f02bdb72b24eb8a35349975082"
       },
       "handoff": "docs/topics/NATIVE-DIALOGUE-ACTING.md"
     }
@@ -13336,9 +13340,9 @@
   },
   "bodyPack": {
     "version": "forest-body-1",
-    "compilerVersion": "forest-source-body-motion-45",
+    "compilerVersion": "forest-source-body-motion-46",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "fb6dc0aeda55aa9df2d914d09e1e7f64d80331c1806012b82e6c25dc7343154c",
+    "fingerprint": "b5007492193bd90f926027b2ec645361e71c22b12efb54772f3895128d8e199a",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -17733,7 +17737,7 @@
         "productionReady": false
       },
       "arms": {
-        "version": "forest-arm-role-shape-4",
+        "version": "forest-arm-role-shape-5",
         "limits": {
           "point": 110,
           "chin": 145,
@@ -17742,7 +17746,7 @@
           "spear-front": 125,
           "spear-rear": 135
         },
-        "handEndpoints": "physical upper/lower chain ends at registered cuff; grip span uses distinct palm points; hand transform is rigid with the forearm tangent",
+        "handEndpoints": "physical upper/lower chain ends at registered cuff; grip span uses distinct palm points; hand follows the forearm tangent unless the current source think command explicitly authors the registered terminal wrist hinge",
         "shapes": "fixed XYZ lengths; reject excessive role-specific flexion and projected segments below 0.7 of the original; smooth C1 ink is not anatomy acceptance",
         "roles": "active clip and current posture only; future run/seat must not change idle arms",
         "layer": "chin-contact ink and mitten share explicit foreground slots, each with one physical definition; inactive arms/hands keep normal layers",
@@ -17760,6 +17764,15 @@
           "Moving body keyposes need full runtime/clearance/velocity review.",
           "No source bitmap, speech, mouth, narration or native sprite timing is altered."
         ]
+      },
+      "wristContact": {
+        "version": "source-chin-wrist-1",
+        "productionReady": false,
+        "field": "Optional gesture.wristCurlDeg, 0–70 degrees, only an explicitly authored current source-body think gesture with registered hand attachment.",
+        "geometry": "Three fixed segments: upper arm, forearm to measured source cuff, then wrist-to-palm. Curl follows the fixed entry-owned elbow pole. Actual palm touches the same registered chin; no contact offset, bone shortening or elbow-limit relaxation.",
+        "timing": "C2 shoulder/elbow/wrist angles in the same original gesture window; zero wrist curl at entry/exit. No inferred selection on old source commands.",
+        "otherActions": "Spear, manipulation, run, point and unspecified wrist retain their existing rigid palm contract.",
+        "pending": "Source artwork, whole motion and final acceptance still required."
       },
       "seatedRestArms": {
         "version": "forest-seated-rest-arm-1",
@@ -21975,12 +21988,12 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+    "codeHash": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
-    "armShapeCodeHash": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-    "compilerCodeHash": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+    "armShapeCodeHash": "7537140571d6476f44f5348bfeb7c7c455fbd8f6c9f3a84732b344b06e4f79a7",
+    "compilerCodeHash": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
     "rigCodeHash": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
     "cameraCodeHash": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
     "sourceBodyCodeHash": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
@@ -22252,7 +22265,7 @@
     "endpoint": "GET /api/projects/:name/topic-readiness",
     "codeHashes": {
       "packages/topics/production-release.ts": "28a1b79c22bd0e7ef8cbcce6a95ade3d0367bc490407e1b0895cea5d44513fc3",
-      "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+      "packages/topics/prehistoric-life.ts": "ff7b8666b715c87980799709616cdd51fa99dfbf90f514fdceea666b16434c99",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/core/config.ts": "d0d9af6f29585379ac7dbba9a4e5d02fafdd96edb14001b36f0873abd393dc10",
       "packages/orchestrator/settings.ts": "91c982c4e0f956b1f75f866a0250f785a2f25ec77fbc3ea0a30a8bd52664b35d",
@@ -22318,14 +22331,14 @@
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
       "packages/animation/body-view-front-registration.ts": "ef79ab94402bc207b231d6117889148bba25abf69b09ccd3f8ad7509f5c54ec1",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
-      "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
+      "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
       "packages/animation/body-geometry.ts": "a3be2e87fd34d0641268378d2f54457719759bd82ff820909f297eae2da4b4ac",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/animation/body-view-cloth.ts": "69118b720dda72036e50c11dc89d530ef476be473782ea49e7b62f7a5c4b28b3",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
-      "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-      "packages/animation/arm-trajectory.ts": "bfe25675d6f7d7e33125f9b0946d0d77ccec1930fdc437a9462eed61f7eacaa9",
+      "packages/animation/source-arm.ts": "7537140571d6476f44f5348bfeb7c7c455fbd8f6c9f3a84732b344b06e4f79a7",
+      "packages/animation/arm-trajectory.ts": "be2e783a7eca370f6db51e7ff62b1f9b28478f6fb4a1407d0945b50ff389ccab",
       "packages/animation/forest-hand.ts": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
@@ -22334,9 +22347,9 @@
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeProfileManipulation": {
@@ -22403,12 +22416,12 @@
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
       "packages/animation/body-view-oblique-registration.ts": "afe36d36b09af0ff85745697c94e3542b1dddd7895f923aa50f6403bb478d2de",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
-      "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
+      "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
       "packages/animation/body-view-cloth.ts": "69118b720dda72036e50c11dc89d530ef476be473782ea49e7b62f7a5c4b28b3",
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
-      "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-      "packages/animation/arm-trajectory.ts": "bfe25675d6f7d7e33125f9b0946d0d77ccec1930fdc437a9462eed61f7eacaa9",
+      "packages/animation/source-arm.ts": "7537140571d6476f44f5348bfeb7c7c455fbd8f6c9f3a84732b344b06e4f79a7",
+      "packages/animation/arm-trajectory.ts": "be2e783a7eca370f6db51e7ff62b1f9b28478f6fb4a1407d0945b50ff389ccab",
       "packages/animation/forest-hand.ts": "c90de3360f131ff90ba71e8b9eb19bee97fa4365e0fcbfa2752d1993e7afa0d1",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
@@ -22417,9 +22430,9 @@
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeFrontSecondary": {
@@ -22534,7 +22547,7 @@
       "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/view-secondary-motion.ts": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
       "packages/animation/view-cloth-geometry.ts": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
@@ -22543,9 +22556,9 @@
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeFrontMotion": {
@@ -22617,21 +22630,21 @@
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-secondary.ts": "53aeac45638caef37f13968f704ec733afd5f3a162231c7b9abf175216721264",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/animation/source-walk.ts": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
       "packages/animation/view-cloth-geometry.ts": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
-      "packages/animation/view-source-gesture.ts": "69f155480e51c4034ad3e99122c0b1d713d4a422733ee829c046a4f049a96b15",
+      "packages/animation/view-source-gesture.ts": "cef70acd13c98b72b8b4b1f89233211e31bf29f02bdb72b24eb8a35349975082",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/animation/schemas.ts": "9fc90ee29457ed34f360a15a5ed6dcbde888b951033951e4b47f9247004f5ed5",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/animation/schemas.ts": "3bcb1c126e002d218f62c14ddc33c7fc3e0d57f48a72019c9d45c7e2acbed155",
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeRearLocomotion": {
@@ -22722,18 +22735,18 @@
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/view-cloth-geometry.ts": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
-      "packages/animation/view-source-gesture.ts": "69f155480e51c4034ad3e99122c0b1d713d4a422733ee829c046a4f049a96b15",
+      "packages/animation/view-source-gesture.ts": "cef70acd13c98b72b8b4b1f89233211e31bf29f02bdb72b24eb8a35349975082",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeProfileSecondary": {
@@ -22890,7 +22903,7 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
       "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
@@ -22898,7 +22911,7 @@
       "packages/animation/view-secondary-motion.ts": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/view-cloth-geometry.ts": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
@@ -22907,7 +22920,7 @@
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeProfileLocomotion": {
@@ -22987,7 +23000,7 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
@@ -22998,16 +23011,16 @@
       "packages/animation/body-view-cloth-binding.ts": "764ae4cb65c7be632efc36d194f305d9ee93ef2eaa656bf2523bdef4836fa0f6",
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/view-cloth-geometry.ts": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
-      "packages/animation/view-source-gesture.ts": "69f155480e51c4034ad3e99122c0b1d713d4a422733ee829c046a4f049a96b15",
+      "packages/animation/view-source-gesture.ts": "cef70acd13c98b72b8b4b1f89233211e31bf29f02bdb72b24eb8a35349975082",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeBasicExpressions": {
@@ -23266,7 +23279,7 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
@@ -23282,14 +23295,14 @@
       "packages/animation/body-view-mouth.ts": "25ce7fc5c13266d53836a7eb49d438e5f7f595a7a5457e1df944964e5b59541e",
       "packages/animation/body-view-eyes.ts": "abb23e43b1c6d454903ac8bb993f4d8f8eab5db51b781b7aa1d5ab7ae4799d26",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/expression-pose.ts": "c9bc4fb95b24da98b0f4987a88ba24be5c8f4d45a8774a69ce1c0414e9dd99ba",
       "packages/animation/view-expression-track.ts": "b0561918fb045a1693f7d961e96e3f51608dc145223cf57bbbec9f5f836e3406",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeBasicSpeech": {
@@ -23595,7 +23608,7 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
@@ -23609,13 +23622,13 @@
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-mouth.ts": "25ce7fc5c13266d53836a7eb49d438e5f7f595a7a5457e1df944964e5b59541e",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/speech-clock.ts": "357fc4f20376f6086acd209ac890946b6bf4cdad912033dbd6309907b0cf28d2",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeBasicEyes": {
@@ -23912,7 +23925,7 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
@@ -23927,12 +23940,12 @@
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-eyes.ts": "abb23e43b1c6d454903ac8bb993f4d8f8eab5db51b781b7aa1d5ab7ae4799d26",
       "packages/animation/body-view-art.ts": "53698e82852535e166295e8df0740afbccb9b40b2f9f0be3336299523be077d8",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/view-gaze-target.ts": "058e8c3a016ead031b7b7909b14e9ec7202d6c2394e6787bcaf41b372654403f",
       "packages/animation/view-acting-clock.ts": "2a255df7d2f0d76bdfb61022551981db5e2124ed5b73cdc41df720254dad9442",
       "packages/actors/view-acting-clock.ts": "a3e5c13ece871413cb6d1474c03bcb0de0ca1e591c257a1cabb94e574ad07158",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b"
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e"
     }
   },
   "nativeObliqueRig": {
@@ -24505,7 +24518,7 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
@@ -24531,12 +24544,12 @@
       "packages/animation/body-view-seat.ts": "8aa8eeefb324f76d1e1c71f434abf8de719684f474c19c06182429a4943ecff4",
       "packages/animation/body-view-secondary.ts": "53aeac45638caef37f13968f704ec733afd5f3a162231c7b9abf175216721264",
       "packages/animation/native-contact-arm.ts": "9e0dd079b6efc706eb2f2789bb95649d83ee7e528c1b35f9af9e573be85e889c",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
-      "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+      "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
       "packages/animation/forest-cutout-head.ts": "8c1509c7c369f5f1b965c725bd7f01f86608fe6ecb2da64f9f92156a086e9c56",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b",
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e",
       "packages/topics/view-registration-workbench.ts": "eca2c62a00f5a133a7a4da1c59f75eefc9e755e99ec4627e4f62b029a78621fd"
     }
   },
@@ -24714,7 +24727,7 @@
       "packages/animation/body-view-profile-manipulation-binding.ts": "6ca3791d0b4093f2e615ff9e5ce3a904ddc4cd6b26bfb9b775341467d09a7f8f",
       "packages/animation/body-view-front-manipulation-binding.ts": "1497722c5d87b148c799eaf14785bbd99e2acc5ab79f2c49ccd8dfdd2e00b4a4",
       "packages/animation/body-view-front-secondary-binding.ts": "f689b62678a6fd9c5ba51b2dbc270b1cb0b4bfdfd91fbe737ba308ba539fec27",
-      "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
+      "packages/director/acting-brief.ts": "0ed69c815ca028a6b3d8df4d806b064d761b0cda4435b9dd77cf1c6d435c3497",
       "packages/animation/body-view-rear-cloth-binding.ts": "27aa88ceb051cb88869989fe20ed68bbd9385ad33777eb7c2ef08a5ccc942313",
       "packages/animation/body-view-front-motion-binding.ts": "2259b473d6935e734fe27467c156025f42b2496100ebc018a0201a3322427d69",
       "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
@@ -24728,7 +24741,7 @@
       "packages/animation/body-view-basic-capabilities.ts": "5ee6ad01dc9f599cbdb9221ab71620d0fce926993df43abeed918e4932350b40",
       "packages/animation/body-view-rest-arm.ts": "e5b8b9fa014f8cc92d890e65e7200462bdf6c5a1209e3a4d10af85b87bf4c01e",
       "packages/animation/body-view-oblique-registration.ts": "afe36d36b09af0ff85745697c94e3542b1dddd7895f923aa50f6403bb478d2de",
-      "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+      "packages/animation/forest-body-art.ts": "c6ab82b61cdbfa9b730cad9e0cae9fb54c27665a9284a16776bd6a5edee51463",
       "packages/animation/forest-cutout-head.ts": "8c1509c7c369f5f1b965c725bd7f01f86608fe6ecb2da64f9f92156a086e9c56",
       "packages/animation/body-view-front-registration.ts": "ef79ab94402bc207b231d6117889148bba25abf69b09ccd3f8ad7509f5c54ec1",
       "packages/animation/body-view-registration.ts": "c3d058e2890c073b5dbde2b1658de9a56e471d7459096dce09ed3fef371d2de8",
@@ -24741,11 +24754,11 @@
       "packages/animation/body-view-seat.ts": "8aa8eeefb324f76d1e1c71f434abf8de719684f474c19c06182429a4943ecff4",
       "packages/animation/body-view-secondary.ts": "53aeac45638caef37f13968f704ec733afd5f3a162231c7b9abf175216721264",
       "packages/animation/native-contact-arm.ts": "9e0dd079b6efc706eb2f2789bb95649d83ee7e528c1b35f9af9e573be85e889c",
-      "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+      "packages/animation/compiler.ts": "299469e2b66a305c898f8f28ce715ee53f434b30c23495b7c3a6f569d46bcfbf",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
-      "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b",
+      "packages/topics/body-workbench.ts": "9fcb24f9b3697e1fca750e15a220eaf152a5b4d878730f4f8a8c866682c3fb7e",
       "packages/topics/view-registration-workbench.ts": "eca2c62a00f5a133a7a4da1c59f75eefc9e755e99ec4627e4f62b029a78621fd"
     }
   },

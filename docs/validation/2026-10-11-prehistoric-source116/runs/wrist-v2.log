@@ -1,0 +1,12 @@
+✔ authored wrist hinge keeps three physical lengths and the original palm target on both elbow branches (1.7558ms)
+✔ source chin wrist keeps cuff artwork joined and fixed bones through entry, hold, recovery and random seeks (64.5686ms)
+✔ no inferred wrist fallback or relaxed elbow guard is applied to an old chin command (1.4397ms)
+✔ original source wrist selection survives cuts and a sibling cannot change it (1.7515ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 771.4954

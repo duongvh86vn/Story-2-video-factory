@@ -1,0 +1,13 @@
+
+> story-to-video-factory@2.1.0 build
+> tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 69 modules transformed.
+rendering chunks...
+computing gzip size...
+../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB
+../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB
+../../dist/studio/assets/index-DriIcC0d.js   253.21 kB │ gzip: 78.81 kB
+✓ built in 619ms

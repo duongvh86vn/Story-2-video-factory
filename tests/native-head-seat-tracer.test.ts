@@ -7,17 +7,19 @@ import {actorViewActingClock} from '../packages/actors/view-acting-clock.js';
 import {actorShotSpeech,narrationCueOwners,rigSpeechPublicationBinding} from '../packages/actors/speech-clock.js';
 import {actorRigResourcePaths} from '../packages/actors/rig-resources.js';
 import {samplePerformance} from '../packages/animation/compiler.js';
-import {nativeHeadCellPoint} from '../packages/animation/body-head-bank.js';
+import {nativeHeadCellPoint,nativeHeadBankCellAtGlobal} from '../packages/animation/body-head-bank.js';
+import {rigMetrics} from '../packages/animation/rig.js';
 import {referenceHeadAssets} from '../packages/animation/forest-head-art.js';
 import {sceneSeats} from '../packages/stage/seats.js';
 import {validateStoryActingCoverage} from '../packages/director/story-coverage.js';
+import {validateCinematicShot} from '../packages/director/index.js';
 import {renderCinematic} from '../library/shots/cinematic.js';
 import {secureSceneFiles,validateSceneFiles} from '../packages/scenes/security.js';
 import {hash} from '../packages/core/utils.js';
 import type {Shot} from '../packages/core/schemas.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
-import {NATIVE_DIALOGUE_STAGINGS,nativeDialogueLayouts,nativeDialogueThinkingWindows} from '../packages/topics/native-dialogue-candidates.js';
-import {registeredDetailedBodyView} from '../packages/animation/body-view-art.js';
+import {NATIVE_DIALOGUE_STAGINGS,nativeDialogueLayouts,nativeDialogueThinkingWindows,nativeDialogueThinkingWrist} from '../packages/topics/native-dialogue-candidates.js';
+import {registeredDetailedBodyView,bodyViewAsset} from '../packages/animation/body-view-art.js';
 import {projectViewSourceGestures} from '../packages/animation/view-source-gesture.js';
 
 type Fixture=Awaited<ReturnType<typeof createNativeHeadSeatTracer>>;
@@ -105,7 +107,20 @@ test('factory renderer owns each native head resource and namespace inside the s
     const html=files.files.find(file=>file.path==='index.html')!.content;
     for(const id of ['lila','karo'] as const){
       const c=context(f,shot,id),bank=c.profile.appearance.bodyHeadBank!;
-      for(const resource of referenceHeadAssets(c.profile.appearance)){assert.ok(allowed.includes(resource.path));assert.ok(!resource.file.includes('/body-views/'));}
+      const resources=referenceHeadAssets(c.profile.appearance),body=bodyViewAsset(c.profile.appearance);
+      assert.equal(resources.filter(resource=>resource.file===body.file&&resource.sha256===body.sha256).length,1);
+      const heads=resources.filter(resource=>resource.file!==body.file);
+      assert.ok(heads.length>0);
+      assert.equal(heads.filter(resource=>resource.nativeHeadPrimary).length,1);
+      for(const resource of resources)assert.ok(allowed.includes(resource.path));
+      for(const resource of heads){
+        assert.ok(!resource.file.includes('/body-views/'));
+        assert.ok(resource.nativeHeadSource!==undefined||resource.nativeHeadPrimary===true);
+        if(resource.nativeHeadSource){
+          assert.equal(resource.nativeHeadSource.primary.sha256,bank.primary.sha256);
+          assert.ok(html.includes(resource.path),resource.file+' head cells must be emitted in this actor scene');
+        }else assert.equal(resource.sha256,bank.primary.sha256);
+      }
       assert.ok(html.includes('data-head-bank="'+bank.fingerprint+'"'));
       assert.equal(html.split('data-seat-id="'+id+'-log"').length-1,1);
       const actorReport=result.report.actors.find(a=>a.actorId===id)!;assert.ok('report' in actorReport);
@@ -151,13 +166,27 @@ test('listener chin gestures use declared rig hands and full body/head/speech hi
     const f=await createNativeHeadSeatTracer(process.cwd(),{staging,acting:'listening-think'}),whole=wholeRun(f),before=hash(f.board);
     assert.match(f.narration.segments[0]!.text,/Karo listens and thinks/);assert.match(f.narration.segments[1]!.text,/Lila considers/);
     for(const shot of f.board.shots)for(const id of ['lila','karo'] as const){
+      if(id==='lila')assert.doesNotThrow(()=>validateCinematicShot(shot,f.profile,f.config,f.board,f.narration));
       const c=context(f,shot,id),window=nativeDialogueThinkingWindows[id],command=c.clock.gestures[0]!;
       assert.equal(c.clock.gestures.length,1);assert.equal(command.hand,registeredDetailedBodyView(c.profile).nearHand);
+      assert.equal(command.wristCurlDeg,nativeDialogueThinkingWrist[id]);
       assert.deepEqual({id:command.id,startMs:command.startMs,reachMs:command.reachMs,recoverMs:command.recoverMs,endMs:command.endMs},window);
       const a=context(whole,whole.board.shots[0]!,id);assert.deepEqual(c.clock.gestures,a.clock.gestures);
       for(const globalMs of [shot.startMs,shot.startMs+.01,(shot.startMs+shot.endMs)/2,shot.endMs-.01,shot.endMs]){
         const sliced=frame(f,shot,id,globalMs),original=frame(whole,whole.board.shots[0]!,id,globalMs);
         for(const key of ['hands','wrists','armGeometry','transforms','paths','face','actorGaze'] as const)assert.deepEqual(sliced[key],original[key]);
+      }
+      const at=Math.max(shot.startMs,window.reachMs),until=Math.min(shot.endMs,window.recoverMs);
+      if(at<=until){
+        const state=frame(f,shot,id,at),{bank,cell}=nativeHeadBankCellAtGlobal(c.plan,c.profile,at,c.clock),chin=nativeHeadCellPoint(bank,cell,cell.chin);
+        const n=(value:string)=>value.match(/-?\d+(?:\.\d+)?/g)!.map(Number),head=n(state.transforms.head!),angle=head[2]!*Math.PI/180;
+        const expected={x:head[0]!+head[3]!*(chin.x*Math.cos(angle)-chin.y*Math.sin(angle)),y:head[1]!+head[3]!*(chin.x*Math.sin(angle)+chin.y*Math.cos(angle))};
+        const distance=(a:{x:number;y:number},b:{x:number;y:number})=>Math.hypot(a.x-b.x,a.y-b.y),hand=command.hand,m=rigMetrics(c.profile),wrist=state.wrists![hand],palm=state.hands[hand];
+        assert.ok(distance(palm,expected)<.005,'registered chin contact changed');
+        assert.ok(state.armGeometry![hand]!.flexionDeg<=145.01);
+        assert.ok(Math.abs(distance(wrist,palm)-m.handAttachment![hand].length*c.plan.scale)<.003);
+        const drawn=n(state.transforms[`hand-${hand}`]!),a=drawn[2]!*Math.PI/180,o=m.handAttachment![hand].wristOffset,k=drawn[3]!;
+        assert.ok(distance(wrist,{x:drawn[0]!+k*(o.x*Math.cos(a)-o.y*Math.sin(a)),y:drawn[1]!+k*(o.x*Math.sin(a)+o.y*Math.cos(a))})<.005,'source hand cuff detached');
       }
     }
     assert.equal(hash(f.board),before);

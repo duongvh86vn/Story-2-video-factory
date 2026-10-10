@@ -1,0 +1,25 @@
+✔ fixed forward lengths and grip endpoints survive shoulder crossing and signed elbow branch changes at random-access clocks (2.071ms)
+✔ quintic entry and recovery are position/velocity/acceleration continuous for fixed keyposes without a separate 80ms transit (0.3876ms)
+✔ directions retain signed flexion while degenerate windows and nonfinite/collapsed pose inputs are rejected (0.587ms)
+✔ current source-body pointing keeps an authored reachable target through its pose hold and separate cuff/palm geometry (30.0689ms)
+✔ current source reactions scale with their arm reach and explicit unreachable authored targets require a new keypose (3.7272ms)
+✔ legacy source pointing remains on its former IK/goal/pole path and contact poses retain their exact locked grip (4.0589ms)
+✔ moving keyposes crossing the original antipode retain one registered shoulder arc; unsupported corridor changes reject explicitly (0.3273ms)
+✔ default expressive gestures retain their entry elbow branch across both run directions/hands and run exit during full pose ownership (78.0582ms)
+✔ implicit running think retains the entry branch while authored rest/reach overrides remain explicit (34.3555ms)
+✔ authored wrist hinge keeps three physical lengths and the original palm target on both elbow branches (1.5142ms)
+✔ source chin wrist keeps cuff artwork joined and fixed bones through entry, hold, recovery and random seeks (63.0575ms)
+✔ no inferred wrist fallback or relaxed elbow guard is applied to an old chin command (1.3772ms)
+✔ original source wrist selection survives cuts and a sibling cannot change it (1.5208ms)
+✔ projection conserves complete original hand ownership and timings through five camera slices (6.1619ms)
+✔ fractional existing default ramps round-trip by omission without rounding at a cut (0.7998ms)
+✔ invalid original commands and clocks cannot be concealed by an empty local slice (1.0289ms)
+✔ local edits do not mutate another slice or the authored target/source span (0.6266ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 965.3486

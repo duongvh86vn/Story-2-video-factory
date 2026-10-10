@@ -45,7 +45,7 @@ function exactJSONSchema(value:unknown):z.ZodTypeAny {
   if(value&&typeof value==='object')return z.object(Object.fromEntries(Object.entries(value).filter(([,v])=>v!==undefined).map(([k,v])=>[k,exactJSONSchema(v)]))).strict();
   throw new Error('Protected repair entry must be JSON data');
 }
-const NewReactionGestureSchema=GestureSchema.omit({target:true,destination:true,propId:true,contactMs:true,releaseMs:true,landingMs:true,carryOffset:true}).extend({action:z.literal('react')}).strict();
+const NewReactionGestureSchema=GestureSchema.omit({target:true,destination:true,propId:true,contactMs:true,releaseMs:true,landingMs:true,carryOffset:true,wristCurlDeg:true}).extend({action:z.literal('react')}).strict();
 function repairMotionSchemaFor(performance:PerformancePlan){
   const protectedGestures=PerformancePlanSchema.parse(performance).gestures.filter(g=>!editableGesture(g));
   const choices=[NewReactionGestureSchema,...protectedGestures.map(exactJSONSchema)];

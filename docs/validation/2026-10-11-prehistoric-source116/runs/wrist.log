@@ -1,0 +1,32 @@
+✔ authored wrist hinge keeps three physical lengths and the original palm target on both elbow branches (1.4796ms)
+✔ source chin wrist keeps cuff artwork joined and fixed bones through entry, hold, recovery and random seeks (86.5811ms)
+✖ no inferred wrist fallback or relaxed elbow guard is applied to an old chin command (2.7299ms)
+✔ original source wrist selection survives cuts and a sibling cannot change it (1.4033ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 768.8176
+
+✖ failing tests:
+
+test at tests\forest-wrist-contact.test.ts:1:3343
+✖ no inferred wrist fallback or relaxed elbow guard is applied to an old chin command (2.7299ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\forest-wrist-contact.test.ts:48:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /chin elbow folds.*145deg/,
+    operator: 'throws',
+    diff: 'simple'
+  }

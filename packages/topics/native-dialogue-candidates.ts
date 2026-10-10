@@ -3,7 +3,7 @@ import {HEAD_FACE_MODES} from './head-face-candidates.js';
 
 /** Screen placement is explicit. The opposite layout selects independent
  * painted views; it never reflects an image or swaps actor identities. */
-export const NATIVE_HEAD_SEAT_TRACER_VERSION='native-head-seat-tracer-5';
+export const NATIVE_HEAD_SEAT_TRACER_VERSION='native-head-seat-tracer-6';
 export const NATIVE_HEAD_SEAT_TRACER_SCOPE='unapproved-native-head-seat-tracer';
 export const NATIVE_DIALOGUE_STAGINGS=['lila-left','lila-right'] as const;
 export const NATIVE_DIALOGUE_ACTING=['rest','listening-think','emotional-reactions'] as const;
@@ -23,6 +23,8 @@ export const nativeDialogueThinkingWindows={
   karo:{id:'karo-listener-think',startMs:1000,reachMs:1700,recoverMs:2500,endMs:2900},
   lila:{id:'lila-listener-think',startMs:3200,reachMs:3700,recoverMs:4200,endMs:4500},
 } as const;
+/** Authored palm-under-chin wrist poses, not a per-frame elbow/hand fallback. */
+export const nativeDialogueThinkingWrist={lila:70,karo:60} as const;
 /** Diagnostic reactions on one original run, spanning the existing camera
  * cuts. They are not substituted for a real user's story or narration. */
 export const nativeDialogueExpressionWindows={

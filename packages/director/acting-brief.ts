@@ -16,6 +16,7 @@ import {sourceSpearEmittedDescription} from './source-spear-emitted.js';
 import {projectedModelGeometryDescription} from './projected-model-geometry.js';
 import {projectedOverlayDescription} from './projected-model-overlays.js';
 import {physicalPerformanceDescription} from '../animation/compiler.js';
+import {wristContactDescription} from '../animation/wrist-contact.js';
 import {sourceManipulationActionDescription} from './source-manipulation-actions.js';
 import {sourcePropBindingDescription} from './source-prop-binding.js';
 import {sourceWorldDescription} from './source-world.js';
@@ -40,6 +41,7 @@ export function creativeActingBrief(beats:Beat[],narration:Narration,profile:Hos
   const unitProfile={...profile,appearance:{...profile.appearance,headScale:1,bodyScale:1}};
   return {
     filmRoles:cameraDirectionDescription,
+    sourceChinWrist:wristContactDescription,
     castCamera:castCameraDescription,cameraRepair:cameraRepairDescription,
     nativeHeadSource:{candidate:nativeHeadBankDescription,selected:hasNativeHeadBank(profile),lockedActors:lockedActors.filter(hasNativeHeadBank).map(a=>a.id),
       explicitSelections:[{actor:profile,scope:'seed-profile'},...lockedActors.map(actor=>({actor,scope:'locked-story-actor'}))].filter(s=>hasNativeHeadBank(s.actor)).map(({actor:a,scope})=>{const bank=a.appearance.bodyHeadBank!;return {scope,actorId:a.id,modelId:bank.actor,bankId:bank.id,version:bank.version,fingerprint:bank.fingerprint,

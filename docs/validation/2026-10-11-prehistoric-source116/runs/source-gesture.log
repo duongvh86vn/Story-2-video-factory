@@ -1,0 +1,85 @@
+✔ source span is strict original motion timing, with complete ordered approach/hold/recovery and no implicit ID inference (9.6324ms)
+✔ all exact source pieces bind one physical hand/action/target/pole/window; real missing/duplicate fragments fail (3.3463ms)
+✔ approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip (343.9097ms)
+✔ seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state (5.1545ms)
+✔ ordinary adjacent gestures never become a source command and explicit cuts cannot carry an incomplete declared span (4.7561ms)
+✔ missing/stale context, incompatible profiles and contact/prop timing cannot silently approximate a source gesture (7.643ms)
+✔ overlapping source commands or an ordinary clip on the same owned hand fail, while the other hand can be independent (4.0528ms)
+✔ cache/repair input identity includes nonlocal command timing and actual replacement, with no discarded old approval (4.3824ms)
+✔ compiler source grid/refinement and namespaced ink/hand layers use original gesture phases without fake contact (2881.1396ms)
+✖ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (466.1857ms)
+✖ creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2] (344.5645ms)
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (301.7874ms)
+✔ native source gesture readiness remains unapproved and full input/video production gates stay active (29.1613ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 10
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6578.2788
+
+✖ failing tests:
+
+test at tests\native-source-gesture.test.ts:1:17304
+✖ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (466.1857ms)
+  Error: Performance identity/profile mismatch
+      at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:174:117)
+      at validateCinematicActorShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:270:3)
+      at validateCinematicShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:223:3)
+      at renderRigCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:61:9)
+      at renderCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:299:10)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:175:20)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\native-source-gesture.test.ts:1:18905
+✖ creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2] (344.5645ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "Host action interval must be positive",
+      "path": [
+        "shots",
+        0,
+        "host",
+        "actions",
+        0
+      ]
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodObject.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at canonicalFixture (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:169:69)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:185:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ],
+    [errors]: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ]
+  }
+
+test at tests\native-source-gesture.test.ts:1:20071
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (301.7874ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "Host action interval must be positive",
+      "path": [
+        "shots",
+        0,
+        "host",
+        "actions",
+        0
+      ]
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodObject.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at canonicalFixture (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:169:69)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:198:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ],
+    [errors]: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ]
+  }

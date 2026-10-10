@@ -1,0 +1,14 @@
+{
+  "name": "listener-final",
+  "startedAt": "2026-10-10T19:40:16.115Z",
+  "endedAt": "2026-10-10T19:41:47.427Z",
+  "exitCode": 0,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "--test-name-pattern=listener chin gestures",
+    "tests/native-head-seat-tracer.test.ts"
+  ]
+}

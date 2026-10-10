@@ -1,0 +1,9 @@
+{"shot":1,"bytes":[{"path":"index.html","bytes":216937},{"path":"style.css","bytes":401},{"path":"scene.js","bytes":2073617}],"validationErrors":["Scene exceeds max_scene_bytes"]}
+C:\Users\Duongvh-pc\.codex\tmp\source116-render.mts:28
+  if(report.validationErrors.length)throw Error('Scene safety/size validation failed');
+                                          ^
+
+Error: Scene safety/size validation failed
+    at <anonymous> (C:\Users\Duongvh-pc\.codex\tmp\source116-render.mts:28:43)
+
+Node.js v24.19.0

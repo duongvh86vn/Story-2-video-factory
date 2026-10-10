@@ -36,7 +36,11 @@ for(const actor of ['lila','karo'] as const)for(const action of ['rest','point',
         assert.ok(dist(drawnCuff,wrist)<.002,'bitmap cuff detached from ink/bones');
         assert.ok(dist(grip,wrist)>2,'palm incorrectly reused as wrist');
         const before={x:wrist.x-elbow.x,y:wrist.y-elbow.y},after={x:grip.x-wrist.x,y:grip.y-wrist.y};
-        assert.ok(Math.abs(before.x*after.y-before.y*after.x)<.002,'source mitten kinks away from forearm tangent');
+        if(action==='think'){
+          const curl=Math.abs(Math.atan2(before.x*after.y-before.y*after.x,before.x*after.x+before.y*after.y))*180/Math.PI;
+          assert.ok(curl<=70.01,'authored chin wrist exceeds its registered bend');
+          if(t<=300||t>=3600)assert.ok(curl<.01,'wrist does not recover its original tangent');
+        }else assert.ok(Math.abs(before.x*after.y-before.y*after.x)<.002,'source mitten kinks away from forearm tangent');
         const ink=nums(f.paths![`ink-arm-${side}`]!);
         assert.ok(dist({x:ink.at(-2)!,y:ink.at(-1)!},wrist)<.002);
         // The source grip must be inside its explicit crop, independent of pose.

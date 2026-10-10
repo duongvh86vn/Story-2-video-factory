@@ -1,0 +1,12 @@
+{
+  "name": "build",
+  "startedAt": "2026-10-10T19:32:46.871Z",
+  "endedAt": "2026-10-10T19:33:11.087Z",
+  "exitCode": 0,
+  "signal": null,
+  "args": [
+    "C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js",
+    "run",
+    "build"
+  ]
+}

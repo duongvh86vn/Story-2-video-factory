@@ -23,6 +23,11 @@ function validateWindow(window:ArticulatedArmWindow){
   finite(Object.values(window),'nonfinite trajectory window');
   if(window.startMs<0||window.reachMs<=window.startMs||window.recoverMs<window.reachMs||window.endMs<=window.recoverMs)throw new Error('needs-arm-keypose: invalid trajectory window');
 }
+export function articulatedArmWeight(window:ArticulatedArmWindow,timeMs:number):number{
+ validateWindow(window);finite([timeMs],'nonfinite trajectory time');
+ return timeMs<=window.startMs||timeMs>=window.endMs?0:timeMs<window.reachMs?ease((timeMs-window.startMs)/(window.reachMs-window.startMs))
+   :timeMs>window.recoverMs?1-ease((timeMs-window.recoverMs)/(window.endMs-window.recoverMs)):1;
+}
 /** Convert absolute source-chain directions into shoulder + signed elbow angles. */
 export function articulatedPoseFromDirections(upperDeg:number,lowerDeg:number):ArticulatedArmPose{
   finite([upperDeg,lowerDeg],'nonfinite chain direction');
@@ -45,8 +50,7 @@ export function sampleArticulatedArm(start:Point,upper:number,lower:number,rest:
   const relative=wrap(active.shoulderDeg-rest.shoulderDeg-reference.shoulderArcDeg);
   // A bounded corridor rejects unsupported moving-keypose branch crossings before the next antipode.
   if(Math.abs(relative)>90)throw new Error('needs-arm-keypose: moving shoulder arc leaves its registered branch corridor');
-  const weight=timeMs<=window.startMs||timeMs>=window.endMs?0:timeMs<window.reachMs?ease((timeMs-window.startMs)/(window.reachMs-window.startMs))
-    :timeMs>window.recoverMs?1-ease((timeMs-window.recoverMs)/(window.endMs-window.recoverMs)):1;
+  const weight=articulatedArmWeight(window,timeMs);
   const shoulder=rest.shoulderDeg+(reference.shoulderArcDeg+relative)*weight;
   const elbow=rest.elbowDeg+(active.elbowDeg-rest.elbowDeg)*weight;
   const radians=(angle:number)=>angle*Math.PI/180;

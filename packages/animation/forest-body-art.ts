@@ -9,6 +9,7 @@ import {runningDescription} from './running.js';
 import {spearDescription} from './spear.js';
 import {sourceArmDescription} from './source-arm.js';
 import {sourceArmTrajectoryDescription} from './arm-trajectory.js';
+import {wristContactDescription} from './wrist-contact.js';
 import {seatedRestArmDescription} from './seated-rest-arm.js';
 import {usesSourceColour,sourceColourAssets,sourceColourSvg,sourceColourDescription} from './source-colour-art.js';
 import {usesBodyView,bodyViewMetrics,bodyViewAsset,bodyViewClothingSvg,bodyViewDescription} from './body-view-art.js';
@@ -19,7 +20,7 @@ type Point={x:number;y:number};
 type Part={anchor:Point;clip:string};
 const rect=(x:number,y:number,w:number,h:number)=>`M${x} ${y}h${w}v${h}h-${w}Z`;
 export const FOREST_BODY_VERSION='forest-body-1' as const;
-export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-45';
+export const FOREST_BODY_COMPILER_VERSION='forest-source-body-motion-46';
 export const FOREST_BODY_RENDER_VERSION='forest-source-body-svg-18';
 const garments={
   lila:{upper:rect(100,240,250,225),left:'M100 455H235L241 540L235 620H100Z',right:'M235 455H350V620H235L241 540Z',follow:.8,maxRotation:78},
@@ -138,8 +139,8 @@ export function forestBodyArt(profile:HostProfile,mode:'embedded'|'scene'){
 export function referenceGarmentMotion(profile:HostProfile){return {...garments[profile.appearance.characterVariant!],lagMs:100};}
 export function referenceBodyDescription(){return {version:FOREST_BODY_VERSION,compilerVersion:FOREST_BODY_COMPILER_VERSION,
   rendererVersion:FOREST_BODY_RENDER_VERSION,
-  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,armTrajectory:sourceArmTrajectoryDescription,seatedRestArms:seatedRestArmDescription,hands:forestHandDescription,views:bodyViewDescription,lunge:lungeDescription,colour:sourceColourDescription.fingerprint}),sources:bodies,sourceColour:sourceColourDescription,handRegistration:forestHandDescription,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
-    actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,expressiveArms:sourceArmTrajectoryDescription,seatedRestArms:seatedRestArmDescription,lunge:lungeDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
+  fingerprint:hash({version:FOREST_BODY_VERSION,compiler:FOREST_BODY_COMPILER_VERSION,renderer:FOREST_BODY_RENDER_VERSION,bodies,garments,seated:seatedGarmentDescription(),head:referenceHeadDescription().fingerprint,walk:sourceWalkDescription,run:runningDescription,spear:spearDescription,arms:sourceArmDescription,armTrajectory:sourceArmTrajectoryDescription,wristContact:wristContactDescription,seatedRestArms:seatedRestArmDescription,hands:forestHandDescription,views:bodyViewDescription,lunge:lungeDescription,colour:sourceColourDescription.fingerprint}),sources:bodies,sourceColour:sourceColourDescription,handRegistration:forestHandDescription,garmentLayers:garments,seatedGarments:seatedGarmentDescription(),authoredViews:bodyViewDescription,
+    actionMotion:{run:runningDescription,spear:spearDescription,arms:sourceArmDescription,expressiveArms:sourceArmTrajectoryDescription,wristContact:wristContactDescription,seatedRestArms:seatedRestArmDescription,lunge:lungeDescription,acceptance:'pending',hunting:'stalk/aim/chase actor calibration; authored quarry rig, sourced tool binding and contact/reaction in story shots pending'},
   anatomicalMapping:{'rig-left':'source-view anatomical right','rig-right':'source-view anatomical left'},
   status:'candidate-source-body-integration',productionReady:false,
   visibleLimbs:{method:'two joined cubics through the projected hidden IK joint; source knee depth preserves physical XYZ lengths',softness:.28,anatomicalGuarantee:false},

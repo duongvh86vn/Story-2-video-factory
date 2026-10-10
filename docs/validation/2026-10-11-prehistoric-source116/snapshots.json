@@ -1,0 +1,137 @@
+{
+  "scope": "LOCAL QA SNAPSHOTS OF SIZE-REJECTED SCENE; NOT AN ACCEPTED VIDEO",
+  "productionValidationErrors": [
+    "Scene exceeds max_scene_bytes"
+  ],
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "videoExport": "NOT RUN",
+  "paidCalls": 0,
+  "sourceRange": [
+    900,
+    2400
+  ],
+  "validation": {
+    "pass": true,
+    "errors": [],
+    "diagnostics": [
+      {
+        "command": "lint",
+        "code": 0,
+        "stdout": "{\n  \"ok\": true,\n  \"errorCount\": 0,\n  \"warningCount\": 0,\n  \"infoCount\": 0,\n  \"findings\": [],\n  \"filesScanned\": 1,\n  \"_meta\": {\n    \"version\": \"0.8.96\",\n    \"updateAvailable\": false\n  }\n}\n",
+        "stderr": "",
+        "timedOut": false,
+        "truncated": false,
+        "envelope": {
+          "ok": true,
+          "errorCount": 0,
+          "warningCount": 0,
+          "infoCount": 0,
+          "findings": [],
+          "filesScanned": 1,
+          "_meta": {
+            "version": "0.8.96",
+            "updateAvailable": false
+          }
+        }
+      },
+      {
+        "command": "check",
+        "code": 0,
+        "stdout": "{\n  \"ok\": true,\n  \"strict\": false,\n  \"lint\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"filesScanned\": 1\n  },\n  \"runtime\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": []\n  },\n  \"layout\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"duration\": 1.5,\n    \"samples\": [\n      0.083,\n      0.25,\n      0.417,\n      0.583,\n      0.75,\n      0.917,\n      1.083,\n      1.25,\n      1.417\n    ],\n    \"transitionSamples\": [],\n    \"transitionSamplesDropped\": 0,\n    \"tolerance\": 2,\n    \"totalIssueCount\": 0,\n    \"truncated\": false\n  },\n  \"motion\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"enabled\": false,\n    \"samples\": 0\n  },\n  \"contrast\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"enabled\": true,\n    \"samples\": [\n      0.083,\n      0.417,\n      0.75,\n      1.083,\n      1.417\n    ],\n    \"checked\": 0,\n    \"passed\": 0\n  },\n  \"hdr\": {\n    \"autoPromotion\": null,\n    \"inspection\": \"available\"\n  },\n  \"snapshots\": {\n    \"enabled\": false,\n    \"files\": [],\n    \"times\": [],\n    \"findingFiles\": []\n  },\n  \"_meta\": {\n    \"version\": \"0.8.96\",\n    \"updateAvailable\": false\n  }\n}\n",
+        "stderr": "",
+        "timedOut": false,
+        "truncated": false,
+        "envelope": {
+          "ok": true,
+          "strict": false,
+          "lint": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "filesScanned": 1
+          },
+          "runtime": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": []
+          },
+          "layout": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "duration": 1.5,
+            "samples": [
+              0.083,
+              0.25,
+              0.417,
+              0.583,
+              0.75,
+              0.917,
+              1.083,
+              1.25,
+              1.417
+            ],
+            "transitionSamples": [],
+            "transitionSamplesDropped": 0,
+            "tolerance": 2,
+            "totalIssueCount": 0,
+            "truncated": false
+          },
+          "motion": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "enabled": false,
+            "samples": 0
+          },
+          "contrast": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "enabled": true,
+            "samples": [
+              0.083,
+              0.417,
+              0.75,
+              1.083,
+              1.417
+            ],
+            "checked": 0,
+            "passed": 0
+          },
+          "hdr": {
+            "autoPromotion": null,
+            "inspection": "available"
+          },
+          "snapshots": {
+            "enabled": false,
+            "files": [],
+            "times": [],
+            "findingFiles": []
+          },
+          "_meta": {
+            "version": "0.8.96",
+            "updateAvailable": false
+          }
+        }
+      }
+    ]
+  },
+  "frames": [
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source116-chin\\render-lila-left\\shot-1\\qa-frames\\0.png",
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source116-chin\\render-lila-left\\shot-1\\qa-frames\\300.png",
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source116-chin\\render-lila-left\\shot-1\\qa-frames\\800.png",
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source116-chin\\render-lila-left\\shot-1\\qa-frames\\1499.png"
+  ]
+}

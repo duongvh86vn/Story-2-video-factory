@@ -16,7 +16,8 @@ import {usesReferenceHead,validateReferenceHead,referenceFaceState,referenceHead
 import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
-import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
+import {articulatedGestureWindow,articulatedArmWeight,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
+import {solveWristContact,wristPalm} from './wrist-contact.js';
 import {seatedRestArm} from './seated-rest-arm.js';
 import {usesBodyView,registeredBodyView,registeredDetailedBodyView,registeredLocomotionBodyView,registeredSecondaryBodyView,registeredManipulationBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace,nativeHeadBankFacialState,nativeHeadBankFacialError} from './body-head-bank.js';
@@ -84,7 +85,7 @@ const contacts = (g:Gesture) => g.action==='operate'||attaches(g);
 const CARRY_TRANSITION_MS=250;
 const enteringCarry=(g:Gesture)=>(g.action==='carry'||g.action==='drop')&&g.startMs===0&&g.contactMs===0;
 const gestureAt=(plan:PerformancePlan,t:number,hand:RigHand='right')=>plan.gestures.find(g=>rigHand(g)===hand&&t>=g.startMs&&(t<g.endMs||g.action==='carry'&&g.releaseMs===undefined&&t===plan.durationMs&&g.endMs===plan.durationMs));
-export interface Chain { joint: Point; end: Point; upper: number; lower: number; reachable: boolean; error: number }
+export interface Chain { joint: Point; end: Point; upper: number; lower: number; reachable: boolean; error: number; wrist?:Point; wristCurlDeg?:number }
 
 /** Fixed lengths, explicit bend direction. Inputs and outputs are all in world space. */
 export function solveChain(start: Point, target: Point, upper: number, lower: number, bend = 1): Chain {
@@ -108,6 +109,7 @@ function overlaps(items: Array<{startMs:number;endMs:number}>, label:string, dur
 }
 /** Applies equally to compiled plans and direct random-access inspection. */
 function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
+  for(const g of plan.gestures)if(g.wristCurlDeg!==undefined&&(g.action!=='think'||!usesReferenceBody(profile)||!isCurrentAnimation(plan.compilerVersion)||!rigMetrics(profile).handAttachment))throw new Error('needs-wrist-pose: wrist curl requires an authored current source-body think gesture');
   if(profile.appearance.supportingModel&&!hasNativeHeadBank(profile)&&(plan.gazes.length||plan.turns?.length||plan.headTurns?.length))throw new Error('needs-supporting-views: supporting head currently has one source orientation; target gaze and turns require its own registrations');
   validateNativeHeadBankTrack(plan,profile);
   if(hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.expressions&&!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-head-expression-phase: source emotions require the current original acting-clock compiler');
@@ -698,15 +700,20 @@ function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture
   const head=add(neck,rotate({x:0,y:-headBottom*s},headAngle));
   const chin=gesture.action==='think'?add(head,rotate(usesCutoutHead(profile)?{x:sourceChinPoint(plan,profile,entryTimeMs,side,actingClock).x*s*headScale,y:sourceChinPoint(plan,profile,entryTimeMs,side,actingClock).y*s*headScale}
     :{x:m.headRadius*.3*s*(side==='left'?-1:1),y:headBottom*.85*s},headAngle)):undefined;
-  const aim=expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lower),active=solveChain(shoulder,aim,lengths.upper*s,lower,pole);
+  const aim=expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lower),hand=(m.handAttachment?.[side].length??0)*s;
+  const active=gesture.wristCurlDeg?solveWristContact(shoulder,aim,lengths.upper*s,lengths.lower*s,hand,gesture.wristCurlDeg,pole,solveChain):solveChain(shoulder,aim,lengths.upper*s,lower,pole);
   if(entry.error>.001||active.error>.001)throw new Error('needs-arm-keypose: gesture-entry reference cannot reach its authored grip with fixed lengths');
   return {pole,restPole,shoulder:articulatedArmReference(entryPose,articulatedPoseFromDirections(active.upper+90,active.lower+90))};
 }
-function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gesture,time:number,upper:number,lower:number,side:RigHand,reference:ReturnType<typeof expressiveArmReference>,currentRun?:Chain):Chain{
-  const rest= currentRun??solveChain(shoulder,neutral,upper,lower,reference.restPole),active=solveChain(shoulder,aim,upper,lower,reference.pole);
+function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gesture,time:number,upper:number,lower:number,side:RigHand,reference:ReturnType<typeof expressiveArmReference>,currentRun?:Chain,hand=0):Chain{
+  const rest=currentRun??solveChain(shoulder,neutral,upper,lower,reference.restPole);
+  const active=gesture.wristCurlDeg?solveWristContact(shoulder,aim,upper,lower-hand,hand,gesture.wristCurlDeg,reference.pole,solveChain):solveChain(shoulder,aim,upper,lower,reference.pole);
   if(rest.error>.001||active.error>.001)throw new Error('needs-arm-keypose: expressive source pose cannot reach its authored grip with fixed lengths');
-  return sampleArticulatedArm(shoulder,upper,lower,articulatedPoseFromDirections(rest.upper+90,rest.lower+90),
-    articulatedPoseFromDirections(active.upper+90,active.lower+90),articulatedGestureWindow(gesture),time,reference.shoulder);
+  const window=articulatedGestureWindow(gesture),sampled=sampleArticulatedArm(shoulder,upper,gesture.wristCurlDeg?lower-hand:lower,articulatedPoseFromDirections(rest.upper+90,rest.lower+90),
+    articulatedPoseFromDirections(active.upper+90,active.lower+90),window,time,reference.shoulder);
+  if(!gesture.wristCurlDeg)return sampled;
+  const curl=reference.pole*gesture.wristCurlDeg*articulatedArmWeight(window,time);
+  return {...sampled,wrist:sampled.end,end:wristPalm(sampled.end,sampled.lower+90,hand,curl),wristCurlDeg:curl};
 }
 
 function sourceChinPoint(plan:PerformancePlan,profile:HostProfile,timeMs:number,side:RigHand,clock?:ViewActingClock):Point{
@@ -887,17 +894,18 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
     const spearPole=spear?.track.elbowPoles?.[side===spear?.track.hand?'primary':'secondary']??(spear&&spear.track.aim.x>=plan.root.x?-1:1);
     if(spear&&usesReferenceBody(profile)&&!spear.track.elbowPoles)throw new Error(spear.track.id+': needs-arm-pose: source spear requires authored fixed elbow roles');
     const expressiveSource=usesReferenceBody(profile)&&isCurrentAnimation(plan.compilerVersion)&&gesture&&!contacts(gesture);
+    if(gesture?.wristCurlDeg!==undefined&&(gesture.action!=='think'||!expressiveSource||!handAttachment))throw new Error('needs-wrist-pose: unsupported wrist selection');
     const nativeContact=hasBodyViewManipulation(profile)&&gesture&&isNativeContactGesture(gesture);
     const restingChain=!gesture?(seatedChain??authoredRun):undefined;
-    const arm=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):restingChain?restingChain:nativeContact
+    const arm:Chain=spear?solveChain(shoulder,target,lengths.upper*s,lowerToGrip,spearPole):restingChain?restingChain:nativeContact
       ?sampleNativeContactArm(shoulder,neutral,goal(gesture,neutral,chin,carryAnchor,Math.max(gesture.contactMs!,Math.min(gestureTime,nativeContactWindow(gesture).recoverMs)),s,shoulder),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),solveChain):expressiveSource
-      ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),seatedChain??authoredRun)
+      ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),seatedChain??authoredRun,(handAttachment?.length??0)*s)
       :armPose(shoulder,neutral,target,sourceGesture,gestureTime,lengths.upper*s,lowerToGrip,side,
       at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder),m.armRestPole?.[side]);
     // Grip is a rigid continuation of the forearm, not a bone endpoint or a
     // second independently solved contact. This preserves the existing palm
     // contract while making ink/bones stop at the measured source cuff.
-    const wrist=handAttachment?mix(arm.joint,arm.end,lengths.lower*s/lowerToGrip):arm.end;
+    const wrist=arm.wrist??(handAttachment?mix(arm.joint,arm.end,lengths.lower*s/lowerToGrip):arm.end);
     if(spear&&arm.error>.01)throw new Error(`${spear.track.id}: ${side} hand cannot reach spear grip at ${t}ms (${arm.error.toFixed(2)}px)`);
     if(gesture&&contacts(gesture)&&gestureTime>=gesture.contactMs!&&gestureTime<=recoveryStart(gesture)&&arm.error>1)throw new Error(`${gesture.id}: hand cannot reach contact at ${t}ms (${arm.error.toFixed(2)}px)`);
     // Frontal candidates use the full planar arm, with no knee-style depth
@@ -913,7 +921,7 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
     }else{transforms[`arm-${side}-upper`]=transform(shoulder,arm.upper,s);transforms[`arm-${side}-lower`]=transform(arm.joint,arm.lower,s);}
     if(drawn)paths[`ink-arm-${side}`]=inkLimb(shoulder,projectedArm?.joint??arm.joint,wrist,usesReferenceBody(profile)?.28:.17);
     const forearmAngle=m.handRestRotation?(projectedArm?.lower??arm.lower)-m.handRestRotation[side]:0;
-    const handAngle=handAttachment?(projectedArm?.lower??arm.lower)+90-handAttachment.angleDeg:forearmAngle;
+    const handAngle=handAttachment?(projectedArm?.lower??arm.lower)+90+(arm.wristCurlDeg??0)-handAttachment.angleDeg:forearmAngle;
     transforms[`hand-${side}`]=transform(arm.end,handAngle,s*(usesReferenceBody(profile)?profile.appearance.bodyScale:1));hands[side]=arm.end;
     if(wrists)wrists[side]=wrist;
     if(usesReferenceBody(profile)){
