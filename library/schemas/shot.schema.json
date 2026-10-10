@@ -3667,7 +3667,8 @@
                               "type": "string",
                               "enum": [
                                 "registered-manipulation-v1",
-                                "registered-profile-manipulation-v1"
+                                "registered-profile-manipulation-v1",
+                                "registered-front-manipulation-v1"
                               ]
                             },
                             "sourceColour": {
@@ -5789,7 +5790,8 @@
                                 "type": "string",
                                 "enum": [
                                   "registered-manipulation-v1",
-                                  "registered-profile-manipulation-v1"
+                                  "registered-profile-manipulation-v1",
+                                  "registered-front-manipulation-v1"
                                 ]
                               },
                               "sourceColour": {

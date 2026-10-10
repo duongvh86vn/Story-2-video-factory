@@ -1,6 +1,7 @@
 import {isBasicBodyView,basicBodyActionAllowed,basicBodyCapabilityError} from '../animation/body-view-basic-capabilities.js';
 import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from '../animation/body-view-profile-cloth-binding.js';
 import {PROFILE_BODY_MANIPULATION_SELECTION,isProfileManipulationView} from '../animation/body-view-profile-manipulation-binding.js';
+import {FRONT_BODY_MANIPULATION_SELECTION,isFrontManipulationView} from '../animation/body-view-front-manipulation-binding.js';
 import {REAR_BODY_LOCOMOTION_SELECTION,isRearMotionView} from '../animation/body-view-rear-cloth-binding.js';
 import {FRONT_BODY_MOTION_SELECTION,isFrontMotionView} from '../animation/body-view-front-motion-binding.js';
 import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
@@ -47,7 +48,7 @@ export const BODY_SECONDARY_MODES=['rigid',BODY_VIEW_SECONDARY_SELECTION,PROFILE
 export type BodySecondaryMode=typeof BODY_SECONDARY_MODES[number];
 export const BODY_SEAT_MODES=['unregistered',BODY_VIEW_SEAT_SELECTION] as const;
 export type BodySeatMode=typeof BODY_SEAT_MODES[number];
-export const BODY_MANIPULATION_MODES=['unregistered',BODY_VIEW_MANIPULATION_SELECTION,PROFILE_BODY_MANIPULATION_SELECTION] as const;
+export const BODY_MANIPULATION_MODES=['unregistered',BODY_VIEW_MANIPULATION_SELECTION,PROFILE_BODY_MANIPULATION_SELECTION,FRONT_BODY_MANIPULATION_SELECTION] as const;
 export type BodyManipulationMode=typeof BODY_MANIPULATION_MODES[number];
 const manipulationActions=['inspect','operate','pick-place','carry','drop'];
 export const BODY_LOOK_MODES=['rest','ahead','up','down'] as const;
@@ -76,7 +77,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   const ownSecondary=secondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(view)||secondary===FRONT_BODY_SECONDARY_SELECTION&&isFrontSecondaryView(view);
   if(secondary!=='rigid'&&!ownSecondary&&(secondary!==BODY_VIEW_SECONDARY_SELECTION||!authored||isBasicBodyView(view)))throw new Error('needs-view-secondary: select secondary registered for this own native body view');
   if(seat!=='unregistered'&&(seat!==BODY_VIEW_SEAT_SELECTION||!authored||motion!==BODY_VIEW_LOCOMOTION_SELECTION))throw new Error('needs-view-seat: seated candidate requires a native view and registered locomotion');
-  const ownManipulation=manipulation===PROFILE_BODY_MANIPULATION_SELECTION&&isProfileManipulationView(view),ownManipulationAction=ownManipulation&&manipulationActions.includes(action);
+  const ownManipulation=(manipulation===PROFILE_BODY_MANIPULATION_SELECTION&&isProfileManipulationView(view)||manipulation===FRONT_BODY_MANIPULATION_SELECTION&&isFrontManipulationView(view)),ownManipulationAction=ownManipulation&&manipulationActions.includes(action);
   if(manipulation!=='unregistered'&&!ownManipulation&&(manipulation!==BODY_VIEW_MANIPULATION_SELECTION||!authored))throw new Error('needs-view-manipulation: manipulation needs an explicit native body view');
   if(manipulationActions.includes(action)&&manipulation!==BODY_VIEW_MANIPULATION_SELECTION&&!ownManipulation)throw new Error('needs-view-manipulation: explicitly select registered-manipulation-v1');
   if(action==='spear-lunge'&&view==='three-quarter-left')throw new Error('needs-lunge-pose: left-facing planted lunge has not been authored');
@@ -119,7 +120,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(manipulationActions.includes(action)){
     const shoulder=m.shoulders![gestureHand],chain=m.arms![gestureHand],reach=chain.upper+chain.lower+(m.handAttachment?.[gestureHand].length??0),side=gestureHand==='left'?-1:1;
     const target={x:plan.root.x+shoulder.x+side*reach*.55,y:plan.root.y+m.pelvisY+shoulder.y+reach*.48};
-    const direction=selectedView==='three-quarter-left'||selectedView==='left'?-1:1,moved=action==='carry'&&(motion===BODY_VIEW_LOCOMOTION_SELECTION||ownMotion)?direction*18:0;
+    const direction=isFrontManipulationView(selectedView)?side:selectedView==='three-quarter-left'||selectedView==='left'?-1:1,moved=action==='carry'&&(motion===BODY_VIEW_LOCOMOTION_SELECTION||ownMotion)?direction*18:0;
     const destination={x:plan.root.x+shoulder.x+moved+side*reach*.72,y:plan.root.y+m.pelvisY+shoulder.y+reach*.35};
     const clip={id:'native-object-'+action,action:action as 'inspect'|'operate'|'pick-place'|'carry'|'drop',hand:gestureHand,elbowPole:'rest' as const,startMs:300,endMs:3700,target};
     if(action==='inspect')plan.gestures=[clip];
@@ -130,7 +131,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
       plan.props=[{id:'native-object',origin:target,destination:landing,gripOffset:{x:0,y:0}}];
       plan.gestures=[{...clip,propId:'native-object',contactMs:1000,releaseMs:2800,destination:landing,
         ...(action==='carry'||action==='drop'?{carryOffset:{x:side*reach*.55,y:reach*.42}}:{}),...(action==='drop'?{landingMs:3300}:{})}];
-      if(moved)plan.walks=[{startMs:1450,endMs:2350,fromX:plan.root.x,toX:plan.root.x+moved}];
+      if(moved)plan.walks=[{startMs:1450,endMs:2350,fromX:plan.root.x,toX:plan.root.x+moved,...(isFrontManipulationView(selectedView)?{gait:'sidestep' as const}:{})}];
     }
   }
   if(action==='crouch')plan.postures=[{pose:'crouch',intensity:.6,startMs:300,endMs:1000},{pose:'stand',startMs:3000,endMs:3700}];

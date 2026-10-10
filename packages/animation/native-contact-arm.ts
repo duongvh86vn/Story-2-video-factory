@@ -1,5 +1,7 @@
 import {isBasicBodyView,basicBodyCapabilityError,basicBodyHasUnsupportedOptions} from './body-view-basic-capabilities.js';
 import {PROFILE_BODY_MANIPULATION_SELECTION,PROFILE_BODY_MANIPULATION_VERSION,profileManipulationBindings,isProfileManipulationView} from './body-view-profile-manipulation-binding.js';
+import {FRONT_BODY_MANIPULATION_SELECTION,FRONT_BODY_MANIPULATION_VERSION,frontManipulationBindings,isFrontManipulationView} from './body-view-front-manipulation-binding.js';
+import {bodyFrontRegistration} from './body-view-front-registration.js';
 import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {type RigHand} from '../core/identifiers.js';
@@ -11,14 +13,15 @@ import type {ViewActingClock} from './view-acting-clock.js';
 import {manipulationSourcePlan} from './view-source-manipulation.js';
 
 export const BODY_VIEW_MANIPULATION_SELECTION='registered-manipulation-v1' as const;
-export const NATIVE_CONTACT_ARM_VERSION='native-contact-angle-3' as const;
+export const NATIVE_CONTACT_ARM_VERSION='native-contact-angle-4' as const;
 const contactActions=['operate','pick-place','carry','drop'] as const;
 export const isNativeContactGesture=(g:Gesture)=>contactActions.some(action=>action===g.action);
-export const hasOwnBodyManipulation=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodyManipulation===PROFILE_BODY_MANIPULATION_SELECTION&&isProfileManipulationView(profile.appearance.bodyView);
-export const hasBodyViewManipulation=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodyManipulation===BODY_VIEW_MANIPULATION_SELECTION||profile.appearance.bodyManipulation===PROFILE_BODY_MANIPULATION_SELECTION;
+export const hasOwnBodyManipulation=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodyManipulation===PROFILE_BODY_MANIPULATION_SELECTION&&isProfileManipulationView(profile.appearance.bodyView)||profile.appearance.bodyManipulation===FRONT_BODY_MANIPULATION_SELECTION&&isFrontManipulationView(profile.appearance.bodyView);
+export const hasBodyViewManipulation=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodyManipulation===BODY_VIEW_MANIPULATION_SELECTION||profile.appearance.bodyManipulation===PROFILE_BODY_MANIPULATION_SELECTION||profile.appearance.bodyManipulation===FRONT_BODY_MANIPULATION_SELECTION;
 /** A complete contact clock is still required for a stationary camera run;
  * selecting locomotion is only necessary when original physical tracks exist.
- * This exception belongs exclusively to the exact own profile contact mode. */
+ * Only exact own profile/front modes qualify; the historical helper name is
+ * retained for callers. An unregistered fixed view gets no clock capability. */
 export function hasStationaryProfileContactSource(plan:PerformancePlan,profile:Pick<HostProfile,'appearance'>){
   const body=plan.sourceBody;
   return hasOwnBodyManipulation(profile)&&!!plan.sourceManipulation&&!!body&&!body.walks.length&&!body.jumps?.length&&!body.postures?.length&&!body.supports?.length&&body.entryPosture===undefined;
@@ -31,13 +34,13 @@ const handSources={
  * chains and source cuff/palm. It does not invent finger articulation or
  * certify a new texture pose, anatomy or motion. */
 export const nativeManipulationBindings={bodyViews:bodyViewRegistrations,hands:handSources,palms:forestHandRegistration};
-type NativeSource={view:'three-quarter-left'|'three-quarter-right'|'left'|'right';sha256:string;width:number;height:number};
+type NativeSource={view:'front'|'three-quarter-left'|'three-quarter-right'|'left'|'right';sha256:string;width:number;height:number};
 export function registeredNativeManipulation(profile:Pick<HostProfile,'appearance'>,source:NativeSource){
   const a=profile.appearance;
   if(isBasicBodyView(a.bodyView)){
-    if(!hasOwnBodyManipulation(profile)||!isProfileManipulationView(a.bodyView)||basicBodyHasUnsupportedOptions(a)||a.artworkVersion!=='forest-body-view-1'||a.characterVariant!=='lila'&&a.characterVariant!=='karo'||a.sourceColour)throw basicBodyCapabilityError(a.bodyView,'manipulation');
-    const own=profileManipulationBindings[a.characterVariant][a.bodyView],body=bodyCandidateRegistrations[a.characterVariant][a.bodyView];
-    if(source.view!==a.bodyView||source.sha256!==own.sha256||source.width!==own.width||source.height!==own.height||body.file!==own.file||body.sha256!==own.sha256||body.width!==own.width||body.height!==own.height)throw new Error('needs-view-manipulation: own profile body source registration differs');
+    if(!hasOwnBodyManipulation(profile)||!isProfileManipulationView(a.bodyView)&&!isFrontManipulationView(a.bodyView)||basicBodyHasUnsupportedOptions(a)||a.artworkVersion!=='forest-body-view-1'||a.characterVariant!=='lila'&&a.characterVariant!=='karo'||a.sourceColour)throw basicBodyCapabilityError(a.bodyView,'manipulation');
+    const own=isFrontManipulationView(a.bodyView)?frontManipulationBindings[a.characterVariant]:profileManipulationBindings[a.characterVariant][a.bodyView],body=isFrontManipulationView(a.bodyView)?bodyFrontRegistration[a.characterVariant]:bodyCandidateRegistrations[a.characterVariant][a.bodyView];
+    if(source.view!==a.bodyView||source.sha256!==own.sha256||source.width!==own.width||source.height!==own.height||body.file!==own.file||body.sha256!==own.sha256||body.width!==own.width||body.height!==own.height)throw new Error('needs-view-manipulation: own body source registration differs');
     return {body,hands:handSources[a.characterVariant],palms:forestHandRegistration[a.characterVariant]};
   }
   if(a.bodyManipulation!==BODY_VIEW_MANIPULATION_SELECTION)throw new Error('needs-view-manipulation: legacy detail requires its exact manipulation selection');
@@ -133,11 +136,12 @@ export function sampleNativeContactArm(shoulder:Point,neutral:Point,activeTarget
   return {joint,end,upper:ua-90,lower:la-90,reachable:true,error};
 }
 export const nativeManipulationDescription={version:NATIVE_CONTACT_ARM_VERSION,selection:BODY_VIEW_MANIPULATION_SELECTION,
-  selections:[BODY_VIEW_MANIPULATION_SELECTION,PROFILE_BODY_MANIPULATION_SELECTION],
+  selections:[BODY_VIEW_MANIPULATION_SELECTION,PROFILE_BODY_MANIPULATION_SELECTION,FRONT_BODY_MANIPULATION_SELECTION],
+  ownFront:{version:FRONT_BODY_MANIPULATION_VERSION,selection:FRONT_BODY_MANIPULATION_SELECTION,bindings:frontManipulationBindings,sourceCount:2,views:['front'],coordinateAuthority:'own authored frontal body shoulders/rest/depth; canonical same-person cuff/palm/bones reused; not accepted anatomy/art',locomotion:'separate registered-front-motion-v1 and explicit lateral sidestep for actual original body travel; stationary contact does not auto-select motion',sourceContact:'explicit identical complete sourceManipulation plus sourceBody on each continuous camera slice',profileManipulation:false,rearManipulation:false,forwardWalking:false,depthTravel:false,spear:false,seat:false,handoff:false,headBank:false,supportingModel:false,continuousTurns:false,approved:false,artApproved:false,motionVerified:false,productionReady:false,productionRig:null,availableBanks:[]},
   ownProfile:{version:PROFILE_BODY_MANIPULATION_VERSION,selection:PROFILE_BODY_MANIPULATION_SELECTION,bindings:profileManipulationBindings,sourceCount:4,views:['left','right'],coordinateAuthority:'own authored body shoulders/rest/depth; canonical same-person cuff/palm/bones reused; not accepted anatomy/art',locomotion:'separate registered-profile-locomotion-v1 for actual original body tracks; stationary contact does not auto-select motion',sourceContact:'explicit identical complete sourceManipulation plus sourceBody on each continuous camera slice',frontManipulation:false,rearManipulation:false,spear:false,seat:false,handoff:false,headBank:false,supportingModel:false,continuousTurns:false,approved:false,artApproved:false,motionVerified:false,productionReady:false,productionRig:null,availableBanks:[]},
-  fingerprint:hash({version:NATIVE_CONTACT_ARM_VERSION,bindings:nativeManipulationBindings,profileManipulationBindings,handContract:forestHandDescription,branch:'explicit-own-authored-rest-entry; legacy per-hand default unchanged',approach:'quintic-angular',corridorDeg:90,bodyClock:'original body run/shot offset; same lift/lower/jump ownership rules',sourceContactClock:'native-source-manipulation-1; unchanged full history and actual original release palm',painter:'one stepped own palm slot after actual prop glyph',shapeFlexionDeg:125,contactTolerancePx:.001}),
+  fingerprint:hash({version:NATIVE_CONTACT_ARM_VERSION,bindings:nativeManipulationBindings,profileManipulationBindings,frontManipulationBindings,handContract:forestHandDescription,branch:'explicit-own-authored-rest-entry; legacy per-hand default unchanged',approach:'quintic-angular',corridorDeg:90,bodyClock:'original body run/shot offset; same lift/lower/jump ownership rules',sourceContactClock:'native-source-manipulation-1; unchanged full history and actual original release palm',painter:'one stepped own palm slot after actual prop glyph',shapeFlexionDeg:125,contactTolerancePx:.001}),
   bindings:nativeManipulationBindings,supported:['inspect','operate','pick-place','carry','drop'],
-  contract:'Explicit own native body/view; each per-side source cuff/palm and fixed chain retained. elbowPole=rest is required for contact. C2 angle approach/recovery; the owned phase follows the real world/body-relative grip with fixed lengths. Shape limits and exact contact still apply. Existing forward native locomotion/seat selection is required for body movement.',
+  contract:'Explicit own native body/view; each per-side source cuff/palm and fixed chain retained. elbowPole=rest is required for contact. C2 angle approach/recovery; the owned phase follows the real world/body-relative grip with fixed lengths. Shape limits and exact contact still apply. Body movement requires its own separately selected motion/seat capability; frontal travel is explicit lateral sidestep.',
   scope:'single-person shot-local contact or explicitly owned complete original sourceManipulation with matching sourceBody; bound story models retain complete action/target/source obligations',
   limitations:['unapproved anatomy, silhouette, grip/ink/painter, smoothness and real film quality','no articulated fingers, wrist flexion or newly painted pinch grip','no new spear stance or profile spear; no shared/sequential/cross-person handoff; cuts need identical complete sourceManipulation/sourceBody and actor clock','identity/art/voice/source/final acceptance remains separate'],
   approved:false,productionReady:false,motionVerified:false};

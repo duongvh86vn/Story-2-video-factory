@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.104-own-front-manipulation",
+  "precedingSourceSHA": "06b6091da7de0817cd8ce54df760c6d1836c4f19",
+  "scope": "explicit own front single-person contact and original body/ownership clocks; source checks only, not anatomy/art/grip/motion/audio/film/full-factory acceptance",
+  "implementation": [
+    "Exact own-front Lila/Karo PNG/SHA/canvas registration for inspect/operate/pick-place/carry/drop; own front shoulders/restDirections/depth, canonical same-person cuff/palm/bones retained. Explicit front mode, no profile/3/4 body or face/ROI/landmark fallback, mirror/warp/yaw/depth inference.",
+    "Shared canonical fixed-chain C2 arm approach/recovery, elbow rest branch, exact actual grip and original release palm remain unchanged. No target repair/clamp, bone stretching, inverse elbow branch or ownership/clock rewrite.",
+    "Complete single-person sourceManipulation and matching sourceBody across every explicitly continuous shot/camera/primary-supporting swap; original contact/carry/release history, no local competing props/contact/body. Stationary front contact keeps explicit empty complete sourceBody without selecting locomotion. Inspect is shot-local target gesture, not a new source ownership/grip capability.",
+    "Moving front carry separately selects own-front motion with explicit paired lateral sidestep; workbench travels toward the active rig-hand side with fixed front facing. Original lift/lower/body/jump ownership guards and complete source closure remain. Forward/depth gait is not granted.",
+    "Compiler43/clock17/native contact4/body registration16/front registration7, schema/API/workbench/director/report/cache/manifest updated. Existing profile/3/4 sources, same-person hand textures and physical/cloth/soft ink/swing/contact kernels preserved.",
+    "No spear/hunt/handoff/seat/head-bank/supportingModel/continuous turn or newly painted finger/wrist pose grant. All production/source/pre-model/TTS gates remain false/null/empty. Ten new callbacks declared, not executed; actual original-project video acceptance remains pending."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "b9c161/session4909/completion68cc45",
+      "decisiveOutput": "✓ 69 modules transformed.\n✓ built in 622ms\n",
+      "scope": "TypeScript core/Studio and Vite build only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "15cb3e/session26456/completionaf8321",
+      "decisiveOutput": "tsc -p tsconfig.tests.json; completion output empty",
+      "scope": "typecheck only; no callbacks/fixtures"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "39f391",
+      "scope": "definition export only; five embedded host/shot/board/clock schemas updated"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "26638a",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "explicitly allowed source/header/hash/static JSON inventory"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source104-static.mjs",
+      "exitCode": 0,
+      "handle": "0b99b9",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.104-own-front-manipulation\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"sharedFunctionsUnchanged\":63,\"frontManipulationSources\":2,\"mappedCodeHashes\":188,\"scalarCodeEntries\":46,\"callbacksDeclared\":10,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}",
+      "scope": "raw file/header/hash/JSON/source AST only; no project module evaluation"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "cdd3b3",
+      "scope": "source whitespace only"
+    }
+  ],
+  "preliminaryChecks": {
+    "build": {
+      "handle": "1270b2/session50186/completionf1f25c",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "handle": "ac6a90/session14935/completion28003d",
+      "exitCode": 0
+    },
+    "scope": "superseded by final checks after test fixture/pack source edits; no runtime acceptance"
+  },
+  "sourceAuthoringInterrupted": {
+    "handle": "4113ba",
+    "exitCode": 1,
+    "finding": "Exact-anchor source helper stopped at missing old director phrase after writing earlier files; no source execution occurred. Remaining director/topic edits applied separately2c4fdf, then final source checks passed. Helper was not rerun over already edited sources."
+  },
+  "sourceDelegation": {
+    "requestedModel": "planner",
+    "requestedReasoning": "xhigh",
+    "elapsedMs": 55015,
+    "clientState": "terminal-error",
+    "providerState": "unknown; no job handle",
+    "error": "client-timeout",
+    "retries": 0,
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "startHandle": "6f5c9e/session35930",
+    "completionHandle": "e23f57",
+    "parentAssessment": "55s client timeout; no usable output/model response/job handle. Provider work remains unknown. No retry; parent authored source. Separate tester review examined completed actual source, not a resubmission of the planning task."
+  },
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 12829,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 13079,
+      "completion_tokens": 1174,
+      "total_tokens": 14253
+    },
+    "reply": "{\"findings\":[{\"file\":\"packages/host/schemas.ts\",\"quote\":\"bodyManipulation:z.enum(['registered-manipulation-v1','registered-profile-manipulation-v1']).optional()\",\"reason\":\"A host profile selecting `registered-front-manipulation-v1` is rejected by the enum before the new front-view refinement can run. Thus the new front contact mode cannot be selected through `HostProfileSchema`, despite being added to the workbench modes and manipulation bindings.\",\"correction\":\"Add `FRONT_BODY_MANIPULATION_SELECTION` to the `bodyManipulation` enum.\"}],\"missingContext\":[\"The supplied excerpts do not include the full source tree, so I cannot confirm whether additional profile-entry paths bypass `HostProfileSchema` or verify ownership/release behavior elsewhere.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshotChars": 42261,
+    "snapshotSHA256": "37061dec4a82179782bcaf1bab4b928a8f62e450bb18ab6ccf58ae32ac0f0f40",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "scope": "bounded independent source review; no runtime or approval",
+    "parentAssessment": "Reviewer enum-omission quote is the removed minus line in the supplied diff. The plus line and actual packages/host/schemas.ts already include registered-front-manipulation-v1 before this review. Confirmed direct raw source quote7e87d0 and raw static enum membership; no missing enum defect and no speculative rewrite. Complete tree/ownership behavior was not accepted by reviewer; canonical original source and solver/source clock/production gates are byte or AST unchanged. Actual callbacks/grip/anatomy/seams/motion/film still need user QA."
+  },
+  "rawRecord": "docs/topics/reviews/front-manipulation-static-record-v1.json",
+  "userQA": {
+    "commandsDocument": "docs/topics/FRONT-MANIPULATION-HANDOFF.md",
+    "test": "tests/native-front-manipulation.test.ts",
+    "callbacksDeclared": 10,
+    "callbacksExecuted": 0,
+    "actualOriginalStoryExport": "NOT RUN",
+    "server": "NOT RUN",
+    "browser": "NOT RUN",
+    "renderer": "NOT RUN",
+    "audio": "NOT RUN",
+    "video": "NOT RUN",
+    "motionArt": "NOT RUN",
+    "factoryThreeInputs": "NOT RUN"
+  },
+  "ownedPaths": 29,
+  "productionBinding": "needs-source-prop-binding",
+  "canPublish": false,
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "user QA on exact SHA/original story/project: actual fixed-chain contact, cuff/palm slots, carry leading/trailing soles, original release-before-cut/history/role swaps/camera/seek",
+    "faithful warm-skin faces/soft anatomy/garment seams/vivid world; genuine continuous own head/body turns, per-view seat/spear/hunt/tools/handoff/crowds/director/interaction",
+    "full arbitrary story/topic -> faithful screenplay; exact script/dialogue/original WAV (+legacySRT) -> narration/scenes/review/repair/final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/QC",
+    "EN primary/VI/JA/KO/external-local HTTP/command TTS and original WAV clock/speaker; missing/failed voice/fit never final/DONE",
+    "resume/rebuild/locks/content/voice/actor invalidation/current source receipts"
+  ]
+}

@@ -111,7 +111,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   validateNativeHeadBankTrack(plan,profile);
   if(hasNativeHeadBank(profile)&&registeredNativeHeadBank(profile).capabilities.expressions&&!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-head-expression-phase: source emotions require the current original acting-clock compiler');
   if(plan.sourceBody){
-    if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)&&!hasStationaryProfileContactSource(plan,profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate, or exact stationary own-profile contact');
+    if(!usesBodyView(profile)||!hasBodyViewLocomotion(profile)&&!hasStationaryProfileContactSource(plan,profile)||!isCurrentAnimation(plan.compilerVersion))throw new Error('needs-view-body-phase: original body span needs the selected current native locomotion candidate, or exact stationary own-profile/front contact');
     validateBodySourcePlan(plan);
   }
   if(plan.gestures.some(g=>g.sourceSpan)){
