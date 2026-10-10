@@ -1,0 +1,64 @@
+{
+  "scope": "unapproved-native-head-seat-tracer",
+  "version": "native-head-seat-tracer-5",
+  "sourceSHA": "bf8bcfbd4018fbff2aceb4cdb8eb448f4c8ecd35",
+  "trackedSourceDirty": false,
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "motionAccepted": false,
+  "phonemeLipSync": false,
+  "status": "failed",
+  "phase": "canonical",
+  "outputRoot": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\native-seat-tracers\\tracer-2026-10-10T16-34-14-168Z-9b74ca9b-8cac-4775-8546-a3071581b294",
+  "shots": [],
+  "resources": [],
+  "audio": {
+    "source": "silent-draft",
+    "speechActivity": "empty",
+    "contentAlignment": "NOT RUN"
+  },
+  "checks": {
+    "canonical": {
+      "status": "FAIL",
+      "detail": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": [\n      \"cells\",\n      0,\n      \"face\"\n    ]\n  },\n  {\n    \"code\": \"custom\",\n    \"message\": \"[\\n  {\\n    \\\"code\\\": \\\"custom\\\",\\n    \\\"message\\\": \\\"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\\\",\\n    \\\"path\\\": []\\n  }\\n]\",\n    \"path\": []\n  }\n]"
+    },
+    "diagnostic-wav": {
+      "status": "NOT RUN"
+    },
+    "cast-and-story": {
+      "status": "NOT RUN"
+    },
+    "scene-security-and-byte-cap": {
+      "status": "NOT RUN"
+    },
+    "master": {
+      "status": "NOT RUN"
+    },
+    "hyperframes": {
+      "status": "NOT RUN"
+    },
+    "snapshots": {
+      "status": "NOT RUN"
+    },
+    "render-draft": {
+      "status": "NOT RUN"
+    },
+    "video-probe": {
+      "status": "NOT RUN"
+    },
+    "video-decode": {
+      "status": "NOT RUN"
+    },
+    "visual-motion-review": {
+      "status": "NOT RUN"
+    },
+    "source-clock-and-reverse-seek": {
+      "status": "NOT RUN"
+    },
+    "full-factory-inputs": {
+      "status": "NOT RUN"
+    }
+  },
+  "error": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": [\n      \"cells\",\n      0,\n      \"face\"\n    ]\n  },\n  {\n    \"code\": \"custom\",\n    \"message\": \"[\\n  {\\n    \\\"code\\\": \\\"custom\\\",\\n    \\\"message\\\": \\\"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\\\",\\n    \\\"path\\\": []\\n  }\\n]\",\n    \"path\": []\n  }\n]",
+  "elapsedMs": 163
+}

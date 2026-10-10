@@ -1,0 +1,806 @@
+{
+  "version": 1,
+  "dateLocal": "2026-10-10",
+  "timezone": "Asia/Saigon",
+  "checkoutSHA": "bf8bcfbd4018fbff2aceb4cdb8eb448f4c8ecd35",
+  "implementationSHA": "c2d436a907e2f76f585807bf7f63800503986199",
+  "trackedSourceDirtyAtExecution": false,
+  "authorization": {
+    "userReply": "Cho phép bạn chạy test và render chẩn đoán cục bộ",
+    "sourceSHA": "c2d436a907e2f76f585807bf7f63800503986199",
+    "startedAt": "2026-10-10T16:32:13.6289011Z",
+    "checkoutSHA": "bf8bcfbd4018fbff2aceb4cdb8eb448f4c8ecd35",
+    "scope": "Listed local regression suites and two native-seat diagnostic stagings; no paid model/TTS calls; no production approval implied"
+  },
+  "scope": "Seven specified local regression files and two diagnostic export attempts only; no real paid model/TTS requests, no source repairs, no accepted film.",
+  "environment": {
+    "os": "Windows",
+    "shell": "PowerShell",
+    "node": "v24.19.0",
+    "hyperframes": "0.8.96",
+    "ffmpeg": "2025-09-25-git-9970dc32bf-full_build-www.gyan.dev",
+    "browser": "NOT REACHED"
+  },
+  "regression": {
+    "command": "node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/seated-rest-arm.test.ts tests/native-source-seat.test.ts tests/forest-arm-trajectory.test.ts tests/native-source-gesture.test.ts tests/native-source-gesture-project.test.ts tests/native-manipulation.test.ts tests/native-head-seat-tracer.test.ts",
+    "exitCode": 1,
+    "tests": 56,
+    "suites": 0,
+    "pass": 35,
+    "fail": 21,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 62884.5745,
+    "byFile": [
+      {
+        "file": "tests/seated-rest-arm.test.ts",
+        "pass": 5,
+        "fail": 0
+      },
+      {
+        "file": "tests/native-source-seat.test.ts",
+        "pass": 4,
+        "fail": 4
+      },
+      {
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "pass": 9,
+        "fail": 0
+      },
+      {
+        "file": "tests/native-source-gesture.test.ts",
+        "pass": 8,
+        "fail": 5
+      },
+      {
+        "file": "tests/native-source-gesture-project.test.ts",
+        "pass": 4,
+        "fail": 0
+      },
+      {
+        "file": "tests/native-manipulation.test.ts",
+        "pass": 5,
+        "fail": 6
+      },
+      {
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "pass": 0,
+        "fail": 6
+      }
+    ],
+    "cases": [
+      {
+        "name": "fixed forward lengths and grip endpoints survive shoulder crossing and signed elbow branch changes at random-access clocks",
+        "status": "PASS",
+        "durationMs": 3.5053,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 14
+      },
+      {
+        "name": "quintic entry and recovery are position/velocity/acceleration continuous for fixed keyposes without a separate 80ms transit",
+        "status": "PASS",
+        "durationMs": 0.6453,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 27
+      },
+      {
+        "name": "directions retain signed flexion while degenerate windows and nonfinite/collapsed pose inputs are rejected",
+        "status": "PASS",
+        "durationMs": 0.8746,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 40
+      },
+      {
+        "name": "current source-body pointing keeps an authored reachable target through its pose hold and separate cuff/palm geometry",
+        "status": "PASS",
+        "durationMs": 39.586,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 52
+      },
+      {
+        "name": "current source reactions scale with their arm reach and explicit unreachable authored targets require a new keypose",
+        "status": "PASS",
+        "durationMs": 6.1278,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 65
+      },
+      {
+        "name": "legacy source pointing remains on its former IK/goal/pole path and contact poses retain their exact locked grip",
+        "status": "PASS",
+        "durationMs": 7.1435,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 76
+      },
+      {
+        "name": "moving keyposes crossing the original antipode retain one registered shoulder arc; unsupported corridor changes reject explicitly",
+        "status": "PASS",
+        "durationMs": 0.5415,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 86
+      },
+      {
+        "name": "default expressive gestures retain their entry elbow branch across both run directions/hands and run exit during full pose ownership",
+        "status": "PASS",
+        "durationMs": 113.6323,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 95
+      },
+      {
+        "name": "implicit running think retains the entry branch while authored rest/reach overrides remain explicit",
+        "status": "PASS",
+        "durationMs": 46.6461,
+        "file": "tests/forest-arm-trajectory.test.ts",
+        "line": 116
+      },
+      {
+        "name": "opposing native heads share the canonical seat run while old fixed-view overlays remain the default",
+        "status": "FAIL",
+        "durationMs": 16.0626,
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 54
+      },
+      {
+        "name": "actor-owned mouths and actual rendered eye targets survive cuts, lead swaps and reverse seeks",
+        "status": "FAIL",
+        "durationMs": 9.418,
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 73
+      },
+      {
+        "name": "factory renderer owns each native head resource and namespace inside the shared scene cap",
+        "status": "FAIL",
+        "durationMs": 4.6333,
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 99
+      },
+      {
+        "name": "publication refuses changed head ownership, target source or a conflicting speaker",
+        "status": "FAIL",
+        "durationMs": 4.4104,
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 119
+      },
+      {
+        "name": "both screen layouts bind independent matching head/body sources and keep each sourced actor identity",
+        "status": "FAIL",
+        "durationMs": 6.7553,
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 132
+      },
+      {
+        "name": "listener chin gestures use declared rig hands and full body/head/speech history across both layouts",
+        "status": "FAIL",
+        "durationMs": 6.1601,
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 149
+      },
+      {
+        "name": "native contact selection is explicit, source-bound and preserved by topic normalization",
+        "status": "PASS",
+        "durationMs": 12.1638,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 46
+      },
+      {
+        "name": "both own views and hands inspect or operate with fixed cuff/palm geometry and deterministic seeks",
+        "status": "PASS",
+        "durationMs": 107.1865,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 59
+      },
+      {
+        "name": "native pickup places the real object center without stretching arms or moving its authored target",
+        "status": "PASS",
+        "durationMs": 19.7396,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 67
+      },
+      {
+        "name": "native carry uses the actual forward body path, then lowers and releases before recovery",
+        "status": "PASS",
+        "durationMs": 49.4466,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 77
+      },
+      {
+        "name": "native drop owns the real release palm; flight and landing do not pull the arm toward the floor",
+        "status": "FAIL",
+        "durationMs": 3.318,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 88
+      },
+      {
+        "name": "contact angular approach/recovery has zero endpoint speed and keeps one elbow branch; owned exit and entry retain grip",
+        "status": "FAIL",
+        "durationMs": 1.0097,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 98
+      },
+      {
+        "name": "unreachable/folded grips, wrong poles and source timing remain blocking errors without target repair",
+        "status": "FAIL",
+        "durationMs": 5.6953,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 110
+      },
+      {
+        "name": "canonical renderer draws both actual native actors and distinct owned props using the same physical compiler",
+        "status": "FAIL",
+        "durationMs": 24.7422,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 135
+      },
+      {
+        "name": "independent source heads and bald/haired supporting identities remain their own while native bodies operate",
+        "status": "FAIL",
+        "durationMs": 50.8408,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 143
+      },
+      {
+        "name": "diagnostic controls expose both hands without auto selecting a pose or approving the film",
+        "status": "FAIL",
+        "durationMs": 240.652,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 154
+      },
+      {
+        "name": "native contact validates original body locomotion/jump windows in the owned shot clock rather than empty local arrays",
+        "status": "PASS",
+        "durationMs": 2.2689,
+        "file": "tests/native-manipulation.test.ts",
+        "line": 161
+      },
+      {
+        "name": "projection conserves complete original hand ownership and timings through five camera slices",
+        "status": "PASS",
+        "durationMs": 5.7294,
+        "file": "tests/native-source-gesture-project.test.ts",
+        "line": 12
+      },
+      {
+        "name": "fractional existing default ramps round-trip by omission without rounding at a cut",
+        "status": "PASS",
+        "durationMs": 0.7782,
+        "file": "tests/native-source-gesture-project.test.ts",
+        "line": 28
+      },
+      {
+        "name": "invalid original commands and clocks cannot be concealed by an empty local slice",
+        "status": "PASS",
+        "durationMs": 0.6893,
+        "file": "tests/native-source-gesture-project.test.ts",
+        "line": 36
+      },
+      {
+        "name": "local edits do not mutate another slice or the authored target/source span",
+        "status": "PASS",
+        "durationMs": 0.4861,
+        "file": "tests/native-source-gesture-project.test.ts",
+        "line": 42
+      },
+      {
+        "name": "source span is strict original motion timing, with complete ordered approach/hold/recovery and no implicit ID inference",
+        "status": "PASS",
+        "durationMs": 9.6228,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 53
+      },
+      {
+        "name": "all exact source pieces bind one physical hand/action/target/pole/window; real missing/duplicate fragments fail",
+        "status": "PASS",
+        "durationMs": 3.8995,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 63
+      },
+      {
+        "name": "approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip",
+        "status": "FAIL",
+        "durationMs": 279.5523,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 76
+      },
+      {
+        "name": "seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state",
+        "status": "FAIL",
+        "durationMs": 1.1316,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 88
+      },
+      {
+        "name": "ordinary adjacent gestures never become a source command and explicit cuts cannot carry an incomplete declared span",
+        "status": "PASS",
+        "durationMs": 4.3208,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 98
+      },
+      {
+        "name": "missing/stale context, incompatible profiles and contact/prop timing cannot silently approximate a source gesture",
+        "status": "PASS",
+        "durationMs": 4.3221,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 106
+      },
+      {
+        "name": "overlapping source commands or an ordinary clip on the same owned hand fail, while the other hand can be independent",
+        "status": "PASS",
+        "durationMs": 1.9533,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 116
+      },
+      {
+        "name": "cache/repair input identity includes nonlocal command timing and actual replacement, with no discarded old approval",
+        "status": "PASS",
+        "durationMs": 3.9093,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 125
+      },
+      {
+        "name": "compiler source grid/refinement and namespaced ink/hand layers use original gesture phases without fake contact",
+        "status": "PASS",
+        "durationMs": 2534.4126,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 134
+      },
+      {
+        "name": "canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing",
+        "status": "FAIL",
+        "durationMs": 608.4256,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 172
+      },
+      {
+        "name": "creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2]",
+        "status": "FAIL",
+        "durationMs": 402.2074,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 183
+      },
+      {
+        "name": "artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2]",
+        "status": "FAIL",
+        "durationMs": 377.4085,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 197
+      },
+      {
+        "name": "native source gesture readiness remains unapproved and full input/video production gates stay active",
+        "status": "PASS",
+        "durationMs": 16.1439,
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 213
+      },
+      {
+        "name": "native seated rest arms retain their own cuff/palm bones and original phase through cuts and reverse seeks",
+        "status": "PASS",
+        "durationMs": 3153.1181,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 45
+      },
+      {
+        "name": "source seats are bounded, explicit and compatible with old unsupported body sources",
+        "status": "PASS",
+        "durationMs": 9.8166,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 74
+      },
+      {
+        "name": "sit preparation, held contact, rise, later gait and cloth/hair retain the complete original phase through camera cuts",
+        "status": "FAIL",
+        "durationMs": 99.7875,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 89
+      },
+      {
+        "name": "occupancy clips the original approach/hold/rise to local time and preserves exclusive world geometry",
+        "status": "PASS",
+        "durationMs": 5.3529,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 108
+      },
+      {
+        "name": "source/support and sibling edits invalidate publication; missing/hidden/cut/local sources cannot synthesize continuity",
+        "status": "PASS",
+        "durationMs": 23.1694,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 117
+      },
+      {
+        "name": "baked support boundaries, reports and camera/preview refer to the original seat clock",
+        "status": "FAIL",
+        "durationMs": 6728.122,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 133
+      },
+      {
+        "name": "single-actor framing fits the whole source seat including its shadow and backrest",
+        "status": "FAIL",
+        "durationMs": 2941.375,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 140
+      },
+      {
+        "name": "canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes",
+        "status": "FAIL",
+        "durationMs": 29611.5533,
+        "file": "tests/native-source-seat.test.ts",
+        "line": 148
+      },
+      {
+        "name": "an inactive seat preserves the exact standing solve without evaluating its lap target",
+        "status": "PASS",
+        "durationMs": 2.5318,
+        "file": "tests/seated-rest-arm.test.ts",
+        "line": 11
+      },
+      {
+        "name": "angular seat transfer stays on fixed bones where a straight wrist path crosses the inner annulus",
+        "status": "PASS",
+        "durationMs": 1.6136,
+        "file": "tests/seated-rest-arm.test.ts",
+        "line": 21
+      },
+      {
+        "name": "seat arm transfer uses the supplied weight once and remains deterministic under reverse seeks and scaling",
+        "status": "PASS",
+        "durationMs": 0.3769,
+        "file": "tests/seated-rest-arm.test.ts",
+        "line": 38
+      },
+      {
+        "name": "unreachable, invalid and unsupported seat keyposes require authored correction without clamping the targets",
+        "status": "PASS",
+        "durationMs": 0.7385,
+        "file": "tests/seated-rest-arm.test.ts",
+        "line": 53
+      },
+      {
+        "name": "wrapped endpoint directions retain one continuous numeric branch for baked arm rotations",
+        "status": "PASS",
+        "durationMs": 0.4082,
+        "file": "tests/seated-rest-arm.test.ts",
+        "line": 62
+      }
+    ],
+    "failures": [
+      {
+        "name": "opposing native heads share the canonical seat run while old fixed-view overlays remain the default",
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 54,
+        "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+        "rawLogStartLine": 68,
+        "rawLogEndLine": 96
+      },
+      {
+        "name": "actor-owned mouths and actual rendered eye targets survive cuts, lead swaps and reverse seeks",
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 73,
+        "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+        "rawLogStartLine": 97,
+        "rawLogEndLine": 125
+      },
+      {
+        "name": "factory renderer owns each native head resource and namespace inside the shared scene cap",
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 99,
+        "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+        "rawLogStartLine": 126,
+        "rawLogEndLine": 154
+      },
+      {
+        "name": "publication refuses changed head ownership, target source or a conflicting speaker",
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 119,
+        "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+        "rawLogStartLine": 155,
+        "rawLogEndLine": 183
+      },
+      {
+        "name": "both screen layouts bind independent matching head/body sources and keep each sourced actor identity",
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 132,
+        "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+        "rawLogStartLine": 184,
+        "rawLogEndLine": 212
+      },
+      {
+        "name": "listener chin gestures use declared rig hands and full body/head/speech history across both layouts",
+        "file": "tests/native-head-seat-tracer.test.ts",
+        "line": 149,
+        "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+        "rawLogStartLine": 213,
+        "rawLogEndLine": 241
+      },
+      {
+        "name": "native drop owns the real release palm; flight and landing do not pull the arm toward the floor",
+        "file": "tests/native-manipulation.test.ts",
+        "line": 88,
+        "message": "Free drop must preserve horizontal hand momentum: landing x must be 124.4553, received 106.35895079660392",
+        "rawLogStartLine": 242,
+        "rawLogEndLine": 255
+      },
+      {
+        "name": "contact angular approach/recovery has zero endpoint speed and keeps one elbow branch; owned exit and entry retain grip",
+        "file": "tests/native-manipulation.test.ts",
+        "line": 98,
+        "message": "needs-view-manipulation: placement/drop needs explicit release and destination; owned-exit carry has no destination",
+        "rawLogStartLine": 256,
+        "rawLogEndLine": 268
+      },
+      {
+        "name": "unreachable/folded grips, wrong poles and source timing remain blocking errors without target repair",
+        "file": "tests/native-manipulation.test.ts",
+        "line": 110,
+        "message": "The input did not match the regular expression /source.*point\\/think|only explicit source/. Input:",
+        "rawLogStartLine": 269,
+        "rawLogEndLine": 299
+      },
+      {
+        "name": "canonical renderer draws both actual native actors and distinct owned props using the same physical compiler",
+        "file": "tests/native-manipulation.test.ts",
+        "line": 135,
+        "message": "Diagram visualization requires an explanatory event.",
+        "rawLogStartLine": 300,
+        "rawLogEndLine": 325
+      },
+      {
+        "name": "independent source heads and bald/haired supporting identities remain their own while native bodies operate",
+        "file": "tests/native-manipulation.test.ts",
+        "line": 143,
+        "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+        "rawLogStartLine": 326,
+        "rawLogEndLine": 354
+      },
+      {
+        "name": "diagnostic controls expose both hands without auto selecting a pose or approving the film",
+        "file": "tests/native-manipulation.test.ts",
+        "line": 154,
+        "message": "The input did not match the regular expression /source/. Input:",
+        "rawLogStartLine": 355,
+        "rawLogEndLine": 385
+      },
+      {
+        "name": "approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip",
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 76,
+        "message": "needs-arm-pose: chin elbow folds 151.4deg, beyond its 145deg candidate art limit",
+        "rawLogStartLine": 386,
+        "rawLogEndLine": 399
+      },
+      {
+        "name": "seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state",
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 88,
+        "message": "needs-arm-pose: chin elbow folds 151.4deg, beyond its 145deg candidate art limit",
+        "rawLogStartLine": 400,
+        "rawLogEndLine": 413
+      },
+      {
+        "name": "canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing",
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 172,
+        "message": "Performance identity/profile mismatch",
+        "rawLogStartLine": 414,
+        "rawLogEndLine": 425
+      },
+      {
+        "name": "creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2]",
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 183,
+        "message": "Host action interval must be positive",
+        "rawLogStartLine": 426,
+        "rawLogEndLine": 450
+      },
+      {
+        "name": "artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2]",
+        "file": "tests/native-source-gesture.test.ts",
+        "line": 197,
+        "message": "Host action interval must be positive",
+        "rawLogStartLine": 451,
+        "rawLogEndLine": 475
+      },
+      {
+        "name": "sit preparation, held contact, rise, later gait and cloth/hair retain the complete original phase through camera cuts",
+        "file": "tests/native-source-seat.test.ts",
+        "line": 89,
+        "message": "Expected values to be strictly deep-equal:",
+        "rawLogStartLine": 476,
+        "rawLogEndLine": 549
+      },
+      {
+        "name": "baked support boundaries, reports and camera/preview refer to the original seat clock",
+        "file": "tests/native-source-seat.test.ts",
+        "line": 133,
+        "message": "wide camera scale must be 0.65–1.12; validate host size and focus inside the safe viewport.",
+        "rawLogStartLine": 550,
+        "rawLogEndLine": 608
+      },
+      {
+        "name": "single-actor framing fits the whole source seat including its shadow and backrest",
+        "file": "tests/native-source-seat.test.ts",
+        "line": 140,
+        "message": "Got unwanted exception.",
+        "rawLogStartLine": 609,
+        "rawLogEndLine": 637
+      },
+      {
+        "name": "canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes",
+        "file": "tests/native-source-seat.test.ts",
+        "line": 148,
+        "message": "Expected values to be strictly deep-equal:",
+        "rawLogStartLine": 638,
+        "rawLogEndLine": 662
+      }
+    ]
+  },
+  "tracers": [
+    {
+      "staging": "lila-left",
+      "outputRoot": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T16-33-40-720Z-096bbe63-405b-42d5-86fe-8f6027c8ff56",
+      "exitCode": 1,
+      "phase": "canonical",
+      "status": "failed",
+      "error": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": [\n      \"cells\",\n      0,\n      \"face\"\n    ]\n  },\n  {\n    \"code\": \"custom\",\n    \"message\": \"[\\n  {\\n    \\\"code\\\": \\\"custom\\\",\\n    \\\"message\\\": \\\"needs-head-face-registration: edit region touches another edit or protected paint\\\",\\n    \\\"path\\\": []\\n  }\\n]\",\n    \"path\": []\n  }\n]",
+      "checks": {
+        "canonical": {
+          "status": "FAIL",
+          "detail": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": [\n      \"cells\",\n      0,\n      \"face\"\n    ]\n  },\n  {\n    \"code\": \"custom\",\n    \"message\": \"[\\n  {\\n    \\\"code\\\": \\\"custom\\\",\\n    \\\"message\\\": \\\"needs-head-face-registration: edit region touches another edit or protected paint\\\",\\n    \\\"path\\\": []\\n  }\\n]\",\n    \"path\": []\n  }\n]"
+        },
+        "diagnostic-wav": {
+          "status": "NOT RUN"
+        },
+        "cast-and-story": {
+          "status": "NOT RUN"
+        },
+        "scene-security-and-byte-cap": {
+          "status": "NOT RUN"
+        },
+        "master": {
+          "status": "NOT RUN"
+        },
+        "hyperframes": {
+          "status": "NOT RUN"
+        },
+        "snapshots": {
+          "status": "NOT RUN"
+        },
+        "render-draft": {
+          "status": "NOT RUN"
+        },
+        "video-probe": {
+          "status": "NOT RUN"
+        },
+        "video-decode": {
+          "status": "NOT RUN"
+        },
+        "visual-motion-review": {
+          "status": "NOT RUN"
+        },
+        "source-clock-and-reverse-seek": {
+          "status": "NOT RUN"
+        },
+        "full-factory-inputs": {
+          "status": "NOT RUN"
+        }
+      },
+      "mp4Created": false,
+      "framesCreated": false
+    },
+    {
+      "staging": "lila-right",
+      "outputRoot": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T16-34-14-168Z-9b74ca9b-8cac-4775-8546-a3071581b294",
+      "exitCode": 1,
+      "phase": "canonical",
+      "status": "failed",
+      "error": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": [\n      \"cells\",\n      0,\n      \"face\"\n    ]\n  },\n  {\n    \"code\": \"custom\",\n    \"message\": \"[\\n  {\\n    \\\"code\\\": \\\"custom\\\",\\n    \\\"message\\\": \\\"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\\\",\\n    \\\"path\\\": []\\n  }\\n]\",\n    \"path\": []\n  }\n]",
+      "checks": {
+        "canonical": {
+          "status": "FAIL",
+          "detail": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": [\n      \"cells\",\n      0,\n      \"face\"\n    ]\n  },\n  {\n    \"code\": \"custom\",\n    \"message\": \"[\\n  {\\n    \\\"code\\\": \\\"custom\\\",\\n    \\\"message\\\": \\\"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\\\",\\n    \\\"path\\\": []\\n  }\\n]\",\n    \"path\": []\n  }\n]"
+        },
+        "diagnostic-wav": {
+          "status": "NOT RUN"
+        },
+        "cast-and-story": {
+          "status": "NOT RUN"
+        },
+        "scene-security-and-byte-cap": {
+          "status": "NOT RUN"
+        },
+        "master": {
+          "status": "NOT RUN"
+        },
+        "hyperframes": {
+          "status": "NOT RUN"
+        },
+        "snapshots": {
+          "status": "NOT RUN"
+        },
+        "render-draft": {
+          "status": "NOT RUN"
+        },
+        "video-probe": {
+          "status": "NOT RUN"
+        },
+        "video-decode": {
+          "status": "NOT RUN"
+        },
+        "visual-motion-review": {
+          "status": "NOT RUN"
+        },
+        "source-clock-and-reverse-seek": {
+          "status": "NOT RUN"
+        },
+        "full-factory-inputs": {
+          "status": "NOT RUN"
+        }
+      },
+      "mp4Created": false,
+      "framesCreated": false
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/authorization.json",
+      "originalPath": "runtime/prehistoric-life/qa/source113-local-20261010/authorization.json",
+      "bytes": 401,
+      "sha256": "34e8d2ae4e77fa20dfe14dea79dba01098fbd86c802f48009d3bfa7ae128c4e3"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/regression-original.log",
+      "originalPath": "runtime/prehistoric-life/qa/source113-local-20261010/regression-original.log",
+      "bytes": 93901,
+      "sha256": "78face983e13c936bd75be35c5dfde43032dc519315fcc7ff7b4b96f800f9f37"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/regression-original-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source113-local-20261010/regression-original-exit.json",
+      "bytes": 222,
+      "sha256": "d0dca3a91a793f774f733a5ad8599740e161ee03623338ab14ee2fc665be86c4"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/tracer-lila-left-original.log",
+      "originalPath": "runtime/prehistoric-life/qa/source113-local-20261010/tracer-lila-left-original.log",
+      "bytes": 872,
+      "sha256": "0dcb62fca5f6db0cfa4fb83165c5bdce5ae4adb3f2d0c8b2d79cbb73ff898c5f"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/tracer-lila-left-original-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source113-local-20261010/tracer-lila-left-original-exit.json",
+      "bytes": 100,
+      "sha256": "04a661b36e544034c314df0cd7605e744519f6a27846f6576c5f76f5344c15c2"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/tracer-lila-right-original.log",
+      "originalPath": "runtime/prehistoric-life/qa/source113-local-20261010/tracer-lila-right-original.log",
+      "bytes": 873,
+      "sha256": "85aef0aae5f1bb53eeae0d2a0e964dd981b968fb6d850ac26ded530058ad6b08"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/tracer-lila-right-original-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source113-local-20261010/tracer-lila-right-original-exit.json",
+      "bytes": 101,
+      "sha256": "2665c7966b04a79fe61c0d7ef6a189dc2a3b96184e708619a1834afc3bdb16a3"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/tracer-lila-left-report.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T16-33-40-720Z-096bbe63-405b-42d5-86fe-8f6027c8ff56/tracer-report.json",
+      "bytes": 2510,
+      "sha256": "810c9fae760037a40fdc1dfa8b13c31ee8b731a9b0715b0e0c9124c2158cc33e"
+    },
+    {
+      "path": "docs/validation/2026-10-10-prehistoric-source113/tracer-lila-right-report.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T16-34-14-168Z-9b74ca9b-8cac-4775-8546-a3071581b294/tracer-report.json",
+      "bytes": 2510,
+      "sha256": "5567ef9967e447fff6c33a9d1ff9e23d1d1ecf6738f9dc818bb578d7f2e211be"
+    }
+  ],
+  "newImageRequests": 0,
+  "paidModelRequests": 0,
+  "paidTtsRequests": 0,
+  "productionAcceptance": false,
+  "visualMotionReviewed": false,
+  "fullFactoryVerified": false,
+  "fullGoalComplete": false
+}

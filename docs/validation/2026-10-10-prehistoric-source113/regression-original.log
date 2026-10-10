@@ -1,0 +1,661 @@
+✔ fixed forward lengths and grip endpoints survive shoulder crossing and signed elbow branch changes at random-access clocks (3.5053ms)
+✔ quintic entry and recovery are position/velocity/acceleration continuous for fixed keyposes without a separate 80ms transit (0.6453ms)
+✔ directions retain signed flexion while degenerate windows and nonfinite/collapsed pose inputs are rejected (0.8746ms)
+✔ current source-body pointing keeps an authored reachable target through its pose hold and separate cuff/palm geometry (39.586ms)
+✔ current source reactions scale with their arm reach and explicit unreachable authored targets require a new keypose (6.1278ms)
+✔ legacy source pointing remains on its former IK/goal/pole path and contact poses retain their exact locked grip (7.1435ms)
+✔ moving keyposes crossing the original antipode retain one registered shoulder arc; unsupported corridor changes reject explicitly (0.5415ms)
+✔ default expressive gestures retain their entry elbow branch across both run directions/hands and run exit during full pose ownership (113.6323ms)
+✔ implicit running think retains the entry branch while authored rest/reach overrides remain explicit (46.6461ms)
+✖ opposing native heads share the canonical seat run while old fixed-view overlays remain the default (16.0626ms)
+✖ actor-owned mouths and actual rendered eye targets survive cuts, lead swaps and reverse seeks (9.418ms)
+✖ factory renderer owns each native head resource and namespace inside the shared scene cap (4.6333ms)
+✖ publication refuses changed head ownership, target source or a conflicting speaker (4.4104ms)
+✖ both screen layouts bind independent matching head/body sources and keep each sourced actor identity (6.7553ms)
+✖ listener chin gestures use declared rig hands and full body/head/speech history across both layouts (6.1601ms)
+✔ native contact selection is explicit, source-bound and preserved by topic normalization (12.1638ms)
+✔ both own views and hands inspect or operate with fixed cuff/palm geometry and deterministic seeks (107.1865ms)
+✔ native pickup places the real object center without stretching arms or moving its authored target (19.7396ms)
+✔ native carry uses the actual forward body path, then lowers and releases before recovery (49.4466ms)
+✖ native drop owns the real release palm; flight and landing do not pull the arm toward the floor (3.318ms)
+✖ contact angular approach/recovery has zero endpoint speed and keeps one elbow branch; owned exit and entry retain grip (1.0097ms)
+✖ unreachable/folded grips, wrong poles and source timing remain blocking errors without target repair (5.6953ms)
+✖ canonical renderer draws both actual native actors and distinct owned props using the same physical compiler (24.7422ms)
+✖ independent source heads and bald/haired supporting identities remain their own while native bodies operate (50.8408ms)
+✖ diagnostic controls expose both hands without auto selecting a pose or approving the film (240.652ms)
+✔ native contact validates original body locomotion/jump windows in the owned shot clock rather than empty local arrays (2.2689ms)
+✔ projection conserves complete original hand ownership and timings through five camera slices (5.7294ms)
+✔ fractional existing default ramps round-trip by omission without rounding at a cut (0.7782ms)
+✔ invalid original commands and clocks cannot be concealed by an empty local slice (0.6893ms)
+✔ local edits do not mutate another slice or the authored target/source span (0.4861ms)
+✔ source span is strict original motion timing, with complete ordered approach/hold/recovery and no implicit ID inference (9.6228ms)
+✔ all exact source pieces bind one physical hand/action/target/pole/window; real missing/duplicate fragments fail (3.8995ms)
+✖ approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip (279.5523ms)
+✖ seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state (1.1316ms)
+✔ ordinary adjacent gestures never become a source command and explicit cuts cannot carry an incomplete declared span (4.3208ms)
+✔ missing/stale context, incompatible profiles and contact/prop timing cannot silently approximate a source gesture (4.3221ms)
+✔ overlapping source commands or an ordinary clip on the same owned hand fail, while the other hand can be independent (1.9533ms)
+✔ cache/repair input identity includes nonlocal command timing and actual replacement, with no discarded old approval (3.9093ms)
+✔ compiler source grid/refinement and namespaced ink/hand layers use original gesture phases without fake contact (2534.4126ms)
+✖ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (608.4256ms)
+✖ creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2] (402.2074ms)
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (377.4085ms)
+✔ native source gesture readiness remains unapproved and full input/video production gates stay active (16.1439ms)
+✔ native seated rest arms retain their own cuff/palm bones and original phase through cuts and reverse seeks (3153.1181ms)
+✔ source seats are bounded, explicit and compatible with old unsupported body sources (9.8166ms)
+✖ sit preparation, held contact, rise, later gait and cloth/hair retain the complete original phase through camera cuts (99.7875ms)
+✔ occupancy clips the original approach/hold/rise to local time and preserves exclusive world geometry (5.3529ms)
+✔ source/support and sibling edits invalidate publication; missing/hidden/cut/local sources cannot synthesize continuity (23.1694ms)
+✖ baked support boundaries, reports and camera/preview refer to the original seat clock (6728.122ms)
+✖ single-actor framing fits the whole source seat including its shadow and backrest (2941.375ms)
+✖ canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes (29611.5533ms)
+✔ an inactive seat preserves the exact standing solve without evaluating its lap target (2.5318ms)
+✔ angular seat transfer stays on fixed bones where a straight wrist path crosses the inner annulus (1.6136ms)
+✔ seat arm transfer uses the supplied weight once and remains deterministic under reverse seeks and scaling (0.3769ms)
+✔ unreachable, invalid and unsupported seat keyposes require authored correction without clamping the targets (0.7385ms)
+✔ wrapped endpoint directions retain one continuous numeric branch for baked arm rotations (0.4082ms)
+ℹ tests 56
+ℹ suites 0
+ℹ pass 35
+ℹ fail 21
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62884.5745
+
+✖ failing tests:
+
+test at tests\native-head-seat-tracer.test.ts:1:3515
+✖ opposing native heads share the canonical seat run while old fixed-view overlays remain the default (16.0626ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+      "path": [
+        "cells",
+        0,
+        "face"
+      ]
+    },
+    {
+      "code": "custom",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+      "path": []
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at headFaceCandidate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-source.ts:28:109)
+      at async createNativeHeadSeatTracer (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\benchmarks\native-seat-tracer.ts:129:14)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-seat-tracer.test.ts:55:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    issues: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ],
+    [errors]: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ]
+  }
+
+test at tests\native-head-seat-tracer.test.ts:1:5331
+✖ actor-owned mouths and actual rendered eye targets survive cuts, lead swaps and reverse seeks (9.418ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+      "path": [
+        "cells",
+        0,
+        "face"
+      ]
+    },
+    {
+      "code": "custom",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+      "path": []
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at headFaceCandidate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-source.ts:28:109)
+      at async createNativeHeadSeatTracer (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\benchmarks\native-seat-tracer.ts:129:14)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-seat-tracer.test.ts:74:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ],
+    [errors]: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ]
+  }
+
+test at tests\native-head-seat-tracer.test.ts:1:6835
+✖ factory renderer owns each native head resource and namespace inside the shared scene cap (4.6333ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+      "path": [
+        "cells",
+        0,
+        "face"
+      ]
+    },
+    {
+      "code": "custom",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+      "path": []
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at headFaceCandidate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-source.ts:28:109)
+      at async createNativeHeadSeatTracer (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\benchmarks\native-seat-tracer.ts:129:14)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-seat-tracer.test.ts:100:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ],
+    [errors]: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ]
+  }
+
+test at tests\native-head-seat-tracer.test.ts:1:8208
+✖ publication refuses changed head ownership, target source or a conflicting speaker (4.4104ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+      "path": [
+        "cells",
+        0,
+        "face"
+      ]
+    },
+    {
+      "code": "custom",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+      "path": []
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at headFaceCandidate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-source.ts:28:109)
+      at async createNativeHeadSeatTracer (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\benchmarks\native-seat-tracer.ts:129:14)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-seat-tracer.test.ts:120:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ],
+    [errors]: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ]
+  }
+
+test at tests\native-head-seat-tracer.test.ts:1:9370
+✖ both screen layouts bind independent matching head/body sources and keep each sourced actor identity (6.7553ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+      "path": [
+        "cells",
+        0,
+        "face"
+      ]
+    },
+    {
+      "code": "custom",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+      "path": []
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at headFaceCandidate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-source.ts:28:109)
+      at async createNativeHeadSeatTracer (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\benchmarks\native-seat-tracer.ts:129:14)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-seat-tracer.test.ts:134:13)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ],
+    [errors]: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ]
+  }
+
+test at tests\native-head-seat-tracer.test.ts:1:10674
+✖ listener chin gestures use declared rig hands and full body/head/speech history across both layouts (6.1601ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+      "path": [
+        "cells",
+        0,
+        "face"
+      ]
+    },
+    {
+      "code": "custom",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+      "path": []
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at headFaceCandidate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-source.ts:28:109)
+      at async createNativeHeadSeatTracer (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\benchmarks\native-seat-tracer.ts:129:14)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-seat-tracer.test.ts:151:13)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ],
+    [errors]: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ]
+  }
+
+test at tests\native-manipulation.test.ts:1:7082
+✖ native drop owns the real release palm; flight and landing do not pull the arm toward the floor (3.318ms)
+  Error: Free drop must preserve horizontal hand momentum: landing x must be 124.4553, received 106.35895079660392
+      at sampleFallingObject (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\airborne.ts:65:84)
+      at samplePerformanceState (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:1098:17)
+      at samplePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:741:10)
+      at physical (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:38:15)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:90:75)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+
+test at tests\native-manipulation.test.ts:1:7647
+✖ contact angular approach/recovery has zero endpoint speed and keeps one elbow branch; owned exit and entry retain grip (1.0097ms)
+  Error: needs-view-manipulation: placement/drop needs explicit release and destination; owned-exit carry has no destination
+      at nativeContactWindow (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\native-contact-arm.ts:57:11)
+      at sampleNativeContactArm (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\native-contact-arm.ts:117:11)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:107:78)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\native-manipulation.test.ts:1:9307
+✖ unreachable/folded grips, wrong poles and source timing remain blocking errors without target repair (5.6953ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /source.*point\/think|only explicit source/. Input:
+  
+  'Error: needs-view-gesture-phase: original gesture span needs a selected current native mouth/eyes/head candidate'
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:115:114)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: needs-view-gesture-phase: original gesture span needs a selected current native mouth/eyes/head candidate
+        at validateFixedBodyView (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:119:165)
+        at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:186:3)
+        at <anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:115:125)
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:115:114)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19),
+    expected: /source.*point\/think|only explicit source/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\native-manipulation.test.ts:1:14501
+✖ canonical renderer draws both actual native actors and distinct owned props using the same physical compiler (24.7422ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "path": [
+        "visualization",
+        "events"
+      ],
+      "message": "Diagram visualization requires an explanatory event."
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at ensemble (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:130:25)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:136:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', path: [Array], message: 'Diagram visualization requires an explanatory event.' } ],
+    [errors]: [ { code: 'custom', path: [Array], message: 'Diagram visualization requires an explanatory event.' } ]
+  }
+
+test at tests\native-manipulation.test.ts:1:15737
+✖ independent source heads and bald/haired supporting identities remain their own while native bodies operate (50.8408ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+      "path": [
+        "cells",
+        0,
+        "face"
+      ]
+    },
+    {
+      "code": "custom",
+      "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+      "path": []
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at headFaceCandidate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-source.ts:28:109)
+      at async headFaceCalibration (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\topics\head-face-workbench.ts:47:19)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:146:20)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ],
+    [errors]: [ { code: 'custom', message: 'needs-head-face-registration: edit region touches another edit or protected paint', path: [Array] }, { code: 'custom', message: '[\n  {\n    "code": "custom",\n    "message": "needs-head-face-registration: edit region touches another edit or protected paint",\n    "path": []\n  }\n]', path: [] } ]
+  }
+
+test at tests\native-manipulation.test.ts:1:17230
+✖ diagnostic controls expose both hands without auto selecting a pose or approving the film (240.652ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /source/. Input:
+  
+  'Error: needs-view-gesture-phase: original gesture span needs a selected current native mouth/eyes/head candidate'
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:158:178)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: needs-view-gesture-phase: original gesture span needs a selected current native mouth/eyes/head candidate
+        at validateFixedBodyView (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:119:165)
+        at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:186:3)
+        at <anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:158:189)
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-manipulation.test.ts:158:178)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19),
+    expected: /source/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\native-source-gesture.test.ts:1:6628
+✖ approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip (279.5523ms)
+  Error: needs-arm-pose: chin elbow folds 151.4deg, beyond its 145deg candidate art limit
+      at sourceArmShape (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\source-arm.ts:13:67)
+      at samplePerformanceState (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:919:25)
+      at samplePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:741:10)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:84:106)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\native-source-gesture.test.ts:1:7987
+✖ seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state (1.1316ms)
+  Error: needs-arm-pose: chin elbow folds 151.4deg, beyond its 145deg candidate art limit
+      at sourceArmShape (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\source-arm.ts:13:67)
+      at samplePerformanceState (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:919:25)
+      at samplePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:741:10)
+      at <anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:90:54)
+      at Array.map (<anonymous>)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:90:41)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+
+test at tests\native-source-gesture.test.ts:1:17304
+✖ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (608.4256ms)
+  Error: Performance identity/profile mismatch
+      at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:172:117)
+      at validateCinematicActorShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:270:3)
+      at validateCinematicShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:223:3)
+      at renderRigCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:61:9)
+      at renderCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:299:10)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:175:20)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\native-source-gesture.test.ts:1:18905
+✖ creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2] (402.2074ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "Host action interval must be positive",
+      "path": [
+        "shots",
+        0,
+        "host",
+        "actions",
+        0
+      ]
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodObject.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at canonicalFixture (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:169:69)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:185:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ],
+    [errors]: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ]
+  }
+
+test at tests\native-source-gesture.test.ts:1:20071
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (377.4085ms)
+  Error [ZodError]: [
+    {
+      "code": "custom",
+      "message": "Host action interval must be positive",
+      "path": [
+        "shots",
+        0,
+        "host",
+        "actions",
+        0
+      ]
+    }
+  ]
+      at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+      at ZodObject.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+      at canonicalFixture (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:169:69)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:198:11)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    issues: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ],
+    [errors]: [ { code: 'custom', message: 'Host action interval must be positive', path: [Array] } ]
+  }
+
+test at tests\native-source-seat.test.ts:1:7313
+✖ sit preparation, held contact, rise, later gait and cloth/hair retain the complete original phase through camera cuts (99.7875ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      armGeometry: {
+        left: {
+          flexionDeg: 28.230802259243575,
+          interiorDeg: 151.76919774075643,
+  ...
+        seatWeights: {
+  +       'lila-log': 0.05352891434599999
+  -       'lila-log': 0.05352891434600003
+        }
+      },
+      contactError: 0,
+      contactErrors: {
+        left: 0,
+  ...
+        left: {
+  +       x: 197.78375634075837,
+  -       x: 197.7837563407584,
+          y: 407.0642176336922
+        },
+        right: {
+          x: 224.94516971279373,
+          y: 410
+  ...
+        left: {
+  +       x: 157.2915163586197,
+  -       x: 157.29151635861967,
+          y: 345.6178939075598
+        },
+        right: {
+          x: 247.43056622937237,
+          y: 338.4253476925412
+  ...
+          kneeDepth: 14.396514022381751,
+  +       lowerRatio: 0.9430515999445046,
+  +       upperRatio: 0.9526093213944127
+  -       lowerRatio: 0.9430515999445047,
+  -       upperRatio: 0.9526093213944126
+        },
+        right: {
+          kneeDepth: 6.418432689614245,
+          lowerRatio: 0.9884456046644554,
+          upperRatio: 0.9901184480164833
+  ...
+        left: {
+  +       x: 158.55645774020658,
+  -       x: 158.55645774020655,
+          y: 337.2141495446863
+        },
+        right: {
+          x: 245.16380134115312,
+          y: 330.2763497403248
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:95:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { root: { x: 210, y: 410 }, feet: { left: [Object], right: [Object] }, stance: { left: false, right: true }, bodyPosture: { pelvisDropRatio: 0, leanDeg: 0, seatWeights: [Object] }, legProjection: { left: [Object], right: [Object] }, armGeometry: { left: [Object], right: [Object] }, hands: { left: [Object], right: [Object] }, wrists: { left: [Object], right: [Object] }, transforms: { 'ground-shadow': 'translate(210 414) rotate(0) scale(1)', pelvis: 'translate(210 310.6769) rotate(0) scale(1)', chest: 'translate(210 310.6769) rotate(-6.4387) scale(0.75)', 'neck-art': 'translate(197.9702 261.6165) rotate(-6.4387) scale(0.75)', neck: 'translate(197.9702 261.6165) rotate(-90) scale(0.75 0)', head: 'translate(197.9702 261.6165) rotate(-6.4387) scale(0.75)', 'leg-left-upper': 'translate(203.0712 315.2784) rotate(20.1708) scale(0.75 0.7145)', 'leg-left-lower': 'translate(187.5255 357.5969) rotate(-14.5569) scale(0.75 0.7073)', 'foot-left': 'translate(197.7838 407.0642) rotate(0) scale(0.75)', 'arm-left-upper': 'translate(186.5457 272.0726) rotate(36.7908) scale(0.75)', 'arm-left-lower': 'translate(163.7794 302.5153) rotate(8.56) scale(0.75)', 'hand-left': 'translate(157.2915 345.6179) rotate(0.133) scale(0.75)', 'leg-right-upper': 'translate(218.3458 313.5546) rotate(2.8459) scale(0.75 0.7426)', 'leg-right-lower': 'translate(216.0958 358.816) rotate(-12.2061) scale(0.75 0.7413)', 'foot-right': 'translate(224.9452 410) rotate(0) scale(0.75)', 'arm-right-upper': 'translate(218.3021 275.937) rotate(-36.2282) scale(0.75)', 'arm-right-lower': 'translate(237.2379 301.7827) rotate(-15.5447) scale(0.75)', 'hand-right': 'translate(247.4306 338.4253) rotate(-9.2045) scale(0.75)' }, paths: { 'ink-leg-left': 'M203.0712 315.2784 C196.542 333.0522 188.0851 346.1827 187.5255 357.5969 C186.9659 369.0111 193.4753 380.5091 197.7838 397.1008', 'ink-arm-left': 'M186.5457 272.0726 C176.9838 284.8585 167.5671 293.4496 163.7794 302.5153 C159.9917 311.5809 160.7501 322.6406 158.5565 337.2141', 'ink-leg-right': 'M218.3458 313.5546 C217.4008 332.5644 215.1396 347.1356 216.0958 358.816 C217.052 370.4964 221.2284 382.5433 224.9452 399.7252', 'ink-arm-right': 'M218.3021 275.937 C226.2551 286.7922 233.6224 294.3325 237.2379 301.7827 C240.8533 309.2329 241.8349 318.309 245.1638 330.2763', 'view-mouth-interior': 'M386 408 C408 432 439 420 459 395 C439 420 408 432 386 408', 'view-mouth-teeth': 'M392.57 405.5 C409.36 410.5 435.64 410.5 452.43 405.5 C435.64 415.5 409.36 415.5 392.57 405.5', 'view-mouth-tongue': 'M409.36 426 C415.2 421 429.8 421 435.64 426 C429.8 433 415.2 433 409.36 426', 'view-expression-mouth-interior': 'M386 408 C408 432 439 420 459 395 C439 420 408 432 386 408', 'view-expression-mouth-teeth-path': 'M394.2742 415.1245 C412.417 427.0499 434.3718 419.7757 451.3594 403.3987 C434.3718 419.7757 412.417 427.0499 394.2742 415.1245', 'view-expression-mouth-tongue': 'M409.36 426 C415.2 421 429.8 421 435.64 426 C429.8 433 415.2 433 409.36 426', 'view-seat-contour': 'M451 826L474 826L497 826L520 826L543 826L566 826L589 826L612 826L635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199Z', 'view-seat-fill': 'M451 826L474 826L497 826L520 826L543 826L566 826L589 826L612 826L635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199Z', 'view-seat-inset': 'M451 826L474 826L497 826L520 826L543 826L566 826L589 826L612 826L635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199Z', 'view-seat-edge': 'M635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199L451 826', 'view-seat-interior-edge': 'M635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199L451 826' }, face: { 'head-view-front': [Object], 'view-mouth-layer': [Object], 'view-eyes-layer': [Object], 'view-eye-screen-left-glyph': [Object], 'view-eye-screen-left-lid': [Object], 'view-eye-screen-right-glyph': [Object], 'view-eye-screen-right-lid': [Object], 'view-expression-layer': [Object], 'view-expression-mouth-teeth': [Object], 'view-expression-brow-screen-left': [Object], 'view-expression-brow-screen-right': [Object], 'hand-left-front-slot': [Object], 'hand-left-back-slot': [Object], 'ink-arm-left-front-slot': [Object], 'ink-arm-left-back-slot': [Object], 'hand-right-front-slot': [Object], 'hand-right-back-slot': [Object], 'ink-arm-right-front-slot': [Object], 'ink-arm-right-back-slot': [Object], 'view-seat-material-rest': [Object], 'view-seat-material-seat': [Object], 'view-seat-rest-0': [Object], 'view-seat-seat-0': [Object], 'view-seat-rest-1': [Object], 'view-seat-seat-1': [Object], 'view-seat-rest-2': [Object], 'view-seat-seat-2': [Object], 'view-seat-rest-3': [Object], 'view-seat-seat-3': [Object], 'view-seat-rest-4': [Object], 'view-seat-seat-4': [Object], 'view-seat-rest-5': [Object], 'view-seat-seat-5': [Object], 'view-seat-rest-6': [Object], 'view-seat-seat-6': [Object], 'view-seat-rest-7': [Object], 'view-seat-seat-7': [Object], 'view-seat-rest-8': [Object], 'view-seat-seat-8': [Object], 'view-seat-rest-9': [Object], 'view-seat-seat-9': [Object], 'view-seat-rest-10': [Object], 'view-seat-seat-10': [Object], 'view-seat-rest-11': [Object], 'view-seat-seat-11': [Object], 'view-seat-rest-12': [Object], 'view-seat-seat-12': [Object], 'view-seat-rest-13': [Object], 'view-seat-seat-13': [Object], 'view-seat-rest-14': [Object], 'view-seat-seat-14': [Object], 'view-seat-rest-15': [Object], 'view-seat-seat-15': [Object], 'view-seat-rest-16': [Object], 'view-seat-seat-16': [Object], 'view-seat-rest-17': [Object], 'view-seat-seat-17': [Object], 'view-seat-rest-18': [Object], 'view-seat-seat-18': [Object], 'view-seat-rest-19': [Object], 'view-seat-seat-19': [Object], 'view-seat-rest-20': [Object], 'view-seat-seat-20': [Object], 'view-seat-rest-21': [Object], 'view-seat-seat-21': [Object], 'view-seat-rest-22': [Object], 'view-seat-seat-22': [Object], 'view-seat-rest-23': [Object], 'view-seat-seat-23': [Object], 'view-seat-rest-24': [Object], 'view-seat-seat-24': [Object], 'view-seat-rest-25': [Object], 'view-seat-seat-25': [Object], 'view-seat-rest-26': [Object], 'view-seat-seat-26': [Object], 'view-seat-rest-27': [Object], 'view-seat-seat-27': [Object], 'view-seat-rest-28': [Object], 'view-seat-seat-28': [Object], 'view-seat-rest-29': [Object], 'view-seat-seat-29': [Object], 'view-seat-rest-30': [Object], 'view-seat-seat-30': [Object], 'view-seat-rest-31': [Object], 'view-seat-seat-31': [Object], 'view-seat-rest-32': [Object], 'view-seat-seat-32': [Object], 'view-seat-rest-33': [Object], 'view-seat-seat-33': [Object], 'view-seat-rest-34': [Object], 'view-seat-seat-34': [Object], 'view-seat-rest-35': [Object], 'view-seat-seat-35': [Object], 'view-seat-rest-36': [Object], 'view-seat-seat-36': [Object], 'view-seat-rest-37': [Object], 'view-seat-seat-37': [Object], 'view-seat-rest-38': [Object], 'view-seat-seat-38': [Object], 'view-seat-rest-39': [Object], 'view-seat-seat-39': [Object], 'view-seat-rest-40': [Object], 'view-seat-seat-40': [Object], 'view-seat-rest-41': [Object], 'view-seat-seat-41': [Object], 'view-seat-rest-42': [Object], 'view-seat-seat-42': [Object], 'view-seat-rest-43': [Object], 'view-seat-seat-43': [Object], 'view-seat-rest-44': [Object], 'view-seat-seat-44': [Object], 'view-seat-rest-45': [Object], 'view-seat-seat-45': [Object], 'view-seat-rest-46': [Object], 'view-seat-seat-46': [Object], 'view-seat-rest-47': [Object], 'view-seat-seat-47': [Object], 'view-seat-rest-48': [Object], 'view-seat-seat-48': [Object], 'view-seat-rest-49': [Object], 'view-seat-seat-49': [Object], 'view-seat-rest-50': [Object], 'view-seat-seat-50': [Object], 'view-seat-rest-51': [Object], 'view-seat-seat-51': [Object], 'view-seat-rest-52': [Object], 'view-seat-seat-52': [Object], 'view-seat-rest-53': [Object], 'view-seat-seat-53': [Object], 'view-seat-rest-54': [Object], 'view-seat-seat-54': [Object], 'view-seat-rest-55': [Object], 'view-seat-seat-55': [Object], 'view-seat-rest-56': [Object], 'view-seat-seat-56': [Object], 'view-seat-rest-57': [Object], 'view-seat-seat-57': [Object], 'view-seat-rest-58': [Object], 'view-seat-seat-58': [Object], 'view-seat-rest-59': [Object], 'view-seat-seat-59': [Object], 'view-seat-rest-60': [Object], 'view-seat-seat-60': [Object], 'view-seat-rest-61': [Object], 'view-seat-seat-61': [Object], 'view-seat-rest-62': [Object], 'view-seat-seat-62': [Object], 'view-seat-rest-63': [Object], 'view-seat-seat-63': [Object], 'view-seat-rest-64': [Object], 'view-seat-seat-64': [Object], 'view-seat-rest-65': [Object], 'view-seat-seat-65': [Object], 'view-seat-rest-66': [Object], 'view-seat-seat-66': [Object], 'view-seat-rest-67': [Object], 'view-seat-seat-67': [Object], 'view-seat-rest-68': [Object], 'view-seat-seat-68': [Object], 'view-seat-rest-69': [Object], 'view-seat-seat-69': [Object], 'view-seat-rest-70': [Object], 'view-seat-seat-70': [Object], 'view-seat-rest-71': [Object], 'view-seat-seat-71': [Object], 'view-seat-rest-72': [Object], 'view-seat-seat-72': [Object], 'view-seat-rest-73': [Object], 'view-seat-seat-73': [Object], 'view-seat-rest-74': [Object], 'view-seat-seat-74': [Object], 'view-seat-rest-75': [Object], 'view-seat-seat-75': [Object], 'view-seat-rest-76': [Object], 'view-seat-seat-76': [Object], 'view-seat-rest-77': [Object], 'view-seat-seat-77': [Object], 'view-seat-rest-78': [Object], 'view-seat-seat-78': [Object], 'view-seat-rest-79': [Object], 'view-seat-seat-79': [Object], 'view-seat-rest-80': [Object], 'view-seat-seat-80': [Object], 'view-seat-rest-81': [Object], 'view-seat-seat-81': [Object], 'view-seat-rest-82': [Object], 'view-seat-seat-82': [Object], 'view-seat-rest-83': [Object], 'view-seat-seat-83': [Object], 'view-seat-rest-84': [Object], 'view-seat-seat-84': [Object], 'view-seat-rest-85': [Object], 'view-seat-seat-85': [Object], 'view-seat-rest-86': [Object], 'view-seat-seat-86': [Object], 'view-seat-rest-87': [Object], 'view-seat-seat-87': [Object], 'view-seat-rest-88': [Object], 'view-seat-seat-88': [Object], 'view-seat-rest-89': [Object], 'view-seat-seat-89': [Object], 'view-seat-rest-90': [Object], 'view-seat-seat-90': [Object], 'view-seat-rest-91': [Object], 'view-seat-seat-91': [Object], 'view-seat-rest-92': [Object], 'view-seat-seat-92': [Object], 'view-seat-rest-93': [Object], 'view-seat-seat-93': [Object], 'view-seat-rest-94': [Object], 'view-seat-seat-94': [Object], 'view-seat-rest-95': [Object], 'view-seat-seat-95': [Object], 'view-seat-rest-96': [Object], 'view-seat-seat-96': [Object], 'view-seat-rest-97': [Object], 'view-seat-seat-97': [Object], 'view-seat-rest-98': [Object], 'view-seat-seat-98': [Object], 'view-seat-rest-99': [Object], 'view-seat-seat-99': [Object], 'view-seat-rest-100': [Object], 'view-seat-seat-100': [Object], 'view-seat-rest-101': [Object], 'view-seat-seat-101': [Object], 'view-seat-rest-102': [Object], 'view-seat-seat-102': [Object], 'view-seat-rest-103': [Object], 'view-seat-seat-103': [Object], 'view-seat-rest-104': [Object], 'view-seat-seat-104': [Object], 'view-seat-rest-105': [Object], 'view-seat-seat-105': [Object], 'view-seat-rest-106': [Object], 'view-seat-seat-106': [Object], 'view-seat-rest-107': [Object], 'view-seat-seat-107': [Object], 'view-seat-rest-108': [Object], 'view-seat-seat-108': [Object], 'view-seat-rest-109': [Object], 'view-seat-seat-109': [Object], 'view-seat-rest-110': [Object], 'view-seat-seat-110': [Object], 'view-seat-rest-111': [Object], 'view-seat-seat-111': [Object], 'view-seat-rest-112': [Object], 'view-seat-seat-112': [Object], 'view-seat-rest-113': [Object], 'view-seat-seat-113': [Object], 'view-seat-rest-114': [Object], 'view-seat-seat-114': [Object], 'view-seat-rest-115': [Object], 'view-seat-seat-115': [Object], 'view-seat-rest-116': [Object], 'view-seat-seat-116': [Object], 'view-seat-rest-117': [Object], 'view-seat-seat-117': [Object], 'view-seat-rest-118': [Object], 'view-seat-seat-118': [Object], 'view-seat-rest-119': [Object], 'view-seat-seat-119': [Object], 'view-seat-rest-120': [Object], 'view-seat-seat-120': [Object], 'view-seat-rest-121': [Object], 'view-seat-seat-121': [Object], 'view-seat-rest-122': [Object], 'view-seat-seat-122': [Object], 'view-seat-rest-123': [Object], 'view-seat-seat-123': [Object], 'view-seat-rest-124': [Object], 'view-seat-seat-124': [Object], 'view-seat-rest-125': [Object], 'view-seat-seat-125': [Object], 'view-seat-rest-126': [Object], 'view-seat-seat-126': [Object], 'view-seat-rest-127': [Object], 'view-seat-seat-127': [Object], 'view-seat-rest-128': [Object], 'view-seat-seat-128': [Object], 'view-seat-rest-129': [Object], 'view-seat-seat-129': [Object], 'view-seat-rest-130': [Object], 'view-seat-seat-130': [Object], 'view-seat-rest-131': [Object], 'view-seat-seat-131': [Object], 'view-seat-rest-132': [Object], 'view-seat-seat-132': [Object], 'view-seat-rest-133': [Object], 'view-seat-seat-133': [Object], 'view-seat-rest-134': [Object], 'view-seat-seat-134': [Object], 'view-seat-rest-135': [Object], 'view-seat-seat-135': [Object], 'view-seat-rest-136': [Object], 'view-seat-seat-136': [Object], 'view-seat-rest-137': [Object], 'view-seat-seat-137': [Object], 'view-seat-rest-138': [Object], 'view-seat-seat-138': [Object], 'view-seat-rest-139': [Object], 'view-seat-seat-139': [Object], 'view-seat-rest-140': [Object], 'view-seat-seat-140': [Object], 'view-seat-rest-141': [Object], 'view-seat-seat-141': [Object], 'view-seat-rest-142': [Object], 'view-seat-seat-142': [Object], 'view-seat-rest-143': [Object], 'view-seat-seat-143': [Object], 'view-seat-rest-144': [Object], 'view-seat-seat-144': [Object], 'view-seat-rest-145': [Object], 'view-seat-seat-145': [Object], 'view-seat-rest-146': [Object], 'view-seat-seat-146': [Object], 'view-seat-rest-147': [Object], 'view-seat-seat-147': [Object], 'view-seat-rest-148': [Object], 'view-seat-seat-148': [Object], 'view-seat-rest-149': [Object], 'view-seat-seat-149': [Object], 'view-seat-rest-150': [Object], 'view-seat-seat-150': [Object], 'view-seat-rest-151': [Object], 'view-seat-seat-151': [Object], 'view-seat-rest-152': [Object], 'view-seat-seat-152': [Object], 'view-seat-rest-153': [Object], 'view-seat-seat-153': [Object], 'view-seat-rest-154': [Object], 'view-seat-seat-154': [Object], 'view-seat-rest-155': [Object], 'view-seat-seat-155': [Object], 'view-seat-rest-156': [Object], 'view-seat-seat-156': [Object], 'view-seat-rest-157': [Object], 'view-seat-seat-157': [Object], 'view-seat-rest-158': [Object], 'view-seat-seat-158': [Object], 'view-seat-rest-159': [Object], 'view-seat-seat-159': [Object], 'view-seat-rest-160': [Object], 'view-seat-seat-160': [Object], 'view-seat-rest-161': [Object], 'view-seat-seat-161': [Object], 'view-seat-rest-162': [Object], 'view-seat-seat-162': [Object], 'view-seat-rest-163': [Object], 'view-seat-seat-163': [Object], 'view-seat-rest-164': [Object], 'view-seat-seat-164': [Object], 'view-seat-rest-165': [Object], 'view-seat-seat-165': [Object], 'view-seat-rest-166': [Object], 'view-seat-seat-166': [Object], 'view-seat-rest-167': [Object], 'view-seat-seat-167': [Object], 'view-seat-rest-168': [Object], 'view-seat-seat-168': [Object], 'view-seat-rest-169': [Object], 'view-seat-seat-169': [Object], 'view-seat-rest-170': [Object], 'view-seat-seat-170': [Object], 'view-seat-rest-171': [Object], 'view-seat-seat-171': [Object], 'view-seat-rest-172': [Object], 'view-seat-seat-172': [Object], 'view-seat-rest-173': [Object], 'view-seat-seat-173': [Object], 'view-seat-rest-174': [Object], 'view-seat-seat-174': [Object], 'view-seat-rest-175': [Object], 'view-seat-seat-175': [Object], 'view-seat-rest-176': [Object], 'view-seat-seat-176': [Object], 'view-seat-rest-177': [Object], 'view-seat-seat-177': [Object], 'view-seat-rest-178': [Object], 'view-seat-seat-178': [Object], 'view-seat-rest-179': [Object], 'view-seat-seat-179': [Object], 'view-seat-rest-180': [Object], 'view-seat-seat-180': [Object], 'view-seat-rest-181': [Object], 'view-seat-seat-181': [Object], 'view-seat-rest-182': [Object], 'view-seat-seat-182': [Object], 'view-seat-rest-183': [Object], 'view-seat-seat-183': [Object], 'view-seat-rest-184': [Object], 'view-seat-seat-184': [Object], 'view-seat-rest-185': [Object], 'view-seat-seat-185': [Object], 'view-seat-rest-186': [Object], 'view-seat-seat-186': [Object], 'view-seat-rest-187': [Object], 'view-seat-seat-187': [Object], 'view-seat-rest-188': [Object], 'view-seat-seat-188': [Object], 'view-seat-rest-189': [Object], 'view-seat-seat-189': [Object], 'view-seat-rest-190': [Object], 'view-seat-seat-190': [Object], 'view-seat-rest-191': [Object], 'view-seat-seat-191': [Object], 'view-seat-rest-192': [Object], 'view-seat-seat-192': [Object], 'view-seat-rest-193': [Object], 'view-seat-seat-193': [Object], 'view-seat-rest-194': [Object], 'view-seat-seat-194': [Object], 'view-seat-rest-195': [Object], 'view-seat-seat-195': [Object], 'view-seat-rest-196': [Object], 'view-seat-seat-196': [Object], 'view-seat-rest-197': [Object], 'view-seat-seat-197': [Object], 'view-seat-rest-198': [Object], 'view-seat-seat-198': [Object], 'view-seat-rest-199': [Object], 'view-seat-seat-199': [Object], 'view-seat-rest-200': [Object], 'view-seat-seat-200': [Object], 'view-seat-rest-201': [Object], 'view-seat-seat-201': [Object], 'view-seat-rest-202': [Object], 'view-seat-seat-202': [Object], 'view-seat-rest-203': [Object], 'view-seat-seat-203': [Object], 'view-seat-rest-204': [Object], 'view-seat-seat-204': [Object], 'view-seat-rest-205': [Object], 'view-seat-seat-205': [Object], 'view-seat-rest-206': [Object], 'view-seat-seat-206': [Object], 'view-seat-rest-207': [Object], 'view-seat-seat-207': [Object], 'view-seat-rest-208': [Object], 'view-seat-seat-208': [Object], 'view-seat-rest-209': [Object], 'view-seat-seat-209': [Object], 'view-seat-rest-210': [Object], 'view-seat-seat-210': [Object], 'view-seat-rest-211': [Object], 'view-seat-seat-211': [Object], 'view-seat-rest-212': [Object], 'view-seat-seat-212': [Object], 'view-seat-rest-213': [Object], 'view-seat-seat-213': [Object], 'view-seat-rest-214': [Object], 'view-seat-seat-214': [Object], 'view-seat-rest-215': [Object], 'view-seat-seat-215': [Object], 'view-seat-rest-216': [Object], 'view-seat-seat-216': [Object], 'view-seat-rest-217': [Object], 'view-seat-seat-217': [Object], 'view-seat-rest-218': [Object], 'view-seat-seat-218': [Object], 'view-seat-rest-219': [Object], 'view-seat-seat-219': [Object], 'view-seat-rest-220': [Object], 'view-seat-seat-220': [Object], 'view-seat-rest-221': [Object], 'view-seat-seat-221': [Object], 'view-secondary-crest-0': [Object], 'view-secondary-crest-1': [Object], 'view-secondary-crest-2': [Object], 'view-secondary-crest-3': [Object], 'view-secondary-crest-4': [Object], 'view-secondary-crest-5': [Object], 'view-secondary-crest-6': [Object], 'view-secondary-crest-7': [Object], 'view-secondary-crest-8': [Object], 'view-secondary-crest-9': [Object], 'view-secondary-crest-10': [Object], 'view-secondary-crest-11': [Object], 'view-secondary-tail-0': [Object], 'view-secondary-tail-1': [Object], 'view-secondary-tail-2': [Object], 'view-secondary-tail-3': [Object], 'view-secondary-tail-4': [Object], 'view-secondary-tail-5': [Object], 'view-secondary-tail-6': [Object], 'view-secondary-tail-7': [Object], 'view-secondary-tail-8': [Object], 'view-secondary-tail-9': [Object], 'view-secondary-tail-10': [Object], 'view-secondary-tail-11': [Object] }, props: {}, mood: 'happy', contactError: 0, contactErrors: { left: 0, right: 0 } },
+    expected: { root: { x: 210, y: 410 }, feet: { left: [Object], right: [Object] }, stance: { left: false, right: true }, bodyPosture: { pelvisDropRatio: 0, leanDeg: 0, seatWeights: [Object] }, legProjection: { left: [Object], right: [Object] }, armGeometry: { left: [Object], right: [Object] }, hands: { left: [Object], right: [Object] }, wrists: { left: [Object], right: [Object] }, transforms: { 'ground-shadow': 'translate(210 414) rotate(0) scale(1)', pelvis: 'translate(210 310.6769) rotate(0) scale(1)', chest: 'translate(210 310.6769) rotate(-6.4387) scale(0.75)', 'neck-art': 'translate(197.9702 261.6165) rotate(-6.4387) scale(0.75)', neck: 'translate(197.9702 261.6165) rotate(-90) scale(0.75 0)', head: 'translate(197.9702 261.6165) rotate(-6.4387) scale(0.75)', 'leg-left-upper': 'translate(203.0712 315.2784) rotate(20.1708) scale(0.75 0.7145)', 'leg-left-lower': 'translate(187.5255 357.5969) rotate(-14.5569) scale(0.75 0.7073)', 'foot-left': 'translate(197.7838 407.0642) rotate(0) scale(0.75)', 'arm-left-upper': 'translate(186.5457 272.0726) rotate(36.7908) scale(0.75)', 'arm-left-lower': 'translate(163.7794 302.5153) rotate(8.56) scale(0.75)', 'hand-left': 'translate(157.2915 345.6179) rotate(0.133) scale(0.75)', 'leg-right-upper': 'translate(218.3458 313.5546) rotate(2.8459) scale(0.75 0.7426)', 'leg-right-lower': 'translate(216.0958 358.816) rotate(-12.2061) scale(0.75 0.7413)', 'foot-right': 'translate(224.9452 410) rotate(0) scale(0.75)', 'arm-right-upper': 'translate(218.3021 275.937) rotate(-36.2282) scale(0.75)', 'arm-right-lower': 'translate(237.2379 301.7827) rotate(-15.5447) scale(0.75)', 'hand-right': 'translate(247.4306 338.4253) rotate(-9.2045) scale(0.75)' }, paths: { 'ink-leg-left': 'M203.0712 315.2784 C196.542 333.0522 188.0851 346.1827 187.5255 357.5969 C186.9659 369.0111 193.4753 380.5091 197.7838 397.1008', 'ink-arm-left': 'M186.5457 272.0726 C176.9838 284.8585 167.5671 293.4496 163.7794 302.5153 C159.9917 311.5809 160.7501 322.6406 158.5565 337.2141', 'ink-leg-right': 'M218.3458 313.5546 C217.4008 332.5644 215.1396 347.1356 216.0958 358.816 C217.052 370.4964 221.2284 382.5433 224.9452 399.7252', 'ink-arm-right': 'M218.3021 275.937 C226.2551 286.7922 233.6224 294.3325 237.2379 301.7827 C240.8533 309.2329 241.8349 318.309 245.1638 330.2763', 'view-mouth-interior': 'M386 408 C408 432 439 420 459 395 C439 420 408 432 386 408', 'view-mouth-teeth': 'M392.57 405.5 C409.36 410.5 435.64 410.5 452.43 405.5 C435.64 415.5 409.36 415.5 392.57 405.5', 'view-mouth-tongue': 'M409.36 426 C415.2 421 429.8 421 435.64 426 C429.8 433 415.2 433 409.36 426', 'view-expression-mouth-interior': 'M386 408 C408 432 439 420 459 395 C439 420 408 432 386 408', 'view-expression-mouth-teeth-path': 'M394.2742 415.1245 C412.417 427.0499 434.3718 419.7757 451.3594 403.3987 C434.3718 419.7757 412.417 427.0499 394.2742 415.1245', 'view-expression-mouth-tongue': 'M409.36 426 C415.2 421 429.8 421 435.64 426 C429.8 433 415.2 433 409.36 426', 'view-seat-contour': 'M451 826L474 826L497 826L520 826L543 826L566 826L589 826L612 826L635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199Z', 'view-seat-fill': 'M451 826L474 826L497 826L520 826L543 826L566 826L589 826L612 826L635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199Z', 'view-seat-inset': 'M451 826L474 826L497 826L520 826L543 826L566 826L589 826L612 826L635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199Z', 'view-seat-edge': 'M635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199L451 826', 'view-seat-interior-edge': 'M635 826L632.9991872 852.2508053L644.9943019 882.5042589L638.9849094 908.7574884L647.9648498 942.0153006L651.6891757 972.0228301L657.9116582 998.5311719L671.6291401 1027.0442275L661.843561 1059.0436651L642.8473551 1055.69844L627.8644627 1040.354927L619.8431183 1060.0179122L602.8406167 1062.6741592L595.1747086 1062.0027112L581.8233064 1078.9951227L573.8309632 1062.9946755L569.8487723 1042.9957252L563.8581057 1028.9973799L550.8256522 1036.0005778L545.8465676 1017.0020183L537.8609993 1001.0031255L527.8004557 1026.0021674L519.7347702 1052.9984956L504.6859766 1068.9863845L495.7112132 1054.9778199L483.6685237 1077.9607255L466.6428921 1095.9381715L461.4164071 1079.9332352L458.7001274 1061.4332972L451.714 1054.6767851L442.6904094 1066.9129395L432.6708825 1078.1483203L421.6868861 1069.3870395L414.6961659 1064.6301144L401.681638 1072.8618382L393.7419685 1042.6158346L404.3184779 1006.8998427L402.8744468 979.1691089L419.9267162 947.9521208L423.9620694 919.7207152L436.9887317 884.4894801L433.7478349 856.9967199L451 826' }, face: { 'head-view-front': [Object], 'view-mouth-layer': [Object], 'view-eyes-layer': [Object], 'view-eye-screen-left-glyph': [Object], 'view-eye-screen-left-lid': [Object], 'view-eye-screen-right-glyph': [Object], 'view-eye-screen-right-lid': [Object], 'view-expression-layer': [Object], 'view-expression-mouth-teeth': [Object], 'view-expression-brow-screen-left': [Object], 'view-expression-brow-screen-right': [Object], 'hand-left-front-slot': [Object], 'hand-left-back-slot': [Object], 'ink-arm-left-front-slot': [Object], 'ink-arm-left-back-slot': [Object], 'hand-right-front-slot': [Object], 'hand-right-back-slot': [Object], 'ink-arm-right-front-slot': [Object], 'ink-arm-right-back-slot': [Object], 'view-seat-material-rest': [Object], 'view-seat-material-seat': [Object], 'view-seat-rest-0': [Object], 'view-seat-seat-0': [Object], 'view-seat-rest-1': [Object], 'view-seat-seat-1': [Object], 'view-seat-rest-2': [Object], 'view-seat-seat-2': [Object], 'view-seat-rest-3': [Object], 'view-seat-seat-3': [Object], 'view-seat-rest-4': [Object], 'view-seat-seat-4': [Object], 'view-seat-rest-5': [Object], 'view-seat-seat-5': [Object], 'view-seat-rest-6': [Object], 'view-seat-seat-6': [Object], 'view-seat-rest-7': [Object], 'view-seat-seat-7': [Object], 'view-seat-rest-8': [Object], 'view-seat-seat-8': [Object], 'view-seat-rest-9': [Object], 'view-seat-seat-9': [Object], 'view-seat-rest-10': [Object], 'view-seat-seat-10': [Object], 'view-seat-rest-11': [Object], 'view-seat-seat-11': [Object], 'view-seat-rest-12': [Object], 'view-seat-seat-12': [Object], 'view-seat-rest-13': [Object], 'view-seat-seat-13': [Object], 'view-seat-rest-14': [Object], 'view-seat-seat-14': [Object], 'view-seat-rest-15': [Object], 'view-seat-seat-15': [Object], 'view-seat-rest-16': [Object], 'view-seat-seat-16': [Object], 'view-seat-rest-17': [Object], 'view-seat-seat-17': [Object], 'view-seat-rest-18': [Object], 'view-seat-seat-18': [Object], 'view-seat-rest-19': [Object], 'view-seat-seat-19': [Object], 'view-seat-rest-20': [Object], 'view-seat-seat-20': [Object], 'view-seat-rest-21': [Object], 'view-seat-seat-21': [Object], 'view-seat-rest-22': [Object], 'view-seat-seat-22': [Object], 'view-seat-rest-23': [Object], 'view-seat-seat-23': [Object], 'view-seat-rest-24': [Object], 'view-seat-seat-24': [Object], 'view-seat-rest-25': [Object], 'view-seat-seat-25': [Object], 'view-seat-rest-26': [Object], 'view-seat-seat-26': [Object], 'view-seat-rest-27': [Object], 'view-seat-seat-27': [Object], 'view-seat-rest-28': [Object], 'view-seat-seat-28': [Object], 'view-seat-rest-29': [Object], 'view-seat-seat-29': [Object], 'view-seat-rest-30': [Object], 'view-seat-seat-30': [Object], 'view-seat-rest-31': [Object], 'view-seat-seat-31': [Object], 'view-seat-rest-32': [Object], 'view-seat-seat-32': [Object], 'view-seat-rest-33': [Object], 'view-seat-seat-33': [Object], 'view-seat-rest-34': [Object], 'view-seat-seat-34': [Object], 'view-seat-rest-35': [Object], 'view-seat-seat-35': [Object], 'view-seat-rest-36': [Object], 'view-seat-seat-36': [Object], 'view-seat-rest-37': [Object], 'view-seat-seat-37': [Object], 'view-seat-rest-38': [Object], 'view-seat-seat-38': [Object], 'view-seat-rest-39': [Object], 'view-seat-seat-39': [Object], 'view-seat-rest-40': [Object], 'view-seat-seat-40': [Object], 'view-seat-rest-41': [Object], 'view-seat-seat-41': [Object], 'view-seat-rest-42': [Object], 'view-seat-seat-42': [Object], 'view-seat-rest-43': [Object], 'view-seat-seat-43': [Object], 'view-seat-rest-44': [Object], 'view-seat-seat-44': [Object], 'view-seat-rest-45': [Object], 'view-seat-seat-45': [Object], 'view-seat-rest-46': [Object], 'view-seat-seat-46': [Object], 'view-seat-rest-47': [Object], 'view-seat-seat-47': [Object], 'view-seat-rest-48': [Object], 'view-seat-seat-48': [Object], 'view-seat-rest-49': [Object], 'view-seat-seat-49': [Object], 'view-seat-rest-50': [Object], 'view-seat-seat-50': [Object], 'view-seat-rest-51': [Object], 'view-seat-seat-51': [Object], 'view-seat-rest-52': [Object], 'view-seat-seat-52': [Object], 'view-seat-rest-53': [Object], 'view-seat-seat-53': [Object], 'view-seat-rest-54': [Object], 'view-seat-seat-54': [Object], 'view-seat-rest-55': [Object], 'view-seat-seat-55': [Object], 'view-seat-rest-56': [Object], 'view-seat-seat-56': [Object], 'view-seat-rest-57': [Object], 'view-seat-seat-57': [Object], 'view-seat-rest-58': [Object], 'view-seat-seat-58': [Object], 'view-seat-rest-59': [Object], 'view-seat-seat-59': [Object], 'view-seat-rest-60': [Object], 'view-seat-seat-60': [Object], 'view-seat-rest-61': [Object], 'view-seat-seat-61': [Object], 'view-seat-rest-62': [Object], 'view-seat-seat-62': [Object], 'view-seat-rest-63': [Object], 'view-seat-seat-63': [Object], 'view-seat-rest-64': [Object], 'view-seat-seat-64': [Object], 'view-seat-rest-65': [Object], 'view-seat-seat-65': [Object], 'view-seat-rest-66': [Object], 'view-seat-seat-66': [Object], 'view-seat-rest-67': [Object], 'view-seat-seat-67': [Object], 'view-seat-rest-68': [Object], 'view-seat-seat-68': [Object], 'view-seat-rest-69': [Object], 'view-seat-seat-69': [Object], 'view-seat-rest-70': [Object], 'view-seat-seat-70': [Object], 'view-seat-rest-71': [Object], 'view-seat-seat-71': [Object], 'view-seat-rest-72': [Object], 'view-seat-seat-72': [Object], 'view-seat-rest-73': [Object], 'view-seat-seat-73': [Object], 'view-seat-rest-74': [Object], 'view-seat-seat-74': [Object], 'view-seat-rest-75': [Object], 'view-seat-seat-75': [Object], 'view-seat-rest-76': [Object], 'view-seat-seat-76': [Object], 'view-seat-rest-77': [Object], 'view-seat-seat-77': [Object], 'view-seat-rest-78': [Object], 'view-seat-seat-78': [Object], 'view-seat-rest-79': [Object], 'view-seat-seat-79': [Object], 'view-seat-rest-80': [Object], 'view-seat-seat-80': [Object], 'view-seat-rest-81': [Object], 'view-seat-seat-81': [Object], 'view-seat-rest-82': [Object], 'view-seat-seat-82': [Object], 'view-seat-rest-83': [Object], 'view-seat-seat-83': [Object], 'view-seat-rest-84': [Object], 'view-seat-seat-84': [Object], 'view-seat-rest-85': [Object], 'view-seat-seat-85': [Object], 'view-seat-rest-86': [Object], 'view-seat-seat-86': [Object], 'view-seat-rest-87': [Object], 'view-seat-seat-87': [Object], 'view-seat-rest-88': [Object], 'view-seat-seat-88': [Object], 'view-seat-rest-89': [Object], 'view-seat-seat-89': [Object], 'view-seat-rest-90': [Object], 'view-seat-seat-90': [Object], 'view-seat-rest-91': [Object], 'view-seat-seat-91': [Object], 'view-seat-rest-92': [Object], 'view-seat-seat-92': [Object], 'view-seat-rest-93': [Object], 'view-seat-seat-93': [Object], 'view-seat-rest-94': [Object], 'view-seat-seat-94': [Object], 'view-seat-rest-95': [Object], 'view-seat-seat-95': [Object], 'view-seat-rest-96': [Object], 'view-seat-seat-96': [Object], 'view-seat-rest-97': [Object], 'view-seat-seat-97': [Object], 'view-seat-rest-98': [Object], 'view-seat-seat-98': [Object], 'view-seat-rest-99': [Object], 'view-seat-seat-99': [Object], 'view-seat-rest-100': [Object], 'view-seat-seat-100': [Object], 'view-seat-rest-101': [Object], 'view-seat-seat-101': [Object], 'view-seat-rest-102': [Object], 'view-seat-seat-102': [Object], 'view-seat-rest-103': [Object], 'view-seat-seat-103': [Object], 'view-seat-rest-104': [Object], 'view-seat-seat-104': [Object], 'view-seat-rest-105': [Object], 'view-seat-seat-105': [Object], 'view-seat-rest-106': [Object], 'view-seat-seat-106': [Object], 'view-seat-rest-107': [Object], 'view-seat-seat-107': [Object], 'view-seat-rest-108': [Object], 'view-seat-seat-108': [Object], 'view-seat-rest-109': [Object], 'view-seat-seat-109': [Object], 'view-seat-rest-110': [Object], 'view-seat-seat-110': [Object], 'view-seat-rest-111': [Object], 'view-seat-seat-111': [Object], 'view-seat-rest-112': [Object], 'view-seat-seat-112': [Object], 'view-seat-rest-113': [Object], 'view-seat-seat-113': [Object], 'view-seat-rest-114': [Object], 'view-seat-seat-114': [Object], 'view-seat-rest-115': [Object], 'view-seat-seat-115': [Object], 'view-seat-rest-116': [Object], 'view-seat-seat-116': [Object], 'view-seat-rest-117': [Object], 'view-seat-seat-117': [Object], 'view-seat-rest-118': [Object], 'view-seat-seat-118': [Object], 'view-seat-rest-119': [Object], 'view-seat-seat-119': [Object], 'view-seat-rest-120': [Object], 'view-seat-seat-120': [Object], 'view-seat-rest-121': [Object], 'view-seat-seat-121': [Object], 'view-seat-rest-122': [Object], 'view-seat-seat-122': [Object], 'view-seat-rest-123': [Object], 'view-seat-seat-123': [Object], 'view-seat-rest-124': [Object], 'view-seat-seat-124': [Object], 'view-seat-rest-125': [Object], 'view-seat-seat-125': [Object], 'view-seat-rest-126': [Object], 'view-seat-seat-126': [Object], 'view-seat-rest-127': [Object], 'view-seat-seat-127': [Object], 'view-seat-rest-128': [Object], 'view-seat-seat-128': [Object], 'view-seat-rest-129': [Object], 'view-seat-seat-129': [Object], 'view-seat-rest-130': [Object], 'view-seat-seat-130': [Object], 'view-seat-rest-131': [Object], 'view-seat-seat-131': [Object], 'view-seat-rest-132': [Object], 'view-seat-seat-132': [Object], 'view-seat-rest-133': [Object], 'view-seat-seat-133': [Object], 'view-seat-rest-134': [Object], 'view-seat-seat-134': [Object], 'view-seat-rest-135': [Object], 'view-seat-seat-135': [Object], 'view-seat-rest-136': [Object], 'view-seat-seat-136': [Object], 'view-seat-rest-137': [Object], 'view-seat-seat-137': [Object], 'view-seat-rest-138': [Object], 'view-seat-seat-138': [Object], 'view-seat-rest-139': [Object], 'view-seat-seat-139': [Object], 'view-seat-rest-140': [Object], 'view-seat-seat-140': [Object], 'view-seat-rest-141': [Object], 'view-seat-seat-141': [Object], 'view-seat-rest-142': [Object], 'view-seat-seat-142': [Object], 'view-seat-rest-143': [Object], 'view-seat-seat-143': [Object], 'view-seat-rest-144': [Object], 'view-seat-seat-144': [Object], 'view-seat-rest-145': [Object], 'view-seat-seat-145': [Object], 'view-seat-rest-146': [Object], 'view-seat-seat-146': [Object], 'view-seat-rest-147': [Object], 'view-seat-seat-147': [Object], 'view-seat-rest-148': [Object], 'view-seat-seat-148': [Object], 'view-seat-rest-149': [Object], 'view-seat-seat-149': [Object], 'view-seat-rest-150': [Object], 'view-seat-seat-150': [Object], 'view-seat-rest-151': [Object], 'view-seat-seat-151': [Object], 'view-seat-rest-152': [Object], 'view-seat-seat-152': [Object], 'view-seat-rest-153': [Object], 'view-seat-seat-153': [Object], 'view-seat-rest-154': [Object], 'view-seat-seat-154': [Object], 'view-seat-rest-155': [Object], 'view-seat-seat-155': [Object], 'view-seat-rest-156': [Object], 'view-seat-seat-156': [Object], 'view-seat-rest-157': [Object], 'view-seat-seat-157': [Object], 'view-seat-rest-158': [Object], 'view-seat-seat-158': [Object], 'view-seat-rest-159': [Object], 'view-seat-seat-159': [Object], 'view-seat-rest-160': [Object], 'view-seat-seat-160': [Object], 'view-seat-rest-161': [Object], 'view-seat-seat-161': [Object], 'view-seat-rest-162': [Object], 'view-seat-seat-162': [Object], 'view-seat-rest-163': [Object], 'view-seat-seat-163': [Object], 'view-seat-rest-164': [Object], 'view-seat-seat-164': [Object], 'view-seat-rest-165': [Object], 'view-seat-seat-165': [Object], 'view-seat-rest-166': [Object], 'view-seat-seat-166': [Object], 'view-seat-rest-167': [Object], 'view-seat-seat-167': [Object], 'view-seat-rest-168': [Object], 'view-seat-seat-168': [Object], 'view-seat-rest-169': [Object], 'view-seat-seat-169': [Object], 'view-seat-rest-170': [Object], 'view-seat-seat-170': [Object], 'view-seat-rest-171': [Object], 'view-seat-seat-171': [Object], 'view-seat-rest-172': [Object], 'view-seat-seat-172': [Object], 'view-seat-rest-173': [Object], 'view-seat-seat-173': [Object], 'view-seat-rest-174': [Object], 'view-seat-seat-174': [Object], 'view-seat-rest-175': [Object], 'view-seat-seat-175': [Object], 'view-seat-rest-176': [Object], 'view-seat-seat-176': [Object], 'view-seat-rest-177': [Object], 'view-seat-seat-177': [Object], 'view-seat-rest-178': [Object], 'view-seat-seat-178': [Object], 'view-seat-rest-179': [Object], 'view-seat-seat-179': [Object], 'view-seat-rest-180': [Object], 'view-seat-seat-180': [Object], 'view-seat-rest-181': [Object], 'view-seat-seat-181': [Object], 'view-seat-rest-182': [Object], 'view-seat-seat-182': [Object], 'view-seat-rest-183': [Object], 'view-seat-seat-183': [Object], 'view-seat-rest-184': [Object], 'view-seat-seat-184': [Object], 'view-seat-rest-185': [Object], 'view-seat-seat-185': [Object], 'view-seat-rest-186': [Object], 'view-seat-seat-186': [Object], 'view-seat-rest-187': [Object], 'view-seat-seat-187': [Object], 'view-seat-rest-188': [Object], 'view-seat-seat-188': [Object], 'view-seat-rest-189': [Object], 'view-seat-seat-189': [Object], 'view-seat-rest-190': [Object], 'view-seat-seat-190': [Object], 'view-seat-rest-191': [Object], 'view-seat-seat-191': [Object], 'view-seat-rest-192': [Object], 'view-seat-seat-192': [Object], 'view-seat-rest-193': [Object], 'view-seat-seat-193': [Object], 'view-seat-rest-194': [Object], 'view-seat-seat-194': [Object], 'view-seat-rest-195': [Object], 'view-seat-seat-195': [Object], 'view-seat-rest-196': [Object], 'view-seat-seat-196': [Object], 'view-seat-rest-197': [Object], 'view-seat-seat-197': [Object], 'view-seat-rest-198': [Object], 'view-seat-seat-198': [Object], 'view-seat-rest-199': [Object], 'view-seat-seat-199': [Object], 'view-seat-rest-200': [Object], 'view-seat-seat-200': [Object], 'view-seat-rest-201': [Object], 'view-seat-seat-201': [Object], 'view-seat-rest-202': [Object], 'view-seat-seat-202': [Object], 'view-seat-rest-203': [Object], 'view-seat-seat-203': [Object], 'view-seat-rest-204': [Object], 'view-seat-seat-204': [Object], 'view-seat-rest-205': [Object], 'view-seat-seat-205': [Object], 'view-seat-rest-206': [Object], 'view-seat-seat-206': [Object], 'view-seat-rest-207': [Object], 'view-seat-seat-207': [Object], 'view-seat-rest-208': [Object], 'view-seat-seat-208': [Object], 'view-seat-rest-209': [Object], 'view-seat-seat-209': [Object], 'view-seat-rest-210': [Object], 'view-seat-seat-210': [Object], 'view-seat-rest-211': [Object], 'view-seat-seat-211': [Object], 'view-seat-rest-212': [Object], 'view-seat-seat-212': [Object], 'view-seat-rest-213': [Object], 'view-seat-seat-213': [Object], 'view-seat-rest-214': [Object], 'view-seat-seat-214': [Object], 'view-seat-rest-215': [Object], 'view-seat-seat-215': [Object], 'view-seat-rest-216': [Object], 'view-seat-seat-216': [Object], 'view-seat-rest-217': [Object], 'view-seat-seat-217': [Object], 'view-seat-rest-218': [Object], 'view-seat-seat-218': [Object], 'view-seat-rest-219': [Object], 'view-seat-seat-219': [Object], 'view-seat-rest-220': [Object], 'view-seat-seat-220': [Object], 'view-seat-rest-221': [Object], 'view-seat-seat-221': [Object], 'view-secondary-crest-0': [Object], 'view-secondary-crest-1': [Object], 'view-secondary-crest-2': [Object], 'view-secondary-crest-3': [Object], 'view-secondary-crest-4': [Object], 'view-secondary-crest-5': [Object], 'view-secondary-crest-6': [Object], 'view-secondary-crest-7': [Object], 'view-secondary-crest-8': [Object], 'view-secondary-crest-9': [Object], 'view-secondary-crest-10': [Object], 'view-secondary-crest-11': [Object], 'view-secondary-tail-0': [Object], 'view-secondary-tail-1': [Object], 'view-secondary-tail-2': [Object], 'view-secondary-tail-3': [Object], 'view-secondary-tail-4': [Object], 'view-secondary-tail-5': [Object], 'view-secondary-tail-6': [Object], 'view-secondary-tail-7': [Object], 'view-secondary-tail-8': [Object], 'view-secondary-tail-9': [Object], 'view-secondary-tail-10': [Object], 'view-secondary-tail-11': [Object] }, props: {}, mood: 'happy', contactError: 0, contactErrors: { left: 0, right: 0 } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\native-source-seat.test.ts:1:13095
+✖ baked support boundaries, reports and camera/preview refer to the original seat clock (6728.122ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "[
+    {
+      "code": "custom",
+      "path": [
+        "startScale"
+      ],
+      "message": "wide camera scale must be 0.65–1.12; validate host size and focus inside the safe viewport."
+    },
+    {
+      "code": "custom",
+      "path": [
+        "endScale"
+      ],
+      "message": "wide camera scale must be 0.65–1.12; validate host size and focus inside the safe viewport."
+    }
+  ]"
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:137:213)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: ZodError: [
+      {
+        "code": "custom",
+        "path": [
+          "startScale"
+        ],
+        "message": "wide camera scale must be 0.65–1.12; validate host size and focus inside the safe viewport."
+      },
+      {
+        "code": "custom",
+        "path": [
+          "endScale"
+        ],
+        "message": "wide camera scale must be 0.65–1.12; validate host size and focus inside the safe viewport."
+      }
+    ]
+        at get error (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:39:31)
+        at ZodEffects.parse (file:///D:/github/Story-2-video-factory2.1/node_modules/zod/v3/types.js:114:22)
+        at planCamera (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\camera.ts:199:25)
+        at <anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:137:230)
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:137:213)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }
+
+test at tests\native-source-seat.test.ts:1:14403
+✖ single-actor framing fits the whole source seat including its shadow and backrest (2941.375ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "world.propBindings is not iterable"
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:144:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: world.propBindings is not iterable
+        at cameraSourceGeometry (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\camera.ts:234:30)
+        at validateCamera (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\camera.ts:255:43)
+        at <anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:144:27)
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:144:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }
+
+test at tests\native-source-seat.test.ts:1:15521
+✖ canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes (29611.5533ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   'Scene exceeds max_scene_bytes'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-seat.test.ts:152:167)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Scene exceeds max_scene_bytes' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

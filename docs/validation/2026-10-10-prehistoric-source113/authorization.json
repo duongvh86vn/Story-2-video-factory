@@ -1,0 +1,7 @@
+{
+  "userReply": "Cho phép bạn chạy test và render chẩn đoán cục bộ",
+  "sourceSHA": "c2d436a907e2f76f585807bf7f63800503986199",
+  "startedAt": "2026-10-10T16:32:13.6289011Z",
+  "checkoutSHA": "bf8bcfbd4018fbff2aceb4cdb8eb448f4c8ecd35",
+  "scope": "Listed local regression suites and two native-seat diagnostic stagings; no paid model/TTS calls; no production approval implied"
+}

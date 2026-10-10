@@ -1,0 +1,21 @@
+
+> story-to-video-factory@2.1.0 tracer:native-seat
+> tsx scripts/native-seat-tracer.ts --native-heads --staging lila-right --acting emotional-reactions --face source-motion --validate --frames --render
+
+[
+  {
+    "code": "custom",
+    "message": "needs-head-face-registration: brow rotation/shift hull leaves its own skin region",
+    "path": [
+      "cells",
+      0,
+      "face"
+    ]
+  },
+  {
+    "code": "custom",
+    "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": []\n  }\n]",
+    "path": []
+  }
+]
+Diagnostic artifacts retained at C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\runtime\prehistoric-life\native-seat-tracers\tracer-2026-10-10T16-34-14-168Z-9b74ca9b-8cac-4775-8546-a3071581b294

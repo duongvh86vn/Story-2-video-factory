@@ -1,0 +1,21 @@
+
+> story-to-video-factory@2.1.0 tracer:native-seat
+> tsx scripts/native-seat-tracer.ts --native-heads --staging lila-left --acting emotional-reactions --face source-motion --validate --frames --render
+
+[
+  {
+    "code": "custom",
+    "message": "needs-head-face-registration: edit region touches another edit or protected paint",
+    "path": [
+      "cells",
+      0,
+      "face"
+    ]
+  },
+  {
+    "code": "custom",
+    "message": "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]",
+    "path": []
+  }
+]
+Diagnostic artifacts retained at C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\runtime\prehistoric-life\native-seat-tracers\tracer-2026-10-10T16-33-40-720Z-096bbe63-405b-42d5-86fe-8f6027c8ff56

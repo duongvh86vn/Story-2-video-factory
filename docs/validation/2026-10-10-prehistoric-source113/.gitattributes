@@ -1,0 +1,3 @@
+# Keep raw local QA receipts/logs byte-identical to their SHA256 inventory.
+*.log -text
+*.json -text

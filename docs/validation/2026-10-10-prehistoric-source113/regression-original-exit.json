@@ -1,0 +1,5 @@
+{
+  "exitCode": 1,
+  "completedAt": "2026-10-10T16:33:36.1945210Z",
+  "command": "node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 [seven suites listed in TEST-RESULTS-PREHISTORIC.md]"
+}
