@@ -1,0 +1,22 @@
+{
+  "startedAt": "2026-10-10T18:03:11.541Z",
+  "completedAt": "2026-10-10T18:08:58.291Z",
+  "exitCode": 1,
+  "signal": null,
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--import",
+    "tsx",
+    "scripts/native-seat-tracer.ts",
+    "--native-heads",
+    "--staging",
+    "lila-left",
+    "--acting",
+    "emotional-reactions",
+    "--face",
+    "source-motion",
+    "--validate",
+    "--frames",
+    "--render"
+  ]
+}

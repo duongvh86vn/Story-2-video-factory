@@ -1,0 +1,98 @@
+{
+  "scope": "unapproved-native-head-seat-tracer",
+  "version": "native-head-seat-tracer-5",
+  "sourceSHA": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+  "trackedSourceDirty": true,
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "motionAccepted": false,
+  "phonemeLipSync": false,
+  "status": "failed",
+  "phase": "scene-security-and-byte-cap",
+  "outputRoot": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\native-seat-tracers\\tracer-2026-10-10T17-52-56-350Z-7b2f7974-afe7-424e-b3a5-9e158945352f",
+  "shots": [],
+  "resources": [],
+  "audio": {
+    "source": "silent-draft",
+    "speechActivity": "empty",
+    "contentAlignment": "NOT RUN"
+  },
+  "checks": {
+    "canonical": {
+      "status": "PASS",
+      "detail": {
+        "storyboardHash": "6274af46edffcd5f75fdaf83ad15a681a3713e7edffefcafbbe2439ae8f79f3c",
+        "narrationHash": "a47b6925474dcce3b7b3c321113acc95ccfd87ce08ba0355ddf51bf839e6c13c",
+        "headMode": "explicit-opposing-bank6-source-follow"
+      }
+    },
+    "diagnostic-wav": {
+      "status": "NOT RUN"
+    },
+    "cast-and-story": {
+      "status": "PASS"
+    },
+    "scene-security-and-byte-cap": {
+      "status": "FAIL",
+      "detail": "needs-head-source-phase: source head requires its complete storyboard/run context"
+    },
+    "master": {
+      "status": "NOT RUN"
+    },
+    "hyperframes": {
+      "status": "NOT RUN"
+    },
+    "snapshots": {
+      "status": "NOT RUN"
+    },
+    "render-draft": {
+      "status": "NOT RUN"
+    },
+    "video-probe": {
+      "status": "NOT RUN"
+    },
+    "video-decode": {
+      "status": "NOT RUN"
+    },
+    "visual-motion-review": {
+      "status": "NOT RUN"
+    },
+    "source-clock-and-reverse-seek": {
+      "status": "NOT RUN"
+    },
+    "full-factory-inputs": {
+      "status": "NOT RUN"
+    }
+  },
+  "headSelection": [
+    {
+      "actorId": "lila",
+      "view": "three-quarter-left",
+      "definitionFile": "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json",
+      "definitionHash": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+      "bankFingerprint": "462da7fb2b966a056265abbed07b31a640b0c6181d943886cf7d1c8d8a127f95",
+      "sourceFile": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+      "sourceSHA256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+      "artApproved": false,
+      "motionVerified": false
+    },
+    {
+      "actorId": "karo",
+      "view": "three-quarter-right",
+      "definitionFile": "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json",
+      "definitionHash": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+      "bankFingerprint": "c5a10019a2a394f09cc9a9f9f2122cf5363087609ebfed4cad2d347047f575e7",
+      "sourceFile": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sourceSHA256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+      "artApproved": false,
+      "motionVerified": false
+    }
+  ],
+  "dialogueSelection": {
+    "staging": "lila-right",
+    "acting": "emotional-reactions",
+    "face": "source-motion"
+  },
+  "error": "needs-head-source-phase: source head requires its complete storyboard/run context",
+  "elapsedMs": 80822
+}

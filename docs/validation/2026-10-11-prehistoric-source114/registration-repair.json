@@ -1,0 +1,223 @@
+[
+  {
+    "mode": "speech-eyes",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json",
+    "previousSha256": "2a9be1bf907aafc4948a0d3d4355d4e2c5657dc3a37fc95428354753f71cdc9d",
+    "current": "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json",
+    "currentSha256": "3058c19afaba96cf57cf90bf9832973ce41f0570f5b4b695c1a1dfd3f8d49faf",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+      "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+      "width": 1167,
+      "height": 1347,
+      "pixelScale": 0.1516
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "expressions",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v1.json",
+    "previousSha256": "193dfa7e2706d2844dd982051978143393d765958bb3c97407f971b00da30177",
+    "current": "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json",
+    "currentSha256": "b8bceb68783b72bad328395f322de82a1b6061d1bedade7cde290583e0874463",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+      "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+      "width": 1168,
+      "height": 1347,
+      "pixelScale": 0.1516
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "expressions",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v1.json",
+    "previousSha256": "e0179ec0f199d8ad48fa9efbfb6e5972de0ac66824abb671b0259ac9a6b4f79a",
+    "current": "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json",
+    "currentSha256": "3c911e19d45fbbfcd7b58847ae3e94708a5f6449cdb7b639137d31898615c54b",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+      "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+      "width": 1167,
+      "height": 1347,
+      "pixelScale": 0.1516
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "expressions",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v1.json",
+    "previousSha256": "b3f973990bd49e2ae23675fb21b5daa614ef7d3e7aa5013f4123a2dff49aee96",
+    "current": "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json",
+    "currentSha256": "e7a79f50fee6140ce7ff2e2e68ca3866482ae253023fb0304741b5fcfabe51e2",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+      "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410",
+      "width": 1312,
+      "height": 1199,
+      "pixelScale": 0.124
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "expressions",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v1.json",
+    "previousSha256": "eb0d48c888dff442b997bc1a94a2d870fe9f5d09079119961d784d4221b017a8",
+    "current": "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json",
+    "currentSha256": "73d478fc4d014ac0b267889aa60a685bffed6e1f53849bf8e01fc3661ccf7a50",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+      "width": 1201,
+      "height": 1309,
+      "pixelScale": 0.11923
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-layers",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v1.json",
+    "previousSha256": "afea362bb5ee5ae59e06f97e47a9bbeafe840df9e3b6da3d787e8092b1922f36",
+    "current": "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json",
+    "currentSha256": "5b53d8cb0e5b0934c13abc6718300c9ba4f3270a39e4e6be11533a3f2e022782",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+      "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+      "width": 1168,
+      "height": 1347,
+      "pixelScale": 0.1516
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-layers",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v1.json",
+    "previousSha256": "f11a2c83209359159ad4bacb751a0671d3585f9e9dfd14dc23c31c8c2c7d51f5",
+    "current": "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json",
+    "currentSha256": "3a072ea2338ce9329fa303cf1481be84e27fda65b946da9cff42c5ce281f266b",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+      "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+      "width": 1167,
+      "height": 1347,
+      "pixelScale": 0.1516
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-layers",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v1.json",
+    "previousSha256": "c20745b0039a37f2f18ebd310a264edafdca4ab7c1e3b6f731b9a4e95a6debef",
+    "current": "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json",
+    "currentSha256": "f5f9dcf02886fc40ce4e8140150254fead6a98ea639fa2fa8b04f70c126855ae",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+      "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410",
+      "width": 1312,
+      "height": 1199,
+      "pixelScale": 0.124
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-layers",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v1.json",
+    "previousSha256": "ba2e06c7b8edf15ea55193d7427c184db75c2a6e579c86b579fd0c5070db3d06",
+    "current": "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json",
+    "currentSha256": "2874311dd15826966e6418107016e596dc44e003e0f508f8f20f46689f087820",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+      "width": 1201,
+      "height": 1309,
+      "pixelScale": 0.11923
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-motion",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v1.json",
+    "previousSha256": "0e729f923f103ae7f0f813412c2096f1f931d90261727fa1df7d5ba68e07fb2a",
+    "current": "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json",
+    "currentSha256": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+      "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+      "width": 1168,
+      "height": 1347,
+      "pixelScale": 0.1516
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-motion",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v1.json",
+    "previousSha256": "8f5e23d8fb3cea937754b8d04b385ca1f323dd0d3a2d64a137a12bb72d3e9bfc",
+    "current": "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json",
+    "currentSha256": "1cc72cc108e5a3c9b946ea52d31d7dcc9523ae4db1400e27947c771c009ba0b7",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+      "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+      "width": 1167,
+      "height": 1347,
+      "pixelScale": 0.1516
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-motion",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v1.json",
+    "previousSha256": "98191236b89a4210462856a7c9c337c6f6843063f1b7cb8ab2c43b1a5403d1f1",
+    "current": "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json",
+    "currentSha256": "b4ce0ffe29fae2c90ff12be93b4c042f17b5e61421d3573f653ab25992831a07",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+      "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410",
+      "width": 1312,
+      "height": 1199,
+      "pixelScale": 0.124
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  },
+  {
+    "mode": "source-motion",
+    "previous": "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v1.json",
+    "previousSha256": "fbfa97cb88d62a80e726f62b1c7e1eddbb0a8ae23e3e6a4e4a2e9567c5ea740e",
+    "current": "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json",
+    "currentSha256": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+    "source": {
+      "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+      "width": 1201,
+      "height": 1309,
+      "pixelScale": 0.11923
+    },
+    "sourceUnchanged": true,
+    "originalUnchanged": true,
+    "productionReady": false
+  }
+]

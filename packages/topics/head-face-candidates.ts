@@ -1,12 +1,12 @@
 /** Authoring candidates only. This catalog does not grant production approval. */
 import {SUPPORTING_FACE_CANDIDATES} from './supporting-face-candidates.js';
-export const HEAD_FACE_WORKBENCH_VERSION='native-head-face-workbench-7';
+export const HEAD_FACE_WORKBENCH_VERSION='native-head-face-workbench-8';
 export const HEAD_FACE_MODES=['speech-eyes','expressions','source-layers','source-motion'] as const;
 export type HeadFaceMode=typeof HEAD_FACE_MODES[number];
 export const HEAD_FACE_VIEWS=['three-quarter-right','three-quarter-left'] as const;
 export type HeadFaceView=typeof HEAD_FACE_VIEWS[number];
 export const HEAD_FACE_CANDIDATES=[
-  {actor:'lila',view:'three-quarter-right',id:'lila-source-face-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json',headFile:'lila-head-source-angle-v2.png'},
+  {actor:'lila',view:'three-quarter-right',id:'lila-source-face-v2',file:'library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json',headFile:'lila-head-source-angle-v2.png'},
   {actor:'karo',view:'three-quarter-right',id:'karo-source-face-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-source-face-v1.json',headFile:'karo-head-source-angle-v2.png'},
   {actor:'lila',view:'three-quarter-left',id:'lila-left-face-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-left-face-v1.json',headFile:'lila-head-left-dialogue-v1.png'},
   {actor:'karo',view:'three-quarter-left',id:'karo-left-face-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-left-face-v1.json',headFile:'karo-head-left-dialogue-v1.png'},
@@ -15,23 +15,23 @@ export const HEAD_FACE_CANDIDATES=[
 /** Separate explicit selection; existing candidates never gain capabilities
  * by inference or by replacing their immutable registration bytes. */
 export const HEAD_FACE_EXPRESSION_CANDIDATES=[
-  {actor:'lila',view:'three-quarter-left',id:'lila-left-emotions-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v1.json',headFile:'lila-head-left-dialogue-v1.png'},
-  {actor:'lila',view:'three-quarter-right',id:'lila-right-emotions-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v1.json',headFile:'lila-head-source-angle-v2.png'},
-  {actor:'karo',view:'three-quarter-left',id:'karo-left-emotions-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v1.json',headFile:'karo-head-left-dialogue-v1.png'},
-  {actor:'karo',view:'three-quarter-right',id:'karo-right-emotions-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v1.json',headFile:'karo-head-source-angle-v2.png'},
+  {actor:'lila',view:'three-quarter-left',id:'lila-left-emotions-v2',file:'library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json',headFile:'lila-head-left-dialogue-v1.png'},
+  {actor:'lila',view:'three-quarter-right',id:'lila-right-emotions-v2',file:'library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json',headFile:'lila-head-source-angle-v2.png'},
+  {actor:'karo',view:'three-quarter-left',id:'karo-left-emotions-v2',file:'library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json',headFile:'karo-head-left-dialogue-v1.png'},
+  {actor:'karo',view:'three-quarter-right',id:'karo-right-emotions-v2',file:'library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json',headFile:'karo-head-source-angle-v2.png'},
 ] as const;
 /** Rear paint is an explicit source selection. Existing bank5 expression
  * definitions remain immutable; Karo explicitly retains a full front head. */
 export const HEAD_FACE_LAYERED_CANDIDATES=[
-  {actor:'lila',view:'three-quarter-left',id:'lila-left-layers-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v1.json',headFile:'lila-head-left-dialogue-v1.png'},
-  {actor:'lila',view:'three-quarter-right',id:'lila-right-layers-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v1.json',headFile:'lila-head-source-angle-v2.png'},
-  {actor:'karo',view:'three-quarter-left',id:'karo-left-layers-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v1.json',headFile:'karo-head-left-dialogue-v1.png'},
-  {actor:'karo',view:'three-quarter-right',id:'karo-right-layers-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v1.json',headFile:'karo-head-source-angle-v2.png'},
+  {actor:'lila',view:'three-quarter-left',id:'lila-left-layers-v2',file:'library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json',headFile:'lila-head-left-dialogue-v1.png'},
+  {actor:'lila',view:'three-quarter-right',id:'lila-right-layers-v2',file:'library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json',headFile:'lila-head-source-angle-v2.png'},
+  {actor:'karo',view:'three-quarter-left',id:'karo-left-layers-v2',file:'library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json',headFile:'karo-head-left-dialogue-v1.png'},
+  {actor:'karo',view:'three-quarter-right',id:'karo-right-layers-v2',file:'library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json',headFile:'karo-head-source-angle-v2.png'},
 ] as const;
 export const HEAD_FACE_FOLLOW_CANDIDATES=[
-  {actor:'lila',view:'three-quarter-left',id:'lila-left-follow-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v1.json',headFile:'lila-head-left-dialogue-v1.png'},
-  {actor:'lila',view:'three-quarter-right',id:'lila-right-follow-v1',file:'library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v1.json',headFile:'lila-head-source-angle-v2.png'},
-  {actor:'karo',view:'three-quarter-left',id:'karo-left-follow-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v1.json',headFile:'karo-head-left-dialogue-v1.png'},
-  {actor:'karo',view:'three-quarter-right',id:'karo-right-follow-v1',file:'library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v1.json',headFile:'karo-head-source-angle-v2.png'},
+  {actor:'lila',view:'three-quarter-left',id:'lila-left-follow-v2',file:'library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json',headFile:'lila-head-left-dialogue-v1.png'},
+  {actor:'lila',view:'three-quarter-right',id:'lila-right-follow-v2',file:'library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json',headFile:'lila-head-source-angle-v2.png'},
+  {actor:'karo',view:'three-quarter-left',id:'karo-left-follow-v2',file:'library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json',headFile:'karo-head-left-dialogue-v1.png'},
+  {actor:'karo',view:'three-quarter-right',id:'karo-right-follow-v2',file:'library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json',headFile:'karo-head-source-angle-v2.png'},
 ] as const;
 export function headFaceCandidatesForMode(mode:HeadFaceMode){return mode==='source-motion'?HEAD_FACE_FOLLOW_CANDIDATES:mode==='source-layers'?HEAD_FACE_LAYERED_CANDIDATES:mode==='expressions'?HEAD_FACE_EXPRESSION_CANDIDATES:HEAD_FACE_CANDIDATES;}

@@ -1,0 +1,1878 @@
+{
+  "version": 1,
+  "dateLocal": "2026-10-11",
+  "timezone": "Asia/Saigon",
+  "sourceVersion": "forest-tribe-0.114-face-registration",
+  "baseSHA": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+  "trackedSourceDirtyAtExecution": true,
+  "scope": "Authorized local diagnostics and regression repair; no paid model/TTS or new image generation. Each suite/run has its own phase and source receipt; do not sum overlapping callback counts.",
+  "sourceChecks": {
+    "build": {
+      "exitCode": 0,
+      "completionChunk": "9a4eec"
+    },
+    "testTypecheck": {
+      "exitCode": 0,
+      "completionChunk": "e9f918"
+    },
+    "staticPack": {
+      "exitCode": 0,
+      "completionChunk": "701b40"
+    }
+  },
+  "environment": {
+    "os": "Windows",
+    "shell": "PowerShell",
+    "node": "v24.19.0",
+    "hyperframes": "0.8.96",
+    "ffmpeg": "2025-09-25-git-9970dc32bf-full_build-www.gyan.dev",
+    "browser": "NOT REACHED"
+  },
+  "suites": {
+    "regression": {
+      "tests": 56,
+      "suites": 0,
+      "pass": 40,
+      "fail": 16,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 463803.0411,
+      "cases": [
+        {
+          "name": "fixed forward lengths and grip endpoints survive shoulder crossing and signed elbow branch changes at random-access clocks",
+          "status": "PASS",
+          "durationMs": 3.3026,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 14
+        },
+        {
+          "name": "quintic entry and recovery are position/velocity/acceleration continuous for fixed keyposes without a separate 80ms transit",
+          "status": "PASS",
+          "durationMs": 0.773,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 27
+        },
+        {
+          "name": "directions retain signed flexion while degenerate windows and nonfinite/collapsed pose inputs are rejected",
+          "status": "PASS",
+          "durationMs": 1.2912,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 40
+        },
+        {
+          "name": "current source-body pointing keeps an authored reachable target through its pose hold and separate cuff/palm geometry",
+          "status": "PASS",
+          "durationMs": 39.5836,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 52
+        },
+        {
+          "name": "current source reactions scale with their arm reach and explicit unreachable authored targets require a new keypose",
+          "status": "PASS",
+          "durationMs": 4.1496,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 65
+        },
+        {
+          "name": "legacy source pointing remains on its former IK/goal/pole path and contact poses retain their exact locked grip",
+          "status": "PASS",
+          "durationMs": 3.969,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 76
+        },
+        {
+          "name": "moving keyposes crossing the original antipode retain one registered shoulder arc; unsupported corridor changes reject explicitly",
+          "status": "PASS",
+          "durationMs": 0.343,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 86
+        },
+        {
+          "name": "default expressive gestures retain their entry elbow branch across both run directions/hands and run exit during full pose ownership",
+          "status": "PASS",
+          "durationMs": 97.5122,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 95
+        },
+        {
+          "name": "implicit running think retains the entry branch while authored rest/reach overrides remain explicit",
+          "status": "PASS",
+          "durationMs": 46.5228,
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "line": 116
+        },
+        {
+          "name": "opposing native heads share the canonical seat run while old fixed-view overlays remain the default",
+          "status": "PASS",
+          "durationMs": 51984.7981,
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 54
+        },
+        {
+          "name": "actor-owned mouths and actual rendered eye targets survive cuts, lead swaps and reverse seeks",
+          "status": "PASS",
+          "durationMs": 65486.4941,
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 73
+        },
+        {
+          "name": "factory renderer owns each native head resource and namespace inside the shared scene cap",
+          "status": "FAIL",
+          "durationMs": 175291.4454,
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 99
+        },
+        {
+          "name": "publication refuses changed head ownership, target source or a conflicting speaker",
+          "status": "PASS",
+          "durationMs": 37833.909,
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 119
+        },
+        {
+          "name": "both screen layouts bind independent matching head/body sources and keep each sourced actor identity",
+          "status": "PASS",
+          "durationMs": 65228.0523,
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 132
+        },
+        {
+          "name": "listener chin gestures use declared rig hands and full body/head/speech history across both layouts",
+          "status": "FAIL",
+          "durationMs": 4499.2238,
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 149
+        },
+        {
+          "name": "native contact selection is explicit, source-bound and preserved by topic normalization",
+          "status": "PASS",
+          "durationMs": 12.8304,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 46
+        },
+        {
+          "name": "both own views and hands inspect or operate with fixed cuff/palm geometry and deterministic seeks",
+          "status": "PASS",
+          "durationMs": 107.0814,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 59
+        },
+        {
+          "name": "native pickup places the real object center without stretching arms or moving its authored target",
+          "status": "PASS",
+          "durationMs": 27.1446,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 67
+        },
+        {
+          "name": "native carry uses the actual forward body path, then lowers and releases before recovery",
+          "status": "PASS",
+          "durationMs": 64.8747,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 77
+        },
+        {
+          "name": "native drop owns the real release palm; flight and landing do not pull the arm toward the floor",
+          "status": "FAIL",
+          "durationMs": 2.7034,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 88
+        },
+        {
+          "name": "contact angular approach/recovery has zero endpoint speed and keeps one elbow branch; owned exit and entry retain grip",
+          "status": "FAIL",
+          "durationMs": 0.6704,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 98
+        },
+        {
+          "name": "unreachable/folded grips, wrong poles and source timing remain blocking errors without target repair",
+          "status": "FAIL",
+          "durationMs": 6.3562,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 110
+        },
+        {
+          "name": "canonical renderer draws both actual native actors and distinct owned props using the same physical compiler",
+          "status": "FAIL",
+          "durationMs": 23.7999,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 135
+        },
+        {
+          "name": "independent source heads and bald/haired supporting identities remain their own while native bodies operate",
+          "status": "PASS",
+          "durationMs": 904.4124,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 143
+        },
+        {
+          "name": "diagnostic controls expose both hands without auto selecting a pose or approving the film",
+          "status": "FAIL",
+          "durationMs": 207.4856,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 154
+        },
+        {
+          "name": "native contact validates original body locomotion/jump windows in the owned shot clock rather than empty local arrays",
+          "status": "PASS",
+          "durationMs": 1.7688,
+          "file": "tests/native-manipulation.test.ts",
+          "line": 161
+        },
+        {
+          "name": "projection conserves complete original hand ownership and timings through five camera slices",
+          "status": "PASS",
+          "durationMs": 8.8734,
+          "file": "tests/native-source-gesture-project.test.ts",
+          "line": 12
+        },
+        {
+          "name": "fractional existing default ramps round-trip by omission without rounding at a cut",
+          "status": "PASS",
+          "durationMs": 1.3545,
+          "file": "tests/native-source-gesture-project.test.ts",
+          "line": 28
+        },
+        {
+          "name": "invalid original commands and clocks cannot be concealed by an empty local slice",
+          "status": "PASS",
+          "durationMs": 0.8547,
+          "file": "tests/native-source-gesture-project.test.ts",
+          "line": 36
+        },
+        {
+          "name": "local edits do not mutate another slice or the authored target/source span",
+          "status": "PASS",
+          "durationMs": 0.9071,
+          "file": "tests/native-source-gesture-project.test.ts",
+          "line": 42
+        },
+        {
+          "name": "source span is strict original motion timing, with complete ordered approach/hold/recovery and no implicit ID inference",
+          "status": "PASS",
+          "durationMs": 8.3765,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 53
+        },
+        {
+          "name": "all exact source pieces bind one physical hand/action/target/pole/window; real missing/duplicate fragments fail",
+          "status": "PASS",
+          "durationMs": 4.4747,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 63
+        },
+        {
+          "name": "approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip",
+          "status": "FAIL",
+          "durationMs": 252.6299,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 76
+        },
+        {
+          "name": "seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state",
+          "status": "FAIL",
+          "durationMs": 1.9489,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 88
+        },
+        {
+          "name": "ordinary adjacent gestures never become a source command and explicit cuts cannot carry an incomplete declared span",
+          "status": "PASS",
+          "durationMs": 3.8504,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 98
+        },
+        {
+          "name": "missing/stale context, incompatible profiles and contact/prop timing cannot silently approximate a source gesture",
+          "status": "PASS",
+          "durationMs": 5.1455,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 106
+        },
+        {
+          "name": "overlapping source commands or an ordinary clip on the same owned hand fail, while the other hand can be independent",
+          "status": "PASS",
+          "durationMs": 3.0902,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 116
+        },
+        {
+          "name": "cache/repair input identity includes nonlocal command timing and actual replacement, with no discarded old approval",
+          "status": "PASS",
+          "durationMs": 4.3635,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 125
+        },
+        {
+          "name": "compiler source grid/refinement and namespaced ink/hand layers use original gesture phases without fake contact",
+          "status": "PASS",
+          "durationMs": 2601.9107,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 134
+        },
+        {
+          "name": "canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing",
+          "status": "FAIL",
+          "durationMs": 509.6823,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 172
+        },
+        {
+          "name": "creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2]",
+          "status": "FAIL",
+          "durationMs": 366.262,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 183
+        },
+        {
+          "name": "artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2]",
+          "status": "FAIL",
+          "durationMs": 369.0201,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 197
+        },
+        {
+          "name": "native source gesture readiness remains unapproved and full input/video production gates stay active",
+          "status": "PASS",
+          "durationMs": 24.5552,
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 213
+        },
+        {
+          "name": "native seated rest arms retain their own cuff/palm bones and original phase through cuts and reverse seeks",
+          "status": "PASS",
+          "durationMs": 3232.5323,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 45
+        },
+        {
+          "name": "source seats are bounded, explicit and compatible with old unsupported body sources",
+          "status": "PASS",
+          "durationMs": 8.3765,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 74
+        },
+        {
+          "name": "sit preparation, held contact, rise, later gait and cloth/hair retain the complete original phase through camera cuts",
+          "status": "FAIL",
+          "durationMs": 83.1034,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 89
+        },
+        {
+          "name": "occupancy clips the original approach/hold/rise to local time and preserves exclusive world geometry",
+          "status": "PASS",
+          "durationMs": 5.5525,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 108
+        },
+        {
+          "name": "source/support and sibling edits invalidate publication; missing/hidden/cut/local sources cannot synthesize continuity",
+          "status": "PASS",
+          "durationMs": 29.6343,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 117
+        },
+        {
+          "name": "baked support boundaries, reports and camera/preview refer to the original seat clock",
+          "status": "FAIL",
+          "durationMs": 6993.4672,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 133
+        },
+        {
+          "name": "single-actor framing fits the whole source seat including its shadow and backrest",
+          "status": "FAIL",
+          "durationMs": 3142.0124,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 140
+        },
+        {
+          "name": "canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes",
+          "status": "FAIL",
+          "durationMs": 32890.2454,
+          "file": "tests/native-source-seat.test.ts",
+          "line": 148
+        },
+        {
+          "name": "an inactive seat preserves the exact standing solve without evaluating its lap target",
+          "status": "PASS",
+          "durationMs": 2.2129,
+          "file": "tests/seated-rest-arm.test.ts",
+          "line": 11
+        },
+        {
+          "name": "angular seat transfer stays on fixed bones where a straight wrist path crosses the inner annulus",
+          "status": "PASS",
+          "durationMs": 1.1743,
+          "file": "tests/seated-rest-arm.test.ts",
+          "line": 21
+        },
+        {
+          "name": "seat arm transfer uses the supplied weight once and remains deterministic under reverse seeks and scaling",
+          "status": "PASS",
+          "durationMs": 0.3899,
+          "file": "tests/seated-rest-arm.test.ts",
+          "line": 38
+        },
+        {
+          "name": "unreachable, invalid and unsupported seat keyposes require authored correction without clamping the targets",
+          "status": "PASS",
+          "durationMs": 0.7092,
+          "file": "tests/seated-rest-arm.test.ts",
+          "line": 53
+        },
+        {
+          "name": "wrapped endpoint directions retain one continuous numeric branch for baked arm rotations",
+          "status": "PASS",
+          "durationMs": 0.4203,
+          "file": "tests/seated-rest-arm.test.ts",
+          "line": 62
+        }
+      ],
+      "failures": [
+        {
+          "name": "factory renderer owns each native head resource and namespace inside the shared scene cap",
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 99,
+          "message": "Expected values to be strictly deep-equal:",
+          "logStartLine": 68,
+          "logEndLine": 92
+        },
+        {
+          "name": "listener chin gestures use declared rig hands and full body/head/speech history across both layouts",
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "line": 149,
+          "message": "needs-arm-pose: chin elbow folds 156.1deg, beyond its 145deg candidate art limit",
+          "logStartLine": 93,
+          "logEndLine": 106
+        },
+        {
+          "name": "native drop owns the real release palm; flight and landing do not pull the arm toward the floor",
+          "file": "tests/native-manipulation.test.ts",
+          "line": 88,
+          "message": "Free drop must preserve horizontal hand momentum: landing x must be 124.4553, received 106.35895079660392",
+          "logStartLine": 107,
+          "logEndLine": 120
+        },
+        {
+          "name": "contact angular approach/recovery has zero endpoint speed and keeps one elbow branch; owned exit and entry retain grip",
+          "file": "tests/native-manipulation.test.ts",
+          "line": 98,
+          "message": "needs-view-manipulation: placement/drop needs explicit release and destination; owned-exit carry has no destination",
+          "logStartLine": 121,
+          "logEndLine": 133
+        },
+        {
+          "name": "unreachable/folded grips, wrong poles and source timing remain blocking errors without target repair",
+          "file": "tests/native-manipulation.test.ts",
+          "line": 110,
+          "message": "The input did not match the regular expression /source.*point\\/think|only explicit source/. Input:",
+          "logStartLine": 134,
+          "logEndLine": 164
+        },
+        {
+          "name": "canonical renderer draws both actual native actors and distinct owned props using the same physical compiler",
+          "file": "tests/native-manipulation.test.ts",
+          "line": 135,
+          "message": "Diagram visualization requires an explanatory event.",
+          "logStartLine": 165,
+          "logEndLine": 190
+        },
+        {
+          "name": "diagnostic controls expose both hands without auto selecting a pose or approving the film",
+          "file": "tests/native-manipulation.test.ts",
+          "line": 154,
+          "message": "The input did not match the regular expression /source/. Input:",
+          "logStartLine": 191,
+          "logEndLine": 221
+        },
+        {
+          "name": "approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip",
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 76,
+          "message": "needs-arm-pose: chin elbow folds 151.4deg, beyond its 145deg candidate art limit",
+          "logStartLine": 222,
+          "logEndLine": 235
+        },
+        {
+          "name": "seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state",
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 88,
+          "message": "needs-arm-pose: chin elbow folds 151.4deg, beyond its 145deg candidate art limit",
+          "logStartLine": 236,
+          "logEndLine": 249
+        },
+        {
+          "name": "canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing",
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 172,
+          "message": "Performance identity/profile mismatch",
+          "logStartLine": 250,
+          "logEndLine": 261
+        },
+        {
+          "name": "creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2]",
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 183,
+          "message": "Host action interval must be positive",
+          "logStartLine": 262,
+          "logEndLine": 286
+        },
+        {
+          "name": "artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2]",
+          "file": "tests/native-source-gesture.test.ts",
+          "line": 197,
+          "message": "Host action interval must be positive",
+          "logStartLine": 287,
+          "logEndLine": 311
+        },
+        {
+          "name": "sit preparation, held contact, rise, later gait and cloth/hair retain the complete original phase through camera cuts",
+          "file": "tests/native-source-seat.test.ts",
+          "line": 89,
+          "message": "Expected values to be strictly deep-equal:",
+          "logStartLine": 312,
+          "logEndLine": 385
+        },
+        {
+          "name": "baked support boundaries, reports and camera/preview refer to the original seat clock",
+          "file": "tests/native-source-seat.test.ts",
+          "line": 133,
+          "message": "wide camera scale must be 0.65–1.12; validate host size and focus inside the safe viewport.",
+          "logStartLine": 386,
+          "logEndLine": 444
+        },
+        {
+          "name": "single-actor framing fits the whole source seat including its shadow and backrest",
+          "file": "tests/native-source-seat.test.ts",
+          "line": 140,
+          "message": "Got unwanted exception.",
+          "logStartLine": 445,
+          "logEndLine": 473
+        },
+        {
+          "name": "canonical objectless two-actor seated run retains original clocks through primary and speaking/listening changes",
+          "file": "tests/native-source-seat.test.ts",
+          "line": 148,
+          "message": "Expected values to be strictly deep-equal:",
+          "logStartLine": 474,
+          "logEndLine": 498
+        }
+      ],
+      "byFile": [
+        {
+          "file": "tests/seated-rest-arm.test.ts",
+          "pass": 5,
+          "fail": 0
+        },
+        {
+          "file": "tests/native-source-seat.test.ts",
+          "pass": 4,
+          "fail": 4
+        },
+        {
+          "file": "tests/forest-arm-trajectory.test.ts",
+          "pass": 9,
+          "fail": 0
+        },
+        {
+          "file": "tests/native-source-gesture.test.ts",
+          "pass": 8,
+          "fail": 5
+        },
+        {
+          "file": "tests/native-source-gesture-project.test.ts",
+          "pass": 4,
+          "fail": 0
+        },
+        {
+          "file": "tests/native-manipulation.test.ts",
+          "pass": 6,
+          "fail": 5
+        },
+        {
+          "file": "tests/native-head-seat-tracer.test.ts",
+          "pass": 4,
+          "fail": 2
+        }
+      ],
+      "start": {
+        "startedAt": "2026-10-10T18:03:11.541Z",
+        "sourceSha": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+        "trackedDirty": true,
+        "sourceFiles": {
+          "library/topics/prehistoric-life/manifest.json": "ceb435fc3f78a7c3d2f95636aab34fc03858b875fc22b24e1929938ea430e426",
+          "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+          "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+          "packages/topics/head-face-candidates.ts": "6c56882a1fdaff9d4f640883f50149d821b8f014db930f5d37674d4289d60170",
+          "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+          "tests/head-face-workbench.test.ts": "fe36436170434c7b394796b659339c0020977f436351f7dc7e40f0fe12d30477",
+          "tests/native-head-face.test.ts": "1a9eb981c88940bf7aa80b9d69cca0f8cffaea82e0a96fbe1821fd703c754324",
+          "tests/native-head-paint.test.ts": "4b5d9415b73f48d19f0f1425f70ac777235bec34a20f5c1a8c3407d2ba9c2a43",
+          "tests/native-source-emotions.test.ts": "5a955dc7e07c2e5751aa2fe43e2fd1d0d541163b92459008e365094d359efe2b",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json": "e7a79f50fee6140ce7ff2e2e68ca3866482ae253023fb0304741b5fcfabe51e2",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json": "b4ce0ffe29fae2c90ff12be93b4c042f17b5e61421d3573f653ab25992831a07",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json": "f5f9dcf02886fc40ce4e8140150254fead6a98ea639fa2fa8b04f70c126855ae",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json": "73d478fc4d014ac0b267889aa60a685bffed6e1f53849bf8e01fc3661ccf7a50",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json": "2874311dd15826966e6418107016e596dc44e003e0f508f8f20f46689f087820",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json": "b8bceb68783b72bad328395f322de82a1b6061d1bedade7cde290583e0874463",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json": "5b53d8cb0e5b0934c13abc6718300c9ba4f3270a39e4e6be11533a3f2e022782",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json": "3c911e19d45fbbfcd7b58847ae3e94708a5f6449cdb7b639137d31898615c54b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json": "1cc72cc108e5a3c9b946ea52d31d7dcc9523ae4db1400e27947c771c009ba0b7",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json": "3a072ea2338ce9329fa303cf1481be84e27fda65b946da9cff42c5ce281f266b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json": "3058c19afaba96cf57cf90bf9832973ce41f0570f5b4b695c1a1dfd3f8d49faf",
+          "tests/native-head-registration.test.ts": "960d9e37488b444fb5dbae735af806806c8f7c39090d1e395c756533877606a1"
+        },
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--experimental-test-module-mocks",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "tests/seated-rest-arm.test.ts",
+          "tests/native-source-seat.test.ts",
+          "tests/forest-arm-trajectory.test.ts",
+          "tests/native-source-gesture.test.ts",
+          "tests/native-source-gesture-project.test.ts",
+          "tests/native-manipulation.test.ts",
+          "tests/native-head-seat-tracer.test.ts"
+        ],
+        "paidModel": false,
+        "tts": false,
+        "productionAcceptance": false
+      },
+      "exit": {
+        "startedAt": "2026-10-10T18:03:11.541Z",
+        "completedAt": "2026-10-10T18:10:55.508Z",
+        "exitCode": 1,
+        "signal": null,
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--experimental-test-module-mocks",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "tests/seated-rest-arm.test.ts",
+          "tests/native-source-seat.test.ts",
+          "tests/forest-arm-trajectory.test.ts",
+          "tests/native-source-gesture.test.ts",
+          "tests/native-source-gesture-project.test.ts",
+          "tests/native-manipulation.test.ts",
+          "tests/native-head-seat-tracer.test.ts"
+        ]
+      },
+      "executedSourceHashesStillMatch": true
+    },
+    "focused": {
+      "tests": 3,
+      "suites": 0,
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 2901.1931,
+      "cases": [
+        {
+          "name": "all selected face modes pass strict edit/protected-paint and complete motion-hull validation",
+          "status": "PASS",
+          "durationMs": 279.7214,
+          "file": "tests/native-head-registration.test.ts",
+          "line": 12
+        },
+        {
+          "name": "registration repair keeps source artwork, facial anchors, motion ranges and original invalid versions",
+          "status": "PASS",
+          "durationMs": 64.8051,
+          "file": "tests/native-head-registration.test.ts",
+          "line": 24
+        },
+        {
+          "name": "structural support validation is body-only while native head rendering still requires its complete clock",
+          "status": "PASS",
+          "durationMs": 848.0275,
+          "file": "tests/native-head-support-validation.test.ts",
+          "line": 11
+        }
+      ],
+      "failures": [],
+      "byFile": [
+        {
+          "file": "tests/native-head-registration.test.ts",
+          "pass": 2,
+          "fail": 0
+        },
+        {
+          "file": "tests/native-head-support-validation.test.ts",
+          "pass": 1,
+          "fail": 0
+        }
+      ],
+      "start": {
+        "startedAt": "2026-10-10T18:10:47.747Z",
+        "sourceSha": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+        "trackedDirty": true,
+        "sourceFiles": {
+          "docs/topics/CUOC-SONG-THOI-TIEN-SU.md": "faa223c7397b6d2fc7d4e4032a6dd96af4ba694b1246f5c852ffdec32185c618",
+          "docs/topics/HEAD-FACE-WORKBENCH.md": "d88d631a751bf9e9bff725ee440d86e80a7f8a50f843562aa4596a3b768bb995",
+          "docs/topics/PROJECT-PROGRESS.md": "dd78b2a9f098017dab5cf59680301502f11a2d852cfebc909d291f5a9a90df84",
+          "library/topics/prehistoric-life/manifest.json": "ceb435fc3f78a7c3d2f95636aab34fc03858b875fc22b24e1929938ea430e426",
+          "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+          "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+          "packages/topics/head-face-candidates.ts": "6c56882a1fdaff9d4f640883f50149d821b8f014db930f5d37674d4289d60170",
+          "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+          "tests/head-face-workbench.test.ts": "fe36436170434c7b394796b659339c0020977f436351f7dc7e40f0fe12d30477",
+          "tests/native-head-face.test.ts": "1a9eb981c88940bf7aa80b9d69cca0f8cffaea82e0a96fbe1821fd703c754324",
+          "tests/native-head-paint.test.ts": "4b5d9415b73f48d19f0f1425f70ac777235bec34a20f5c1a8c3407d2ba9c2a43",
+          "tests/native-source-emotions.test.ts": "5a955dc7e07c2e5751aa2fe43e2fd1d0d541163b92459008e365094d359efe2b",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json": "e7a79f50fee6140ce7ff2e2e68ca3866482ae253023fb0304741b5fcfabe51e2",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json": "b4ce0ffe29fae2c90ff12be93b4c042f17b5e61421d3573f653ab25992831a07",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json": "f5f9dcf02886fc40ce4e8140150254fead6a98ea639fa2fa8b04f70c126855ae",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json": "73d478fc4d014ac0b267889aa60a685bffed6e1f53849bf8e01fc3661ccf7a50",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json": "2874311dd15826966e6418107016e596dc44e003e0f508f8f20f46689f087820",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json": "b8bceb68783b72bad328395f322de82a1b6061d1bedade7cde290583e0874463",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json": "5b53d8cb0e5b0934c13abc6718300c9ba4f3270a39e4e6be11533a3f2e022782",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json": "3c911e19d45fbbfcd7b58847ae3e94708a5f6449cdb7b639137d31898615c54b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json": "1cc72cc108e5a3c9b946ea52d31d7dcc9523ae4db1400e27947c771c009ba0b7",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json": "3a072ea2338ce9329fa303cf1481be84e27fda65b946da9cff42c5ce281f266b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json": "3058c19afaba96cf57cf90bf9832973ce41f0570f5b4b695c1a1dfd3f8d49faf",
+          "tests/native-head-registration.test.ts": "960d9e37488b444fb5dbae735af806806c8f7c39090d1e395c756533877606a1"
+        },
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--experimental-test-module-mocks",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "tests/native-head-registration.test.ts",
+          "tests/native-head-support-validation.test.ts"
+        ],
+        "paidModel": false,
+        "tts": false,
+        "productionAcceptance": false
+      },
+      "exit": {
+        "startedAt": "2026-10-10T18:10:47.747Z",
+        "completedAt": "2026-10-10T18:10:50.777Z",
+        "exitCode": 0,
+        "signal": null,
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--experimental-test-module-mocks",
+          "--import",
+          "tsx",
+          "--test",
+          "--test-concurrency=1",
+          "tests/native-head-registration.test.ts",
+          "tests/native-head-support-validation.test.ts"
+        ]
+      },
+      "executedSourceHashesStillMatch": true
+    },
+    "facesBeforeSupportFix": {
+      "tests": 40,
+      "suites": 0,
+      "pass": 33,
+      "fail": 7,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 845611.7214,
+      "cases": [
+        {
+          "name": "full and camera-sliced face previews keep original mouth/blink/gesture phase in all authored views",
+          "status": "FAIL",
+          "durationMs": 1036.7883,
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 16
+        },
+        {
+          "name": "each left selection owns its own raw head/body/rest plate and cannot borrow another revision",
+          "status": "PASS",
+          "durationMs": 176.6576,
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 38
+        },
+        {
+          "name": "preview assets and JS are bound to one source/clock revision and scene generator",
+          "status": "PASS",
+          "durationMs": 53429.0616,
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 60
+        },
+        {
+          "name": "the exact candidate loader rejects renamed actor, traversal and changed source bytes",
+          "status": "PASS",
+          "durationMs": 44.8564,
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 84
+        },
+        {
+          "name": "explicit view routes and legacy nested PNG URLs retain exact resources without route ambiguity",
+          "status": "FAIL",
+          "durationMs": 108026.1032,
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 104
+        },
+        {
+          "name": "workbench endpoints expose read-only constrained preview with MIME, CSP, revision and no production promotion",
+          "status": "FAIL",
+          "durationMs": 93583.3627,
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 141
+        },
+        {
+          "name": "real source-face candidates bind original V2 and local rest plate bytes without granting production approval",
+          "status": "PASS",
+          "durationMs": 66.3201,
+          "file": "tests/native-head-face.test.ts",
+          "line": 36
+        },
+        {
+          "name": "foreign source, swapped eyes and protected-paint edit intersections are rejected",
+          "status": "PASS",
+          "durationMs": 4.6289,
+          "file": "tests/native-head-face.test.ts",
+          "line": 50
+        },
+        {
+          "name": "maximum mouth opening, pupil travel, strips and polygon retraces cannot escape registered regions",
+          "status": "PASS",
+          "durationMs": 5.7722,
+          "file": "tests/native-head-face.test.ts",
+          "line": 57
+        },
+        {
+          "name": "Karo requires a distinct closed-mouth plate and the bank cannot use that image as a whole head",
+          "status": "PASS",
+          "durationMs": 10.9729,
+          "file": "tests/native-head-face.test.ts",
+          "line": 65
+        },
+        {
+          "name": "source-face SVG and state retain stable local selectors, exact glyph source and one uniform neck transform",
+          "status": "PASS",
+          "durationMs": 30.9262,
+          "file": "tests/native-head-face.test.ts",
+          "line": 73
+        },
+        {
+          "name": "owned original voice drives both source faces across a camera slice; no source clock or wrong owner fails",
+          "status": "PASS",
+          "durationMs": 423.0399,
+          "file": "tests/native-head-face.test.ts",
+          "line": 86
+        },
+        {
+          "name": "bank3 keeps unknown single view honest and rejects unavailable turn/expression or backward gaze",
+          "status": "PASS",
+          "durationMs": 42.1226,
+          "file": "tests/native-head-face.test.ts",
+          "line": 100
+        },
+        {
+          "name": "compiled source face preserves local matrices/path ids and owns narration metadata",
+          "status": "PASS",
+          "durationMs": 38417.9726,
+          "file": "tests/native-head-face.test.ts",
+          "line": 109
+        },
+        {
+          "name": "legacy banks/face data round-trip unchanged and retain both visible eye/brow channels",
+          "status": "PASS",
+          "durationMs": 36.7878,
+          "file": "tests/native-head-occlusion.test.ts",
+          "line": 28
+        },
+        {
+          "name": "explicit face3 creates no hidden glyph, skin strip, lid, brow or matrix channel",
+          "status": "PASS",
+          "durationMs": 28.8854,
+          "file": "tests/native-head-occlusion.test.ts",
+          "line": 36
+        },
+        {
+          "name": "legacy occlusion, missing/both-hidden features, invented geometry and foreign contour evidence reject",
+          "status": "PASS",
+          "durationMs": 14.6123,
+          "file": "tests/native-head-occlusion.test.ts",
+          "line": 48
+        },
+        {
+          "name": "bank7 requires face3, its visible eye anchor, complete own source/emotions/paint and false production flags",
+          "status": "PASS",
+          "durationMs": 24.5882,
+          "file": "tests/native-head-occlusion.test.ts",
+          "line": 59
+        },
+        {
+          "name": "face3 rejects a visible-eye erase strip covering the exact protected hidden contour",
+          "status": "PASS",
+          "durationMs": 8.0156,
+          "file": "tests/native-head-occlusion.test.ts",
+          "line": 72
+        },
+        {
+          "name": "with screen-left hidden, screen-right brow tilt uses its slot-specific direction",
+          "status": "PASS",
+          "durationMs": 5.4284,
+          "file": "tests/native-head-occlusion.test.ts",
+          "line": 82
+        },
+        {
+          "name": "four explicit source-layer definitions retain exact original faces, body/identity and unapproved state",
+          "status": "PASS",
+          "durationMs": 296.4593,
+          "file": "tests/native-head-paint.test.ts",
+          "line": 24
+        },
+        {
+          "name": "paint rejects another source, legacy banks, facial/neck regions, crop escapes and unbounded/double rear paint",
+          "status": "PASS",
+          "durationMs": 41.1721,
+          "file": "tests/native-head-paint.test.ts",
+          "line": 36
+        },
+        {
+          "name": "rear source pixels paint before the entire body; original face and chin-contact arms remain in front with namespaced local references",
+          "status": "PASS",
+          "durationMs": 255.8082,
+          "file": "tests/native-head-paint.test.ts",
+          "line": 50
+        },
+        {
+          "name": "whole/slice/reverse seeks keep rear attachment identical to head and preserve facial/hand motion from the plain emotion source",
+          "status": "FAIL",
+          "durationMs": 513.3639,
+          "file": "tests/native-head-paint.test.ts",
+          "line": 65
+        },
+        {
+          "name": "compiled rear/head transforms share exact frame values and discrete cell opacity; Karo has no invented rear hair",
+          "status": "PASS",
+          "durationMs": 162654.8073,
+          "file": "tests/native-head-paint.test.ts",
+          "line": 81
+        },
+        {
+          "name": "both stagings carry sourced rear paint through five canonical factory shots, actor namespaces, original reactions and byte caps",
+          "status": "FAIL",
+          "durationMs": 56366.6172,
+          "file": "tests/native-head-paint.test.ts",
+          "line": 90
+        },
+        {
+          "name": "Studio source-layers route/revision cannot reuse the old expression route or supply a missing supporting partition",
+          "status": "FAIL",
+          "durationMs": 4352.6648,
+          "file": "tests/native-head-paint.test.ts",
+          "line": 106
+        },
+        {
+          "name": "all selected face modes pass strict edit/protected-paint and complete motion-hull validation",
+          "status": "PASS",
+          "durationMs": 267.6891,
+          "file": "tests/native-head-registration.test.ts",
+          "line": 12
+        },
+        {
+          "name": "registration repair keeps source artwork, facial anchors, motion ranges and original invalid versions",
+          "status": "PASS",
+          "durationMs": 65.2245,
+          "file": "tests/native-head-registration.test.ts",
+          "line": 24
+        },
+        {
+          "name": "four real principal emotion registrations bind the original source drawings and exact body views without approval",
+          "status": "PASS",
+          "durationMs": 169.2613,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 27
+        },
+        {
+          "name": "emotion capability cannot be granted to legacy faces, incomplete geometry or borrowed repair sources",
+          "status": "PASS",
+          "durationMs": 36.1071,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 41
+        },
+        {
+          "name": "brow motion, repair strips and closed mouth controls must remain inside their own protected source regions",
+          "status": "PASS",
+          "durationMs": 15.1149,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 54
+        },
+        {
+          "name": "source rest remains native; silent expressions are closed contours and never create speech activity",
+          "status": "PASS",
+          "durationMs": 56.3051,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 65
+        },
+        {
+          "name": "mixed smile/frown, round and speech controls stay in the registered convex mouth region",
+          "status": "PASS",
+          "durationMs": 480.6971,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 80
+        },
+        {
+          "name": "own source SVG exposes every bounded mouth/eye/brow selector without whole-face transforms or extra assets",
+          "status": "PASS",
+          "durationMs": 58.8779,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 92
+        },
+        {
+          "name": "emotions, speaker mouth, partner look and original gestures survive arbitrary seeks and camera slicing together",
+          "status": "FAIL",
+          "durationMs": 131.8957,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 104
+        },
+        {
+          "name": "compiler refinement includes original eyebrow matrices as well as nonlinear face paths through reaction boundaries",
+          "status": "PASS",
+          "durationMs": 115535.516,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 117
+        },
+        {
+          "name": "two actors carry complete reaction and gaze histories through the actual five-shot canonical factory design",
+          "status": "PASS",
+          "durationMs": 92000.6944,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 129
+        },
+        {
+          "name": "mode and mood are bound in preview URLs/revisions; missing supporting emotions cannot fall back to a principal",
+          "status": "PASS",
+          "durationMs": 88.9264,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 144
+        },
+        {
+          "name": "Studio expression routes retain exact mood/scene binding and legacy routes retain their original bank",
+          "status": "PASS",
+          "durationMs": 99505.3869,
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 153
+        }
+      ],
+      "failures": [
+        {
+          "name": "full and camera-sliced face previews keep original mouth/blink/gesture phase in all authored views",
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 16,
+          "message": "needs-arm-pose: chin elbow folds 158.1deg, beyond its 145deg candidate art limit",
+          "logStartLine": 52,
+          "logEndLine": 64
+        },
+        {
+          "name": "explicit view routes and legacy nested PNG URLs retain exact resources without route ambiguity",
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 104,
+          "message": "Expected values to be strictly equal:",
+          "logStartLine": 65,
+          "logEndLine": 82
+        },
+        {
+          "name": "workbench endpoints expose read-only constrained preview with MIME, CSP, revision and no production promotion",
+          "file": "tests/head-face-workbench.test.ts",
+          "line": 141,
+          "message": "Expected values to be strictly equal:",
+          "logStartLine": 83,
+          "logEndLine": 100
+        },
+        {
+          "name": "whole/slice/reverse seeks keep rear attachment identical to head and preserve facial/hand motion from the plain emotion source",
+          "file": "tests/native-head-paint.test.ts",
+          "line": 65,
+          "message": "needs-arm-pose: chin elbow folds 158.5deg, beyond its 145deg candidate art limit",
+          "logStartLine": 101,
+          "logEndLine": 111
+        },
+        {
+          "name": "both stagings carry sourced rear paint through five canonical factory shots, actor namespaces, original reactions and byte caps",
+          "file": "tests/native-head-paint.test.ts",
+          "line": 90,
+          "message": "needs-head-source-phase: source head requires its complete storyboard/run context",
+          "logStartLine": 112,
+          "logEndLine": 125
+        },
+        {
+          "name": "Studio source-layers route/revision cannot reuse the old expression route or supply a missing supporting partition",
+          "file": "tests/native-head-paint.test.ts",
+          "line": 106,
+          "message": "Expected values to be strictly equal:",
+          "logStartLine": 126,
+          "logEndLine": 143
+        },
+        {
+          "name": "emotions, speaker mouth, partner look and original gestures survive arbitrary seeks and camera slicing together",
+          "file": "tests/native-source-emotions.test.ts",
+          "line": 104,
+          "message": "needs-arm-pose: chin elbow folds 158.5deg, beyond its 145deg candidate art limit",
+          "logStartLine": 144,
+          "logEndLine": 155
+        }
+      ],
+      "byFile": [
+        {
+          "file": "tests/native-head-registration.test.ts",
+          "pass": 2,
+          "fail": 0
+        },
+        {
+          "file": "tests/native-head-face.test.ts",
+          "pass": 8,
+          "fail": 0
+        },
+        {
+          "file": "tests/head-face-workbench.test.ts",
+          "pass": 3,
+          "fail": 3
+        },
+        {
+          "file": "tests/native-source-emotions.test.ts",
+          "pass": 10,
+          "fail": 1
+        },
+        {
+          "file": "tests/native-head-paint.test.ts",
+          "pass": 4,
+          "fail": 3
+        },
+        {
+          "file": "tests/native-head-occlusion.test.ts",
+          "pass": 6,
+          "fail": 0
+        }
+      ],
+      "logKind": "Complete concatenation of tool-delivered stdout chunks; no original stream file",
+      "compiler": "forest-source-body-motion-44",
+      "command": "node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/native-head-registration.test.ts tests/native-head-face.test.ts tests/head-face-workbench.test.ts tests/native-source-emotions.test.ts tests/native-head-paint.test.ts tests/native-head-occlusion.test.ts",
+      "exitCode": 1
+    }
+  },
+  "tracers": [
+    {
+      "name": "before-support-left",
+      "outputRoot": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T17-49-12-279Z-f8d8954c-f6e6-4267-aa17-e222fc3bff25",
+      "start": {
+        "startedAt": "2026-10-10T17:49:10.001Z",
+        "sourceSha": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+        "trackedDirty": true,
+        "sourceFiles": {
+          "packages/topics/head-face-candidates.ts": "6c56882a1fdaff9d4f640883f50149d821b8f014db930f5d37674d4289d60170",
+          "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+          "tests/head-face-workbench.test.ts": "fe36436170434c7b394796b659339c0020977f436351f7dc7e40f0fe12d30477",
+          "tests/native-head-face.test.ts": "1a9eb981c88940bf7aa80b9d69cca0f8cffaea82e0a96fbe1821fd703c754324",
+          "tests/native-head-paint.test.ts": "4b5d9415b73f48d19f0f1425f70ac777235bec34a20f5c1a8c3407d2ba9c2a43",
+          "tests/native-source-emotions.test.ts": "5a955dc7e07c2e5751aa2fe43e2fd1d0d541163b92459008e365094d359efe2b",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json": "e7a79f50fee6140ce7ff2e2e68ca3866482ae253023fb0304741b5fcfabe51e2",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json": "b4ce0ffe29fae2c90ff12be93b4c042f17b5e61421d3573f653ab25992831a07",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json": "f5f9dcf02886fc40ce4e8140150254fead6a98ea639fa2fa8b04f70c126855ae",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json": "73d478fc4d014ac0b267889aa60a685bffed6e1f53849bf8e01fc3661ccf7a50",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json": "2874311dd15826966e6418107016e596dc44e003e0f508f8f20f46689f087820",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json": "b8bceb68783b72bad328395f322de82a1b6061d1bedade7cde290583e0874463",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json": "5b53d8cb0e5b0934c13abc6718300c9ba4f3270a39e4e6be11533a3f2e022782",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json": "3c911e19d45fbbfcd7b58847ae3e94708a5f6449cdb7b639137d31898615c54b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json": "1cc72cc108e5a3c9b946ea52d31d7dcc9523ae4db1400e27947c771c009ba0b7",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json": "3a072ea2338ce9329fa303cf1481be84e27fda65b946da9cff42c5ce281f266b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json": "3058c19afaba96cf57cf90bf9832973ce41f0570f5b4b695c1a1dfd3f8d49faf",
+          "tests/native-head-registration.test.ts": "960d9e37488b444fb5dbae735af806806c8f7c39090d1e395c756533877606a1"
+        },
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-left",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ],
+        "paidModel": false,
+        "tts": false,
+        "productionAcceptance": false
+      },
+      "exit": {
+        "startedAt": "2026-10-10T17:49:10.001Z",
+        "completedAt": "2026-10-10T17:50:34.211Z",
+        "exitCode": 1,
+        "signal": null,
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-left",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ]
+      },
+      "status": "failed",
+      "phase": "scene-security-and-byte-cap",
+      "error": "needs-head-source-phase: source head requires its complete storyboard/run context",
+      "checks": {
+        "canonical": {
+          "status": "PASS",
+          "detail": {
+            "storyboardHash": "24adaff6b9e4e5b692bbd0803592c58d6e9e564e9e7c2e96be279f0fa244ee19",
+            "narrationHash": "a47b6925474dcce3b7b3c321113acc95ccfd87ce08ba0355ddf51bf839e6c13c",
+            "headMode": "explicit-opposing-bank6-source-follow"
+          }
+        },
+        "diagnostic-wav": {
+          "status": "NOT RUN"
+        },
+        "cast-and-story": {
+          "status": "PASS"
+        },
+        "scene-security-and-byte-cap": {
+          "status": "FAIL",
+          "detail": "needs-head-source-phase: source head requires its complete storyboard/run context"
+        },
+        "master": {
+          "status": "NOT RUN"
+        },
+        "hyperframes": {
+          "status": "NOT RUN"
+        },
+        "snapshots": {
+          "status": "NOT RUN"
+        },
+        "render-draft": {
+          "status": "NOT RUN"
+        },
+        "video-probe": {
+          "status": "NOT RUN"
+        },
+        "video-decode": {
+          "status": "NOT RUN"
+        },
+        "visual-motion-review": {
+          "status": "NOT RUN"
+        },
+        "source-clock-and-reverse-seek": {
+          "status": "NOT RUN"
+        },
+        "full-factory-inputs": {
+          "status": "NOT RUN"
+        }
+      },
+      "shots": [],
+      "mp4Created": false,
+      "framesCreated": false
+    },
+    {
+      "name": "before-support-right",
+      "outputRoot": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T17-52-56-350Z-7b2f7974-afe7-424e-b3a5-9e158945352f",
+      "start": {
+        "startedAt": "2026-10-10T17:52:52.955Z",
+        "sourceSha": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+        "trackedDirty": true,
+        "sourceFiles": {
+          "packages/topics/head-face-candidates.ts": "6c56882a1fdaff9d4f640883f50149d821b8f014db930f5d37674d4289d60170",
+          "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+          "tests/head-face-workbench.test.ts": "fe36436170434c7b394796b659339c0020977f436351f7dc7e40f0fe12d30477",
+          "tests/native-head-face.test.ts": "1a9eb981c88940bf7aa80b9d69cca0f8cffaea82e0a96fbe1821fd703c754324",
+          "tests/native-head-paint.test.ts": "4b5d9415b73f48d19f0f1425f70ac777235bec34a20f5c1a8c3407d2ba9c2a43",
+          "tests/native-source-emotions.test.ts": "5a955dc7e07c2e5751aa2fe43e2fd1d0d541163b92459008e365094d359efe2b",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json": "e7a79f50fee6140ce7ff2e2e68ca3866482ae253023fb0304741b5fcfabe51e2",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json": "b4ce0ffe29fae2c90ff12be93b4c042f17b5e61421d3573f653ab25992831a07",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json": "f5f9dcf02886fc40ce4e8140150254fead6a98ea639fa2fa8b04f70c126855ae",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json": "73d478fc4d014ac0b267889aa60a685bffed6e1f53849bf8e01fc3661ccf7a50",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json": "2874311dd15826966e6418107016e596dc44e003e0f508f8f20f46689f087820",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json": "b8bceb68783b72bad328395f322de82a1b6061d1bedade7cde290583e0874463",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json": "5b53d8cb0e5b0934c13abc6718300c9ba4f3270a39e4e6be11533a3f2e022782",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json": "3c911e19d45fbbfcd7b58847ae3e94708a5f6449cdb7b639137d31898615c54b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json": "1cc72cc108e5a3c9b946ea52d31d7dcc9523ae4db1400e27947c771c009ba0b7",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json": "3a072ea2338ce9329fa303cf1481be84e27fda65b946da9cff42c5ce281f266b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json": "3058c19afaba96cf57cf90bf9832973ce41f0570f5b4b695c1a1dfd3f8d49faf",
+          "tests/native-head-registration.test.ts": "960d9e37488b444fb5dbae735af806806c8f7c39090d1e395c756533877606a1"
+        },
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-right",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ],
+        "paidModel": false,
+        "tts": false,
+        "productionAcceptance": false
+      },
+      "exit": {
+        "startedAt": "2026-10-10T17:52:52.955Z",
+        "completedAt": "2026-10-10T17:54:17.288Z",
+        "exitCode": 1,
+        "signal": null,
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-right",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ]
+      },
+      "status": "failed",
+      "phase": "scene-security-and-byte-cap",
+      "error": "needs-head-source-phase: source head requires its complete storyboard/run context",
+      "checks": {
+        "canonical": {
+          "status": "PASS",
+          "detail": {
+            "storyboardHash": "6274af46edffcd5f75fdaf83ad15a681a3713e7edffefcafbbe2439ae8f79f3c",
+            "narrationHash": "a47b6925474dcce3b7b3c321113acc95ccfd87ce08ba0355ddf51bf839e6c13c",
+            "headMode": "explicit-opposing-bank6-source-follow"
+          }
+        },
+        "diagnostic-wav": {
+          "status": "NOT RUN"
+        },
+        "cast-and-story": {
+          "status": "PASS"
+        },
+        "scene-security-and-byte-cap": {
+          "status": "FAIL",
+          "detail": "needs-head-source-phase: source head requires its complete storyboard/run context"
+        },
+        "master": {
+          "status": "NOT RUN"
+        },
+        "hyperframes": {
+          "status": "NOT RUN"
+        },
+        "snapshots": {
+          "status": "NOT RUN"
+        },
+        "render-draft": {
+          "status": "NOT RUN"
+        },
+        "video-probe": {
+          "status": "NOT RUN"
+        },
+        "video-decode": {
+          "status": "NOT RUN"
+        },
+        "visual-motion-review": {
+          "status": "NOT RUN"
+        },
+        "source-clock-and-reverse-seek": {
+          "status": "NOT RUN"
+        },
+        "full-factory-inputs": {
+          "status": "NOT RUN"
+        }
+      },
+      "shots": [],
+      "mp4Created": false,
+      "framesCreated": false
+    },
+    {
+      "name": "after-support-left",
+      "outputRoot": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T18-03-13-906Z-24aaeba8-b049-4f5f-8366-3e52298180d1",
+      "start": {
+        "startedAt": "2026-10-10T18:03:11.541Z",
+        "sourceSha": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+        "trackedDirty": true,
+        "sourceFiles": {
+          "library/topics/prehistoric-life/manifest.json": "ceb435fc3f78a7c3d2f95636aab34fc03858b875fc22b24e1929938ea430e426",
+          "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+          "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+          "packages/topics/head-face-candidates.ts": "6c56882a1fdaff9d4f640883f50149d821b8f014db930f5d37674d4289d60170",
+          "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+          "tests/head-face-workbench.test.ts": "fe36436170434c7b394796b659339c0020977f436351f7dc7e40f0fe12d30477",
+          "tests/native-head-face.test.ts": "1a9eb981c88940bf7aa80b9d69cca0f8cffaea82e0a96fbe1821fd703c754324",
+          "tests/native-head-paint.test.ts": "4b5d9415b73f48d19f0f1425f70ac777235bec34a20f5c1a8c3407d2ba9c2a43",
+          "tests/native-source-emotions.test.ts": "5a955dc7e07c2e5751aa2fe43e2fd1d0d541163b92459008e365094d359efe2b",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json": "e7a79f50fee6140ce7ff2e2e68ca3866482ae253023fb0304741b5fcfabe51e2",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json": "b4ce0ffe29fae2c90ff12be93b4c042f17b5e61421d3573f653ab25992831a07",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json": "f5f9dcf02886fc40ce4e8140150254fead6a98ea639fa2fa8b04f70c126855ae",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json": "73d478fc4d014ac0b267889aa60a685bffed6e1f53849bf8e01fc3661ccf7a50",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json": "2874311dd15826966e6418107016e596dc44e003e0f508f8f20f46689f087820",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json": "b8bceb68783b72bad328395f322de82a1b6061d1bedade7cde290583e0874463",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json": "5b53d8cb0e5b0934c13abc6718300c9ba4f3270a39e4e6be11533a3f2e022782",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json": "3c911e19d45fbbfcd7b58847ae3e94708a5f6449cdb7b639137d31898615c54b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json": "1cc72cc108e5a3c9b946ea52d31d7dcc9523ae4db1400e27947c771c009ba0b7",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json": "3a072ea2338ce9329fa303cf1481be84e27fda65b946da9cff42c5ce281f266b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json": "3058c19afaba96cf57cf90bf9832973ce41f0570f5b4b695c1a1dfd3f8d49faf",
+          "tests/native-head-registration.test.ts": "960d9e37488b444fb5dbae735af806806c8f7c39090d1e395c756533877606a1"
+        },
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-left",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ],
+        "paidModel": false,
+        "tts": false,
+        "productionAcceptance": false
+      },
+      "exit": {
+        "startedAt": "2026-10-10T18:03:11.541Z",
+        "completedAt": "2026-10-10T18:08:58.291Z",
+        "exitCode": 1,
+        "signal": null,
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-left",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ]
+      },
+      "status": "failed",
+      "phase": "scene-security-and-byte-cap",
+      "error": "native-seat-canonical-0: scene validation failed: Scene exceeds max_scene_bytes; Forbidden or malformed HTML tag: feComponentTransfer; Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/; Forbidden or malformed HTML tag: /feComponentTransfer; scene.js: tween values must be literal data with allowed animation properties",
+      "checks": {
+        "canonical": {
+          "status": "PASS",
+          "detail": {
+            "storyboardHash": "24adaff6b9e4e5b692bbd0803592c58d6e9e564e9e7c2e96be279f0fa244ee19",
+            "narrationHash": "a47b6925474dcce3b7b3c321113acc95ccfd87ce08ba0355ddf51bf839e6c13c",
+            "headMode": "explicit-opposing-bank6-source-follow"
+          }
+        },
+        "diagnostic-wav": {
+          "status": "NOT RUN"
+        },
+        "cast-and-story": {
+          "status": "PASS"
+        },
+        "scene-security-and-byte-cap": {
+          "status": "FAIL",
+          "detail": "native-seat-canonical-0: scene validation failed: Scene exceeds max_scene_bytes; Forbidden or malformed HTML tag: feComponentTransfer; Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/; Forbidden or malformed HTML tag: /feComponentTransfer; scene.js: tween values must be literal data with allowed animation properties"
+        },
+        "master": {
+          "status": "NOT RUN"
+        },
+        "hyperframes": {
+          "status": "NOT RUN"
+        },
+        "snapshots": {
+          "status": "NOT RUN"
+        },
+        "render-draft": {
+          "status": "NOT RUN"
+        },
+        "video-probe": {
+          "status": "NOT RUN"
+        },
+        "video-decode": {
+          "status": "NOT RUN"
+        },
+        "visual-motion-review": {
+          "status": "NOT RUN"
+        },
+        "source-clock-and-reverse-seek": {
+          "status": "NOT RUN"
+        },
+        "full-factory-inputs": {
+          "status": "NOT RUN"
+        }
+      },
+      "shots": [
+        {
+          "shotId": "native-seat-canonical-0",
+          "sceneBytes": 16481788,
+          "capBytes": 2000000,
+          "compileMs": 249176,
+          "errors": [
+            "Scene exceeds max_scene_bytes",
+            "Forbidden or malformed HTML tag: feComponentTransfer",
+            "Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/",
+            "Forbidden or malformed HTML tag: /feComponentTransfer",
+            "scene.js: tween values must be literal data with allowed animation properties"
+          ]
+        }
+      ],
+      "mp4Created": false,
+      "framesCreated": false
+    },
+    {
+      "name": "after-support-right",
+      "outputRoot": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T18-03-13-894Z-4df9f35c-ccb0-47c5-9c8e-e94c61cfb58c",
+      "start": {
+        "startedAt": "2026-10-10T18:03:11.509Z",
+        "sourceSha": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+        "trackedDirty": true,
+        "sourceFiles": {
+          "library/topics/prehistoric-life/manifest.json": "ceb435fc3f78a7c3d2f95636aab34fc03858b875fc22b24e1929938ea430e426",
+          "packages/animation/compiler.ts": "1731aa3617306e9b3daeb3f8a76354d797b564932a9f220f7b19309017feacec",
+          "packages/animation/forest-body-art.ts": "ecdbb3ca8476599e0ac69a44e3f7585825b1e7ab0a17d6a7f6a521813bc87004",
+          "packages/topics/head-face-candidates.ts": "6c56882a1fdaff9d4f640883f50149d821b8f014db930f5d37674d4289d60170",
+          "packages/topics/prehistoric-life.ts": "d177612271a4c9db48e3bc162bbf8d0a3d95448f4c679805ac3dba2ebbbc4c45",
+          "tests/head-face-workbench.test.ts": "fe36436170434c7b394796b659339c0020977f436351f7dc7e40f0fe12d30477",
+          "tests/native-head-face.test.ts": "1a9eb981c88940bf7aa80b9d69cca0f8cffaea82e0a96fbe1821fd703c754324",
+          "tests/native-head-paint.test.ts": "4b5d9415b73f48d19f0f1425f70ac777235bec34a20f5c1a8c3407d2ba9c2a43",
+          "tests/native-source-emotions.test.ts": "5a955dc7e07c2e5751aa2fe43e2fd1d0d541163b92459008e365094d359efe2b",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v2.json": "e7a79f50fee6140ce7ff2e2e68ca3866482ae253023fb0304741b5fcfabe51e2",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v2.json": "b4ce0ffe29fae2c90ff12be93b4c042f17b5e61421d3573f653ab25992831a07",
+          "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v2.json": "f5f9dcf02886fc40ce4e8140150254fead6a98ea639fa2fa8b04f70c126855ae",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v2.json": "73d478fc4d014ac0b267889aa60a685bffed6e1f53849bf8e01fc3661ccf7a50",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+          "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v2.json": "2874311dd15826966e6418107016e596dc44e003e0f508f8f20f46689f087820",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v2.json": "b8bceb68783b72bad328395f322de82a1b6061d1bedade7cde290583e0874463",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+          "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v2.json": "5b53d8cb0e5b0934c13abc6718300c9ba4f3270a39e4e6be11533a3f2e022782",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v2.json": "3c911e19d45fbbfcd7b58847ae3e94708a5f6449cdb7b639137d31898615c54b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v2.json": "1cc72cc108e5a3c9b946ea52d31d7dcc9523ae4db1400e27947c771c009ba0b7",
+          "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v2.json": "3a072ea2338ce9329fa303cf1481be84e27fda65b946da9cff42c5ce281f266b",
+          "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v2.json": "3058c19afaba96cf57cf90bf9832973ce41f0570f5b4b695c1a1dfd3f8d49faf",
+          "tests/native-head-registration.test.ts": "960d9e37488b444fb5dbae735af806806c8f7c39090d1e395c756533877606a1"
+        },
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-right",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ],
+        "paidModel": false,
+        "tts": false,
+        "productionAcceptance": false
+      },
+      "exit": {
+        "startedAt": "2026-10-10T18:03:11.509Z",
+        "completedAt": "2026-10-10T18:09:05.748Z",
+        "exitCode": 1,
+        "signal": null,
+        "command": [
+          "C:\\Program Files\\nodejs\\node.exe",
+          "--import",
+          "tsx",
+          "scripts/native-seat-tracer.ts",
+          "--native-heads",
+          "--staging",
+          "lila-right",
+          "--acting",
+          "emotional-reactions",
+          "--face",
+          "source-motion",
+          "--validate",
+          "--frames",
+          "--render"
+        ]
+      },
+      "status": "failed",
+      "phase": "scene-security-and-byte-cap",
+      "error": "native-seat-canonical-0: scene validation failed: Scene exceeds max_scene_bytes; Forbidden or malformed HTML tag: feComponentTransfer; Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/; Forbidden or malformed HTML tag: /feComponentTransfer; scene.js: tween values must be literal data with allowed animation properties",
+      "checks": {
+        "canonical": {
+          "status": "PASS",
+          "detail": {
+            "storyboardHash": "6274af46edffcd5f75fdaf83ad15a681a3713e7edffefcafbbe2439ae8f79f3c",
+            "narrationHash": "a47b6925474dcce3b7b3c321113acc95ccfd87ce08ba0355ddf51bf839e6c13c",
+            "headMode": "explicit-opposing-bank6-source-follow"
+          }
+        },
+        "diagnostic-wav": {
+          "status": "NOT RUN"
+        },
+        "cast-and-story": {
+          "status": "PASS"
+        },
+        "scene-security-and-byte-cap": {
+          "status": "FAIL",
+          "detail": "native-seat-canonical-0: scene validation failed: Scene exceeds max_scene_bytes; Forbidden or malformed HTML tag: feComponentTransfer; Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/; Forbidden or malformed HTML tag: /feComponentTransfer; scene.js: tween values must be literal data with allowed animation properties"
+        },
+        "master": {
+          "status": "NOT RUN"
+        },
+        "hyperframes": {
+          "status": "NOT RUN"
+        },
+        "snapshots": {
+          "status": "NOT RUN"
+        },
+        "render-draft": {
+          "status": "NOT RUN"
+        },
+        "video-probe": {
+          "status": "NOT RUN"
+        },
+        "video-decode": {
+          "status": "NOT RUN"
+        },
+        "visual-motion-review": {
+          "status": "NOT RUN"
+        },
+        "source-clock-and-reverse-seek": {
+          "status": "NOT RUN"
+        },
+        "full-factory-inputs": {
+          "status": "NOT RUN"
+        }
+      },
+      "shots": [
+        {
+          "shotId": "native-seat-canonical-0",
+          "sceneBytes": 19844820,
+          "capBytes": 2000000,
+          "compileMs": 260391,
+          "errors": [
+            "Scene exceeds max_scene_bytes",
+            "Forbidden or malformed HTML tag: feComponentTransfer",
+            "Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/",
+            "Forbidden or malformed HTML tag: /feComponentTransfer",
+            "scene.js: tween values must be literal data with allowed animation properties"
+          ]
+        }
+      ],
+      "mp4Created": false,
+      "framesCreated": false
+    }
+  ],
+  "artifacts": [
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/regression-output.log",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/regression-2026-10-10T18-03-11.265Z/output.log",
+      "bytes": 81126,
+      "sha256": "e9a75843c8f3aa0a4561ebaa75b03254db2d2c9e77d2bd3ad83658a88d8516b7"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/regression-start.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/regression-2026-10-10T18-03-11.265Z/start.json",
+      "bytes": 3850,
+      "sha256": "b785a9ae91c488d48bb3d09cac1d848252e5dbbedc6f2a38500ff002d2ecc409"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/regression-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/regression-2026-10-10T18-03-11.265Z/exit.json",
+      "bytes": 597,
+      "sha256": "edfd7ed366f910557afb8376cae8a7679f1fffe103182fcb83a163f9bf609879"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/focused-output.log",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/focused-2026-10-10T18-10-47.492Z/output.log",
+      "bytes": 464,
+      "sha256": "c553ead7a3e08390d54e49b4b54ad68f863b1be8cd17e41f6b1386ae39050085"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/focused-start.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/focused-2026-10-10T18-10-47.492Z/start.json",
+      "bytes": 3978,
+      "sha256": "3d2d0d88aaa97ca533a4ba942a1930d0371a6f2c6989099e818b0e5f2aedf368"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/focused-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/focused-2026-10-10T18-10-47.492Z/exit.json",
+      "bytes": 395,
+      "sha256": "739b96379933475c7c37592083e32eacc504038bafd5990f2784265748a472ba"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/face-suite-captured.log",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/face-suite-captured.log",
+      "bytes": 12569,
+      "sha256": "93a5931963e579d1203d45207b4913e605c9568e9867c25e3a6c2e7255af9951"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/registration-before.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/registration-before.json",
+      "bytes": 12675,
+      "sha256": "580d7abb3e9141375b3bc368162e3227ca73ed18ed84cdb54015ded5376c263e"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/registration-repair.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/registration-repair.json",
+      "bytes": 10063,
+      "sha256": "aa42286837624c894b40dfd0d3b1c3984ee773fa8a5aca32829e7691b6a4f8a5"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-left-output.log",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-left-2026-10-10T17-49-09.770Z/output.log",
+      "bytes": 311,
+      "sha256": "02a7bced28cac8c15e855789212807ef1b701870b548b17ab704c0be9774324b"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-left-start.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-left-2026-10-10T17-49-09.770Z/start.json",
+      "bytes": 3349,
+      "sha256": "2808ab7a4c7af5f74d988455ff9965f258c6674c7dc9f6ceeda58ac79d579f32"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-left-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-left-2026-10-10T17-49-09.770Z/exit.json",
+      "bytes": 436,
+      "sha256": "81b2c66988c4d69432bcb7e3515c707c78521d6ab3aa7d52f546972a7fcf177e"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-left-report.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T17-49-12-279Z-f8d8954c-f6e6-4267-aa17-e222fc3bff25/tracer-report.json",
+      "bytes": 3364,
+      "sha256": "ec87395503f5a56212bd6a4d2a70f69f45702456f87c87ecb7cbb667f5f64e11"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-right-output.log",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-right-2026-10-10T17-52-52.711Z/output.log",
+      "bytes": 311,
+      "sha256": "cee84a17de993c20d8e03193526f505bf3dc9637d868fad860d8b792f9843bf9"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-right-start.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-right-2026-10-10T17-52-52.711Z/start.json",
+      "bytes": 3350,
+      "sha256": "21a5df881ba0a90bb0a1e9ba7b74e39bbd3961cab49707c224fb211c8b2f7d0c"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-right-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-right-2026-10-10T17-52-52.711Z/exit.json",
+      "bytes": 437,
+      "sha256": "09d556188c6a4030e8250ef9af9ed0b0f2d94bc14ce977e9be3eff818ba668f8"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/before-support-right-report.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T17-52-56-350Z-7b2f7974-afe7-424e-b3a5-9e158945352f/tracer-report.json",
+      "bytes": 3365,
+      "sha256": "0c8ac8cc5ba7cc651b44cdf330f2317754be3594dc797958d70817d28f074937"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-left-output.log",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-left-2026-10-10T18-03-11.262Z/output.log",
+      "bytes": 574,
+      "sha256": "1cc99557d66579386e5fa83e9bf8426a01c2646c2cce9b994a3a0c973af179b6"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-left-start.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-left-2026-10-10T18-03-11.262Z/start.json",
+      "bytes": 3689,
+      "sha256": "a5332a76f946b8ca71dfc15953e5b23f23c5d5accbc2f54d865db001c9c0f9df"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-left-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-left-2026-10-10T18-03-11.262Z/exit.json",
+      "bytes": 436,
+      "sha256": "ad472d4ba36a9cc322495cf8ae40ad2b92f19bec18c567a887527cdae646d1ab"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-left-report.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T18-03-13-906Z-24aaeba8-b049-4f5f-8366-3e52298180d1/tracer-report.json",
+      "bytes": 74362,
+      "sha256": "b82ccb51f5a89e414dc2394e595fd488416fe0d425acdcded0b4a6e2a7426d80"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-left-scene-0.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T18-03-13-906Z-24aaeba8-b049-4f5f-8366-3e52298180d1/work/scene-reports/native-seat-canonical-0.json",
+      "bytes": 1440046,
+      "sha256": "7ed0d5bc9ef879e4966e05a6e69f3c45e6d8af2daa97b1ccfb306cd3283970eb"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-right-output.log",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-right-2026-10-10T18-03-11.245Z/output.log",
+      "bytes": 574,
+      "sha256": "229753f755cb77d172a7f496b7f6d150a7b310f90c25e1da9c7bab524a5edbc2"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-right-start.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-right-2026-10-10T18-03-11.245Z/start.json",
+      "bytes": 3690,
+      "sha256": "25ea7e7abf51eb540689d91a320f121b0793a4b33ce94d9ce914e1651e6d520f"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-right-exit.json",
+      "originalPath": "runtime/prehistoric-life/qa/source114-head-face/lila-right-2026-10-10T18-03-11.245Z/exit.json",
+      "bytes": 437,
+      "sha256": "bd86880de6d217adbf54ccb49261ef0b25e296029ab1719e4942e0737945aee2"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-right-report.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T18-03-13-894Z-4df9f35c-ccb0-47c5-9c8e-e94c61cfb58c/tracer-report.json",
+      "bytes": 72899,
+      "sha256": "69cfc6f8019b1b318161303adb3baa678ba5644a3a169dc6e6413f89ad7f2b73"
+    },
+    {
+      "file": "docs/validation/2026-10-11-prehistoric-source114/after-support-right-scene-0.json",
+      "originalPath": "runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T18-03-13-894Z-4df9f35c-ccb0-47c5-9c8e-e94c61cfb58c/work/scene-reports/native-seat-canonical-0.json",
+      "bytes": 1438727,
+      "sha256": "de21a9b8b9c8e9901ce800b91ed247ce952b08db4096838c7552f3044b8093d6"
+    }
+  ],
+  "newImageRequests": 0,
+  "paidModelRequests": 0,
+  "paidTtsRequests": 0,
+  "overallProgressEstimatePercent": 40,
+  "deltaPercentagePoints": 0,
+  "productionAcceptance": false,
+  "visualMotionReviewed": false,
+  "fullFactoryVerified": false,
+  "fullGoalComplete": false
+}

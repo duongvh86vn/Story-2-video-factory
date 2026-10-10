@@ -1,0 +1,434 @@
+[
+  {
+    "mode": "speech-eyes",
+    "id": "lila-source-face-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: edit region touches another edit or protected paint",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": []
+  },
+  {
+    "mode": "speech-eyes",
+    "id": "karo-source-face-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-source-face-v1.json",
+    "success": true,
+    "issues": [],
+    "browOutside": []
+  },
+  {
+    "mode": "speech-eyes",
+    "id": "lila-left-face-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-face-v1.json",
+    "success": true,
+    "issues": [],
+    "browOutside": []
+  },
+  {
+    "mode": "speech-eyes",
+    "id": "karo-left-face-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-face-v1.json",
+    "success": true,
+    "issues": [],
+    "browOutside": []
+  },
+  {
+    "mode": "speech-eyes",
+    "id": "supporting-male-left-face-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/supporting-male-left-face-v1.json",
+    "success": true,
+    "issues": [],
+    "browOutside": []
+  },
+  {
+    "mode": "speech-eyes",
+    "id": "supporting-female-right-face-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/supporting-female-right-face-v1.json",
+    "success": true,
+    "issues": [],
+    "browOutside": []
+  },
+  {
+    "mode": "expressions",
+    "id": "lila-left-emotions-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-emotions-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow rotation/shift hull leaves its own skin region",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-right",
+        "index": 2,
+        "outside": [
+          {
+            "x": 482.9408395668146,
+            "y": 393.70094465320466
+          },
+          {
+            "x": 489.2125473628738,
+            "y": 393.70094465320466
+          }
+        ]
+      },
+      {
+        "slot": "screen-right",
+        "index": 3,
+        "outside": [
+          {
+            "x": 506.8601277929614,
+            "y": 404.16880592322565
+          },
+          {
+            "x": 511.0412663236675,
+            "y": 404.16880592322565
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "expressions",
+    "id": "lila-right-emotions-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-right-emotions-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: edit region touches another edit or protected paint",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-left",
+        "index": 8,
+        "outside": [
+          {
+            "x": 652.3056751416132,
+            "y": 468.07603922234546
+          }
+        ]
+      },
+      {
+        "slot": "screen-left",
+        "index": 9,
+        "outside": [
+          {
+            "x": 639.8995328181638,
+            "y": 474.4075187216663
+          },
+          {
+            "x": 632.582540389428,
+            "y": 474.4075187216663
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "expressions",
+    "id": "karo-left-emotions-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-emotions-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow pivot/strip differs from its own source geometry",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow pivot/strip differs from its own source geometry\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-right",
+        "index": 8,
+        "outside": [
+          {
+            "x": 678.9060762121497,
+            "y": 519.5665019522887
+          },
+          {
+            "x": 672.7675065226666,
+            "y": 519.5665019522887
+          }
+        ]
+      },
+      {
+        "slot": "screen-right",
+        "index": 9,
+        "outside": [
+          {
+            "x": 667.9328716592917,
+            "y": 518.7991807411033
+          },
+          {
+            "x": 661.7943019698085,
+            "y": 518.7991807411033
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "expressions",
+    "id": "karo-right-emotions-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-right-emotions-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow pivot/strip differs from its own source geometry",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow pivot/strip differs from its own source geometry\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": []
+  },
+  {
+    "mode": "source-layers",
+    "id": "lila-left-layers-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-layers-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow rotation/shift hull leaves its own skin region",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-right",
+        "index": 2,
+        "outside": [
+          {
+            "x": 482.9408395668146,
+            "y": 393.70094465320466
+          },
+          {
+            "x": 489.2125473628738,
+            "y": 393.70094465320466
+          }
+        ]
+      },
+      {
+        "slot": "screen-right",
+        "index": 3,
+        "outside": [
+          {
+            "x": 506.8601277929614,
+            "y": 404.16880592322565
+          },
+          {
+            "x": 511.0412663236675,
+            "y": 404.16880592322565
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "source-layers",
+    "id": "lila-right-layers-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-right-layers-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: edit region touches another edit or protected paint",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-left",
+        "index": 8,
+        "outside": [
+          {
+            "x": 652.3056751416132,
+            "y": 468.07603922234546
+          }
+        ]
+      },
+      {
+        "slot": "screen-left",
+        "index": 9,
+        "outside": [
+          {
+            "x": 639.8995328181638,
+            "y": 474.4075187216663
+          },
+          {
+            "x": 632.582540389428,
+            "y": 474.4075187216663
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "source-layers",
+    "id": "karo-left-layers-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-layers-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow pivot/strip differs from its own source geometry",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow pivot/strip differs from its own source geometry\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-right",
+        "index": 8,
+        "outside": [
+          {
+            "x": 678.9060762121497,
+            "y": 519.5665019522887
+          },
+          {
+            "x": 672.7675065226666,
+            "y": 519.5665019522887
+          }
+        ]
+      },
+      {
+        "slot": "screen-right",
+        "index": 9,
+        "outside": [
+          {
+            "x": 667.9328716592917,
+            "y": 518.7991807411033
+          },
+          {
+            "x": 661.7943019698085,
+            "y": 518.7991807411033
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "source-layers",
+    "id": "karo-right-layers-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-right-layers-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow pivot/strip differs from its own source geometry",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow pivot/strip differs from its own source geometry\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": []
+  },
+  {
+    "mode": "source-motion",
+    "id": "lila-left-follow-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow rotation/shift hull leaves its own skin region",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow rotation/shift hull leaves its own skin region\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-right",
+        "index": 2,
+        "outside": [
+          {
+            "x": 482.9408395668146,
+            "y": 393.70094465320466
+          },
+          {
+            "x": 489.2125473628738,
+            "y": 393.70094465320466
+          }
+        ]
+      },
+      {
+        "slot": "screen-right",
+        "index": 3,
+        "outside": [
+          {
+            "x": 506.8601277929614,
+            "y": 404.16880592322565
+          },
+          {
+            "x": 511.0412663236675,
+            "y": 404.16880592322565
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "source-motion",
+    "id": "lila-right-follow-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/lila-right-follow-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: edit region touches another edit or protected paint",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: edit region touches another edit or protected paint\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-left",
+        "index": 8,
+        "outside": [
+          {
+            "x": 652.3056751416132,
+            "y": 468.07603922234546
+          }
+        ]
+      },
+      {
+        "slot": "screen-left",
+        "index": 9,
+        "outside": [
+          {
+            "x": 639.8995328181638,
+            "y": 474.4075187216663
+          },
+          {
+            "x": 632.582540389428,
+            "y": 474.4075187216663
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "source-motion",
+    "id": "karo-left-follow-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-left-follow-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow pivot/strip differs from its own source geometry",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow pivot/strip differs from its own source geometry\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": [
+      {
+        "slot": "screen-right",
+        "index": 8,
+        "outside": [
+          {
+            "x": 678.9060762121497,
+            "y": 519.5665019522887
+          },
+          {
+            "x": 672.7675065226666,
+            "y": 519.5665019522887
+          }
+        ]
+      },
+      {
+        "slot": "screen-right",
+        "index": 9,
+        "outside": [
+          {
+            "x": 667.9328716592917,
+            "y": 518.7991807411033
+          },
+          {
+            "x": 661.7943019698085,
+            "y": 518.7991807411033
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "mode": "source-motion",
+    "id": "karo-right-follow-v1",
+    "file": "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v1.json",
+    "success": false,
+    "issues": [
+      "needs-head-face-registration: brow pivot/strip differs from its own source geometry",
+      "[\n  {\n    \"code\": \"custom\",\n    \"message\": \"needs-head-face-registration: brow pivot/strip differs from its own source geometry\",\n    \"path\": []\n  }\n]"
+    ],
+    "browOutside": []
+  }
+]

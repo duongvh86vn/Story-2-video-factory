@@ -1,0 +1,154 @@
+✖ full and camera-sliced face previews keep original mouth/blink/gesture phase in all authored views (1036.7883ms)
+✔ each left selection owns its own raw head/body/rest plate and cannot borrow another revision (176.6576ms)
+✔ preview assets and JS are bound to one source/clock revision and scene generator (53429.0616ms)
+✔ the exact candidate loader rejects renamed actor, traversal and changed source bytes (44.8564ms)
+✖ explicit view routes and legacy nested PNG URLs retain exact resources without route ambiguity (108026.1032ms)
+✖ workbench endpoints expose read-only constrained preview with MIME, CSP, revision and no production promotion (93583.3627ms)
+✔ real source-face candidates bind original V2 and local rest plate bytes without granting production approval (66.3201ms)
+✔ foreign source, swapped eyes and protected-paint edit intersections are rejected (4.6289ms)
+✔ maximum mouth opening, pupil travel, strips and polygon retraces cannot escape registered regions (5.7722ms)
+✔ Karo requires a distinct closed-mouth plate and the bank cannot use that image as a whole head (10.9729ms)
+✔ source-face SVG and state retain stable local selectors, exact glyph source and one uniform neck transform (30.9262ms)
+✔ owned original voice drives both source faces across a camera slice; no source clock or wrong owner fails (423.0399ms)
+✔ bank3 keeps unknown single view honest and rejects unavailable turn/expression or backward gaze (42.1226ms)
+✔ compiled source face preserves local matrices/path ids and owns narration metadata (38417.9726ms)
+✔ legacy banks/face data round-trip unchanged and retain both visible eye/brow channels (36.7878ms)
+✔ explicit face3 creates no hidden glyph, skin strip, lid, brow or matrix channel (28.8854ms)
+✔ legacy occlusion, missing/both-hidden features, invented geometry and foreign contour evidence reject (14.6123ms)
+✔ bank7 requires face3, its visible eye anchor, complete own source/emotions/paint and false production flags (24.5882ms)
+✔ face3 rejects a visible-eye erase strip covering the exact protected hidden contour (8.0156ms)
+✔ with screen-left hidden, screen-right brow tilt uses its slot-specific direction (5.4284ms)
+✔ four explicit source-layer definitions retain exact original faces, body/identity and unapproved state (296.4593ms)
+✔ paint rejects another source, legacy banks, facial/neck regions, crop escapes and unbounded/double rear paint (41.1721ms)
+✔ rear source pixels paint before the entire body; original face and chin-contact arms remain in front with namespaced local references (255.8082ms)
+✖ whole/slice/reverse seeks keep rear attachment identical to head and preserve facial/hand motion from the plain emotion source (513.3639ms)
+✔ compiled rear/head transforms share exact frame values and discrete cell opacity; Karo has no invented rear hair (162654.8073ms)
+✖ both stagings carry sourced rear paint through five canonical factory shots, actor namespaces, original reactions and byte caps (56366.6172ms)
+✖ Studio source-layers route/revision cannot reuse the old expression route or supply a missing supporting partition (4352.6648ms)
+✔ all selected face modes pass strict edit/protected-paint and complete motion-hull validation (267.6891ms)
+✔ registration repair keeps source artwork, facial anchors, motion ranges and original invalid versions (65.2245ms)
+✔ four real principal emotion registrations bind the original source drawings and exact body views without approval (169.2613ms)
+✔ emotion capability cannot be granted to legacy faces, incomplete geometry or borrowed repair sources (36.1071ms)
+✔ brow motion, repair strips and closed mouth controls must remain inside their own protected source regions (15.1149ms)
+✔ source rest remains native; silent expressions are closed contours and never create speech activity (56.3051ms)
+✔ mixed smile/frown, round and speech controls stay in the registered convex mouth region (480.6971ms)
+✔ own source SVG exposes every bounded mouth/eye/brow selector without whole-face transforms or extra assets (58.8779ms)
+✖ emotions, speaker mouth, partner look and original gestures survive arbitrary seeks and camera slicing together (131.8957ms)
+✔ compiler refinement includes original eyebrow matrices as well as nonlinear face paths through reaction boundaries (115535.516ms)
+✔ two actors carry complete reaction and gaze histories through the actual five-shot canonical factory design (92000.6944ms)
+✔ mode and mood are bound in preview URLs/revisions; missing supporting emotions cannot fall back to a principal (88.9264ms)
+✔ Studio expression routes retain exact mood/scene binding and legacy routes retain their original bank (99505.3869ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 33
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 845611.7214
+
+✖ failing tests:
+
+test at tests\head-face-workbench.test.ts:1:839
+✖ full and camera-sliced face previews keep original mouth/blink/gesture phase in all authored views (1036.7883ms)
+  Error: needs-arm-pose: chin elbow folds 158.1deg, beyond its 145deg candidate art limit
+      at sourceArmShape (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\source-arm.ts:13:67)
+      at samplePerformanceState (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:919:25)
+      at samplePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:741:10)
+      at at (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\head-face-workbench.test.ts:27:44)
+      at <anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\head-face-workbench.test.ts:28:79)
+      at Array.map (<anonymous>)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\head-face-workbench.test.ts:28:63)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at tests\head-face-workbench.test.ts:1:8229
+✖ explicit view routes and legacy nested PNG URLs retain exact resources without route ambiguity (108026.1032ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  500 !== 200
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\head-face-workbench.test.ts:121:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\head-face-workbench.test.ts:1:11299
+✖ workbench endpoints expose read-only constrained preview with MIME, CSP, revision and no production promotion (93583.3627ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  500 !== 200
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\head-face-workbench.test.ts:153:87)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\native-head-paint.test.ts:1:5043
+✖ whole/slice/reverse seeks keep rear attachment identical to head and preserve facial/hand motion from the plain emotion source (513.3639ms)
+  Error: needs-arm-pose: chin elbow folds 158.5deg, beyond its 145deg candidate art limit
+      at sourceArmShape (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\source-arm.ts:13:67)
+      at samplePerformanceState (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:919:25)
+      at samplePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:741:10)
+      at at (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-paint.test.ts:70:40)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-paint.test.ts:72:15)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\native-head-paint.test.ts:1:7445
+✖ both stagings carry sourced rear paint through five canonical factory shots, actor namespaces, original reactions and byte caps (56366.6172ms)
+  Error: needs-head-source-phase: source head requires its complete storyboard/run context
+      at bodyStateAt (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:423:42)
+      at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:215:51)
+      at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:168:59)
+      at validateCinematicActorShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:270:3)
+      at validateCinematicShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:223:3)
+      at renderRigCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:61:9)
+      at renderCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:299:10)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-paint.test.ts:98:15)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\native-head-paint.test.ts:1:8889
+✖ Studio source-layers route/revision cannot reuse the old expression route or supply a missing supporting partition (4352.6648ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  500 !== 200
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-head-paint.test.ts:111:96)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\native-source-emotions.test.ts:1:8225
+✖ emotions, speaker mouth, partner look and original gestures survive arbitrary seeks and camera slicing together (131.8957ms)
+  Error: needs-arm-pose: chin elbow folds 158.5deg, beyond its 145deg candidate art limit
+      at sourceArmShape (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\source-arm.ts:13:67)
+      at samplePerformanceState (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:919:25)
+      at samplePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:741:10)
+      at at (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-emotions.test.ts:109:40)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-emotions.test.ts:110:61)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+

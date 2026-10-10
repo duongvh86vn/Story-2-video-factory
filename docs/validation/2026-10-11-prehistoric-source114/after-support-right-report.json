@@ -1,0 +1,1846 @@
+{
+  "scope": "unapproved-native-head-seat-tracer",
+  "version": "native-head-seat-tracer-5",
+  "sourceSHA": "49b8b2ad91276beadfd172a9c72520080bdc4646",
+  "trackedSourceDirty": true,
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "motionAccepted": false,
+  "phonemeLipSync": false,
+  "status": "failed",
+  "phase": "scene-security-and-byte-cap",
+  "outputRoot": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\native-seat-tracers\\tracer-2026-10-10T18-03-13-894Z-4df9f35c-ccb0-47c5-9c8e-e94c61cfb58c",
+  "shots": [
+    {
+      "shotId": "native-seat-canonical-0",
+      "startMs": 0,
+      "endMs": 900,
+      "sceneBytes": 19844820,
+      "capBytes": 2000000,
+      "compileMs": 260391,
+      "errors": [
+        "Scene exceeds max_scene_bytes",
+        "Forbidden or malformed HTML tag: feComponentTransfer",
+        "Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/",
+        "Forbidden or malformed HTML tag: /feComponentTransfer",
+        "scene.js: tween values must be literal data with allowed animation properties"
+      ],
+      "securityVersion": 5,
+      "publicationBinding": {
+        "version": "speech-source-clock-1",
+        "identityHash": "c4e3e7d52dfad582a92506b86642c2f1ae485b0813126b3729a02089a53e284d"
+      },
+      "camera": {
+        "framing": "wide",
+        "movement": "locked",
+        "focus": "ensemble",
+        "anchor": {
+          "x": 614.1152857913853,
+          "y": 395.38113708575855
+        },
+        "startScale": 1,
+        "endScale": 1
+      },
+      "cameraEndpoints": [
+        {
+          "atMs": 0,
+          "scale": 1,
+          "x": 25.884714208614696,
+          "y": -64.18113708575856
+        },
+        {
+          "atMs": 900,
+          "scale": 1,
+          "x": 25.884714208614696,
+          "y": -64.18113708575856
+        }
+      ],
+      "clocks": [
+        {
+          "actorId": "lila",
+          "clock": {
+            "version": "native-view-acting-clock-17",
+            "ownerId": "lila",
+            "startMs": 0,
+            "endMs": 900,
+            "runStartMs": 0,
+            "runEndMs": 7200,
+            "sourceIdentityHash": "448980eff7c85aa2d661fb1364aad57bb528a296d252e0b39d1e31475debfeb7",
+            "gazes": [
+              {
+                "startMs": 0,
+                "endMs": 7200,
+                "actorTarget": {
+                  "id": "karo",
+                  "anchor": "eyes"
+                }
+              }
+            ],
+            "gestures": [],
+            "bodyMotion": {
+              "version": "native-source-body-1",
+              "id": "lila-complete-seat",
+              "startMs": 0,
+              "endMs": 7200,
+              "walks": [
+                {
+                  "startMs": 4600,
+                  "endMs": 6600,
+                  "fromX": 850,
+                  "toX": 806
+                }
+              ],
+              "postures": [
+                {
+                  "startMs": 300,
+                  "endMs": 1800,
+                  "pose": "seated",
+                  "supportId": "lila-log"
+                },
+                {
+                  "startMs": 3000,
+                  "endMs": 4500,
+                  "pose": "stand"
+                }
+              ],
+              "supports": [
+                {
+                  "id": "lila-log",
+                  "kind": "seat",
+                  "center": {
+                    "x": 909.2511749347259,
+                    "y": 505.0919851254055
+                  },
+                  "width": 51.2,
+                  "facing": "left"
+                }
+              ]
+            },
+            "headMotion": {
+              "version": "native-head-source-1",
+              "id": "lila-complete-head",
+              "ownerId": "lila",
+              "bankFingerprint": "462da7fb2b966a056265abbed07b31a640b0c6181d943886cf7d1c8d8a127f95",
+              "startMs": 0,
+              "endMs": 7200,
+              "samples": [
+                {
+                  "atMs": 0,
+                  "cell": "left-source-angle"
+                }
+              ]
+            },
+            "expressions": [
+              {
+                "startMs": 300,
+                "endMs": 2600,
+                "mood": "excited"
+              },
+              {
+                "startMs": 2700,
+                "endMs": 4450,
+                "mood": "concerned"
+              },
+              {
+                "startMs": 4600,
+                "endMs": 6200,
+                "mood": "relieved"
+              }
+            ],
+            "actorTargets": [
+              {
+                "version": "native-actor-gaze-source-4",
+                "actorId": "karo",
+                "startMs": 0,
+                "endMs": 7200,
+                "sourceIdentityHash": "9dcdfc2b37f7c7d83771261eb92e0ba295a376ff8ad1d768d381382de4283b77",
+                "profile": {
+                  "id": "karo",
+                  "version": 1,
+                  "kind": "stick-man",
+                  "role": "story-actor",
+                  "name": "karo",
+                  "description": "illustration; illustrative; stylized illustration",
+                  "appearance": {
+                    "outline": "#080604",
+                    "shell": "#F2C58D",
+                    "screen": "#F2C58D",
+                    "accent": "#AE6E31",
+                    "badge": "#4B2917",
+                    "headScale": 1.04,
+                    "bodyScale": 1.08,
+                    "strokeWidth": 7.106145251396648,
+                    "characterVariant": "karo",
+                    "artworkVersion": "forest-body-view-1",
+                    "bodyView": "three-quarter-right",
+                    "bodyHeadBank": {
+                      "version": "native-head-bank-6",
+                      "id": "karo-right-follow-v2",
+                      "actor": "karo",
+                      "source": {
+                        "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+                        "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+                        "width": 1201,
+                        "height": 1309,
+                        "pixelScale": 0.11923
+                      },
+                      "additionalSources": [
+                        {
+                          "id": "rest-mouth",
+                          "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-source-angle-v1.png",
+                          "sha256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb",
+                          "width": 1201,
+                          "height": 1309,
+                          "pixelScale": 0.11923
+                        }
+                      ],
+                      "primary": {
+                        "file": "docs/topics/assets/reference-karo-full.png",
+                        "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+                      },
+                      "bodyViews": [
+                        {
+                          "view": "three-quarter-right",
+                          "sourceHash": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182"
+                        }
+                      ],
+                      "unitScale": 1,
+                      "cells": [
+                        {
+                          "id": "source-angle",
+                          "sourceId": "primary",
+                          "crop": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 1201,
+                            "height": 1309
+                          },
+                          "neck": {
+                            "x": 690,
+                            "y": 1140
+                          },
+                          "neckTop": {
+                            "x": 690,
+                            "y": 1100
+                          },
+                          "chin": {
+                            "x": 709,
+                            "y": 1103
+                          },
+                          "eyeTarget": {
+                            "x": 739,
+                            "y": 582.5
+                          },
+                          "skull": {
+                            "x": 220,
+                            "y": 205,
+                            "width": 860,
+                            "height": 905
+                          },
+                          "yawDeg": null,
+                          "seam": [
+                            {
+                              "x": 632,
+                              "y": 1080
+                            },
+                            {
+                              "x": 750,
+                              "y": 1080
+                            },
+                            {
+                              "x": 750,
+                              "y": 1180
+                            },
+                            {
+                              "x": 632,
+                              "y": 1180
+                            }
+                          ],
+                          "restMood": "happy",
+                          "face": {
+                            "version": "native-head-face-2",
+                            "source": {
+                              "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+                              "width": 1201,
+                              "height": 1309
+                            },
+                            "mouth": {
+                              "kind": "native-rim",
+                              "region": [
+                                {
+                                  "x": 545,
+                                  "y": 766
+                                },
+                                {
+                                  "x": 925,
+                                  "y": 766
+                                },
+                                {
+                                  "x": 925,
+                                  "y": 938
+                                },
+                                {
+                                  "x": 545,
+                                  "y": 938
+                                }
+                              ],
+                              "top": [
+                                {
+                                  "x": 583,
+                                  "y": 797
+                                },
+                                {
+                                  "x": 646,
+                                  "y": 838
+                                },
+                                {
+                                  "x": 808,
+                                  "y": 838
+                                },
+                                {
+                                  "x": 884,
+                                  "y": 788
+                                }
+                              ],
+                              "depth": 88,
+                              "lift": 12,
+                              "stroke": 7,
+                              "rest": {
+                                "sourceId": "rest-mouth",
+                                "source": {
+                                  "sha256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb",
+                                  "width": 1201,
+                                  "height": 1309
+                                },
+                                "scale": 1,
+                                "offset": {
+                                  "x": 0,
+                                  "y": 0
+                                }
+                              }
+                            },
+                            "eyes": {
+                              "screen-left": {
+                                "center": {
+                                  "x": 606,
+                                  "y": 592
+                                },
+                                "shift": {
+                                  "x": 5,
+                                  "y": 3
+                                },
+                                "region": [
+                                  {
+                                    "x": 562,
+                                    "y": 540
+                                  },
+                                  {
+                                    "x": 651,
+                                    "y": 540
+                                  },
+                                  {
+                                    "x": 651,
+                                    "y": 645
+                                  },
+                                  {
+                                    "x": 562,
+                                    "y": 645
+                                  }
+                                ],
+                                "glyph": [
+                                  {
+                                    "x": 587.4,
+                                    "y": 550
+                                  },
+                                  {
+                                    "x": 621.5,
+                                    "y": 550
+                                  },
+                                  {
+                                    "x": 637,
+                                    "y": 571
+                                  },
+                                  {
+                                    "x": 637,
+                                    "y": 613
+                                  },
+                                  {
+                                    "x": 621.5,
+                                    "y": 634
+                                  },
+                                  {
+                                    "x": 590.5,
+                                    "y": 634
+                                  },
+                                  {
+                                    "x": 575,
+                                    "y": 613
+                                  },
+                                  {
+                                    "x": 575,
+                                    "y": 571
+                                  }
+                                ],
+                                "lid": [
+                                  {
+                                    "x": 575,
+                                    "y": 592
+                                  },
+                                  {
+                                    "x": 593.6,
+                                    "y": 598
+                                  },
+                                  {
+                                    "x": 618.4,
+                                    "y": 598
+                                  },
+                                  {
+                                    "x": 637,
+                                    "y": 592
+                                  }
+                                ],
+                                "strip": {
+                                  "x": 578,
+                                  "y": 648,
+                                  "width": 60,
+                                  "height": 8
+                                },
+                                "stroke": 4
+                              },
+                              "screen-right": {
+                                "center": {
+                                  "x": 872,
+                                  "y": 573
+                                },
+                                "shift": {
+                                  "x": 5,
+                                  "y": 3
+                                },
+                                "region": [
+                                  {
+                                    "x": 829,
+                                    "y": 521
+                                  },
+                                  {
+                                    "x": 917,
+                                    "y": 521
+                                  },
+                                  {
+                                    "x": 917,
+                                    "y": 626
+                                  },
+                                  {
+                                    "x": 829,
+                                    "y": 626
+                                  }
+                                ],
+                                "glyph": [
+                                  {
+                                    "x": 854.6,
+                                    "y": 533
+                                  },
+                                  {
+                                    "x": 886.5,
+                                    "y": 533
+                                  },
+                                  {
+                                    "x": 901,
+                                    "y": 553
+                                  },
+                                  {
+                                    "x": 901,
+                                    "y": 593
+                                  },
+                                  {
+                                    "x": 886.5,
+                                    "y": 613
+                                  },
+                                  {
+                                    "x": 857.5,
+                                    "y": 613
+                                  },
+                                  {
+                                    "x": 843,
+                                    "y": 593
+                                  },
+                                  {
+                                    "x": 843,
+                                    "y": 553
+                                  }
+                                ],
+                                "lid": [
+                                  {
+                                    "x": 843,
+                                    "y": 573
+                                  },
+                                  {
+                                    "x": 860.4,
+                                    "y": 579
+                                  },
+                                  {
+                                    "x": 883.6,
+                                    "y": 579
+                                  },
+                                  {
+                                    "x": 901,
+                                    "y": 573
+                                  }
+                                ],
+                                "strip": {
+                                  "x": 892,
+                                  "y": 643,
+                                  "width": 46,
+                                  "height": 8
+                                },
+                                "stroke": 4
+                              }
+                            },
+                            "protectedContours": [
+                              [
+                                {
+                                  "x": 769,
+                                  "y": 607
+                                },
+                                {
+                                  "x": 852,
+                                  "y": 642
+                                },
+                                {
+                                  "x": 863,
+                                  "y": 694
+                                },
+                                {
+                                  "x": 821,
+                                  "y": 736
+                                },
+                                {
+                                  "x": 772,
+                                  "y": 735
+                                }
+                              ]
+                            ],
+                            "emotions": {
+                              "mouth": {
+                                "flat": [
+                                  {
+                                    "x": 583,
+                                    "y": 797
+                                  },
+                                  {
+                                    "x": 646,
+                                    "y": 795
+                                  },
+                                  {
+                                    "x": 808,
+                                    "y": 790
+                                  },
+                                  {
+                                    "x": 884,
+                                    "y": 788
+                                  }
+                                ],
+                                "frown": [
+                                  {
+                                    "x": 583,
+                                    "y": 797
+                                  },
+                                  {
+                                    "x": 646,
+                                    "y": 786
+                                  },
+                                  {
+                                    "x": 808,
+                                    "y": 784
+                                  },
+                                  {
+                                    "x": 884,
+                                    "y": 788
+                                  }
+                                ],
+                                "repair": {
+                                  "sourceId": "rest-mouth",
+                                  "source": {
+                                    "sha256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb",
+                                    "width": 1201,
+                                    "height": 1309
+                                  },
+                                  "strip": {
+                                    "x": 665,
+                                    "y": 868,
+                                    "width": 133,
+                                    "height": 7
+                                  }
+                                }
+                              },
+                              "brows": {
+                                "screen-left": {
+                                  "center": {
+                                    "x": 578,
+                                    "y": 491
+                                  },
+                                  "region": [
+                                    {
+                                      "x": 489,
+                                      "y": 490
+                                    },
+                                    {
+                                      "x": 660,
+                                      "y": 417
+                                    },
+                                    {
+                                      "x": 660,
+                                      "y": 494
+                                    },
+                                    {
+                                      "x": 489,
+                                      "y": 567
+                                    }
+                                  ],
+                                  "glyph": [
+                                    {
+                                      "x": 508,
+                                      "y": 520
+                                    },
+                                    {
+                                      "x": 536,
+                                      "y": 492
+                                    },
+                                    {
+                                      "x": 582,
+                                      "y": 462
+                                    },
+                                    {
+                                      "x": 621,
+                                      "y": 447
+                                    },
+                                    {
+                                      "x": 647,
+                                      "y": 450
+                                    },
+                                    {
+                                      "x": 650,
+                                      "y": 460
+                                    },
+                                    {
+                                      "x": 618,
+                                      "y": 477
+                                    },
+                                    {
+                                      "x": 576,
+                                      "y": 502
+                                    },
+                                    {
+                                      "x": 543,
+                                      "y": 530
+                                    },
+                                    {
+                                      "x": 523,
+                                      "y": 538
+                                    },
+                                    {
+                                      "x": 510,
+                                      "y": 535
+                                    }
+                                  ],
+                                  "strip": {
+                                    "x": 673,
+                                    "y": 514,
+                                    "width": 40,
+                                    "height": 8
+                                  },
+                                  "up": 4,
+                                  "down": 4,
+                                  "tiltDeg": 4
+                                },
+                                "screen-right": {
+                                  "center": {
+                                    "x": 887,
+                                    "y": 461
+                                  },
+                                  "region": [
+                                    {
+                                      "x": 805,
+                                      "y": 405
+                                    },
+                                    {
+                                      "x": 970,
+                                      "y": 405
+                                    },
+                                    {
+                                      "x": 970,
+                                      "y": 514
+                                    },
+                                    {
+                                      "x": 805,
+                                      "y": 514
+                                    }
+                                  ],
+                                  "glyph": [
+                                    {
+                                      "x": 820,
+                                      "y": 453
+                                    },
+                                    {
+                                      "x": 831,
+                                      "y": 438
+                                    },
+                                    {
+                                      "x": 850,
+                                      "y": 430
+                                    },
+                                    {
+                                      "x": 871,
+                                      "y": 431
+                                    },
+                                    {
+                                      "x": 897,
+                                      "y": 444
+                                    },
+                                    {
+                                      "x": 926,
+                                      "y": 463
+                                    },
+                                    {
+                                      "x": 947,
+                                      "y": 477
+                                    },
+                                    {
+                                      "x": 951,
+                                      "y": 487
+                                    },
+                                    {
+                                      "x": 943,
+                                      "y": 493
+                                    },
+                                    {
+                                      "x": 931,
+                                      "y": 490
+                                    },
+                                    {
+                                      "x": 907,
+                                      "y": 474
+                                    },
+                                    {
+                                      "x": 881,
+                                      "y": 464
+                                    },
+                                    {
+                                      "x": 854,
+                                      "y": 462
+                                    },
+                                    {
+                                      "x": 833,
+                                      "y": 466
+                                    },
+                                    {
+                                      "x": 819,
+                                      "y": 462
+                                    }
+                                  ],
+                                  "strip": {
+                                    "x": 947,
+                                    "y": 516,
+                                    "width": 17,
+                                    "height": 7
+                                  },
+                                  "up": 4,
+                                  "down": 4,
+                                  "tiltDeg": 6
+                                }
+                              }
+                            },
+                            "status": "engineering-face-registration",
+                            "approved": false,
+                            "productionReady": false,
+                            "motionVerified": false
+                          },
+                          "paint": {
+                            "version": "native-head-paint-2",
+                            "source": {
+                              "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+                              "width": 1201,
+                              "height": 1309
+                            },
+                            "rear": [],
+                            "status": "engineering-paint-registration",
+                            "approved": false,
+                            "productionReady": false,
+                            "motionVerified": false
+                          }
+                        }
+                      ],
+                      "routes": [],
+                      "capabilities": {
+                        "speech": true,
+                        "directionalEyes": true,
+                        "expressions": true,
+                        "secondary": false
+                      },
+                      "status": "engineering-source-registration",
+                      "approved": false,
+                      "productionReady": false,
+                      "motionVerified": false,
+                      "fingerprint": "c5a10019a2a394f09cc9a9f9f2122cf5363087609ebfed4cad2d347047f575e7"
+                    },
+                    "bodyMotion": "registered-locomotion-v1",
+                    "bodySeat": "registered-seated-v1"
+                  },
+                  "actions": [
+                    "idle",
+                    "greet",
+                    "explain",
+                    "point",
+                    "operate-model",
+                    "compare",
+                    "think",
+                    "react",
+                    "summarize",
+                    "walk-to-marker",
+                    "hold-tool",
+                    "thrust-tool"
+                  ],
+                  "immutable": [
+                    "cast identity",
+                    "face design",
+                    "costume baseline",
+                    "rig proportions"
+                  ],
+                  "profileHash": "700a785afcd8ba6179552a7f0494f1e007fb5ee05497bcfee049a5499b71b2fb",
+                  "compilerVersion": "host-svg-2.2.7",
+                  "sourcePath": "work/actor-cast.json"
+                },
+                "performance": {
+                  "version": 22,
+                  "compilerVersion": "performance-2.2.13",
+                  "id": "karo",
+                  "leadCharacterId": "karo",
+                  "profileHash": "700a785afcd8ba6179552a7f0494f1e007fb5ee05497bcfee049a5499b71b2fb",
+                  "kind": "stick-man",
+                  "durationMs": 7200,
+                  "fps": 60,
+                  "stage": {
+                    "width": 1280,
+                    "height": 720,
+                    "groundY": 540
+                  },
+                  "root": {
+                    "x": 380,
+                    "y": 540
+                  },
+                  "scale": 0.8,
+                  "facing": "right",
+                  "headView": "three-quarter-right",
+                  "postures": [],
+                  "supports": [],
+                  "walks": [],
+                  "jumps": [],
+                  "gestures": [],
+                  "spears": [],
+                  "sourceBody": {
+                    "version": "native-source-body-1",
+                    "id": "karo-complete-seat",
+                    "startMs": 0,
+                    "endMs": 7200,
+                    "walks": [
+                      {
+                        "startMs": 4600,
+                        "endMs": 6600,
+                        "fromX": 380,
+                        "toX": 424
+                      }
+                    ],
+                    "postures": [
+                      {
+                        "startMs": 300,
+                        "endMs": 1800,
+                        "pose": "seated",
+                        "supportId": "karo-log"
+                      },
+                      {
+                        "startMs": 3000,
+                        "endMs": 4500,
+                        "pose": "stand"
+                      }
+                    ],
+                    "supports": [
+                      {
+                        "id": "karo-log",
+                        "kind": "seat",
+                        "center": {
+                          "x": 318.9793966480447,
+                          "y": 505.3880526803756
+                        },
+                        "width": 51.2,
+                        "facing": "right"
+                      }
+                    ]
+                  },
+                  "sourceHead": {
+                    "version": "native-head-source-1",
+                    "id": "karo-complete-head",
+                    "ownerId": "karo",
+                    "bankFingerprint": "c5a10019a2a394f09cc9a9f9f2122cf5363087609ebfed4cad2d347047f575e7",
+                    "startMs": 0,
+                    "endMs": 7200,
+                    "samples": [
+                      {
+                        "atMs": 0,
+                        "cell": "source-angle"
+                      }
+                    ]
+                  },
+                  "expressions": [
+                    {
+                      "startMs": 300,
+                      "endMs": 2100,
+                      "mood": "curious"
+                    },
+                    {
+                      "startMs": 2200,
+                      "endMs": 3850,
+                      "mood": "surprised"
+                    },
+                    {
+                      "startMs": 4000,
+                      "endMs": 6250,
+                      "mood": "confident"
+                    }
+                  ],
+                  "gazes": [],
+                  "props": []
+                },
+                "fingerprint": "9af0ffaee7fc7f92b56c0a191a90d1ab0774e83a50501935e3aadd8e2b18f35c"
+              }
+            ]
+          }
+        },
+        {
+          "actorId": "karo",
+          "clock": {
+            "version": "native-view-acting-clock-17",
+            "ownerId": "karo",
+            "startMs": 0,
+            "endMs": 900,
+            "runStartMs": 0,
+            "runEndMs": 7200,
+            "sourceIdentityHash": "2574d21d8ecd50315960d01f523acb633d3d67005ca06ef30e747f769b5208bf",
+            "gazes": [
+              {
+                "startMs": 0,
+                "endMs": 7200,
+                "actorTarget": {
+                  "id": "lila",
+                  "anchor": "eyes"
+                }
+              }
+            ],
+            "gestures": [],
+            "bodyMotion": {
+              "version": "native-source-body-1",
+              "id": "karo-complete-seat",
+              "startMs": 0,
+              "endMs": 7200,
+              "walks": [
+                {
+                  "startMs": 4600,
+                  "endMs": 6600,
+                  "fromX": 380,
+                  "toX": 424
+                }
+              ],
+              "postures": [
+                {
+                  "startMs": 300,
+                  "endMs": 1800,
+                  "pose": "seated",
+                  "supportId": "karo-log"
+                },
+                {
+                  "startMs": 3000,
+                  "endMs": 4500,
+                  "pose": "stand"
+                }
+              ],
+              "supports": [
+                {
+                  "id": "karo-log",
+                  "kind": "seat",
+                  "center": {
+                    "x": 318.9793966480447,
+                    "y": 505.3880526803756
+                  },
+                  "width": 51.2,
+                  "facing": "right"
+                }
+              ]
+            },
+            "headMotion": {
+              "version": "native-head-source-1",
+              "id": "karo-complete-head",
+              "ownerId": "karo",
+              "bankFingerprint": "c5a10019a2a394f09cc9a9f9f2122cf5363087609ebfed4cad2d347047f575e7",
+              "startMs": 0,
+              "endMs": 7200,
+              "samples": [
+                {
+                  "atMs": 0,
+                  "cell": "source-angle"
+                }
+              ]
+            },
+            "expressions": [
+              {
+                "startMs": 300,
+                "endMs": 2100,
+                "mood": "curious"
+              },
+              {
+                "startMs": 2200,
+                "endMs": 3850,
+                "mood": "surprised"
+              },
+              {
+                "startMs": 4000,
+                "endMs": 6250,
+                "mood": "confident"
+              }
+            ],
+            "actorTargets": [
+              {
+                "version": "native-actor-gaze-source-4",
+                "actorId": "lila",
+                "startMs": 0,
+                "endMs": 7200,
+                "sourceIdentityHash": "2f8976c01074eaa5ea45227b73476eb4637cd7c63163108d758a03b2f1351191",
+                "profile": {
+                  "id": "lila",
+                  "version": 1,
+                  "kind": "stick-man",
+                  "role": "story-actor",
+                  "name": "lila",
+                  "description": "illustration; illustrative; stylized illustration",
+                  "appearance": {
+                    "outline": "#080604",
+                    "shell": "#F2C58D",
+                    "screen": "#F2C58D",
+                    "accent": "#AE6E31",
+                    "badge": "#4B2917",
+                    "headScale": 1,
+                    "bodyScale": 1,
+                    "strokeWidth": 6.642297650130549,
+                    "characterVariant": "lila",
+                    "artworkVersion": "forest-body-view-1",
+                    "bodyView": "three-quarter-left",
+                    "bodyHeadBank": {
+                      "version": "native-head-bank-6",
+                      "id": "lila-left-follow-v2",
+                      "actor": "lila",
+                      "source": {
+                        "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+                        "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+                        "width": 1168,
+                        "height": 1347,
+                        "pixelScale": 0.1516
+                      },
+                      "primary": {
+                        "file": "docs/topics/assets/reference-lila-full.png",
+                        "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+                      },
+                      "bodyViews": [
+                        {
+                          "view": "three-quarter-left",
+                          "sourceHash": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf"
+                        }
+                      ],
+                      "unitScale": 1,
+                      "cells": [
+                        {
+                          "id": "left-source-angle",
+                          "sourceId": "primary",
+                          "crop": {
+                            "x": 0,
+                            "y": 0,
+                            "width": 1168,
+                            "height": 1347
+                          },
+                          "neck": {
+                            "x": 575,
+                            "y": 800
+                          },
+                          "neckTop": {
+                            "x": 575,
+                            "y": 775
+                          },
+                          "chin": {
+                            "x": 435,
+                            "y": 741
+                          },
+                          "eyeTarget": {
+                            "x": 386.5,
+                            "y": 495
+                          },
+                          "skull": {
+                            "x": 160,
+                            "y": 140,
+                            "width": 820,
+                            "height": 650
+                          },
+                          "yawDeg": null,
+                          "seam": [
+                            {
+                              "x": 548,
+                              "y": 750
+                            },
+                            {
+                              "x": 605,
+                              "y": 755
+                            },
+                            {
+                              "x": 619,
+                              "y": 794
+                            },
+                            {
+                              "x": 568,
+                              "y": 814
+                            }
+                          ],
+                          "restMood": "happy",
+                          "face": {
+                            "version": "native-head-face-2",
+                            "source": {
+                              "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+                              "width": 1168,
+                              "height": 1347
+                            },
+                            "mouth": {
+                              "kind": "skin-strip",
+                              "region": [
+                                {
+                                  "x": 321,
+                                  "y": 585
+                                },
+                                {
+                                  "x": 527,
+                                  "y": 585
+                                },
+                                {
+                                  "x": 550,
+                                  "y": 680
+                                },
+                                {
+                                  "x": 500,
+                                  "y": 705
+                                },
+                                {
+                                  "x": 360,
+                                  "y": 698
+                                },
+                                {
+                                  "x": 321,
+                                  "y": 660
+                                }
+                              ],
+                              "top": [
+                                {
+                                  "x": 335,
+                                  "y": 620
+                                },
+                                {
+                                  "x": 375,
+                                  "y": 661
+                                },
+                                {
+                                  "x": 450,
+                                  "y": 661
+                                },
+                                {
+                                  "x": 502,
+                                  "y": 606
+                                }
+                              ],
+                              "depth": 24,
+                              "lift": 10,
+                              "stroke": 6,
+                              "strip": {
+                                "x": 371,
+                                "y": 575,
+                                "width": 78,
+                                "height": 7
+                              }
+                            },
+                            "eyes": {
+                              "screen-left": {
+                                "center": {
+                                  "x": 304,
+                                  "y": 484
+                                },
+                                "shift": {
+                                  "x": 4,
+                                  "y": 3
+                                },
+                                "region": [
+                                  {
+                                    "x": 273,
+                                    "y": 440
+                                  },
+                                  {
+                                    "x": 338,
+                                    "y": 440
+                                  },
+                                  {
+                                    "x": 338,
+                                    "y": 524
+                                  },
+                                  {
+                                    "x": 273,
+                                    "y": 524
+                                  }
+                                ],
+                                "glyph": [
+                                  {
+                                    "x": 296,
+                                    "y": 450
+                                  },
+                                  {
+                                    "x": 313,
+                                    "y": 450
+                                  },
+                                  {
+                                    "x": 324,
+                                    "y": 465
+                                  },
+                                  {
+                                    "x": 324,
+                                    "y": 502
+                                  },
+                                  {
+                                    "x": 313,
+                                    "y": 518
+                                  },
+                                  {
+                                    "x": 296,
+                                    "y": 518
+                                  },
+                                  {
+                                    "x": 284,
+                                    "y": 502
+                                  },
+                                  {
+                                    "x": 284,
+                                    "y": 465
+                                  }
+                                ],
+                                "lid": [
+                                  {
+                                    "x": 290,
+                                    "y": 484
+                                  },
+                                  {
+                                    "x": 299,
+                                    "y": 488
+                                  },
+                                  {
+                                    "x": 309,
+                                    "y": 488
+                                  },
+                                  {
+                                    "x": 319,
+                                    "y": 484
+                                  }
+                                ],
+                                "strip": {
+                                  "x": 343,
+                                  "y": 458,
+                                  "width": 22,
+                                  "height": 6
+                                },
+                                "stroke": 4
+                              },
+                              "screen-right": {
+                                "center": {
+                                  "x": 469,
+                                  "y": 506
+                                },
+                                "shift": {
+                                  "x": 4,
+                                  "y": 3
+                                },
+                                "region": [
+                                  {
+                                    "x": 431,
+                                    "y": 455
+                                  },
+                                  {
+                                    "x": 506,
+                                    "y": 455
+                                  },
+                                  {
+                                    "x": 506,
+                                    "y": 551
+                                  },
+                                  {
+                                    "x": 431,
+                                    "y": 551
+                                  }
+                                ],
+                                "glyph": [
+                                  {
+                                    "x": 459,
+                                    "y": 470
+                                  },
+                                  {
+                                    "x": 481,
+                                    "y": 470
+                                  },
+                                  {
+                                    "x": 493,
+                                    "y": 486
+                                  },
+                                  {
+                                    "x": 493,
+                                    "y": 525
+                                  },
+                                  {
+                                    "x": 480,
+                                    "y": 542
+                                  },
+                                  {
+                                    "x": 459,
+                                    "y": 542
+                                  },
+                                  {
+                                    "x": 444,
+                                    "y": 525
+                                  },
+                                  {
+                                    "x": 444,
+                                    "y": 486
+                                  }
+                                ],
+                                "lid": [
+                                  {
+                                    "x": 451,
+                                    "y": 506
+                                  },
+                                  {
+                                    "x": 462,
+                                    "y": 510
+                                  },
+                                  {
+                                    "x": 475,
+                                    "y": 510
+                                  },
+                                  {
+                                    "x": 486,
+                                    "y": 506
+                                  }
+                                ],
+                                "strip": {
+                                  "x": 507,
+                                  "y": 493,
+                                  "width": 26,
+                                  "height": 7
+                                },
+                                "stroke": 4
+                              }
+                            },
+                            "protectedContours": [
+                              [
+                                {
+                                  "x": 310,
+                                  "y": 525
+                                },
+                                {
+                                  "x": 370,
+                                  "y": 525
+                                },
+                                {
+                                  "x": 370,
+                                  "y": 583
+                                },
+                                {
+                                  "x": 310,
+                                  "y": 583
+                                }
+                              ]
+                            ],
+                            "emotions": {
+                              "mouth": {
+                                "flat": [
+                                  {
+                                    "x": 335,
+                                    "y": 620
+                                  },
+                                  {
+                                    "x": 375,
+                                    "y": 617
+                                  },
+                                  {
+                                    "x": 450,
+                                    "y": 610
+                                  },
+                                  {
+                                    "x": 502,
+                                    "y": 606
+                                  }
+                                ],
+                                "frown": [
+                                  {
+                                    "x": 335,
+                                    "y": 620
+                                  },
+                                  {
+                                    "x": 375,
+                                    "y": 600
+                                  },
+                                  {
+                                    "x": 450,
+                                    "y": 600
+                                  },
+                                  {
+                                    "x": 502,
+                                    "y": 606
+                                  }
+                                ],
+                                "repair": {
+                                  "sourceId": "primary",
+                                  "source": {
+                                    "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+                                    "width": 1168,
+                                    "height": 1347
+                                  },
+                                  "strip": {
+                                    "x": 371,
+                                    "y": 575,
+                                    "width": 78,
+                                    "height": 7
+                                  }
+                                }
+                              },
+                              "brows": {
+                                "screen-left": {
+                                  "center": {
+                                    "x": 320,
+                                    "y": 402
+                                  },
+                                  "region": [
+                                    {
+                                      "x": 275,
+                                      "y": 365
+                                    },
+                                    {
+                                      "x": 367,
+                                      "y": 365
+                                    },
+                                    {
+                                      "x": 367,
+                                      "y": 435
+                                    },
+                                    {
+                                      "x": 275,
+                                      "y": 435
+                                    }
+                                  ],
+                                  "glyph": [
+                                    {
+                                      "x": 293,
+                                      "y": 398
+                                    },
+                                    {
+                                      "x": 312,
+                                      "y": 389
+                                    },
+                                    {
+                                      "x": 333,
+                                      "y": 388
+                                    },
+                                    {
+                                      "x": 345,
+                                      "y": 398
+                                    },
+                                    {
+                                      "x": 348,
+                                      "y": 409
+                                    },
+                                    {
+                                      "x": 327,
+                                      "y": 407
+                                    },
+                                    {
+                                      "x": 305,
+                                      "y": 415
+                                    },
+                                    {
+                                      "x": 293,
+                                      "y": 417
+                                    }
+                                  ],
+                                  "strip": {
+                                    "x": 381,
+                                    "y": 426,
+                                    "width": 24,
+                                    "height": 7
+                                  },
+                                  "up": 6,
+                                  "down": 4,
+                                  "tiltDeg": 8
+                                },
+                                "screen-right": {
+                                  "center": {
+                                    "x": 500,
+                                    "y": 429
+                                  },
+                                  "region": [
+                                    {
+                                      "x": 438,
+                                      "y": 367
+                                    },
+                                    {
+                                      "x": 568,
+                                      "y": 431
+                                    },
+                                    {
+                                      "x": 568,
+                                      "y": 482
+                                    },
+                                    {
+                                      "x": 438,
+                                      "y": 418
+                                    }
+                                  ],
+                                  "glyph": [
+                                    {
+                                      "x": 457,
+                                      "y": 405
+                                    },
+                                    {
+                                      "x": 466,
+                                      "y": 398
+                                    },
+                                    {
+                                      "x": 486,
+                                      "y": 399
+                                    },
+                                    {
+                                      "x": 509,
+                                      "y": 409
+                                    },
+                                    {
+                                      "x": 536,
+                                      "y": 429
+                                    },
+                                    {
+                                      "x": 547,
+                                      "y": 449
+                                    },
+                                    {
+                                      "x": 546,
+                                      "y": 459
+                                    },
+                                    {
+                                      "x": 535,
+                                      "y": 450
+                                    },
+                                    {
+                                      "x": 513,
+                                      "y": 432
+                                    },
+                                    {
+                                      "x": 490,
+                                      "y": 420
+                                    },
+                                    {
+                                      "x": 467,
+                                      "y": 419
+                                    },
+                                    {
+                                      "x": 456,
+                                      "y": 414
+                                    }
+                                  ],
+                                  "strip": {
+                                    "x": 550,
+                                    "y": 492,
+                                    "width": 30,
+                                    "height": 7
+                                  },
+                                  "up": 4,
+                                  "down": 4,
+                                  "tiltDeg": 6
+                                }
+                              }
+                            },
+                            "status": "engineering-face-registration",
+                            "approved": false,
+                            "productionReady": false,
+                            "motionVerified": false
+                          },
+                          "paint": {
+                            "version": "native-head-paint-2",
+                            "source": {
+                              "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+                              "width": 1168,
+                              "height": 1347
+                            },
+                            "rear": [
+                              {
+                                "id": "ponytail-behind-body",
+                                "region": {
+                                  "x": 660,
+                                  "y": 815,
+                                  "width": 508,
+                                  "height": 532
+                                },
+                                "frontCut": {
+                                  "x": 662,
+                                  "y": 817,
+                                  "width": 506,
+                                  "height": 530
+                                },
+                                "motion": {
+                                  "pin": "top",
+                                  "gain": 0.8,
+                                  "maxDisplacement": 24
+                                }
+                              }
+                            ],
+                            "status": "engineering-paint-registration",
+                            "approved": false,
+                            "productionReady": false,
+                            "motionVerified": false
+                          }
+                        }
+                      ],
+                      "routes": [],
+                      "capabilities": {
+                        "speech": true,
+                        "directionalEyes": true,
+                        "expressions": true,
+                        "secondary": true
+                      },
+                      "status": "engineering-source-registration",
+                      "approved": false,
+                      "productionReady": false,
+                      "motionVerified": false,
+                      "fingerprint": "462da7fb2b966a056265abbed07b31a640b0c6181d943886cf7d1c8d8a127f95"
+                    },
+                    "bodyMotion": "registered-locomotion-v1",
+                    "bodySeat": "registered-seated-v1"
+                  },
+                  "actions": [
+                    "idle",
+                    "greet",
+                    "explain",
+                    "point",
+                    "operate-model",
+                    "compare",
+                    "think",
+                    "react",
+                    "summarize",
+                    "walk-to-marker",
+                    "hold-tool",
+                    "thrust-tool"
+                  ],
+                  "immutable": [
+                    "cast identity",
+                    "face design",
+                    "costume baseline",
+                    "rig proportions"
+                  ],
+                  "profileHash": "e31e820a440af1536a4f850eab4299f4abf04a385f2fd36a37b49eb45700d97d",
+                  "compilerVersion": "host-svg-2.2.7",
+                  "sourcePath": "work/actor-cast.json"
+                },
+                "performance": {
+                  "version": 22,
+                  "compilerVersion": "performance-2.2.13",
+                  "id": "lila",
+                  "leadCharacterId": "lila",
+                  "profileHash": "e31e820a440af1536a4f850eab4299f4abf04a385f2fd36a37b49eb45700d97d",
+                  "kind": "stick-man",
+                  "durationMs": 7200,
+                  "fps": 60,
+                  "stage": {
+                    "width": 1280,
+                    "height": 720,
+                    "groundY": 540
+                  },
+                  "root": {
+                    "x": 850,
+                    "y": 540
+                  },
+                  "scale": 0.8,
+                  "facing": "left",
+                  "headView": "three-quarter-left",
+                  "postures": [],
+                  "supports": [],
+                  "walks": [],
+                  "jumps": [],
+                  "gestures": [],
+                  "spears": [],
+                  "sourceBody": {
+                    "version": "native-source-body-1",
+                    "id": "lila-complete-seat",
+                    "startMs": 0,
+                    "endMs": 7200,
+                    "walks": [
+                      {
+                        "startMs": 4600,
+                        "endMs": 6600,
+                        "fromX": 850,
+                        "toX": 806
+                      }
+                    ],
+                    "postures": [
+                      {
+                        "startMs": 300,
+                        "endMs": 1800,
+                        "pose": "seated",
+                        "supportId": "lila-log"
+                      },
+                      {
+                        "startMs": 3000,
+                        "endMs": 4500,
+                        "pose": "stand"
+                      }
+                    ],
+                    "supports": [
+                      {
+                        "id": "lila-log",
+                        "kind": "seat",
+                        "center": {
+                          "x": 909.2511749347259,
+                          "y": 505.0919851254055
+                        },
+                        "width": 51.2,
+                        "facing": "left"
+                      }
+                    ]
+                  },
+                  "sourceHead": {
+                    "version": "native-head-source-1",
+                    "id": "lila-complete-head",
+                    "ownerId": "lila",
+                    "bankFingerprint": "462da7fb2b966a056265abbed07b31a640b0c6181d943886cf7d1c8d8a127f95",
+                    "startMs": 0,
+                    "endMs": 7200,
+                    "samples": [
+                      {
+                        "atMs": 0,
+                        "cell": "left-source-angle"
+                      }
+                    ]
+                  },
+                  "expressions": [
+                    {
+                      "startMs": 300,
+                      "endMs": 2600,
+                      "mood": "excited"
+                    },
+                    {
+                      "startMs": 2700,
+                      "endMs": 4450,
+                      "mood": "concerned"
+                    },
+                    {
+                      "startMs": 4600,
+                      "endMs": 6200,
+                      "mood": "relieved"
+                    }
+                  ],
+                  "gazes": [],
+                  "props": []
+                },
+                "fingerprint": "210d4bb51a76698b5e1a020c30beb6ee0b3b418ca3a6b09ab7542bd2e36acef8"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "resources": [],
+  "audio": {
+    "source": "silent-draft",
+    "speechActivity": "empty",
+    "contentAlignment": "NOT RUN"
+  },
+  "checks": {
+    "canonical": {
+      "status": "PASS",
+      "detail": {
+        "storyboardHash": "6274af46edffcd5f75fdaf83ad15a681a3713e7edffefcafbbe2439ae8f79f3c",
+        "narrationHash": "a47b6925474dcce3b7b3c321113acc95ccfd87ce08ba0355ddf51bf839e6c13c",
+        "headMode": "explicit-opposing-bank6-source-follow"
+      }
+    },
+    "diagnostic-wav": {
+      "status": "NOT RUN"
+    },
+    "cast-and-story": {
+      "status": "PASS"
+    },
+    "scene-security-and-byte-cap": {
+      "status": "FAIL",
+      "detail": "native-seat-canonical-0: scene validation failed: Scene exceeds max_scene_bytes; Forbidden or malformed HTML tag: feComponentTransfer; Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/; Forbidden or malformed HTML tag: /feComponentTransfer; scene.js: tween values must be literal data with allowed animation properties"
+    },
+    "master": {
+      "status": "NOT RUN"
+    },
+    "hyperframes": {
+      "status": "NOT RUN"
+    },
+    "snapshots": {
+      "status": "NOT RUN"
+    },
+    "render-draft": {
+      "status": "NOT RUN"
+    },
+    "video-probe": {
+      "status": "NOT RUN"
+    },
+    "video-decode": {
+      "status": "NOT RUN"
+    },
+    "visual-motion-review": {
+      "status": "NOT RUN"
+    },
+    "source-clock-and-reverse-seek": {
+      "status": "NOT RUN"
+    },
+    "full-factory-inputs": {
+      "status": "NOT RUN"
+    }
+  },
+  "headSelection": [
+    {
+      "actorId": "lila",
+      "view": "three-quarter-left",
+      "definitionFile": "library/topics/prehistoric-life/head-face-registrations/lila-left-follow-v2.json",
+      "definitionHash": "30fbe16f29dbc45b9e4158a7859ca7d3d1961981e57ce100e104bf1c89a1db26",
+      "bankFingerprint": "462da7fb2b966a056265abbed07b31a640b0c6181d943886cf7d1c8d8a127f95",
+      "sourceFile": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+      "sourceSHA256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+      "artApproved": false,
+      "motionVerified": false
+    },
+    {
+      "actorId": "karo",
+      "view": "three-quarter-right",
+      "definitionFile": "library/topics/prehistoric-life/head-face-registrations/karo-right-follow-v2.json",
+      "definitionHash": "afb1ae0707f9ec275ab55148429eedc7b1f58b90c6d330dd504be96cbce1c95d",
+      "bankFingerprint": "c5a10019a2a394f09cc9a9f9f2122cf5363087609ebfed4cad2d347047f575e7",
+      "sourceFile": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+      "sourceSHA256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+      "artApproved": false,
+      "motionVerified": false
+    }
+  ],
+  "dialogueSelection": {
+    "staging": "lila-right",
+    "acting": "emotional-reactions",
+    "face": "source-motion"
+  },
+  "error": "native-seat-canonical-0: scene validation failed: Scene exceeds max_scene_bytes; Forbidden or malformed HTML tag: feComponentTransfer; Forbidden or malformed HTML tag: feFuncA type=\"discrete\" tableValues=\"0 1\"/; Forbidden or malformed HTML tag: /feComponentTransfer; scene.js: tween values must be literal data with allowed animation properties",
+  "elapsedMs": 351708
+}

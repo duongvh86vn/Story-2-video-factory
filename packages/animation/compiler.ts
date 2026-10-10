@@ -212,7 +212,10 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
       if((root.x-seat.center.x)*direction<=0)throw new Error(`${seat.id}: planted feet must be in front of the seat`);
       const facing=[...(plan.turns??[])].filter(t=>t.endMs<=time).sort((a,b)=>a.endMs-b.endMs).at(-1)?.direction??plan.facing??'front';
       if(facing!==seat.facing)throw new Error(`${seat.id}: seated facing must agree with the seat direction`);
-      const sourcePose=usesReferenceBody(profile)?bodyStateAt(plan,profile,time):undefined;
+      // This structural check measures only the authored seat/feet template.
+      // It does not select a head cell or evaluate a rendered actor run. The
+      // public samplers/compiler still require the complete owned head clock.
+      const sourcePose=usesReferenceBody(profile)?bodyStateAt({...plan,sourceHead:undefined},profile,time):undefined;
       for(const side of ['left','right'] as const){
         const foot=sourcePose?.walk.feet[side]??{x:root.x+(m.hips?.[side].x??(side==='left'?-1:1)*m.stance)*s,y:root.y};
         const geometry=legGeometry(m,sourcePose?.pelvis??seat.center,foot,side,s,profile.appearance.bodyScale,sourcePose?.lean??0);

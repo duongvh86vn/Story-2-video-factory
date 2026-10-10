@@ -1,4 +1,4 @@
-// DECLARED ONLY, NOT RUN. Human's model owns runtime/image/video acceptance.
+// Local diagnostics authorized; current execution results live in TEST-RESULTS-PREHISTORIC.md.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {promises as fs} from 'node:fs';
@@ -10,6 +10,7 @@ import {NativeHeadBankDefinitionSchema,nativeHeadBank,nativeHeadSources} from '.
 import {nativeHeadBankSvg,nativeHeadBankFacialState,nativeHeadCellPoint} from '../packages/animation/body-head-bank.js';
 import {nativeHeadResources,readNativeHeadSource} from '../packages/animation/native-head-resources.js';
 import {HostProfileSchema} from '../packages/host/schemas.js';
+import {HEAD_FACE_CANDIDATES} from '../packages/topics/head-face-candidates.js';
 import {topicPreviewProfile} from '../packages/topics/preview.js';
 import {HUNT_ANIMATION_VERSION,PerformancePlanSchema} from '../packages/animation/schemas.js';
 import {VIEW_ACTING_CLOCK_VERSION} from '../packages/animation/view-acting-clock.js';
@@ -19,7 +20,8 @@ import {pathCoordinates} from '../packages/animation/ink-limb.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 async function definition(actor:'lila'|'karo'){
-  return NativeHeadBankDefinitionSchema.parse(JSON.parse(await fs.readFile(path.join(repo,'library/topics/prehistoric-life/head-face-registrations/'+actor+'-source-face-v1.json'),'utf8')));
+  const entry=HEAD_FACE_CANDIDATES.find(c=>c.actor===actor&&c.view==='three-quarter-right')!;
+  return NativeHeadBankDefinitionSchema.parse(JSON.parse(await fs.readFile(path.join(repo,entry.file),'utf8')));
 }
 async function fixture(actor:'lila'|'karo'){
   const bank=nativeHeadBank(await definition(actor)),base=topicPreviewProfile(actor);

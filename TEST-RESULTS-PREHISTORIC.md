@@ -1,8 +1,67 @@
 # Báo cáo kiểm tra — Cuộc sống thời tiền sử
 
+## Kết quả hiện hành — source0.114, 11/10/2026
+
+**Bộ regression ban đầu: 56 ca, 40 PASS / 16 FAIL / 0 SKIP**, so với 35 PASS / 21 FAIL ở source0.113. Ba ca tập trung mới PASS. Hai lượt render sau sửa vẫn FAIL tại kiểm cảnh; **chưa có MP4/frames để xem độ mượt**, chưa nghiệm thu sản phẩm.
+
+Đã sửa 13 registration mặt trên nguyên ảnh/glyph/motion nguồn và sửa phép kiểm ghế/chân gọi nhầm yêu cầu clock đầu. Catalog/workbench8, body compiler45, topic `forest-tribe-0.114-face-registration`. V1 giữ nguyên; không tạo ảnh mới. Samplers/compiler dựng frame vẫn từ chối thiếu clock; ba test mới kiểm cả geometry hợp lệ, sai support và thiếu clock. [Phạm vi sửa](docs/topics/HEAD-FACE-REGISTRATION-REPAIR.md).
+
+Người dùng cho phép test/render chẩn đoán cục bộ. **Không gọi model/TTS trả phí**, không đổi server8850/checkout D. Chạy trong worktree C, HEAD nền `49b8b2ad91276beadfd172a9c72520080bdc4646` với tracked source đang sửa; receipts lưu hash từng file thực thi, không gán kết quả cho checkout nền sạch. Build và test:typecheck trên source cuối đều exit0; static pack exit0. Nguồn chạy và lệnh thật nằm trong [results.json](docs/validation/2026-10-11-prehistoric-source114/results.json).
+
+| Nhóm chạy | PASS / FAIL | Phạm vi và giới hạn |
+| --- | --- | --- |
+| Bảy file regression ban đầu | **40 / 16** | 56 ca; 463.803 giây, exit1; cùng bộ ca với source0.113 |
+| Registration + support mới | **3 / 0** | 18 lựa chọn qua schema; giữ glyph/source/motion; support hợp lệ và guard clock; exit0 |
+| Sáu file mặt/paint/occlusion | **33 / 7** | Chạy sau sửa registration, trước sửa support; 40 ca, 845.612 giây, exit1. Chưa chạy lại toàn nhóm này sau sửa support |
+
+Các nhóm có ca trùng nhau; **không cộng thành một tỷ lệ tổng**. Bộ regression ban đầu hiện gồm: seated-rest-arm 5/0, native-source-seat 4/4, forest-arm-trajectory 9/0, native-source-gesture 8/5, native-source-gesture-project 4/0, native-manipulation 6/5, native-head-seat-tracer 4/2. Bốn ca native-head mới đi qua ownership/miệng/eye-target/seek/primary swap; một ca supporting-head đã qua. Chưa chứng minh phim mượt hoặc các flow final đạt.
+
+### Render thực tế sau sửa support
+
+| Bố trí | Cảnh đầu | Byte cảnh / cap | Thời gian biên dịch cảnh | Kết quả |
+| --- | --- | ---: | ---: | --- |
+| lila-left | 0–900ms | **16,481,788 / 2,000,000** | 249.176 giây | FAIL |
+| lila-right | 0–900ms | **19,844,820 / 2,000,000** | 260.391 giây | FAIL |
+
+Cả hai qua canonical/cast, tới `scene-security-and-byte-cap`, cùng báo vượt cap; filter `feComponentTransfer/feFuncA type="discrete" tableValues="0 1"` bị từ chối; một giá trị tween không được validator nhận. Chưa xác định chính xác statement/channel tween lỗi. Cảnh đầu có 148/96 frame biên dịch cho Lila/Karo ở lila-left, 141/115 ở lila-right; chưa thể quy kết chỉ do quá nhiều frame. Hai tracer và regression chạy đồng thời, nên các thời gian này **không phải benchmark chạy riêng**.
+
+Hai lượt trước sửa support đã qua registration/cast nhưng dừng vì `needs-head-source-phase` trong structural seat check; giữ riêng log để thấy tiến trình lỗi. Cả bốn lượt đều không tới master/HyperFrames/browser/snapshots/encode/probe/decode. `productionAcceptance=false`, `finalExportAllowed=false`; không có final/DONE.
+
+### Công việc còn thiếu, ưu tiên theo lỗi thật
+
+1. **Emitter và kích thước cảnh:** đo riêng HTML/CSS/JS, số tween, số channel UV/mesh, dữ liệu lặp theo actor/frame tại `packages/animation/compiler.ts`, `scene.ts`, `library/shots/cinematic.ts`. Lưu output bị từ chối ở thư mục chẩn đoán riêng trước validation để truy nguyên; không đưa vào master. Thiết kế biểu diễn dữ liệu/tween gọn hơn, giữ clock, mesh, sai số 0.2px và seek. Không tăng cap hoặc bỏ chuyển động chỉ để test xanh.
+2. **Renderer và validator chưa khớp:** đối chiếu filter alpha nguồn tại `packages/animation/native-head-face.ts:190` với whitelist `packages/scenes/security.ts`; chỉ nhận cấu trúc/thuộc tính hữu hạn cần thiết và giữ các ca từ chối resource/script không hợp lệ. Tách đúng statement/channel gây lỗi tween, sửa emitter hoặc kiểm literal/path hữu hạn tương ứng; hiện chưa đủ bằng chứng chọn cách nào. Thêm regression validator cho output renderer thực, rồi chạy lại cả hai staging.
+3. **Pose chống cằm:** native-head và preview báo gập khuỷu **156.1–158.5°**, bộ source gesture cũ **151.4°**, đều vượt 145°. Rà own hand/shoulder/chin/contact và keypose ở `compiler.ts`, `source-arm.ts`, `body-workbench.ts`, `head-face-workbench.ts`, `native-dialogue-candidates.ts`. Chọn hoặc dựng tư thế có reach/silhouette hợp lệ; giữ bone lengths, target/contact và các pha approach/hold/recovery. Không tăng giới hạn hoặc làm mềm nét để che gập khớp.
+4. **Thời gian biên dịch/API:** lập profile chạy riêng từng cảnh; kiểm chi phí validate lại bank/geometry và bake mesh. Chỉ cache khi kiểm được hash/source mutation, không tái dùng pose/ảnh/revision đã đổi. Mục tiêu là runtime dùng được, không chỉ TypeScript đạt.
+5. **Các failure regression còn lại:** drop landing/momentum, contact thiếu release/destination, camera scale/fixture propBindings, identity qua primary swap, host interval/visualization fixture, sai số float và regex guard cũ. Bằng chứng chi tiết và file/dòng của đủ 16 failure ở results.json/log; bảng source0.113 phía dưới vẫn mô tả các nhóm này. Phân biệt fixture sai với production bug trước khi sửa, không nới guard hoặc ép mọi câu chuyện thành diagram.
+6. **Sau khi xuất được video:** xem ở tốc độ thường, kiểm nét/màu, mặt/hướng nhìn, listener, tay chân/contact, camera, cut và seek; sau đó mới nghiệm thu cả story→script, script và WAV, giọng EN/VI/JA/KO/external-local TTS, resume/cache/lock/rebuild và final/QC. Các phần này chưa được kiểm chứng bởi lượt chẩn đoán im lặng.
+
+### Môi trường và lệnh chạy lại
+
+Windows / PowerShell, Node v24.19.0 (yêu cầu ≥22.13), dependencies hiện có, HyperFrames0.8.96, FFmpeg/FFprobe tại C:/ffmpeg/bin/. Giữ node_modules junction hiện có; không cần cài lại dependencies để lặp ca này. Checkout test là worktree C đã nêu trong receipts; server8850 của checkout D được giữ nguyên.
+
+```powershell
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/native-head-registration.test.ts tests/native-head-support-validation.test.ts
+node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 tests/seated-rest-arm.test.ts tests/native-source-seat.test.ts tests/forest-arm-trajectory.test.ts tests/native-source-gesture.test.ts tests/native-source-gesture-project.test.ts tests/native-manipulation.test.ts tests/native-head-seat-tracer.test.ts
+npm run tracer:native-seat -- --native-heads --staging lila-left --acting emotional-reactions --face source-motion --validate --frames --render
+npm run tracer:native-seat -- --native-heads --staging lila-right --acting emotional-reactions --face source-motion --validate --frames --render
+npm run build
+npm run test:typecheck
+```
+
+[Log/receipts và mapping ca](docs/validation/2026-10-11-prehistoric-source114/results.json) giữ log regression/focused nguyên stream; log bộ mặt là bản ghép đầy đủ stdout từ tool, được ghi rõ nguồn. Có cả bốn tracer report và hai scene report. Lệnh tracer thực thi qua Node/tsx cùng entrypoint/flags với npm script trên. Không dùng kết quả V1 cũ để tuyên bố nghiệm thu hiện hành.
+
+Tiến độ toàn dự án ước lượng **40%, +0 điểm phần trăm**. Năm ca đổi từ FAIL sang PASS là tiến bộ kiểm chứng hẹp, chưa đổi thành phần trăm hoàn thành hoặc chất lượng video.
+
+---
+
+## Lịch sử source0.113 — 10/10/2026
+
+Phần dưới giữ nguyên bằng chứng của lượt trước; kết quả hiện hành ở trên thay trạng thái đang chờ/FAIL của đúng ca đã chạy lại.
+
 Ngày lập và cập nhật runtime: **2026-10-10**, múi giờ **Asia/Saigon**. Báo cáo được lưu tại thư mục gốc project theo yêu cầu người dùng.
 
-**Kết luận hiện tại: 56 test đã chạy, 35 PASS / 21 FAIL / 0 SKIP; cả hai lượt xuất chẩn đoán FAIL trước khi tạo cảnh. Chưa tạo được MP4/frames để đánh giá độ mượt. Sản phẩm chưa hoàn thành.**
+**Kết quả lịch sử source0.113: 56 test đã chạy, 35 PASS / 21 FAIL / 0 SKIP; cả hai lượt xuất chẩn đoán FAIL trước khi tạo cảnh. Chưa tạo được MP4/frames để đánh giá độ mượt. Sản phẩm chưa hoàn thành.**
 
 Người dùng đã cho phép agent triển khai chạy test và render chẩn đoán cục bộ. Lượt này không gọi model/TTS trả phí, không tạo ảnh, không sửa source hay nới guard. Chi tiết thực tế ở phần đầu dưới đây; các mục 1–5 phía sau giữ hồ sơ bàn giao **trước lượt chạy**, nên NOT RUN trong các bảng lịch sử không thay thế kết quả mới.
 

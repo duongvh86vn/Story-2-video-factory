@@ -1,4 +1,4 @@
-// DECLARED ONLY, NOT RUN. Geometry, callbacks, compiler and video are delegated.
+// Local diagnostics authorized; current execution results live in TEST-RESULTS-PREHISTORIC.md.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {promises as fs} from 'node:fs';
@@ -133,7 +133,8 @@ test('two actors carry complete reaction and gaze histories through the actual f
     for(const shot of f.board.shots)for(const id of ['lila','karo'] as const){const clock=actorViewActingClock(f.board,shot,id);assert.ok(clock);
       assert.deepEqual(clock.expressions,nativeDialogueExpressionWindows[id]);assert.equal(clock.ownerId,id);
     }
-    assert.ok(f.headSelection.every(h=>h.definitionFile.includes('emotions-v1')));
+    assert.deepEqual(f.headSelection.map(h=>h.definitionFile).sort(),HEAD_FACE_EXPRESSION_CANDIDATES.filter(c=>
+      c.view===(c.actor==='lila'?(staging==='lila-left'?'three-quarter-right':'three-quarter-left'):(staging==='lila-left'?'three-quarter-left':'three-quarter-right'))).map(c=>c.file).sort());
   }
   await assert.rejects(createNativeHeadSeatTracer(repo,{acting:'emotional-reactions'}),/explicit face/);
   assert.throws(()=>nativeSeatTracerOptions(['--native-heads','--acting','emotional-reactions']),/explicit --face/);

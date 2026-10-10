@@ -1,0 +1,21 @@
+{
+  "startedAt": "2026-10-10T18:03:11.541Z",
+  "completedAt": "2026-10-10T18:10:55.508Z",
+  "exitCode": 1,
+  "signal": null,
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--experimental-test-module-mocks",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/seated-rest-arm.test.ts",
+    "tests/native-source-seat.test.ts",
+    "tests/forest-arm-trajectory.test.ts",
+    "tests/native-source-gesture.test.ts",
+    "tests/native-source-gesture-project.test.ts",
+    "tests/native-manipulation.test.ts",
+    "tests/native-head-seat-tracer.test.ts"
+  ]
+}

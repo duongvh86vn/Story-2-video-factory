@@ -91,7 +91,8 @@ test('both stagings carry sourced rear paint through five canonical factory shot
   for(const staging of ['lila-left','lila-right'] as const){
     const f=await createNativeHeadSeatTracer(repo,{staging,acting:'emotional-reactions',face:'source-layers'});
     assert.equal(f.board.shots.length,NATIVE_SEAT_TRACER_CUTS.length-1);assert.equal(f.finalExportAllowed,false);
-    assert.ok(f.headSelection.every(h=>h.definitionFile.includes('layers-v1')));
+    assert.deepEqual(f.headSelection.map(h=>h.definitionFile).sort(),HEAD_FACE_LAYERED_CANDIDATES.filter(c=>
+      c.view===(c.actor==='lila'?(staging==='lila-left'?'three-quarter-right':'three-quarter-left'):(staging==='lila-left'?'three-quarter-left':'three-quarter-right'))).map(c=>c.file).sort());
     for(const shot of f.board.shots){
       for(const id of ['lila','karo'] as const)assert.deepEqual(actorViewActingClock(f.board,shot,id)!.expressions,nativeDialogueExpressionWindows[id]);
       const r=renderCinematic(shot,f.profile,f.rig,{method:'segment-draft',windowMs:20,intervals:[]},f.config,undefined,f.narration,undefined,undefined,f.board),files=secureSceneFiles(r.files);

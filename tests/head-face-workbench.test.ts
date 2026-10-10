@@ -1,4 +1,4 @@
-// DECLARED ONLY, NOT RUN. Runtime/render/browser belongs to the user's model.
+// Local diagnostics authorized; current execution results live in TEST-RESULTS-PREHISTORIC.md.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {promises as fs} from 'node:fs';
@@ -9,6 +9,7 @@ import {buildServer} from '../apps/server/index.js';
 import {samplePerformance} from '../packages/animation/compiler.js';
 import {hash} from '../packages/core/utils.js';
 import {NativeHeadBankDefinitionSchema} from '../packages/animation/native-head-bank.js';
+import {HEAD_FACE_CANDIDATES} from '../packages/topics/head-face-candidates.js';
 import {headFaceCalibration,headFaceCandidate,headFacePreviewFile,headFacePreviewRevision} from '../packages/topics/head-face-workbench.js';
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 
@@ -83,7 +84,7 @@ test('preview assets and JS are bound to one source/clock revision and scene gen
 test('the exact candidate loader rejects renamed actor, traversal and changed source bytes',async t=>{
   await assert.rejects(headFaceCandidate(repo,'../karo' as 'karo'));
   const root=await fs.mkdtemp(path.join(os.tmpdir(),'face-workbench-test-'));t.after(()=>fs.rm(root,{recursive:true,force:true}));
-  const definition='library/topics/prehistoric-life/head-face-registrations/lila-source-face-v1.json';
+  const definition=HEAD_FACE_CANDIDATES.find(c=>c.actor==='lila'&&c.view==='three-quarter-right')!.file;
   const body=JSON.parse(await fs.readFile(path.join(repo,definition),'utf8'));
   await fs.mkdir(path.dirname(path.join(root,definition)),{recursive:true});
   await fs.writeFile(path.join(root,definition),JSON.stringify({...body,actor:'karo'}));
