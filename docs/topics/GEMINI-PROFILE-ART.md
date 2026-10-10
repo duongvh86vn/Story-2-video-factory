@@ -45,7 +45,7 @@ Ví dụ trên là phiên bản mới, **chưa chạy**. Bản `matte-v1` đã c
 ## Việc còn lại để dùng trong video
 
 1. Sửa artwork theo đúng primary face/hair/costume/palette, kiểm đủ khoảng trống và biên tóc; giữ từng nguồn/phiên bản riêng. Không warp hoặc mirror mặt chính diện để gọi đó là góc mới.
-2. Mở rộng provenance intake cho nguồn Gemini + matte. Head-cell intake hiện có chỉ nhận provenance built-in; không đổi nhãn nguồn để vượt contract.
+2. Source0.111 đã thêm [intake Gemini + matte](GEMINI-HEAD-CELL-INTAKE.md), giữ provider thật và chuỗi receipt/hash/RGB/mask. CLI và sáu ca test mới chưa chạy; chưa nhập candidate này vào bộ head-cell. Không đổi nhãn nguồn để vượt contract.
 3. Đăng ký landmark/crop/neck/body/own eye/brow/mouth từ chính ảnh đã duyệt, rồi dùng face3/bank7 ở góc có mắt bị che. Chưa có đăng ký này cho candidate mới.
 4. Model test kiểm ảnh trên nền sáng/tối/màu, tóc/viền/cổ, expression/gaze/turn, seek và clip tốc độ bình thường. Sau đó mới nghiệm thu story/script/WAV→audio clock→hai diễn viên→director/camera→review/repair→final/QC, EN/VI/JA/KO/external-local TTS và resume.
 

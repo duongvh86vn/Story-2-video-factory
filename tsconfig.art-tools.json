@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": { "noEmit": true },
-  "include": ["scripts/native-head-reference-art.ts"]
+  "include": ["scripts/native-head-reference-art.ts", "scripts/head-cell-import.ts"]
 }

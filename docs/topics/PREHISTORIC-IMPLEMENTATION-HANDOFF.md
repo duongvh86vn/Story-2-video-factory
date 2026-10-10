@@ -1,5 +1,8 @@
 # Bàn giao source WIP — Cuộc sống thời tiền sử
 
+**Cập nhật source0.111:** [Nhập head-cell từ Gemini/matte](GEMINI-HEAD-CELL-INTAKE.md). Prompt2 giữ provider/receipt/hash thật, kiểm RGB và mask alpha, có CLI nhập candidate; nguồn built-in cũ giữ nguyên. Chưa chạy import hoặc sáu test mới, chưa đăng ký/duyệt ảnh Lira đang giữ lại. Art/motion và toàn story/script/WAV→final/QC vẫn còn mở;0.110 trở xuống là lịch sử.
+
+
 **Cập nhật source0.110:** [Gemini reference và tách nền cục bộ](GEMINI-PROFILE-ART.md). Đã tạo một ảnh qua Gemini/9router và PNG alpha thật bằng BiRefNet CPU, giữ RGB nguồn; tool/prompt/hash/mask có thể dùng lại. Ảnh còn khác mặt/tóc mẫu gốc, chưa đăng ký vào rig, chưa duyệt art/motion/video. Ba task source hẹp qua coder/tester, không tự retry. Runtime do model test thực hiện; toàn story/script/WAV→diễn viên→final/QC vẫn còn mở.0.109 trở xuống là lịch sử.
 
 

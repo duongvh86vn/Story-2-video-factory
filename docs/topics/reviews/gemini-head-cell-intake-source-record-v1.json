@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.111-gemini-head-cell-intake",
+  "precedingSourceSHA": "030fcf38bce29a86d5e7fde6aa9dbb99d5ac3d6d",
+  "ownedPaths": 21,
+  "change": "Explicit Gemini prompt2 provenance, exact generation/primary/optional matte receipt and raw source/output/mask bindings with RGB/alpha relational checks; new static import CLI, existing inventory/loader integration, legacy prompt1 definition unchanged and finite/opened-handle readers. No new artwork, import execution, rig/renderer/voice/production change.",
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "848449",
+      "session": 35268,
+      "completionChunk": "0c0dc1",
+      "exitCode": 0,
+      "decisiveOutput": "69 modules transformed; built in 864ms"
+    },
+    "testTypes": {
+      "command": "npm run test:typecheck",
+      "startChunk": "152c57",
+      "session": 43722,
+      "completionChunk": "8d29df",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "artTypes": {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.art-tools.json",
+      "chunk": "0e0087",
+      "exitCode": 0
+    },
+    "schemas": {
+      "command": "npm run schemas",
+      "chunk": "f5d84f",
+      "exitCode": 0,
+      "scope": "definition export only; prompt v1 semantic definition retained, explicit v2 added"
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "f0c23f",
+      "exitCode": 0,
+      "scope": "explicitly permitted static inventory, existing legacy materials only"
+    },
+    "raw": {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source111-static.mjs",
+      "chunk": "b09f9d",
+      "exitCode": 0,
+      "result": {
+        "scope": "raw Git/file/hash/JSON/TypeScript AST only; no project import/schema instance/CLI import/test/geometry/pose/renderer evaluation",
+        "sourceVersion": "forest-tribe-0.111-gemini-head-cell-intake",
+        "nodeVersion": "v24.19.0",
+        "ownedPaths": 21,
+        "oldMaterialsUnchanged": 8,
+        "legacyPromptDefinitionUnchanged": true,
+        "newPromptDefinition": "native-head-cell-prompt-2",
+        "sourceProviders": [
+          "builtin-imagegen",
+          "9router-gemini"
+        ],
+        "manifestHashesMatched": 5,
+        "sourceHashes": {
+          "packages/topics/head-profile-provenance.ts": "b56eab6f2186d4de6fbb89782349b90237ca658ebb87134b7892337257fae878",
+          "packages/topics/head-cell-art.ts": "f41e3717216ed28fae52cd7838569cfa64989fe065d025d3e832d5604d35b2fa",
+          "scripts/head-cell-import.ts": "6c879733d2e4d1ae5f539e011a67761d6a4aa34db24f3e7a4e382bf72f1d2cf8",
+          "scripts/head-cell-inventory.ts": "a5b432fa43bb6d8b6370dd1d2322ed8ed3743b6620377bfafc3913e3110c344f",
+          "tests/head-profile-provenance.test.ts": "d50d98ad7a5008841a7f359679b7d1877b906b095bb088607bc869690922dca5"
+        },
+        "rendererVoiceClockProductionCodeUnchanged": true,
+        "newCallbacksDeclared": 6,
+        "callbacksExecuted": 0,
+        "headCellImportRun": false,
+        "newImageRequests": 0,
+        "acceptedQaLedger": null,
+        "realCurrentVideo": null,
+        "productionReady": false,
+        "fullGoalComplete": false
+      }
+    }
+  },
+  "sourceAdvice": {
+    "coder": {
+      "model": "coder",
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "promptTokens": 7068,
+        "completionTokens": 2846,
+        "totalTokens": 9914
+      },
+      "startChunk": "42cd41",
+      "session": 62001,
+      "completionChunk": "0f7c5b",
+      "exitCode": 0,
+      "parentCorrections": [
+        "Actual matte dependency object/histogram/yawMeasured fields",
+        "JPEG/WebP raw decoding; original PNG only for unmatted source",
+        "Compare grayscale mask intensity to output alpha",
+        "Reject null-yaw substitution; validate metadata/statistics",
+        "Strict fixed paths, finite read bounds and opened-handle/path identity checks"
+      ]
+    },
+    "tester": {
+      "model": "tester",
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "promptTokens": 9342,
+        "completionTokens": 587,
+        "totalTokens": 9929
+      },
+      "startChunk": "919cc2",
+      "session": 64293,
+      "completionChunk": "169d7c",
+      "exitCode": 0,
+      "findings": [
+        {
+          "file": "packages/topics/head-cell-art.ts",
+          "issue": "readHeadCellSource checks path components with lstat and then opens the path separately with fs.readFile, leaving a symlink-swap race.",
+          "reason": "A path component or final file can be replaced after the checks and before the read, allowing a caller to read outside the fixed artifact paths. The profile-artifact reader uses an opened file handle and verifies its device/inode against the checked file; this reader does not.",
+          "fix": "Open with O_NOFOLLOW, then verify the opened file is regular and matches the checked device/inode before reading. Consider applying the same handle-based checks to each path component or otherwise preventing directory-component swaps."
+        },
+        {
+          "file": "packages/topics/head-cell-art.ts",
+          "issue": "readHeadCellSource does not validate maxBytes before using it as a size limit.",
+          "reason": "Because the function is exported, a caller can pass NaN or Infinity; the stat.size > maxBytes checks then do not enforce the intended read bound, potentially allowing an oversized artifact to be read into memory.",
+          "fix": "Require maxBytes to be a positive safe integer within a fixed maximum before path inspection or reading."
+        }
+      ],
+      "parentDisposition": "Both finite maxBytes and lstat/readFile race findings addressed with bounded opened handles and component rechecks. Snapshot precedes final fixes and six test declarations; no final-source or runtime acceptance."
+    },
+    "totalTokens": 19843,
+    "retries": 0,
+    "fusion": false
+  },
+  "newCallbacksDeclared": 6,
+  "callbacksExecuted": 0,
+  "headCellImportRun": false,
+  "newImageRequests": 0,
+  "oldSourceArtifacts": "Eight head-cell materials and all original raster bytes/receipts retained; only static inventory provider/version metadata synchronized.",
+  "unexecuted": [
+    "Head-cell import CLI and default inventory CLI",
+    "New v2 provenance function against an actual imported head-cell",
+    "Six new regression callbacks plus legacy callbacks",
+    "Concurrent/partial-output/symlink Windows import scenarios",
+    "Primary identity/alpha edges/own neck/body/face3/bank7/turn/motion QA",
+    "All story/script/WAV final/audio/subtitle/multilingual voice/resume acceptance"
+  ],
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "fullGoalComplete": false
+}

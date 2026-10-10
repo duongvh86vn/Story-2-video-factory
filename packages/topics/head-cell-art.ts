@@ -1,8 +1,9 @@
-import {promises as fs} from 'node:fs';
+import {promises as fs,constants} from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import {z} from 'zod';
 import {hash} from '../core/utils.js';
+import {GeminiHeadProvenanceSchema,validateGeminiHeadProvenance} from './head-profile-provenance.js';
 
 export const HEAD_CELL_FOLDER='library/topics/prehistoric-life/head-cells';
 export const HeadCellFileSchema=z.string().max(90).regex(/^(lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\d*\.png$(?![\s\S])/);
@@ -10,13 +11,18 @@ const Sha=z.string().length(64).regex(/^[a-f0-9]{64}$/),Count=z.number().int().n
 const Ref=z.object({file:z.string().max(250),sha256:Sha,role:z.enum(['primary-character-identity','edit-target'])}).strict();
 // Null is an explicit source-angle-preservation request, never an inferred0°.
 // No default is supplied; existing finite-angle records keep identical bytes.
-export const HeadCellPromptSchema=z.object({version:z.literal('native-head-cell-prompt-1'),actor:z.enum(['lila','karo']),provider:z.literal('builtin-imagegen'),
-  prompt:z.string().min(1).max(24000),referenceImages:z.array(Ref).min(1).max(2),generatedOriginal:z.string().min(1).max(4096),requestedYawDeg:z.number().finite().min(-90).max(90).nullable(),
+const CommonPrompt=z.object({actor:z.enum(['lila','karo']),
+  prompt:z.string().min(1).max(24000),referenceImages:z.array(Ref).min(1).max(2),requestedYawDeg:z.number().finite().min(-90).max(90).nullable(),
   scope:z.literal('static-art-authoring-only'),approved:z.literal(false),registered:z.literal(false),productionReady:z.literal(false),runtimeVerified:z.literal(false),
-}).strict().superRefine((p,ctx)=>{
+}).strict();
+const BuiltinPrompt=CommonPrompt.extend({version:z.literal('native-head-cell-prompt-1'),provider:z.literal('builtin-imagegen'),generatedOriginal:z.string().min(1).max(4096)});
+const GeminiPrompt=CommonPrompt.extend({version:z.literal('native-head-cell-prompt-2'),provider:z.literal('9router-gemini'),model:z.literal('ag/gemini-3.1-flash-image'),
+  generatedOriginal:z.string().max(250).regex(/^library\/topics\/prehistoric-life\/head-source-studies\/(?:lila|karo)-profile-(?:left|right)-v[1-9]\d*(?:-matte-v[1-9]\d*)?\.png$(?![\s\S])/),provenance:GeminiHeadProvenanceSchema});
+export const HeadCellPromptSchema=z.discriminatedUnion('version',[BuiltinPrompt,GeminiPrompt]).superRefine((p,ctx)=>{
   const primary=p.referenceImages.filter(r=>r.role==='primary-character-identity'),edit=p.referenceImages.filter(r=>r.role==='edit-target');
   if(primary.length!==1||primary[0]?.file!==`docs/topics/assets/reference-${p.actor}-full.png`||edit.length>1)ctx.addIssue({code:'custom',message:'Single head source needs its one original actor identity reference'});
   for(const r of edit)if(!r.file.startsWith(HEAD_CELL_FOLDER+'/')||!HeadCellFileSchema.safeParse(r.file.slice(HEAD_CELL_FOLDER.length+1)).success||!r.file.startsWith(HEAD_CELL_FOLDER+'/'+p.actor+'-head-'))ctx.addIssue({code:'custom',message:'Single head edit target must belong to the same actor/source folder'});
+  if(p.version==='native-head-cell-prompt-2'&&(p.referenceImages.length!==1||edit.length||!p.generatedOriginal.startsWith(`library/topics/prehistoric-life/head-source-studies/${p.actor}-profile-`)||!p.provenance.generation.file.startsWith(`library/topics/prehistoric-life/head-source-studies/${p.actor}-profile-`)))ctx.addIssue({code:'custom',message:'Gemini profile must retain its one owned primary reference and output'});
 });
 export const HeadCellMaterialSchema=z.object({version:z.literal('native-head-cell-material-1'),actor:z.enum(['lila','karo']),file:HeadCellFileSchema,sha256:Sha,
   promptFile:z.string().max(250),promptSha256:Sha,references:z.array(Ref).min(1).max(2),
@@ -37,16 +43,24 @@ export type HeadCellMaterial=z.infer<typeof HeadCellMaterialSchema>;
 export type HeadCellPrompt=z.infer<typeof HeadCellPromptSchema>;
 
 export async function readHeadCellSource(repo:string,file:string,maxBytes=40*1024*1024){
+  if(!Number.isSafeInteger(maxBytes)||maxBytes<=0||maxBytes>40*1024*1024)throw new Error('Invalid single head read bound');
   const relative=file.startsWith(HEAD_CELL_FOLDER+'/')?file.slice(HEAD_CELL_FOLDER.length+1):undefined;
   const pngName=relative?.replace(/(?:-prompt)?\.json$/,'.png');
   const knownCell=relative!==undefined&&HeadCellFileSchema.safeParse(pngName).success&&[pngName,pngName!.slice(0,-4)+'.json',pngName!.slice(0,-4)+'-prompt.json'].includes(relative);
   if(!/^docs\/topics\/assets\/reference-(lila|karo)-full\.png$(?![\s\S])/.test(file)&&!knownCell)throw new Error('Unknown single head source path');
-  let target=path.resolve(repo);const parts=file.split('/');
+  let target=path.resolve(repo);const parts=file.split('/'),checked=[];
   for(const [i,part] of parts.entries()){
     target=path.join(target,part);const stat=await fs.lstat(target);
     if(stat.isSymbolicLink()||(i===parts.length-1?!stat.isFile()||stat.size>maxBytes:!stat.isDirectory()))throw new Error('Linked/oversized single head source');
+    checked.push({file:target,stat});
   }
-  const bytes=await fs.readFile(target);if(bytes.length>maxBytes)throw new Error('Oversized single head source');return bytes;
+  const handle=await fs.open(target,constants.O_RDONLY|(constants.O_NOFOLLOW??0));
+  try{
+    const opened=await handle.stat(),before=checked.at(-1)!.stat;
+    if(!opened.isFile()||opened.dev!==before.dev||opened.ino!==before.ino||opened.size>maxBytes)throw new Error('Single head source changed while opening');
+    for(const entry of checked){const current=await fs.lstat(entry.file);if(current.isSymbolicLink()||current.dev!==entry.stat.dev||current.ino!==entry.stat.ino)throw new Error('Linked/changed single head path');}
+    const bytes=await handle.readFile();if(bytes.length>maxBytes)throw new Error('Oversized single head source');return bytes;
+  }finally{await handle.close();}
 }
 /** Static raw RGBA inspection only; no raster edit, masks, inferred landmarks,
  * face correspondence, anatomy, yaw measurement, sampler or animation. */
@@ -72,15 +86,19 @@ export async function headCellMaterial(repo:string,file:string){
   const promptBytes=await readHeadCellSource(repo,record.promptFile,200*1024);if(hash(promptBytes)!==record.promptSha256)throw new Error('Single head prompt changed');
   const prompt=HeadCellPromptSchema.parse(JSON.parse(promptBytes.toString('utf8')));
   if(prompt.actor!==record.actor||hash(prompt.referenceImages)!==hash(record.references)||prompt.requestedYawDeg!==record.requestedYawDeg)throw new Error('Single head prompt/source ownership differs');
-  await validateHeadCellPromptSources(repo,record.actor,file,prompt);return {record,bytes};
+  await validateHeadCellPromptSources(repo,record.actor,file,prompt,bytes);return {record,bytes};
 }
-export async function validateHeadCellPromptSources(repo:string,actor:'lila'|'karo',file:string,prompt:HeadCellPrompt){
+export async function validateHeadCellPromptSources(repo:string,actor:'lila'|'karo',file:string,prompt:HeadCellPrompt,outputBytes?:Buffer){
   HeadCellFileSchema.parse(file);if(prompt.actor!==actor||!file.startsWith(actor+'-head-'))throw new Error('Single head prompt actor differs');
   for(const ref of prompt.referenceImages){if(ref.file===`${HEAD_CELL_FOLDER}/${file}`)throw new Error('Single head edit cannot refer to its own output');if(hash(await readHeadCellSource(repo,ref.file))!==ref.sha256)throw new Error('Single head reference changed');}
+  if(prompt.version==='native-head-cell-prompt-2'){
+    const original=await validateGeminiHeadProvenance(repo,prompt),output=outputBytes??await readHeadCellSource(repo,`${HEAD_CELL_FOLDER}/${file}`);
+    if(!original.equals(output))throw new Error('Single head PNG differs from Gemini provenance output');
+  }
 }
 export async function headCellInventory(repo:string){
   const folder=path.join(repo,HEAD_CELL_FOLDER),stat=await fs.lstat(folder);if(stat.isSymbolicLink()||!stat.isDirectory())throw new Error('Linked single head folder');
   const files=(await fs.readdir(folder)).filter(file=>HeadCellFileSchema.safeParse(file.replace(/\.json$/,'.png')).success&&file.endsWith('.json')&&!file.endsWith('-prompt.json')).sort();
   return Promise.all(files.map(async file=>(await headCellMaterial(repo,file.replace(/\.json$/,'.png'))).record));
 }
-export const headCellArtDescription={version:'native-head-cell-material-1',method:'individual original PNGs with immutable raw RGBA/provenance measurement; explicit angle request or null preserving primary orientation, never inferred registration',registered:false,approved:false,productionReady:false,motionVerified:false,availableBanks:[],pending:['identity and adjacent-view correspondence','source neck/eye/chin/mouth/seam/mask registrations','full speech/emotion/body turn and normal-speed whole-factory acceptance']};
+export const headCellArtDescription={version:'native-head-cell-material-1',method:'individual original PNGs with immutable raw RGBA/provenance measurement; explicit angle request or null preserving primary orientation, never inferred registration',promptVersions:['native-head-cell-prompt-1','native-head-cell-prompt-2'],sourceProviders:['builtin-imagegen','9router-gemini'],registered:false,approved:false,productionReady:false,motionVerified:false,availableBanks:[],pending:['identity and adjacent-view correspondence','source neck/eye/chin/mouth/seam/mask registrations','full speech/emotion/body turn and normal-speed whole-factory acceptance']};

@@ -16,8 +16,9 @@ for(const file of files){
   if(existing){await headCellMaterial(repo,file);continue;} // Keep old immutable findings.
   const promptFile=`${HEAD_CELL_FOLDER}/${file.slice(0,-4)}-prompt.json`,promptBytes=await readHeadCellSource(repo,promptFile,200*1024);
   const prompt=HeadCellPromptSchema.parse(JSON.parse(promptBytes.toString('utf8')));
-  await validateHeadCellPromptSources(repo,prompt.actor,file,prompt);
   const bytes=await readHeadCellSource(repo,`${HEAD_CELL_FOLDER}/${file}`);
+  await validateHeadCellPromptSources(repo,prompt.actor,file,prompt,bytes);
+  if(prompt.version==='native-head-cell-prompt-1'){
   // Only original author outputs may be read; repo API has no external-path IO.
   const outputRoot=path.resolve(process.env.CODEX_HOME??path.join(os.homedir(),'.codex'),'generated_images');
   const original=path.resolve(prompt.generatedOriginal),relative=path.relative(outputRoot,original);
@@ -29,9 +30,10 @@ for(const file of files){
     if(stat.isSymbolicLink()||(i===parts.length-1?!stat.isFile()||stat.size>40*1024*1024:!stat.isDirectory()))throw new Error('Linked/oversized generated image source');
   }
   const originalBytes=await fs.readFile(original);if(originalBytes.length>40*1024*1024||!originalBytes.equals(bytes))throw new Error('Single PNG differs from generated original');
+  }
   const measured=await measureHeadCellPng(bytes);
   const record=HeadCellMaterialSchema.parse({version:'native-head-cell-material-1',actor:prompt.actor,file,sha256:hash(bytes),promptFile,promptSha256:hash(promptBytes),references:prompt.referenceImages,...measured,requestedYawDeg:prompt.requestedYawDeg,yawMeasured:false,
-    findings:['Original generated PNG bytes retained unchanged; identity, colour, ink and face quality require primary comparison.','Source angle is not measured. Null requested yaw means original orientation; no implicit zero-degree front view.','Neck/skull/face/eyes/mouth/seam/masks/adjacent correspondence unregistered; speech/blink/emotion/body compatibility/motion acceptance pending.'],
+    findings:[prompt.version==='native-head-cell-prompt-1'?'Original generated PNG bytes retained unchanged; identity, colour, ink and face quality require primary comparison.':'Gemini source and optional local mask receipts bound to unchanged copied PNG; provenance is not identity/edge acceptance.','Source angle is not measured. Null requested yaw means original orientation; no implicit zero-degree front view.','Neck/skull/face/eyes/mouth/seam/masks/adjacent correspondence unregistered; speech/blink/emotion/body compatibility/motion acceptance pending.'],
     status:'unreviewed-source-candidate',approved:false,registered:false,productionReady:false,motionVerified:false});
   await fs.writeFile(target,JSON.stringify(record,null,2)+'\n',{flag:'wx'});
 }

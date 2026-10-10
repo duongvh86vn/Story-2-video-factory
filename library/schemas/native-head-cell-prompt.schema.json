@@ -2,114 +2,281 @@
   "$ref": "#/definitions/native-head-cell-prompt",
   "definitions": {
     "native-head-cell-prompt": {
-      "type": "object",
-      "properties": {
-        "version": {
-          "type": "string",
-          "const": "native-head-cell-prompt-1"
-        },
-        "actor": {
-          "type": "string",
-          "enum": [
-            "lila",
-            "karo"
-          ]
-        },
-        "provider": {
-          "type": "string",
-          "const": "builtin-imagegen"
-        },
-        "prompt": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 24000
-        },
-        "referenceImages": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "file": {
-                "type": "string",
-                "maxLength": 250
-              },
-              "sha256": {
-                "type": "string",
-                "minLength": 64,
-                "maxLength": 64,
-                "pattern": "^[a-f0-9]{64}$"
-              },
-              "role": {
-                "type": "string",
-                "enum": [
-                  "primary-character-identity",
-                  "edit-target"
-                ]
-              }
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "actor": {
+              "type": "string",
+              "enum": [
+                "lila",
+                "karo"
+              ]
             },
-            "required": [
-              "file",
-              "sha256",
-              "role"
-            ],
-            "additionalProperties": false
-          },
-          "minItems": 1,
-          "maxItems": 2
-        },
-        "generatedOriginal": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 4096
-        },
-        "requestedYawDeg": {
-          "anyOf": [
-            {
-              "type": "number",
-              "minimum": -90,
-              "maximum": 90
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 24000
             },
-            {
-              "type": "null"
+            "referenceImages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "maxLength": 250
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "primary-character-identity",
+                      "edit-target"
+                    ]
+                  }
+                },
+                "required": [
+                  "file",
+                  "sha256",
+                  "role"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "requestedYawDeg": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "const": "static-art-authoring-only"
+            },
+            "approved": {
+              "type": "boolean",
+              "const": false
+            },
+            "registered": {
+              "type": "boolean",
+              "const": false
+            },
+            "productionReady": {
+              "type": "boolean",
+              "const": false
+            },
+            "runtimeVerified": {
+              "type": "boolean",
+              "const": false
+            },
+            "version": {
+              "type": "string",
+              "const": "native-head-cell-prompt-1"
+            },
+            "provider": {
+              "type": "string",
+              "const": "builtin-imagegen"
+            },
+            "generatedOriginal": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
             }
-          ]
+          },
+          "required": [
+            "actor",
+            "prompt",
+            "referenceImages",
+            "requestedYawDeg",
+            "scope",
+            "approved",
+            "registered",
+            "productionReady",
+            "runtimeVerified",
+            "version",
+            "provider",
+            "generatedOriginal"
+          ],
+          "additionalProperties": false
         },
-        "scope": {
-          "type": "string",
-          "const": "static-art-authoring-only"
-        },
-        "approved": {
-          "type": "boolean",
-          "const": false
-        },
-        "registered": {
-          "type": "boolean",
-          "const": false
-        },
-        "productionReady": {
-          "type": "boolean",
-          "const": false
-        },
-        "runtimeVerified": {
-          "type": "boolean",
-          "const": false
+        {
+          "type": "object",
+          "properties": {
+            "actor": {
+              "type": "string",
+              "enum": [
+                "lila",
+                "karo"
+              ]
+            },
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 24000
+            },
+            "referenceImages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "maxLength": 250
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "primary-character-identity",
+                      "edit-target"
+                    ]
+                  }
+                },
+                "required": [
+                  "file",
+                  "sha256",
+                  "role"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "requestedYawDeg": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "const": "static-art-authoring-only"
+            },
+            "approved": {
+              "type": "boolean",
+              "const": false
+            },
+            "registered": {
+              "type": "boolean",
+              "const": false
+            },
+            "productionReady": {
+              "type": "boolean",
+              "const": false
+            },
+            "runtimeVerified": {
+              "type": "boolean",
+              "const": false
+            },
+            "version": {
+              "type": "string",
+              "const": "native-head-cell-prompt-2"
+            },
+            "provider": {
+              "type": "string",
+              "const": "9router-gemini"
+            },
+            "model": {
+              "type": "string",
+              "const": "ag/gemini-3.1-flash-image"
+            },
+            "generatedOriginal": {
+              "type": "string",
+              "maxLength": 250,
+              "pattern": "^library\\/topics\\/prehistoric-life\\/head-source-studies\\/(?:lila|karo)-profile-(?:left|right)-v[1-9]\\d*(?:-matte-v[1-9]\\d*)?\\.png$(?![\\s\\S])"
+            },
+            "provenance": {
+              "type": "object",
+              "properties": {
+                "generation": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "maxLength": 250,
+                      "pattern": "^library\\/topics\\/prehistoric-life\\/head-source-studies\\/(lila|karo)-profile-(left|right)-v[1-9]\\d*\\.json$(?![\\s\\S])"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "sha256"
+                  ],
+                  "additionalProperties": false
+                },
+                "matte": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "string",
+                      "maxLength": 250,
+                      "pattern": "^library\\/topics\\/prehistoric-life\\/head-source-studies\\/(lila|karo)-profile-(left|right)-v[1-9]\\d*-matte-v[1-9]\\d*\\.json$(?![\\s\\S])"
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$(?![\\s\\S])"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "sha256"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "generation"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "actor",
+            "prompt",
+            "referenceImages",
+            "requestedYawDeg",
+            "scope",
+            "approved",
+            "registered",
+            "productionReady",
+            "runtimeVerified",
+            "version",
+            "provider",
+            "model",
+            "generatedOriginal",
+            "provenance"
+          ],
+          "additionalProperties": false
         }
-      },
-      "required": [
-        "version",
-        "actor",
-        "provider",
-        "prompt",
-        "referenceImages",
-        "generatedOriginal",
-        "requestedYawDeg",
-        "scope",
-        "approved",
-        "registered",
-        "productionReady",
-        "runtimeVerified"
-      ],
-      "additionalProperties": false
+      ]
     }
   },
   "$schema": "http://json-schema.org/draft-07/schema#"

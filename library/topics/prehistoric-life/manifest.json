@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.110-gemini-profile-art",
+  "version": "forest-tribe-0.111-gemini-head-cell-intake",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -1250,7 +1250,7 @@
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b",
-      "packages/topics/prehistoric-life.ts": "6e1042e6d6fdb156a664a06cbb33a71448320d68f0a0e3a00d83cb81e77646c6",
+      "packages/topics/prehistoric-life.ts": "0d8eb1a12997e33756cc6cd0593e7cc2d645ee3128db058df276a4a7fd615ac4",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df",
@@ -1272,7 +1272,7 @@
     "handoffDocument": "docs/topics/STORY-PERSON-MODELS-HANDOFF.md",
     "codeHashes": {
       "packages/topics/cast-model.ts": "b23d4d893d1b7c1a3a61029cd53dfa22ca10571ffe6e00d4889441daf6be1d6c",
-      "packages/topics/prehistoric-life.ts": "6e1042e6d6fdb156a664a06cbb33a71448320d68f0a0e3a00d83cb81e77646c6",
+      "packages/topics/prehistoric-life.ts": "0d8eb1a12997e33756cc6cd0593e7cc2d645ee3128db058df276a4a7fd615ac4",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/production-release.ts": "28a1b79c22bd0e7ef8cbcce6a95ade3d0367bc490407e1b0895cea5d44513fc3",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
@@ -1304,7 +1304,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "6e1042e6d6fdb156a664a06cbb33a71448320d68f0a0e3a00d83cb81e77646c6",
+      "packages/topics/prehistoric-life.ts": "0d8eb1a12997e33756cc6cd0593e7cc2d645ee3128db058df276a4a7fd615ac4",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
     }
   },
@@ -1548,7 +1548,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "6e1042e6d6fdb156a664a06cbb33a71448320d68f0a0e3a00d83cb81e77646c6",
+      "packages/topics/prehistoric-life.ts": "0d8eb1a12997e33756cc6cd0593e7cc2d645ee3128db058df276a4a7fd615ac4",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "f07c779af12fae1140d66c495b2f7536b567161a7bcc7d1ffac1a272fb3852a6",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
@@ -5595,6 +5595,14 @@
   "nativeHeadCells": {
     "version": "native-head-cell-material-1",
     "method": "individual original PNGs with immutable raw RGBA/provenance measurement; explicit angle request or null preserving primary orientation, never inferred registration",
+    "promptVersions": [
+      "native-head-cell-prompt-1",
+      "native-head-cell-prompt-2"
+    ],
+    "sourceProviders": [
+      "builtin-imagegen",
+      "9router-gemini"
+    ],
     "registered": false,
     "approved": false,
     "productionReady": false,
@@ -8041,7 +8049,9 @@
       }
     ],
     "fingerprint": "93e37c055188ad5908c0a1ea1337950bfbf9e8f284372960748bc08aa16dd16b",
-    "codeHash": "edfca023b84b6c5473bc8c0d7892f098283e19b81433a05d14329f5fd254775d",
+    "codeHash": "f41e3717216ed28fae52cd7838569cfa64989fe065d025d3e832d5604d35b2fa",
+    "provenanceCodeHash": "b56eab6f2186d4de6fbb89782349b90237ca658ebb87134b7892337257fae878",
+    "importToolCodeHash": "6c879733d2e4d1ae5f539e011a67761d6a4aa34db24f3e7a4e382bf72f1d2cf8",
     "landmarkCodeHash": "1074787d9b3dab8fae8f156ea5d72eb5fd9d982c1078e4bf843501e210436972",
     "workbenchCodeHash": "3430b12c14e908e942ef32d851284ac4f3646581be450174266d66b37c317d08",
     "workbench": "/api/topics/prehistoric-life/head-cells",
@@ -21912,7 +21922,7 @@
     "endpoint": "GET /api/projects/:name/topic-readiness",
     "codeHashes": {
       "packages/topics/production-release.ts": "28a1b79c22bd0e7ef8cbcce6a95ade3d0367bc490407e1b0895cea5d44513fc3",
-      "packages/topics/prehistoric-life.ts": "6e1042e6d6fdb156a664a06cbb33a71448320d68f0a0e3a00d83cb81e77646c6",
+      "packages/topics/prehistoric-life.ts": "0d8eb1a12997e33756cc6cd0593e7cc2d645ee3128db058df276a4a7fd615ac4",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/core/config.ts": "d0d9af6f29585379ac7dbba9a4e5d02fafdd96edb14001b36f0873abd393dc10",
       "packages/orchestrator/settings.ts": "91c982c4e0f956b1f75f866a0250f785a2f25ec77fbc3ea0a30a8bd52664b35d",

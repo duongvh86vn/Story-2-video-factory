@@ -2447,5 +2447,13 @@
     }
   ],
   "fingerprint": "93e37c055188ad5908c0a1ea1337950bfbf9e8f284372960748bc08aa16dd16b",
-  "productionRig": null
+  "productionRig": null,
+  "promptVersions": [
+    "native-head-cell-prompt-1",
+    "native-head-cell-prompt-2"
+  ],
+  "sourceProviders": [
+    "builtin-imagegen",
+    "9router-gemini"
+  ]
 }
