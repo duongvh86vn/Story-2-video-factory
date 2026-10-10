@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.95-own-front-profile-speech",
+  "precedingSourceSHA": "7891e9cc43b1cfcfe102060247320292c64219a9",
+  "scope": "own front/profile speech source integration only; no anatomy/art/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Six exact own-source mouth regions with registered-basic-mouth-v1; no rear mouth, borrowed3/4 coordinates, face mirror/warp or image edits.",
+    "Independent source eye/mouth masks and replacement-opacity coupling. Lila source smile in silence; Karo own skin-strip/closed contour candidate.",
+    "Original source speech envelope/shape code and actor cue ownership unchanged. Fixed-happy original actor clock retained with speech-only selection, clock9.",
+    "Schema/raw/accessor/workbench/API selections and visual profile/fingerprint identity updated; unavailable basic capabilities still rejected.",
+    "Eight unit callbacks DECLARED/NOT RUN, including paired speakers and cross-cut/role-swap clocks. No runtime/tracer/render/media acceptance."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "49ec53",
+      "session": 25983,
+      "completionChunk": "6d62b7",
+      "decisiveOutput": "vite v7.3.6 building client environment for production...\n✓ 61 modules transformed.\n✓ built in 685ms",
+      "scope": "TypeScript/Studio source build; no runtime tests"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "7dd5ed",
+      "session": 80238,
+      "completionChunk": "22dcfd",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json",
+      "scope": "Declaration typecheck only; final completion output empty, no callbacks"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "2c354d",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts",
+      "scope": "Schema definition export only, no schema instances"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "c3ad2b",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "Explicitly allowed source asset/header/hash/static JSON inventory"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/own-view-speech-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "be6283",
+      "session": 93611,
+      "completionChunk": "0c3cb9",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.95-own-front-profile-speech\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"frontEngineeringSources\":2,\"obliqueEngineeringSources\":8,\"legacyDetailedViews\":2,\"mappedCodeHashes\":163,\"scalarCodeEntries\":46,\"callbacksDeclared\":8,\"ownMouthSourceCount\":6,\"skinStripsWithDarkPixels\":0,\"ownEyeSources\":6,\"visibleOwnEyeGlyphs\":8,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}",
+      "scope": "Raw bytes/header/alpha/ROI/JSON/literal-source AST only; no project imports or pose/geometry execution"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "source freeze only"
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/own-view-speech-static-record-v1.json",
+  "mouthRawROI": "six source RGBA ROI inventories in raw record; all strips have0 dark pixels and nonopaque alpha, not acceptance",
+  "originalShapeAndEnvelopeFunctionSourceUnchanged": true,
+  "agentAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 12731,
+    "usage": {
+      "prompt_tokens": 13533,
+      "completion_tokens": 626,
+      "total_tokens": 14159
+    },
+    "finishReason": "stop",
+    "reply": "{\"findings\":[{\"file\":\"packages/animation/body-view-art.ts\",\"quote\":\"const sourceHead=profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION?`<g mask=\\\"url(#view-mouth-source-mask)\\\">${base}</g>`:base;\",\"reason\":\"The basic-mouth mask is applied around the source image, while `mouth` is emitted as a sibling afterward. That erases source pixels but does not fade the replacement with the same opacity; moreover, masking is skipped whenever `secondary?.artwork` supplies the source head, so a valid combined basic-mouth selection can leave the original mouth visible.\",\"correction\":\"Apply the mouth source mask to every source-head rendering path, including secondary artwork where supported, and give the replacement ROI the same activity-driven opacity as the erase mask.\"},{\"file\":\"packages/animation/body-view-mouth.ts\",\"quote\":\"const erase=c.sourceErase?`<defs><mask id=\\\"view-mouth-source-mask\\\" ...><g id=\\\"view-mouth-source-erase\\\" opacity=\\\"${permanent?1:0}\\\"><path d=\\\"${c.clip}\\\" fill=\\\"black\\\"/></g></mask></defs>`:'';\",\"reason\":\"For Lila's `resting:'source-closed'`, `permanent` is false, so the source erase remains transparent even while the replacement layer becomes visible during speech. The original smile therefore remains beneath the animated mouth. Also, the erase opacity is hard-coded to 0/1 rather than following `sampleBodyViewMouth`'s animated replacement opacity.\",\"correction\":\"Drive source erase opacity from the same sampled opacity as the replacement layer; for source-closed registrations, ensure the source ROI is erased whenever the replacement covers it, including the closed/silent state if needed to avoid overlap.\"},{\"file\":\"packages/animation/body-view-mouth.ts\",\"quote\":\"const opacity=registeredBodyViewRestMouth(profile)||c.resting==='closed-overlay'?1:ease(amount/.08);\",\"reason\":\"Basic Karo registrations use `resting:'closed-overlay'`, so the whole mouth layer stays fully opaque at silence. Its zero-aperture path is drawn from `bodyViewMouthPaths(c,0)`, but the returned teeth path is still unconditional; for `curvedTeeth`, it traces the upper contour with a nonzero lower edge even at zero aperture, potentially exposing teeth in the closed contour.\",\"correction\":\"Make the closed Karo contour explicitly tooth-free at zero aperture (or gate tooth visibility by aperture), while preserving its permanent closed overlay.\"}],\"missingContext\":[\"The supplied diff does not show whether the scene renderer merges `view-mouth-source-mask` with the eye mask or how SVG mask IDs are scoped across multiple actors. Independent-mask coexistence and duplicate-ID behavior cannot be confirmed from these excerpts.\",\"The supplied diff does not show the call sites that derive mouth opacity and source erase opacity from source-clock activity, nor the actor-clock ownership behavior across cut/role swaps. Those clock contracts cannot be fully assessed here.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshot": "C:/Users/Duongvh-pc/.codex/tmp/source095-review-snapshot.txt",
+    "sha256": "282d364e444ae0e4168075e4d58ed571a8d8ceb9b94a8d4221cbb0ac374c2400",
+    "scope": "source snapshot only; no tests/art/runtime/production acceptance",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "dispositions": [
+      {
+        "finding": 1,
+        "status": "not-applied",
+        "evidence": "sampleBodyViewMouth supplies the same opacity to view-mouth-layer and view-mouth-source-erase. basicBodyHasUnsupportedOptions rejects bodySecondary on every basic view, so the proposed combined secondary/basic-mouth path is invalid."
+      },
+      {
+        "finding": 2,
+        "status": "not-applied",
+        "evidence": "Initial SVG opacity is rest state only. Compiler merges sampled mouth.face into frame face; sampleBodyViewMouth animates view-mouth-source-erase at exactly the same replacement opacity."
+      },
+      {
+        "finding": 3,
+        "status": "not-applied",
+        "evidence": "curvedTeeth lower-edge thickness is Math.min(8,c.depth*amount*.38), exactly0 at amount0; teeth/tongue are also within view-mouth-aperture clip. Zero-aperture path retraces its upper curve. Real render seams remain unaccepted."
+      }
+    ]
+  },
+  "ownedPaths": 28,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/OWN-VIEW-SPEECH-HANDOFF.md",
+  "newCallbacksDeclared": 8,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 0,
+  "imagesEdited": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

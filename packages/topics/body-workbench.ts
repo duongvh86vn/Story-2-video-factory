@@ -1,5 +1,6 @@
 import {isBasicBodyView,basicBodyActionAllowed,basicBodyCapabilityError} from '../animation/body-view-basic-capabilities.js';
 import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
+import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-view-basic-mouth-registration.js';
 import {escapeHtml} from '../core/utils.js';
 import {hash} from '../core/utils.js';
 import {BODY_VIEW_VERSION,BODY_CANDIDATE_VIEWS,bodyViewFacing,bodyViewDescription} from '../animation/body-view-art.js';
@@ -27,7 +28,7 @@ export const BODY_WORKBENCH_VIEWS=['source',...BODY_CANDIDATE_VIEWS] as const;
 export type BodyWorkbenchView=typeof BODY_WORKBENCH_VIEWS[number];
 export const BODY_COLOUR_MODES=['cutout',SOURCE_COLOUR_VERSION] as const;
 export type BodyColourMode=typeof BODY_COLOUR_MODES[number];
-export const BODY_MOUTH_MODES=['silent',BODY_VIEW_SPEECH_VERSION,BODY_VIEW_REST_SPEECH_SELECTION] as const;
+export const BODY_MOUTH_MODES=['silent',BODY_VIEW_SPEECH_VERSION,BODY_VIEW_REST_SPEECH_SELECTION,BASIC_BODY_SPEECH_SELECTION] as const;
 export type BodyMouthMode=typeof BODY_MOUTH_MODES[number];
 export const BODY_EYES_MODES=['native',BODY_VIEW_EYES_SELECTION,BASIC_BODY_EYES_SELECTION] as const;
 export type BodyEyesMode=typeof BODY_EYES_MODES[number];
@@ -56,6 +57,7 @@ export const bodyActionDuration=(action:BodyAction)=>action.startsWith('sit-walk
 export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:Mood,gestureHand:'left'|'right'='right',view:BodyWorkbenchView='source',colour:BodyColourMode='cutout',mouth:BodyMouthMode='silent',eyes:BodyEyesMode='native',look:BodyLookMode='rest',expressions:BodyExpressionMode='native',motion:BodyMotionMode='rigid',secondary:BodySecondaryMode='rigid',seat:BodySeatMode='unregistered',manipulation:BodyManipulationMode='unregistered') {
   const base=topicPreviewProfile(actor),authored=view!=='source'||action==='spear-lunge';
   if(mouth!=='silent'&&(!BODY_MOUTH_MODES.includes(mouth)||!authored))throw new Error('needs-view-voice-animation: mouth candidate requires an authored body view');
+  if(mouth===BASIC_BODY_SPEECH_SELECTION&&!isBasicMouthView(view))throw new Error('needs-view-voice-animation: explicitly select the own front/profile mouth');
   if(eyes!=='native'&&(!authored||(eyes===BASIC_BODY_EYES_SELECTION?!isBasicEyeView(view):eyes!==BODY_VIEW_EYES_SELECTION||isBasicBodyView(view))))throw new Error('needs-view-eyes: explicitly select the eyes registered for this own body source');
   if(look!=='rest'&&eyes==='native')throw new Error('needs-view-gaze: explicit look requires its selected registered eyes');
   if(expressions!=='native'&&(expressions!==BODY_VIEW_EXPRESSIONS_SELECTION||!authored||eyes!==BODY_VIEW_EYES_SELECTION||mouth!==BODY_VIEW_REST_SPEECH_SELECTION))throw new Error('needs-view-expression: expressions need native view, registered eyes and resting speech');
@@ -66,8 +68,8 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(manipulationActions.includes(action)&&manipulation!==BODY_VIEW_MANIPULATION_SELECTION)throw new Error('needs-view-manipulation: explicitly select registered-manipulation-v1');
   if(action==='spear-lunge'&&view==='three-quarter-left')throw new Error('needs-lunge-pose: left-facing planted lunge has not been authored');
   if(colour!== 'cutout'&&(colour!==SOURCE_COLOUR_VERSION||authored))throw new Error('needs-source-colour-profile: original RGB candidate is registered only for source orientation');
-  if(isBasicBodyView(view)&&(mood!=='happy'||!basicBodyActionAllowed(view,action)||mouth!=='silent'||eyes!=='native'&&!(eyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(view))||expressions!=='native'||motion!=='rigid'||seat!=='unregistered'||secondary!=='rigid'||manipulation!=='unregistered'))
-    throw basicBodyCapabilityError(view,'selected action/face/motion (silent happy rigid basic poses; own front/profile eyes only, no rear chin/eyes)');
+  if(isBasicBodyView(view)&&(mood!=='happy'||!basicBodyActionAllowed(view,action)||mouth!=='silent'&&!(mouth===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(view))||eyes!=='native'&&!(eyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(view))||expressions!=='native'||motion!=='rigid'||seat!=='unregistered'||secondary!=='rigid'||manipulation!=='unregistered'))
+    throw basicBodyCapabilityError(view,'selected action/face/motion (happy rigid basic poses; own front/profile eyes and speech only, no rear chin/eyes/speech)');
   if(authored){
     if(mood!=='happy'&&expressions==='native')throw new Error('needs-view-expression: non-happy moods need explicit registered expressions');
     const fixed=['rest','point','think'];
@@ -250,6 +252,7 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:Bod
   return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rig toàn thân Lila &amp; Karo</title><style>'
     +'body{margin:24px;background:#ece5d6;color:#362215;font:16px system-ui}main{max-width:1100px;margin:auto}section{background:#fff7e5;border-radius:16px;padding:20px;margin:20px 0}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;text-align:center}img,svg{width:100%;height:490px;object-fit:contain}.tool-pair{grid-template-columns:minmax(130px,210px) minmax(0,1fr);align-items:center}.tool-pair img{height:350px}.tool-pair svg{height:440px}figcaption{padding:12px}form{display:flex;gap:14px;align-items:end;flex-wrap:wrap}label{display:grid;gap:4px}input,select,button{font:inherit;padding:8px}a{color:#65461b} @media(max-width:620px){.pair,.tool-pair{grid-template-columns:1fr}img,svg{height:410px}.tool-pair img{height:230px}}</style><main><h1>Rig toàn thân — bản hiệu chỉnh</h1>'
     +(view==='source'&&action!=='spear-lunge'?'<p>Thân nguồn: nét tay/chân liên tục qua khớp IK; tay think và mitten cùng lớp trước cằm. Preset front giữ hai grip giáo cách 100 × bodyScale. Đây là ứng viên pose tĩnh, chưa nghiệm thu chuyển động.</p>':'')
+    +'<p><strong>Thoại riêng góc chính diện/nghiêng — source0.95:</strong> chọn registered-basic-mouth-v1 ở front/left/right. Tín hiệu segment-draft chỉ là mô phỏng có nhãn, chưa có audio thật. Lila giữ smile nguồn trong im lặng; Karo có contour khép riêng. Mask miệng và mắt tách riêng; da/viền/môi/tóc/râu cần review hình và video, productionReady=false. Không phải phoneme lip-sync hoặc quay đầu liên tục.</p>'
     +'<p><strong>Miệng góc 3/4 — mốc 0.30:</strong> lựa chọn registered-mouth-v1 dùng tín hiệu giả lập có nhãn segment-draft; không có audio hoặc xác nhận lip-sync. Khoảng im lặng/level 0 trả lại ảnh happy gốc của view. Miệng, identity, mask và video còn chờ duyệt; productionReady=false.</p>'
     +'<p><strong>Biểu cảm — ứng viên 0.36:</strong> chọn registered-expressions-v1 cùng mắt native và miệng khép để xem các mood; nét mực chân mày lấy từ đúng PNG đang đăng ký. Mắt/mũi/đầu không bị kéo méo; màu da/viền ghép và diễn xuất còn chờ nghiệm thu.</p>'
     +'<p><strong>Thân và vạt áo:</strong> chọn registered-locomotion-v1 với góc 3/4 đúng chiều để xem đi/chạy/nhảy/cúi. Đai áo giữ cố định, vạt theo đùi có độ trễ. Ngồi cần chọn thêm registered-seated-v1; đây là ứng viên một shot với ghế/khúc gỗ, chung viền vải đục và hai ống quần Karo. Clock ghế xuyên camera và quay thân còn chờ; chưa nghiệm thu nét vẽ/chuyển động/video.</p>'

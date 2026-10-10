@@ -7,6 +7,7 @@ import {basicBodyHasUnsupportedOptions,basicBodyCapabilityError} from './body-vi
 import {obliqueBodyRegistrationDescription} from './body-view-oblique-registration.js';
 import {authoredRestArm} from './body-view-rest-arm.js';
 import {BASIC_BODY_EYES_SELECTION} from './body-view-basic-eyes-registration.js';
+import {BASIC_BODY_SPEECH_SELECTION} from './body-view-basic-mouth-registration.js';
 import {bodyViewMouthSvg,bodyViewMouthDescription} from './body-view-mouth.js';
 import {bodyViewEyesSvg,bodyViewEyesDescription} from './body-view-eyes.js';
 import {bodyViewExpressionsSvg,bodyViewExpressionsDescription} from './body-view-expressions.js';
@@ -18,7 +19,7 @@ import {nativeManipulationDescription} from './native-contact-arm.js';
 import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-7';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-8';
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These
  * engineering candidates use uniform head/body transforms. Their physical
@@ -66,7 +67,9 @@ export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:st
   // overlays, whole-face warp, expressions and continuous turns stay blocked.
   const url=imageUrl(c.file,c.sha256),source={sha256:c.sha256,width:c.width,height:c.height,url},mouth=bodyViewMouthSvg(profile,source,imageUrl),eyes=bodyViewEyesSvg(profile,source),expressions=bodyViewExpressionsSvg(profile,source,imageUrl);
   const secondary=hasBodyViewSecondary(profile)?nativeSecondarySvg(profile,registeredDetailedBodyView(profile)):undefined;
-  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath>${secondary?`<image id="view-secondary-source" width="${c.width}" height="${c.height}" href="${url}"/>`:''}</defs>${secondary?.defs??''}<g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})">${secondary?.artwork??`<g clip-path="url(#source-head-clip)"><image width="${c.width}" height="${c.height}" href="${url}"${profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION?' mask="url(#view-eyes-source-mask)"':''}/></g>`}<g clip-path="url(#source-head-clip)">${mouth}${eyes}${expressions}</g></g></g></g>`;
+  const base=`<image width="${c.width}" height="${c.height}" href="${url}"${profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION?' mask="url(#view-eyes-source-mask)"':''}/>`;
+  const sourceHead=profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION?`<g mask="url(#view-mouth-source-mask)">${base}</g>`:base;
+  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath>${secondary?`<image id="view-secondary-source" width="${c.width}" height="${c.height}" href="${url}"/>`:''}</defs>${secondary?.defs??''}<g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})">${secondary?.artwork??`<g clip-path="url(#source-head-clip)">${sourceHead}</g>`}<g clip-path="url(#source-head-clip)">${mouth}${eyes}${expressions}</g></g></g></g>`;
 }
 export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
   const c=registeredBodyView(profile);

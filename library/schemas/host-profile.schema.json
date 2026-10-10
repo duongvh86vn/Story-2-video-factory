@@ -1964,7 +1964,8 @@
               "type": "string",
               "enum": [
                 "registered-mouth-v1",
-                "registered-rest-mouth-v1"
+                "registered-rest-mouth-v1",
+                "registered-basic-mouth-v1"
               ]
             },
             "bodyEyes": {

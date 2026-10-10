@@ -6,6 +6,7 @@ import {isSupportingNativeHeadVersion,nativeHeadIdentityMatches} from '../animat
 import {SpearActionRefSchema} from '../director/source-spear-action-reference.js';
 import {basicBodyHasUnsupportedOptions,basicBodyCapabilityError} from '../animation/body-view-basic-capabilities.js';
 import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
+import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-view-basic-mouth-registration.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker','hold-tool','thrust-tool'] as const;
@@ -21,7 +22,7 @@ export const HostProfileSchema = z.object({
     artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
     bodyView:z.enum(['three-quarter-right','three-quarter-left','front','left','right','back-left','back-right']).optional(),
     bodyHeadBank:NativeHeadBankSchema.optional(),
-    bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1']).optional(),bodyEyes:z.enum(['registered-eyes-v1','registered-basic-eyes-v1']).optional(),bodyExpressions:z.literal('registered-expressions-v1').optional(),bodyMotion:z.literal('registered-locomotion-v1').optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.literal('registered-secondary-v1').optional(),bodyManipulation:z.literal('registered-manipulation-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
+    bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1','registered-basic-mouth-v1']).optional(),bodyEyes:z.enum(['registered-eyes-v1','registered-basic-eyes-v1']).optional(),bodyExpressions:z.literal('registered-expressions-v1').optional(),bodyMotion:z.literal('registered-locomotion-v1').optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.literal('registered-secondary-v1').optional(),bodyManipulation:z.literal('registered-manipulation-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
       if(basicBodyHasUnsupportedOptions(a))
         ctx.addIssue({code:'custom',message:basicBodyCapabilityError(a.bodyView,'detailed feature/action').message});
       if(a.supportingModel){
@@ -34,6 +35,7 @@ export const HostProfileSchema = z.object({
       if(a.bodyView&&a.artworkVersion!=='forest-body-view-1')ctx.addIssue({code:'custom',message:'bodyView requires the authored body candidate artwork version'});
       if(a.bodyHeadBank&&(a.artworkVersion!=='forest-body-view-1'||!nativeHeadIdentityMatches(a,a.bodyHeadBank.actor)||!a.bodyHeadBank.bodyViews.some(v=>v.view===a.bodyView)||a.bodySpeech||a.bodyEyes||a.bodyExpressions||a.bodySecondary))ctx.addIssue({code:'custom',message:'Head bank requires its actor/body source and independent cell capabilities; fixed-view face/hair overlays cannot be reused'});
       if(a.bodySpeech&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered mouth requires its authored actor and body view'});
+      if(a.bodySpeech===BASIC_BODY_SPEECH_SELECTION&&!isBasicMouthView(a.bodyView))ctx.addIssue({code:'custom',message:'Basic speech requires its own front/profile source; rear or detailed3/4 mouth cannot be inferred'});
       if(a.bodyEyes&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered eyes require their authored actor and body view'});
       if(a.bodyEyes===BASIC_BODY_EYES_SELECTION&&!isBasicEyeView(a.bodyView))ctx.addIssue({code:'custom',message:'Basic eyes require their own front/profile source; rear or detailed3/4 eyes cannot be inferred'});
       if(a.bodyExpressions&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant||a.bodyEyes!=='registered-eyes-v1'||a.bodySpeech!=='registered-rest-mouth-v1'))ctx.addIssue({code:'custom',message:'Registered expressions require native actor/view, registered eyes and resting speech'});
