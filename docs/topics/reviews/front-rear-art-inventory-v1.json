@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+      "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+      "width": 939,
+      "height": 1675,
+      "view": "front",
+      "visibleBounds": {
+        "x": 157,
+        "y": 32,
+        "width": 622,
+        "height": 1602
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1023048,
+      "opaquePixels": 1746
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+      "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+      "width": 1024,
+      "height": 1536,
+      "view": "front",
+      "visibleBounds": {
+        "x": 183,
+        "y": 23,
+        "width": 656,
+        "height": 1475
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1090934,
+      "opaquePixels": 0
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v1.png",
+      "sha256": "b9ce186ebbc567b28f0e33c1ebc54279daa3987e20edfe572c532d47045ecd96",
+      "width": 939,
+      "height": 1676,
+      "view": "back-three-quarter-left",
+      "visibleBounds": {
+        "x": 156,
+        "y": 42,
+        "width": 670,
+        "height": 1586
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1041698,
+      "opaquePixels": 2016
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+      "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+      "width": 910,
+      "height": 1729,
+      "view": "back-three-quarter-left",
+      "visibleBounds": {
+        "x": 170,
+        "y": 56,
+        "width": 582,
+        "height": 1614
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1050045,
+      "opaquePixels": 2227
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+      "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+      "width": 939,
+      "height": 1676,
+      "view": "back-three-quarter-right",
+      "visibleBounds": {
+        "x": 218,
+        "y": 23,
+        "width": 627,
+        "height": 1605
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1043921,
+      "opaquePixels": 2465
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v1.png",
+      "sha256": "ff59a0d9bba05f1542a2179be8bf912ac314d927e0a83c63c6297ff86deecb02",
+      "width": 910,
+      "height": 1728,
+      "view": "back-three-quarter-right",
+      "visibleBounds": {
+        "x": 176,
+        "y": 27,
+        "width": 650,
+        "height": 1651
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1006392,
+      "opaquePixels": 2171
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+      "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+      "width": 939,
+      "height": 1675,
+      "view": "back-three-quarter-left",
+      "visibleBounds": {
+        "x": 161,
+        "y": 41,
+        "width": 662,
+        "height": 1592
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1040428,
+      "opaquePixels": 3133
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+      "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+      "width": 910,
+      "height": 1728,
+      "view": "back-three-quarter-right",
+      "visibleBounds": {
+        "x": 174,
+        "y": 30,
+        "width": 659,
+        "height": 1653
+      },
+      "edgePixels": 0,
+      "transparentPixels": 1018803,
+      "opaquePixels": 2435
+    }
+  ],
+  "rawRepairs": [
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+      "scope": "raw RGBA bytes only; not geometry/landmarks/pose equivalence",
+      "sameCanvas": false,
+      "priorCanvas": {
+        "width": 939,
+        "height": 1676
+      },
+      "newCanvas": {
+        "width": 939,
+        "height": 1675
+      },
+      "changedPixels": null,
+      "changedPixelsBelowHalf": null
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+      "scope": "raw RGBA bytes only; not geometry/landmarks/pose equivalence",
+      "sameCanvas": true,
+      "priorCanvas": {
+        "width": 910,
+        "height": 1728
+      },
+      "newCanvas": {
+        "width": 910,
+        "height": 1728
+      },
+      "changedPixels": 526140,
+      "changedPixelsBelowHalf": 196079
+    }
+  ],
+  "builtInImageCalls": 8,
+  "staticVisionAdviceAttempts": 1,
+  "sourceBytesUnmodified": true,
+  "artApproved": false,
+  "registered": false,
+  "motionVerified": false,
+  "productionReady": false
+}

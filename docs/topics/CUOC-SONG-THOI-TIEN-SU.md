@@ -1,6 +1,6 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Cập nhật source0.90:** [Artwork profile phải và bảng đủ bảy hướng](RIGHT-PROFILE-ART-HANDOFF.md). Đã thêm5 PNG nguyên bản/metadata (Lila V1–V3, Karo V1–V2), prompt/source hashes/alpha và sửa có mục tiêu sole/mũi/cuff; không khẳng định sửa giữ nguyên pixel. Catalog/API phân biệt nguồn từng hướng, engineering registration và production acceptance, chặn nguồn stale/link và dùng MIME thật. 6 callback mới DECLARED/NOT RUN. Review Gemini9router hai lượt bị cắt, chỉ dùng các nhận xét đọc được và đối chiếu parent; không là art/pose/film PASS. Còn thiếu nguồn chính diện/hai góc lưng3/4 và registration/continuous turns/acting/video/full3input/voice/resume/final. productionReady=false, productionRig=null, availableBanks=[] và needs-source-prop-binding giữ nguyên. Chưa sẵn sàng sử dụng hoàn chỉnh. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.91:** [Nguồn chính diện và góc lưng Lila/Karo](FRONT-REAR-ART-HANDOFF.md). Thêm8 PNG nguyên byte/metadata:6 nguồn front/rear3/4 theo ảnh primary và2 sửa riêng hướng đầu. Catalog có14/14 vị trí nguồn theo hướng yêu cầu, **0 vị trí production**; chưa là bảy góc đo/rig/turn đã đạt. Review tester9router HTTP200/JSON đầy đủ; các claim đảo vai không khớp phần vai trần trên primary nên không sửa theo; hai đầu còn nhìn profile do parent phát hiện đã tạo V2, chưa review độc lập. Một callback catalog được cập nhật,6 callback tổng DECLARED/NOT RUN. Còn own registration/masks/yaw/continuous turns/acting/world/camera/ba input/voice/resume/final thực. productionReady=false, productionRig=null, availableBanks=[] và needs-source-prop-binding giữ nguyên. Chưa sẵn sàng sử dụng hoàn chỉnh. Các mốc bên dưới là lịch sử.
 
 Cập nhật source0.81: [vật chung và vật cầm riêng trong cùng cảnh](MIXED-OWNERSHIP-HANDOFF.md). Đã viết complete-run binding closure, union center channels và hand masks theo phase; chín callbacks mới chưa chạy. Combo tester đã trả static review; không có runtime/hình/chuyển động/video acceptance. Các mốc bên dưới là lịch sử.
 
@@ -663,19 +663,19 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-### Hiện hành0.90 — source chưa nghiệm thu sản phẩm
+### Hiện hành0.91 — source chưa nghiệm thu sản phẩm
 
 | Hạng mục | Source hiện có | Chứng cứ còn thiếu |
 |---|---|---|
 | Ba input + legacy SRT | Code script giữ lời, WAV giữ audio/clock, story→script; Studio/API/CLI.0.89 thêm lựa chọn dialogue có nhãn vai/giọng riêng, không tự hiểu nhãn trong narration | Chạy câu chuyện mới qua mỗi luồng tới MP4 có giọng/subtitle/QC, không dùng V1 làm chứng nhận |
-| Hai diễn viên đúng mẫu | Primary warm-skin khóa theo hash; bốn pair head/body 3/4 trái/phải và own speech/emotion/layers/follow candidates;0.90 thêm artwork profile phải có nguồn riêng, catalog bảy hướng. Yaw/rig mới chưa đo/đăng ký; không kế thừa tọa độ từ bản sửa ảnh | Identity, face/neck/hair seam, phối cảnh/tỷ lệ/màu, geometry và normal-speed video ở cả hai bố trí đối thoại |
+| Hai diễn viên đúng mẫu | Primary warm-skin khóa theo hash; bốn pair head/body 3/4 trái/phải và own speech/emotion/layers/follow candidates;0.90 thêm profile phải;0.91 thêm front/hai góc lưng3/4 và2 sửa hướng đầu.14/14 metadata nguồn theo hướng yêu cầu,0 production. Yaw/rig mới chưa đo/đăng ký; không kế thừa tọa độ từ bản sửa ảnh | Identity, face/neck/hair seam, phối cảnh/tỷ lệ/màu, geometry và normal-speed video ở cả hai bố trí đối thoại |
 | Diễn viên phụ | Nam đầu trọc không râu v2, nữ có tóc giữ v1, dùng asset trang phục Karo/Lila, ID/vai/thoại riêng | Face/view/pose/contact và video có nhiều người; chưa dùng mẫu quần chúng để chứng nhận principal rig |
 | Miệng/mắt | Bank3/4 own speech/eyes và bank5/6 own expressions, mouth erase/repair, rear layers/follow; source clock/speaker riêng. Old plate V1 held theo SHA; không mượn mặt/mask principal cho quần chúng | Chỉ người nói mở miệng, silence đúng, không double ink/râu/ghost, target/rendered eye projection, cut/seek và mask/subpixel seam |
 | Diễn xuất/chuyển động | Canonical original body/head clocks, gesture/gaze/expression/locomotion/seat/rear follow; manipulation/shaft/source-world/shared ownership/observations/projection/overlays có source candidates tới0.88.0.89 cue giữ đúng speaker gốc; chưa có production acceptance | Toàn chu kỳ khớp/chân trụ/weight/cloth/hair/props, cut/seek/role swap, cảm xúc và tương tác ở tốc độ thường; geometry/video mới chưa chạy |
 | Bối cảnh/màu | Reference/palette và nguồn draft hiện có; vector cũ bị loại | World day/sunset/night có chiều sâu, nguồn sáng/bóng/contact và màu tươi trong final, không nền nhợt/slideshow |
 | EN chính + VI/JA/KO/TTS ngoài-local | Adapter/config/source contract hiện có;0.89 explicit actor voice ID cùng provider/ngôn ngữ, thiếu vai dừng trước TTS; WAV không bị buộc đổi thành TTS | Giọng đúng ngôn ngữ/speaker, TTS/API lỗi/clock/fit, audio-subtitle-duration và final gate thực |
 | Resume/rebuild/locks | Source/hash/cache/repair và lock guards WIP | Sửa script/voice/actor/shot giữ hoặc invalidate đúng artifact; không xuất final từ source/clock cũ |
-| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory ghi theo exact source/commit ở RIGHT-PROFILE-ART-HANDOFF.md; source0.89 giữ handoff giọng riêng. Không dùng báo cáo cũ hoặc V1 để nghiệm thu0.90 | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
+| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory ghi theo exact source/commit ở FRONT-REAR-ART-HANDOFF.md; source0.89/0.90 giữ handoff riêng. Không dùng báo cáo cũ hoặc V1 để nghiệm thu0.91 | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
 | Production | productionReady=false, productionRig=null, availableBanks=[] | Chỉ mở sau khi model test có evidence đáp ứng toàn bộ mục11 và bộ chủ đề thực sự dùng lại cho câu chuyện mới |
 
 Các nguyên liệu/definition đơn lẻ không thay bộ sản phẩm hoàn chỉnh. Nội dung tập lấy từ input người dùng; việc chưa có một tập đầu được chọn không là lý do bó tool vào demo món ăn/máy móc hoặc dừng các phần source độc lập.

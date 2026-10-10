@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "scope": "single bounded static own-source raster advice; no motion/anatomy/rig/film acceptance",
+  "requestedModel": "tester",
+  "returnedModel": "gpt-6-luna",
+  "httpStatus": 200,
+  "elapsedMs": 10657,
+  "usage": {
+    "prompt_tokens": 15035,
+    "completion_tokens": 415,
+    "total_tokens": 15450
+  },
+  "finishReason": "stop",
+  "completeJSON": true,
+  "reply": "{\"issues\":[{\"image\":2,\"actor\":\"Lila\",\"severity\":\"moderate\",\"issue\":\"The front view changes Lila's single-shoulder dress construction: its jagged neckline rises to her left shoulder (image right), unlike the primary's exposed left shoulder and fabric over the right shoulder (image left).\",\"evidence\":\"Image 1 shows the covered shoulder on image left; image 2 shows the covered shoulder on image right.\"},{\"image\":4,\"actor\":\"Lila\",\"severity\":\"moderate\",\"issue\":\"The rear three-quarter-right view exposes a diagonal dress edge across the back/shoulder that conflicts with the exposed-back, single-shoulder construction shown in image 3.\",\"evidence\":\"Image 4 has a prominent fabric strap/edge crossing from the image-left back toward the image-right shoulder; image 3 shows the back mostly bare above the dress.\"},{\"image\":6,\"actor\":\"Karo\",\"severity\":\"moderate\",\"issue\":\"The front view reverses the tunic's one-shoulder construction relative to the primary.\",\"evidence\":\"Image 5 shows the tunic covering the image-left shoulder and leaving image-right shoulder bare; image 6 covers image-right shoulder and leaves image-left bare.\"},{\"image\":7,\"actor\":\"Karo\",\"severity\":\"moderate\",\"issue\":\"The shorts are drawn with an unusually deep central split and separated leg openings compared with the primary's short, compact shorts; this may undermine matching costume proportions.\",\"evidence\":\"Image 7 has a long, conspicuous crotch gap extending upward between the legs, while image 5 shows a short split beneath the waistband.\"}],\"unverified\":[\"Black matte obscures black limbs and extremities in the requested views; limb anatomy, contact, and continuity cannot be verified from these images.\",\"The requested view labels do not establish measured yaw; exact orientation and correspondence to a specific angle cannot be verified.\",\"Motion, rig suitability, production approval, and whether hidden shoulder-side construction is intentional cannot be assessed from static images.\"]}",
+  "parsed": {
+    "issues": [
+      {
+        "image": 2,
+        "actor": "Lila",
+        "severity": "moderate",
+        "issue": "The front view changes Lila's single-shoulder dress construction: its jagged neckline rises to her left shoulder (image right), unlike the primary's exposed left shoulder and fabric over the right shoulder (image left).",
+        "evidence": "Image 1 shows the covered shoulder on image left; image 2 shows the covered shoulder on image right."
+      },
+      {
+        "image": 4,
+        "actor": "Lila",
+        "severity": "moderate",
+        "issue": "The rear three-quarter-right view exposes a diagonal dress edge across the back/shoulder that conflicts with the exposed-back, single-shoulder construction shown in image 3.",
+        "evidence": "Image 4 has a prominent fabric strap/edge crossing from the image-left back toward the image-right shoulder; image 3 shows the back mostly bare above the dress."
+      },
+      {
+        "image": 6,
+        "actor": "Karo",
+        "severity": "moderate",
+        "issue": "The front view reverses the tunic's one-shoulder construction relative to the primary.",
+        "evidence": "Image 5 shows the tunic covering the image-left shoulder and leaving image-right shoulder bare; image 6 covers image-right shoulder and leaves image-left bare."
+      },
+      {
+        "image": 7,
+        "actor": "Karo",
+        "severity": "moderate",
+        "issue": "The shorts are drawn with an unusually deep central split and separated leg openings compared with the primary's short, compact shorts; this may undermine matching costume proportions.",
+        "evidence": "Image 7 has a long, conspicuous crotch gap extending upward between the legs, while image 5 shows a short split beneath the waistband."
+      }
+    ],
+    "unverified": [
+      "Black matte obscures black limbs and extremities in the requested views; limb anatomy, contact, and continuity cannot be verified from these images.",
+      "The requested view labels do not establish measured yaw; exact orientation and correspondence to a specific angle cannot be verified.",
+      "Motion, rig suitability, production approval, and whether hidden shoulder-side construction is intentional cannot be assessed from static images."
+    ]
+  },
+  "sources": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+      "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v1.png",
+      "sha256": "b9ce186ebbc567b28f0e33c1ebc54279daa3987e20edfe572c532d47045ecd96"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+      "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32"
+    },
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+      "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+      "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b"
+    },
+    {
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v1.png",
+      "sha256": "ff59a0d9bba05f1542a2179be8bf912ac314d927e0a83c63c6297ff86deecb02"
+    }
+  ],
+  "testsExecuted": false,
+  "artApproved": false,
+  "registered": false,
+  "motionVerified": false,
+  "productionReady": false,
+  "dispositions": [
+    {
+      "images": [
+        2,
+        6
+      ],
+      "issue": "Primary covered shoulder alleged on image-left; frontal outfit alleged reversed",
+      "action": "Unsupported as stated: own primary warm bare neck/shoulder triangle is visible on image-left. No automatic shoulder swap. Anatomical correspondence across actual view geometry still unmeasured.",
+      "approved": false
+    },
+    {
+      "images": [
+        4
+      ],
+      "issue": "Rear Lila shoulder/costume conflict",
+      "action": "Unproven from screen-side comparison across views. Preserve source, require own anatomical/occlusion/topology review; not an approval.",
+      "approved": false
+    },
+    {
+      "images": [
+        7
+      ],
+      "issue": "Karo rear-left shorts split/proportions",
+      "action": "Unmeasured proportion claim remains pending own source/cuff/crotch review; no unsupported body edit.",
+      "approved": false
+    },
+    {
+      "images": [
+        3,
+        8
+      ],
+      "issue": "Parent observed exposed eye/profile head against intended rear torso",
+      "action": "New own-source edit V2 requested for Lila rear-left and Karo rear-right to hide eyes and face into rear hair. Outputs not independently reviewed; do not claim exact preservation or measured yaw.",
+      "approved": false
+    }
+  ],
+  "finalRepairsIndependentlyReviewed": false
+}

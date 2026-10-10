@@ -1,0 +1,238 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.91-front-rear-art",
+  "precedingSourceSHA": "4f62759c3bb5d03415cc91485e8eae740811c1b6",
+  "scope": "Own-source art/source checks only; no identity/anatomy/rig/turn/motion/film/full-factory acceptance",
+  "implementation": [
+    "Six own-primary source front/rear-three-quarter PNGs plus two same-person rear-head repair PNGs; exact original byte copies and all prompts/reference roles/hashes/raw alpha/canvas inventory retained",
+    "Catalog now has14 requested-view source positions,0 production; original fixed3/4 registrations and all production/voice/renderer paths retained",
+    "Gallery displays candidate status/review notes; all source/yaw/approval limits explicit. Latest source is not accepted source",
+    "One existing catalog callback updated for all requested sources/latest rearV2 and deliberately incomplete inventory. Six callbacks total,0 new, all NOT RUN"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "6f1725",
+      "session": 72865,
+      "completionChunk": "25ef02",
+      "decisiveOutput": "Vite7.3.6;56 modules;built in612ms"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "376849",
+      "session": 6284,
+      "completionChunk": "c45d97",
+      "scope": "tsc -p tsconfig.tests.json; no callbacks"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "489ae4",
+      "scope": "definitions exported; no schema instances"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "7adca9",
+      "scope": "raw raster/header/hash/static JSON descriptions only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/front-rear-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "13536a",
+      "session": 98593,
+      "completionChunk": "daab9b",
+      "scope": "raw raster/alpha/reference/source/JSON inventory; no project runtime logic imports; Git text CRLF normalized"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "performed during source freeze"
+    }
+  ],
+  "artAdvice": {
+    "record": "docs/topics/reviews/front-rear-art-advice-v1.json",
+    "requestedModel": "tester",
+    "returnedModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 10657,
+    "totalTokens": 15450,
+    "completionChunk": "079f1c",
+    "completeJSON": true,
+    "attempts": 1,
+    "scope": "Visible static source-raster advice only; primary-shoulder claims contradicted visible primary. Rear shoulder/crotch correspondence remains pending. Parent identified rear-head exposed eyes and generated two V2 repairs; V2 not independently reviewed."
+  },
+  "rawInventory": {
+    "version": 1,
+    "sourceVersion": "forest-tribe-0.91-front-rear-art",
+    "precedingSourceSHA": "4f62759c3bb5d03415cc91485e8eae740811c1b6",
+    "scope": "raw source bytes/PNG headers/alpha histograms/source-reference hashes/JSON metadata only; no project runtime imports, catalog invocation, schema-instance validation or geometry",
+    "existingTrackedImages": 299,
+    "existingActualPNG": 136,
+    "existingActualJPEG": 163,
+    "existingJPEGNamedPNG": 101,
+    "allOriginalImageBytesUnchanged": true,
+    "originalImagesFingerprint": "bb51eb88fa826903b6e16cce56cbf41cefa5e55ab05e65c99081c15287227ed8",
+    "newImages": 8,
+    "combinedOwnedAndOriginalImages": 307,
+    "combinedActualPNG": 144,
+    "combinedActualJPEG": 163,
+    "originalHeadDefinitionsUnchanged": 18,
+    "originalHeadMetadataUnchanged": 27,
+    "unchangedProductionPaths": 203,
+    "productionSourceComparison": "Git source text with pre-existing CRLF normalized; raster/header hashes are raw bytes",
+    "existingCRLFOnly": [
+      "library/shots/explainer.ts",
+      "library/shots/scene-labels.ts"
+    ],
+    "originalSourceProductionGuardRetained": true,
+    "topicProductionEntryRetained": true,
+    "originalWAVSRTVoiceAndPipelineUnchanged": true,
+    "newSourceFiles": [
+      {
+        "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+        "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+        "width": 939,
+        "height": 1675,
+        "rawPixelSha256": "d68097cdedf74bbf911c075d2d5d22a12ce5a8e40bd5618731e5eccd48a125ba",
+        "opaquePixels": 1746,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+        "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+        "width": 1024,
+        "height": 1536,
+        "rawPixelSha256": "3fdc052a687527d08e013e2dd4dc3cee32a5ac66b5bffa0fbaca8e320e962474",
+        "opaquePixels": 0,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v1.png",
+        "sha256": "b9ce186ebbc567b28f0e33c1ebc54279daa3987e20edfe572c532d47045ecd96",
+        "width": 939,
+        "height": 1676,
+        "rawPixelSha256": "92af1ac4549733421f8fc63aa906f05e9720eefa638f11131d17e8f1a09fcf78",
+        "opaquePixels": 2016,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+        "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+        "width": 910,
+        "height": 1729,
+        "rawPixelSha256": "3ef95be3cce7ad7ef9d0cdae71c8a52901315ffb15e66514a8577d6df3d609fe",
+        "opaquePixels": 2227,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+        "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+        "width": 939,
+        "height": 1676,
+        "rawPixelSha256": "d074a5b9c968b7109294584f43cc3390b61bf6d54521f465fbd72544be34e16c",
+        "opaquePixels": 2465,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v1.png",
+        "sha256": "ff59a0d9bba05f1542a2179be8bf912ac314d927e0a83c63c6297ff86deecb02",
+        "width": 910,
+        "height": 1728,
+        "rawPixelSha256": "b2ca47b3f45f6dd4a02f6fae5b490122a4e86c6dec288361e8390a873f6d3d79",
+        "opaquePixels": 2171,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+        "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+        "width": 939,
+        "height": 1675,
+        "rawPixelSha256": "163d4a11afee193463f778d77319a171d12d431714773d3222b43662c9e3cb3e",
+        "opaquePixels": 3133,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      },
+      {
+        "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+        "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+        "width": 910,
+        "height": 1728,
+        "rawPixelSha256": "00d84001779c2d119b37464b301792263abd92eb50c42ad4fa91bbfda9a9339b",
+        "opaquePixels": 2435,
+        "approved": false,
+        "registered": false,
+        "productionReady": false
+      }
+    ],
+    "requiredRequestedSourceSlots": 14,
+    "presentRequestedSourceSlots": 14,
+    "missingRequestedSources": [],
+    "productionReadySlots": 0,
+    "manifestMappedCodeHashes": 146,
+    "manifestMappedCodeEntries": 363,
+    "availableBankFields": 10,
+    "newCallbacksDeclared": 0,
+    "updatedCallbacks": 1,
+    "totalCallbacksDeclared": 6,
+    "callbacksExecuted": 0,
+    "fixtureInvoked": false,
+    "geometryInvoked": false,
+    "compilerInvoked": false,
+    "browserOpened": false,
+    "serverStarted": false,
+    "rendererRun": false,
+    "audioGenerated": false,
+    "videoRendered": false,
+    "existingTestReport": {
+      "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+      "length": 18063,
+      "lastWriteTimeUTC": "2026-10-01T06:23:44.131Z",
+      "acceptsCurrentSource": false
+    },
+    "productionBinding": "needs-source-prop-binding",
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "approved": false,
+    "motionVerified": false,
+    "productionApproval": false,
+    "fullGoalComplete": false
+  },
+  "ownedPaths": 32,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/FRONT-REAR-ART-HANDOFF.md",
+  "newCallbacksDeclared": 0,
+  "updatedCallbacks": 1,
+  "totalCallbacksDeclared": 6,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 8,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "Own anatomical identity/pose/color/topology/opacity/occlusion/yaw review, per-view source landmarks/masks/rigs and speech/blink/emotions; new source position coverage is not measured seven-view acceptance",
+    "Continuous turns/soft limbs/foot contact/seat/partner gaze/hair/cloth/actions at normal speed and original clock; true vivid world/props/depth/crowd/director/camera integrated production",
+    "Actual arbitrary story/topic→faithful screenplay, exact script/dialogue, original WAV/legacy SRT; EN-primary/VI/JA/KO/external-local TTS, resume/locks/rebuild/review/repair and final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/QC. User model owns runtime testing. V1 report does not accept this source"
+  ]
+}

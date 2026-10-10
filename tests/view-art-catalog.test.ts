@@ -9,17 +9,25 @@ import {hash} from '../packages/core/utils.js';
 import {REQUIRED_BODY_VIEWS,ViewArtStudySchema,viewArtCoverage,viewArtInventory,viewArtImage} from '../packages/topics/view-art-workbench.js';
 import {temporary} from './support.js';
 
-test('seven requested native directions remain distinct and never count missing art as production ready',async()=>{
+test('all seven requested native directions have source candidates and never count those as production ready',async()=>{
   const inventory=await viewArtInventory(await findRepoRoot()),coverage=viewArtCoverage(inventory);
   assert.deepEqual(REQUIRED_BODY_VIEWS,['front','three-quarter-left','three-quarter-right','left','right','back-three-quarter-left','back-three-quarter-right']);
   assert.equal(coverage.requiredSlots,14);assert.equal(coverage.productionReadySlots,0);assert.equal(coverage.productionReady,false);
+  assert.equal(coverage.sourceCandidateSlots,14);assert.deepEqual(coverage.missingSources,[]);
   for(const actor of ['lila','karo']){
     const sources=coverage.actors.find(a=>a.actor===actor)!;
     assert.equal(sources.views.find(v=>v.view==='right')!.sourceCandidatePresent,true);
-    for(const view of ['front','back-three-quarter-left','back-three-quarter-right'])assert.equal(sources.views.find(v=>v.view===view)!.sourceCandidatePresent,false);
+    assert.ok(sources.views.every(v=>v.sourceCandidatePresent));
     assert.ok(sources.views.every(v=>!v.artApproved&&!v.registeredForProduction));
   }
   assert.equal(coverage.actors[0]!.views.find(v=>v.view==='right')!.file,'lila-right-v3.png');
+  assert.equal(coverage.actors[0]!.views.find(v=>v.view==='back-three-quarter-left')!.file,'lila-back-three-quarter-left-v2.png');
+  assert.equal(coverage.actors[1]!.views.find(v=>v.view==='back-three-quarter-right')!.file,'karo-back-three-quarter-right-v2.png');
+  // A partial catalog must still expose absent directions rather than filling
+  // them from the actor's primary image or another source view.
+  const partial=viewArtCoverage(inventory.filter(s=>s.view!=='front'));
+  assert.equal(partial.sourceCandidateSlots,12);
+  assert.deepEqual(partial.missingSources,[{actor:'lila',view:'front'},{actor:'karo',view:'front'}]);
   assert.deepEqual(coverage.availableBanks,[]);
 });
 
