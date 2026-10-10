@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.102-original-source-preview",
+  "precedingSourceSHA": "234fb989cf090b6f84963cc34e5105028114ebfc",
+  "scope": "original project source preview entry/exporter and production exclusion only; no runtime, art, anatomy, audio, motion, film or full-factory acceptance",
+  "implementation": [
+    "Separate diagnostic renderSourceCinematicPreview, complete original cloned authority/all source audit checks/exact unique shot; shared canonical cinematic renderer with private production-default entry. No caller preview bypass in ordinary renderCinematic.",
+    "Original actor/world/ownership/grip/release/physical/target/camera/clock checks remain. No fixture substitution, source retiming/rewriting/migration/target repair/pose correction or readiness changes.",
+    "Original-project exporter reads bounded raw snapshots, chosen voiced narration/optional absence, canonical host, existing speech activity and actual audio receipt when measured. Same-person source rig resources and original still raster environment bytes retained; no re-encoding/download/provider.",
+    "Exclusive UUID diagnostic folder outside input project, immutable source/scene/resource/activity/audio/Git/GSAP receipts and optimistic whole-authority end-of-read comparisons. No source project writes, audio inclusion, browser/server/renderer/media/final or DONE.",
+    "Durable diagnostic HTML scope/meta/root/visible label with separate scene validator; production security5 rejects preview bytes even when notes dropped. Normal CSS/script/CSP/timing/dimensions/assets/byte cap checks retained.",
+    "Nine callbacks DECLARED / NOT RUN; real positive project callback needs explicit user QA source and SKIP is not passing export evidence. Whole factory goal remains unverified."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "1277a7/session54657/completion0ef7cc",
+      "decisiveOutput": "TypeScript core and Studio + Vite67 modules, built in1.45s",
+      "scope": "source build only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "5bfd4c/session68736/completionb2a575",
+      "decisiveOutput": "tsc -p tsconfig.tests.json; no diagnostics",
+      "scope": "typecheck only; no callbacks/fixtures/validators/renderer executed"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "91602d",
+      "scope": "definition export only; generated definitions unchanged"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "68b61d",
+      "decisiveOutput": "references6/candidates12/headCandidates6/garmentCandidates2/rejected7/productionReadyfalse",
+      "scope": "explicitly allowed source/header/hash/static JSON inventory"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source102-static.mjs",
+      "exitCode": 0,
+      "handle": "561d02",
+      "decisiveOutput": "307 unchanged rasters;18head definitions/27metadata;184mapped code hashes/46scalar entries;9callbacks declared/0executed",
+      "scope": "raw file/header/hash/JSON/source AST only; no application module evaluation"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "561d02",
+      "scope": "source whitespace only"
+    }
+  ],
+  "supersededBuild": {
+    "handles": [
+      "2d738d/session90427/completion4fd0a9",
+      "c41c09/session83378/completionfa6970"
+    ],
+    "exitCode": 1,
+    "finding": "New entry-mode parameters collided with existing CSS scope identifiers in cinematic/security functions; renamed entryMode/safetyScope. Source passes shown above supersede this error, not runtime acceptance."
+  },
+  "rawRecord": "docs/topics/reviews/original-source-preview-static-record-v1.json",
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 21576,
+    "usage": {
+      "prompt_tokens": 11004,
+      "completion_tokens": 2076,
+      "total_tokens": 13080
+    },
+    "finishReason": "stop",
+    "reply": "{\"findings\":[{\"file\":\"diagnostic exporter\",\"quote\":\"for(const resource of resources.values())stage(resource.path,readReferenceHeadAsset(resource),'registered own rig resource');\",\"reason\":\"`resources` combines `referenceHeadAssets` and `referenceBodyAssets`, but every entry is read with the head-asset reader. If body resources require a distinct reader or representation, exporting a shot with body assets fails or stages incorrect bytes; the later rig freshness check repeats the same reader and cannot catch the mismatch.\",\"correction\":\"Use the canonical reader for each resource type (or a shared reader that explicitly supports both), and verify staged bytes against the canonical resource receipt.\"}],\"missingContext\":[\"The implementation/contracts of `referenceHeadAssets`, `referenceBodyAssets`, and `readReferenceHeadAsset`; these are needed to confirm how body resources are read.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshotChars": 36054,
+    "snapshotSHA256": "39bb09008d9805ce3e5f1115109d0264bd1cdf630694dedc219b18c087d42031",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "scope": "bounded source-only advice; no runtime/art/motion/factory acceptance",
+    "parentAssessment": "Conditional body-reader finding lacked included reader context. Verified packages/animation/forest-head-art.ts readReferenceHeadAsset supports raw file/SHA for general own head/body resources and registered native head metadata; existing packages/scenes/index.ts stageAssets and scripts/native-seat-tracer.ts use it for combined head/body resources. No confirmed reader defect and no speculative reader split introduced. Actual source review snapshot precedes final environment receipt and positive real-project callback edits; reviewer does not accept final source."
+  },
+  "userQA": {
+    "commandsDocument": "docs/topics/ORIGINAL-SOURCE-PREVIEW-HANDOFF.md",
+    "test": "tests/original-source-preview.test.ts",
+    "callbacksDeclared": 9,
+    "callbacksExecuted": 0,
+    "exporterExecuted": false,
+    "positiveOriginalProjectExport": "NOT RUN",
+    "server": "NOT RUN",
+    "browser": "NOT RUN",
+    "renderer": "NOT RUN",
+    "audio": "NOT RUN",
+    "video": "NOT RUN",
+    "motionArt": "NOT RUN",
+    "factoryThreeInputs": "NOT RUN"
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "canPublish": false,
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "runtime source/scene/assets/body/grip/clock/camera/seek evidence on a real user story and exact SHA",
+    "faithful warm-skin Lila/Karo and vivid scenery; continuous own turns/views, tools/seat/handoff/other body capabilities, anatomy/art/motion quality",
+    "arbitrary story/topic -> faithful screenplay; exact script/dialogue and original WAV (+legacy SRT) -> voices/narration/scenes/review/repair/final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/QC",
+    "EN primary/VI/JA/KO and external/local TTS; missing/failed voice/audio fit must never final/DONE",
+    "resume/rebuild/approved locks/content/voice/actor invalidation and current source release receipts"
+  ]
+}

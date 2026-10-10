@@ -13,7 +13,10 @@ import type {ViewActingClock} from '../../packages/animation/view-acting-clock.j
 import {viewSourceGestureDefinition} from '../../packages/animation/view-source-gesture.js';
 import { rigMetrics } from '../../packages/animation/rig.js';
 import { ANIMATION_VERSION } from '../../packages/animation/schemas.js';
-import { validateCinematicShot } from '../../packages/director/index.js';
+import { validateCinematicShot,validateSourceCinematicCandidate } from '../../packages/director/index.js';
+import {inspectSourceProductionCandidate,snapshotSourceProductionCandidate,type SourceProductionAuditInput} from '../../packages/director/source-production-audit.js';
+import {markSourcePreview,SOURCE_PREVIEW_SCOPE} from '../../packages/scenes/source-preview-scope.js';
+import {ActivitySchema} from '../../packages/voice/schemas.js';
 import { cinematicModel, cinematicRelations } from './cinematic-models.js';
 import { CAMERA_VIEWPORT, cameraMatrixAt, cameraTimeline, cameraModelLabel, cameraEnvironmentBounds, validateCamera } from '../../packages/director/camera.js';
 import { artLayers, customModelArt, customModelForegroundArt, customModelMotionOrigin, MODEL_FOREGROUND_VERSION } from '../../packages/director/art-direction.js';
@@ -48,11 +51,14 @@ import {compileSourceOwnership} from '../../packages/director/ownership-compile.
 import {ownershipGlyph} from '../../packages/director/ownership-reference.js';
 import {renderOwnershipLayer,suppressOwnershipCopies,ownershipRelationFrames} from './ownership-layer.js';
 
-function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,board?:Storyboard):{
+function renderRigCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activity:SpeechActivity,config:FactoryConfig,background?:string,narration?:Narration,board?:Storyboard,entryMode:'production'|'source-preview'='production'):{
   files:SceneFiles;geometry:HostGeometry;report:ReturnType<typeof performanceScene>['compiled']['report'] & {camera:ReturnType<typeof validateCamera>;actors:Array<{actorId:string;profileHash:string;rigHash:string;report:ReturnType<typeof compilePerformance>['report']}>;modelForegroundVersion?:string;foregroundModels?:Array<{partId:string;actorId?:string;propId?:string;ownershipSourceId?:string}>;seatSupportVersion?:string;seatSupports?:ReturnType<typeof sceneSeats>;boundModelMotionVersion?:string;boundModels?:Record<string,unknown>[];sourceWorld?:Record<string,unknown>;sourceOwnership?:Record<string,unknown>;emittedSpearActions?:ReturnType<typeof inspectEmittedSpearActions>;projectedRelations?:ReturnType<typeof cinematicRelations>['projectedReports'];projectedOverlays?:Array<ReturnType<typeof projectedModelOverlayTimeline>['report']>};
 } {
   ({profile,rig}=shotPerformer(shot,profile,rig));
-  validateCinematicShot(shot,profile,config,board,narration);
+  if(entryMode==='source-preview'){
+    if(!board||!narration)throw new Error('needs-source-preview-context: complete original storyboard and narration required');
+    validateSourceCinematicCandidate(shot,profile,config,board,narration);
+  }else validateCinematicShot(shot,profile,config,board,narration);
   const c=shot.cinematic!,p=c.performance,v=shot.visualization!,{width,height}=p.stage;
   const sceneText=sceneLabels(config.project.language);
   const art=c.artDirection,palette=art?.palette??{background:'#F3DDAA',surface:'#FFF3DB',ink:'#201A15',accent:'#F4CD68'};
@@ -291,4 +297,25 @@ export function renderCinematic(shot:Shot,profile:HostProfile,rig:HostRig,activi
     return renderSpriteScene(shot,profile,config,motions,background,narration,activity,speech);
   }
   return renderRigCinematic(shot,profile,rig,activity,config,background,narration,board);
+}
+
+/** Separate diagnostic entry. There is no opt-out flag on renderCinematic and
+ * no promotion of a candidate scene into production, even after source checks. */
+export function renderSourceCinematicPreview(input:SourceProductionAuditInput,shotId:string,activityInput:SpeechActivity,environment?:{assetId:string;path:string;sha256:string}){
+  const snapshot=snapshotSourceProductionCandidate(input),{board,narration,profile,rig,config}=snapshot;
+  const audit=inspectSourceProductionCandidate(snapshot);
+  if(!audit.sourceChecksPassed)throw new Error(`needs-source-preview-context: complete original source audit failed: ${audit.checks.filter(c=>c.status!=='passed').map(c=>`${c.shotId??'story'}:${c.id}:${c.message??c.status}`).join('; ')}`);
+  const matches=board.shots.filter(shot=>shot.id===shotId);
+  if(matches.length!==1)throw new Error('needs-source-preview-context: shot must be an exact unique member of the complete storyboard');
+  const shot=matches[0]!;
+  if(!shot.cinematic||shot.cinematic.spriteStage)throw new Error('needs-source-preview-context: only canonical cinematic rig actors are supported');
+  if(Boolean(shot.cinematic.environmentAssetId)!==Boolean(environment)||environment&&(environment.assetId!==shot.cinematic.environmentAssetId||!/^[a-f0-9]{64}$/.test(environment.sha256)||!['.png','.jpg','.jpeg','.webp'].some(extension=>environment.path==='assets/source/'+environment.sha256+extension)))throw new Error('needs-source-preview-context: exact original environment binding required');
+  const activity=ActivitySchema.parse(structuredClone(activityInput));validateSpeechActivityTrack(activity);
+  if(activity.intervals.some(c=>c.endMs>narration.durationMs))throw new Error('needs-source-preview-context: activity extends beyond the original narration clock');
+  const result=renderRigCinematic(shot,profile,rig,activity,config,environment?.path,narration,board,'source-preview');
+  return {...result,files:markSourcePreview(result.files,shot.id),preview:{version:SOURCE_PREVIEW_SCOPE,shotId:shot.id,startMs:shot.startMs,endMs:shot.endMs,
+    auditFingerprint:audit.fingerprint,binding:audit.binding,activityHash:hash(activity),activityMethod:activity.method,environment:environment??null,
+    audioIncluded:false as const,audioVerified:false as const,phonemeLipSync:false as const,
+    productionBinding:'needs-source-prop-binding' as const,canPublish:false as const,approved:false as const,productionReady:false as const,
+    productionRig:null,availableBanks:[] as [],motionVerified:false as const,productionApproval:false as const}};
 }

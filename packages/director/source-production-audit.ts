@@ -35,7 +35,7 @@ export interface SourceProductionAudit {
 /** Read and clone before checking. Original scripts, cues, poses, artwork and
  * caller records are never edited, retimed, upgraded or approved here. Schema
  * failures remain failures, rather than a partial "passed" diagnostic. */
-function sourceSnapshot(input:SourceProductionAuditInput):SourceProductionAuditInput{
+export function snapshotSourceProductionCandidate(input:SourceProductionAuditInput):SourceProductionAuditInput{
   const copy=structuredClone(input);
   return {board:StoryboardSchema.parse(copy.board),narration:NarrationSchema.parse(copy.narration),beats:z.array(BeatSchema).parse(copy.beats),
     characters:CharacterBibleSchema.parse(copy.characters),profile:HostProfileSchema.parse(copy.profile),rig:HostRigSchema.parse(copy.rig),config:ConfigSchema.parse(copy.config)};
@@ -45,7 +45,7 @@ function sourceSnapshot(input:SourceProductionAuditInput):SourceProductionAuditI
  * a human/test runtime requests diagnostics. It does not run providers, render
  * scenes/media, save artifacts, issue approval or substitute for final QC. */
 export function inspectSourceProductionCandidate(input:SourceProductionAuditInput):SourceProductionAudit{
-  const {board,narration,beats,characters,profile,rig,config}=sourceSnapshot(input);
+  const {board,narration,beats,characters,profile,rig,config}=snapshotSourceProductionCandidate(input);
   if(!board.shots.some(hasOriginalSource))
     throw new Error('needs-source-prop-binding: source audit requires an explicit original world, ownership or manipulation');
   if(config.content.mode!=='narrated-explainer'||config.presentation.mode!=='story-cinematic'||config.presentation.character_mode!=='actors'||(config.presentation.actor_renderer??'rig')!=='rig')

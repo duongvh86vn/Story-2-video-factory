@@ -16,6 +16,7 @@
     "animation:preview": "tsx scripts/animation-preview.ts",
     "animation:serve": "tsx scripts/animation-player.ts",
     "cinematic:preview": "tsx scripts/cinematic-preview.ts",
+    "source:preview": "tsx scripts/source-preview.ts",
     "test:render": "tsx scripts/acceptance-render.ts",
     "tracer:native-seat": "tsx scripts/native-seat-tracer.ts",
     "test:cinematic-inputs": "tsx scripts/acceptance-v22.ts",

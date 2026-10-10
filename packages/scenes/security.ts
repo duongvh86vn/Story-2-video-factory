@@ -1,10 +1,11 @@
 import ts from 'typescript';
 import type { SceneFiles, Shot } from '../core/schemas.js';
 import { SceneFilesSchema } from '../core/schemas.js';
+import {SOURCE_PREVIEW_SCOPE,SOURCE_PREVIEW_META,SOURCE_PREVIEW_LABEL} from './source-preview-scope.js';
 
 export const SCENE_CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self'; font-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'";
 export const SCENE_FILENAMES = ['index.html','style.css','scene.js'] as const;
-export const SCENE_SECURITY_VERSION = 4;
+export const SCENE_SECURITY_VERSION = 5;
 const animationKeys = new Set(['duration','delay','ease','stagger','opacity','autoAlpha','x','y','xPercent','yPercent','scale','scaleX','scaleY','rotation','rotationX','rotationY','transformOrigin','svgOrigin','width','height','visibility','strokeDashoffset','strokeDasharray','backgroundColor','color','borderColor','borderRadius','zIndex','immediateRender','overwrite','repeat','yoyo','paused','each','amount','from','grid']);
 const tags = new Set(['html','head','meta','title','link','body','div','span','p','h1','h2','h3','h4','section','article','header','footer','main','blockquote','strong','em','b','i','br','ul','ol','li','img','video','source','svg','g','path','circle','ellipse','rect','line','polyline','polygon','text','tspan','defs','lineargradient','radialgradient','stop','clippath','mask','image','use','filter','fecolormatrix','script']);
 
@@ -106,6 +107,14 @@ function validateCss(css: string): string[] {
   return errors;
 }
 export function validateSceneFiles(input: SceneFiles, shot: Shot, maxBytes=500000, allowedAssets: readonly string[]=[],expectedSize?:{width:number;height:number}): string[] {
+  return inspectSceneFiles(input,shot,maxBytes,allowedAssets,expectedSize,'production');
+}
+/** Diagnostic-only validation. No caller-controlled bypass exists on the
+ * production entry. Reloaded preview bytes retain their separate HTML scope. */
+export function validateSourcePreviewFiles(input: SceneFiles, shot: Shot, maxBytes=500000, allowedAssets: readonly string[]=[],expectedSize?:{width:number;height:number}): string[] {
+  return inspectSceneFiles(input,shot,maxBytes,allowedAssets,expectedSize,'source-preview');
+}
+function inspectSceneFiles(input:SceneFiles,shot:Shot,maxBytes:number,allowedAssets:readonly string[],expectedSize:{width:number;height:number}|undefined,safetyScope:'production'|'source-preview'):string[]{
   const parsed=SceneFilesSchema.safeParse(input); if (!parsed.success) return parsed.error.issues.map(issue=>`scene-files: ${issue.path.join('.')}: ${issue.message}`);
   const errors:string[]=[], files=new Map<string,string>();
   for (const file of input.files) {
@@ -117,8 +126,9 @@ export function validateSceneFiles(input: SceneFiles, shot: Shot, maxBytes=50000
   if (input.files.reduce((size,file)=>size+Buffer.byteLength(file.content),0)>maxBytes) errors.push('Scene exceeds max_scene_bytes');
   for (const name of SCENE_FILENAMES) if (!files.has(name)) errors.push(`Missing ${name}`);
   const html=files.get('index.html')??'';
+  if(safetyScope==='production'&&(/\bdata-source-preview(?:-label)?\s*=/i.test(html)||new RegExp(`name\\s*=\\s*["']${SOURCE_PREVIEW_META}["']`,'i').test(html)||input.notes.includes(SOURCE_PREVIEW_SCOPE)))errors.push('Diagnostic source preview cannot enter production');
   const allowed=new Set(['style.css','scene.js','vendor/gsap.min.js',...allowedAssets]);
-  let roots=0; const scripts:string[]=[];
+  let roots=0,previewRoots=0,previewMetas=0,previewLabels=0; const scripts:string[]=[];
   if (/<!--|<!ENTITY|<\?/.test(html)) errors.push('HTML comments, XML declarations and entities are forbidden');
   for (const match of html.matchAll(/<([^>]*)>/g)) {
     const raw=match[1]!;
@@ -149,10 +159,13 @@ export function validateSceneFiles(input: SceneFiles, shot: Shot, maxBytes=50000
     if (attributes.has('data-composition-src')) errors.push('A generated shot cannot load additional compositions');
     if (attributes.has('data-composition-id')) {
       roots++;if (attributes.get('data-composition-id')!==shot.id) errors.push('Composition ID must equal shot ID');
+      if(attributes.get('data-source-preview')===SOURCE_PREVIEW_SCOPE)previewRoots++;
       if(Number(attributes.get('data-duration'))!==(shot.endMs-shot.startMs)/1000 || Number(attributes.get('data-start')??'0')!==0) errors.push('Shot composition timing must match the canonical local interval');
       const width=Number(attributes.get('data-width')),height=Number(attributes.get('data-height'));
       if(!(width>0&&height>0)||(expectedSize&&(width!==expectedSize.width||height!==expectedSize.height))) errors.push('Shot composition dimensions do not match the render profile');
     }
+    if(tag==='meta'&&attributes.get('name')===SOURCE_PREVIEW_META&&attributes.get('content')===SOURCE_PREVIEW_SCOPE)previewMetas++;
+    if(!raw.startsWith('/')&&attributes.get('data-source-preview-label')===SOURCE_PREVIEW_SCOPE&&attributes.get('class')==='source-preview-label')previewLabels++;
     if (tag==='meta' && attributes.has('http-equiv') && attributes.get('http-equiv')!.toLowerCase()!=='content-security-policy') errors.push('Meta refresh/headers are forbidden');
     if (tag==='link' && attributes.get('rel')!=='stylesheet') errors.push('Only local stylesheet links are permitted');
   }
@@ -161,6 +174,7 @@ export function validateSceneFiles(input: SceneFiles, shot: Shot, maxBytes=50000
     if (inline && !/^window\.__timelines\s*=\s*window\.__timelines\s*\|\|\s*\{\};?$/.test(inline)) errors.push('Inline authored JS is forbidden; use scene.js');
   }
   if (roots!==1) errors.push('Exactly one shot composition root is required');
+  if(safetyScope==='source-preview'&&(previewRoots!==1||previewMetas!==1||previewLabels!==1||!html.includes(SOURCE_PREVIEW_LABEL)))errors.push('Source preview requires its exact HTML scope and visible unapproved/no-audio label');
   if (scripts.join('|')!=='vendor/gsap.min.js|scene.js') errors.push('Scripts must load GSAP then scene.js exactly once');
   const css=files.get('style.css')??'',scope=`[data-composition-id="${shot.id}"]`;
   for(const rule of css.replace(/\/\*[\s\S]*?\*\//g,'').matchAll(/([^{}]+)\{([^{}]*)\}/g)) for(const selector of rule[1]!.split(',').map(value=>value.trim())) {
