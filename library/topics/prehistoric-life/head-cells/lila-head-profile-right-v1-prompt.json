@@ -1,0 +1,20 @@
+{
+  "version": "native-head-cell-prompt-1",
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Edit the attached original Lira character reference into ONE faithful animation asset: her complete head, all hair, and a short neck, looking toward screen RIGHT in a natural side profile. The attached original is the sole identity and drawing-style authority. Preserve her young, friendly feminine appearance, softly rounded cheek and chin, tiny curved nose, small black oval eye, warm saturated orange-peach skin, and gentle happy closed smile. Match the original rich dark-brown hand-painted hair, irregular bold black ink contours, warm shading, asymmetric tousled crown wisps, and long loose ragged low gathered ponytail with its simple tan tie. Keep the hair silhouette proportionate to her face, following the reference, not an exaggerated star-shaped or anime crown. Adapt the original face carefully for the profile: one visible eye, believable facial alignment, soft jaw, no squared chin, no protruding masculine jaw, no blush circles. Preserve the original painted texture and color richness; do not simplify into a smooth vector drawing. Include every strand and the entire long ponytail, even below the neck. Center this single isolated head asset with at least 15 percent empty transparent margin on every side. Actual transparent background, no checkerboard pixels, no beige or white field, no shadow. No torso, clothes, arms, props, leaves, labels, text, panels, expression grid, or other characters. This is a source drawing candidate for review, not an approved rig.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-c3ce0803-0df7-4705-a5a6-7e80f62325b9.png",
+  "requestedYawDeg": 90,
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

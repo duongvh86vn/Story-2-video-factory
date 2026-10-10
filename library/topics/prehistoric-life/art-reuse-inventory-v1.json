@@ -1,0 +1,416 @@
+{
+  "version": "actor-art-reuse-snapshot-1",
+  "sourceVersion": "forest-tribe-0.112-art-reuse",
+  "scope": "Raw filesystem/hash snapshot of Git-tracked and explicitly owned current images only; not the unexecuted CLI output",
+  "actors": [
+    {
+      "actor": "lila",
+      "files": 31,
+      "uniqueImages": 31,
+      "duplicates": [],
+      "entries": [
+        {
+          "file": "docs/topics/assets/reference-lila-full.png",
+          "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+          "bytes": 342896,
+          "kind": "primary-reference",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v1.png",
+          "sha256": "b9ce186ebbc567b28f0e33c1ebc54279daa3987e20edfe572c532d47045ecd96",
+          "bytes": 745393,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+          "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+          "bytes": 749193,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+          "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+          "bytes": 768159,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+          "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+          "bytes": 769993,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-left-v1.png",
+          "sha256": "6716ca8ffca0fe0f2862b7f41fb3878a6bcf03e458d5cc028e2c4da70a75104e",
+          "bytes": 666978,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+          "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+          "bytes": 516273,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-right-v1.png",
+          "sha256": "352c678865b95353df20d76824ffe929d9a840fab5060e3c4634bbde19afcb15",
+          "bytes": 1123440,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-right-v2.png",
+          "sha256": "5047990e9e856cdedf7b1a09ff6f0827756d181ed6027312f7a6bb1d4f47eaed",
+          "bytes": 1089136,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+          "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+          "bytes": 1106561,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v1.png",
+          "sha256": "935715ed6c3cab5112af6b63311f8d9b38b9db2add9de6f9a5a40d9845d4e04a",
+          "bytes": 1038086,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-left-v2.png",
+          "sha256": "ef90f6783d89a8e554c12605065a218faf4e0f6aae4411ae00cccf6825b686bf",
+          "bytes": 960118,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v1.png",
+          "sha256": "517f5db63095e6942a04ee14ac1c4e60f6dbe31cf11cb9eb30cca015a032acb9",
+          "bytes": 731186,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png",
+          "sha256": "c11b0aeddf06e42d0e8363df9167c87fc4a94262606565a0c1bee55c950e43a9",
+          "bytes": 550007,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-front-v1.png",
+          "sha256": "9fe7c077165da2483af272f0ec70a9e01fb3e467203e46ee8019af23a104e552",
+          "bytes": 1363101,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-left-dialogue-v1.png",
+          "sha256": "0b95893960a2910fa0331db66431bfb828681d3a1b6ce03d9ba901e7d9e2b3a6",
+          "bytes": 1073582,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-near-right-v1.png",
+          "sha256": "299a47ecbb78536f314884159c7a3c2736d8b166715f74b20d41412c7d0e9c57",
+          "bytes": 1287355,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-profile-right-v1.png",
+          "sha256": "20e357ad55a467d5ced161c890892b11457d23c3856b1f802b8312557d8da764",
+          "bytes": 749389,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v1.png",
+          "sha256": "a98424e76e08daa67561d9ccc8fa8a2685c3dd3b1e66c4d35e9b5105b7fc5986",
+          "bytes": 1084116,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/lila-head-source-angle-v2.png",
+          "sha256": "05b555d23110f2837888d49647038d779fd6e398c9dd31af2853dbd5479eb298",
+          "bytes": 1001635,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v1-matte-v1.png",
+          "sha256": "6c59a372ddd717d62a17f53f585c55e88219925d31fde05768a9329612575fca",
+          "bytes": 1144149,
+          "kind": "head-source-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v1.jpg",
+          "sha256": "5c864b2612688c6525c58b2c94b3357282756672d7c2fce842cc71b1b3b48278",
+          "bytes": 581688,
+          "kind": "head-source-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v2-matte-v1.png",
+          "sha256": "96778c5fba61bf6d3e9b5a3ffbebe9968796c600f98231c1c208497605b02653",
+          "bytes": 689553,
+          "kind": "head-source-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v2.jpg",
+          "sha256": "f539cf35c99383917d6e96ac5612b78c508c2a70996f95d913181e8a97f817c7",
+          "bytes": 370848,
+          "kind": "head-source-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/lila-jump-v3.png",
+          "sha256": "ec1299ee1f95f9c79b454d838456eb221c8b5fb0b6fa4c099556809bb5216181",
+          "bytes": 1301541,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/lila-point-v3.png",
+          "sha256": "21f6b2ea312e9a6e52053ccbd61d815e07fa809920366997a3baca5ae04e1cce",
+          "bytes": 1303933,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/lila-poses-v1.jpg",
+          "sha256": "b1b3f9509b16009cb8e79775846729907187a5923717feed79134cae70ef792f",
+          "bytes": 516277,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/lila-run-left-v3.png",
+          "sha256": "1bdacad856a00c70787f9b7cb1b44189fa8a0ee815c3bb151629fdb16e2529f4",
+          "bytes": 1346772,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/lila-spear-lunge-left-v2.jpg",
+          "sha256": "09f2410e5c88920252d5787e2d414fe145b58e923d8d20b6212eba195327b95e",
+          "bytes": 479283,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/lila-spear-lunge-left-v3.png",
+          "sha256": "227a0f546f47281d936a0656351cbb585881116dd3971f2f8282faf95d192af7",
+          "bytes": 1356597,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/lila-think-v3.png",
+          "sha256": "c987d95646870e83dadb029dc3927dcb840ef21b4835d69df02afdb4c49ed0e6",
+          "bytes": 1242102,
+          "kind": "pose-studies",
+          "productionReady": false
+        }
+      ]
+    },
+    {
+      "actor": "karo",
+      "files": 25,
+      "uniqueImages": 25,
+      "duplicates": [],
+      "entries": [
+        {
+          "file": "docs/topics/assets/reference-karo-full.png",
+          "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+          "bytes": 265656,
+          "kind": "primary-reference",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+          "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+          "bytes": 675340,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v1.png",
+          "sha256": "ff59a0d9bba05f1542a2179be8bf912ac314d927e0a83c63c6297ff86deecb02",
+          "bytes": 734467,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+          "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+          "bytes": 674762,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+          "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+          "bytes": 1108862,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+          "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+          "bytes": 559918,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-left-tile-v1.png",
+          "sha256": "8bebcdd782963731ee3c3ae6c7a594ca864db649286028b0428d41c8a1c8cc2f",
+          "bytes": 1375742,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-rest-mouth-right-tile-v1.png",
+          "sha256": "4eb6bb39b353bee9938ed0f6f41b4a16390143e5bb7ba6e628afa660beb79511",
+          "bytes": 1338765,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-right-v1.png",
+          "sha256": "816dfed34395f4408cf397e69a3001ebbbd884525e15e61e7a2bb3c80589d094",
+          "bytes": 608752,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+          "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+          "bytes": 609628,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-left-v1.png",
+          "sha256": "bfcffe1fac13281de68ca11910407bb22fde02f8f5f5d867054713399166fdf4",
+          "bytes": 699176,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/body-views/karo-three-quarter-right-v1.png",
+          "sha256": "eefa90341b6a39138b163c173b3d6072b56c4bed4015bd431345691e8088e182",
+          "bytes": 622556,
+          "kind": "body-views",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/karo-head-left-dialogue-v1.png",
+          "sha256": "2d0adfba965b08425d8c0312d674a997f8a7fa60b90d1532b4f62b58a0ac7410",
+          "bytes": 1041361,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v1.png",
+          "sha256": "7aaaf2ddc6c1019b5b8428cf50f1bd0255f6a6cbfaf561c510bbc0006a22eb6d",
+          "bytes": 1090886,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-cells/karo-head-source-angle-v2.png",
+          "sha256": "d4b417a194098670cc20beab4ef8a8488094fcb32ac29dd1725e933d90e17a23",
+          "bytes": 1073012,
+          "kind": "head-cells",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-left-dialogue-v1.png",
+          "sha256": "1f84f61a4bf5e69c45903626df91517091013f16aa3bbc5bec52aa14609227b2",
+          "bytes": 978163,
+          "kind": "head-face-plates",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-left-dialogue-v2.png",
+          "sha256": "1d439730677e66f9017f2763768470ffa61125f597bf1b496804406ae94b4b95",
+          "bytes": 980515,
+          "kind": "head-face-plates",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/head-face-plates/karo-head-rest-source-angle-v1.png",
+          "sha256": "4df2e11ca43fb18bb5ff64b93222d1fe92da302d26509327afe647a6817173eb",
+          "bytes": 1077340,
+          "kind": "head-face-plates",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/karo-jump-v3.png",
+          "sha256": "2c57213eeb937a6f85dfe4d1ae373cc6413796443706506bb4d287283d45a51b",
+          "bytes": 1272099,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/karo-point-v3.png",
+          "sha256": "e18198b377d1f1b095ed00605b0f88538003ca7c6bcedcf6c08cea8c836f4b70",
+          "bytes": 1233347,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/karo-poses-v1.jpg",
+          "sha256": "5abb61c73922d63ff583141659e39f34988b79e55eacb56db129a77ef52297d3",
+          "bytes": 519598,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/karo-run-left-v3.png",
+          "sha256": "026e353b9364351f31315eec8ef338c73dfb7f0b0085187927d4fa5380dd4037",
+          "bytes": 1285984,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/karo-spear-lunge-left-v2.jpg",
+          "sha256": "2f6deea2bc7366f420e82ef87ad304d3ab9b5f34a07da5e13a2c7a46d6c88acc",
+          "bytes": 450218,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/karo-spear-lunge-left-v3.png",
+          "sha256": "e17a90deb6092f641aa37db1b80720c5dd1567b41b9b7a9b26e7a871f0f898c0",
+          "bytes": 1314064,
+          "kind": "pose-studies",
+          "productionReady": false
+        },
+        {
+          "file": "library/topics/prehistoric-life/pose-studies/karo-think-v3.png",
+          "sha256": "2e4494c3a277fdcf2831b4af9c4893f8db14654f14a897072090e8018c2ef072",
+          "bytes": 1229586,
+          "kind": "pose-studies",
+          "productionReady": false
+        }
+      ]
+    }
+  ],
+  "productionReady": false
+}

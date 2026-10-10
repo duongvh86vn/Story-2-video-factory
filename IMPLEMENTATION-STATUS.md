@@ -1,5 +1,7 @@
 # Trạng thái triển khai V2.2
 
+**Cập nhật source0.112:** [Tái sử dụng asset](docs/topics/ART-REUSE.md). Hai tool đầu/pose mặc định chỉ đọc kho local; đổi câu chuyện, action hoặc vN không tự gọi ảnh. Tạo mới cần yêu cầu rõ và lý do phần thiếu. Một candidate đầu Lira built-in đã lưu nguyên PNG/prompt; Gemini2 giữ riêng vì lệch identity. Chưa duyệt rig/motion hoặc toàn story/script/WAV→final/QC; runtime do model test thực hiện.0.111 trở xuống là lịch sử.
+
 **Cập nhật source0.111:** [Nhập head-cell từ Gemini/matte](docs/topics/GEMINI-HEAD-CELL-INTAKE.md). Prompt2 giữ provider/receipt/hash thật, kiểm RGB và mask alpha, có CLI nhập candidate; nguồn built-in cũ giữ nguyên. Chưa chạy import hoặc sáu test mới, chưa đăng ký/duyệt ảnh Lira đang giữ lại. Art/motion và toàn story/script/WAV→final/QC vẫn còn mở;0.110 trở xuống là lịch sử.
 
 

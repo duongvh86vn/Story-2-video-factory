@@ -5,13 +5,17 @@ import dotenv from 'dotenv';
 import {parseArgs} from 'node:util';
 import {hash} from '../packages/core/utils.js';
 import {discoverNineRouterImages,generateNineRouterReferenceImage} from '../packages/models/nine-router-image.js';
+import {existingActorArt,newArtReason} from '../packages/topics/art-reuse.js';
 
 const {values}=parseArgs({options:{actor:{type:'string'},action:{type:'string',default:'sheet'},env:{type:'string'},model:{type:'string',default:'ag/gemini-3.1-flash-image'},
-  version:{type:'string',default:'v1'},'pose-reference':{type:'string'},discover:{type:'boolean',default:false}}});
-if(values.env)dotenv.config({path:path.resolve(values.env),quiet:true});
-if(values.discover){console.log(JSON.stringify({models:await discoverNineRouterImages()}));process.exit(0);}
+  version:{type:'string',default:'v1'},'pose-reference':{type:'string'},discover:{type:'boolean',default:false},generate:{type:'boolean',default:false},'new-art-reason':{type:'string'}}});
+if(values.discover){if(values.env)dotenv.config({path:path.resolve(values.env),quiet:true});console.log(JSON.stringify({models:await discoverNineRouterImages()}));process.exit(0);}
 const actor=values.actor;
 if(actor!=='lila'&&actor!=='karo')throw new Error('--actor must be lila or karo.');
+const existing=await existingActorArt(process.cwd(),actor);
+if(!values.generate){console.log(JSON.stringify({...existing,generationRequested:false},null,2));process.exit(0);}
+const reason=newArtReason(values.generate,values['new-art-reason']);
+if(values.env)dotenv.config({path:path.resolve(values.env),quiet:true});
 if(!/^v\d+$/.test(values.version!))throw new Error('--version must be v1, v2, etc.');
 const action=values.action!;
 if(!['sheet','point','think','run-left','jump','spear-lunge-left'].includes(action))throw new Error('Unknown --action.');
@@ -42,7 +46,7 @@ const poses:Record<string,string>={
   'spear-lunge-left':'Match the RIGHT POSE REFERENCE: wide stable SPEAR LUNGE toward lower-left, front knee bent with nearly vertical shin, rear leg extended to the right, body leaning forward left. A continuous long wooden spear runs from stone tip lower-left to butt upper-right, length about 1.2 character heights. Front hand low/forward near shaft middle; rear hand up/back on the same shaft; rear elbow raised/back near shoulder. Both BLACK MITTEN HANDS visibly grip the same shaft. Preserve the exact simple black line limbs of the LEFT character.'};
 const prompt=action==='sheet'?sheetPrompt:`Generate ONE full-body drawing of ${identity}, in the requested pose, using the LEFT reference as the exact character identity. The RIGHT image supplies pose mechanics only. This is a STICK FIGURE, not a flesh-limbed cartoon caveman. ARMS AND LEGS ARE SINGLE SLIM SOLID BLACK INK STROKES. Hands are simple black mitten silhouettes, feet simple black oval silhouettes. No skin-colored limbs, fingers, toes, muscles, boots or realistic anatomy details. Keep the original face, eye spacing, original nose and smile, hair outline, beard if present, ragged fur garment and belt from the LEFT image. Do not simplify or redesign the head, hair or clothes. Preserve rich warm skin and brown colors. Smooth softly curved ink strokes, natural elbows, exactly two arms and two legs, no backwards joints, no abrupt zigzag bends. ${poses[action]} Plain cream background. One character only, ample empty margins, whole spear/hair/hands/feet inside canvas, no text, no grid, no other poses. Face remains original happy for this mechanical pose study. This is a design reference pending review, not finished video.`;
 const request={actor,action,model:values.model,endpoint:'http://127.0.0.1:20128/v1/images/generations',adapter:values.model!.split('/')[0]+'-one-inline-reference-board',prompt,references:refs,
-  status:'requested',approved:false,productionReady:false,requestedAt:new Date().toISOString()};
+  status:'requested',approved:false,productionReady:false,requestedAt:new Date().toISOString(),newArtReason:reason,existingArt:existing.entries};
 await fs.writeFile(path.join(output,name+'.json'),JSON.stringify(request,null,2)+'\n',{flag:'wx'});
 try{
   const image=await generateNineRouterReferenceImage({model:values.model!,prompt,referencePng:board});

@@ -1,5 +1,7 @@
 # Lila/Karo: bộ pose AI và sửa rig theo ảnh
 
+**Hiện hành0.112:** [Dùng lại bộ ảnh và rig](ART-REUSE.md). Tool pose mặc định chỉ liệt kê ảnh local, không gọi API khi đổi action/version. Không sinh lại nhân vật mỗi câu chuyện/pose; tạo mới cần `--generate` và lý do phần thiếu. Các mốc bên dưới là lịch sử.
+
 **Hiện hành 0.20:** cuff/palm tách riêng theo ảnh nguồn; chain migrate độc lập target, contact vẫn ở palm, mitten theo tiếp tuyến cẳng tay. Preset frontal đã re-author, slot think discrete và shaft interpolation có kiểm riêng. Grasp/anatomy/motion/video chưa nghiệm thu, `productionReady=false`; ba input và diễn viên trong truyện giữ nguyên. [Chi tiết, bằng chứng và lệnh bàn giao](WRIST-PALM-IMPLEMENTATION.md). Các đoạn 0.19 trở về trước dưới đây là lịch sử.
 
 **Cầu nối sprite motion 07/10/2026:** [đánh giá source sprite-gen 2.38.0](SPRITE-GEN-ASSESSMENT.md), [tiến độ importer/compiler/preview](SPRITE-MOTION-IMPLEMENTATION.md) và [bàn giao model test](SPRITE-MOTION-TEST-HANDOFF.md). Bộ source đọc atlas/strip và phát theo clock là công cụ kiểm asset; chưa nghiệm thu chuyển động Lila/Karo hoặc nối thư viện được duyệt vào cảnh truyện. Upstream chưa được cài/chạy. Chuỗi diễn hoạt phải được xem như chuyển động, không ghép vài ảnh pose/crossfade để gọi là animation. Nó bổ sung thư viện acting cho tool ba input, không thay nguồn giọng/kịch bản hoặc tự bảo đảm anatomy.
@@ -59,9 +61,9 @@ Set-Location -LiteralPath 'C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-
 # Discovery không chứng minh quota hoặc hỗ trợ ảnh tham chiếu:
 node --import tsx scripts/prehistoric-pose-art.ts --discover --env 'D:/github/Story-2-video-factory2.1/.env'
 
-# Tạo phiên bản mới, không ghi đè v3. Lệnh này gọi dịch vụ model thật:
+# Hiện chỉ liệt kê ảnh đã có, không sinh pose hoặc gọi API:
 node --import tsx scripts/prehistoric-pose-art.ts --actor karo --action spear-lunge-left --version v4 --model ag/gemini-3.1-flash-image --env 'D:/github/Story-2-video-factory2.1/.env' --pose-reference docs/topics/assets/reference-spear-pose.png
-# Có thể chọn cx/gpt-image-2 như v3. Các action khác: point, think, run-left, jump.
+# Tạo mới cần --generate và --new-art-reason; không chạy để kiểm kết nối.
 
 # Build/typecheck; không phải runtime test:
 npm run build

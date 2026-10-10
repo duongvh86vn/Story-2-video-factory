@@ -1,5 +1,7 @@
 # Phân công theo cấu hình 9router của người dùng
 
+**Điều chỉnh mới nhất:** ưu tiên tái sử dụng asset, dừng tạo ảnh lặp. Built-in đã dùng một lần theo yêu cầu khi Gemini sai nét; không có lượt ảnh nào sau yêu cầu dừng. [Guard CLI và bộ ảnh hiện có](../topics/ART-REUSE.md). Chỉ đề xuất ảnh mới khi chỉ rõ phần thiếu; thay câu chuyện/pose/version không tự gọi image model. Phân vai coder/tester bên dưới giữ nguyên.
+
 Áp dụng theo yêu cầu giảm quota phiên chính ngày 10/10/2026. Một task hẹp có contract và file sở hữu rõ; chỉ gọi vai trò cần thiết, không gọi toàn bộ nhóm mỗi vòng. Parent giữ tích hợp và kiểm tra đề xuất. Không dùng Fusion, không tự retry. Runtime tiếp tục do model test của người dùng thực hiện.
 
 | Combo / route | Công việc |

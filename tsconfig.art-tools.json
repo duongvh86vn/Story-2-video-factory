@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": { "noEmit": true },
-  "include": ["scripts/native-head-reference-art.ts", "scripts/head-cell-import.ts"]
+  "include": ["scripts/native-head-reference-art.ts", "scripts/head-cell-import.ts", "scripts/prehistoric-pose-art.ts", "scripts/art-reuse-catalog.ts"]
 }

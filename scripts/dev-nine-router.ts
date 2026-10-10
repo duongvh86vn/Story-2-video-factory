@@ -36,7 +36,7 @@ for(const file of [process.env.STORY_FACTORY_ENV_FILE,path.join(repo,'.env'),'D:
 }
 const key=process.env.MODEL_GATEWAY_KEY?.trim();if(!key)throw new Error('MODEL_GATEWAY_KEY is not configured; key values are never logged');
 async function readAllowed(file:string,image=false){
-  if(image?!/^(?:docs\/topics\/assets\/reference-(?:lila|karo)-full|library\/topics\/prehistoric-life\/(?:head-cells|head-face-plates)\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\d*)\.png$(?![\s\S])/.test(file)
+  if(image?!/^(?:docs\/topics\/assets\/reference-(?:lila|karo)-full|library\/topics\/prehistoric-life\/(?:(?:head-cells|head-face-plates)\/(?:lila|karo)-head-[a-z0-9][a-z0-9-]{0,39}-v[1-9]\d*|head-source-studies\/(?:lila|karo)-profile-(?:left|right)-v[1-9]\d*(?:-matte-v[1-9]\d*)?))\.png$(?![\s\S])/.test(file)
     :!/^(?:(?:packages|tests|apps|scripts|library\/shots)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*\.ts|docs\/(?:plans|topics)\/(?:[a-zA-Z0-9_-]+\/)*[a-zA-Z0-9_-]+\.md)$(?![\s\S])/.test(file))throw new Error('Unapproved dev-agent input');
   return boundedRead(path.resolve(repo,file),image?8*1024*1024:64000);
 }

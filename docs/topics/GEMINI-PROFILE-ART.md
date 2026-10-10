@@ -1,5 +1,7 @@
 # Ảnh tham chiếu Gemini và tách nền cục bộ — source0.110
 
+**Hiện hành0.112:** [Tái sử dụng asset](ART-REUSE.md). Không tiếp tục sinh ảnh lặp; hai tool artwork mặc định chỉ đọc danh mục, tạo mới cần `--generate` cùng lý do phần thiếu. Mô tả0.110 dưới đây là lịch sử.
+
 Đã gọi thành công một lượt `ag/gemini-3.1-flash-image` qua 9router, dùng nguyên ảnh Lira gốc. Đã tách nền bằng model chạy CPU cục bộ và lưu PNG có alpha thật; RGB sau giải mã giữ nguyên. Đây là công cụ chuẩn bị asset, chưa đưa ảnh mới vào rig hoặc pipeline sản xuất.
 
 ## Kết quả thực tế
@@ -26,13 +28,13 @@ node scripts/setup-asset-tools.mjs
 
 Script dùng lockfile trong `config/asset-tools/`, cài `@huggingface/transformers` 4.3.1 vào `runtime/asset-tools/`. Model CPU fp32 là [BiRefNet_lite-ONNX](https://huggingface.co/onnx-community/BiRefNet_lite-ONNX), MIT, revision `de15b22ba131738a16dff04aab8bdf8dc32e3ac1`; cache nằm trong `runtime/asset-tools/models/`. Lần đầu cần Internet tải weights khoảng 224 MB. Không gửi ảnh lên dịch vụ tách nền, không dùng Python/Forge. `runtime/` được Git bỏ qua; setup script mới chỉ được kiểm syntax, chưa chạy lại bằng `npm ci` trong lượt này. Dependency thực tế đã được cài riêng bằng npm install cùng package/lock, và inference thực tế thành công.
 
-Ví dụ tạo một ảnh mới; lệnh gọi API và có thể dùng quota. Chỉ chạy khi cần asset mới, không chạy lại chỉ để kiểm tra kết nối:
+Ví dụ tra lại ảnh có sẵn, không dùng quota ảnh. Nhánh tạo ảnh mới là lựa chọn riêng có lý do, không chạy chỉ để kiểm tra kết nối:
 
 ```powershell
-node --import tsx scripts/native-head-reference-art.ts --actor lila --view right --version v2 --generate
+node --import tsx scripts/native-head-reference-art.ts --actor lila --view right --version v3
 ```
 
-`actor` nhận `lila | karo`, `view` nhận `left | right`, phiên bản `vN`. Mỗi lần gọi gửi một primary PNG nguyên bytes và một prompt, không retry/fallback. Script kiểm SHA gốc, giữ đúng định dạng và bytes trả về, đo alpha thật; không đổi đuôi JPEG thành PNG để giả transparency. Tệp đã tồn tại/reserved bị từ chối; cần đọc receipt trước khi quyết định tạo phiên bản mới. Request lỗi có thể đã tiêu thụ quota upstream.
+Lệnh trên hiện chỉ liệt kê ảnh đã có, không gọi API. `actor` nhận `lila | karo`; khi chủ động tạo mới cần `view` trái/phải, phiên bản `vN`, `--generate` và `--new-art-reason` mô tả phần thiếu sau khi kiểm kho. Nhánh tạo mới gửi một primary PNG nguyên bytes và một prompt, không retry/fallback. Script kiểm SHA gốc, giữ đúng định dạng và bytes trả về, đo alpha thật; không đổi đuôi JPEG thành PNG để giả transparency. Tệp đã tồn tại/reserved bị từ chối; đọc receipt trước khi quyết định. Request lỗi có thể đã tiêu thụ quota upstream.
 
 Tách nền từ receipt ảnh đã có; lệnh chạy inference asset cục bộ:
 

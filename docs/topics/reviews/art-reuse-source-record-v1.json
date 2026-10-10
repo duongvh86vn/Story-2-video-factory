@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.112-art-reuse",
+  "precedingSourceSHA": "36b40938a8f2ba1069e71eee52f583df1c56cd1b",
+  "ownedPaths": 30,
+  "change": "Reuse-first authoring inventory and default CLI listing before env/key/output/API; explicit generate+reason required. Existing original art paths and hashes are reused rather than generating per story/pose/version. Saves one builtin head candidate made before the reuse correction; held Gemini2 and local matte retained separately.",
+  "userSteering": [
+    "Builtin imagegen permitted after poor Gemini result",
+    "Then stop repeat image generation and reuse existing assets"
+  ],
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "a0c9e9",
+      "session": 45550,
+      "completionChunk": "049cd5",
+      "exitCode": 0,
+      "output": "69 modules transformed; built in 656ms"
+    },
+    "testTypes": {
+      "command": "npm run test:typecheck",
+      "startChunk": "651132",
+      "session": 93119,
+      "completionChunk": "e08927",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "artTypes": {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.art-tools.json",
+      "chunk": "4fbe1e",
+      "exitCode": 0
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "dfff27",
+      "exitCode": 0,
+      "scope": "explicitly permitted static inventory; one newly authored builtin candidate, not rig acceptance"
+    },
+    "raw": {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source112-static.mjs",
+      "chunk": "a11843",
+      "exitCode": 0,
+      "result": {
+        "sourceVersion": "forest-tribe-0.112-art-reuse",
+        "scope": "Raw Git/file/hash/JSON/RGBA/TypeScript AST only; no project functions/schema instances/catalog CLI/importer/renderer/test evaluation",
+        "oldHeadMaterialsUnchanged": 8,
+        "newMaterial": "lila-head-profile-right-v1.png",
+        "originalBytesUnchanged": true,
+        "matteRgbAndMaskIntensityMatched": true,
+        "catalog": [
+          {
+            "actor": "lila",
+            "files": 31,
+            "uniqueImages": 31
+          },
+          {
+            "actor": "karo",
+            "files": 25,
+            "uniqueImages": 25
+          }
+        ],
+        "sourceHashes": {
+          "packages/topics/art-reuse.ts": "6ffd9147db03bda37b23905b13e81192c18a2cdde77d432a71c67214407582c3",
+          "scripts/art-reuse-catalog.ts": "5a7892e45d4147a71f73d2f575facb35437b1b8a5e435bf3bdf8ad57f4dfc54e",
+          "scripts/native-head-reference-art.ts": "a7e091387ff55b283ec5bba4d4c52ec1e46d77ccdd5492b9e28a042e33c9496c",
+          "scripts/prehistoric-pose-art.ts": "968827d1266ad1fd521bfa76f3b7db196d27d5e00c627b094319b8df98e31df0"
+        },
+        "furtherImageCallsAfterUserReuseCorrection": 0,
+        "catalogCliRun": false,
+        "callbacksExecuted": 0,
+        "productionReady": false,
+        "fullGoalComplete": false
+      }
+    }
+  },
+  "sourceAdvice": {
+    "tester": {
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "promptTokens": 2096,
+        "completionTokens": 572,
+        "totalTokens": 2668
+      },
+      "startChunk": "32e103",
+      "completionChunk": "60ff9c",
+      "scope": "static primary/Gemini1 image advice, no acceptance"
+    },
+    "coder": {
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "promptTokens": 5218,
+        "completionTokens": 560,
+        "totalTokens": 5778
+      },
+      "startChunk": "098a48",
+      "session": 94623,
+      "completionChunk": "a0ffb6",
+      "scope": "small source proposal before final parent implementation",
+      "parentDisposition": "Explicit discover remains opt-in; missing optional catalog folders skipped; no acceptance inferred. Head authoring decision uses a separate reuse JSON to preserve immutable generation receipt1. No code from response executed."
+    },
+    "totalTokens": 8446,
+    "retries": 0,
+    "fusion": false
+  },
+  "artRequests": {
+    "gemini": {
+      "model": "ag/gemini-3.1-flash-image",
+      "requests": 1,
+      "startChunk": "4624c5",
+      "session": 89037,
+      "completionChunk": "352a26",
+      "exitCode": 0,
+      "file": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v2.jpg",
+      "sha256": "f539cf35c99383917d6e96ac5612b78c508c2a70996f95d913181e8a97f817c7",
+      "usage": null,
+      "status": "held-wrong-identity"
+    },
+    "localMatte": {
+      "startChunk": "640975",
+      "session": 64245,
+      "completionChunk": "040467",
+      "exitCode": 0,
+      "scope": "actual CPU alpha authoring; no image upload, raw RGB unchanged"
+    },
+    "builtin": {
+      "tool": "image_gen__imagegen",
+      "requests": 1,
+      "reference": "docs/topics/assets/reference-lila-full.png",
+      "referenceAlreadyViewed": true,
+      "transparentBackground": true,
+      "saved": {
+        "file": "library/topics/prehistoric-life/head-cells/lila-head-profile-right-v1.png",
+        "sha256": "20e357ad55a467d5ced161c890892b11457d23c3856b1f802b8312557d8da764",
+        "promptFile": "library/topics/prehistoric-life/head-cells/lila-head-profile-right-v1-prompt.json",
+        "width": 1312,
+        "height": 1199,
+        "hasAlpha": true,
+        "transparentPixels": 1079842,
+        "edgePixels": 0,
+        "visibleBounds": {
+          "x": 302,
+          "y": 60,
+          "width": 833,
+          "height": 1086
+        },
+        "minimumMarginFraction": 0.04420350291909925,
+        "originalBytesUnchanged": true,
+        "productionReady": false
+      },
+      "usage": null,
+      "status": "unreviewed-source-candidate"
+    },
+    "furtherRequestsAfterReuseCorrection": 0
+  },
+  "headCellImportCliRun": false,
+  "catalogCliRun": false,
+  "defaultAuthoringCliRun": false,
+  "newCallbacksDeclared": 0,
+  "callbacksExecuted": 0,
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "unexecuted": [
+    "Default catalog/authoring CLI no-network/no-env/no-output and explicit new-art-reason behavior",
+    "Source/duplicate/symlink/concurrent-art/partial-reservation cases",
+    "Own head/body/face3/bank7 registration and primary identity/edges/turn/acting/motion QA",
+    "All story/script/WAV audio/subtitle/multilingual local-external TTS/final/QC/resume acceptance"
+  ],
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "fullGoalComplete": false
+}
