@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.107-story-person-models",
+  "precedingSourceSHA": "56258ed24271c4c6891f59d9b0a69f011296646e",
+  "scope": "implementation source/build/types/schema definitions/static raw file-header-hash-JSON-AST/Git delivery; user model owns runtime/film QA",
+  "ownedPaths": 14,
+  "change": "Resolve explicit own visual model separately from original source-person ID/name/role/evidence/speaker clock; whole cast rejects duplicate person or cross-scene model drift before any visual normalization. Ledger including locks uses same mapping. Prompt catalogue visual-only, legacy principal IDs unchanged.",
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "805e81",
+      "session": 72118,
+      "completionChunk": "6b45c3",
+      "exitCode": 0,
+      "studioModules": 69,
+      "viteBuildMs": 650
+    },
+    "typecheck": {
+      "command": "npm run test:typecheck",
+      "startChunk": "e7941a",
+      "session": 9960,
+      "completionChunk": "b39ec5",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "schemas": {
+      "command": "npm run schemas",
+      "chunk": "27694d",
+      "exitCode": 0,
+      "scope": "schema definition export only"
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "0d540a",
+      "exitCode": 0,
+      "scope": "explicitly permitted static inventory only"
+    },
+    "rawInventory": {
+      "chunk": "9897e0",
+      "exitCode": 0,
+      "scope": "raw Git/file/header/hash/JSON/TS AST only; no project imports/evaluation",
+      "inventoryAuthoringCorrections": [
+        "Generated helper quote corrected before it was executed; no project source effect.",
+        "Inherited source106 continuity baseline expected pre-refactor body; raw comparison failed ccd9a6 before record write. Parent updated source107 baseline comparison to same shared worker; successful9897e0, no source rules changed."
+      ]
+    },
+    "whitespace": {
+      "chunk": "9fdf45",
+      "exitCode": 0
+    }
+  },
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "requestedReasoning": "high",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 20884,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 7034,
+      "completion_tokens": 2261,
+      "total_tokens": 9295
+    },
+    "reply": "{\"findings\":[],\"missingContext\":[\"HostProfileSchema appearance refinements and production-release intake implementation were not supplied, so their validation details could not be reviewed.\",\"No current QA ledger was supplied; ledger acceptance was not assessed.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshotChars": 20279,
+    "snapshotSHA256": "b126f47b65d0ea661eeb6604eb171e5c91efb0195bd2631983c29c0180241ee1",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "scope": "bounded source review only, not runtime/art acceptance",
+    "findings": [],
+    "missingContext": [
+      "HostProfileSchema appearance refinements and production-release intake implementation were not supplied, so their validation details could not be reviewed.",
+      "No current QA ledger was supplied; ledger acceptance was not assessed."
+    ],
+    "startChunk": "93f2e3",
+    "session": 52287,
+    "completionChunk": "cb998d",
+    "replyReadChunk": "25c47e",
+    "exitCode": 0,
+    "parentDisposition": "No concrete finding in supplied scope. HostProfileSchema refinements/full intake/actual QA ledger omitted. After snapshot parent added explicit unknown supporting-model rejection and deep equality for ledger test key order; review does not accept final source or art.",
+    "successfulDispatches": 1,
+    "retries": 0
+  },
+  "testAuthority": {
+    "owner": "user/model test",
+    "latestHumanReply": "chưa",
+    "replyDate": "2026-10-10",
+    "currentLilaKaroReportAvailable": false,
+    "oldV1Acceptance": false
+  },
+  "tests": {
+    "file": "tests/topic-person-models.test.ts",
+    "declared": 8,
+    "executed": 0,
+    "status": "DECLARED / NOT RUN",
+    "fixturesInvoked": 0,
+    "schemasInstantiated": false,
+    "normalizerInvoked": false,
+    "geometryEvaluated": false,
+    "compilerRun": false,
+    "cameraEvaluatorRun": false,
+    "serverStarted": false,
+    "browserOpened": false,
+    "pipelineRun": false,
+    "ttsRun": false,
+    "asrRun": false,
+    "rendererRun": false,
+    "exporterRun": false,
+    "videoRendered": false,
+    "actualLedgerCase": "Requires real current STORY_FACTORY_QA_LEDGER; absent means SKIP, not PASS"
+  },
+  "preserved": {
+    "originalRasters": 307,
+    "originalHeadDefinitions": 18,
+    "originalHeadMetadata": 27,
+    "sharedFunctions": 63,
+    "priorCallbacksUnchanged": true,
+    "ownAppearanceNormalizerUnchanged": true,
+    "visualQaIntakeUnchanged": true,
+    "actorLocksSpeakerClockAndProfileCompilerUnchanged": true,
+    "sourceNarrativeContextUnchanged": true,
+    "sourceClockSolverInkBoneCuffPalmSoleClothUnchanged": true,
+    "ordinaryProductionGuardsUnchanged": true,
+    "previewEmitterMarkerSecurityUnchanged": true
+  },
+  "pending": [
+    "Current Lila/Karo art/anatomy/garment outlines/face/partner gaze and normal-speed/reverse/random-seek motion/film QA; human currently has no report.",
+    "Genuine own continuous head/body turns, tool/seat/hunt/grasp/handoff/rear secondary/crowds and vivid day/sunset/night world/camera acting.",
+    "Integrated original-source production with actual current visual QA and episode source/contact/cue/voice/review/final/QC. Candidate source checks or cast mapping do not open production.",
+    "Full arbitrary story/topic -> faithful screenplay, exact script/dialogue and original WAV(+legacy SRT) -> actual narration clock -> actors inside story/world/director/camera -> review/repair/final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/reports/QC.",
+    "EN primary/VI/JA/KO/external-local TTS, locked actors and scenes/cache/resume/rebuild on current real projects. Source/build/types/hash/advice and V1 do not establish acceptance."
+  ],
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "productionBinding": "needs-source-prop-binding",
+  "canPublish": false,
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

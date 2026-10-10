@@ -19,8 +19,9 @@ import {isSupportingNativeHeadVersion} from '../animation/native-head-identity.j
 import {supportingFaceDescription} from './supporting-face-candidates.js';
 import {normalizeTopicActorAppearance,topicCastNormalizationDescription,TOPIC_RENDER_SELECTION_KEYS} from './cast-appearance.js';
 import {readTopicProductionRelease,certifiedTopicAppearance,certifiedTopicDefault,topicProductionReleaseDescription} from './production-release.js';
+import {topicCastModels,topicCastModelDescription} from './cast-model.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.106-original-model-boundaries';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.107-story-person-models';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},
@@ -50,12 +51,9 @@ export function configuredTopicRelease(config:FactoryConfig){
  * default substitution is permitted here, and no actor or source is mutated. */
 export function validateCertifiedTopicCast(board:Storyboard,config:FactoryConfig){
   const verified=configuredTopicRelease(config);if(!verified)return;
-  for(const shot of board.shots){const scene=shot.cinematic?.actorScene;if(!scene)continue;
-    for(const character of [...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)]){
-      const principal=character.id==='lila'||character.id==='karo';
-      if(character.kind!=='stick-man'||principal&&character.appearance.supportingModel||!principal&&!character.appearance.supportingModel)throw new Error(`${shot.id}: needs-art-direction: actor identity/model is outside the tested visual ledger`);
-      certifiedTopicAppearance(verified,principal?character.id:character.appearance.supportingModel!,character.appearance);
-    }
+  for(const {shotId,character,model} of topicCastModels(board)){
+    if(character.kind!=='stick-man')throw new Error(`${shotId}: needs-art-direction: actor identity/model is outside the tested visual ledger`);
+    certifiedTopicAppearance(verified,model,character.appearance);
   }
 }
 /** Read-only status; no test job, acceptance writer, media execution or final grant. */
@@ -92,7 +90,7 @@ export function topicContext(config:FactoryConfig) {
   if(!config.topic.id)return null;
   const verified=configuredTopicRelease(config);
   return {id:'prehistoric-life',version:PREHISTORIC_TOPIC_VERSION,name:'Cuộc sống thời tiền sử',
-    castNormalization:topicCastNormalizationDescription,
+    castNormalization:topicCastNormalizationDescription,castModels:topicCastModelDescription,
     visualAcceptance:verified?'external-scoped-QA':'pending',readiness:{...prehistoricReadiness,preflightReady:!!verified},
     visualRelease:verified?{fingerprint:verified.fingerprint,codeFingerprint:verified.codeFingerprint,profiles:verified.release.profiles,defaults:verified.release.defaults,environments:verified.release.environments}:null,
     releaseIntake:topicProductionReleaseDescription,references:prehistoricReferences,reference:'docs/topics/assets/prehistoric-character-sheet.png',
@@ -122,34 +120,28 @@ export function topicContext(config:FactoryConfig) {
           y:-(m.legs.left.lower+m.legs.right.lower)/2-(m.footSoleOffset.left+m.footSoleOffset.right)*topicAppearance(id).bodyScale/2-(m.hips.left.y+m.hips.right.y)/2+m.seatContactOffset.y},
           convention:'seat.center.x = root.x - xMagnitude for right facing, root.x + xMagnitude for left facing; seat.center.y = root.y + relativeCenter.y; scale all offsets by performance.scale. The validator checks actual pose lean and asymmetric chain reach.'};
       })},
-    cast:[{id:'lila',name:'Lila',description:'Female prehistoric stick actor: long dark brown hair with side-swept fringe, warm face, asymmetric ragged fur dress.',appearance:verified?certifiedTopicDefault(verified,'lila'):topicAppearance('lila')},
-      {id:'karo',name:'Karo',description:'Male prehistoric stick actor: tousled short dark brown hair, full beard around expressive mouth, asymmetric fur tunic and ragged shorts with two separate legs.',appearance:verified?certifiedTopicDefault(verified,'karo'):topicAppearance('karo')}],
+    cast:[{id:'lila',modelId:'lila',name:'Lila',scope:'visual-model-only',description:'Female prehistoric stick actor: long dark brown hair with side-swept fringe, warm face, asymmetric ragged fur dress.',appearance:verified?certifiedTopicDefault(verified,'lila'):topicAppearance('lila')},
+      {id:'karo',modelId:'karo',name:'Karo',scope:'visual-model-only',description:'Male prehistoric stick actor: tousled short dark brown hair, full beard around expressive mouth, asymmetric fur tunic and ragged shorts with two separate legs.',appearance:verified?certifiedTopicDefault(verified,'karo'):topicAppearance('karo')}],
     supportingCast:{...prehistoricSupportingDescription,nativeFaces:supportingFaceDescription},
-    acting:'These are reusable visual actors inside the events. Assign the two principal sourced roles to IDs lila (female model) and karo (male model). Additional source-supported participants use their own stable actor IDs with appearance.supportingModel=prehistoric-male-bald or prehistoric-female-haired and the matching Karo/Lila source costume. Multiple participants may share a visual model, never an actor ID. A supporting person may be the camera primary in a shot while keeping their supportingModel and identity. Keep each participant name, role, identity and evidence from narration unchanged: visual model names are not permission to rename story people. Do not invent a presenter, crowds, dialogue, historical identity or extra events. Only source-supported dialogue gets speakingSegmentIds. A recorded narrator stays off screen.',
+    acting:'These are reusable visual models for actors inside the events. Preserve each sourced participant ID, name, role, identity, evidence and speaker/cue ownership. A custom principal person ID explicitly selects appearance.characterVariant=lila (female artwork) or karo (male artwork); visual model IDs/names never rename story people or speakers. Legacy participant IDs lila/karo retain their existing principal model assignment. Additional source-supported participants select appearance.supportingModel=prehistoric-male-bald or prehistoric-female-haired with their own stable person IDs and matching Karo/Lila source costume. Multiple people may share artwork, never a person ID; one person retains its model across camera roles and scenes. Camera primary/supporting is staging, not visual model identity. Do not guess a missing model from names/gender, invent a presenter, crowds, dialogue, historical identity or extra events. Only source-supported dialogue gets speakingSegmentIds. A recorded narrator stays off screen.',
     design:'Thin continuous dark curved limbs, grounded feet, anatomically stable elbows, coordinated body action, head turns and partner/object gaze. Rich forest greens, warm ochre fur and skin, vivid fire. Layered forest depth with textured artwork. Never replace the cast with portraits or slides.',
     freedoms:'Staging, narrative action, environments, props, lighting and camera vary with the input story. Do not force machinery or a fixed food scene. Use the palette as the reusable art direction, not an unlit flat background.'};
 }
 export function topicFingerprint(config:FactoryConfig):string|null {return config.topic.id?hash(topicContext(config)):null;}
 
-/** Identity is provided by the topic; narration remains the authority for roles and actions. */
+/** Topic supplies visual artwork; original people/cues/roles remain authoritative. */
 export function applyTopicCast(board:Storyboard,config:FactoryConfig):void {
   if(!config.topic.id)return;
   const verified=configuredTopicRelease(config);
   const updates:Array<{character:ActorDefinition;appearance:ActorDefinition['appearance']}>=[];
-  for(const shot of board.shots){
-    const scene=shot.cinematic?.actorScene;if(!scene)continue;
-    for(const character of [...(scene.primary?[scene.primary]:[]),...scene.supporting.map(a=>a.character)]){
-      const principal=character.id==='lila'||character.id==='karo';
-      if(principal&&character.appearance.supportingModel)throw new Error(`${shot.id}: principal lila/karo IDs cannot select a supporting model`);
-      if(!principal&&!character.appearance.supportingModel)throw new Error(`${shot.id}: additional sourced cast requires its own actor ID and explicit supportingModel`);
-      const requested=character.appearance;
-      const model=principal?character.id as 'lila'|'karo':requested.supportingModel!;
-      const canonical=principal?topicAppearance(model as 'lila'|'karo'):supportingTopicAppearance(requested.supportingModel!);
-      const explicit=requested.artworkVersion==='forest-body-view-1'||TOPIC_RENDER_SELECTION_KEYS.some(key=>requested[key]!==undefined);
-      const selected=verified&&principal&&!explicit?certifiedTopicDefault(verified,model as 'lila'|'karo'):requested;
-      const appearance=normalizeTopicActorAppearance(model,canonical,selected);
-      updates.push({character,appearance:verified?certifiedTopicAppearance(verified,model,appearance):appearance});
-    }
+  for(const {character,model} of topicCastModels(board)){
+    const principal=model==='lila'||model==='karo';
+    const requested=character.appearance;
+    const canonical=principal?topicAppearance(model):supportingTopicAppearance(model);
+    const explicit=requested.artworkVersion==='forest-body-view-1'||TOPIC_RENDER_SELECTION_KEYS.some(key=>requested[key]!==undefined);
+    const selected=verified&&principal&&!explicit?certifiedTopicDefault(verified,model):requested;
+    const appearance=normalizeTopicActorAppearance(model,canonical,selected);
+    updates.push({character,appearance:verified?certifiedTopicAppearance(verified,model,appearance):appearance});
   }
   // All source selections must validate before mutating even the first actor.
   // Costume and head artwork are versioned rig assets, not per-shot drawings.
