@@ -5,6 +5,7 @@ export {bodyViewRegistration,bodyViewRegistrations,bodyCandidateRegistrations,BO
 import {frontBodyRegistrationDescription} from './body-view-front-registration.js';
 import {basicBodyHasUnsupportedOptions,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import {obliqueBodyRegistrationDescription} from './body-view-oblique-registration.js';
+import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from './body-view-profile-cloth-binding.js';
 import {authoredRestArm} from './body-view-rest-arm.js';
 import {BASIC_BODY_EYES_SELECTION} from './body-view-basic-eyes-registration.js';
 import {BASIC_BODY_SPEECH_SELECTION} from './body-view-basic-mouth-registration.js';
@@ -20,7 +21,7 @@ import {nativeManipulationDescription} from './native-contact-arm.js';
 import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-9';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-10';
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These
  * engineering candidates use uniform head/body transforms. Their physical
@@ -38,6 +39,16 @@ export function registeredBodyView(profile:Pick<HostProfile,'appearance'>){
 export function registeredDetailedBodyView(profile:Pick<HostProfile,'appearance'>){
   const source=registeredBodyView(profile);
   if(source.view!=='three-quarter-left'&&source.view!=='three-quarter-right')throw basicBodyCapabilityError(source.view,'detailed3/4 feature');
+  return source;
+}
+/** Motion consumes the explicitly selected same-view garment, never a
+ * fallback detailed3/4 image. Seat/secondary/tool callers retain their guards. */
+export function registeredLocomotionBodyView(profile:Pick<HostProfile,'appearance'>){
+  const a=profile.appearance;
+  if(!hasBodyViewLocomotion(profile)||a.artworkVersion!==BODY_VIEW_VERSION||a.characterVariant!=='lila'&&a.characterVariant!=='karo')throw new Error('needs-view-locomotion: select the exact native actor and motion mode');
+  if(profile.appearance.bodyMotion!==PROFILE_BODY_LOCOMOTION_SELECTION)return registeredDetailedBodyView(profile);
+  const source=registeredBodyView(profile);
+  if(source.view!=='left'&&source.view!=='right'||!isProfileMotionView(profile.appearance.bodyView))throw basicBodyCapabilityError(source.view,'profile locomotion');
   return source;
 }
 export function bodyViewFacing(profile:Pick<HostProfile,'appearance'>){const view=registeredBodyView(profile).view;return view==='front'?'front':view==='three-quarter-left'||view==='left'||view==='back-left'?'left':'right';}
@@ -75,7 +86,7 @@ export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:st
 }
 export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
   const c=registeredBodyView(profile);
-  const cloth=hasBodyViewSeat(profile)?nativeSeatSvg(profile,registeredDetailedBodyView(profile),imageUrl):hasBodyViewLocomotion(profile)?nativeClothSvg(profile,registeredDetailedBodyView(profile)):undefined;
+  const cloth=hasBodyViewSeat(profile)?nativeSeatSvg(profile,registeredDetailedBodyView(profile),imageUrl):hasBodyViewLocomotion(profile)?nativeClothSvg(profile,registeredLocomotionBodyView(profile)):undefined;
   return {defs:`<defs><mask id="view-clothing-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${c.width}" height="${c.height}"><path d="${c.clothing}" fill="white" stroke="white" stroke-width="${c.inkPad*2}" stroke-linejoin="round"/></mask><image id="view-body-source" width="${c.width}" height="${c.height}" href="${imageUrl(c.file,c.sha256)}"/></defs>`+(cloth?.defs??''),
     torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})">${cloth?.artwork??'<g mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>'}</g>`};
 }

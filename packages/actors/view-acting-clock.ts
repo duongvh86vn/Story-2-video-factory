@@ -14,10 +14,11 @@ import {VIEW_ACTING_CLOCK_VERSION,normalizeViewGazes,validateViewActingClock,val
 import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../animation/view-gaze-target.js';
 import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
 import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-view-basic-mouth-registration.js';
-/** Preserve the fixed happy pose of own basic eye rigs in the original run;
- * this does not grant expression overlays or a different facial artwork. */
+import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from '../animation/body-view-profile-cloth-binding.js';
+/** Preserve the original expression run for selected own face/motion rigs;
+ * motion alone keeps happy and does not grant expression artwork. */
 function keepsExpressionClock(profile:Pick<HostProfile,'appearance'>){
-  return hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(profile.appearance.bodyView)||profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(profile.appearance.bodyView);
+  return hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(profile.appearance.bodyView)||profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(profile.appearance.bodyView)||profile.appearance.bodyMotion===PROFILE_BODY_LOCOMOTION_SELECTION&&isProfileMotionView(profile.appearance.bodyView);
 }
 import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';

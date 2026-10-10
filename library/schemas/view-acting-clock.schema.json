@@ -6,7 +6,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "const": "native-view-acting-clock-10"
+          "const": "native-view-acting-clock-11"
         },
         "ownerId": {
           "type": "string",
@@ -3111,7 +3111,10 @@
                       },
                       "bodyMotion": {
                         "type": "string",
-                        "const": "registered-locomotion-v1"
+                        "enum": [
+                          "registered-locomotion-v1",
+                          "registered-profile-locomotion-v1"
+                        ]
                       },
                       "bodySeat": {
                         "type": "string",

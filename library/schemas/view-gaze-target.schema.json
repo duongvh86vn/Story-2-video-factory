@@ -2008,7 +2008,10 @@
                 },
                 "bodyMotion": {
                   "type": "string",
-                  "const": "registered-locomotion-v1"
+                  "enum": [
+                    "registered-locomotion-v1",
+                    "registered-profile-locomotion-v1"
+                  ]
                 },
                 "bodySeat": {
                   "type": "string",

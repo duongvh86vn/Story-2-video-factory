@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.97-own-profile-locomotion",
+  "precedingSourceSHA": "de39c1ceb5e328806c0598aa68e430dbade187f9",
+  "scope": "own left/right locomotion source integration only; no anatomy/art/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Four exact own PNG/SHA/canvas garment cages with registered-profile-locomotion-v1. Forward walk/run/jump/crouch; no3/4 coordinate/ROI reuse, image edits, face mirror/warp or inferred yaw.",
+    "Own motion source selected by garment SVG, physical validation, cloth lag and baked interpolation. Original same-person canonical bones/mitten/sole and gait/airborne/arm kernels retained.",
+    "Schema/raw/API/workbench guards reject wrong actors/views/modes, front/rear/detailed fallback, seat/hair/tools/manipulation/supporting/head-bank and continuous turns.",
+    "Complete sourceBody and separately validated original point/think spans retain original run through explicit continuous camera/role swaps. Motion-only retains happy expression clock. Source prop/head/spear/manipulation ownership stays blocked.",
+    "Clock11/report/cache/manifest bind exact selection; own fixed geometry, legacy cloth/face data, shared cloth and physical body kernel sources unchanged.",
+    "Eight new callback declarations NOT RUN; real geometry/art/motion/audio/render/product acceptance pending."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "18c819/session62882/completionadcf38",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 build\n> tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 63 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-dWP4O5ZZ.js   248.16 kB │ gzip: 77.38 kB\n✓ built in 639ms\n",
+      "scope": "source build only; no runtime acceptance"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "b3c566/session24719/completion5342e2",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n",
+      "scope": "typecheck only; callbacks NOT RUN"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "44a08e",
+      "decisiveOutput": "> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n",
+      "scope": "definition export only; no schema instances"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "e52fc2",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "allowed source/header/hash/static JSON inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/profile-locomotion-static-v1.mjs",
+      "exitCode": 0,
+      "handle": "b34b77/session4318/completion891786",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.97-own-profile-locomotion\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"mappedCodeHashes\":170,\"scalarCodeEntries\":46,\"ownProfileClothSources\":4,\"callbacksDeclared\":8,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}\n",
+      "scope": "raw header/bytes/JSON/source AST only; no project evaluation or tests"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "source freeze only"
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/profile-locomotion-static-record-v1.json",
+  "agentAdvice": {
+    "requestedModel": "debugger",
+    "requestedReasoningEffort": "xhigh",
+    "responseModel": null,
+    "httpStatus": null,
+    "responseUsage": null,
+    "clientState": "terminal-timeout",
+    "clientExitCode": 1,
+    "timeoutMs": 90000,
+    "handle": "079962/session20135/completion62f59d",
+    "decisiveOutput": "[DOMException [TimeoutError]: The operation was aborted due to timeout]",
+    "providerState": "unknown; no job handle supplied",
+    "calls": 1,
+    "retries": 0,
+    "snapshot": "C:/Users/Duongvh-pc/.codex/tmp/source097-review-snapshot.txt",
+    "scope": "bounded source-only advice request; no reviewer response or final-source/art/runtime acceptance",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "snapshotSha256": "ba946f86c3f9aff846b9ae50fb90c7fae9249a4a39d55dd08b6a57bcb53acedd"
+  },
+  "ownedPaths": 28,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/PROFILE-LOCOMOTION-HANDOFF.md",
+  "newCallbacksDeclared": 8,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 0,
+  "imagesEdited": false,
+  "environment": {
+    "node": "24.19.0",
+    "platform": "win32",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+    "diagnosticPort": 8851,
+    "serverStarted": false
+  },
+  "sourceInventoryPreparation": {
+    "firstAttempt": {
+      "handle": "a548cd",
+      "exitCode": 1,
+      "scope": "raw JSON source-read helper; incorrect marker offset"
+    },
+    "corrected": {
+      "handle": "e0edac",
+      "exitCode": 0,
+      "scope": "raw JSON marker.length; own landmark read only"
+    }
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}
