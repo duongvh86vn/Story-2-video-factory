@@ -1998,7 +1998,8 @@
               "type": "string",
               "enum": [
                 "registered-secondary-v1",
-                "registered-profile-secondary-v1"
+                "registered-profile-secondary-v1",
+                "registered-front-secondary-v1"
               ]
             },
             "bodyManipulation": {

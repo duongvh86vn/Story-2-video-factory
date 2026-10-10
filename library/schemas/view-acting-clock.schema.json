@@ -6,7 +6,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "const": "native-view-acting-clock-13"
+          "const": "native-view-acting-clock-14"
         },
         "ownerId": {
           "type": "string",
@@ -3125,7 +3125,8 @@
                         "type": "string",
                         "enum": [
                           "registered-secondary-v1",
-                          "registered-profile-secondary-v1"
+                          "registered-profile-secondary-v1",
+                          "registered-front-secondary-v1"
                         ]
                       },
                       "bodyManipulation": {

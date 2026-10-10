@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.100-own-front-secondary",
+  "precedingSourceSHA": "74811d202832827b8296a00339e0b964b0c0344e",
+  "scope": "raw file/header/alpha/JSON/source-literal inventory only; no project imports, schema instances, callback/fixture/pose/geometry/sampler/compiler/camera evaluator/renderer/browser/server/audio/video",
+  "originalRastersUnchanged": 307,
+  "actualPNG": 144,
+  "actualJPEG": 163,
+  "JPEGNamedPNG": 101,
+  "imageFingerprint": "3da9a2cdc700204d46f875a3f2b2f55866735e92053ec7b977434a71b2ebbe93",
+  "originalHeadDefinitionsUnchanged": 18,
+  "originalHeadMetadataUnchanged": 27,
+  "newImages": 0,
+  "protectedProductionPathsUnchanged": 217,
+  "intentionallyEditedProductionModules": [
+    "packages/animation/body-view-art.ts",
+    "packages/animation/body-view-basic-capabilities.ts",
+    "packages/animation/body-view-secondary.ts",
+    "packages/animation/body-view-front-registration.ts",
+    "packages/animation/view-acting-clock.ts",
+    "packages/actors/view-acting-clock.ts",
+    "packages/director/acting-brief.ts"
+  ],
+  "legacySecondaryBindingsUnchanged": true,
+  "sharedSecondaryMeshStateBoundsInterpolationUnchanged": true,
+  "legacySecondarySvgDefinitionUnchanged": true,
+  "optionalOwnUvSelectionChanged": true,
+  "sharedSecondaryTemporalSourceUnchanged": true,
+  "physicalBodyKernelUnchanged": true,
+  "legacyClothAndFaceDataUnchanged": true,
+  "ownFixedBodyGeometryUnchanged": true,
+  "ownFrontSecondarySourceCount": 2,
+  "ownFrontSecondarySources": [
+    {
+      "actor": "lila",
+      "view": "front",
+      "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+      "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+      "width": 939,
+      "height": 1675,
+      "sourcePixelSha256": "d68097cdedf74bbf911c075d2d5d22a12ce5a8e40bd5618731e5eccd48a125ba",
+      "opaquePixels": 1746,
+      "regions": [
+        {
+          "id": "crest",
+          "left": 200,
+          "right": 770,
+          "top": 35,
+          "bottom": 195,
+          "pin": "bottom",
+          "maxDisplacement": 12,
+          "gain": 0.35
+        },
+        {
+          "id": "tail",
+          "left": 157,
+          "right": 345,
+          "top": 555,
+          "bottom": 889,
+          "pin": "top",
+          "maxDisplacement": 32,
+          "gain": 1
+        }
+      ],
+      "hairTie": {
+        "x": 260,
+        "y": 476,
+        "width": 88,
+        "height": 58
+      },
+      "protectedFeatures": 12,
+      "coordinateAuthority": "manual own-source rectangles/tie cues, not segmentation/anatomy/yaw or art/motion acceptance"
+    },
+    {
+      "actor": "karo",
+      "view": "front",
+      "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+      "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+      "width": 1024,
+      "height": 1536,
+      "sourcePixelSha256": "3fdc052a687527d08e013e2dd4dc3cee32a5ac66b5bffa0fbaca8e320e962474",
+      "opaquePixels": 0,
+      "regions": [
+        {
+          "id": "crest",
+          "left": 205,
+          "right": 823,
+          "top": 28,
+          "bottom": 160,
+          "pin": "bottom",
+          "maxDisplacement": 12,
+          "gain": 0.35
+        },
+        {
+          "id": "beard",
+          "left": 378,
+          "right": 650,
+          "top": 455,
+          "bottom": 552,
+          "pin": "top",
+          "maxDisplacement": 10,
+          "gain": 0.3,
+          "sourceClip": "M378 455H650L636 490L625 505L596 515L607 524L565 538L528 544L511 550L500 548L500 543L475 540L467 535L464 530L463 526L434 525L429 517L422 511L398 504L389 495Z"
+        }
+      ],
+      "hairTie": null,
+      "protectedFeatures": 11,
+      "coordinateAuthority": "manual own-source rectangles/tie cues, not segmentation/anatomy/yaw or art/motion acceptance"
+    }
+  ],
+  "visibleRegions": 4,
+  "protectedRawFeatureBoxes": 23,
+  "manualCoordinatesNotMeasured": true,
+  "rawClippedUvPixels": [
+    {
+      "actor": "lila",
+      "region": "crest",
+      "opaque": 39724,
+      "warmBrightHeuristic": 0,
+      "warmCoordinates": [],
+      "ownUvContour": false,
+      "scope": "raw RGBA ROI/UV-mask pixel inventory only; heuristic is not segmentation, measured anatomy or art/motion approval"
+    },
+    {
+      "actor": "lila",
+      "region": "tail",
+      "opaque": 43657,
+      "warmBrightHeuristic": 0,
+      "warmCoordinates": [],
+      "ownUvContour": false,
+      "scope": "raw RGBA ROI/UV-mask pixel inventory only; heuristic is not segmentation, measured anatomy or art/motion approval"
+    },
+    {
+      "actor": "karo",
+      "region": "crest",
+      "opaque": 41423,
+      "warmBrightHeuristic": 0,
+      "warmCoordinates": [],
+      "ownUvContour": false,
+      "scope": "raw RGBA ROI/UV-mask pixel inventory only; heuristic is not segmentation, measured anatomy or art/motion approval"
+    },
+    {
+      "actor": "karo",
+      "region": "beard",
+      "opaque": 18361,
+      "warmBrightHeuristic": 0,
+      "warmCoordinates": [],
+      "ownUvContour": true,
+      "scope": "raw RGBA ROI/UV-mask pixel inventory only; heuristic is not segmentation, measured anatomy or art/motion approval"
+    }
+  ],
+  "ownUvContourCount": 1,
+  "segmentationAccepted": false,
+  "manifestMappedCodeHashes": 174,
+  "manifestMappedEntries": 571,
+  "manifestScalarCodeEntries": 46,
+  "availableBankFields": 55,
+  "newCallbacksDeclared": 8,
+  "callbacksExecuted": 0,
+  "priorTestsUnchanged": true,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "compilerInvoked": false,
+  "cameraEvaluatorInvoked": false,
+  "serverStarted": false,
+  "browserOpened": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

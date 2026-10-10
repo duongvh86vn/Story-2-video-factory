@@ -1,5 +1,6 @@
 import {isBasicBodyView,basicBodyCapabilityError,basicBodyHasUnsupportedOptions} from './body-view-basic-capabilities.js';
 import {PROFILE_BODY_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_VERSION,profileSecondaryBindings,isProfileSecondaryView} from './body-view-profile-secondary-binding.js';
+import {FRONT_BODY_SECONDARY_SELECTION,FRONT_BODY_SECONDARY_VERSION,frontSecondaryBindings,isFrontSecondaryView} from './body-view-front-secondary-binding.js';
 import type {HostProfile} from '../host/schemas.js';
 import type {Point} from './schemas.js';
 import {hash} from '../core/utils.js';
@@ -7,12 +8,12 @@ import {clothTriangleArea,clothTriangleMatrix,clothAreaInfluence,type ClothTrian
 import {secondaryMotionDescription} from './view-secondary-motion.js';
 
 export const BODY_VIEW_SECONDARY_SELECTION='registered-secondary-v1' as const;
-export const BODY_VIEW_SECONDARY_VERSION='native-view-secondary-2';
-export type NativeSecondaryRegion={id:string;left:number;right:number;top:number;bottom:number;pin:'top'|'bottom';maxDisplacement:number;gain:number};
+export const BODY_VIEW_SECONDARY_VERSION='native-view-secondary-3';
+export type NativeSecondaryRegion={id:string;left:number;right:number;top:number;bottom:number;pin:'top'|'bottom';maxDisplacement:number;gain:number;sourceClip?:string};
 type Region=NativeSecondaryRegion;
-type View='three-quarter-left'|'three-quarter-right'|'left'|'right';
+type View='front'|'three-quarter-left'|'three-quarter-right'|'left'|'right';
 export type NativeSecondarySource={sha256:string;width:number;height:number;view:View;headBounds:{left:number;right:number;top:number;bottom:number}};
-/** Image-space texture regions authored by inspecting the four existing PNGs.
+/** Image-space texture regions authored from each selected own PNG.
  * Side seams and the attachment row are pinned. No face pixels are selected;
  * identity, silhouette, layer separation and mesh seams remain unapproved. */
 export const nativeSecondaryBindings={
@@ -31,13 +32,15 @@ export const nativeSecondaryBindings={
       {id:'crest',left:180,right:800,top:60,bottom:230,pin:'bottom',maxDisplacement:12,gain:.35},
       {id:'beard',left:300,right:480,top:550,bottom:670,pin:'top',maxDisplacement:10,gain:.3}]}},
 } as const;
-export const hasBodyViewSecondary=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySecondary===BODY_VIEW_SECONDARY_SELECTION||profile.appearance.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION;
+export const hasOwnBodySecondary=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(profile.appearance.bodyView)||profile.appearance.bodySecondary===FRONT_BODY_SECONDARY_SELECTION&&isFrontSecondaryView(profile.appearance.bodyView);
+export const hasBodyViewSecondary=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySecondary===BODY_VIEW_SECONDARY_SELECTION||profile.appearance.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION||profile.appearance.bodySecondary===FRONT_BODY_SECONDARY_SELECTION;
 export function registeredNativeSecondary(profile:Pick<HostProfile,'appearance'>,source:NativeSecondarySource){
   const a=profile.appearance;
   if(isBasicBodyView(a.bodyView)){
-    if(a.bodySecondary!==PROFILE_BODY_SECONDARY_SELECTION||!isProfileSecondaryView(a.bodyView)||basicBodyHasUnsupportedOptions(a)||a.artworkVersion!=='forest-body-view-1'||a.characterVariant!=='lila'&&a.characterVariant!=='karo'||a.sourceColour)throw basicBodyCapabilityError(a.bodyView,'secondary');
-    const binding=profileSecondaryBindings[a.characterVariant][a.bodyView];
-    if(source.view!==a.bodyView||source.sha256!==binding.sha256||source.width!==binding.width||source.height!==binding.height)throw new Error('needs-view-secondary: own profile image registration differs');
+    if(!hasOwnBodySecondary(profile)||basicBodyHasUnsupportedOptions(a)||a.artworkVersion!=='forest-body-view-1'||a.characterVariant!=='lila'&&a.characterVariant!=='karo'||a.sourceColour)throw basicBodyCapabilityError(a.bodyView,'secondary');
+    const binding=a.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(a.bodyView)?profileSecondaryBindings[a.characterVariant][a.bodyView]:a.bodySecondary===FRONT_BODY_SECONDARY_SELECTION&&isFrontSecondaryView(a.bodyView)?frontSecondaryBindings[a.characterVariant][a.bodyView]:undefined;
+    if(!binding)throw basicBodyCapabilityError(a.bodyView,'secondary');
+    if(source.view!==a.bodyView||source.sha256!==binding.sha256||source.width!==binding.width||source.height!==binding.height)throw new Error('needs-view-secondary: own image registration differs');
     return binding;
   }
   if(a.bodySecondary!==BODY_VIEW_SECONDARY_SELECTION||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-secondary: select a registered native actor/view');
@@ -62,9 +65,9 @@ export function nativeSecondaryPieces(profile:Pick<HostProfile,'appearance'>,sou
  * Original headClip is applied in UV space before deformation; moving tips
  * are not clipped again against the old silhouette in destination space. */
 export function nativeSecondarySvg(profile:Pick<HostProfile,'appearance'>,source:NativeSecondarySource){
-  const regions=registeredNativeSecondary(profile,source).regions,pieces=nativeSecondaryPieces(profile,source);
-  const defs='<defs><mask id="view-secondary-static-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="'+source.width+'" height="'+source.height+'"><path d="M0 0H'+source.width+'V'+source.height+'H0Z" fill="white"/>'+regions.map(r=>'<path d="'+rect(r)+'" fill="black"/>').join('')+'</mask>'
-    +regions.map(r=>'<clipPath id="view-secondary-'+r.id+'-clip"><path d="'+rect(r)+'"/></clipPath>').join('')
+  const regions:readonly NativeSecondaryRegion[]=registeredNativeSecondary(profile,source).regions,pieces=nativeSecondaryPieces(profile,source);
+  const defs='<defs><mask id="view-secondary-static-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="'+source.width+'" height="'+source.height+'"><path d="M0 0H'+source.width+'V'+source.height+'H0Z" fill="white"/>'+regions.map(r=>'<path d="'+(r.sourceClip??rect(r))+'" fill="black"/>').join('')+'</mask>'
+    +regions.map(r=>'<clipPath id="view-secondary-'+r.id+'-clip"><path d="'+(r.sourceClip??rect(r))+'"/></clipPath>').join('')
     +pieces.map(piece=>{
       const normals=piece.from.map((p,i)=>{const q=piece.from[(i+1)%3]!,dx=q.x-p.x,dy=q.y-p.y,length=Math.hypot(dx,dy);return {x:dy/length,y:-dx/length};});
       const expanded=piece.from.map((p,i)=>{const a=normals[(i+2)%3]!,b=normals[i]!,k=2/(1+a.x*b.x+a.y*b.y);return {x:p.x+(a.x+b.x)*k,y:p.y+(a.y+b.y)*k};});
@@ -113,8 +116,9 @@ export function nativeSecondaryMatrixError(profile:Pick<HostProfile,'appearance'
   }return error;
 }
 export const nativeSecondaryDescription={version:BODY_VIEW_SECONDARY_VERSION,selection:BODY_VIEW_SECONDARY_SELECTION,
-  selections:[BODY_VIEW_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_SELECTION],
+  selections:[BODY_VIEW_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_SELECTION,FRONT_BODY_SECONDARY_SELECTION],
   ownProfile:{version:PROFILE_BODY_SECONDARY_VERSION,selection:PROFILE_BODY_SECONDARY_SELECTION,bindings:profileSecondaryBindings,sourceCount:4,visibleRegions:8,coordinateAuthority:'manual own-source cues, not measured anatomy/segmentation or accepted artwork',frontSecondary:false,rearSecondary:false,continuousTurns:false,approved:false,artApproved:false,motionVerified:false,productionReady:false,productionRig:null,availableBanks:[]},
-  fingerprint:hash({version:BODY_VIEW_SECONDARY_VERSION,bindings:nativeSecondaryBindings,profileSecondaryBindings,temporal:secondaryMotionDescription.fingerprint,mesh:[2,3],minimumArea:.4,uvOverlap:2}),bindings:nativeSecondaryBindings,temporal:secondaryMotionDescription,
+  ownFront:{version:FRONT_BODY_SECONDARY_VERSION,selection:FRONT_BODY_SECONDARY_SELECTION,bindings:frontSecondaryBindings,sourceCount:2,visibleRegions:4,coordinateAuthority:'manual own-source texture/UV contour cues; not measured segmentation/anatomy or accepted art',sourceClip:'same own lower-beard UV contour in static erase and moving source; neck remains rigid',profileSecondary:false,rearSecondary:false,locomotion:false,seat:false,tools:false,continuousTurns:false,approved:false,artApproved:false,motionVerified:false,productionReady:false,productionRig:null,availableBanks:[]},
+  fingerprint:hash({version:BODY_VIEW_SECONDARY_VERSION,bindings:nativeSecondaryBindings,profileSecondaryBindings,frontSecondaryBindings,temporal:secondaryMotionDescription.fingerprint,mesh:[2,3],minimumArea:.4,uvOverlap:2}),bindings:nativeSecondaryBindings,temporal:secondaryMotionDescription,
   method:'source-texture meshes for ponytail/crest or lower beard; attachment row and side seams pinned; eyes/nose/mouth/hair ties and face stay rigid',trianglesPerActor:24,
   limits:'candidate regions, layers and silhouette not accepted; no reconstructed hidden artwork, collision/fabric/hair simulation or full turns',approved:false,productionReady:false,motionVerified:false};

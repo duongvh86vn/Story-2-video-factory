@@ -26,9 +26,10 @@ export const bodyFrontRegistration={
     headClip:'M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z',
     headBounds:{left:183,right:839,top:23,bottom:575},chin:{left:{x:409,y:498},right:{x:625,y:498}}},
 } as const;
-export const frontBodyRegistrationDescription={version:'native-front-body-registration-4',sources:bodyFrontRegistration,
+export const frontBodyRegistrationDescription={version:'native-front-body-registration-5',sources:bodyFrontRegistration,
   coordinateAuthority:'manually authored source-canvas approximations; not measured anatomy/pose/yaw',measuredYawDeg:null,
   capabilities:['fixed happy source head','rigid own-source clothing','same-person canonical soft limb rest/point/think candidate','explicit registered-basic-eyes-v1 from own front source; bounded look/blink candidate only','explicit registered-basic-mouth-v1 from own front source; activity-driven mouth and original speaker clock, unaccepted skin/contour seams'],
+  ownSecondary:'explicit registered-front-secondary-v1 uses own front crest/tail/lower beard texture cues; shared own face erase masks, original expression clock and manual lower-beard UV contour; seams/segmentation/identity/motion unaccepted',
   ownExpressions:'explicit registered-basic-expressions-v1 with own front brows, registered-basic-eyes-v1 and registered-basic-mouth-v1; original expression clock, unaccepted skin/ink/contour seams',
-  unavailable:['phoneme lip-sync','exact optical gaze','laugh/body acting acceptance','locomotion','seat','cloth/hair follow','manipulation/tools','supporting cast','head bank','continuous body/head turns'],
+  unavailable:['phoneme lip-sync','exact optical gaze','laugh/body acting acceptance','locomotion','seat','cloth follow; hair/beard rigid unless own front secondary selected','manipulation/tools','supporting cast','head bank','continuous body/head turns'],
   artApproved:false,approved:false,motionVerified:false,productionReady:false,productionRig:null,availableBanks:[]};

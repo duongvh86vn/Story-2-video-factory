@@ -13,6 +13,7 @@ import {BODY_VIEW_EYES_SELECTION,bodyViewEyesDescription} from '../animation/bod
 import {BODY_VIEW_EXPRESSIONS_SELECTION,bodyViewExpressionsDescription} from '../animation/body-view-expressions.js';
 import {BODY_VIEW_LOCOMOTION_SELECTION,nativeClothDescription} from '../animation/body-view-cloth.js';
 import {BODY_VIEW_SECONDARY_SELECTION,nativeSecondaryDescription} from '../animation/body-view-secondary.js';
+import {FRONT_BODY_SECONDARY_SELECTION,isFrontSecondaryView} from '../animation/body-view-front-secondary-binding.js';
 import {PROFILE_BODY_SECONDARY_SELECTION,isProfileSecondaryView} from '../animation/body-view-profile-secondary-binding.js';
 import {BODY_VIEW_SEAT_SELECTION,nativeSeatDescription} from '../animation/body-view-seat.js';
 import {BODY_VIEW_MANIPULATION_SELECTION,nativeManipulationDescription} from '../animation/native-contact-arm.js';
@@ -40,7 +41,7 @@ export const BODY_EXPRESSION_MODES=['native',BODY_VIEW_EXPRESSIONS_SELECTION,BAS
 export type BodyExpressionMode=typeof BODY_EXPRESSION_MODES[number];
 export const BODY_MOTION_MODES=['rigid',BODY_VIEW_LOCOMOTION_SELECTION,PROFILE_BODY_LOCOMOTION_SELECTION,REAR_BODY_LOCOMOTION_SELECTION] as const;
 export type BodyMotionMode=typeof BODY_MOTION_MODES[number];
-export const BODY_SECONDARY_MODES=['rigid',BODY_VIEW_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_SELECTION] as const;
+export const BODY_SECONDARY_MODES=['rigid',BODY_VIEW_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_SELECTION,FRONT_BODY_SECONDARY_SELECTION] as const;
 export type BodySecondaryMode=typeof BODY_SECONDARY_MODES[number];
 export const BODY_SEAT_MODES=['unregistered',BODY_VIEW_SEAT_SELECTION] as const;
 export type BodySeatMode=typeof BODY_SEAT_MODES[number];
@@ -69,7 +70,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   const ownMotion=motion===PROFILE_BODY_LOCOMOTION_SELECTION&&isProfileMotionView(view)||motion===REAR_BODY_LOCOMOTION_SELECTION&&isRearMotionView(view);
   if(motion!=='rigid'&&!ownMotion&&(motion!==BODY_VIEW_LOCOMOTION_SELECTION||!authored||isBasicBodyView(view)))throw new Error('needs-view-locomotion: select motion registered for this own native body view');
   const ownMotionAction=ownMotion&&['walk','walk-left','run','run-left','jump','crouch'].includes(action);
-  const ownSecondary=secondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(view);
+  const ownSecondary=secondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(view)||secondary===FRONT_BODY_SECONDARY_SELECTION&&isFrontSecondaryView(view);
   if(secondary!=='rigid'&&!ownSecondary&&(secondary!==BODY_VIEW_SECONDARY_SELECTION||!authored||isBasicBodyView(view)))throw new Error('needs-view-secondary: select secondary registered for this own native body view');
   if(seat!=='unregistered'&&(seat!==BODY_VIEW_SEAT_SELECTION||!authored||motion!==BODY_VIEW_LOCOMOTION_SELECTION))throw new Error('needs-view-seat: seated candidate requires a native view and registered locomotion');
   if(manipulation!=='unregistered'&&(manipulation!==BODY_VIEW_MANIPULATION_SELECTION||!authored))throw new Error('needs-view-manipulation: manipulation needs an explicit native body view');
@@ -264,6 +265,7 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:Bod
     +'<p><strong>Thoại riêng góc chính diện/nghiêng — source0.95:</strong> chọn registered-basic-mouth-v1 ở front/left/right. Tín hiệu segment-draft chỉ là mô phỏng có nhãn, chưa có audio thật. Khi chưa chọn expressions, Lila giữ smile nguồn trong im lặng; Karo có contour khép riêng. Mask miệng, mắt và chân mày tách riêng; da/viền/môi/tóc/râu cần review hình và video, productionReady=false. Không phải phoneme lip-sync hoặc quay đầu liên tục.</p>'
     +'<p><strong>Miệng góc 3/4 — mốc 0.30:</strong> lựa chọn registered-mouth-v1 dùng tín hiệu giả lập có nhãn segment-draft; không có audio hoặc xác nhận lip-sync. Khoảng im lặng/level 0 trả lại ảnh happy gốc của view. Miệng, identity, mask và video còn chờ duyệt; productionReady=false.</p>'
     +'<p><strong>Biểu cảm — ứng viên 0.36:</strong> chọn registered-expressions-v1 cùng mắt native và miệng khép để xem các mood; nét mực chân mày lấy từ đúng PNG đang đăng ký. Mắt/mũi/đầu không bị kéo méo; màu da/viền ghép và diễn xuất còn chờ nghiệm thu.</p>'
+    +'<p><strong>Tóc/râu chính diện — source0.100:</strong> chọn registered-front-secondary-v1 ở front, giữ đúng hai PNG gốc và cùng face erase masks. Bốn vùng crest/tail/beard; lower beard Karo dùng cùng own UV contour cho phần tĩnh và chuyển động để giữ cổ. Original expression/secondary clock xuyên camera cut/đổi vai. Không cấp locomotion/ngồi/tools/head-bank/mẫu supportingModel hoặc quay liên tục; tạo hình/viền/layer/chuyển động/video chưa nghiệm thu.</p>'
     +'<p><strong>Đi/chạy/nhảy/cúi góc lưng — source0.99:</strong> chọn registered-rear-locomotion-v1 ở back-left/back-right; walk-left/run-left cho back-left, walk/run cho back-right. Vạt áo lấy đúng ảnh của từng góc, cùng clock thân/đai/vạt và original sourceBody qua camera cut/đổi vai. Đầu/tóc giữ góc gốc; chưa có face overlays, chin contact, ngồi, tools hoặc quay liên tục. Chưa nghiệm thu tạo hình, khớp, chuyển động hay video.</p>'
     +'<p><strong>Đi/chạy/nhảy/cúi riêng góc nghiêng — source0.97:</strong> chọn registered-profile-locomotion-v1 ở left/right; walk-left/run-left cho left, walk/run cho right. Vạt áo dùng đúng ảnh từng góc, đai giữ nguyên và vạt theo chân trễ90ms. Complete sourceBody giữ clock qua camera cut/đổi primary–supporting. Mode profile không cấp front/rear motion, ngồi, cầm vật hoặc quay thân; chưa nghiệm thu khớp, chân/viền áo, chuyển động hay video.</p>'
     +'<p><strong>Thân và vạt áo góc3/4:</strong> chọn registered-locomotion-v1 với góc 3/4 đúng chiều để xem đi/chạy/nhảy/cúi. Đai áo giữ cố định, vạt theo đùi có độ trễ. Ngồi cần chọn thêm registered-seated-v1; đây là ứng viên với ghế/khúc gỗ, chung viền vải đục và hai ống quần Karo. Complete sourceBody hỗ trợ clock ghế xuyên camera nhưng còn chờ runtime; quay thân và chất lượng video chưa nghiệm thu.</p>'

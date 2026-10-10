@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.100-own-front-secondary",
+  "precedingSourceSHA": "74811d202832827b8296a00339e0b964b0c0344e",
+  "scope": "own front secondary/UV texture integration and bounded source advice only; no segmentation/anatomy/art/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Two own front PNG/SHA/canvas bindings/four crest/tail/lower-beard regions; exact registered-front-secondary-v1. Original raster/face/costume colours untouched; no other-view ROI/landmark borrowing, mirrored/warped face or inferred yaw.",
+    "Own selector routes head SVG, validation, physical sampling, mesh/interpolation and conservative camera bounds. Shared mesh/state/bounds/temporal kernels unchanged. Optional sourceClip uses same own contour in static erase and moving source UV before source headClip/deformation; legacy rect definitions unchanged.",
+    "Own front/profile static/moving source shares eyes/mouth/brow erase masks; replacement layers remain outside texture meshes. Complete original expression/secondary history through continuous cuts/role swaps; secondary-only retains original happy.",
+    "Clock14/schema/API/workbench/director/exact report/cache/manifest bind actual source/selection. Front secondary grants no locomotion/sourceBody/sourceSpan/seat/tools/head-bank/supportingModel/turns. Production/source/voice/final gates unchanged.",
+    "Eight new callbacks DECLARED/NOT RUN. Source ROI coordinates/neck exclusion/UV contour are manual cues, not segmentation/anatomy/seam/identity/art/motion acceptance."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "fff6e3/session78032/completionab35d4",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 build\n> tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 66 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-BP7s-jPT.js   249.20 kB │ gzip: 77.56 kB\n✓ built in 884ms\n",
+      "scope": "source build only; no runtime acceptance"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "fa547b/session9074/completion5ea278",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "typecheck only; callbacks NOT RUN; completion output empty"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "5fad5d",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n\n",
+      "scope": "definition export only; no schema instances"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "4f8ec4",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "explicitly allowed source/header/hash/static JSON inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/front-secondary-static-v1.mjs",
+      "exitCode": 0,
+      "handle": "d8efe1",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.100-own-front-secondary\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"mappedCodeHashes\":174,\"scalarCodeEntries\":46,\"ownFrontSecondarySources\":2,\"visibleRegions\":4,\"callbacksDeclared\":8,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}\n",
+      "scope": "raw header/alpha/RGBA/JSON/source AST inventory only; no project evaluation or tests"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "source freeze only; executed by freeze script before recording"
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/front-secondary-static-record-v1.json",
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 17350,
+    "usage": {
+      "prompt_tokens": 12284,
+      "completion_tokens": 1568,
+      "total_tokens": 13852
+    },
+    "finishReason": "stop",
+    "reply": "{\"findings\":[{\"file\":\"packages/animation/body-view-art.ts\",\"quote\":\"const secondarySource=hasOwnBodySecondary(profile)?`<g id=\\\"view-secondary-source\\\">${sourceHead}</g>`:`<image id=\\\"view-secondary-source\\\" width=\\\"${c.width}\\\" height=\\\"${c.height}\\\" href=\\\"${url}\\\"/>`;\",\"reason\":\"For own secondary motion, the source placed in the defs is not wrapped in `source-head-clip`. The head clip is applied to the ordinary source image elsewhere in this function, but not to this moving source; extracted UV pixels can therefore include pixels outside the registered head contour.\",\"correction\":\"Apply `source-head-clip` to the secondary source in source/UV space before deformation, while preserving the shared face erase masks.\"}],\"missingContext\":[\"Full SVG emission in `nativeSecondarySvg` would confirm how the moving source references `view-secondary-source`.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshot": "C:/Users/Duongvh-pc/.codex/tmp/source100-review-snapshot.txt",
+    "sha256": "978801d189dc3c1cfe9da22d74fec5525bbe6cdaefea7c29d6f738d6444ed3e4",
+    "scope": "bounded source-only snapshot advice; no tests/art/runtime/production acceptance",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "handle": "a6068d/session63892/completion22d967",
+    "parentDisposition": {
+      "finding": "Moving source allegedly omits source headClip",
+      "classification": "not established; existing full SVG implementation already clips source UV before outer piece deformation",
+      "evidence": "nativeSecondarySvg emits <g id=piece><g clip=region><g clip=triangle><g clip-path=url(#source-head-clip)><use href=#view-secondary-source/>. Static source is also clipped. Both unchanged headClip nesting and new same UV contour verified from source; no runtime verdict.",
+      "contextLimit": "Snapshot supplied binding/diffs; full unchanged nativeSecondarySvg emission was not supplied. Snapshot builder used literal escaped newlines, so appended compiler validation slice was empty. Parent inspected actual complete code; no claim that bounded advice accepted final source.",
+      "acceptsFinalSource": false,
+      "testsExecuted": false,
+      "artAccepted": false
+    }
+  },
+  "earlierChecks": [
+    {
+      "rawInventory": "f977f6",
+      "exitCode": 1,
+      "finding": "Temporary inventory reader indexed front registration as actor/view; front is flat actor data. Reader corrected; successful final inventory follows."
+    },
+    {
+      "rawPixelCue": "4422f1",
+      "exitCode": 0,
+      "finding": "Initial own lower-beard UV contour retained seven warm-colour heuristic pixels. Manual ROI contour adjusted; final raw cue acd2a1 recorded zero. This is not segmentation/art/anatomy acceptance."
+    }
+  ],
+  "ownedPaths": 28,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/FRONT-SECONDARY-HANDOFF.md",
+  "newCallbacksDeclared": 8,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 0,
+  "imagesEdited": false,
+  "environment": {
+    "node": "24.19.0",
+    "platform": "win32",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+    "diagnosticPort": 8851,
+    "serverStarted": false
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}
