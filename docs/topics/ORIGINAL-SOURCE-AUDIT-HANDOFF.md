@@ -1,5 +1,7 @@
 # Kiểm tra cảnh trên nguồn gốc — source0.82
 
+**Cập nhật source0.106:** [Tọa độ vật/giáo tại camera cut trên câu chuyện gốc](ORIGINAL-MODEL-BOUNDARIES-HANDOFF.md). Source audit2 và candidate explainer đọc đúng actual owner/source clock và translation của glyph giáo, kiểm đủ bindings cả camera đầu và cut; production checker vẫn chặn nguồn chưa nghiệm thu. Sáu ca regression đã viết, **DECLARED / NOT RUN**; không tạo video hoặc tuyên bố tay/mặt/chuyển động đã đạt. Toàn story/script/WAV→video, diễn viên trong câu chuyện, EN/VI/JA/KO/local TTS và nghiệm thu hình/motion/final/QC vẫn là mục tiêu; source0.105 trở xuống là lịch sử.
+
 Hiện hành source0.83 bổ sung nhận diện `sourceSpear` và báo pending rotating model/action/cue/native tool acceptance, không thông qua candidate/production binding. Xem [bàn giao clock giáo](ORIGINAL-SPEAR-CLOCK-HANDOFF.md). Phần source0.82 dưới đây là lịch sử; runtime/video vẫn chưa nghiệm thu.
 
 Đã viết màn hình **Kiểm tra cảnh** và API chỉ đọc để model test biết lỗi nào còn thiếu theo toàn câu chuyện, cảnh và diễn viên. Source `forest-tribe-0.82-original-source-audit`, producer `story-direction-2.2.45`, audit `original-source-audit-1`. Chưa chạy API, test callback, server, geometry, renderer hoặc video; chưa nghiệm thu chất lượng phim hay toàn sản phẩm.

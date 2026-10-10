@@ -12,9 +12,15 @@ import {validateManipulationActionSlices} from './source-manipulation-actions.js
 import {validateSourceOwnershipTimelines} from './source-ownership.js';
 import {ownershipScene,type OwnershipScene} from './ownership-scene.js';
 import {ownershipBakeAt} from './ownership-bake-query.js';
+import {assertOriginalAuditContext} from './source-audit-context.js';
+import {sourceSpearBinding} from './source-spear-bindings.js';
+import {actorViewActingClock} from '../actors/view-acting-clock.js';
+import {actorProfile} from '../actors/model.js';
+import {samplePhysicalPerformance} from '../animation/compiler.js';
+import {compiledRigidProp} from './prop-motion.js';
 
 /** Bound-model motion/center/support semantics are visual-only cache inputs. */
-export const PROP_BINDING_VERSION='bound-model-motion-2.2.7';
+export const PROP_BINDING_VERSION='bound-model-motion-2.2.8';
 export const ACTOR_PROP_OWNERSHIP_DESCRIPTION={version:'actor-prop-ownership-4',bindingVersion:PROP_BINDING_VERSION,
   field:'cinematic.propBindings[].ownerId',identity:'actual visible story-person ID, not rig/model identity',
   selection:'explicit supporting owner; omission retains legacy primary/presenter only; original source props require explicit person on every slice',
@@ -41,13 +47,25 @@ export function pickupPart(shot:Shot){
   return ref?{part,ref}:undefined;
 }
 function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene):NonNullable<Shot['visualization']>['parts']{
-  validateSourceSpearProductionBinding(shot);
   const owners=new Map<string,ReturnType<typeof sourceBoundPropFrame>['frame']>();
   const canonical=shot.cinematic?.sourceOwnership?ownershipScene(shot,board,narration,compiled):undefined;
   return (shot.visualization?.parts??[]).map(part=>{
     const entity=canonical?.get(part.id);
     if(entity){const at=ownershipBakeAt(entity,exit?shot.endMs:shot.startMs),stage=shot.cinematic!.performance.stage;return {...part,x:at.center.x/stage.width,y:at.center.y/stage.height};}
     const binding=shot.cinematic?.propBindings.find(b=>b.partId===part.id),owned=binding&&boundProp(shot,binding),prop=owned?.prop,p=owned?.performance;
+    const spear=binding&&p?.sourceSpear&&sourceSpearBinding(shot,binding);
+    if(spear){
+      if(!board||!narration)throw new Error(`${shot.id}: needs-source-prop-binding: original shaft boundary requires complete storyboard and narration`);
+      const clock=actorViewActingClock(board,shot,spear.owner.id);
+      if(!clock?.spearMotion)throw new Error(`${shot.id}: needs-source-prop-binding: original shaft boundary lost its actual owned clock`);
+      let frame=owners.get(spear.owner.id);
+      if(!frame){frame=samplePhysicalPerformance(spear.owner.performance,actorProfile(spear.owner.character!),exit?spear.owner.performance.durationMs:0,clock);owners.set(spear.owner.id,frame);}
+      // Exactly the serialized translation drawn for the physical shaft. Its
+      // raw origin is only a descriptor; a destination cannot stand in for a
+      // rotating tool. Angle unwrapping changes no endpoint translation.
+      const at=compiledRigidProp(frame,{partId:part.id,ownerId:spear.owner.id,propId:binding!.propId,frames:[frame],rigid:{transformKey:`prop-${binding!.propId}`,scale:spear.owner.performance.scale}});
+      return {...part,x:at.point.x/spear.owner.performance.stage.width,y:at.point.y/spear.owner.performance.stage.height};
+    }
     if(binding&&owned&&p?.sourceManipulation){
       let frame=owners.get(owned.id);if(!frame){frame=sourceBoundPropFrame(shot,binding,exit?p.durationMs:0,board).frame;owners.set(owned.id,frame);}
       const state=frame.props[binding.propId];if(!state)throw new Error(`${shot.id}: needs-source-prop-binding: actual model state missing`);
@@ -56,8 +74,27 @@ function modelPartsAt(shot:Shot,exit:boolean,board?:Storyboard,narration?:Narrat
     return exit&&prop?.destination&&p?{...part,x:prop.destination.x/p.stage.width,y:prop.destination.y/p.stage.height}:part;
   });
 }
-export function modelExitParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){return modelPartsAt(shot,true,board,narration,compiled);}
-export function modelEntryParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){return modelPartsAt(shot,false,board,narration,compiled);}
+export function modelExitParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){validateSourceSpearProductionBinding(shot);return modelPartsAt(shot,true,board,narration,compiled);}
+export function modelEntryParts(shot:Shot,board?:Storyboard,narration?:Narration,compiled?:OwnershipScene){validateSourceSpearProductionBinding(shot);return modelPartsAt(shot,false,board,narration,compiled);}
+
+/** Separate read-only source geometry. Complete original membership and all
+ * source bindings are mandatory; this entry grants no production exception,
+ * approval flag, caller-supplied bake or substituted scene history. */
+function sourceModelPartsAt(shot:Shot,exit:boolean,board:Storyboard,narration:Narration){
+  assertOriginalAuditContext(board,narration,[shot]);
+  validateSourceWorld(shot,board,narration);
+  if(shot.cinematic?.sourceOwnership?.length||[shot.cinematic?.performance,...(shot.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation||p?.sourceSpear))validateSourcePropBindings(shot,board,narration);
+  else validatePropBindings(shot,board,narration);
+  return modelPartsAt(shot,exit,board,narration);
+}
+export function sourceModelExitParts(shot:Shot,board:Storyboard,narration:Narration){return sourceModelPartsAt(shot,true,board,narration);}
+export function sourceModelEntryParts(shot:Shot,board:Storyboard,narration:Narration){return sourceModelPartsAt(shot,false,board,narration);}
+
+export const sourceModelBoundaryDescription={version:'original-source-model-boundaries-1',scope:'complete-original-model-boundary-candidate',
+  input:'exact full storyboard/narration and original actor/model/tool bindings; no fixture or shortened run substituted',
+  geometry:'canonical ownership bake or actual person-owned physical source at the camera boundary; rigid shaft reads its serialized glyph translation, never its static origin or destination',
+  continuity:'separate original candidate checker shares ordinary model continuity rules; ordinary production entries retain the spear guard',
+  acceptance:'source checks do not approve art, contact, motion, audio or final production',runtimeVerified:false,productionReady:false,productionApproval:false,motionVerified:false};
 /** Physical source clock support cannot certify a rotating entity/model/action
  * binding or native tool pose. Keep this separate from the existing generic
  * manipulation acceptance guard. */

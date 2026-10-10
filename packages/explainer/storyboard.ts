@@ -9,7 +9,7 @@ import type { ExplanationBeat, Visualization } from './schemas.js';
 import { ExplanationBeatSchema } from './schemas.js';
 import { fold,validateSceneIntent } from './plan.js';
 import { thermalEvidence } from './thermal.js';
-import { validateCinematicShot, validateSourceCinematicCandidate, validateModelContinuity } from '../director/index.js';
+import { validateCinematicShot, validateSourceCinematicCandidate, validateModelContinuity,validateSourceModelContinuity } from '../director/index.js';
 
 import { EXPLAINER_RECIPES } from './recipes.js';
 import { validateAuthoredVisualSources } from './visual-sources.js';
@@ -93,7 +93,7 @@ export function explainerShot(id: string, startMs: number, endMs: number, beat: 
   });
 }
 export function validateExplainerStoryboard(board: Storyboard, narration: Narration, beats: Beat[], baseProfile: HostProfile, baseRig: HostRig, config: FactoryConfig,options:{fragment?:boolean;sourceBoard?:Storyboard}={}): void {
-  checkExplainerStoryboard(board,narration,beats,baseProfile,baseRig,config,options,validateCinematicShot);
+  checkExplainerStoryboard(board,narration,beats,baseProfile,baseRig,config,options,validateCinematicShot,validateModelContinuity);
 }
 
 /** Read-only candidate diagnostics share every explainer rule, but can never
@@ -102,11 +102,12 @@ export function validateExplainerStoryboard(board: Storyboard, narration: Narrat
 export function validateSourceCandidateStoryboard(board:Storyboard,narration:Narration,beats:Beat[],baseProfile:HostProfile,baseRig:HostRig,config:FactoryConfig,sourceBoard:Storyboard=board){
   assertOriginalAuditContext(sourceBoard,narration,board.shots);
   const fragment=hash(board)!==hash(sourceBoard);
-  checkExplainerStoryboard(board,narration,beats,baseProfile,baseRig,config,{fragment,sourceBoard},validateSourceCinematicCandidate);
+  checkExplainerStoryboard(board,narration,beats,baseProfile,baseRig,config,{fragment,sourceBoard},validateSourceCinematicCandidate,validateSourceModelContinuity);
   return {scope:'original-source-candidate' as const,productionReady:false as const,productionApproval:false as const,motionVerified:false as const};
 }
 
-function checkExplainerStoryboard(board:Storyboard,narration:Narration,beats:Beat[],baseProfile:HostProfile,baseRig:HostRig,config:FactoryConfig,options:{fragment?:boolean;sourceBoard?:Storyboard},cinematic:(shot:Shot,profile:HostProfile,config:FactoryConfig,board:Storyboard,narration:Narration)=>unknown):void {
+function checkExplainerStoryboard(board:Storyboard,narration:Narration,beats:Beat[],baseProfile:HostProfile,baseRig:HostRig,config:FactoryConfig,options:{fragment?:boolean;sourceBoard?:Storyboard},cinematic:(shot:Shot,profile:HostProfile,config:FactoryConfig,board:Storyboard,narration:Narration)=>unknown,
+  continuity:(previous:Shot|undefined,next:Shot,board:Storyboard,narration:Narration)=>void):void {
   // A diagnostic fragment retains the actual complete source run, substituting
   // the candidate under review so stale siblings cannot approve another phase.
   const phaseBoard=options.sourceBoard?{shots:options.sourceBoard.shots.filter(s=>!board.shots.some(current=>current.id===s.id)).concat(board.shots).sort((a,b)=>a.startMs-b.startMs)}:board;
@@ -212,7 +213,7 @@ function checkExplainerStoryboard(board:Storyboard,narration:Narration,beats:Bea
     const spoken = narration.segments.reduce((n, s) => n + Math.max(0, Math.min(s.endMs, shot.endMs) - Math.max(s.startMs, shot.startMs)), 0);
     speech += spoken; if (h.presence !== 'absent') visible += spoken;
   }
-  if(config.presentation.mode==='story-cinematic')for(const [i,shot] of board.shots.entries())validateModelContinuity(board.shots[i-1],shot,phaseBoard,narration);
+  if(config.presentation.mode==='story-cinematic')for(const [i,shot] of board.shots.entries())continuity(board.shots[i-1],shot,phaseBoard,narration);
   if (!board.shots.some(s=>s.cinematic?.actorScene)&&speech && visible / speech < config.presentation.minimum_host_speech_visibility) throw new Error('Insufficient host visibility during narration');
   if (!board.shots.some(s=>s.cinematic?.actorScene)&&config.presentation.require_meaningful_host_action_per_beat) for (const beat of beats) {
     if (!board.shots.some(s => s.beatIds.includes(beat.id) && s.host?.presence !== 'absent' && s.host?.actions.some(a => !['idle', 'greet', 'react'].includes(a.type)))) throw new Error(`${beat.id}: no explanatory host action`);

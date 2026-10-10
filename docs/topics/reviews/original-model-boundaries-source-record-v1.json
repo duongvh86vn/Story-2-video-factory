@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.106-original-model-boundaries",
+  "precedingSourceSHA": "19b0225519b80f53083d25dbc48b9bc37c6137af",
+  "scope": "implementation source/build/typecheck/schema definitions/raw hash/header/AST/Git delivery only; user model retains runtime/film QA",
+  "ownedPaths": 18,
+  "change": "Original source model boundaries and continuity reach actual own person/source-spear geometry in candidate audit/explainer; serialized shaft translation, full original context, public production guards unchanged",
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "b2d8df",
+      "session": 7474,
+      "completionChunk": "81771c",
+      "exitCode": 0,
+      "studioModules": 69,
+      "viteBuildMs": 609
+    },
+    "typecheck": {
+      "command": "npm run test:typecheck",
+      "startChunk": "1248cb",
+      "session": 15801,
+      "completionChunk": "c5e66f",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "schemas": {
+      "command": "npm run schemas",
+      "chunk": "a032cc",
+      "exitCode": 0,
+      "scope": "schema definition export only"
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "803678",
+      "exitCode": 0,
+      "scope": "explicitly permitted static inventory only"
+    },
+    "rawInventory": {
+      "chunk": "f543d6",
+      "exitCode": 0,
+      "scope": "raw Git/file/header/hash/JSON/TS AST only, no project imports/evaluation"
+    },
+    "whitespace": {
+      "chunk": "ef3777",
+      "exitCode": 0
+    }
+  },
+  "connectivity": {
+    "requestedModel": "tester",
+    "httpStatus": 200,
+    "responseModel": "gpt-6-luna",
+    "reply": "TESTER_OK",
+    "elapsedMs": 1787,
+    "scope": "historical current-route connectivity only, not project tests"
+  },
+  "sourceWorker": {
+    "requestedModel": "cx/gpt-6.1-sol",
+    "requestedReasoning": "xhigh",
+    "elapsedMs": 55017,
+    "clientState": "terminal-error",
+    "providerState": "unknown; no job handle",
+    "error": "client-timeout",
+    "retries": 0,
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "snapshotSHA256": "12c4357236f562df69a7bd71d011a21814b3061ae56ae18146e68e9cb48812bc",
+    "snapshotChars": 26390,
+    "successfulDispatches": 1,
+    "preDispatchOversizeErrors": 1,
+    "localStartChunk": "34536b",
+    "localSession": 56112,
+    "localCompletionChunk": "df3845",
+    "localExitCode": 1,
+    "parentDisposition": "No answer/source received, no retry; parent authored six declarations. Provider job state remains unknown without a job handle."
+  },
+  "testAuthority": {
+    "owner": "user/model test",
+    "latestUserReply": "chưa",
+    "replyDate": "2026-10-10",
+    "currentLilaKaroReportAvailable": false,
+    "oldV1Acceptance": false
+  },
+  "tests": {
+    "newFile": "tests/source-model-boundaries.test.ts",
+    "declared": 6,
+    "executed": 0,
+    "status": "DECLARED / NOT RUN",
+    "fixturesInvoked": 0,
+    "geometryEvaluated": false,
+    "compilerRun": false,
+    "cameraEvaluatorRun": false,
+    "serverStarted": false,
+    "browserOpened": false,
+    "pipelineRun": false,
+    "ttsRun": false,
+    "asrRun": false,
+    "rendererRun": false,
+    "exporterRun": false,
+    "videoRendered": false
+  },
+  "preserved": {
+    "originalRasters": 307,
+    "originalHeadDefinitions": 18,
+    "originalHeadMetadata": 27,
+    "sharedGeometryFunctions": 63,
+    "priorCallbacksUnchanged": true,
+    "sourceClockSolverInkBoneCuffPalmSoleClothUnchanged": true,
+    "sharedModelContinuityRulesUnchanged": true,
+    "ordinarySourceProductionPropGuardsUnchanged": true,
+    "previewEmitterMarkerSecurityUnchanged": true
+  },
+  "pending": [
+    "Actual current-source Lila/Karo art/anatomy/palm/garment/face/gaze and normal-speed/reverse/random-seek motion/film QA; user currently has no report.",
+    "Genuine own continuous head/body turns, tool/seat/hunt/grasp/handoff/rear secondary/crowds and vivid day/sunset/night world/camera acting.",
+    "Integrated original source production with real exact-version visual QA evidence, episode source/contact/cue/voice/review/final/QC; a candidate all-passed audit is not a production grant.",
+    "Full arbitrary story/topic -> faithful screenplay, exact script/dialogue and original WAV(+legacy SRT) -> actual narration clock -> actors inside story/world/director/camera -> review/repair/final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/reports/QC.",
+    "EN primary/VI/JA/KO/external-local TTS and locks/cache/resume/rebuild on current real projects; build/types/hash inventory and V1 do not accept these."
+  ],
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "productionBinding": "needs-source-prop-binding",
+  "canPublish": false,
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

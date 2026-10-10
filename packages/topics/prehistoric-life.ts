@@ -20,7 +20,7 @@ import {supportingFaceDescription} from './supporting-face-candidates.js';
 import {normalizeTopicActorAppearance,topicCastNormalizationDescription,TOPIC_RENDER_SELECTION_KEYS} from './cast-appearance.js';
 import {readTopicProductionRelease,certifiedTopicAppearance,certifiedTopicDefault,topicProductionReleaseDescription} from './production-release.js';
 
-export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.105-visual-qa-intake';
+export const PREHISTORIC_TOPIC_VERSION='forest-tribe-0.106-original-model-boundaries';
 export const prehistoricReadiness={productionReady:false,artwork:'source-body-head-candidates',rejected:'vector-v0.3',layers:'source-body-and-head-integrated-secondary-pending',motionAcceptance:'pending'} as const;
 export const prehistoricReferences=[
   {file:'reference-lila-full.png',role:'primary-lila-design'},

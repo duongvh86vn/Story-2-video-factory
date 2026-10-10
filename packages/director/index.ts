@@ -18,7 +18,7 @@ import { stageModels } from './models.js';
 import { ANIMATION_LIBRARY } from '../animation/library.js';
 import { planCamera, validateCamera } from './camera.js';
 import { validateComparisonReadability } from './readability.js';
-import { pickupPart, modelExitParts,modelEntryParts, validatePropBindings,validateSourceSpearProductionBinding } from './props.js';
+import { pickupPart, modelExitParts,modelEntryParts,sourceModelExitParts,sourceModelEntryParts, validatePropBindings } from './props.js';
 import { cueExpressions } from './emotion.js';
 import { validateArtDirection } from './art-direction.js';
 import {actorProfile,seedActorShot} from '../actors/model.js';
@@ -229,15 +229,14 @@ export function validateCinematicShot(shot:Shot,profile:HostProfile,config:Facto
  * ordinary production validator. No artifact or accepted receipt is created. */
 export function validateSourceCinematicCandidate(shot:Shot,profile:HostProfile,config:FactoryConfig,board:Storyboard,narration:Narration){
   assertOriginalAuditContext(board,narration,[shot]);
-  validateSourceSpearProductionBinding(shot);
   if(!hasOriginalSource(shot))validateCinematicShot(shot,profile,config,board,narration);
   else{
     validateSourceWorld(shot,board,narration);
     if(shot.cinematic?.sourceOwnership)validateSourceOwnershipTimelines(shot,board,narration);
-    if(shot.cinematic?.sourceOwnership||[shot.cinematic?.performance,...(shot.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation))
+    if(shot.cinematic?.sourceOwnership||[shot.cinematic?.performance,...(shot.cinematic?.actorScene?.supporting.map(a=>a.performance)??[])].some(p=>p?.sourceManipulation||p?.sourceSpear))
       validateSourcePropBindings(shot,board,narration);
     else validatePropBindings(shot,board,narration); // World-only rows retain ordinary local binding checks.
-    if(hash(shot.cinematic!.continuity.models)!==hash(modelExitParts(shot,board,narration).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))
+    if(hash(shot.cinematic!.continuity.models)!==hash(sourceModelExitParts(shot,board,narration).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))))
       throw new Error(`${shot.id}: model continuity disagrees with its original source candidate`);
     validateCinematicActorShot(shot,profile,config,false,board,shot,narration);
   }
@@ -321,11 +320,27 @@ function validateCinematicActorShot(shot:Shot,profile:HostProfile,config:Factory
 }
 
 export function validateModelContinuity(previous:Shot|undefined,next:Shot,board?:Storyboard,narration?:Narration):void{
+  checkModelContinuity(previous,next,board,narration,modelEntryParts,modelExitParts);
+}
+/** Exact original candidate only. Public production validation has no skip
+ * option; the diagnostic entry cannot supply foreign fragments or history. */
+export function validateSourceModelContinuity(previous:Shot|undefined,next:Shot,board:Storyboard,narration:Narration):void{
+  assertOriginalAuditContext(board,narration,previous?[previous,next]:[next]);
+  // Validate bindings even on the first camera or an intentional actor cut.
+  // Such cuts may skip a layout comparison, never the original source contract.
+  const nextParts=sourceModelEntryParts(next,board,narration);
+  const priorParts=previous?sourceModelExitParts(previous,board,narration):[];
+  checkModelContinuity(previous,next,board,narration,
+    ()=>nextParts,()=>priorParts);
+}
+function checkModelContinuity(previous:Shot|undefined,next:Shot,board:Storyboard|undefined,narration:Narration|undefined,
+  entry:(shot:Shot,board?:Storyboard,narration?:Narration)=>ReturnType<typeof modelEntryParts>,
+  exit:(shot:Shot,board?:Storyboard,narration?:Narration)=>ReturnType<typeof modelExitParts>):void{
   if(!previous?.cinematic||!next.cinematic)return;
   const ownership=previous.cinematic.sourceOwnership?.length||next.cinematic.sourceOwnership?.length;
   if(next.cinematic.actorScene?.continuity==='cut'&&!ownership)return;
-  const priorParts=modelExitParts(previous,board,narration);
-  for(const part of modelEntryParts(next,board,narration)){
+  const priorParts=exit(previous,board,narration);
+  for(const part of entry(next,board,narration)){
     const source=next.cinematic.sourceOwnership?.find(s=>s.partId===part.id)??previous.cinematic.sourceOwnership?.find(s=>s.partId===part.id);
     if(next.cinematic.actorScene?.continuity==='cut'&&!source)continue;
     const prior=priorParts.find(p=>p.id===part.id);

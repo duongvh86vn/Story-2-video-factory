@@ -8,13 +8,13 @@ import {validateActorContinuity} from '../actors/model.js';
 import {validateStoryActingCoverage,requireFinalStoryDirection} from './story-coverage.js';
 import {validateSourceCandidateStoryboard} from '../explainer/storyboard.js';
 import {inspectCastCameras} from './cast-camera.js';
-import {validateModelContinuity} from './index.js';
+import {validateSourceModelContinuity} from './index.js';
 import {assertOriginalAuditContext,hasOriginalSource} from './source-audit-context.js';
 import {validateSourceSpearBindings} from './source-spear-bindings.js';
 import {validateSourceSpearActions} from './source-spear-interactions.js';
 import {validateSourceWorld} from './source-world.js';
 
-export const SOURCE_PRODUCTION_AUDIT_VERSION='original-source-audit-1';
+export const SOURCE_PRODUCTION_AUDIT_VERSION='original-source-audit-2';
 export interface SourceProductionAuditInput {
   board:Storyboard;narration:Narration;beats:Beat[];characters:CharacterBible;
   profile:HostProfile;rig:HostRig;config:FactoryConfig;
@@ -68,7 +68,7 @@ export function inspectSourceProductionCandidate(input:SourceProductionAuditInpu
   check('final-direction-source',()=>requireFinalStoryDirection(board,beats));
   for(const [index,shot] of board.shots.entries()){
     const scene=shot.cinematic?.actorScene,actual=[...new Set([...(scene?.primary?[scene.primary.id]:[]),...(scene?.supporting.map(a=>a.character.id)??[])])];
-    check('model-continuity',()=>validateModelContinuity(board.shots[index-1],shot,board,narration),shot.id);
+    check('model-continuity',()=>validateSourceModelContinuity(board.shots[index-1],shot,board,narration),shot.id);
     check('original-spear-model-binding',()=>validateSourceSpearBindings(shot,board,narration),shot.id);
     check('original-spear-action-tip',()=>validateSourceSpearActions(shot,board,narration),shot.id);
     check('original-world-contact',()=>validateSourceWorld(shot,board,narration),shot.id);

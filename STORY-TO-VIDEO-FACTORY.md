@@ -1,5 +1,7 @@
 # STORY-TO-VIDEO FACTORY — DIỄN VIÊN TRONG CÂU CHUYỆN
 
+**Cập nhật source0.106:** [Tọa độ vật/giáo tại camera cut trên câu chuyện gốc](docs/topics/ORIGINAL-MODEL-BOUNDARIES-HANDOFF.md). Source audit2 và candidate explainer đọc đúng actual owner/source clock và translation của glyph giáo, kiểm đủ bindings cả camera đầu và cut; production checker vẫn chặn nguồn chưa nghiệm thu. Sáu ca regression đã viết, **DECLARED / NOT RUN**; không tạo video hoặc tuyên bố tay/mặt/chuyển động đã đạt. Toàn story/script/WAV→video, diễn viên trong câu chuyện, EN/VI/JA/KO/local TTS và nghiệm thu hình/motion/final/QC vẫn là mục tiêu; source0.105 trở xuống là lịch sử.
+
 **Cập nhật source0.105:** [Nhận hồ sơ QA hình ảnh đúng phiên bản](docs/topics/VISUAL-QA-INTAKE-HANDOFF.md). `topic.production_release` tùy chọn trỏ tới JSON do model test/người dùng lập sau test và duyệt thật: exact code/profile/own source/assets, report/MP4/probe60fps và day/sunset/night. Default vẫn needs-art-direction; hồ sơ cũ/thiếu/NOT RUN/sai bytes bị chặn trước model/TTS. Chỉ profile đã kiểm chứng được dùng, gồm cast trong cảnh khóa; nền cần explicit ID/setting/environmentLighting đúng hồ sơ, không fallback. Đổi hồ sơ hình giữ narrative/audio cache, ledger đổi giữa run buộc resume. Endpoint GET topic-readiness chỉ đọc, không tạo approval/test/render.12 callback DECLARED / NOT RUN, chưa có hồ sơ được chấp nhận hay video nghiệm thu; catalogue và source-prop-binding/final/QC gates giữ nguyên. Full story/script/WAV→video, voices/resume/turns/art/motion còn mở.0.104 trở xuống là lịch sử.
 
 
