@@ -1145,7 +1145,7 @@
             },
             "producer": {
               "type": "string",
-              "const": "story-direction-2.2.51"
+              "const": "story-direction-2.2.52"
             },
             "shotId": {
               "type": "string",

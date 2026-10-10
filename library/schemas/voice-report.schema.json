@@ -40,6 +40,35 @@
         "language": {
           "type": "string"
         },
+        "speakerVoices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "speakerId": {
+                "type": "string"
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "voiceId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "speakerId",
+              "provider",
+              "voiceId"
+            ],
+            "additionalProperties": false
+          }
+        },
         "narrationHash": {
           "type": "string"
         },
@@ -83,6 +112,15 @@
               },
               "endMs": {
                 "type": "number"
+              },
+              "speakerId": {
+                "type": "string"
+              },
+              "voiceId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "rawDurationMs": {
                 "type": "number"

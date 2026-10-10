@@ -162,6 +162,30 @@
               "type": "string",
               "default": "TTS_API_KEY"
             },
+            "speaker_voices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "speaker_id": {
+                    "type": "string",
+                    "maxLength": 96,
+                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                  },
+                  "voice_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "speaker_id",
+                  "voice_id"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 32
+            },
             "command": {
               "type": "string"
             },
@@ -342,6 +366,30 @@
               "api_key_env": {
                 "type": "string",
                 "default": "TTS_API_KEY"
+              },
+              "speaker_voices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "speaker_id": {
+                      "type": "string",
+                      "maxLength": 96,
+                      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
+                    },
+                    "voice_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 500
+                    }
+                  },
+                  "required": [
+                    "speaker_id",
+                    "voice_id"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 32
               },
               "command": {
                 "type": "string"
@@ -526,6 +574,13 @@
             "script": {
               "type": "string",
               "default": "input/script.txt"
+            },
+            "script_format": {
+              "type": "string",
+              "enum": [
+                "narration",
+                "dialogue"
+              ]
             },
             "source": {
               "type": "string",

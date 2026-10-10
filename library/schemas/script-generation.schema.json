@@ -62,6 +62,13 @@
           "type": "string",
           "const": "not-independently-verified"
         },
+        "scriptFormat": {
+          "type": "string",
+          "enum": [
+            "narration",
+            "dialogue"
+          ]
+        },
         "warnings": {
           "type": "array",
           "items": {

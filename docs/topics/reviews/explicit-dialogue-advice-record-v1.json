@@ -1,0 +1,46 @@
+{
+  "requestedModel": "tester",
+  "returnedModel": "gpt-6-luna",
+  "httpStatus": 200,
+  "elapsedMs": 9045,
+  "usage": {
+    "prompt_tokens": 6923,
+    "completion_tokens": 690,
+    "total_tokens": 7613
+  },
+  "files": [
+    {
+      "file": "packages/ingest/script.ts",
+      "sha256": "81658533613e36ad70a28e1262119d0999cb5e2ccb9c097b8f7ff42a2827c8f2"
+    },
+    {
+      "file": "packages/voice/dialogue.ts",
+      "sha256": "1ff8746dee09e69841905dd81d0d065626f0277e041177f7ccf47a2eee22e25f"
+    },
+    {
+      "file": "packages/actors/explicit-speakers.ts",
+      "sha256": "b7ca86b3f34606a9f1fe374db7bfca033023d79c6c60a9a4ebfbf355b80eb893"
+    },
+    {
+      "file": "packages/orchestrator/script-generation.ts",
+      "sha256": "702af8aeda6768a37302d1da76281a7390dd61fd7d0d570a1ff22df26db55182"
+    }
+  ],
+  "answer": "{\"issues\":[{\"file\":\"packages/ingest/script.ts\",\"problem\":\"In dialogue mode, `speakerId` persists after a marked line, so later unmarked lines—including lines after a blank paragraph—silently inherit that speaker instead of requiring an explicit `[id]` marker.\",\"fix\":\"Require a marker at the start of each dialogue turn, or explicitly define and validate a continuation rule; do not let blank lines implicitly authorize unmarked turns.\"},{\"file\":\"packages/orchestrator/script-generation.ts\",\"problem\":\"A cache hit validates the draft schema and reparses its narration, but skips the format and configured-kind checks applied to newly generated drafts. A stale cached draft can therefore be accepted despite conflicting with current selections.\",\"fix\":\"Run the same format and kind validations on cache hits as on newly generated drafts before publishing the script.\"}]}",
+  "scope": "snapshot source-only advice; no tests/runtime/voice/media",
+  "testsExecuted": false,
+  "approved": false,
+  "dispositions": [
+    {
+      "issue": "speaker leaks across blank line",
+      "action": "flush resets speaker; contiguous lines explicitly remain continuation; parser callback declared",
+      "status": "source fixed, NOT RUN"
+    },
+    {
+      "issue": "cached draft skips selected format/kind",
+      "action": "parseGeneratedScript shared by fresh-result validator and cache publication; callback declared",
+      "status": "source fixed, NOT RUN"
+    }
+  ],
+  "finalIntegrationIndependentlyReviewed": false
+}

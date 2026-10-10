@@ -12,7 +12,8 @@
           "type": "string",
           "enum": [
             "script-1",
-            "script-2"
+            "script-2",
+            "script-3"
           ]
         },
         "sourcePath": {
@@ -20,6 +21,13 @@
         },
         "sourceHash": {
           "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "narration",
+            "dialogue"
+          ]
         },
         "original": {
           "type": "string"
@@ -44,6 +52,11 @@
               },
               "sourceEndLine": {
                 "type": "integer"
+              },
+              "speakerId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
               }
             },
             "required": [
@@ -84,6 +97,11 @@
               },
               "sourceEndLine": {
                 "type": "integer"
+              },
+              "speakerId": {
+                "type": "string",
+                "maxLength": 96,
+                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
               }
             },
             "required": [

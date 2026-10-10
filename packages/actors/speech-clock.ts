@@ -6,6 +6,7 @@ import {SPEECH_SOURCE_CLOCK_VERSION,projectSpeechActivity,windowSpeechActivity,v
 import {actorViewActingClock,actorUsesViewActingClock} from './view-acting-clock.js';
 import {sourcePropBindingIdentity} from '../director/source-prop-identity.js';
 import {sourceWorldIdentity} from '../director/source-world.js';
+import {assertExplicitCueSpeaker} from './explicit-speakers.js';
 
 export function shotUsesSourceSpeechClock(shot:Shot):boolean{
   const scene=shot.cinematic?.actorScene;
@@ -19,6 +20,7 @@ export function narrationCueOwners(board:Storyboard,current:Shot,narration:Narra
   for(const shot of shots){const scene=shot.cinematic?.actorScene;if(!scene)continue;
     const actors=[...(scene.primary?[{id:scene.primary.id,ids:scene.speakingSegmentIds}]:[]),...scene.supporting.map(a=>({id:a.character.id,ids:a.speakingSegmentIds}))];
     for(const actor of actors)for(const cueId of actor.ids){
+      assertExplicitCueSpeaker(narration,actor.id,cueId);
       if(!known.has(cueId))throw new Error('needs-speaker-ownership: unknown narration cue '+cueId);
       if(!shot.narrationSegmentIds?.includes(cueId))throw new Error('needs-speaker-ownership: cue is outside shot anchors '+cueId);
       const prior=owners.get(cueId);if(prior&&prior!==actor.id)throw new Error('needs-speaker-ownership: one complete cue has conflicting actor owners '+cueId);

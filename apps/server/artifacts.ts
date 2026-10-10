@@ -203,7 +203,7 @@ export async function saveArtifact(root: string, name: string, value: unknown, r
   if(name==='storyboard.json'&&(await cinematicMigration(root)).required)throw new ApiError(409,'This cinematic plan uses an earlier renderer. Resume production before editing; locked shots require an explicit unlock or their original renderer.','CINEMATIC_MIGRATION_REQUIRED');
   const state = await optionalArtifact<z.infer<typeof ProjectStateSchema>>(root, 'project-state.json');
   let data: unknown = spec.text ? z.string().min(1).max(2 * 1024 * 1024).parse(value) : spec.schema!.parse(value);
-  if(name==='script.txt'||name==='script.md')parseScript(data as string,`input/${name}`);
+  if(name==='script.txt'||name==='script.md')parseScript(data as string,`input/${name}`,(await loadConfig(root)).input.script_format);
   if(['story.txt','story.md','idea.txt','idea.md'].includes(name))validateIdea(data as string);
   if(name==='host.md'&&Buffer.byteLength(data as string,'utf8')>128*1024)throw new ApiError(413,'Host MD exceeds 128 KB','TOO_LARGE');
   if(['story.json','narration.json'].includes(name)&&(await loadConfig(root)).content.mode==='narrated-explainer')throw new ApiError(403,'Edit the script or input SRT; generated narration is immutable.','READ_ONLY');

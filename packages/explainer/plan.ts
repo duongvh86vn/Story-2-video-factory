@@ -10,8 +10,9 @@ import { ExplanationPlanSchema,SceneIntentSchema, type SceneIntent, type Explana
 import {HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION} from '../animation/schemas.js';
 import { narratedStates } from './thermal.js';
 import { steamConfigurations, validateConfiguration } from './configurations.js';
+import {explicitSpeakerNameEvidence} from '../actors/explicit-speakers.js';
 
-export const EXPLANATION_VERSION='sourced-explanation-2.2.6';
+export const EXPLANATION_VERSION='sourced-explanation-2.2.7';
 export const fold = (s: string) => s.normalize('NFKD').replace(/\p{M}/gu, '').replace(/[đĐ]/g, 'd').toLowerCase().replace(/\s+/g, ' ').trim();
 const transferPredicate=/\b(?:day|truyen|lam quay|dan|dua|di vao|tao ra|cap nang luong|push|transfer|drive|turn|supply|supplies)\b/;
 function narratedPredicate(quote:string,from:string,to:string,otherLabels:string[]):string|undefined{
@@ -198,7 +199,7 @@ export function validateSceneIntent(input:SceneIntent,narration:Narration,verifi
   if(new Set(intent.participants.map(p=>p.id)).size!==intent.participants.length)throw new Error('sceneIntent has duplicate participants');
   for(const participant of intent.participants){
     participant.sourceRefs.forEach(reference);
-    if(!participant.sourceRefs.some(ref=>ref.quote.normalize('NFC').toLocaleLowerCase().includes(participant.name.normalize('NFC').toLocaleLowerCase()))||!statement(participant.role,participant.sourceRefs))
+    if(!(explicitSpeakerNameEvidence(narration,participant.id,participant.name,participant.identity,participant.sourceRefs)||participant.sourceRefs.some(ref=>ref.quote.normalize('NFC').toLocaleLowerCase().includes(participant.name.normalize('NFC').toLocaleLowerCase())))||!statement(participant.role,participant.sourceRefs))
       throw new Error(`sceneIntent participant ${participant.id} requires its exact name and a whole sourced role statement`);
   }
   for(const acting of intent.acting??[]){

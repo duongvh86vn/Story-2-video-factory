@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.89-explicit-dialogue-voices",
+  "precedingSourceSHA": "47f003928efc79c03bf5c79d64535a562e80d390",
+  "scope": "source build/typecheck/schema definition export/raw inventory/source-only advice; no runtime/native/art/motion/film/full-factory acceptance",
+  "implementation": [
+    "explicit opt-in dialogue source format/markers/source lines/chunk speakers",
+    "stable per-speaker TTS IDs resolved before provider calls; narrator fallback only",
+    "real measured audio clock and per-cue cache/report ownership",
+    "Studio/API/upload/artifact/CLI contracts and story accepted-cache validation",
+    "exact nonhistorical source speaker name evidence without injecting spoken names; historical identity/role/action rules retained"
+  ],
+  "checks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "startChunk": "7a73ff",
+      "session": 73093,
+      "completionChunk": "127c21",
+      "decisiveOutput": "vite v7.3.6; 56 modules; index-CUp4XaUa.js 245.94kB/gzip76.79; built in575ms"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "startChunk": "3eb430",
+      "session": 81785,
+      "completionChunk": "c3221e",
+      "scope": "tsc -p tsconfig.tests.json; completion output empty; no callbacks executed"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "chunk": "b310ea",
+      "scope": "schema definitions only; no instance validation"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "chunk": "318781",
+      "scope": "raw image/header/hash/JSON/static description inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/explicit-dialogue-static-v1.mjs",
+      "exitCode": 0,
+      "startChunk": "53d1c5",
+      "session": 43639,
+      "completionChunk": "04fd0e",
+      "scope": "raw source-text/byte/header/JSON inventory only; no project runtime imports"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "chunk": "f8d60a"
+    }
+  ],
+  "sourceAdvice": {
+    "record": "docs/topics/reviews/explicit-dialogue-advice-record-v1.json",
+    "requestedModel": "tester",
+    "returnedModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 9045,
+    "totalTokens": 7613,
+    "completionChunk": "ef5635",
+    "issuesReported": 2,
+    "disposition": "Blank-line speaker reset and shared cached/fresh format/kind validation fixed in source; not executed. Subsequent nonhistorical source-name integration was parent-authored, not independently re-reviewed.",
+    "finalIntegrationIndependentlyReviewed": false
+  },
+  "rawInventory": {
+    "trackedImages": 294,
+    "actualPNG": 131,
+    "actualJPEG": 163,
+    "allOriginalImageBytesUnchanged": true,
+    "headDefinitions": 18,
+    "headMetadata": 27,
+    "mappedSourceHashes": 145,
+    "mappedSourceEntries": 360,
+    "availableBankFields": 9
+  },
+  "newUnitCallbacksDeclared": 9,
+  "newIntegrationCallbacksDeclared": 1,
+  "newCallbacksDeclared": 10,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "compilerInvoked": false,
+  "browserOpened": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44.131Z",
+    "acceptsCurrentSource": false
+  },
+  "ownedPaths": 47,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/EXPLICIT-DIALOGUE-VOICES-HANDOFF.md",
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "runtime dialogue parser/voice/cache/cut/actor-source ownership and actual Studio/API/upload/CLI integration",
+    "three canonical arbitrary story/script/original WAV runs, legacy SRT, EN/VI/JA/KO/external-local HTTP/command TTS through correct final gates",
+    "faithful Lila/Karo/source own supporting cast, seven views/continuous turns, soft anatomical acting/contact/partner gaze and vivid day/sunset/night",
+    "integrated source production audit and normal-speed SVG/GSAP/60fps film acceptance; never lift needs-source-prop-binding alone",
+    "resume/rebuild/approved locks, review/repair and final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/QC"
+  ]
+}

@@ -440,12 +440,12 @@ export async function buildServer(options: ServerOptions = {}) {
     return mutate(request.params.name,async root=>{await checkRevision(await boundPath(root,'project.yaml'),body.revision);await updateSettings(root,body);return detail(request.params.name);});
   });
   app.put<{Params:Named}>('/api/projects/:name/script',async request=>{
-    const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']).default('txt'),revision:z.string().optional(),settingsRevision:z.string().optional()}).strict().parse(request.body);
+    const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']).default('txt'),scriptFormat:z.enum(['narration','dialogue']).optional(),revision:z.string().optional(),settingsRevision:z.string().optional()}).strict().parse(request.body);
     return mutate(request.params.name,async(root,core)=>{
       await checkRevision(await boundPath(root,'project.yaml'),body.settingsRevision);
       const relative=`input/script.${body.format}`,file=await boundPath(root,relative,true);await checkRevision(await locate(root,[relative]),body.revision);
-      parseScript(body.text,relative);if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
-      await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md'}});return {...await readArtifact(root,`script.${body.format}`),settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
+      const spokenFormat=body.scriptFormat??(await loadConfig(root)).input.script_format;parseScript(body.text,relative,spokenFormat);if(!await exists(file)||(await fs.readFile(file,'utf8'))!==body.text){await core.invalidateProject(root,'NEW');await writeAtomic(file,body.text);}
+      await updateSettings(root,{input:{mode:'script',script:relative as 'input/script.txt'|'input/script.md',script_format:spokenFormat??'narration'}});return {...await readArtifact(root,`script.${body.format}`),settingsRevision:hash(await fs.readFile(await boundPath(root,'project.yaml')))};
     });
   });
   app.put<{Params:Named}>('/api/projects/:name/idea',async request=>{
@@ -474,7 +474,7 @@ export async function buildServer(options: ServerOptions = {}) {
     const profile=await parseHostProfile(root,config,new ModelRouter(config,root));
     return reply.type('image/svg+xml').header('Content-Security-Policy',"default-src 'none'; style-src 'unsafe-inline'").send(hostPreviewSvg(profile));
   });
-  app.post('/api/script-preview',async request=>{const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md'])}).strict().parse(request.body);const parsed=parseScript(body.text,`input/script.${body.format}`);return {text:parsed.text,chunks:parsed.chunks.length};});
+  app.post('/api/script-preview',async request=>{const body=z.object({text:z.string().min(1).max(128*1024),format:z.enum(['txt','md']),scriptFormat:z.enum(['narration','dialogue']).optional()}).strict().parse(request.body);const parsed=parseScript(body.text,`input/script.${body.format}`,body.scriptFormat);return {text:parsed.text,chunks:parsed.chunks.length,...(parsed.format==='dialogue'?{turns:parsed.paragraphs.map(p=>({speakerId:p.speakerId,text:p.text,sourceStartLine:p.sourceStartLine,sourceEndLine:p.sourceEndLine}))}:{})};});
   app.get('/api/voices',async()=>{
     const file=await boundPath(repo,'config/voice.yaml',true),raw=await exists(file)?YAML.parse(await fs.readFile(file,'utf8'))??{}:{};
     const profiles=ConfigSchema.shape.voice_profiles.removeDefault().parse(raw.voice_profiles??{});
@@ -617,9 +617,9 @@ export async function buildServer(options: ServerOptions = {}) {
     });
   });
 
-  app.post<{ Params: Named;Querystring:{settingsRevision?:string} }>('/api/projects/:name/upload', async (request, reply) => {
+  app.post<{ Params: Named;Querystring:{settingsRevision?:string;scriptFormat?:'narration'|'dialogue'} }>('/api/projects/:name/upload', async (request, reply) => {
     if (!request.isMultipart()) throw new ApiError(415, 'Choose files to upload.', 'MULTIPART_REQUIRED');
-    const query=z.object({settingsRevision:z.string().optional()}).strict().parse(request.query);
+    const query=z.object({settingsRevision:z.string().optional(),scriptFormat:z.enum(['narration','dialogue']).optional()}).strict().parse(request.query);
     const uploaded = await mutate(request.params.name, async (root, core) => {
       await checkRevision(await boundPath(root,'project.yaml'),query.settingsRevision);
       const stageName = `.studio-upload-${randomUUID()}`;
@@ -653,7 +653,7 @@ export async function buildServer(options: ServerOptions = {}) {
           if(category==='story'||category==='idea'||category==='script'||category==='host'){
             if(size>128*1024)throw new ApiError(413,'Script/host exceeds 128 KB.','TOO_LARGE');
             let text:string;try{text=new TextDecoder('utf-8',{fatal:true}).decode(await fs.readFile(staged));}catch{throw new ApiError(422,'Script/host must be UTF-8.','INVALID_INPUT');}
-            if(category==='script')parseScript(text,relative);
+            if(category==='script')parseScript(text,relative,query.scriptFormat??(await loadConfig(root)).input.script_format);
             if(category==='idea'||category==='story')try{validateIdea(text);}catch(error){throw new ApiError(422,error instanceof Error?error.message:'Invalid idea','INVALID_INPUT');}
           } else if (relative.endsWith('.srt')) {
             if (size > 2 * 1024 * 1024) throw new ApiError(413, 'Subtitles exceed 2 MB.', 'TOO_LARGE');
@@ -687,7 +687,7 @@ export async function buildServer(options: ServerOptions = {}) {
           result.push({ name: item.original, path: item.relative, size: item.size });
         }
         const script=pending.find(item=>/^input\/script\.(?:txt|md)$/.test(item.relative));
-        if(script)await updateSettings(root,{input:{mode:'script',script:script.relative as 'input/script.txt'|'input/script.md'}});
+        if(script)await updateSettings(root,{input:{mode:'script',script:script.relative as 'input/script.txt'|'input/script.md',...(query.scriptFormat?{script_format:query.scriptFormat}:{})}});
         const story=pending.find(item=>/^input\/story\.(?:txt|md)$/.test(item.relative));
         if(story)await updateSettings(root,{input:{mode:'story',story:story.relative as 'input/story.txt'|'input/story.md'}});
         const idea=pending.find(item=>/^input\/idea\.(?:txt|md)$/.test(item.relative));

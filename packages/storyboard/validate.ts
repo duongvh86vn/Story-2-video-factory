@@ -1,6 +1,7 @@
 import { BeatSchema, StoryboardSchema, type Beat, type CharacterBible, type Narration, type Shot, type Storyboard } from '../core/schemas.js';
 import { validateCharacterBible } from '../story/characters.js';
 import { uniqueIds, validateNarration, validatePartition } from '../story/timeline.js';
+import {validateExplicitNarrationSpeakers} from '../actors/explicit-speakers.js';
 
 export function narrationBoundaries(narration: Narration, beats: Beat[]): Set<number> {
   return new Set([0, narration.durationMs,
@@ -43,6 +44,7 @@ export function validateShotReferences(shot: Shot, beats: Beat[], characters: Ch
 export function validateStoryboard(storyboard: Storyboard, narration: Narration, beats: Beat[], characters: CharacterBible): void {
   const parsed = StoryboardSchema.parse(storyboard);
   validateNarration(narration);
+  validateExplicitNarrationSpeakers(parsed,narration);
   validateCharacterBible(characters);
   beats.forEach(beat => BeatSchema.parse(beat));
   validatePartition(beats, narration.segments, 'storyboard beats');

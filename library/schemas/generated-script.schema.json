@@ -21,6 +21,13 @@
           "minLength": 1,
           "maxLength": 131072
         },
+        "format": {
+          "type": "string",
+          "enum": [
+            "narration",
+            "dialogue"
+          ]
+        },
         "warnings": {
           "type": "array",
           "items": {

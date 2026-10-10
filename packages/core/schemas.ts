@@ -20,7 +20,7 @@ export const StorySchema = z.object({
     sourcePath:z.string(),factualVerification:z.literal('not-independently-verified'),warnings:z.array(z.string())}).optional(),
   supplement: z.object({ story: z.string(), facts: z.array(FactSchema), sourcePath: z.string() }).optional(),
 });
-export const SegmentSchema = z.object({ id: Id, startMs: Time, endMs: Time, text: z.string().min(1) }).refine(s => s.endMs > s.startMs, 'endMs must exceed startMs');
+export const SegmentSchema = z.object({ id: Id, startMs: Time, endMs: Time, text: z.string().min(1), speakerId:Id.optional() }).refine(s => s.endMs > s.startMs, 'endMs must exceed startMs');
 export const WordSchema = z.object({ text: z.string(), startMs: Time, endMs: Time });
 export const NarrationSchema = z.object({ durationMs: z.number().int().positive(), segments: z.array(SegmentSchema).min(1), words: z.array(WordSchema).default([]), audioPath: z.string().optional(), mode: z.enum(['script','srt','wav','aligned']) });
 export const CharacterSchema = z.object({ id: Id, name: z.string(), identity: z.object({ genderPresentation: z.string().default(''), apparentAge: z.string().default(''), body: z.string().default(''), face: z.string().default(''), hair: z.string().default(''), facialHair: z.string().default('') }), wardrobe: z.object({ default: z.string(), eraRules: z.array(z.string()).default([]) }), immutable: z.array(z.string()), mutable: z.array(z.string()), negativeRules: z.array(z.string()).default([]), referenceAssets: z.array(z.string()).default([]), locked: z.boolean().default(true), versions: z.array(z.object({ id: Id, description: z.string(), assets: z.array(z.string()).default([]) })).default([]), poses: z.record(z.string()).default({}) });

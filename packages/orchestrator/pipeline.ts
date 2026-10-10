@@ -94,7 +94,7 @@ async function inputFingerprint(root:string,config:FactoryConfig,hostHash:string
       ...(vocabularyRevision?[hash(groundedInput)]:[])]:[])
   ];
   return {all:hash({...allInput,...vocabularyInput}),sourceRevisionParents,
-    narration:hash({version:3,scriptParser:mode==='script'||['idea','story'].includes(mode)?SCRIPT_PARSER_VERSION:undefined,authoring,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
+    narration:hash({version:3,scriptParser:mode==='script'||['idea','story'].includes(mode)?SCRIPT_PARSER_VERSION:undefined,...(mode==='script'||['idea','story'].includes(mode)?{scriptFormat:config.input.script_format??'narration'}:{}),authoring,input:mode,autoPresence,paths:relativeFiles,inputContents,voice:mode==='wav'?undefined:config.voice,asr:mode==='wav'?config.asr:undefined,language:config.project.language,audio:config.audio,maxDuration:config.rendering.max_duration_seconds})};
 }
 async function assetFingerprint(root:string):Promise<string> {
   const files=[...await walk(path.join(root,'input/assets')),...await walk(path.join(root,'assets'))];

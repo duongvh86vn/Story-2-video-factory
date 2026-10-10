@@ -15,7 +15,7 @@ export const PresentationPatchSchema = z.object({ mode: ConfigSchema.shape.prese
   design_brief:ConfigSchema.shape.presentation.removeDefault().shape.design_brief }).strict().refine(patch=>patch.mode!==undefined||patch.character_mode!==undefined||patch.actor_renderer!==undefined||patch.design_brief!==undefined||patch.camera_agent!==undefined,'Choose presentation, character, movement renderer, camera agent or supply a design brief');
 export const CreativeModelPatchSchema=ModelSettingsSchema.pick({provider:true,model:true,base_url:true,api_key_env:true,temperature:true,timeout_ms:true,vision:true}).partial().strict();
 export const SettingsPatchSchema = z.object({ revision: z.string().optional(),
-  input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']), story: z.enum(['input/story.txt','input/story.md']).optional(), idea: z.enum(['input/idea.txt','input/idea.md']).optional(), script: z.enum(['input/script.txt','input/script.md']).optional() }).strict().optional(),
+  input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']), script_format:ConfigSchema.shape.input.removeDefault().shape.script_format, story: z.enum(['input/story.txt','input/story.md']).optional(), idea: z.enum(['input/idea.txt','input/idea.md']).optional(), script: z.enum(['input/script.txt','input/script.md']).optional() }).strict().optional(),
   topic: ConfigSchema.shape.topic.removeDefault().optional(),
   script_generation: ConfigSchema.shape.script_generation.removeDefault().partial().strict().optional(),
   host: z.enum(['mini-robot','stick-man','custom']).optional(), language: z.string().regex(LANGUAGE_TAG).optional(),

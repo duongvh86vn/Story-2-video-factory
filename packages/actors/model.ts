@@ -13,6 +13,7 @@ import {sameSeatSupport} from '../animation/support.js';
 import {validateSceneIntent} from '../explainer/plan.js';
 import {actorViewActingClock} from './view-acting-clock.js';
 import {bodyRootAt} from '../animation/view-source-body.js';
+import {explicitSpeakerNameEvidence} from './explicit-speakers.js';
 
 export function actorProfile(character:ActorDefinition,_base?:HostProfile):HostProfile{
   for(const [i,layer] of (character.costume??[]).entries())artworkSvg(layer.svg,`actor.${character.id}.${i}`);
@@ -64,7 +65,7 @@ export function validateActorCast(board:Storyboard,narration:Narration,sourceRef
           :!!segment&&!!ref.quote.trim()&&segment.text.normalize('NFC').includes(ref.quote.normalize('NFC'));
         if(!valid)throw new Error(`${shot.id}: actor ${character.id} has unverifiable source evidence`);
       }
-      if(['historical','fictional'].includes(character.identity)&&!character.sourceRefs.some(r=>r.kind==='narration'&&r.quote.normalize('NFC').toLocaleLowerCase().includes(character.name.normalize('NFC').toLocaleLowerCase())))throw new Error(`${shot.id}: named actor ${character.name} lacks exact narration identity`);
+      if(['historical','fictional'].includes(character.identity)&&!explicitSpeakerNameEvidence(narration,character.id,character.name,character.identity,character.sourceRefs)&&!character.sourceRefs.some(r=>r.kind==='narration'&&r.quote.normalize('NFC').toLocaleLowerCase().includes(character.name.normalize('NFC').toLocaleLowerCase())))throw new Error(`${shot.id}: named actor ${character.name} lacks exact narration identity`);
       if(['historical','fictional'].includes(character.identity)&&!character.sourceRefs.some(r=>r.kind==='narration'&&r.quote.normalize('NFC').toLocaleLowerCase().includes(character.role.trim().normalize('NFC').toLocaleLowerCase())))throw new Error(`${shot.id}: ${character.identity} actor ${character.name} role must be a literal excerpt of verified narration evidence`);
       if(actor.speakingSegmentIds.some(id=>!shot.narrationSegmentIds?.includes(id)))throw new Error(`${shot.id}: actor speech is outside this shot's narration anchors`);
     }

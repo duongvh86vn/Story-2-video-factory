@@ -493,6 +493,31 @@ for (const mode of ['script', 'srt'] as const) test(`${mode}: audio cache regene
   }
 });
 
+// Source0.89 DECLARED / NOT RUN: the human test model alone executes this callback.
+test('dialogue TTS keeps actor voices, measured clocks and per-cue cache; missing role stops before requests',async t=>{
+  const {requests,url}=await localSpeechStub(t),root=await temporary(t);
+  await fs.mkdir(path.join(root,'work'));environment(t,{DIALOGUE_UNIT_TTS_KEY:undefined});
+  const config=ConfigSchema.parse({project:{language:'en'},input:{script_format:'dialogue'},voice:{
+    tts_provider:'http',base_url:url,voice_id:'narrator-A',api_key_env:'DIALOGUE_UNIT_TTS_KEY',
+    speaker_voices:[{speaker_id:'lila',voice_id:'lila-A'},{speaker_id:'karo',voice_id:'karo-A'}],
+  }});
+  const document=parseScript('[lila] Is the soup ready?\n[karo] Almost!\n[narrator] They wait.','input/script.txt','dialogue'),original=structuredClone(document);
+  const first=await narrateScript(root,config,document);assert.ok(first);
+  assert.deepEqual(requests.map(r=>[r.body.text,r.body.voice]),[['Is the soup ready?','lila-A'],['Almost!','karo-A'],['They wait.','narrator-A']]);
+  assert.deepEqual(first.segments.map(c=>[c.speakerId,c.startMs,c.endMs]),[['lila',0,400],['karo',650,1050],['narrator',1300,1700]]);
+  assert.equal(first.durationMs,1700);assert.deepEqual(document,original);
+  const report=await readJson<{status:string;cues:Array<{speakerId:string;voiceId:string;rawDurationMs:number}>}>(path.join(root,'work/voice-report.json'));
+  assert.equal(report.status,'ready');assert.deepEqual(report.cues.map(c=>[c.speakerId,c.voiceId,c.rawDurationMs]),[['lila','lila-A',400],['karo','karo-A',400],['narrator','narrator-A',400]]);
+  await narrateScript(root,config,document);assert.equal(requests.length,3);
+  config.voice.speaker_voices![0]!.voice_id='lila-B';
+  assert.ok(await narrateScript(root,config,document));assert.equal(requests.length,4);
+  assert.deepEqual([requests.at(-1)!.body.text,requests.at(-1)!.body.voice],['Is the soup ready?','lila-B']);
+  config.voice.speaker_voices=config.voice.speaker_voices!.slice(0,1);
+  assert.equal(await narrateScript(root,config,document),undefined);assert.equal(requests.length,4);
+  const missing=await readJson<{status:string;error:string}>(path.join(root,'work/voice-report.json'));
+  assert.equal(missing.status,'needs-voice');assert.match(missing.error,/karo/);assert.deepEqual(document,original);
+});
+
 for (const failure of ['timeout', 'malformed-audio', 'not-WAV', 'HTTP-503'] as const)
   test(`external ${failure}: no canonical narration/timeline/final output escapes the voice gate`, async t => {
     const root = await createProject('external-gate', { root: await temporary(t) }), file = path.join(root, 'project.yaml');

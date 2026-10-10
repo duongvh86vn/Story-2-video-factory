@@ -5,16 +5,29 @@ import type { FactoryConfig } from '../core/config.js';
 import { Id } from '../core/identifiers.js';
 import { exists, hash, safeRealPath, writeJson } from '../core/utils.js';
 
-export const SCRIPT_PARSER_VERSION = 'script-2';
-export const ScriptDocumentSchema = z.object({ version: z.literal(1), parserVersion: z.enum(['script-1',SCRIPT_PARSER_VERSION]), sourcePath: z.string(), sourceHash: z.string(),
-  original: z.string(), text: z.string().min(1), paragraphs: z.array(z.object({ index: z.number().int(), text: z.string(), sourceStartLine: z.number().int(), sourceEndLine: z.number().int() })),
-  chunks: z.array(z.object({ id: Id, text: z.string().min(1), separatorBefore: z.enum(['',' ']).optional(), paragraphIndex: z.number().int(), sourceStartLine: z.number().int(), sourceEndLine: z.number().int() })).min(1) });
+export const SCRIPT_PARSER_VERSION = 'script-3';
+export const ScriptFormatSchema=z.enum(['narration','dialogue']);
+export const ScriptDocumentSchema = z.object({ version: z.literal(1), parserVersion: z.enum(['script-1','script-2',SCRIPT_PARSER_VERSION]), sourcePath: z.string(), sourceHash: z.string(),
+  format:ScriptFormatSchema.optional(),
+  original: z.string(), text: z.string().min(1), paragraphs: z.array(z.object({ index: z.number().int(), text: z.string(), sourceStartLine: z.number().int(), sourceEndLine: z.number().int(),speakerId:Id.optional() })),
+  chunks: z.array(z.object({ id: Id, text: z.string().min(1), separatorBefore: z.enum(['',' ']).optional(), paragraphIndex: z.number().int(), sourceStartLine: z.number().int(), sourceEndLine: z.number().int(),speakerId:Id.optional() })).min(1) }).superRefine((document,context)=>{
+    for(const [index,paragraph] of document.paragraphs.entries()){
+      if(document.format==='dialogue'?!paragraph.speakerId:!!paragraph.speakerId)
+        context.addIssue({code:'custom',path:['paragraphs',index,'speakerId'],message:'Speaker metadata must match the explicitly selected dialogue format'});
+    }
+    for(const [index,chunk] of document.chunks.entries()){
+      const paragraph=document.paragraphs.find(p=>p.index===chunk.paragraphIndex);
+      if(!paragraph||chunk.speakerId!==paragraph.speakerId||(document.format==='dialogue'&&!chunk.speakerId))
+        context.addIssue({code:'custom',path:['chunks',index,'speakerId'],message:'Each subtitle chunk must retain its original turn speaker'});
+    }
+  });
 export type ScriptDocument = z.infer<typeof ScriptDocumentSchema>;
-export function parseScript(original: string, sourcePath = 'input/script.txt'): ScriptDocument {
+export function parseScript(original: string, sourcePath = 'input/script.txt',format:z.infer<typeof ScriptFormatSchema>='narration'): ScriptDocument {
+  ScriptFormatSchema.parse(format);
   if (Buffer.byteLength(original, 'utf8') > 128 * 1024 || original.includes('\0')) throw new Error('Script must be UTF-8 text without NUL, at most 128 KB');
   const markdown = sourcePath.toLowerCase().endsWith('.md'), lines = original.replace(/^\uFEFF/, '').split(/\r\n|\r|\n/);
-  const paragraphs: ScriptDocument['paragraphs'] = []; let words: string[] = [], start = 1, end = 1, frontmatter = markdown && lines[0]?.trim() === '---';
-  const flush = () => { if (words.length) paragraphs.push({ index: paragraphs.length, text: words.join(' ').replace(/\s+/gu, ' ').trim(), sourceStartLine: start, sourceEndLine: end }); words = []; };
+  const paragraphs: ScriptDocument['paragraphs'] = []; let words: string[] = [], start = 1, end = 1,speakerId:string|undefined,frontmatter = markdown && lines[0]?.trim() === '---';
+  const flush = () => { if (words.length) paragraphs.push({ index: paragraphs.length, text: words.join(' ').replace(/\s+/gu, ' ').trim(), sourceStartLine: start, sourceEndLine: end,...(speakerId?{speakerId}:{}) }); words = [];speakerId=undefined; };
   for (const [i, raw] of lines.entries()) {
     if (frontmatter) { if (i > 0 && raw.trim() === '---') frontmatter = false; continue; }
     let line = raw;
@@ -26,13 +39,19 @@ export function parseScript(original: string, sourcePath = 'input/script.txt'): 
         .replace(/\*([^*]+)\*/g, '$1').replace(/<[^>]*>/g, '');
     }
     line = line.trim(); if (!line) { flush(); continue; }
+    if(format==='dialogue'){
+      const marker=/^\[([^\]]+)\]\s+(.+)$/u.exec(line);
+      if(marker){flush();speakerId=Id.parse(marker[1]);line=marker[2]!.trim();}
+      else if(/^\[/.test(line))throw new Error(`needs-speaker-ownership: malformed [speaker-id] turn at line ${i+1}`);
+      if(!speakerId)throw new Error(`needs-speaker-ownership: dialogue must start with [speaker-id] at line ${i+1}`);
+    }
     if (!words.length) start = i + 1; end = i + 1; words.push(line);
   }
   flush(); if (frontmatter) throw new Error('Unclosed script Markdown frontmatter');
   const chunks: ScriptDocument['chunks'] = [];
   for (const p of paragraphs) {
     let current = '', separatorBefore:''|' ' = '';
-    const emit = () => { if (current) chunks.push({ id: `script-${String(chunks.length + 1).padStart(4, '0')}`, text: current, separatorBefore, paragraphIndex: p.index, sourceStartLine: p.sourceStartLine, sourceEndLine: p.sourceEndLine }); current = ''; };
+    const emit = () => { if (current) chunks.push({ id: `script-${String(chunks.length + 1).padStart(4, '0')}`, text: current, separatorBefore, paragraphIndex: p.index, sourceStartLine: p.sourceStartLine, sourceEndLine: p.sourceEndLine,...(p.speakerId?{speakerId:p.speakerId}:{}) }); current = ''; };
     for (const [i, word] of p.text.split(' ').entries()) {
       // Japanese words are not separated by spaces. ICU finds lexical boundaries,
       // retaining every character, punctuation mark and original separator.
@@ -51,7 +70,7 @@ export function parseScript(original: string, sourcePath = 'input/script.txt'): 
     if(chunks.filter(c=>c.paragraphIndex===p.index).map(c=>(c.separatorBefore??' ')+c.text).join('')!==p.text)throw new Error('Script segmentation changed spoken text');
   }
   const text = paragraphs.map(p => p.text).join('\n\n');
-  return ScriptDocumentSchema.parse({ version: 1, parserVersion: SCRIPT_PARSER_VERSION, sourcePath, sourceHash: hash(original), original, text, paragraphs, chunks });
+  return ScriptDocumentSchema.parse({ version: 1, parserVersion: SCRIPT_PARSER_VERSION, sourcePath, sourceHash: hash(original), original, text, paragraphs, chunks,...(format==='dialogue'?{format}:{}) });
 }
 export function validateIdea(text: string): void {
   if (!text.trim() || text.includes('\0') || Buffer.byteLength(text,'utf8') > 128 * 1024) throw new Error('Idea/story must be nonempty UTF-8 text without NUL, at most 128 KB');
@@ -77,6 +96,6 @@ export async function prepareInput(root: string, config: FactoryConfig): Promise
   if (isAuthoringMode(mode)) validateIdea(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
   await writeJson(path.join(root, 'work/input-document.json'), { version: 2, mode, sourcePath: relative, sourceHash: hash(bytes),
     companionSubtitles: mode === 'wav' && subtitles ? config.input.subtitles : null });
-  if (mode === 'script') await writeJson(path.join(root, 'work/script.json'), parseScript(new TextDecoder('utf-8', { fatal: true }).decode(bytes), relative));
+  if (mode === 'script') await writeJson(path.join(root, 'work/script.json'), parseScript(new TextDecoder('utf-8', { fatal: true }).decode(bytes), relative,config.input.script_format));
   return mode;
 }

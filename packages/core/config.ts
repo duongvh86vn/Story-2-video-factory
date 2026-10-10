@@ -6,6 +6,7 @@ import { z } from 'zod';
 import dotenv from 'dotenv';
 import { exists, safePath } from './utils.js';
 import { LANGUAGE_TAG, primaryLanguage } from './languages.js';
+import {Id} from './identifiers.js';
 
 export const RoleNames = ['planner','storyboard','camera','coder','repair','visual_review','fallback'] as const;
 export type ModelRole = typeof RoleNames[number];
@@ -16,6 +17,8 @@ const Profile = z.object({ width: z.number().int().positive(), height: z.number(
 export const VoiceSettingsSchema = z.object({ source: z.enum(['auto','input','tts']).default('auto'),
   tts_provider: z.enum(['none','windows-speech','azure-speech','http','openai-compatible','omnivoice-studio','command']).nullable().default(null),
   voice_id: z.string().nullable().default(null), base_url: z.string().url().optional(), api_key_env: z.string().default('TTS_API_KEY'),
+  speaker_voices:z.array(z.object({speaker_id:Id,voice_id:z.string().trim().min(1).max(500)}).strict()).max(32)
+    .refine(rows=>new Set(rows.map(row=>row.speaker_id)).size===rows.length,'Each speaker needs one stable voice mapping').optional(),
   command: z.string().optional(), command_args: z.array(z.string()).default([]), timeout_ms: z.number().positive().default(120000),
   model:z.string().min(1).nullable().optional(), http_extra_body:z.record(z.unknown()).nullable().optional(),
   http_fields:z.object({text:z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/),language:z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).nullable().optional(),
@@ -47,6 +50,7 @@ export const ConfigSchema = z.object({
   voice_profiles: z.record(z.string().regex(LANGUAGE_TAG), VoiceSettingsSchema.partial()).default({}),
   topic: z.object({ id: z.enum(['prehistoric-life']).nullable().default(null) }).strict().default({}),
   input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']).default('auto'), story: z.string().default('input/story.txt'), idea: z.string().default('input/idea.txt'), script: z.string().default('input/script.txt'),
+    script_format:z.enum(['narration','dialogue']).optional(),
     source: z.string().default('input/source.md'), narration: z.string().default('input/narration.wav'), subtitles: z.string().default('input/narration.srt') }).strict().default({}),
   script_generation: z.object({ kind: z.enum(['auto','factual','fiction']).default('auto'),
     target_seconds: z.number().int().min(10).max(300).default(60), brief: z.string().max(6000).default('') }).strict().default({}),

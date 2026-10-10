@@ -10,6 +10,7 @@ import { ScriptDocumentSchema, type ScriptDocument } from '../ingest/script.js';
 import { primaryLanguage } from '../core/languages.js';
 import { azureVoiceId, synthesizeAzure } from './azure.js';
 import { synthesizeExternal } from './external.js';
+import {scriptVoiceSelections,MissingSpeakerVoiceError} from './dialogue.js';
 export * from './schemas.js';
 
 /** A second output bound protects PCM writers even if a filter mishandles EOF. */
@@ -57,16 +58,19 @@ export async function narrateScript(root: string, config: FactoryConfig, script:
   try {
     if(config.voice.tts_provider==='azure-speech')report.voiceId=azureVoiceId(config);
     if (!config.voice.tts_provider || config.voice.tts_provider === 'none' || config.voice.source === 'input') throw new Error('Script requires a configured TTS voice before creating its timeline');
+    const selections=scriptVoiceSelections(script,config);
+    if(script.format==='dialogue')report.speakerVoices=[...selections].map(([speakerId,c])=>({speakerId,provider:c.voice.tts_provider,voiceId:c.voice.tts_provider==='azure-speech'?azureVoiceId(c):c.voice.voice_id}));
     const pieces: string[] = [], segments: Narration['segments'] = []; let clock = 0;
     for (const [i, chunk] of script.chunks.entries()) {
-      const raw = await cachedSpeech(root, config, chunk.id, chunk.text), normalized = path.join(path.dirname(raw), 'script-normalized.wav');
+      const selected=selections.get(chunk.speakerId??'narrator')!;
+      const raw = await cachedSpeech(root, selected, chunk.id, chunk.text), normalized = path.join(path.dirname(raw), 'script-normalized.wav');
       await ffmpeg(root, config, ['-y', '-i', raw, '-ar', String(config.audio.sample_rate), '-ac', '1', '-c:a', 'pcm_s16le', normalized]);
       const metadata = await probe(root, config, normalized), duration = Number(metadata.format.duration) * 1000;
       if (!Number.isFinite(duration) || duration <= 0 || !metadata.streams.some(s => s.codec_type === 'audio')) throw new Error(`${chunk.id}: invalid generated speech`);
       const startMs = Math.round(clock), endMs = Math.round(clock + duration);
       if (endMs <= startMs) throw new Error(`${chunk.id}: empty generated speech`);
-      segments.push({ id: chunk.id, text: chunk.text, startMs, endMs });
-      report.cues.push({ id: chunk.id, textHash: hash(chunk.text), startMs, endMs, rawDurationMs: duration, rate: 1, audioHash: hash(await fs.readFile(raw)) });
+      segments.push({ id: chunk.id, text: chunk.text, startMs, endMs,...(chunk.speakerId?{speakerId:chunk.speakerId}:{}) });
+      report.cues.push({ id: chunk.id, textHash: hash(chunk.text), startMs, endMs, rawDurationMs: duration, rate: 1, audioHash: hash(await fs.readFile(raw)),...(chunk.speakerId?{speakerId:chunk.speakerId,voiceId:selected.voice.tts_provider==='azure-speech'?azureVoiceId(selected):selected.voice.voice_id}:{}) });
       const next = script.chunks[i + 1], pause = next && next.paragraphIndex !== chunk.paragraphIndex ? 250 : 0;
       const piece = path.join(path.dirname(raw), 'script-piece.wav');
       await ffmpeg(root, config, ['-y', '-i', normalized, '-af', `apad=whole_dur=${seconds((duration + pause) / 1000)},atrim=duration=${seconds((duration + pause) / 1000)}`, ...pcmBounds(duration+pause,config.audio.sample_rate), '-c:a', 'pcm_s16le', piece]);
@@ -96,7 +100,7 @@ export async function narrateScript(root: string, config: FactoryConfig, script:
     await writeJson(await outputPath(root, 'work/script-timing.json'), { scriptHash: script.sourceHash, audioHash: report.audioHash,
       chunks: script.chunks.map((c, i) => ({ ...c, startMs: segments[i]!.startMs, endMs: segments[i]!.endMs })), paragraphPauseMs: 250 });
   } catch (error) {
-    report.status = !config.voice.tts_provider || config.voice.tts_provider === 'none' || config.voice.source === 'input' ? 'needs-voice' : 'provider-failed';
+    report.status = error instanceof MissingSpeakerVoiceError||!config.voice.tts_provider || config.voice.tts_provider === 'none' || config.voice.source === 'input' ? 'needs-voice' : 'provider-failed';
     report.error = redact(error instanceof Error ? error.message : String(error)); narration = undefined;
   }
   await writeJson(await outputPath(root, 'work/voice-report.json'), VoiceReportSchema.parse(report));

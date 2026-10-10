@@ -1,6 +1,6 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
-**Cập nhật source0.88:** [Nhãn, bóng và hiệu ứng theo hình đạo cụ](PROJECTED-OVERLAYS-HANDOFF.md). Đã viết trusted focus/energy/thermal trong whole-glyph matrix, nhãn thẳng theo declared bottom, bóng ngang trên ground và camera envelope/cache/report riêng; producer2.2.51. 8 callbacks mới DECLARED/NOT RUN; 9 callbacks source0.87 chỉ refactor fixture và vẫn NOT RUN. Combo tester9router HTTP200/gpt-6-luna đã góp ý source; không phải nghiệm thu runtime. Native art/acting, SVG/GSAP/text/depth/light/video và toàn ba luồng/voice/resume/final vẫn chờ; productionReady=false, productionRig=null, availableBanks=[] và needs-source-prop-binding giữ nguyên. Chưa sẵn sàng sử dụng hoàn chỉnh. Các mốc cũ bên dưới là lịch sử.
+**Cập nhật source0.89:** [Phân vai thoại và giọng từng diễn viên](EXPLICIT-DIALOGUE-VOICES-HANDOFF.md). Thêm lựa chọn dialogue rõ ràng, nhãn [speaker-id], speaker_voices, nguồn vai tới cue/miệng và cache từng giọng; narration mặc định vẫn đọc nguyên văn, WAV không bị thay. Hai lỗi source do combo tester9router HTTP200/gpt-6-luna phát hiện đã sửa. 10 callback mới DECLARED/NOT RUN. Build/typecheck/schema/inventory chỉ kiểm source; ba input/voice/resume/final và tạo hình/chuyển động/video vẫn chưa nghiệm thu. productionReady=false, productionRig=null, availableBanks=[] và needs-source-prop-binding giữ nguyên. Chưa sẵn sàng sử dụng hoàn chỉnh. Các mốc cũ bên dưới là lịch sử.
 
 Cập nhật source0.81: [vật chung và vật cầm riêng trong cùng cảnh](MIXED-OWNERSHIP-HANDOFF.md). Đã viết complete-run binding closure, union center channels và hand masks theo phase; chín callbacks mới chưa chạy. Combo tester đã trả static review; không có runtime/hình/chuyển động/video acceptance. Các mốc bên dưới là lịch sử.
 
@@ -362,6 +362,8 @@ Không buộc người dùng chuẩn bị WAV hoặc phụ đề trước khi d�
 4. TTS đọc đúng lời đã có, đo độ dài audio thật để tạo cue/timeline. Không ước lượng clock trước rồi cắt hoặc ép lời để vừa.
 5. Chạy pipeline diễn xuất chung. Chỉnh diễn xuất không làm thay đổi lời đã chốt.
 
+Lựa chọn rõ ràng trong luồng kịch bản/câu chuyện: `input.script_format: narration` (mặc định đọc nguyên văn) hoặc `dialogue`. Chỉ dialogue mới bỏ nhãn `[speaker-id]` khỏi lời đọc; mỗi lượt có nhãn riêng, dòng liền có thể tiếp tục cùng lượt, sau dòng trống phải có nhãn mới. Giữ spoken text, thứ tự và source lines; cấu hình giọng ổn định qua `voice.speaker_voices`. `[narrator]` là lời ngoài khung hình. Mã vai là mã diễn viên thật trong câu chuyện, độc lập với model Lila/Karo. [Contract, cấu hình và test](EXPLICIT-DIALOGUE-VOICES-HANDOFF.md). Không tự chuyển narration/WAV/SRT thành đối thoại.
+
 ### Luồng 2 — WAV ghi âm sẵn hoặc AI đọc sẵn
 
 1. Giữ file WAV gốc và tham chiếu/hash; dùng audio này làm nguồn giọng của video. Không chạy TTS để thay nó bằng một giọng khác.
@@ -661,19 +663,19 @@ Nghiệm thu kết hợp: bảng tạo hình, color frame, clip chuyển động
 
 ## 12. Trạng thái và những điểm còn chờ
 
-### Hiện hành0.66 — source chưa nghiệm thu sản phẩm
+### Hiện hành0.89 — source chưa nghiệm thu sản phẩm
 
 | Hạng mục | Source hiện có | Chứng cứ còn thiếu |
 |---|---|---|
-| Ba input + legacy SRT | Code script giữ lời, WAV giữ audio/clock, story→script; Studio/API/CLI và external/local TTS WIP | Chạy câu chuyện mới qua mỗi luồng tới MP4 có giọng/subtitle/QC, không dùng V1 làm chứng nhận |
+| Ba input + legacy SRT | Code script giữ lời, WAV giữ audio/clock, story→script; Studio/API/CLI.0.89 thêm lựa chọn dialogue có nhãn vai/giọng riêng, không tự hiểu nhãn trong narration | Chạy câu chuyện mới qua mỗi luồng tới MP4 có giọng/subtitle/QC, không dùng V1 làm chứng nhận |
 | Hai diễn viên đúng mẫu | Primary warm-skin khóa theo hash; bốn pair head/body trái/phải, own speech/emotion/layers/follow candidates; góc yaw chưa đo vẫn null | Identity, face/neck/hair seam, phối cảnh/tỷ lệ/màu, geometry và normal-speed video ở cả hai bố trí đối thoại |
 | Diễn viên phụ | Nam đầu trọc không râu v2, nữ có tóc giữ v1, dùng asset trang phục Karo/Lila, ID/vai/thoại riêng | Face/view/pose/contact và video có nhiều người; chưa dùng mẫu quần chúng để chứng nhận principal rig |
 | Miệng/mắt | Bank3/4 own speech/eyes và bank5/6 own expressions, mouth erase/repair, rear layers/follow; source clock/speaker riêng. Old plate V1 held theo SHA; không mượn mặt/mask principal cho quần chúng | Chỉ người nói mở miệng, silence đúng, không double ink/râu/ghost, target/rendered eye projection, cut/seek và mask/subpixel seam |
-| Diễn xuất/chuyển động | Canonical original body/head clocks, source gesture/gaze/expression/locomotion/seat/rear follow;0.64 mỗi diễn viên sở hữu đạo cụ khác nhau;0.65 explicit native manipulation có fixed-chain/C2 approach/recovery và own cuff/palm, không mở guard thiếu nguồn/pose;0.66 sourceManipulation giữ original hand/prop/release/flight phase qua actor clock6, production model/action/continuity binding còn chặn | Toàn chu kỳ khớp/chân trụ/weight/cloth/hair/props, cut/seek/role swap, cảm xúc và tương tác ở tốc độ thường; geometry/video mới chưa chạy |
+| Diễn xuất/chuyển động | Canonical original body/head clocks, gesture/gaze/expression/locomotion/seat/rear follow; manipulation/shaft/source-world/shared ownership/observations/projection/overlays có source candidates tới0.88.0.89 cue giữ đúng speaker gốc; chưa có production acceptance | Toàn chu kỳ khớp/chân trụ/weight/cloth/hair/props, cut/seek/role swap, cảm xúc và tương tác ở tốc độ thường; geometry/video mới chưa chạy |
 | Bối cảnh/màu | Reference/palette và nguồn draft hiện có; vector cũ bị loại | World day/sunset/night có chiều sâu, nguồn sáng/bóng/contact và màu tươi trong final, không nền nhợt/slideshow |
-| EN chính + VI/JA/KO/TTS ngoài-local | Adapter/config/source contract hiện có; WAV không bị buộc đổi thành TTS | Giọng đúng ngôn ngữ/speaker, TTS/API lỗi/clock/fit, audio-subtitle-duration và final gate thực |
+| EN chính + VI/JA/KO/TTS ngoài-local | Adapter/config/source contract hiện có;0.89 explicit actor voice ID cùng provider/ngôn ngữ, thiếu vai dừng trước TTS; WAV không bị buộc đổi thành TTS | Giọng đúng ngôn ngữ/speaker, TTS/API lỗi/clock/fit, audio-subtitle-duration và final gate thực |
 | Resume/rebuild/locks | Source/hash/cache/repair và lock guards WIP | Sửa script/voice/actor/shot giữ hoặc invalidate đúng artifact; không xuất final từ source/clock cũ |
-| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory ghi theo exact source/commit; source0.66 xem SOURCE-MANIPULATION-CLOCK-HANDOFF.md, source0.65 xem NATIVE-MANIPULATION-HANDOFF.md, source0.64 xem ACTOR-PROP-OWNERS-HANDOFF.md | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
+| Kiểm source/giao GitHub | Build/typecheck/schema/static inventory ghi theo exact source/commit ở EXPLICIT-DIALOGUE-VOICES-HANDOFF.md; không dùng báo cáo0.88 hoặc V1 để nghiệm thu0.89 | Build không chứng minh runtime, tạo hình, nét vẽ, diễn xuất hoặc video đã đạt |
 | Production | productionReady=false, productionRig=null, availableBanks=[] | Chỉ mở sau khi model test có evidence đáp ứng toàn bộ mục11 và bộ chủ đề thực sự dùng lại cho câu chuyện mới |
 
 Các nguyên liệu/definition đơn lẻ không thay bộ sản phẩm hoàn chỉnh. Nội dung tập lấy từ input người dùng; việc chưa có một tập đầu được chọn không là lý do bó tool vào demo món ăn/máy móc hoặc dừng các phần source độc lập.
