@@ -12,7 +12,7 @@ import {sceneSeats} from '../stage/seats.js';
 import {usesCutoutHead,cutoutHeadRegistration} from '../animation/forest-cutout-head.js';
 import {nativeHeadTrackTimes} from '../animation/native-head-track.js';
 import {hasBodyViewSecondary,nativeSecondaryBounds} from '../animation/body-view-secondary.js';
-import {registeredBodyView,registeredDetailedBodyView} from '../animation/body-view-art.js';
+import {registeredBodyView,registeredSecondaryBodyView} from '../animation/body-view-art.js';
 import {hasBodyViewSeat} from '../animation/body-view-seat.js';
 import {pathCoordinates} from '../animation/ink-limb.js';
 import {SECONDARY_MOTION_DELAYS_MS} from '../animation/view-secondary-motion.js';
@@ -96,7 +96,7 @@ export function cameraHostBounds(p:PerformancePlan,profile:HostProfile,actingClo
     const x=Number(match[1]),y=Number(match[2]),angle=Number(match[3])*Math.PI/180,scale=Number(match[4]),local=emptyBounds();
     if(usesCutoutHead(profile)){
       const c=cutoutHeadRegistration(profile);
-      const headBounds=hasBodyViewSecondary(profile)?nativeSecondaryBounds(profile,registeredDetailedBodyView(profile),frame.surfaceState):c.bounds;
+      const headBounds=hasBodyViewSecondary(profile)?nativeSecondaryBounds(profile,registeredSecondaryBodyView(profile),frame.surfaceState):c.bounds;
       for(const px of [headBounds.left,headBounds.right])for(const py of [headBounds.top,headBounds.bottom]){
         const dx=(px-c.neck.x)*c.scale,dy=(py-c.neck.y)*c.scale;
         include(local,{x:x+(dx*Math.cos(angle)-dy*Math.sin(angle))*scale,y:y+(dx*Math.sin(angle)+dy*Math.cos(angle))*scale});

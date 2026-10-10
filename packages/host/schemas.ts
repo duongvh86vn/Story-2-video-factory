@@ -9,6 +9,7 @@ import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-b
 import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-view-basic-mouth-registration.js';
 import {BASIC_BODY_EXPRESSIONS_SELECTION,isBasicExpressionView} from '../animation/body-view-basic-expression-registration.js';
 import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from '../animation/body-view-profile-cloth-binding.js';
+import {PROFILE_BODY_SECONDARY_SELECTION,isProfileSecondaryView} from '../animation/body-view-profile-secondary-binding.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker','hold-tool','thrust-tool'] as const;
@@ -24,7 +25,7 @@ export const HostProfileSchema = z.object({
     artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
     bodyView:z.enum(['three-quarter-right','three-quarter-left','front','left','right','back-left','back-right']).optional(),
     bodyHeadBank:NativeHeadBankSchema.optional(),
-    bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1','registered-basic-mouth-v1']).optional(),bodyEyes:z.enum(['registered-eyes-v1','registered-basic-eyes-v1']).optional(),bodyExpressions:z.enum(['registered-expressions-v1','registered-basic-expressions-v1']).optional(),bodyMotion:z.enum(['registered-locomotion-v1','registered-profile-locomotion-v1']).optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.literal('registered-secondary-v1').optional(),bodyManipulation:z.literal('registered-manipulation-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
+    bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1','registered-basic-mouth-v1']).optional(),bodyEyes:z.enum(['registered-eyes-v1','registered-basic-eyes-v1']).optional(),bodyExpressions:z.enum(['registered-expressions-v1','registered-basic-expressions-v1']).optional(),bodyMotion:z.enum(['registered-locomotion-v1','registered-profile-locomotion-v1']).optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.enum(['registered-secondary-v1','registered-profile-secondary-v1']).optional(),bodyManipulation:z.literal('registered-manipulation-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
       if(basicBodyHasUnsupportedOptions(a))
         ctx.addIssue({code:'custom',message:basicBodyCapabilityError(a.bodyView,'detailed feature/action').message});
       if(a.supportingModel){
@@ -47,6 +48,7 @@ export const HostProfileSchema = z.object({
       if(a.bodySeat&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant||a.bodyMotion!=='registered-locomotion-v1'))ctx.addIssue({code:'custom',message:'Registered seating requires its native actor/view and registered locomotion'});
       if(a.bodyManipulation&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered manipulation requires its native actor and body view'});
       if(a.bodySecondary&&(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant))ctx.addIssue({code:'custom',message:'Registered secondary motion requires its native actor and body view'});
+      if(a.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION&&!isProfileSecondaryView(a.bodyView))ctx.addIssue({code:'custom',message:'Profile secondary requires its own left/right source; no front/rear/detailed3/4 fallback'});
       if(a.sourceColour&&(a.artworkVersion!=='forest-body-1'||!a.characterVariant))ctx.addIssue({code:'custom',message:'Original source colour requires the source body and its actor; authored views are separate artwork'});
     }),
   costume: z.array(z.object({joint:z.enum(['head','chest','pelvis','hand-left','hand-right']),svg:z.string().min(1).max(24000)}).strict()).max(12).optional(),

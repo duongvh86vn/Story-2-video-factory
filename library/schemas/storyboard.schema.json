@@ -3660,7 +3660,10 @@
                                   },
                                   "bodySecondary": {
                                     "type": "string",
-                                    "const": "registered-secondary-v1"
+                                    "enum": [
+                                      "registered-secondary-v1",
+                                      "registered-profile-secondary-v1"
+                                    ]
                                   },
                                   "bodyManipulation": {
                                     "type": "string",
@@ -5773,7 +5776,10 @@
                                     },
                                     "bodySecondary": {
                                       "type": "string",
-                                      "const": "registered-secondary-v1"
+                                      "enum": [
+                                        "registered-secondary-v1",
+                                        "registered-profile-secondary-v1"
+                                      ]
                                     },
                                     "bodyManipulation": {
                                       "type": "string",

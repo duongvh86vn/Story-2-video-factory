@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.98-own-profile-secondary",
+  "precedingSourceSHA": "5005f916f28077b42325f96b9e03986b113f5207",
+  "scope": "own left/right secondary source integration and tester connectivity only; no anatomy/art/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Four own PNG/SHA/canvas bindings, eight crest/tail/beard regions; explicit registered-profile-secondary-v1. No other-view ROI/landmark borrowing, image edits, face mirror/warp or inferred yaw.",
+    "Own secondary selector routes head SVG, validation, sampling, interpolation and camera bounds. Shared secondary mesh/bounds/temporal and physical body kernels unchanged.",
+    "Moving/static source shares own eyes/mouth/brow erase masks; replacement features remain outside mesh. Secondary-only preserves original happy expression clock.",
+    "Complete original body/secondary history through explicit continuous camera/role swaps when own locomotion/sourceBody selected. Secondary alone grants no sourceBody/seat/tools/head-bank/supporting/turn ownership.",
+    "Clock12/schema/API/workbench/exact report/cache/manifest bind source; legacy cloth/face/secondary data and own fixed body geometry unchanged.",
+    "Eight new callbacks DECLARED/NOT RUN; actual geometry/art/motion/audio/render/final product acceptance remains pending."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "29082b/session31228/completiond2489d",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 build\n> tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 64 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-CgNUzaoH.js   248.52 kB │ gzip: 77.43 kB\n✓ built in 1.09s\n",
+      "scope": "source build only; no runtime acceptance"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "3a64d7/session24376/completion5f3fcc",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "typecheck only; callbacks NOT RUN; completion output empty"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "5252f1",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n\n",
+      "scope": "definition export only; no schema instances"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "17cc64",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "allowed source/header/hash/static JSON inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/profile-secondary-static-v1.mjs",
+      "exitCode": 0,
+      "handle": "6993f0/session5649/completion3d35b6",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.98-own-profile-secondary\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"mappedCodeHashes\":172,\"scalarCodeEntries\":46,\"ownProfileSecondarySources\":4,\"visibleRegions\":8,\"callbacksDeclared\":8,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}\n",
+      "scope": "raw header/bytes/JSON/source AST only; no project evaluation or tests"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "fa3fac",
+      "scope": "source freeze only"
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/profile-secondary-static-record-v1.json",
+  "testerConnectivity": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 1107,
+    "reply": "TESTER_OK",
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 2507,
+      "completion_tokens": 7,
+      "total_tokens": 2514
+    },
+    "scope": "Connectivity only; no project tests",
+    "testsExecuted": false,
+    "handle": "17809f",
+    "acceptsProject": false,
+    "sourceReviewPerformed": false
+  },
+  "ownedPaths": 29,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/PROFILE-SECONDARY-HANDOFF.md",
+  "newCallbacksDeclared": 8,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 0,
+  "imagesEdited": false,
+  "environment": {
+    "node": "24.19.0",
+    "platform": "win32",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+    "diagnosticPort": 8851,
+    "serverStarted": false
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

@@ -6,6 +6,7 @@ import {frontBodyRegistrationDescription} from './body-view-front-registration.j
 import {basicBodyHasUnsupportedOptions,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import {obliqueBodyRegistrationDescription} from './body-view-oblique-registration.js';
 import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from './body-view-profile-cloth-binding.js';
+import {PROFILE_BODY_SECONDARY_SELECTION,isProfileSecondaryView} from './body-view-profile-secondary-binding.js';
 import {authoredRestArm} from './body-view-rest-arm.js';
 import {BASIC_BODY_EYES_SELECTION} from './body-view-basic-eyes-registration.js';
 import {BASIC_BODY_SPEECH_SELECTION} from './body-view-basic-mouth-registration.js';
@@ -21,7 +22,7 @@ import {nativeManipulationDescription} from './native-contact-arm.js';
 import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-10';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-11';
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These
  * engineering candidates use uniform head/body transforms. Their physical
@@ -51,6 +52,14 @@ export function registeredLocomotionBodyView(profile:Pick<HostProfile,'appearanc
   if(source.view!=='left'&&source.view!=='right'||!isProfileMotionView(profile.appearance.bodyView))throw basicBodyCapabilityError(source.view,'profile locomotion');
   return source;
 }
+export function registeredSecondaryBodyView(profile:Pick<HostProfile,'appearance'>){
+  const a=profile.appearance;
+  if(!hasBodyViewSecondary(profile)||a.artworkVersion!==BODY_VIEW_VERSION||a.characterVariant!=='lila'&&a.characterVariant!=='karo')throw new Error('needs-view-secondary: select the exact native actor and secondary mode');
+  if(a.bodySecondary!==PROFILE_BODY_SECONDARY_SELECTION)return registeredDetailedBodyView(profile);
+  const source=registeredBodyView(profile);
+  if(source.view!=='left'&&source.view!=='right'||!isProfileSecondaryView(a.bodyView))throw basicBodyCapabilityError(source.view,'profile secondary');
+  return source;
+}
 export function bodyViewFacing(profile:Pick<HostProfile,'appearance'>){const view=registeredBodyView(profile).view;return view==='front'?'front':view==='three-quarter-left'||view==='left'||view==='back-left'?'left':'right';}
 /** A planted lunge has only been authored for the right-facing candidate. */
 export function validateBodyViewLunge(profile:Pick<HostProfile,'appearance'>){
@@ -78,11 +87,12 @@ export function bodyViewHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:st
   // Native eyes/mouth remain inside the same uniform attachment. Unselected
   // overlays, whole-face warp, expressions and continuous turns stay blocked.
   const url=imageUrl(c.file,c.sha256),source={sha256:c.sha256,width:c.width,height:c.height,url},mouth=bodyViewMouthSvg(profile,source,imageUrl),eyes=bodyViewEyesSvg(profile,source),expressions=bodyViewExpressionsSvg(profile,source,imageUrl);
-  const secondary=hasBodyViewSecondary(profile)?nativeSecondarySvg(profile,registeredDetailedBodyView(profile)):undefined;
+  const secondary=hasBodyViewSecondary(profile)?nativeSecondarySvg(profile,registeredSecondaryBodyView(profile)):undefined;
   const base=`<image width="${c.width}" height="${c.height}" href="${url}"${profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION?' mask="url(#view-eyes-source-mask)"':''}/>`;
   const mouthMasked=profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION?`<g mask="url(#view-mouth-source-mask)">${base}</g>`:base;
   const sourceHead=profile.appearance.bodyExpressions===BASIC_BODY_EXPRESSIONS_SELECTION?`<g mask="url(#view-expression-source-mask)">${mouthMasked}</g>`:mouthMasked;
-  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath>${secondary?`<image id="view-secondary-source" width="${c.width}" height="${c.height}" href="${url}"/>`:''}</defs>${secondary?.defs??''}<g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})">${secondary?.artwork??`<g clip-path="url(#source-head-clip)">${sourceHead}</g>`}<g clip-path="url(#source-head-clip)">${mouth}${eyes}${expressions}</g></g></g></g>`;
+  const secondarySource=profile.appearance.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION?`<g id="view-secondary-source">${sourceHead}</g>`:`<image id="view-secondary-source" width="${c.width}" height="${c.height}" href="${url}"/>`;
+  return `<g data-body-view="${c.view}" data-registration="${BODY_VIEW_REGISTRATION_VERSION}" stroke="none"><defs><clipPath id="source-head-clip"><path d="${c.headClip}"/></clipPath>${secondary?secondarySource:''}</defs>${secondary?.defs??''}<g id="head-view-front"><g transform="scale(${c.headScale}) translate(${-c.neck.x} ${-c.neck.y})">${secondary?.artwork??`<g clip-path="url(#source-head-clip)">${sourceHead}</g>`}<g clip-path="url(#source-head-clip)">${mouth}${eyes}${expressions}</g></g></g></g>`;
 }
 export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string){
   const c=registeredBodyView(profile);

@@ -11,7 +11,7 @@ import {validateViewSourceManipulation} from './view-source-manipulation.js';
 import {validateViewSourceSpear} from './view-source-spear.js';
 import {NativeHeadTrackSchema,validateNativeHeadSource} from './native-head-track.js';
 
-export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-11' as const;
+export const VIEW_ACTING_CLOCK_VERSION='native-view-acting-clock-12' as const;
 export const VIEW_GAZE_RAMP_MS=140,VIEW_BREATH_RAMP_MS=200;
 export type ViewGaze=z.infer<typeof GazeSchema>;
 /** Renderer context only; never changes narration, persisted activity or authored clips. */

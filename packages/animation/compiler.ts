@@ -17,7 +17,7 @@ import {headProjectionMatrixError} from './forest-head-projection.js';
 import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
-import {usesBodyView,registeredBodyView,registeredDetailedBodyView,registeredLocomotionBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
+import {usesBodyView,registeredBodyView,registeredDetailedBodyView,registeredLocomotionBodyView,registeredSecondaryBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
 import {PROFILE_BODY_LOCOMOTION_SELECTION} from './body-view-profile-cloth-binding.js';
 import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace,nativeHeadBankFacialState,nativeHeadBankFacialError} from './body-head-bank.js';
 import {nativeHeadSources,nativeHeadPixelScale} from './native-head-bank.js';
@@ -130,7 +130,7 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   if((hasNativeHeadSpeech(profile)||hasNativeHeadEyes(profile))&&![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-head-face-registration: source-face interpolation requires animation2.2.13/14/15');
   if(hasBodyViewExpressions(profile))registeredBodyViewExpressions(profile);
   if(hasBodyViewSecondary(profile)){
-    registeredNativeSecondary(profile,registeredDetailedBodyView(profile));
+    registeredNativeSecondary(profile,registeredSecondaryBodyView(profile));
     if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-secondary: registered secondary motion requires animation2.2.13/14/15');
   }
   if(!usesBodyView(profile))return;
@@ -1032,7 +1032,7 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
     else Object.assign(face,nativeClothState(profile,viewCloth,viewThighAngles).face);
   }
   if(hasBodyViewSecondary(profile)){
-    const c=registeredDetailedBodyView(profile);registeredNativeSecondary(profile,c);
+    const c=registeredSecondaryBodyView(profile);registeredNativeSecondary(profile,c);
     const offset=actingClock?.startMs??0,startMs=actingClock?.runStartMs??0,endMs=actingClock?.runEndMs??plan.durationMs;
     const control=sampleSecondaryMotion({timeMs:t+offset,startMs,endMs,scale:c.headScale*s*headArtScale,sample:at=>{
       const state=bodyStateAt(plan,profile,at-offset,actingClock),neck=add(state.pelvis,rotate({x:state.m.neckX!*state.s,y:state.m.torsoTop!*state.s},state.lean));
@@ -1255,7 +1255,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       if(hasNativeHeadEyes(profile))error=Math.max(error,nativeHeadBankFacialError(registeredNativeHeadBank(profile),a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(hasBodyViewSeat(profile))error=Math.max(error,nativeSeatMatrixError(profile,registeredDetailedBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
       else if(hasBodyViewLocomotion(profile))error=Math.max(error,nativeClothMatrixError(profile,registeredLocomotionBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2);
-      if(hasBodyViewSecondary(profile))error=Math.max(error,nativeSecondaryMatrixError(profile,registeredDetailedBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
+      if(hasBodyViewSecondary(profile))error=Math.max(error,nativeSecondaryMatrixError(profile,registeredSecondaryBodyView(profile),a.face,b.face,actual.face,progress)*registeredBodyView(profile).headScale*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(hasNativeHeadSecondary(profile))error=Math.max(error,nativeHeadBankRearError(registeredNativeHeadBank(profile),a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesBodyView(profile))error=Math.max(error,seatedGarmentMatrixError(profile,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.bodyScale/.2);
       if(usesReferenceBody(profile)&&!usesCutoutHead(profile))error=Math.max(error,headProjectionMatrixError(profile.appearance.characterVariant!,a.face,b.face,actual.face,progress)*plan.scale*profile.appearance.headScale*rigMetrics(profile).headArtworkScale!/.2);
@@ -1334,7 +1334,7 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
       ...(actingClock?.actorTargets?.length?{actorGazeVersion:VIEW_ACTOR_GAZE_VERSION,targetSources:actingClock.actorTargets.map(t=>({actorId:t.actorId,fingerprint:t.fingerprint,sourceIdentityHash:t.sourceIdentityHash,startMs:t.startMs,endMs:t.endMs})),motionVerified:false}:{}),opticalGazeVerified:false}}:{}),
     ...(hasBodyViewExpressions(profile)?{bodyExpressions:{...bodyViewExpressionsDescription,selection:profile.appearance.bodyExpressions!,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'complete original expression run':'shot-local diagnostic expressions',sourceTrackHash:hash(actingClock?.expressions??plan.expressions),audioVerified:false}}:{}),
-    ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
+    ...(hasBodyViewSecondary(profile)?{bodySecondary:{...nativeSecondaryDescription,selection:profile.appearance.bodySecondary!,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       clock:actingClock?'original continuous actor run; causal head history before camera slice':'shot-local diagnostic head history',sourcePhase:actingClock?viewActingClockDescription(actingClock):null,motionVerified:false,audioVerified:false}}:{}),
     ...(plan.sourceManipulation?{sourceManipulation:{...sourceManipulationDescription,sourceHash:hash(plan.sourceManipulation),offsetMs:plan.sourceManipulation.startMs-actingClock!.startMs,source:plan.sourceManipulation}}:{}),
     ...(plan.sourceSpear?{sourceSpear:{...sourceSpearDescription,sourceHash:hash(plan.sourceSpear),offsetMs:plan.sourceSpear.startMs-actingClock!.startMs,source:plan.sourceSpear,motionVerified:false,productionApproval:false}}:{}),

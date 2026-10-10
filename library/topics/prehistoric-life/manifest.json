@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.97-own-profile-locomotion",
+  "version": "forest-tribe-0.98-own-profile-secondary",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -42,7 +42,7 @@
       "packages/director/source-actor.ts": "467cb2988f60638561c08f2c7eb6723a0a0b141a0c5b70920a1de2f8920d8f20",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
       "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/creative.ts": "830ddaddb3d7da0eec1d7f81a89730ea6ed9ac7082813e8065aa72d68d65a260",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
       "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
@@ -60,7 +60,7 @@
     "motionVerified": false,
     "codeHashes": {
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/creative.ts": "830ddaddb3d7da0eec1d7f81a89730ea6ed9ac7082813e8065aa72d68d65a260",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e"
@@ -178,10 +178,10 @@
       "packages/director/continuity.ts": "10fc00d7c76e79d38fdbc674be58def424c18c2183be764be3b81c0415284b7e",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
       "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "apps/server/cinematic.ts": "0c326da064833b85f569efe7fd0d4674d9b59365286bf88ba98ca8ac707bbeb7",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597"
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0"
     }
   },
   "sourceWorldTimeline": {
@@ -244,7 +244,7 @@
       "packages/director/source-interactions.ts": "3be454c0c8f86cf1e6200c362a33450e8d6ac03c1afaf3232eebe255e4a0aad6",
       "packages/director/source-spear-interactions.ts": "81500068532df5b8a6097cc0515867c9e2191111ec9a4d13bb147af73820645a",
       "packages/director/source-world.ts": "4534557a9c340485f40083b464ae5ae9f35e02f2032b5607361699b1f9c3922b",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/host/controller.ts": "ff89445ed0bc571d8ed0b0af9accfc748bef9284e3f2dee9173c10dca8d80bb5",
       "library/shots/source-world-timeline.ts": "8c1c06449ce2f2b63eeedf8fe981e78ccda3b69885c736deff0b5a22ca4f2f12",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
@@ -343,7 +343,7 @@
       "packages/director/projected-relation-track.ts": "9125a1dd70170a818c3cda10963091bf952a7a02dbbec8614e04299d000722fd",
       "packages/director/model-contact-motion.ts": "40d8d71aaea21949641ca15190b88f2a70b61c58202cbc4cb4d62c9865e87498",
       "packages/director/art-direction.ts": "fb52bec1d6ee0fd1204016bc039c5d51f86f1f30cd3e8e5a1a91c2163cdaad17",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
       "library/shots/ownership-layer.ts": "88fe4f37e2b6a18388c76a7162b2827c0cad4cded205e4334e59a1a78b3ca063",
       "library/shots/source-world-timeline.ts": "8c1c06449ce2f2b63eeedf8fe981e78ccda3b69885c736deff0b5a22ca4f2f12",
@@ -402,7 +402,7 @@
       "packages/director/source-spear-actions.ts": "c236a48979dad35668e1a590eec730f10cb12f77d3f1569b696f9970eb7b2324",
       "packages/director/source-spear-interactions.ts": "81500068532df5b8a6097cc0515867c9e2191111ec9a4d13bb147af73820645a",
       "apps/studio/src/cinematic.ts": "31f51c09d096eda8d345fd43535d6fd018e3c6c443a27eed13f9ec7424e5443b",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/source-spear-bindings.ts": "6625078fdaf04617a854cefe91fd1fd6af5fc4e91cdea99e6568c042b1f62d55",
       "packages/director/source-world-schemas.ts": "6d52c3043b46771851c4fc330670bc17bcea990257516a76189add27a5a9f7b9",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
@@ -414,7 +414,7 @@
       "packages/director/source-production-audit.ts": "5aeafc3dfdf27608786bc8e5e0181667e0cc510917eec0f8e9457742ad860f39",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
       "packages/host/controller.ts": "ff89445ed0bc571d8ed0b0af9accfc748bef9284e3f2dee9173c10dca8d80bb5",
       "packages/explainer/schemas.ts": "ea369418415b2226e0725cc02f2e272373eee27a359f9cf6d5655fa74cb918ba",
       "packages/explainer/plan.ts": "230c80194b47111baae77c7839f4976e640dc558e721701492d3ed650aacd532",
@@ -447,7 +447,7 @@
       "packages/director/ownership-binding-context.ts": "d55bc71c6cbd7891797c0490acdbe97a8aab5bcb24a144a86daafd970567c2a1",
       "packages/director/source-production-audit.ts": "5aeafc3dfdf27608786bc8e5e0181667e0cc510917eec0f8e9457742ad860f39",
       "packages/director/prop-motion.ts": "7c6c2011d8d637011ad013b7ff35cdf6fed2ac6caac236c7d01288ab731560df",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
@@ -503,14 +503,14 @@
     "codeHashes": {
       "packages/animation/view-source-spear.ts": "7b9a50038ca9fcc3c9cf3fd5a54299f467c57c294d1fd7c0715786b1f4b8f4cd",
       "packages/animation/schemas.ts": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
       "packages/animation/view-gaze-target.ts": "058e8c3a016ead031b7b7909b14e9ec7202d6c2394e6787bcaf41b372654403f",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/source-audit-context.ts": "cc65696ca6490f91d35efbdb51af560b63412a50082cc7a05bc6e10f919a9da0",
@@ -603,7 +603,7 @@
       "packages/director/source-interactions.ts": "3be454c0c8f86cf1e6200c362a33450e8d6ac03c1afaf3232eebe255e4a0aad6",
       "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
       "packages/director/ownership-compile.ts": "9d26766ce37a22f174ed4cb9e2256005604ad48f3a228505d4175662b0ea861b",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
       "packages/director/camera-repair.ts": "6cd057ab995d267fbe9f93000ec625fcea9fcf6610c6285b20291ce4cde3c0eb",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
@@ -663,8 +663,8 @@
     "voice": "no input, generated activity, expanded speech clock, mouth state or render fallback",
     "motionVerified": false,
     "codeHashes": {
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408"
     }
   },
@@ -681,7 +681,7 @@
       "packages/director/source-manipulation-actions.ts": "c14229201ff78b0d995019d8760bd904b281691d6e1dea7d39fce2c856711571",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
@@ -710,7 +710,7 @@
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/prop-owner.ts": "c5ce737c469fdd7b43751305c08bc29d78d2e3f38d29fa751168e261d7af6cd7",
       "packages/director/prop-motion.ts": "7c6c2011d8d637011ad013b7ff35cdf6fed2ac6caac236c7d01288ab731560df",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
@@ -733,15 +733,15 @@
     "codeHashes": {
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
       "packages/animation/schemas.ts": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
       "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
@@ -1082,16 +1082,16 @@
     "motionVerified": false,
     "codeHashes": {
       "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
-      "packages/animation/body-view-art.ts": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
       "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/body-workbench.ts": "1a9e5f71800b46252b9c5672bb7c16a268cf3a77abdd5d023852bdfb8104a75c",
-      "packages/topics/prehistoric-life.ts": "e4595b5555593816f699064167fd7d533273e6bc4f92d8de71884896e55d91d3",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462",
+      "packages/topics/prehistoric-life.ts": "f0d99d8c0919a5946207dddc7aa14c3c0e161fc6b52dd1e9906fa4d26c072100",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
@@ -1123,7 +1123,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "e4595b5555593816f699064167fd7d533273e6bc4f92d8de71884896e55d91d3",
+      "packages/topics/prehistoric-life.ts": "f0d99d8c0919a5946207dddc7aa14c3c0e161fc6b52dd1e9906fa4d26c072100",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e"
     }
   },
@@ -1367,11 +1367,11 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "e4595b5555593816f699064167fd7d533273e6bc4f92d8de71884896e55d91d3",
+      "packages/topics/prehistoric-life.ts": "f0d99d8c0919a5946207dddc7aa14c3c0e161fc6b52dd1e9906fa4d26c072100",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597"
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0"
     },
     "workbench": "/api/topics/prehistoric-life/supporting-actors"
   },
@@ -8123,7 +8123,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-10",
+        "version": "forest-view-registration-11",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -8531,7 +8531,7 @@
           "availableBanks": []
         },
         "obliqueCandidate": {
-          "version": "native-oblique-body-registration-5",
+          "version": "native-oblique-body-registration-6",
           "sources": {
             "lila": {
               "left": {
@@ -9071,7 +9071,8 @@
             "profile only: explicit registered-basic-eyes-v1 with one own visible eye",
             "profile only: explicit registered-basic-mouth-v1, own mouth ROI and original speaker activity clock; unaccepted contours/skin seams",
             "profile only: explicit registered-basic-expressions-v1 with one own visible brow and exact own eyes/mouth dependencies; original expression clock",
-            "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps"
+            "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps",
+            "profile only: explicit registered-profile-secondary-v1, four own crest/tail/beard source registrations; same original causal head/body clock and own face masks"
           ],
           "unavailable": [
             "rear speech/expressions/motion",
@@ -9080,7 +9081,7 @@
             "exact optical gaze",
             "laugh/body acting acceptance",
             "seat",
-            "hair/beard follow",
+            "front/rear hair/beard follow",
             "tools/manipulation",
             "supporting cast/head bank",
             "continuous turns",
@@ -10959,9 +10960,161 @@
           ]
         },
         "secondaryCandidate": {
-          "version": "native-view-secondary-1",
+          "version": "native-view-secondary-2",
           "selection": "registered-secondary-v1",
-          "fingerprint": "06ffd2155dde30bdef1d8fa751e0151d286fa72cf6afc666c8918de6ee6166c4",
+          "selections": [
+            "registered-secondary-v1",
+            "registered-profile-secondary-v1"
+          ],
+          "ownProfile": {
+            "version": "native-profile-secondary-1",
+            "selection": "registered-profile-secondary-v1",
+            "bindings": {
+              "lila": {
+                "left": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+                  "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+                  "width": 1173,
+                  "height": 1341,
+                  "hairTie": {
+                    "x": 682,
+                    "y": 420,
+                    "width": 83,
+                    "height": 63
+                  },
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 394,
+                      "right": 879,
+                      "top": 56,
+                      "bottom": 202,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "tail",
+                      "left": 700,
+                      "right": 851,
+                      "top": 536,
+                      "bottom": 797,
+                      "pin": "top",
+                      "maxDisplacement": 32,
+                      "gain": 1
+                    }
+                  ]
+                },
+                "right": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+                  "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+                  "width": 1024,
+                  "height": 1536,
+                  "hairTie": {
+                    "x": 330,
+                    "y": 439,
+                    "width": 116,
+                    "height": 82
+                  },
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 214,
+                      "right": 829,
+                      "top": 30,
+                      "bottom": 182,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "tail",
+                      "left": 244,
+                      "right": 434,
+                      "top": 545,
+                      "bottom": 833,
+                      "pin": "top",
+                      "maxDisplacement": 32,
+                      "gain": 1
+                    }
+                  ]
+                }
+              },
+              "karo": {
+                "left": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+                  "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+                  "width": 910,
+                  "height": 1728,
+                  "hairTie": null,
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 205,
+                      "right": 721,
+                      "top": 83,
+                      "bottom": 268,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "beard",
+                      "left": 260,
+                      "right": 395,
+                      "top": 554,
+                      "bottom": 622,
+                      "pin": "top",
+                      "maxDisplacement": 10,
+                      "gain": 0.3
+                    }
+                  ]
+                },
+                "right": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+                  "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+                  "width": 910,
+                  "height": 1727,
+                  "hairTie": null,
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 223,
+                      "right": 750,
+                      "top": 28,
+                      "bottom": 214,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "beard",
+                      "left": 547,
+                      "right": 679,
+                      "top": 491,
+                      "bottom": 548,
+                      "pin": "top",
+                      "maxDisplacement": 10,
+                      "gain": 0.3
+                    }
+                  ]
+                }
+              }
+            },
+            "sourceCount": 4,
+            "visibleRegions": 8,
+            "coordinateAuthority": "manual own-source cues, not measured anatomy/segmentation or accepted artwork",
+            "frontSecondary": false,
+            "rearSecondary": false,
+            "continuousTurns": false,
+            "approved": false,
+            "artApproved": false,
+            "motionVerified": false,
+            "productionReady": false,
+            "productionRig": null,
+            "availableBanks": []
+          },
+          "fingerprint": "a0fffaf4ef360575d4b2f06e2b2cbf6c4877b5780e13c8954563ed857507d93c",
           "bindings": {
             "lila": {
               "three-quarter-right": {
@@ -11452,7 +11605,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "ff1bf9e34fddc9686ffb667ed4a4e1ecabf1d78775395d9067d7a592172465a1",
+        "fingerprint": "8ba0b56e4646a97545e630679b38270a94f780ae0d87ca34aa15cbef250aaca5",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -11467,13 +11620,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "68ee4b66496d73ca4d7db99c67bab6c2dbf72fc8dfaace0a1fa90cc1683cb431",
+      "fingerprint": "01d4e28b8f334b51628892ecab937ce0c35de0c93b476f2cc524e356ccd7f92f",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "10fa5f865c7ad2405b2e7919d34179df8e926851a2348a713d26a3b4717dfce1",
+    "fingerprint": "1675db29a927ffd3e15d9c2c7442fa52cc13280a245ebfb0835ad3f5c0125cd4",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -11497,7 +11650,7 @@
     "version": "forest-body-1",
     "compilerVersion": "forest-source-body-motion-40",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "042bea3b77f04ab5da2326bddaa06978d068ad1889aafb5f66171a4ec724f495",
+    "fingerprint": "88f2e25daf655e77c765d5f06db9574a291c8d6edcf89b8aa88195fb78549603",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -12010,7 +12163,7 @@
       "repairPrompt": "library/topics/prehistoric-life/rig-v1/karo-cuffs-v2-prompt.json"
     },
     "authoredViews": {
-      "version": "forest-view-registration-10",
+      "version": "forest-view-registration-11",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -12418,7 +12571,7 @@
         "availableBanks": []
       },
       "obliqueCandidate": {
-        "version": "native-oblique-body-registration-5",
+        "version": "native-oblique-body-registration-6",
         "sources": {
           "lila": {
             "left": {
@@ -12958,7 +13111,8 @@
           "profile only: explicit registered-basic-eyes-v1 with one own visible eye",
           "profile only: explicit registered-basic-mouth-v1, own mouth ROI and original speaker activity clock; unaccepted contours/skin seams",
           "profile only: explicit registered-basic-expressions-v1 with one own visible brow and exact own eyes/mouth dependencies; original expression clock",
-          "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps"
+          "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps",
+          "profile only: explicit registered-profile-secondary-v1, four own crest/tail/beard source registrations; same original causal head/body clock and own face masks"
         ],
         "unavailable": [
           "rear speech/expressions/motion",
@@ -12967,7 +13121,7 @@
           "exact optical gaze",
           "laugh/body acting acceptance",
           "seat",
-          "hair/beard follow",
+          "front/rear hair/beard follow",
           "tools/manipulation",
           "supporting cast/head bank",
           "continuous turns",
@@ -14846,9 +15000,161 @@
         ]
       },
       "secondaryCandidate": {
-        "version": "native-view-secondary-1",
+        "version": "native-view-secondary-2",
         "selection": "registered-secondary-v1",
-        "fingerprint": "06ffd2155dde30bdef1d8fa751e0151d286fa72cf6afc666c8918de6ee6166c4",
+        "selections": [
+          "registered-secondary-v1",
+          "registered-profile-secondary-v1"
+        ],
+        "ownProfile": {
+          "version": "native-profile-secondary-1",
+          "selection": "registered-profile-secondary-v1",
+          "bindings": {
+            "lila": {
+              "left": {
+                "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+                "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+                "width": 1173,
+                "height": 1341,
+                "hairTie": {
+                  "x": 682,
+                  "y": 420,
+                  "width": 83,
+                  "height": 63
+                },
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 394,
+                    "right": 879,
+                    "top": 56,
+                    "bottom": 202,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "tail",
+                    "left": 700,
+                    "right": 851,
+                    "top": 536,
+                    "bottom": 797,
+                    "pin": "top",
+                    "maxDisplacement": 32,
+                    "gain": 1
+                  }
+                ]
+              },
+              "right": {
+                "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+                "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+                "width": 1024,
+                "height": 1536,
+                "hairTie": {
+                  "x": 330,
+                  "y": 439,
+                  "width": 116,
+                  "height": 82
+                },
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 214,
+                    "right": 829,
+                    "top": 30,
+                    "bottom": 182,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "tail",
+                    "left": 244,
+                    "right": 434,
+                    "top": 545,
+                    "bottom": 833,
+                    "pin": "top",
+                    "maxDisplacement": 32,
+                    "gain": 1
+                  }
+                ]
+              }
+            },
+            "karo": {
+              "left": {
+                "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+                "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+                "width": 910,
+                "height": 1728,
+                "hairTie": null,
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 205,
+                    "right": 721,
+                    "top": 83,
+                    "bottom": 268,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "beard",
+                    "left": 260,
+                    "right": 395,
+                    "top": 554,
+                    "bottom": 622,
+                    "pin": "top",
+                    "maxDisplacement": 10,
+                    "gain": 0.3
+                  }
+                ]
+              },
+              "right": {
+                "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+                "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+                "width": 910,
+                "height": 1727,
+                "hairTie": null,
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 223,
+                    "right": 750,
+                    "top": 28,
+                    "bottom": 214,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "beard",
+                    "left": 547,
+                    "right": 679,
+                    "top": 491,
+                    "bottom": 548,
+                    "pin": "top",
+                    "maxDisplacement": 10,
+                    "gain": 0.3
+                  }
+                ]
+              }
+            }
+          },
+          "sourceCount": 4,
+          "visibleRegions": 8,
+          "coordinateAuthority": "manual own-source cues, not measured anatomy/segmentation or accepted artwork",
+          "frontSecondary": false,
+          "rearSecondary": false,
+          "continuousTurns": false,
+          "approved": false,
+          "artApproved": false,
+          "motionVerified": false,
+          "productionReady": false,
+          "productionRig": null,
+          "availableBanks": []
+        },
+        "fingerprint": "a0fffaf4ef360575d4b2f06e2b2cbf6c4877b5780e13c8954563ed857507d93c",
         "bindings": {
           "lila": {
             "three-quarter-right": {
@@ -15339,7 +15645,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "ff1bf9e34fddc9686ffb667ed4a4e1ecabf1d78775395d9067d7a592172465a1",
+      "fingerprint": "8ba0b56e4646a97545e630679b38270a94f780ae0d87ca34aa15cbef250aaca5",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
@@ -15766,7 +16072,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-10",
+        "version": "forest-view-registration-11",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -16174,7 +16480,7 @@
           "availableBanks": []
         },
         "obliqueCandidate": {
-          "version": "native-oblique-body-registration-5",
+          "version": "native-oblique-body-registration-6",
           "sources": {
             "lila": {
               "left": {
@@ -16714,7 +17020,8 @@
             "profile only: explicit registered-basic-eyes-v1 with one own visible eye",
             "profile only: explicit registered-basic-mouth-v1, own mouth ROI and original speaker activity clock; unaccepted contours/skin seams",
             "profile only: explicit registered-basic-expressions-v1 with one own visible brow and exact own eyes/mouth dependencies; original expression clock",
-            "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps"
+            "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps",
+            "profile only: explicit registered-profile-secondary-v1, four own crest/tail/beard source registrations; same original causal head/body clock and own face masks"
           ],
           "unavailable": [
             "rear speech/expressions/motion",
@@ -16723,7 +17030,7 @@
             "exact optical gaze",
             "laugh/body acting acceptance",
             "seat",
-            "hair/beard follow",
+            "front/rear hair/beard follow",
             "tools/manipulation",
             "supporting cast/head bank",
             "continuous turns",
@@ -18602,9 +18909,161 @@
           ]
         },
         "secondaryCandidate": {
-          "version": "native-view-secondary-1",
+          "version": "native-view-secondary-2",
           "selection": "registered-secondary-v1",
-          "fingerprint": "06ffd2155dde30bdef1d8fa751e0151d286fa72cf6afc666c8918de6ee6166c4",
+          "selections": [
+            "registered-secondary-v1",
+            "registered-profile-secondary-v1"
+          ],
+          "ownProfile": {
+            "version": "native-profile-secondary-1",
+            "selection": "registered-profile-secondary-v1",
+            "bindings": {
+              "lila": {
+                "left": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+                  "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+                  "width": 1173,
+                  "height": 1341,
+                  "hairTie": {
+                    "x": 682,
+                    "y": 420,
+                    "width": 83,
+                    "height": 63
+                  },
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 394,
+                      "right": 879,
+                      "top": 56,
+                      "bottom": 202,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "tail",
+                      "left": 700,
+                      "right": 851,
+                      "top": 536,
+                      "bottom": 797,
+                      "pin": "top",
+                      "maxDisplacement": 32,
+                      "gain": 1
+                    }
+                  ]
+                },
+                "right": {
+                  "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+                  "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+                  "width": 1024,
+                  "height": 1536,
+                  "hairTie": {
+                    "x": 330,
+                    "y": 439,
+                    "width": 116,
+                    "height": 82
+                  },
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 214,
+                      "right": 829,
+                      "top": 30,
+                      "bottom": 182,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "tail",
+                      "left": 244,
+                      "right": 434,
+                      "top": 545,
+                      "bottom": 833,
+                      "pin": "top",
+                      "maxDisplacement": 32,
+                      "gain": 1
+                    }
+                  ]
+                }
+              },
+              "karo": {
+                "left": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+                  "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+                  "width": 910,
+                  "height": 1728,
+                  "hairTie": null,
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 205,
+                      "right": 721,
+                      "top": 83,
+                      "bottom": 268,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "beard",
+                      "left": 260,
+                      "right": 395,
+                      "top": 554,
+                      "bottom": 622,
+                      "pin": "top",
+                      "maxDisplacement": 10,
+                      "gain": 0.3
+                    }
+                  ]
+                },
+                "right": {
+                  "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+                  "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+                  "width": 910,
+                  "height": 1727,
+                  "hairTie": null,
+                  "regions": [
+                    {
+                      "id": "crest",
+                      "left": 223,
+                      "right": 750,
+                      "top": 28,
+                      "bottom": 214,
+                      "pin": "bottom",
+                      "maxDisplacement": 12,
+                      "gain": 0.35
+                    },
+                    {
+                      "id": "beard",
+                      "left": 547,
+                      "right": 679,
+                      "top": 491,
+                      "bottom": 548,
+                      "pin": "top",
+                      "maxDisplacement": 10,
+                      "gain": 0.3
+                    }
+                  ]
+                }
+              }
+            },
+            "sourceCount": 4,
+            "visibleRegions": 8,
+            "coordinateAuthority": "manual own-source cues, not measured anatomy/segmentation or accepted artwork",
+            "frontSecondary": false,
+            "rearSecondary": false,
+            "continuousTurns": false,
+            "approved": false,
+            "artApproved": false,
+            "motionVerified": false,
+            "productionReady": false,
+            "productionRig": null,
+            "availableBanks": []
+          },
+          "fingerprint": "a0fffaf4ef360575d4b2f06e2b2cbf6c4877b5780e13c8954563ed857507d93c",
           "bindings": {
             "lila": {
               "three-quarter-right": {
@@ -19095,7 +19554,7 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "ff1bf9e34fddc9686ffb667ed4a4e1ecabf1d78775395d9067d7a592172465a1",
+        "fingerprint": "8ba0b56e4646a97545e630679b38270a94f780ae0d87ca34aa15cbef250aaca5",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
@@ -19110,7 +19569,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "68ee4b66496d73ca4d7db99c67bab6c2dbf72fc8dfaace0a1fa90cc1683cb431",
+      "fingerprint": "01d4e28b8f334b51628892ecab937ce0c35de0c93b476f2cc524e356ccd7f92f",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -19129,15 +19588,15 @@
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-    "compilerCodeHash": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+    "compilerCodeHash": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
     "rigCodeHash": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
-    "cameraCodeHash": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+    "cameraCodeHash": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
     "sourceBodyCodeHash": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
-    "actingClockCodeHash": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
-    "actingBindingCodeHash": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
-    "secondaryCodeHash": "884addb5616e89c3c83986343fb4315f1c257a8d2927971fdff2de500d089278",
+    "actingClockCodeHash": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+    "actingBindingCodeHash": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
+    "secondaryCodeHash": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
     "secondaryMotionCodeHash": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
-    "viewCodeHash": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
+    "viewCodeHash": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
     "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
     "viewClothCodeHash": "bfdaa119a61899d0b9331a49b910da22c635f8d01be6cd8c8221d3ef7ac37028",
     "viewClothGeometryCodeHash": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
@@ -19379,6 +19838,173 @@
     ],
     "workflow": "docs/topics/AI-POSE-WORKFLOW.md"
   },
+  "nativeProfileSecondary": {
+    "version": "native-profile-secondary-1",
+    "selection": "registered-profile-secondary-v1",
+    "bindings": {
+      "lila": {
+        "left": {
+          "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+          "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+          "width": 1173,
+          "height": 1341,
+          "hairTie": {
+            "x": 682,
+            "y": 420,
+            "width": 83,
+            "height": 63
+          },
+          "regions": [
+            {
+              "id": "crest",
+              "left": 394,
+              "right": 879,
+              "top": 56,
+              "bottom": 202,
+              "pin": "bottom",
+              "maxDisplacement": 12,
+              "gain": 0.35
+            },
+            {
+              "id": "tail",
+              "left": 700,
+              "right": 851,
+              "top": 536,
+              "bottom": 797,
+              "pin": "top",
+              "maxDisplacement": 32,
+              "gain": 1
+            }
+          ]
+        },
+        "right": {
+          "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+          "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+          "width": 1024,
+          "height": 1536,
+          "hairTie": {
+            "x": 330,
+            "y": 439,
+            "width": 116,
+            "height": 82
+          },
+          "regions": [
+            {
+              "id": "crest",
+              "left": 214,
+              "right": 829,
+              "top": 30,
+              "bottom": 182,
+              "pin": "bottom",
+              "maxDisplacement": 12,
+              "gain": 0.35
+            },
+            {
+              "id": "tail",
+              "left": 244,
+              "right": 434,
+              "top": 545,
+              "bottom": 833,
+              "pin": "top",
+              "maxDisplacement": 32,
+              "gain": 1
+            }
+          ]
+        }
+      },
+      "karo": {
+        "left": {
+          "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+          "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+          "width": 910,
+          "height": 1728,
+          "hairTie": null,
+          "regions": [
+            {
+              "id": "crest",
+              "left": 205,
+              "right": 721,
+              "top": 83,
+              "bottom": 268,
+              "pin": "bottom",
+              "maxDisplacement": 12,
+              "gain": 0.35
+            },
+            {
+              "id": "beard",
+              "left": 260,
+              "right": 395,
+              "top": 554,
+              "bottom": 622,
+              "pin": "top",
+              "maxDisplacement": 10,
+              "gain": 0.3
+            }
+          ]
+        },
+        "right": {
+          "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+          "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+          "width": 910,
+          "height": 1727,
+          "hairTie": null,
+          "regions": [
+            {
+              "id": "crest",
+              "left": 223,
+              "right": 750,
+              "top": 28,
+              "bottom": 214,
+              "pin": "bottom",
+              "maxDisplacement": 12,
+              "gain": 0.35
+            },
+            {
+              "id": "beard",
+              "left": 547,
+              "right": 679,
+              "top": 491,
+              "bottom": 548,
+              "pin": "top",
+              "maxDisplacement": 10,
+              "gain": 0.3
+            }
+          ]
+        }
+      }
+    },
+    "sourceCount": 4,
+    "visibleRegions": 8,
+    "coordinateAuthority": "manual own-source cues, not measured anatomy/segmentation or accepted artwork",
+    "frontSecondary": false,
+    "rearSecondary": false,
+    "continuousTurns": false,
+    "approved": false,
+    "artApproved": false,
+    "motionVerified": false,
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "fingerprint": "a0fffaf4ef360575d4b2f06e2b2cbf6c4877b5780e13c8954563ed857507d93c",
+    "handoff": "docs/topics/PROFILE-SECONDARY-HANDOFF.md",
+    "codeHashes": {
+      "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
+      "packages/animation/body-view-secondary.ts": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
+      "packages/animation/view-secondary-motion.ts": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
+      "packages/animation/body-view-basic-capabilities.ts": "c881fd207f7e8285d63613bdac35cf4b2dfdd4ab48e1f343d4eed138516bd0d5",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
+      "packages/animation/view-cloth-geometry.ts": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
+      "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
+      "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
+      "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462"
+    }
+  },
   "nativeProfileLocomotion": {
     "version": "native-profile-cloth-1",
     "selection": "registered-profile-locomotion-v1",
@@ -19452,21 +20078,24 @@
     "fingerprint": "debaeb4bf8b144e76d1a939935ce4edf1c03028c0673ed38fbeb49065fdc4381",
     "handoff": "docs/topics/PROFILE-LOCOMOTION-HANDOFF.md",
     "codeHashes": {
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
+      "packages/animation/body-view-secondary.ts": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
+      "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
       "packages/animation/body-view-cloth.ts": "bfdaa119a61899d0b9331a49b910da22c635f8d01be6cd8c8221d3ef7ac37028",
       "packages/animation/body-view-cloth-binding.ts": "764ae4cb65c7be632efc36d194f305d9ee93ef2eaa656bf2523bdef4836fa0f6",
-      "packages/animation/body-view-basic-capabilities.ts": "3d58fb0b7afa45058a18c76e873440ac72329d8b711e34686e5d2fd992bbf5c6",
-      "packages/animation/body-view-art.ts": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/body-view-basic-capabilities.ts": "c881fd207f7e8285d63613bdac35cf4b2dfdd4ab48e1f343d4eed138516bd0d5",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/view-cloth-geometry.ts": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-source-gesture.ts": "69f155480e51c4034ad3e99122c0b1d713d4a422733ee829c046a4f049a96b15",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
-      "packages/topics/body-workbench.ts": "1a9e5f71800b46252b9c5672bb7c16a268cf3a77abdd5d023852bdfb8104a75c"
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462"
     }
   },
   "nativeBasicExpressions": {
@@ -19721,24 +20350,27 @@
     "fingerprint": "9bfc09231c9b62088644e9f80feecde196e57b149d86261d667ca6486041cf6b",
     "handoff": "docs/topics/OWN-VIEW-EXPRESSIONS-HANDOFF.md",
     "codeHashes": {
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
+      "packages/animation/body-view-secondary.ts": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
+      "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
       "packages/animation/body-view-cloth.ts": "bfdaa119a61899d0b9331a49b910da22c635f8d01be6cd8c8221d3ef7ac37028",
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
       "packages/animation/body-view-basic-expression-registration.ts": "400a6b3250c7bae221b1c1706e41842ff8cbd2f9c0cc2e2fe405b9ca61175149",
       "packages/animation/body-view-basic-eyes-registration.ts": "e4ba353f7d20e8953db925d499854efbd12ee11e81f4c7d888dea01797c3dc4c",
       "packages/animation/body-view-basic-mouth-registration.ts": "efd4dd67b0d1bb70bd5d92c48c299f9f835f396daf04ed69c6e7de4551332a38",
-      "packages/animation/body-view-basic-capabilities.ts": "3d58fb0b7afa45058a18c76e873440ac72329d8b711e34686e5d2fd992bbf5c6",
+      "packages/animation/body-view-basic-capabilities.ts": "c881fd207f7e8285d63613bdac35cf4b2dfdd4ab48e1f343d4eed138516bd0d5",
       "packages/animation/body-view-expressions.ts": "340dfb1d87a37f742c82b221b3c6438bc125e8bfc1133b4c9032c1999d0fde18",
       "packages/animation/body-view-mouth.ts": "25ce7fc5c13266d53836a7eb49d438e5f7f595a7a5457e1df944964e5b59541e",
       "packages/animation/body-view-eyes.ts": "abb23e43b1c6d454903ac8bb993f4d8f8eab5db51b781b7aa1d5ab7ae4799d26",
-      "packages/animation/body-view-art.ts": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/expression-pose.ts": "c9bc4fb95b24da98b0f4987a88ba24be5c8f4d45a8774a69ce1c0414e9dd99ba",
       "packages/animation/view-expression-track.ts": "b0561918fb045a1693f7d961e96e3f51608dc145223cf57bbbec9f5f836e3406",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
-      "packages/topics/body-workbench.ts": "1a9e5f71800b46252b9c5672bb7c16a268cf3a77abdd5d023852bdfb8104a75c"
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462"
     }
   },
   "nativeBasicSpeech": {
@@ -20040,21 +20672,24 @@
     "availableBanks": [],
     "handoff": "docs/topics/OWN-VIEW-SPEECH-HANDOFF.md",
     "codeHashes": {
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
+      "packages/animation/body-view-secondary.ts": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
+      "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
       "packages/animation/body-view-cloth.ts": "bfdaa119a61899d0b9331a49b910da22c635f8d01be6cd8c8221d3ef7ac37028",
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
       "packages/animation/body-view-basic-mouth-registration.ts": "efd4dd67b0d1bb70bd5d92c48c299f9f835f396daf04ed69c6e7de4551332a38",
       "packages/animation/body-view-basic-expression-registration.ts": "400a6b3250c7bae221b1c1706e41842ff8cbd2f9c0cc2e2fe405b9ca61175149",
       "packages/animation/body-view-expressions.ts": "340dfb1d87a37f742c82b221b3c6438bc125e8bfc1133b4c9032c1999d0fde18",
-      "packages/animation/body-view-basic-capabilities.ts": "3d58fb0b7afa45058a18c76e873440ac72329d8b711e34686e5d2fd992bbf5c6",
+      "packages/animation/body-view-basic-capabilities.ts": "c881fd207f7e8285d63613bdac35cf4b2dfdd4ab48e1f343d4eed138516bd0d5",
       "packages/animation/body-view-mouth.ts": "25ce7fc5c13266d53836a7eb49d438e5f7f595a7a5457e1df944964e5b59541e",
-      "packages/animation/body-view-art.ts": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/speech-clock.ts": "357fc4f20376f6086acd209ac890946b6bf4cdad912033dbd6309907b0cf28d2",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
-      "packages/topics/body-workbench.ts": "1a9e5f71800b46252b9c5672bb7c16a268cf3a77abdd5d023852bdfb8104a75c"
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462"
     }
   },
   "nativeBasicEyes": {
@@ -20347,25 +20982,28 @@
     "availableBanks": [],
     "handoff": "docs/topics/OWN-VIEW-EYES-HANDOFF.md",
     "codeHashes": {
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
+      "packages/animation/body-view-secondary.ts": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
+      "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
       "packages/animation/body-view-cloth.ts": "bfdaa119a61899d0b9331a49b910da22c635f8d01be6cd8c8221d3ef7ac37028",
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
       "packages/animation/body-view-expressions.ts": "340dfb1d87a37f742c82b221b3c6438bc125e8bfc1133b4c9032c1999d0fde18",
       "packages/animation/body-view-basic-expression-registration.ts": "400a6b3250c7bae221b1c1706e41842ff8cbd2f9c0cc2e2fe405b9ca61175149",
       "packages/animation/body-view-basic-mouth-registration.ts": "efd4dd67b0d1bb70bd5d92c48c299f9f835f396daf04ed69c6e7de4551332a38",
       "packages/animation/body-view-basic-eyes-registration.ts": "e4ba353f7d20e8953db925d499854efbd12ee11e81f4c7d888dea01797c3dc4c",
-      "packages/animation/body-view-basic-capabilities.ts": "3d58fb0b7afa45058a18c76e873440ac72329d8b711e34686e5d2fd992bbf5c6",
+      "packages/animation/body-view-basic-capabilities.ts": "c881fd207f7e8285d63613bdac35cf4b2dfdd4ab48e1f343d4eed138516bd0d5",
       "packages/animation/body-view-eyes.ts": "abb23e43b1c6d454903ac8bb993f4d8f8eab5db51b781b7aa1d5ab7ae4799d26",
-      "packages/animation/body-view-art.ts": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/view-gaze-target.ts": "058e8c3a016ead031b7b7909b14e9ec7202d6c2394e6787bcaf41b372654403f",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
-      "packages/topics/body-workbench.ts": "1a9e5f71800b46252b9c5672bb7c16a268cf3a77abdd5d023852bdfb8104a75c"
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462"
     }
   },
   "nativeObliqueRig": {
-    "version": "native-oblique-body-registration-5",
+    "version": "native-oblique-body-registration-6",
     "sources": {
       "lila": {
         "left": {
@@ -20905,7 +21543,8 @@
       "profile only: explicit registered-basic-eyes-v1 with one own visible eye",
       "profile only: explicit registered-basic-mouth-v1, own mouth ROI and original speaker activity clock; unaccepted contours/skin seams",
       "profile only: explicit registered-basic-expressions-v1 with one own visible brow and exact own eyes/mouth dependencies; original expression clock",
-      "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps"
+      "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps",
+      "profile only: explicit registered-profile-secondary-v1, four own crest/tail/beard source registrations; same original causal head/body clock and own face masks"
     ],
     "unavailable": [
       "rear speech/expressions/motion",
@@ -20914,7 +21553,7 @@
       "exact optical gaze",
       "laugh/body acting acceptance",
       "seat",
-      "hair/beard follow",
+      "front/rear hair/beard follow",
       "tools/manipulation",
       "supporting cast/head bank",
       "continuous turns",
@@ -20928,33 +21567,35 @@
     "availableBanks": [],
     "handoff": "docs/topics/PROFILE-REAR-RIG-HANDOFF.md",
     "codeHashes": {
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
+      "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
       "packages/animation/body-view-basic-expression-registration.ts": "400a6b3250c7bae221b1c1706e41842ff8cbd2f9c0cc2e2fe405b9ca61175149",
       "packages/animation/body-view-basic-mouth-registration.ts": "efd4dd67b0d1bb70bd5d92c48c299f9f835f396daf04ed69c6e7de4551332a38",
       "packages/animation/view-gaze-target.ts": "058e8c3a016ead031b7b7909b14e9ec7202d6c2394e6787bcaf41b372654403f",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
       "packages/animation/body-view-basic-eyes-registration.ts": "e4ba353f7d20e8953db925d499854efbd12ee11e81f4c7d888dea01797c3dc4c",
-      "packages/animation/body-view-basic-capabilities.ts": "3d58fb0b7afa45058a18c76e873440ac72329d8b711e34686e5d2fd992bbf5c6",
-      "packages/animation/body-view-oblique-registration.ts": "03c908df4f455d79e2ce28ca4af98cf80808bd689f044d9dcda0f43a236798f9",
+      "packages/animation/body-view-basic-capabilities.ts": "c881fd207f7e8285d63613bdac35cf4b2dfdd4ab48e1f343d4eed138516bd0d5",
+      "packages/animation/body-view-oblique-registration.ts": "6a396a96bc205477956999564e74536abc341fb5834eebb866e0cd924f8587de",
       "packages/animation/body-view-rest-arm.ts": "e5b8b9fa014f8cc92d890e65e7200462bdf6c5a1209e3a4d10af85b87bf4c01e",
       "packages/animation/body-view-front-registration.ts": "fb339a3a66c011dc81a37491fc40f249e3ef8f46dc0543cdd90f01e6ad1edd7f",
       "packages/animation/body-view-registration.ts": "c3d058e2890c073b5dbde2b1658de9a56e471d7459096dce09ed3fef371d2de8",
-      "packages/animation/body-view-art.ts": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
       "packages/animation/body-view-mouth.ts": "25ce7fc5c13266d53836a7eb49d438e5f7f595a7a5457e1df944964e5b59541e",
       "packages/animation/body-view-rest-mouth.ts": "3b82b2802d403fe768c23cf8d6c039979e9b34ddf3a43b3219224489ac8899ac",
       "packages/animation/body-view-eyes.ts": "abb23e43b1c6d454903ac8bb993f4d8f8eab5db51b781b7aa1d5ab7ae4799d26",
       "packages/animation/body-view-expressions.ts": "340dfb1d87a37f742c82b221b3c6438bc125e8bfc1133b4c9032c1999d0fde18",
       "packages/animation/body-view-cloth.ts": "bfdaa119a61899d0b9331a49b910da22c635f8d01be6cd8c8221d3ef7ac37028",
       "packages/animation/body-view-seat.ts": "8aa8eeefb324f76d1e1c71f434abf8de719684f474c19c06182429a4943ecff4",
-      "packages/animation/body-view-secondary.ts": "884addb5616e89c3c83986343fb4315f1c257a8d2927971fdff2de500d089278",
+      "packages/animation/body-view-secondary.ts": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
       "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408",
       "packages/animation/forest-cutout-head.ts": "8c1509c7c369f5f1b965c725bd7f01f86608fe6ecb2da64f9f92156a086e9c56",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
-      "packages/topics/body-workbench.ts": "1a9e5f71800b46252b9c5672bb7c16a268cf3a77abdd5d023852bdfb8104a75c",
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462",
       "packages/topics/view-registration-workbench.ts": "eca2c62a00f5a133a7a4da1c59f75eefc9e755e99ec4627e4f62b029a78621fd"
     }
   },
@@ -21126,34 +21767,35 @@
     "availableBanks": [],
     "handoff": "docs/topics/FRONT-BODY-RIG-HANDOFF.md",
     "codeHashes": {
+      "packages/animation/body-view-profile-secondary-binding.ts": "02c5b2d61b82932783b3e4343356e305f2516529a6c20063ad005e8a00c219fe",
       "packages/animation/body-view-profile-cloth-binding.ts": "dfc924ce77b66c9205f028dadf31c2bd98136671c73ad22440fa00bc2d02f5aa",
       "packages/animation/body-view-basic-expression-registration.ts": "400a6b3250c7bae221b1c1706e41842ff8cbd2f9c0cc2e2fe405b9ca61175149",
       "packages/animation/body-view-basic-mouth-registration.ts": "efd4dd67b0d1bb70bd5d92c48c299f9f835f396daf04ed69c6e7de4551332a38",
       "packages/animation/view-gaze-target.ts": "058e8c3a016ead031b7b7909b14e9ec7202d6c2394e6787bcaf41b372654403f",
-      "packages/animation/view-acting-clock.ts": "d6b47d569de1f3ce792c5f2d7ff50b27772bb92628edf8e9e9a773023ba2c02a",
-      "packages/actors/view-acting-clock.ts": "5d926d84aaecc3c061f910c67e396616f099dcd18d15790976332e5494ca162c",
+      "packages/animation/view-acting-clock.ts": "87b0c1da0428b8a2525f681aa4a16bc0d2f51b562400147f0d48fbf3b04353f2",
+      "packages/actors/view-acting-clock.ts": "62ebe458bfe584f81707d91375b1ef18766129ad20117b84ee10ec086b79c734",
       "packages/animation/body-view-basic-eyes-registration.ts": "e4ba353f7d20e8953db925d499854efbd12ee11e81f4c7d888dea01797c3dc4c",
-      "packages/animation/body-view-basic-capabilities.ts": "3d58fb0b7afa45058a18c76e873440ac72329d8b711e34686e5d2fd992bbf5c6",
+      "packages/animation/body-view-basic-capabilities.ts": "c881fd207f7e8285d63613bdac35cf4b2dfdd4ab48e1f343d4eed138516bd0d5",
       "packages/animation/body-view-rest-arm.ts": "e5b8b9fa014f8cc92d890e65e7200462bdf6c5a1209e3a4d10af85b87bf4c01e",
-      "packages/animation/body-view-oblique-registration.ts": "03c908df4f455d79e2ce28ca4af98cf80808bd689f044d9dcda0f43a236798f9",
+      "packages/animation/body-view-oblique-registration.ts": "6a396a96bc205477956999564e74536abc341fb5834eebb866e0cd924f8587de",
       "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408",
       "packages/animation/forest-cutout-head.ts": "8c1509c7c369f5f1b965c725bd7f01f86608fe6ecb2da64f9f92156a086e9c56",
       "packages/animation/body-view-front-registration.ts": "fb339a3a66c011dc81a37491fc40f249e3ef8f46dc0543cdd90f01e6ad1edd7f",
       "packages/animation/body-view-registration.ts": "c3d058e2890c073b5dbde2b1658de9a56e471d7459096dce09ed3fef371d2de8",
-      "packages/animation/body-view-art.ts": "b27e1daaa48c44207773c462f59e28632c0ca68613959f2c2192db747bbc8790",
+      "packages/animation/body-view-art.ts": "2c1d963cdd8a43c7b65a7fb35c1f2520d8c98a09734c0d047940d5a158970c71",
       "packages/animation/body-view-mouth.ts": "25ce7fc5c13266d53836a7eb49d438e5f7f595a7a5457e1df944964e5b59541e",
       "packages/animation/body-view-rest-mouth.ts": "3b82b2802d403fe768c23cf8d6c039979e9b34ddf3a43b3219224489ac8899ac",
       "packages/animation/body-view-eyes.ts": "abb23e43b1c6d454903ac8bb993f4d8f8eab5db51b781b7aa1d5ab7ae4799d26",
       "packages/animation/body-view-expressions.ts": "340dfb1d87a37f742c82b221b3c6438bc125e8bfc1133b4c9032c1999d0fde18",
       "packages/animation/body-view-cloth.ts": "bfdaa119a61899d0b9331a49b910da22c635f8d01be6cd8c8221d3ef7ac37028",
       "packages/animation/body-view-seat.ts": "8aa8eeefb324f76d1e1c71f434abf8de719684f474c19c06182429a4943ecff4",
-      "packages/animation/body-view-secondary.ts": "884addb5616e89c3c83986343fb4315f1c257a8d2927971fdff2de500d089278",
+      "packages/animation/body-view-secondary.ts": "2f08bcb70e9d8d4076edfc01447070a9a51c6a8e57f1a8c78f702cbb1fd8ca2e",
       "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
-      "packages/animation/compiler.ts": "e9e0026d1d332a451f334dd164fc2925411625bd5d34e7b6350a50b7300c5ee2",
+      "packages/animation/compiler.ts": "e834a059105a62b8fc0881bbb0c66094360c757214b7760a3583f344f3416454",
       "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
-      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
-      "packages/host/schemas.ts": "5dd358ab50f53919139422e16e0f11aa1bd2aff8fa12a9d0d5f9a3f6d00fa597",
-      "packages/topics/body-workbench.ts": "1a9e5f71800b46252b9c5672bb7c16a268cf3a77abdd5d023852bdfb8104a75c",
+      "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
+      "packages/host/schemas.ts": "8bbef4c5859397952ca576d0d479f96fc6d1a203dd96013ce3cba2276f79f8f0",
+      "packages/topics/body-workbench.ts": "9858788aac22aa0a266cf5182d0755de7715f2d5c97e33759459e05b6bc47462",
       "packages/topics/view-registration-workbench.ts": "eca2c62a00f5a133a7a4da1c59f75eefc9e755e99ec4627e4f62b029a78621fd"
     }
   },
@@ -21907,7 +22549,7 @@
     "registered": false,
     "registrationFlagScope": "all artwork approved/registered for production: false; raw generation metadata remains immutable",
     "engineeringRegistrations": {
-      "version": "forest-view-registration-10",
+      "version": "forest-view-registration-11",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -22315,7 +22957,7 @@
         "availableBanks": []
       },
       "obliqueCandidate": {
-        "version": "native-oblique-body-registration-5",
+        "version": "native-oblique-body-registration-6",
         "sources": {
           "lila": {
             "left": {
@@ -22855,7 +23497,8 @@
           "profile only: explicit registered-basic-eyes-v1 with one own visible eye",
           "profile only: explicit registered-basic-mouth-v1, own mouth ROI and original speaker activity clock; unaccepted contours/skin seams",
           "profile only: explicit registered-basic-expressions-v1 with one own visible brow and exact own eyes/mouth dependencies; original expression clock",
-          "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps"
+          "profile only: explicit registered-profile-locomotion-v1, four own garment cages with pinned belt/lagged hem; forward walk/run/jump/crouch and complete original sourceBody across continuous camera/role swaps",
+          "profile only: explicit registered-profile-secondary-v1, four own crest/tail/beard source registrations; same original causal head/body clock and own face masks"
         ],
         "unavailable": [
           "rear speech/expressions/motion",
@@ -22864,7 +23507,7 @@
           "exact optical gaze",
           "laugh/body acting acceptance",
           "seat",
-          "hair/beard follow",
+          "front/rear hair/beard follow",
           "tools/manipulation",
           "supporting cast/head bank",
           "continuous turns",
@@ -24743,9 +25386,161 @@
         ]
       },
       "secondaryCandidate": {
-        "version": "native-view-secondary-1",
+        "version": "native-view-secondary-2",
         "selection": "registered-secondary-v1",
-        "fingerprint": "06ffd2155dde30bdef1d8fa751e0151d286fa72cf6afc666c8918de6ee6166c4",
+        "selections": [
+          "registered-secondary-v1",
+          "registered-profile-secondary-v1"
+        ],
+        "ownProfile": {
+          "version": "native-profile-secondary-1",
+          "selection": "registered-profile-secondary-v1",
+          "bindings": {
+            "lila": {
+              "left": {
+                "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+                "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+                "width": 1173,
+                "height": 1341,
+                "hairTie": {
+                  "x": 682,
+                  "y": 420,
+                  "width": 83,
+                  "height": 63
+                },
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 394,
+                    "right": 879,
+                    "top": 56,
+                    "bottom": 202,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "tail",
+                    "left": 700,
+                    "right": 851,
+                    "top": 536,
+                    "bottom": 797,
+                    "pin": "top",
+                    "maxDisplacement": 32,
+                    "gain": 1
+                  }
+                ]
+              },
+              "right": {
+                "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+                "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+                "width": 1024,
+                "height": 1536,
+                "hairTie": {
+                  "x": 330,
+                  "y": 439,
+                  "width": 116,
+                  "height": 82
+                },
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 214,
+                    "right": 829,
+                    "top": 30,
+                    "bottom": 182,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "tail",
+                    "left": 244,
+                    "right": 434,
+                    "top": 545,
+                    "bottom": 833,
+                    "pin": "top",
+                    "maxDisplacement": 32,
+                    "gain": 1
+                  }
+                ]
+              }
+            },
+            "karo": {
+              "left": {
+                "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+                "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+                "width": 910,
+                "height": 1728,
+                "hairTie": null,
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 205,
+                    "right": 721,
+                    "top": 83,
+                    "bottom": 268,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "beard",
+                    "left": 260,
+                    "right": 395,
+                    "top": 554,
+                    "bottom": 622,
+                    "pin": "top",
+                    "maxDisplacement": 10,
+                    "gain": 0.3
+                  }
+                ]
+              },
+              "right": {
+                "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+                "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+                "width": 910,
+                "height": 1727,
+                "hairTie": null,
+                "regions": [
+                  {
+                    "id": "crest",
+                    "left": 223,
+                    "right": 750,
+                    "top": 28,
+                    "bottom": 214,
+                    "pin": "bottom",
+                    "maxDisplacement": 12,
+                    "gain": 0.35
+                  },
+                  {
+                    "id": "beard",
+                    "left": 547,
+                    "right": 679,
+                    "top": 491,
+                    "bottom": 548,
+                    "pin": "top",
+                    "maxDisplacement": 10,
+                    "gain": 0.3
+                  }
+                ]
+              }
+            }
+          },
+          "sourceCount": 4,
+          "visibleRegions": 8,
+          "coordinateAuthority": "manual own-source cues, not measured anatomy/segmentation or accepted artwork",
+          "frontSecondary": false,
+          "rearSecondary": false,
+          "continuousTurns": false,
+          "approved": false,
+          "artApproved": false,
+          "motionVerified": false,
+          "productionReady": false,
+          "productionRig": null,
+          "availableBanks": []
+        },
+        "fingerprint": "a0fffaf4ef360575d4b2f06e2b2cbf6c4877b5780e13c8954563ed857507d93c",
         "bindings": {
           "lila": {
             "three-quarter-right": {
@@ -25236,7 +26031,7 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "ff1bf9e34fddc9686ffb667ed4a4e1ecabf1d78775395d9067d7a592172465a1",
+      "fingerprint": "8ba0b56e4646a97545e630679b38270a94f780ae0d87ca34aa15cbef250aaca5",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,

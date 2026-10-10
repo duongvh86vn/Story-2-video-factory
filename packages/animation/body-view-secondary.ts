@@ -1,4 +1,5 @@
-import {isBasicBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
+import {isBasicBodyView,basicBodyCapabilityError,basicBodyHasUnsupportedOptions} from './body-view-basic-capabilities.js';
+import {PROFILE_BODY_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_VERSION,profileSecondaryBindings,isProfileSecondaryView} from './body-view-profile-secondary-binding.js';
 import type {HostProfile} from '../host/schemas.js';
 import type {Point} from './schemas.js';
 import {hash} from '../core/utils.js';
@@ -6,9 +7,10 @@ import {clothTriangleArea,clothTriangleMatrix,clothAreaInfluence,type ClothTrian
 import {secondaryMotionDescription} from './view-secondary-motion.js';
 
 export const BODY_VIEW_SECONDARY_SELECTION='registered-secondary-v1' as const;
-export const BODY_VIEW_SECONDARY_VERSION='native-view-secondary-1';
-type Region={id:string;left:number;right:number;top:number;bottom:number;pin:'top'|'bottom';maxDisplacement:number;gain:number};
-type View='three-quarter-left'|'three-quarter-right';
+export const BODY_VIEW_SECONDARY_VERSION='native-view-secondary-2';
+export type NativeSecondaryRegion={id:string;left:number;right:number;top:number;bottom:number;pin:'top'|'bottom';maxDisplacement:number;gain:number};
+type Region=NativeSecondaryRegion;
+type View='three-quarter-left'|'three-quarter-right'|'left'|'right';
 export type NativeSecondarySource={sha256:string;width:number;height:number;view:View;headBounds:{left:number;right:number;top:number;bottom:number}};
 /** Image-space texture regions authored by inspecting the four existing PNGs.
  * Side seams and the attachment row are pinned. No face pixels are selected;
@@ -29,11 +31,16 @@ export const nativeSecondaryBindings={
       {id:'crest',left:180,right:800,top:60,bottom:230,pin:'bottom',maxDisplacement:12,gain:.35},
       {id:'beard',left:300,right:480,top:550,bottom:670,pin:'top',maxDisplacement:10,gain:.3}]}},
 } as const;
-export const hasBodyViewSecondary=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySecondary===BODY_VIEW_SECONDARY_SELECTION;
+export const hasBodyViewSecondary=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySecondary===BODY_VIEW_SECONDARY_SELECTION||profile.appearance.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION;
 export function registeredNativeSecondary(profile:Pick<HostProfile,'appearance'>,source:NativeSecondarySource){
   const a=profile.appearance;
-  if(isBasicBodyView(a.bodyView))throw basicBodyCapabilityError(a.bodyView,'secondary');
-  if(!hasBodyViewSecondary(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-secondary: select a registered native actor/view');
+  if(isBasicBodyView(a.bodyView)){
+    if(a.bodySecondary!==PROFILE_BODY_SECONDARY_SELECTION||!isProfileSecondaryView(a.bodyView)||basicBodyHasUnsupportedOptions(a)||a.artworkVersion!=='forest-body-view-1'||a.characterVariant!=='lila'&&a.characterVariant!=='karo'||a.sourceColour)throw basicBodyCapabilityError(a.bodyView,'secondary');
+    const binding=profileSecondaryBindings[a.characterVariant][a.bodyView];
+    if(source.view!==a.bodyView||source.sha256!==binding.sha256||source.width!==binding.width||source.height!==binding.height)throw new Error('needs-view-secondary: own profile image registration differs');
+    return binding;
+  }
+  if(a.bodySecondary!==BODY_VIEW_SECONDARY_SELECTION||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-secondary: select a registered native actor/view');
   const binding=nativeSecondaryBindings[a.characterVariant][a.bodyView];
   if(source.view!==a.bodyView||source.sha256!==binding.sha256||source.width!==binding.width||source.height!==binding.height)throw new Error('needs-view-secondary: native image registration differs');
   return binding;
@@ -106,6 +113,8 @@ export function nativeSecondaryMatrixError(profile:Pick<HostProfile,'appearance'
   }return error;
 }
 export const nativeSecondaryDescription={version:BODY_VIEW_SECONDARY_VERSION,selection:BODY_VIEW_SECONDARY_SELECTION,
-  fingerprint:hash({version:BODY_VIEW_SECONDARY_VERSION,bindings:nativeSecondaryBindings,temporal:secondaryMotionDescription.fingerprint,mesh:[2,3],minimumArea:.4,uvOverlap:2}),bindings:nativeSecondaryBindings,temporal:secondaryMotionDescription,
+  selections:[BODY_VIEW_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_SELECTION],
+  ownProfile:{version:PROFILE_BODY_SECONDARY_VERSION,selection:PROFILE_BODY_SECONDARY_SELECTION,bindings:profileSecondaryBindings,sourceCount:4,visibleRegions:8,coordinateAuthority:'manual own-source cues, not measured anatomy/segmentation or accepted artwork',frontSecondary:false,rearSecondary:false,continuousTurns:false,approved:false,artApproved:false,motionVerified:false,productionReady:false,productionRig:null,availableBanks:[]},
+  fingerprint:hash({version:BODY_VIEW_SECONDARY_VERSION,bindings:nativeSecondaryBindings,profileSecondaryBindings,temporal:secondaryMotionDescription.fingerprint,mesh:[2,3],minimumArea:.4,uvOverlap:2}),bindings:nativeSecondaryBindings,temporal:secondaryMotionDescription,
   method:'source-texture meshes for ponytail/crest or lower beard; attachment row and side seams pinned; eyes/nose/mouth/hair ties and face stay rigid',trianglesPerActor:24,
   limits:'candidate regions, layers and silhouette not accepted; no reconstructed hidden artwork, collision/fabric/hair simulation or full turns',approved:false,productionReady:false,motionVerified:false};
