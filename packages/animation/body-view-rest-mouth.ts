@@ -23,6 +23,7 @@ export function hasBodyViewRestSpeech(profile:Pick<HostProfile,'appearance'>):bo
 export function registeredBodyViewRestMouth(profile:Pick<HostProfile,'appearance'>,sourceHash?:string){
   if(!hasBodyViewRestSpeech(profile))return undefined;
   const a=profile.appearance;
+  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front rest-mouth registration is unavailable');
   if(a.artworkVersion!=='forest-body-view-1'||!a.bodyView||!a.characterVariant||a.sourceColour)throw new Error('needs-view-rest-mouth: resting mouth requires its native actor/view');
   if(a.characterVariant==='lila')return undefined; // Her actual source smile is already closed.
   const c=bodyViewRestMouthRegistration[a.bodyView];

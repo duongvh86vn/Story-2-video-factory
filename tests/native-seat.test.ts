@@ -6,7 +6,7 @@ import {hash} from '../packages/core/utils.js';
 import {HostProfileSchema} from '../packages/host/schemas.js';
 import {ActorDefinitionSchema} from '../packages/actors/schemas.js';
 import {bodyCalibrationPlan,bodyWorkbench,type BodyAction} from '../packages/topics/body-workbench.js';
-import {REGISTERED_BODY_VIEWS,registeredBodyView} from '../packages/animation/body-view-art.js';
+import {REGISTERED_BODY_VIEWS,registeredDetailedBodyView} from '../packages/animation/body-view-art.js';
 import {NativeSeatCorrespondenceSchema,nativeSeatRegistration,nativeSeatMinimumArea} from '../packages/animation/native-seat-registration.js';
 import {BODY_VIEW_SEAT_SELECTION,registeredNativeSeat,nativeSeatState,nativeSeatMatrixError,nativeSeatSvg,nativeSeatAssets,nativeSeatDescription} from '../packages/animation/body-view-seat.js';
 import {samplePerformance,validatePerformance,compilePerformance} from '../packages/animation/compiler.js';
@@ -45,7 +45,7 @@ test('seating is explicit in host/cast/schema/brief/context; native defaults and
 test('registration binds primary identity, independent native view, atlas/tile and pinned waist without mutable public alias',()=>{
   const geometry=nativeSeatRegistration(),before=hash(geometry);assert.equal(NativeSeatCorrespondenceSchema.safeParse(geometry).success,true);
   for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){
-    const {profile}=candidate(actor,view),source=registeredBodyView(profile),{c}=registeredNativeSeat(profile,source);
+    const {profile}=candidate(actor,view),source=registeredDetailedBodyView(profile),{c}=registeredNativeSeat(profile,source);
     assert.equal(c.standing.sha256,source.sha256);assert.equal(c.outline.rest.length,50);assert.ok(c.pieces.length<=400);
     for(const piece of c.pieces){assert.ok(clothTriangleArea(piece.rest)>0);assert.ok(clothTriangleArea(piece.seat)>0);assert.ok(nativeSeatMinimumArea(piece.rest,piece.target)>0);}
     assert.deepEqual(c.outline.rest.slice(0,9),c.outline.target.slice(0,9));
@@ -68,7 +68,7 @@ test('invalid UV, flipped mesh, changed waist, atlas and false acceptance claims
 });
 
 test('public seat metadata and registered geometry cannot mutate the active surface or fingerprint',()=>{
-  const {profile}=candidate('karo','three-quarter-right'),source=registeredBodyView(profile),binding=registeredNativeSeat(profile,source),before=nativeSeatState(profile,source,{progress:.4,thighAngles:{left:0,right:0}}),fingerprint=nativeSeatDescription.fingerprint;
+  const {profile}=candidate('karo','three-quarter-right'),source=registeredDetailedBodyView(profile),binding=registeredNativeSeat(profile,source),before=nativeSeatState(profile,source,{progress:.4,thighAngles:{left:0,right:0}}),fingerprint=nativeSeatDescription.fingerprint;
   assert.throws(()=>{binding.c.standing.waist++;},TypeError);assert.throws(()=>{binding.actor.material.width++;},TypeError);
   const metadata=nativeSeatDescription.bindings.karo!;assert.throws(()=>{metadata.material.width++;},TypeError);
   assert.equal(nativeSeatDescription.fingerprint,fingerprint);assert.deepEqual(nativeSeatState(profile,source,{progress:.4,thighAngles:{left:0,right:0}}),before);
@@ -76,7 +76,7 @@ test('public seat metadata and registered geometry cannot mutate the active surf
 
 test('standing/transfer/seated surfaces share pinned opaque contour and preserve positive areas during bounded thigh follow',()=>{
   for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){
-    const {profile}=candidate(actor,view),source=registeredBodyView(profile),registration=registeredNativeSeat(profile,source),before=hash({profile,source});
+    const {profile}=candidate(actor,view),source=registeredDetailedBodyView(profile),registration=registeredNativeSeat(profile,source),before=hash({profile,source});
     for(const progress of [0,.1,.38,.5,.9,1])for(const thighAngles of [{left:0,right:0},{left:80,right:-80},{left:-80,right:80}]){
       const state=nativeSeatState(profile,source,{progress,thighAngles});assert.equal(state.face['view-seat-material-rest']!.opacity,1);assert.equal(state.face['view-seat-material-seat']!.opacity,progress);
       assert.deepEqual(state.outline.slice(0,9),registration.c.outline.rest.slice(0,9));assert.ok(state.pieces.every(p=>p.areaRatio>=.25-1e-8));
@@ -89,13 +89,13 @@ test('standing/transfer/seated surfaces share pinned opaque contour and preserve
 });
 
 test('seated texture and surface interpolate on the same geometry; missing baked transform cannot bypass error budget',()=>{
-  const {profile}=candidate('lila','three-quarter-right'),source=registeredBodyView(profile),control={left:0,right:0},a=nativeSeatState(profile,source,{progress:0,thighAngles:control}),b=nativeSeatState(profile,source,{progress:1,thighAngles:control}),mid=nativeSeatState(profile,source,{progress:.37,thighAngles:control});
+  const {profile}=candidate('lila','three-quarter-right'),source=registeredDetailedBodyView(profile),control={left:0,right:0},a=nativeSeatState(profile,source,{progress:0,thighAngles:control}),b=nativeSeatState(profile,source,{progress:1,thighAngles:control}),mid=nativeSeatState(profile,source,{progress:.37,thighAngles:control});
   assert.ok(nativeSeatMatrixError(profile,source,a.face,b.face,mid.face,.37)<5e-4);assert.throws(()=>nativeSeatMatrixError(profile,source,{},b.face,mid.face,.37),/missing baked/);
 });
 
 test('SVG uses one contour/edge and native torso, preserves resources, isolated namespaces and unselected rig',()=>{
   for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){
-    const {profile}=candidate(actor,view),source=registeredBodyView(profile),art=nativeSeatSvg(profile,source,(file,sha)=>'assets/rigs/'+sha+'.png'),svg=performanceSvg(profile,'scene'),scoped=namespaceRigSvg(svg,'seat-'+actor+'-');
+    const {profile}=candidate(actor,view),source=registeredDetailedBodyView(profile),art=nativeSeatSvg(profile,source,(file,sha)=>'assets/rigs/'+sha+'.png'),svg=performanceSvg(profile,'scene'),scoped=namespaceRigSvg(svg,'seat-'+actor+'-');
     assert.equal([...svg.matchAll(/id="view-seat-edge"/g)].length,1);assert.match(art.artwork,/view-seat-upper-clip/);assert.doesNotMatch(art.artwork,/view-cloth-triangle|scale\(-|http/);
     assert.match(scoped,new RegExp('id="seat-'+actor+'-view-seat-edge"'));const ids=[...svg.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(new Set(ids).size,ids.length);
     assert.match(art.defs,/id="view-seat-inset"[^>]*fill="white" stroke="none"/);
@@ -134,7 +134,7 @@ test('selected support direction, missing supports, short transition and walking
 
 test('camera covers current shared cloth contour at calibrated scale and preserves subtitle clearance obligation',()=>{
   for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){
-    const {profile,plan}=candidate(actor,view),c=registeredBodyView(profile),bounds=cameraHostBounds(plan,profile);
+    const {profile,plan}=candidate(actor,view),c=registeredDetailedBodyView(profile),bounds=cameraHostBounds(plan,profile);
     for(const t of [0,1200,2500,3750,5000]){const frame=samplePerformance(plan,profile,t,silence),transform=values(frame.transforms.chest!),a=transform[2]!*Math.PI/180,k=transform[3]!*c.bodyScale,points=pathCoordinates(frame.paths!['view-seat-contour']!);
       for(let i=0;i<points.length;i+=2){const dx=(points[i]!-c.pelvis.x)*k,dy=(points[i+1]!-c.pelvis.y)*k,x=transform[0]!+dx*Math.cos(a)-dy*Math.sin(a),y=transform[1]!+dx*Math.sin(a)+dy*Math.cos(a);assert.ok(x>=bounds.body.left-.01&&x<=bounds.body.right+.01);assert.ok(y>=bounds.body.top-.01&&y<=bounds.body.bottom+.01);}
     }

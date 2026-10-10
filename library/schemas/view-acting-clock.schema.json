@@ -1228,7 +1228,8 @@
                         "type": "string",
                         "enum": [
                           "three-quarter-right",
-                          "three-quarter-left"
+                          "three-quarter-left",
+                          "front"
                         ]
                       },
                       "bodyHeadBank": {

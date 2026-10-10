@@ -1,6 +1,6 @@
 import {escapeHtml} from '../core/utils.js';
 import {hash} from '../core/utils.js';
-import {BODY_VIEW_VERSION,REGISTERED_BODY_VIEWS,bodyViewDescription} from '../animation/body-view-art.js';
+import {BODY_VIEW_VERSION,BODY_CANDIDATE_VIEWS,bodyViewFacing,bodyViewDescription} from '../animation/body-view-art.js';
 import {BODY_VIEW_SPEECH_VERSION,bodyViewMouthDescription} from '../animation/body-view-mouth.js';
 import {BODY_VIEW_REST_SPEECH_SELECTION} from '../animation/body-view-rest-mouth.js';
 import {BODY_VIEW_EYES_SELECTION,bodyViewEyesDescription} from '../animation/body-view-eyes.js';
@@ -21,7 +21,7 @@ import {SOURCE_WALK_POSES} from '../animation/source-walk.js';
 import {RUN_POSES,runStepCount} from '../animation/running.js';
 import {spearSvg} from '../animation/spear.js';
 export const BODY_ACTIONS=['rest','point','think','inspect','operate','pick-place','carry','drop','crouch','walk','walk-left','run','run-left','jump','hunt-stalk','spear-hold','spear-hold-left','spear-thrust','spear-thrust-left','spear-lunge','hunt-aim','hunt-chase','head-turn','sit-right','sit-left','sit-walk-right','sit-walk-left'] as const;
-export const BODY_WORKBENCH_VIEWS=['source',...REGISTERED_BODY_VIEWS] as const;
+export const BODY_WORKBENCH_VIEWS=['source',...BODY_CANDIDATE_VIEWS] as const;
 export type BodyWorkbenchView=typeof BODY_WORKBENCH_VIEWS[number];
 export const BODY_COLOUR_MODES=['cutout',SOURCE_COLOUR_VERSION] as const;
 export type BodyColourMode=typeof BODY_COLOUR_MODES[number];
@@ -64,6 +64,8 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(manipulationActions.includes(action)&&manipulation!==BODY_VIEW_MANIPULATION_SELECTION)throw new Error('needs-view-manipulation: explicitly select registered-manipulation-v1');
   if(action==='spear-lunge'&&view==='three-quarter-left')throw new Error('needs-lunge-pose: left-facing planted lunge has not been authored');
   if(colour!== 'cutout'&&(colour!==SOURCE_COLOUR_VERSION||authored))throw new Error('needs-source-colour-profile: original RGB candidate is registered only for source orientation');
+  if(view==='front'&&(mood!=='happy'||!['rest','point','think'].includes(action)||mouth!=='silent'||eyes!=='native'||look!=='rest'||expressions!=='native'||motion!=='rigid'||seat!=='unregistered'||secondary!=='rigid'||manipulation!=='unregistered'))
+    throw new Error('needs-front-capability: front preview requires silent happy rigid rest/point/think and no borrowed detailed registrations');
   if(authored){
     if(mood!=='happy'&&expressions==='native')throw new Error('needs-view-expression: non-happy moods need explicit registered expressions');
     const fixed=['rest','point','think'];
@@ -87,7 +89,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   const plan:PerformancePlan={version:22,compilerVersion:ANIMATION_VERSION,id:'body-calibration-'+actor,leadCharacterId:actor,profileHash:profile.profileHash,
     kind:'stick-man',durationMs,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
     walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:durationMs,mood}]};
-  if(authored){plan.headView=selectedView;plan.facing=selectedView==='three-quarter-left'?'left':'right';}
+  if(authored){plan.headView=selectedView;plan.facing=bodyViewFacing(profile);}
   if(look!=='rest'){const direction=selectedView==='three-quarter-left'?-1:1;
     plan.gazes=[{startMs:300,endMs:3600,target:{x:210+direction*(look==='ahead'?160:80),y:look==='up'?100:look==='down'?395:260}}];}
   if(action==='point'){

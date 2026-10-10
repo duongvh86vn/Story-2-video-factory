@@ -1,3 +1,4 @@
+import {registeredDetailedBodyView} from '../packages/animation/body-view-art.js';
 import type {Gaze} from '../packages/animation/schemas.js';
 // NOT RUN by controller. Runtime declarations for the user's test model.
 import test from 'node:test';
@@ -91,7 +92,7 @@ test('only explicit eye selection permits front-hemisphere gaze; expression/turn
 
 test('head-local pupil direction follows the native eye origin and is invariant to translating actor and target together',()=>{
   for(const actor of ['lila','karo'] as const){
-    const {profile,plan}=candidate(actor),c=bodyViewRegistrations[actor][profile.appearance.bodyView!],eyes=registeredBodyViewEyes(profile),forward=c.view==='three-quarter-left'?-1:1;
+    const {profile,plan}=candidate(actor),c=registeredDetailedBodyView(profile),eyes=registeredBodyViewEyes(profile),forward=c.view==='three-quarter-left'?-1:1;
     plan.gazes=[{startMs:0,endMs:3500,target:{x:210+forward*160,y:120}}];const at=900,f=samplePerformance(plan,profile,at,silence),head=numbers(f.transforms.head!);
     const angle=head[2]!*Math.PI/180,scale=head[3]!,center={x:(eyes.eyes[0].center.x+eyes.eyes[1].center.x)/2,y:(eyes.eyes[0].center.y+eyes.eyes[1].center.y)/2};
     const native={x:(center.x-c.neck.x)*c.headScale*scale,y:(center.y-c.neck.y)*c.headScale*scale},origin={x:head[0]!+Math.cos(angle)*native.x-Math.sin(angle)*native.y,y:head[1]!+Math.sin(angle)*native.x+Math.cos(angle)*native.y};

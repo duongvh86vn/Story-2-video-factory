@@ -62,13 +62,13 @@ export function performanceSvg(profile: HostProfile,imageMode:'embedded'|'scene'
   // One animated ink path per arm, referenced in exactly one painter slot.
   // Keep chin-contact stroke and mitten together above the head cutout.
   const bodyArmInk=body?`<defs>${ink('arm')}</defs>`+(view?'':(['left','right'] as const).map(side=>`<g id="ink-arm-${side}-back-slot"><use href="#ink-arm-${side}"/></g>`).join('')):'';
-  const viewArmSlot=(side:'left'|'right')=>`<g data-view-depth="${side===view?.nearHand?'near':'far'}"><g id="ink-arm-${side}-back-slot"><use href="#ink-arm-${side}"/></g><g id="hand-${side}-back-slot"><use href="#hand-${side}"/></g></g>`;
+  const viewArmSlot=(side:'left'|'right')=>`<g data-view-depth="${view?.view==='front'?'coplanar':side===view?.nearHand?'near':'far'}"><g id="ink-arm-${side}-back-slot"><use href="#ink-arm-${side}"/></g><g id="hand-${side}-back-slot"><use href="#hand-${side}"/></g></g>`;
   const inkPaths=drawn?(body?ink('leg'):(['left','right'] as const).map(side=>`<path id="ink-leg-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/><path id="ink-arm-${side}" d="M0 0C0 0 0 0 0 0C0 0 0 0 0 0"/>`).join('')):'';
   const neck=`<g id="neck"${body?' opacity="0"':''}><path d="M0 0V1" vector-effect="non-scaling-stroke"/></g>`;
   return `<g id="performer" data-profile-hash="${profile.profileHash}" fill="none" stroke="${a.outline}" stroke-width="${a.strokeWidth}" stroke-linecap="round" stroke-linejoin="round">`
-    + `${body?.defs??''}${hasNativeHeadRear(profile)?`<g id="head-back">${nativeHeadBankRearSvg(profile)}</g>`:''}${inkPaths}${view?bodyArmInk+viewArmSlot(view.farHand):''}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g>`
+    + `${body?.defs??''}${hasNativeHeadRear(profile)?`<g id="head-back">${nativeHeadBankRearSvg(profile)}</g>`:''}${inkPaths}${view?bodyArmInk+(view.view==='front'?'':viewArmSlot(view.farHand)):''}<g id="pelvis"><ellipse rx="8" ry="3" stroke="none"/>${costume('pelvis')}</g>`
     + (body?`<g id="garment-left"><g id="garment-standing-left">${body.garments.left}</g></g><g id="garment-right"><g id="garment-standing-right">${body.garments.right}</g></g>`:'')
-    + `${body?.seatedGarments??''}${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?'':neck}${heldTools}${view?'':bodyArmInk}${limbs}${view?viewArmSlot(view.nearHand):''}`
+    + `${body?.seatedGarments??''}${body?`<g id="neck-art">${body.neck}</g>${neck}`:''}<g id="chest">${torso}${costume('chest')}</g>${body?'':neck}${heldTools}${view?'':bodyArmInk}${limbs}${view?view.view==='front'?viewArmSlot('left')+viewArmSlot('right'):viewArmSlot(view.nearHand):''}`
     + `<g id="head">${head}${costume('head')}${drawn?'':`<g id="face-orientation">${faceLayers(0, -4, 18, robot ? a.accent : a.outline, robot ? a.screen : a.shell, 15)}</g>`}</g>`
     + (body?(['left','right'] as const).map(side=>`<g id="ink-arm-${side}-front-slot" opacity="0"><use href="#ink-arm-${side}"/></g><g id="hand-${side}-front-slot" opacity="0"><use href="#hand-${side}"/></g>`).join(''):'')+'</g>';
 }

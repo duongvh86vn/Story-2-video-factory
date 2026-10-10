@@ -17,7 +17,7 @@ import {hash} from '../packages/core/utils.js';
 import type {Shot} from '../packages/core/schemas.js';
 import type {SpeechActivity} from '../packages/voice/schemas.js';
 import {NATIVE_DIALOGUE_STAGINGS,nativeDialogueLayouts,nativeDialogueThinkingWindows} from '../packages/topics/native-dialogue-candidates.js';
-import {registeredBodyView} from '../packages/animation/body-view-art.js';
+import {registeredDetailedBodyView} from '../packages/animation/body-view-art.js';
 import {projectViewSourceGestures} from '../packages/animation/view-source-gesture.js';
 
 type Fixture=Awaited<ReturnType<typeof createNativeHeadSeatTracer>>;
@@ -138,7 +138,7 @@ test('both screen layouts bind independent matching head/body sources and keep e
       assert.equal(c.plan.root.x,expected.rootX);assert.equal(c.plan.facing,expected.view==='three-quarter-left'?'left':'right');
       assert.equal(c.profile.id,expected.actor);assert.equal(c.profile.name,expected.actor);assert.equal(c.profile.appearance.bodyView,expected.view);
       assert.equal(selected.view,expected.view);assert.equal(selected.bankFingerprint,c.plan.sourceHead!.bankFingerprint);
-      assert.equal(c.profile.appearance.bodyHeadBank!.bodyViews[0]!.sourceHash,registeredBodyView(c.profile).sha256);
+      assert.equal(c.profile.appearance.bodyHeadBank!.bodyViews[0]!.sourceHash,registeredDetailedBodyView(c.profile).sha256);
     }
     assert.doesNotThrow(()=>validateActorCast(f.board,f.narration));assert.doesNotThrow(()=>validateStoryActingCoverage(f.board,[f.beat],f.narration));
   }
@@ -152,7 +152,7 @@ test('listener chin gestures use declared rig hands and full body/head/speech hi
     assert.match(f.narration.segments[0]!.text,/Karo listens and thinks/);assert.match(f.narration.segments[1]!.text,/Lila considers/);
     for(const shot of f.board.shots)for(const id of ['lila','karo'] as const){
       const c=context(f,shot,id),window=nativeDialogueThinkingWindows[id],command=c.clock.gestures[0]!;
-      assert.equal(c.clock.gestures.length,1);assert.equal(command.hand,registeredBodyView(c.profile).nearHand);
+      assert.equal(c.clock.gestures.length,1);assert.equal(command.hand,registeredDetailedBodyView(c.profile).nearHand);
       assert.deepEqual({id:command.id,startMs:command.startMs,reachMs:command.reachMs,recoverMs:command.recoverMs,endMs:command.endMs},window);
       const a=context(whole,whole.board.shots[0]!,id);assert.deepEqual(c.clock.gestures,a.clock.gestures);
       for(const globalMs of [shot.startMs,shot.startMs+.01,(shot.startMs+shot.endMs)/2,shot.endMs-.01,shot.endMs]){

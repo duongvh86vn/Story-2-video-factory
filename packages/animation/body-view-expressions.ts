@@ -39,9 +39,11 @@ export type NativeExpressionPose={brow:number;browAngle:number;smile:number;frow
 export function hasBodyViewExpressions(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyExpressions===BODY_VIEW_EXPRESSIONS_SELECTION;}
 export function registeredBodyViewExpressions(profile:Pick<HostProfile,'appearance'>,sourceHash?:string){
   const a=profile.appearance;
+  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front expression registration is unavailable');
   if(!hasBodyViewExpressions(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour||a.bodyEyes!=='registered-eyes-v1'||a.bodySpeech!=='registered-rest-mouth-v1')throw new Error('needs-view-expression: native expressions require the exact native actor/view, registered eyes and resting speech');
   const eyes=registeredBodyViewEyes(profile,sourceHash),mouth=registeredBodyViewMouth(profile,sourceHash);
-  return {sourceHash:eyes.sourceHash,sourceSize:eyes.sourceSize,brows:bodyViewBrowRegistration[a.characterVariant][a.bodyView].map((b,i)=>({...b,clip:nativeBrowRegions[a.characterVariant!][a.bodyView!]![i]!})),mouth};
+  const actor=a.characterVariant,view=a.bodyView;
+  return {sourceHash:eyes.sourceHash,sourceSize:eyes.sourceSize,brows:bodyViewBrowRegistration[actor][view].map((b,i)=>({...b,clip:nativeBrowRegions[actor][view]![i]!})),mouth};
 }
 const n=(v:number)=>Number(v.toFixed(5));
 /** Pure shape authoring shared by static art documents and the compiler. No

@@ -13,6 +13,7 @@ const registration=freezeDeep(nativeSeatRegistration());
 export const hasBodyViewSeat=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySeat===BODY_VIEW_SEAT_SELECTION;
 export function registeredNativeSeat(profile:Pick<HostProfile,'appearance'>,source:NativeClothSource){
   const a=profile.appearance;
+  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front seat registration is unavailable');
   if(!hasBodyViewSeat(profile)||a.bodyMotion!=='registered-locomotion-v1'||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-seat: select the registered native actor/view and locomotion');
   const actor=registration.actors[a.characterVariant],c=actor.views[a.bodyView],s=c.standing;
   if(source.view!==a.bodyView||source.sha256!==s.sha256||source.width!==s.width||source.height!==s.height||source.bodyScale!==s.bodyScale||hash(source.pelvis)!==hash(s.pelvis))throw new Error('needs-view-seat: native image/scale/pelvis registration differs');

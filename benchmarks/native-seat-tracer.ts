@@ -17,7 +17,7 @@ import type {SceneIntent} from '../packages/explainer/schemas.js';
 import {headFaceCandidate} from '../packages/topics/head-face-source.js';
 import type {NativeHeadBank} from '../packages/animation/native-head-bank.js';
 import {NATIVE_HEAD_SOURCE_VERSION} from '../packages/animation/native-head-track.js';
-import {registeredBodyView} from '../packages/animation/body-view-art.js';
+import {registeredDetailedBodyView} from '../packages/animation/body-view-art.js';
 import {projectViewSourceGestures,type ViewSourceGesture} from '../packages/animation/view-source-gesture.js';
 import {NativeDialogueSelectionSchema,nativeDialogueLayouts,nativeDialogueThinkingWindows,nativeDialogueExpressionWindows,NATIVE_HEAD_SEAT_TRACER_VERSION,NATIVE_HEAD_SEAT_TRACER_SCOPE,type NativeDialogueSelection} from '../packages/topics/native-dialogue-candidates.js';
 import {projectViewExpressions} from '../packages/animation/view-expression-track.js';
@@ -74,7 +74,7 @@ function buildNativeSeatTracer(heads?:Record<NativeSeatActor,NativeHeadBank>,sel
     }
     const character=ActorDefinitionSchema.parse({id:actor,name:actor,role:'illustration',kind:'stick-man',identity:'illustrative',appearance,sourceRefs:refs});
     f.plan.profileHash=actorProfile(character).profileHash;
-    const gestures:ViewSourceGesture[]=thinking?[{...nativeDialogueThinkingWindows[actor],action:'think',hand:registeredBodyView(character).nearHand}]:[];
+    const gestures:ViewSourceGesture[]=thinking?[{...nativeDialogueThinkingWindows[actor],action:'think',hand:registeredDetailedBodyView(character).nearHand}]:[];
     const expressions=emotional?nativeDialogueExpressionWindows[actor].map(e=>({...e})):[];
     return {character,plan:f.plan,gestures,expressions};
   });

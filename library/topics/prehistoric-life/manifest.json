@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.91-front-rear-art",
+  "version": "forest-tribe-0.92-front-body-rig",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -42,7 +42,7 @@
       "packages/director/source-actor.ts": "467cb2988f60638561c08f2c7eb6723a0a0b141a0c5b70920a1de2f8920d8f20",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
       "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/creative.ts": "830ddaddb3d7da0eec1d7f81a89730ea6ed9ac7082813e8065aa72d68d65a260",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
       "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
@@ -60,7 +60,7 @@
     "motionVerified": false,
     "codeHashes": {
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/creative.ts": "830ddaddb3d7da0eec1d7f81a89730ea6ed9ac7082813e8065aa72d68d65a260",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e"
@@ -178,10 +178,10 @@
       "packages/director/continuity.ts": "10fc00d7c76e79d38fdbc674be58def424c18c2183be764be3b81c0415284b7e",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
       "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
-      "packages/animation/compiler.ts": "7cb1b752fb5c506ed115db824544ab1fec0beedbc9ea51a9f6997219e82bb99b",
+      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "apps/server/cinematic.ts": "0c326da064833b85f569efe7fd0d4674d9b59365286bf88ba98ca8ac707bbeb7",
-      "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067"
+      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3"
     }
   },
   "sourceWorldTimeline": {
@@ -244,7 +244,7 @@
       "packages/director/source-interactions.ts": "3be454c0c8f86cf1e6200c362a33450e8d6ac03c1afaf3232eebe255e4a0aad6",
       "packages/director/source-spear-interactions.ts": "81500068532df5b8a6097cc0515867c9e2191111ec9a4d13bb147af73820645a",
       "packages/director/source-world.ts": "4534557a9c340485f40083b464ae5ae9f35e02f2032b5607361699b1f9c3922b",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/host/controller.ts": "ff89445ed0bc571d8ed0b0af9accfc748bef9284e3f2dee9173c10dca8d80bb5",
       "library/shots/source-world-timeline.ts": "8c1c06449ce2f2b63eeedf8fe981e78ccda3b69885c736deff0b5a22ca4f2f12",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
@@ -343,7 +343,7 @@
       "packages/director/projected-relation-track.ts": "9125a1dd70170a818c3cda10963091bf952a7a02dbbec8614e04299d000722fd",
       "packages/director/model-contact-motion.ts": "40d8d71aaea21949641ca15190b88f2a70b61c58202cbc4cb4d62c9865e87498",
       "packages/director/art-direction.ts": "fb52bec1d6ee0fd1204016bc039c5d51f86f1f30cd3e8e5a1a91c2163cdaad17",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
       "library/shots/ownership-layer.ts": "88fe4f37e2b6a18388c76a7162b2827c0cad4cded205e4334e59a1a78b3ca063",
       "library/shots/source-world-timeline.ts": "8c1c06449ce2f2b63eeedf8fe981e78ccda3b69885c736deff0b5a22ca4f2f12",
@@ -402,7 +402,7 @@
       "packages/director/source-spear-actions.ts": "c236a48979dad35668e1a590eec730f10cb12f77d3f1569b696f9970eb7b2324",
       "packages/director/source-spear-interactions.ts": "81500068532df5b8a6097cc0515867c9e2191111ec9a4d13bb147af73820645a",
       "apps/studio/src/cinematic.ts": "31f51c09d096eda8d345fd43535d6fd018e3c6c443a27eed13f9ec7424e5443b",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/source-spear-bindings.ts": "6625078fdaf04617a854cefe91fd1fd6af5fc4e91cdea99e6568c042b1f62d55",
       "packages/director/source-world-schemas.ts": "6d52c3043b46771851c4fc330670bc17bcea990257516a76189add27a5a9f7b9",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
@@ -414,7 +414,7 @@
       "packages/director/source-production-audit.ts": "5aeafc3dfdf27608786bc8e5e0181667e0cc510917eec0f8e9457742ad860f39",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067",
+      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
       "packages/host/controller.ts": "ff89445ed0bc571d8ed0b0af9accfc748bef9284e3f2dee9173c10dca8d80bb5",
       "packages/explainer/schemas.ts": "ea369418415b2226e0725cc02f2e272373eee27a359f9cf6d5655fa74cb918ba",
       "packages/explainer/plan.ts": "230c80194b47111baae77c7839f4976e640dc558e721701492d3ed650aacd532",
@@ -447,7 +447,7 @@
       "packages/director/ownership-binding-context.ts": "d55bc71c6cbd7891797c0490acdbe97a8aab5bcb24a144a86daafd970567c2a1",
       "packages/director/source-production-audit.ts": "5aeafc3dfdf27608786bc8e5e0181667e0cc510917eec0f8e9457742ad860f39",
       "packages/director/prop-motion.ts": "7c6c2011d8d637011ad013b7ff35cdf6fed2ac6caac236c7d01288ab731560df",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
@@ -503,14 +503,14 @@
     "codeHashes": {
       "packages/animation/view-source-spear.ts": "7b9a50038ca9fcc3c9cf3fd5a54299f467c57c294d1fd7c0715786b1f4b8f4cd",
       "packages/animation/schemas.ts": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
-      "packages/animation/compiler.ts": "7cb1b752fb5c506ed115db824544ab1fec0beedbc9ea51a9f6997219e82bb99b",
+      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
       "packages/animation/view-acting-clock.ts": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
       "packages/animation/view-gaze-target.ts": "bf637de1adead7bef4f71af79990ad61795223ccf48cb00935727d0d7f566812",
       "packages/actors/view-acting-clock.ts": "a5264e4c4b8191a3045bf3d762869d035bad5b5d734db8472b2e1dcc720f4639",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/source-audit-context.ts": "cc65696ca6490f91d35efbdb51af560b63412a50082cc7a05bc6e10f919a9da0",
@@ -603,7 +603,7 @@
       "packages/director/source-interactions.ts": "3be454c0c8f86cf1e6200c362a33450e8d6ac03c1afaf3232eebe255e4a0aad6",
       "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
       "packages/director/ownership-compile.ts": "9d26766ce37a22f174ed4cb9e2256005604ad48f3a228505d4175662b0ea861b",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
       "packages/director/camera-repair.ts": "6cd057ab995d267fbe9f93000ec625fcea9fcf6610c6285b20291ce4cde3c0eb",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
@@ -663,8 +663,8 @@
     "voice": "no input, generated activity, expanded speech clock, mouth state or render fallback",
     "motionVerified": false,
     "codeHashes": {
-      "packages/animation/compiler.ts": "7cb1b752fb5c506ed115db824544ab1fec0beedbc9ea51a9f6997219e82bb99b",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/animation/forest-body-art.ts": "5be6a0e011b3909760c112c2439830325abac33d29fec88ed8c13eb4fa21f2f3"
     }
   },
@@ -681,7 +681,7 @@
       "packages/director/source-manipulation-actions.ts": "c14229201ff78b0d995019d8760bd904b281691d6e1dea7d39fce2c856711571",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
-      "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067",
+      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
@@ -710,7 +710,7 @@
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "packages/director/prop-owner.ts": "c5ce737c469fdd7b43751305c08bc29d78d2e3f38d29fa751168e261d7af6cd7",
       "packages/director/prop-motion.ts": "7c6c2011d8d637011ad013b7ff35cdf6fed2ac6caac236c7d01288ab731560df",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
@@ -733,15 +733,15 @@
     "codeHashes": {
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
       "packages/animation/schemas.ts": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
-      "packages/animation/compiler.ts": "7cb1b752fb5c506ed115db824544ab1fec0beedbc9ea51a9f6997219e82bb99b",
+      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-acting-clock.ts": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
-      "packages/animation/native-contact-arm.ts": "c8a44bd1b3365cab8f239b82de3ff8cf886d872fc9fbce5cced2aac02125da27",
+      "packages/animation/native-contact-arm.ts": "b1787c3db51c017b47dc8b808408dca142bb08c74c96d7f937a4471f7c09f10b",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
       "packages/actors/view-acting-clock.ts": "a5264e4c4b8191a3045bf3d762869d035bad5b5d734db8472b2e1dcc720f4639",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "packages/director/camera.ts": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
       "packages/director/props.ts": "dc616a34b664016b2a7a482ce16def7e33c85e149bab9b23993ed648f161944d",
       "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
@@ -1081,17 +1081,17 @@
     "productionReady": false,
     "motionVerified": false,
     "codeHashes": {
-      "packages/animation/native-contact-arm.ts": "c8a44bd1b3365cab8f239b82de3ff8cf886d872fc9fbce5cced2aac02125da27",
-      "packages/animation/compiler.ts": "7cb1b752fb5c506ed115db824544ab1fec0beedbc9ea51a9f6997219e82bb99b",
+      "packages/animation/native-contact-arm.ts": "b1787c3db51c017b47dc8b808408dca142bb08c74c96d7f937a4471f7c09f10b",
+      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
       "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-      "packages/animation/rig.ts": "e28f5d076aa7211179582f7cb01db7fe0f6b675379004a869ac7dc97e586d96f",
+      "packages/animation/rig.ts": "7889f3da63988ad58c1b73689ee86a84df819d246330b5bb23fcea055c4d4b14",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
-      "packages/animation/body-view-art.ts": "79f315c05716d4e951e8a445cbc6b9bd73b4f0723b1f7f5bbc05551a663012e7",
+      "packages/animation/body-view-art.ts": "8c2eacce65b1fd8d6734a1d4a0fcb19b2efe61d3adee581028093ab505b0729e",
       "packages/animation/forest-body-art.ts": "5be6a0e011b3909760c112c2439830325abac33d29fec88ed8c13eb4fa21f2f3",
-      "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067",
+      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/body-workbench.ts": "9247143df6f5cc439e0fd80434dcc2a9c3cab016fb2255e4f31de4fcd3ea97a2",
-      "packages/topics/prehistoric-life.ts": "8f3976298a3ebe7545753038335a47c7ccca8f48d244d9286f485e172c3044e5",
+      "packages/topics/body-workbench.ts": "d09c2240d0b0ab8be0267023f5d966c9f063419cb83a5d417c3e490a0adb0e40",
+      "packages/topics/prehistoric-life.ts": "8b4855bbdfe433d5cc52151cfa0f04e15d6c878bf137e261be95986bdf3261ac",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
@@ -1123,7 +1123,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "8f3976298a3ebe7545753038335a47c7ccca8f48d244d9286f485e172c3044e5",
+      "packages/topics/prehistoric-life.ts": "8b4855bbdfe433d5cc52151cfa0f04e15d6c878bf137e261be95986bdf3261ac",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e"
     }
   },
@@ -1367,11 +1367,11 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "8f3976298a3ebe7545753038335a47c7ccca8f48d244d9286f485e172c3044e5",
+      "packages/topics/prehistoric-life.ts": "8b4855bbdfe433d5cc52151cfa0f04e15d6c878bf137e261be95986bdf3261ac",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
-      "packages/host/schemas.ts": "21a27c4e7acc0821612d75cbbaf0d09474c00ef3bc854a7f19d2b21715b0d067"
+      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3"
     },
     "workbench": "/api/topics/prehistoric-life/supporting-actors"
   },
@@ -7054,7 +7054,7 @@
     "productionAcceptance": false,
     "finalExportAllowed": false,
     "builder": "benchmarks/native-seat-tracer.ts",
-    "builderHash": "191e9dd5a7cacd113099ef87605a6f1e513f9900afc0874b378c7be0db85ef8b",
+    "builderHash": "fe8f29e49b544c9b7fc818f992356902d8d4337eb0094890dc5c85aea8a8b03b",
     "exporter": "scripts/native-seat-tracer.ts",
     "exporterHash": "3c79e8cb7ca0b0bc9b429db42e8c50c4809409468a01d86faf85545d887b209d",
     "handoff": "docs/topics/NATIVE-SEAT-TRACER.md",
@@ -8123,7 +8123,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-4",
+        "version": "forest-view-registration-5",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -8362,6 +8362,150 @@
               }
             }
           }
+        },
+        "frontCandidate": {
+          "version": "native-front-body-registration-1",
+          "sources": {
+            "lila": {
+              "view": "front",
+              "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+              "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+              "width": 939,
+              "height": 1675,
+              "bodyScale": 0.18301369863013697,
+              "headScale": 0.2231372549019608,
+              "pelvis": {
+                "x": 490,
+                "y": 907
+              },
+              "neck": {
+                "x": 490,
+                "y": 542
+              },
+              "shoulders": {
+                "left": {
+                  "x": 375,
+                  "y": 613
+                },
+                "right": {
+                  "x": 590,
+                  "y": 614
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 427,
+                  "y": 929
+                },
+                "right": {
+                  "x": 557,
+                  "y": 929
+                }
+              },
+              "armDepth": "coplanar",
+              "inkPad": 7,
+              "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
+              "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
+              "headBounds": {
+                "left": 157,
+                "right": 779,
+                "top": 32,
+                "bottom": 889
+              },
+              "chin": {
+                "left": {
+                  "x": 382,
+                  "y": 482
+                },
+                "right": {
+                  "x": 585,
+                  "y": 482
+                }
+              }
+            },
+            "karo": {
+              "view": "front",
+              "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+              "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+              "width": 1024,
+              "height": 1536,
+              "bodyScale": 0.19413489736070383,
+              "headScale": 0.2309124767225326,
+              "pelvis": {
+                "x": 512,
+                "y": 904
+              },
+              "neck": {
+                "x": 512,
+                "y": 563
+              },
+              "shoulders": {
+                "left": {
+                  "x": 390,
+                  "y": 566
+                },
+                "right": {
+                  "x": 634,
+                  "y": 561
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 441,
+                  "y": 929
+                },
+                "right": {
+                  "x": 586,
+                  "y": 929
+                }
+              },
+              "armDepth": "coplanar",
+              "inkPad": 7,
+              "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
+              "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
+              "headBounds": {
+                "left": 183,
+                "right": 839,
+                "top": 23,
+                "bottom": 575
+              },
+              "chin": {
+                "left": {
+                  "x": 409,
+                  "y": 498
+                },
+                "right": {
+                  "x": 625,
+                  "y": 498
+                }
+              }
+            }
+          },
+          "coordinateAuthority": "manually authored source-canvas approximations; not measured anatomy/pose/yaw",
+          "measuredYawDeg": null,
+          "capabilities": [
+            "fixed happy source head",
+            "rigid own-source clothing",
+            "same-person canonical soft limb rest/point/think candidate"
+          ],
+          "unavailable": [
+            "speech",
+            "target gaze/blink",
+            "other emotions",
+            "locomotion",
+            "seat",
+            "cloth/hair follow",
+            "manipulation/tools",
+            "supporting cast",
+            "head bank",
+            "continuous body/head turns"
+          ],
+          "artApproved": false,
+          "approved": false,
+          "motionVerified": false,
+          "productionReady": false,
+          "productionRig": null,
+          "availableBanks": []
         },
         "headBankCandidate": {
           "version": "native-head-bank-1",
@@ -9801,12 +9945,13 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
+        "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
-        "method": "fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+        "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
         "limitations": [
+          "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
           "identity/proportion/mask review",
           "happy fixed view by default; optional unapproved speech/eyes/expression selections",
           "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",
@@ -9815,13 +9960,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "96b0c6fde6a3efd6e5b665afc09d3b9b005c15daebeca3e8944c269e7118eaeb",
+      "fingerprint": "27407061e3b48273fbea7a8f085e0fedfdfd6eb07216df0a0629978532d019c7",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "cc67f1a25c2de2147e17e5550854aabc25a18cc4c054e8abde7e9337b5a74144",
+    "fingerprint": "b1d9ee0405a9e46d4be91a371adc35bfc25d7320d3cd14cf39e64ae7d3c414bd",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -9845,7 +9990,7 @@
     "version": "forest-body-1",
     "compilerVersion": "forest-source-body-motion-40",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "c3feb8df9682d0fe1cff2161bafb8536f8ce1101ff5245797d3db3ad918c01bd",
+    "fingerprint": "74e5f402072551bb938151134f4baeb11f26d8cd86244f3864b6742407575f03",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -10358,7 +10503,7 @@
       "repairPrompt": "library/topics/prehistoric-life/rig-v1/karo-cuffs-v2-prompt.json"
     },
     "authoredViews": {
-      "version": "forest-view-registration-4",
+      "version": "forest-view-registration-5",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -10597,6 +10742,150 @@
             }
           }
         }
+      },
+      "frontCandidate": {
+        "version": "native-front-body-registration-1",
+        "sources": {
+          "lila": {
+            "view": "front",
+            "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+            "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+            "width": 939,
+            "height": 1675,
+            "bodyScale": 0.18301369863013697,
+            "headScale": 0.2231372549019608,
+            "pelvis": {
+              "x": 490,
+              "y": 907
+            },
+            "neck": {
+              "x": 490,
+              "y": 542
+            },
+            "shoulders": {
+              "left": {
+                "x": 375,
+                "y": 613
+              },
+              "right": {
+                "x": 590,
+                "y": 614
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 427,
+                "y": 929
+              },
+              "right": {
+                "x": 557,
+                "y": 929
+              }
+            },
+            "armDepth": "coplanar",
+            "inkPad": 7,
+            "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
+            "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
+            "headBounds": {
+              "left": 157,
+              "right": 779,
+              "top": 32,
+              "bottom": 889
+            },
+            "chin": {
+              "left": {
+                "x": 382,
+                "y": 482
+              },
+              "right": {
+                "x": 585,
+                "y": 482
+              }
+            }
+          },
+          "karo": {
+            "view": "front",
+            "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+            "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+            "width": 1024,
+            "height": 1536,
+            "bodyScale": 0.19413489736070383,
+            "headScale": 0.2309124767225326,
+            "pelvis": {
+              "x": 512,
+              "y": 904
+            },
+            "neck": {
+              "x": 512,
+              "y": 563
+            },
+            "shoulders": {
+              "left": {
+                "x": 390,
+                "y": 566
+              },
+              "right": {
+                "x": 634,
+                "y": 561
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 441,
+                "y": 929
+              },
+              "right": {
+                "x": 586,
+                "y": 929
+              }
+            },
+            "armDepth": "coplanar",
+            "inkPad": 7,
+            "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
+            "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
+            "headBounds": {
+              "left": 183,
+              "right": 839,
+              "top": 23,
+              "bottom": 575
+            },
+            "chin": {
+              "left": {
+                "x": 409,
+                "y": 498
+              },
+              "right": {
+                "x": 625,
+                "y": 498
+              }
+            }
+          }
+        },
+        "coordinateAuthority": "manually authored source-canvas approximations; not measured anatomy/pose/yaw",
+        "measuredYawDeg": null,
+        "capabilities": [
+          "fixed happy source head",
+          "rigid own-source clothing",
+          "same-person canonical soft limb rest/point/think candidate"
+        ],
+        "unavailable": [
+          "speech",
+          "target gaze/blink",
+          "other emotions",
+          "locomotion",
+          "seat",
+          "cloth/hair follow",
+          "manipulation/tools",
+          "supporting cast",
+          "head bank",
+          "continuous body/head turns"
+        ],
+        "artApproved": false,
+        "approved": false,
+        "motionVerified": false,
+        "productionReady": false,
+        "productionRig": null,
+        "availableBanks": []
       },
       "headBankCandidate": {
         "version": "native-head-bank-1",
@@ -12036,12 +12325,13 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
+      "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
-      "method": "fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+      "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
       "limitations": [
+        "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
         "identity/proportion/mask review",
         "happy fixed view by default; optional unapproved speech/eyes/expression selections",
         "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",
@@ -12462,7 +12752,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-4",
+        "version": "forest-view-registration-5",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -12701,6 +12991,150 @@
               }
             }
           }
+        },
+        "frontCandidate": {
+          "version": "native-front-body-registration-1",
+          "sources": {
+            "lila": {
+              "view": "front",
+              "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+              "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+              "width": 939,
+              "height": 1675,
+              "bodyScale": 0.18301369863013697,
+              "headScale": 0.2231372549019608,
+              "pelvis": {
+                "x": 490,
+                "y": 907
+              },
+              "neck": {
+                "x": 490,
+                "y": 542
+              },
+              "shoulders": {
+                "left": {
+                  "x": 375,
+                  "y": 613
+                },
+                "right": {
+                  "x": 590,
+                  "y": 614
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 427,
+                  "y": 929
+                },
+                "right": {
+                  "x": 557,
+                  "y": 929
+                }
+              },
+              "armDepth": "coplanar",
+              "inkPad": 7,
+              "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
+              "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
+              "headBounds": {
+                "left": 157,
+                "right": 779,
+                "top": 32,
+                "bottom": 889
+              },
+              "chin": {
+                "left": {
+                  "x": 382,
+                  "y": 482
+                },
+                "right": {
+                  "x": 585,
+                  "y": 482
+                }
+              }
+            },
+            "karo": {
+              "view": "front",
+              "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+              "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+              "width": 1024,
+              "height": 1536,
+              "bodyScale": 0.19413489736070383,
+              "headScale": 0.2309124767225326,
+              "pelvis": {
+                "x": 512,
+                "y": 904
+              },
+              "neck": {
+                "x": 512,
+                "y": 563
+              },
+              "shoulders": {
+                "left": {
+                  "x": 390,
+                  "y": 566
+                },
+                "right": {
+                  "x": 634,
+                  "y": 561
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 441,
+                  "y": 929
+                },
+                "right": {
+                  "x": 586,
+                  "y": 929
+                }
+              },
+              "armDepth": "coplanar",
+              "inkPad": 7,
+              "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
+              "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
+              "headBounds": {
+                "left": 183,
+                "right": 839,
+                "top": 23,
+                "bottom": 575
+              },
+              "chin": {
+                "left": {
+                  "x": 409,
+                  "y": 498
+                },
+                "right": {
+                  "x": 625,
+                  "y": 498
+                }
+              }
+            }
+          },
+          "coordinateAuthority": "manually authored source-canvas approximations; not measured anatomy/pose/yaw",
+          "measuredYawDeg": null,
+          "capabilities": [
+            "fixed happy source head",
+            "rigid own-source clothing",
+            "same-person canonical soft limb rest/point/think candidate"
+          ],
+          "unavailable": [
+            "speech",
+            "target gaze/blink",
+            "other emotions",
+            "locomotion",
+            "seat",
+            "cloth/hair follow",
+            "manipulation/tools",
+            "supporting cast",
+            "head bank",
+            "continuous body/head turns"
+          ],
+          "artApproved": false,
+          "approved": false,
+          "motionVerified": false,
+          "productionReady": false,
+          "productionRig": null,
+          "availableBanks": []
         },
         "headBankCandidate": {
           "version": "native-head-bank-1",
@@ -14140,12 +14574,13 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
+        "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
-        "method": "fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+        "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
         "limitations": [
+          "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
           "identity/proportion/mask review",
           "happy fixed view by default; optional unapproved speech/eyes/expression selections",
           "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",
@@ -14154,7 +14589,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "96b0c6fde6a3efd6e5b665afc09d3b9b005c15daebeca3e8944c269e7118eaeb",
+      "fingerprint": "27407061e3b48273fbea7a8f085e0fedfdfd6eb07216df0a0629978532d019c7",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -14173,19 +14608,19 @@
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-    "compilerCodeHash": "7cb1b752fb5c506ed115db824544ab1fec0beedbc9ea51a9f6997219e82bb99b",
-    "rigCodeHash": "e28f5d076aa7211179582f7cb01db7fe0f6b675379004a869ac7dc97e586d96f",
-    "cameraCodeHash": "ca85fa017b7648819b04495618b20dd29cd7b2cfa3814158af10eef9b98495b1",
+    "compilerCodeHash": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+    "rigCodeHash": "7889f3da63988ad58c1b73689ee86a84df819d246330b5bb23fcea055c4d4b14",
+    "cameraCodeHash": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
     "sourceBodyCodeHash": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
     "actingClockCodeHash": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
     "actingBindingCodeHash": "a5264e4c4b8191a3045bf3d762869d035bad5b5d734db8472b2e1dcc720f4639",
-    "secondaryCodeHash": "baa043be6ac71977d560fe207902b6ef3ec48eaf21bb77c4c891eb9f99b39b51",
+    "secondaryCodeHash": "7391bed1c6b05dfde089058a07fee7099c4fd27b8457b5089ee0ba592d955fad",
     "secondaryMotionCodeHash": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
-    "viewCodeHash": "79f315c05716d4e951e8a445cbc6b9bd73b4f0723b1f7f5bbc05551a663012e7",
+    "viewCodeHash": "8c2eacce65b1fd8d6734a1d4a0fcb19b2efe61d3adee581028093ab505b0729e",
     "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
-    "viewClothCodeHash": "cc88afd81c6063948dc2420ec7eaf543945e90bc4d05c86472696be53c8a3256",
+    "viewClothCodeHash": "76774634b92df6a5378caa37f70449d2f6d3e5a37014c18fc5363f09a313052b",
     "viewClothGeometryCodeHash": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
-    "viewSeatCodeHash": "34883a38ae6121bb3f77c267d20f51d41209143c0955295e77caac3fffdd702a",
+    "viewSeatCodeHash": "45db194550423810c71e191e35bcf2155cb5217abe322f963db7d116e44584ef",
     "viewSeatRegistrationCodeHash": "48b77839b52e2275b68d1bb0a0ea0aeed102add0194a6b4fc3550f548d485142",
     "viewSeatCorrespondenceHash": "89df68c15f5c359f3b9421fce0ac2c5309d259a2e6fe469991e20592f03d48af",
     "lungeCodeHash": "124f4fe064ceda099e1f1ecd108faf2d09910738c402463530106b2d7a1fcdfc",
@@ -14423,6 +14858,170 @@
     ],
     "workflow": "docs/topics/AI-POSE-WORKFLOW.md"
   },
+  "nativeFrontRig": {
+    "version": "native-front-body-registration-1",
+    "sources": {
+      "lila": {
+        "view": "front",
+        "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+        "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+        "width": 939,
+        "height": 1675,
+        "bodyScale": 0.18301369863013697,
+        "headScale": 0.2231372549019608,
+        "pelvis": {
+          "x": 490,
+          "y": 907
+        },
+        "neck": {
+          "x": 490,
+          "y": 542
+        },
+        "shoulders": {
+          "left": {
+            "x": 375,
+            "y": 613
+          },
+          "right": {
+            "x": 590,
+            "y": 614
+          }
+        },
+        "hips": {
+          "left": {
+            "x": 427,
+            "y": 929
+          },
+          "right": {
+            "x": 557,
+            "y": 929
+          }
+        },
+        "armDepth": "coplanar",
+        "inkPad": 7,
+        "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
+        "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
+        "headBounds": {
+          "left": 157,
+          "right": 779,
+          "top": 32,
+          "bottom": 889
+        },
+        "chin": {
+          "left": {
+            "x": 382,
+            "y": 482
+          },
+          "right": {
+            "x": 585,
+            "y": 482
+          }
+        }
+      },
+      "karo": {
+        "view": "front",
+        "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+        "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+        "width": 1024,
+        "height": 1536,
+        "bodyScale": 0.19413489736070383,
+        "headScale": 0.2309124767225326,
+        "pelvis": {
+          "x": 512,
+          "y": 904
+        },
+        "neck": {
+          "x": 512,
+          "y": 563
+        },
+        "shoulders": {
+          "left": {
+            "x": 390,
+            "y": 566
+          },
+          "right": {
+            "x": 634,
+            "y": 561
+          }
+        },
+        "hips": {
+          "left": {
+            "x": 441,
+            "y": 929
+          },
+          "right": {
+            "x": 586,
+            "y": 929
+          }
+        },
+        "armDepth": "coplanar",
+        "inkPad": 7,
+        "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
+        "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
+        "headBounds": {
+          "left": 183,
+          "right": 839,
+          "top": 23,
+          "bottom": 575
+        },
+        "chin": {
+          "left": {
+            "x": 409,
+            "y": 498
+          },
+          "right": {
+            "x": 625,
+            "y": 498
+          }
+        }
+      }
+    },
+    "coordinateAuthority": "manually authored source-canvas approximations; not measured anatomy/pose/yaw",
+    "measuredYawDeg": null,
+    "capabilities": [
+      "fixed happy source head",
+      "rigid own-source clothing",
+      "same-person canonical soft limb rest/point/think candidate"
+    ],
+    "unavailable": [
+      "speech",
+      "target gaze/blink",
+      "other emotions",
+      "locomotion",
+      "seat",
+      "cloth/hair follow",
+      "manipulation/tools",
+      "supporting cast",
+      "head bank",
+      "continuous body/head turns"
+    ],
+    "artApproved": false,
+    "approved": false,
+    "motionVerified": false,
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "handoff": "docs/topics/FRONT-BODY-RIG-HANDOFF.md",
+    "codeHashes": {
+      "packages/animation/body-view-front-registration.ts": "86ab2e47ba49d36895b196537bf0b7eb0b122494e7320cc990d64d5dc470e403",
+      "packages/animation/body-view-registration.ts": "045ef1ae95684b3fa5580b47144ede6cf7b9a6801986e9285211ff7a99294bd7",
+      "packages/animation/body-view-art.ts": "8c2eacce65b1fd8d6734a1d4a0fcb19b2efe61d3adee581028093ab505b0729e",
+      "packages/animation/body-view-mouth.ts": "3f24a3b5a9315ace1d19097bc5ceb836c932dff4f58f0f5ec815eb4c77730f6d",
+      "packages/animation/body-view-rest-mouth.ts": "23ae31842d1e4ae0f1a920440d84c70e6f87beb11087f31a5c039b4caf267d85",
+      "packages/animation/body-view-eyes.ts": "6953fc615b768cad515996ae4e6af478e634cbd487b7a917551d8a6e936896ea",
+      "packages/animation/body-view-expressions.ts": "ba4cfe469ffad28a29266c75999e77ed25a64661bcc8876ec68da8cafe3994ba",
+      "packages/animation/body-view-cloth.ts": "76774634b92df6a5378caa37f70449d2f6d3e5a37014c18fc5363f09a313052b",
+      "packages/animation/body-view-seat.ts": "45db194550423810c71e191e35bcf2155cb5217abe322f963db7d116e44584ef",
+      "packages/animation/body-view-secondary.ts": "7391bed1c6b05dfde089058a07fee7099c4fd27b8457b5089ee0ba592d955fad",
+      "packages/animation/native-contact-arm.ts": "b1787c3db51c017b47dc8b808408dca142bb08c74c96d7f937a4471f7c09f10b",
+      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+      "packages/animation/rig.ts": "7889f3da63988ad58c1b73689ee86a84df819d246330b5bb23fcea055c4d4b14",
+      "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
+      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
+      "packages/topics/body-workbench.ts": "d09c2240d0b0ab8be0267023f5d966c9f063419cb83a5d417c3e490a0adb0e40",
+      "packages/topics/view-registration-workbench.ts": "eca2c62a00f5a133a7a4da1c59f75eefc9e755e99ec4627e4f62b029a78621fd"
+    }
+  },
   "nativeViewCatalog": {
     "version": "native-view-art-catalog-2",
     "requiredViews": [
@@ -14446,9 +15045,9 @@
     "motionVerified": false,
     "productionApproval": false,
     "availableBanks": [],
-    "handoff": "docs/topics/FRONT-REAR-ART-HANDOFF.md",
+    "handoff": "docs/topics/FRONT-BODY-RIG-HANDOFF.md",
     "codeHashes": {
-      "packages/topics/view-art-workbench.ts": "c8776129b6d5ea04a506799eb763b5dc68dc3add80d57ba7a38e9ad2924a76d0",
+      "packages/topics/view-art-workbench.ts": "a8911dbd514eb7f344ca1bdc7f504aa51767ba8f87351d2882c2673eb9778712",
       "apps/server/index.ts": "87927cf6e1a19e4c0efdbc664b02d365ba23950ddadde2894a553c2bc318b6be",
       "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
@@ -14457,8 +15056,13 @@
     "scope": "static-artwork-only",
     "sourceRecords": 22,
     "legacyStaticVisionAdviceCalls": 2,
-    "builtInImageCallsThisSource": 8,
-    "staticVisionAdviceAttemptsThisSource": 1,
+    "builtInImageCallsThisSource": 0,
+    "staticVisionAdviceAttemptsThisSource": 0,
+    "previousFrontRearSource": {
+      "sourceVersion": "forest-tribe-0.91-front-rear-art",
+      "builtInImageCalls": 8,
+      "staticVisionAdviceAttempts": 1
+    },
     "previousRightProfileSource": {
       "sourceVersion": "forest-tribe-0.90-right-profile-art",
       "builtInImageCalls": 5,
@@ -15168,7 +15772,7 @@
     "registered": false,
     "registrationFlagScope": "all artwork approved/registered for production: false; raw generation metadata remains immutable",
     "engineeringRegistrations": {
-      "version": "forest-view-registration-4",
+      "version": "forest-view-registration-5",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -15407,6 +16011,150 @@
             }
           }
         }
+      },
+      "frontCandidate": {
+        "version": "native-front-body-registration-1",
+        "sources": {
+          "lila": {
+            "view": "front",
+            "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+            "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+            "width": 939,
+            "height": 1675,
+            "bodyScale": 0.18301369863013697,
+            "headScale": 0.2231372549019608,
+            "pelvis": {
+              "x": 490,
+              "y": 907
+            },
+            "neck": {
+              "x": 490,
+              "y": 542
+            },
+            "shoulders": {
+              "left": {
+                "x": 375,
+                "y": 613
+              },
+              "right": {
+                "x": 590,
+                "y": 614
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 427,
+                "y": 929
+              },
+              "right": {
+                "x": 557,
+                "y": 929
+              }
+            },
+            "armDepth": "coplanar",
+            "inkPad": 7,
+            "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
+            "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
+            "headBounds": {
+              "left": 157,
+              "right": 779,
+              "top": 32,
+              "bottom": 889
+            },
+            "chin": {
+              "left": {
+                "x": 382,
+                "y": 482
+              },
+              "right": {
+                "x": 585,
+                "y": 482
+              }
+            }
+          },
+          "karo": {
+            "view": "front",
+            "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+            "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+            "width": 1024,
+            "height": 1536,
+            "bodyScale": 0.19413489736070383,
+            "headScale": 0.2309124767225326,
+            "pelvis": {
+              "x": 512,
+              "y": 904
+            },
+            "neck": {
+              "x": 512,
+              "y": 563
+            },
+            "shoulders": {
+              "left": {
+                "x": 390,
+                "y": 566
+              },
+              "right": {
+                "x": 634,
+                "y": 561
+              }
+            },
+            "hips": {
+              "left": {
+                "x": 441,
+                "y": 929
+              },
+              "right": {
+                "x": 586,
+                "y": 929
+              }
+            },
+            "armDepth": "coplanar",
+            "inkPad": 7,
+            "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
+            "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
+            "headBounds": {
+              "left": 183,
+              "right": 839,
+              "top": 23,
+              "bottom": 575
+            },
+            "chin": {
+              "left": {
+                "x": 409,
+                "y": 498
+              },
+              "right": {
+                "x": 625,
+                "y": 498
+              }
+            }
+          }
+        },
+        "coordinateAuthority": "manually authored source-canvas approximations; not measured anatomy/pose/yaw",
+        "measuredYawDeg": null,
+        "capabilities": [
+          "fixed happy source head",
+          "rigid own-source clothing",
+          "same-person canonical soft limb rest/point/think candidate"
+        ],
+        "unavailable": [
+          "speech",
+          "target gaze/blink",
+          "other emotions",
+          "locomotion",
+          "seat",
+          "cloth/hair follow",
+          "manipulation/tools",
+          "supporting cast",
+          "head bank",
+          "continuous body/head turns"
+        ],
+        "artApproved": false,
+        "approved": false,
+        "motionVerified": false,
+        "productionReady": false,
+        "productionRig": null,
+        "availableBanks": []
       },
       "headBankCandidate": {
         "version": "native-head-bank-1",
@@ -16846,12 +17594,13 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "97f635e692de572053a4bfeb42f559a3b61405dbc56273389bf8d4bcbd1534c5",
+      "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
-      "method": "fixed authored 3/4 left/right head/body with independent uniform native registrations; source limb lengths and mitten/sole artwork retained; no mirror or face warp",
+      "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
       "limitations": [
+        "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
         "identity/proportion/mask review",
         "happy fixed view by default; optional unapproved speech/eyes/expression selections",
         "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",

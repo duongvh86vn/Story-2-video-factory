@@ -17,6 +17,7 @@ export type NativeClothSource={sha256:string;width:number;height:number;bodyScal
 export const hasBodyViewLocomotion=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodyMotion===BODY_VIEW_LOCOMOTION_SELECTION;
 export function registeredNativeCloth(profile:Pick<HostProfile,'appearance'>,source:NativeClothSource){
   const a=profile.appearance;
+  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front locomotion registration is unavailable');
   if(!hasBodyViewLocomotion(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-locomotion: select a registered native actor/view');
   const binding=nativeClothBindings[a.characterVariant][a.bodyView];
   if(source.view!==a.bodyView||source.sha256!==binding.sha256||source.width!==binding.width||source.height!==binding.height)throw new Error('needs-view-cloth: native garment image registration differs');

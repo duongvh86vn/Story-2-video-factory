@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.92-front-body-rig",
+  "scope": "bounded source-only agent advice; no code execution/runtime/visual acceptance",
+  "planner": {
+    "scope": "source-only bounded design assistance; no tests or geometry execution",
+    "requestedModel": "planner",
+    "responseModel": "gpt-6.1-sol",
+    "httpStatus": 200,
+    "elapsedMs": 87361,
+    "usage": {
+      "prompt_tokens": 2972,
+      "completion_tokens": 2867,
+      "total_tokens": 5839
+    },
+    "finishReason": "stop",
+    "reply": "{\n  \"pitfalls\": [\n    \"Schema checks alone miss raw/spread profiles; truthiness checks miss false or empty capability options. Use a discriminated front profile with optional-never capability fields plus shared runtime presence validation. Reject forbidden capabilities, actions, props, turns, gaze, nonhappy expressions, and explicit facing before defaults can erase their presence.\",\n    \"Calling detailedBodyView during unconditional compiler setup would reject valid front rest/point/think. Keep calls inside validated detailed-only branches; use registeredBodyView for shared geometry. Preserve literal keys and fixed2 maps/arrays without mutation or alias-based extension; casts and fallback lookups must not substitute detailed registrations for front.\",\n    \"Shared defaults, registration spreads, and renderer transforms can still borrow detailed geometry or capabilities despite empty banks. Allow only the named canonical same-person hand/sole/physical-length inputs; require own front anchors, masks, and scales. Handle front explicitly: no left/right coercion, mirroring, face warping, or fabricated near/far arm depth; draw the head over coplanar arms.\",\n    \"BODY_CANDIDATE_VIEWS must authorize discovery, not capabilities or production readiness. Enforce silent happy rigid rest/point/think in both compiler and workbench, without default advanced-bank lookups. Keep detail-generation consumers on REGISTERED_BODY_VIEWS and preserve productionReady=false, productionRig=null, availableBanks=[], and the existing source production gate.\"\n  ],\n  \"helper\": \"function detailedBodyView(profile: HostProfile): (typeof bodyViewRegistrations)[keyof typeof bodyViewRegistrations] {\\n  const view = profile.appearance.bodyView;\\n  const isDetailed = (value: unknown): value is keyof typeof bodyViewRegistrations =>\\n    typeof value === 'string' && Object.prototype.hasOwnProperty.call(bodyViewRegistrations, value);\\n  if (view === 'front' || !isDetailed(view)) {\\n    throw new Error('Expected an existing detailed3/4 body registration');\\n  }\\n  return bodyViewRegistrations[view];\\n}\",\n  \"limits\": \"Design-level, source-only assessment; no repository inspection or execution. The helper assumes the existing map retains its literal keys. Manually authored front geometry remains unmeasured and unaccepted: engineering candidates only, not accepted animation or whole-video readiness.\"\n}",
+    "testsExecuted": false
+  },
+  "reviewer": {
+    "scope": "source-only review; no execution or acceptance",
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 4907,
+    "usage": {
+      "prompt_tokens": 22210,
+      "completion_tokens": 131,
+      "total_tokens": 22341
+    },
+    "finishReason": "stop",
+    "reply": "{\"defects\":[{\"file\":\"packages/animation/rig.ts\",\"code\":\"Front arm painter order\",\"why\":\"The front view emits both arm slots after `heldTools` and `chest`, but before `<g id=\\\"head\\\">`; however the `front` branch also omits the earlier far-arm slot. This leaves each arm drawn once, coplanar, and before the head as required. No defect supported here.\" ,\"fix\":\"\"}],\"reviewLimits\":[\"No concrete integration defect is established by the supplied TypeScript text. Runtime call paths, schema consumers, and rendering behavior were not executed or inspected.\"]}",
+    "testsExecuted": false
+  },
+  "disposition": {
+    "planner": "Accepted boundary checks for raw constructed profiles, no fake front facing, detailed3/4 accessor only inside advanced branches, and production-vs-engineering distinction. Proposed helper used a different map shape and was not copied; actual actor→view lookup retained.",
+    "reviewer": "The single item labelled defect explicitly says the painter order satisfies requirements and no defect is supported; no fix inferred. This is a limited source reading, not an independent compiler/rig/anatomy test or PASS."
+  },
+  "testsExecuted": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "fullGoalComplete": false,
+  "inputSnapshotRetained": false,
+  "acceptsFinalSource": false,
+  "finalSourceChangesAfterAdvice": [
+    "front source near/far placeholder labels removed; actual painter stays coplanar",
+    "legacy detail/tracer/test consumers narrowed explicitly",
+    "callback declarations and docs/manifest/schema delivery added"
+  ]
+}

@@ -37,6 +37,7 @@ export const bodyViewEyesRegistration={
 export function hasBodyViewEyes(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyEyes===BODY_VIEW_EYES_SELECTION;}
 export function registeredBodyViewEyes(profile:Pick<HostProfile,'appearance'>,sourceHash?:string):Registration{
   const a=profile.appearance;
+  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front eyes registration is unavailable');
   if(!hasBodyViewEyes(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-eyes: eye candidate requires its registered actor/body view');
   const c=bodyViewEyesRegistration[a.characterVariant]?.[a.bodyView];
   if(!c||sourceHash!==undefined&&sourceHash!==c.sourceHash)throw new Error('needs-view-eyes: eye coordinates do not match the native view image');

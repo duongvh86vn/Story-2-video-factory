@@ -13,7 +13,7 @@ import {actorRigResourcePaths} from '../packages/actors/rig-resources.js';
 import {bodyCalibrationPlan,bodyWorkbench,type BodyAction} from '../packages/topics/body-workbench.js';
 import {BODY_SOURCE_VERSION} from '../packages/animation/schemas.js';
 import {projectViewExpressions} from '../packages/animation/view-expression-track.js';
-import {REGISTERED_BODY_VIEWS,registeredBodyView,bodyViewHeadSvg} from '../packages/animation/body-view-art.js';
+import {REGISTERED_BODY_VIEWS,registeredDetailedBodyView,bodyViewHeadSvg} from '../packages/animation/body-view-art.js';
 import {BODY_VIEW_SECONDARY_SELECTION,registeredNativeSecondary,nativeSecondaryPieces,nativeSecondaryState,nativeSecondaryBounds,nativeSecondaryMatrixError,nativeSecondaryDescription} from '../packages/animation/body-view-secondary.js';
 import {bodyViewEyesRegistration} from '../packages/animation/body-view-eyes.js';
 import {bodyViewMouthRegistration} from '../packages/animation/body-view-mouth.js';
@@ -57,7 +57,7 @@ test('secondary selection is explicit in shared profiles, no production or defau
 });
 
 test('each independent region binds its image and stays outside native eye and mouth ROIs',()=>{
-  for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){const {profile}=candidate(actor,view),c=registeredBodyView(profile),registration=registeredNativeSecondary(profile,c);
+  for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){const {profile}=candidate(actor,view),c=registeredDetailedBodyView(profile),registration=registeredNativeSecondary(profile,c);
     assert.equal(registration.sha256,c.sha256);assert.throws(()=>registeredNativeSecondary(profile,{...c,sha256:'0'.repeat(64)}),/registration differs/);assert.throws(()=>registeredNativeSecondary(profile,{...c,width:c.width+1}),/registration differs/);
     const protectedRegions:Array<{x:number;y:number;width:number;height:number}>=[...bodyViewEyesRegistration[actor][view].eyes.map(e=>e.bounds),bodyViewMouthRegistration[actor][view].bounds];
     protectedRegions.push({x:c.neck.x-24,y:c.neck.y-24,width:48,height:48});
@@ -68,7 +68,7 @@ test('each independent region binds its image and stays outside native eye and m
 });
 
 test('shared texture vertices, attachment seams and bounded positive-area deformation hold in all four views',()=>{
-  for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){const {profile}=candidate(actor,view),c=registeredBodyView(profile),before=structuredClone(c);
+  for(const actor of ['lila','karo'] as const)for(const view of REGISTERED_BODY_VIEWS){const {profile}=candidate(actor,view),c=registeredDetailedBodyView(profile),before=structuredClone(c);
     for(const control of [{x:0,y:0,angle:0},{x:32,y:0,angle:8},{x:-32,y:0,angle:-8},{x:0,y:32,angle:8}]){
       const state=nativeSecondaryState(profile,c,control),vertices=new Map<string,string>();assert.ok(state.influence>=0&&state.influence<=1);
       for(const piece of state.pieces){const region=nativeSecondaryPieces(profile,c).find(p=>p.id===piece.id)!.region;assert.ok(piece.areaRatio>=.4-1e-9);
@@ -84,7 +84,7 @@ test('shared texture vertices, attachment seams and bounded positive-area deform
 });
 
 test('bounds include mapped mesh vertices and interpolation checks native texture distance',()=>{
-  const {profile}=candidate('lila','three-quarter-right'),c=registeredBodyView(profile),a=nativeSecondaryState(profile,c,{x:0,y:0,angle:0}),b=nativeSecondaryState(profile,c,{x:20,y:0,angle:6}),bounds=nativeSecondaryBounds(profile,c,b.face);
+  const {profile}=candidate('lila','three-quarter-right'),c=registeredDetailedBodyView(profile),a=nativeSecondaryState(profile,c,{x:0,y:0,angle:0}),b=nativeSecondaryState(profile,c,{x:20,y:0,angle:6}),bounds=nativeSecondaryBounds(profile,c,b.face);
   for(const p of b.pieces.flatMap(p=>p.target)){assert.ok(p.x>=bounds.left-1e-4&&p.x<=bounds.right+1e-4);assert.ok(p.y>=bounds.top-1e-4&&p.y<=bounds.bottom+1e-4);}
   assert.equal(nativeSecondaryMatrixError(profile,c,a.face,a.face,a.face,.5),0);assert.ok(nativeSecondaryMatrixError(profile,c,a.face,a.face,b.face,.5)>1);
   assert.throws(()=>nativeSecondaryBounds(profile,c,{}),/missing baked/);const bad=structuredClone(b.face);bad[Object.keys(bad)[0]!]!.attr.transform='matrix(1 0 0 1 NaN 0)';assert.throws(()=>nativeSecondaryBounds(profile,c,bad),/invalid baked/);
@@ -124,7 +124,7 @@ test('shot-local lunge cannot restart secondary head history across a declared c
 
 test('compiler, camera and scene resource/security caps include the moving texture candidate',()=>{
   const f=run('karo','three-quarter-left'),shot=f.shots[1]!,p=shot.cinematic!.performance,clock=actorViewActingClock(f.board,shot,'karo')!,compiled=compilePerformance(p,f.profile,silence,'actor-karo-',undefined,clock);assert.match(compiled.js,/actor-karo-view-secondary-beard-11/);assert.equal(compiled.report.bodySecondary!.approved,false);assert.equal(compiled.report.bodySecondary!.motionVerified,false);assert.equal(compiled.report.phonemeLipSync,false);
-  const camera=cameraHostBounds(p,f.profile,clock);for(const at of [0,40,500,p.durationMs]){const frame=samplePerformance(p,f.profile,at,silence,undefined,clock),c=registeredBodyView(f.profile),bounds=nativeSecondaryBounds(f.profile,c,frame.face),v=frame.transforms.head!.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)/g)!.map(Number),angle=v[2]!*Math.PI/180;
+  const camera=cameraHostBounds(p,f.profile,clock);for(const at of [0,40,500,p.durationMs]){const frame=samplePerformance(p,f.profile,at,silence,undefined,clock),c=registeredDetailedBodyView(f.profile),bounds=nativeSecondaryBounds(f.profile,c,frame.face),v=frame.transforms.head!.match(/[+-]?(?:\d+(?:\.\d*)?|\.\d+)/g)!.map(Number),angle=v[2]!*Math.PI/180;
     for(const x of [bounds.left,bounds.right])for(const y of [bounds.top,bounds.bottom]){const dx=(x-c.neck.x)*c.headScale*v[3]!,dy=(y-c.neck.y)*c.headScale*v[3]!,px=v[0]!+dx*Math.cos(angle)-dy*Math.sin(angle),py=v[1]!+dx*Math.sin(angle)+dy*Math.cos(angle);assert.ok(px>=camera.head.left-1e-4&&px<=camera.head.right+1e-4);assert.ok(py>=camera.head.top-1e-4&&py<=camera.head.bottom+1e-4);}
   }
   const local=candidate('karo','three-quarter-left','walk-left'),scene=performanceScene(local.plan,local.profile,silence),allowed=referenceHeadAssets(local.profile.appearance).map(a=>a.path);assert.deepEqual(validateSceneFiles(secureSceneFiles(scene.files),{id:local.plan.id,startMs:0,endMs:4000} as Shot,2000000,allowed,local.plan.stage),[]);

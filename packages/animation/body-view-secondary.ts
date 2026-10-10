@@ -31,6 +31,7 @@ export const nativeSecondaryBindings={
 export const hasBodyViewSecondary=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySecondary===BODY_VIEW_SECONDARY_SELECTION;
 export function registeredNativeSecondary(profile:Pick<HostProfile,'appearance'>,source:NativeSecondarySource){
   const a=profile.appearance;
+  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front secondary registration is unavailable');
   if(!hasBodyViewSecondary(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-secondary: select a registered native actor/view');
   const binding=nativeSecondaryBindings[a.characterVariant][a.bodyView];
   if(source.view!==a.bodyView||source.sha256!==binding.sha256||source.width!==binding.width||source.height!==binding.height)throw new Error('needs-view-secondary: native image registration differs');

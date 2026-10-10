@@ -8,7 +8,7 @@ import {HostProfileSchema,type HostProfile} from '../packages/host/schemas.js';
 import {topicPreviewProfile} from '../packages/topics/preview.js';
 import {bodyCalibrationPlan,bodyWorkbench,BODY_WORKBENCH_VIEWS} from '../packages/topics/body-workbench.js';
 import {viewRegistrationWorkbench} from '../packages/topics/view-registration-workbench.js';
-import {BODY_VIEW_VERSION,REGISTERED_BODY_VIEWS,bodyViewRegistration,bodyViewRegistrations,registeredBodyView,bodyViewAsset,bodyViewDescription,bodyViewFacing,type RegisteredBodyView} from '../packages/animation/body-view-art.js';
+import {BODY_VIEW_VERSION,REGISTERED_BODY_VIEWS,bodyViewRegistration,bodyViewRegistrations,registeredDetailedBodyView,bodyViewAsset,bodyViewDescription,bodyViewFacing,type RegisteredBodyView} from '../packages/animation/body-view-art.js';
 import {referenceBodyAssets,referenceBodyMetrics,referenceBodyDescription} from '../packages/animation/forest-body-art.js';
 import {referenceHeadAssets,readReferenceHeadAsset} from '../packages/animation/forest-head-art.js';
 import {performanceSvg} from '../packages/animation/rig.js';
@@ -28,7 +28,7 @@ function profileFor(actor:typeof actors[number],view:RegisteredBodyView):HostPro
 
 test('each actor selects independent native left/right artwork; existing right registrations remain exact',()=>{
   for(const actor of actors){
-    const left=registeredBodyView(profileFor(actor,'three-quarter-left')),right=registeredBodyView(profileFor(actor,'three-quarter-right'));
+    const left=registeredDetailedBodyView(profileFor(actor,'three-quarter-left')),right=registeredDetailedBodyView(profileFor(actor,'three-quarter-right'));
     assert.strictEqual(right,bodyViewRegistration[actor]);assert.notEqual(left.sha256,right.sha256);
     assert.equal(left.nearHand,'right');assert.equal(left.farHand,'left');assert.equal(right.nearHand,'left');
     assert.equal(bodyViewFacing(profileFor(actor,'three-quarter-left')),'left');
@@ -52,7 +52,7 @@ test('native view registration changes attachment positions but preserves canoni
     const original=referenceBodyMetrics(base);
     for(const view of REGISTERED_BODY_VIEWS){
       const profile=profileFor(actor,view);profile.appearance.bodyScale=scale;
-      const candidate=referenceBodyMetrics(profile),c=registeredBodyView(profile);
+      const candidate=referenceBodyMetrics(profile),c=registeredDetailedBodyView(profile);
       for(const key of ['arms','legs','handAttachment','footSoleOffset','footOffsets','armRest','handRestRotation','height','pelvisY'] as const)assert.deepEqual(candidate[key],original[key],actor+'/'+view+'/'+key);
       assert.equal(candidate.shoulders!.left.x,(c.shoulders.left.x-c.pelvis.x)*c.bodyScale*scale);
       assert.equal(candidate.hips!.right.y,(c.hips.right.y-c.pelvis.y)*c.bodyScale*scale);
@@ -63,7 +63,7 @@ test('native view registration changes attachment positions but preserves canoni
 test('paired opposite views retain hand labels and unique painter slots, intact faces and independent resources',()=>{
   const pair=[profileFor('lila','three-quarter-right'),profileFor('karo','three-quarter-left')];
   const combined=pair.map(profile=>{
-    const c=registeredBodyView(profile),svg=performanceSvg(profile,'scene');
+    const c=registeredDetailedBodyView(profile),svg=performanceSvg(profile,'scene');
     assert.ok(svg.includes('data-body-view="'+c.view+'"'));
     assert.doesNotMatch(svg,/source-blink-|source-mouth-cover|scale\(\s*-/);
     assert.ok(svg.indexOf('id="ink-arm-'+c.farHand+'-back-slot"')<svg.indexOf('id="chest"'));
