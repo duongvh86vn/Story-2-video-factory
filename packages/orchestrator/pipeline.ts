@@ -44,7 +44,7 @@ import {actorDefinitions} from '../actors/locks.js';
 import { CINEMATIC_MODEL_VERSION } from '../../library/shots/cinematic-models.js';
 import { PROP_BINDING_VERSION } from '../director/props.js';
 import {SEAT_SUPPORT_VERSION} from '../stage/seats.js';
-import {topicFingerprint,requireTopicProductionReady} from '../topics/prehistoric-life.js';
+import {topicFingerprint,requireTopicProductionReady,validateCertifiedTopicCast} from '../topics/prehistoric-life.js';
 import {assertNoCandidateSpriteActors} from '../motion/scene-validation.js';
 import {loadSpriteMotionCatalog} from '../motion/catalog.js';
 
@@ -210,11 +210,12 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
     // or reconciling cached artifact hashes.
     const {recoverCinematicArtworkTransactions}=await import('../director/artwork-repair.js');
     await recoverCinematicArtworkTransactions(root);
-    config=await loadConfig(root); requireTopicProductionReady(config); const state=await loadState(root);
+    config=await loadConfig(root); const visualReleaseFingerprint=requireTopicProductionReady(config); const state=await loadState(root);
     if(await exists(path.join(root,'work/storyboard.json'))){
       const raw=await readJson<{shots:Array<{locked?:boolean}>}>(path.join(root,'work/storyboard.json'));
       if(Object.values(state.locked).some(Boolean)||raw.shots.some(shot=>shot.locked)){
         const board=await readStoryboardForDirection(path.join(root,'work/storyboard.json'),state.locked);
+        validateCertifiedTopicCast(board,config);
         if(board.shots.some(shot=>lockedShot(state,shot))){
           if(await exists(path.join(root,'work/asset-manifest.json'))){
             await assertLockedSceneCompatibility(root,config,board,await readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema),await readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema),state);
@@ -284,13 +285,14 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
       const next=States[stateIndex(state.state)+1]!; const job=store.beginJob(next);
       await appendLog(path.join(root,'logs/orchestrator.log'),{time:new Date().toISOString(),event:'start',state:next});
       try {
+        if(requireTopicProductionReady(config)!==visualReleaseFingerprint)throw new Error('needs-art-direction: visual QA ledger changed during production; resume against current evidence');
         const story=()=>readJson(path.join(root,'work/story.json'),StorySchema);
         const narration=()=>readJson(path.join(root,'work/narration.json'),NarrationSchema);
         const voiced=()=>config!.content.mode==='narrated-explainer'?readJson(path.join(root,'work/voiced-narration.json'),NarrationSchema):narration();
         if(['QC_PASSED','DONE'].includes(next))assertNoCandidateSpriteActors(await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema));
         const characters=()=>readJson(path.join(root,'work/character-bible.json'),CharacterBibleSchema);
         const beats=()=>readJson(path.join(root,'work/beats.json'),z.array(BeatSchema));
-        const board=()=>readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);
+        const board=async()=>{const value=await readJson(path.join(root,'work/storyboard.json'),StoryboardSchema);validateCertifiedTopicCast(value,config!);return value;};
         const assets=()=>readJson(path.join(root,'work/asset-manifest.json'),AssetManifestSchema);
         switch(next) {
           case 'INGESTED': {
@@ -322,9 +324,10 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
             if(config.workflow.require_character_approval && !state.approvals.characters) throw new ApprovalRequired('characters');
             const chars=await characters(); const n=await narration(); const b=await beats();
             const sb=state.locked.storyboard && await exists(path.join(root,'work/storyboard.json')) ? await readStoryboardForDirection(path.join(root,'work/storyboard.json'),state.locked) : await createStoryboard(root,config,router,await story(),n,chars,await readJson(path.join(root,'work/chapters.json'),z.array(ChapterSchema)),b);
+            validateCertifiedTopicCast(sb,config);
             if(config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'){
               const lockedIds=new Set(sb.shots.filter(s=>state.locked.storyboard||(state.locked[s.id]??state.locked[`shot:${s.id}`]??s.locked)).map(s=>s.id));
-              await prepareCinematicEnvironments(root,sb,lockedIds);await writeCinematicPlans(root,sb);
+              await prepareCinematicEnvironments(root,sb,lockedIds,config);await writeCinematicPlans(root,sb);
             }
             validateStoryboard(sb,n,b,chars); if(sb.shots.length>config.rendering.max_shots) throw new Error('Storyboard exceeds configured maximum shots');
             if(config.content.mode==='narrated-explainer'){const{profile,rig}=await loadHost(root);validateExplainerStoryboard(sb,n,b,profile,rig,config);const voice=await readJson(path.join(root,'work/voice-report.json'),VoiceReportSchema);await writeHostTimeline(root,sb,n,profile,rig,voice.synchronization);}
@@ -332,7 +335,7 @@ export async function runPipeline(projectRoot:string,options:PipelineOptions={})
           }
           case 'ASSETS_READY': {
             if(config.content.mode==='narrated-explainer'&&config.presentation.mode==='story-cinematic'){
-              const sb=await board();await prepareCinematicEnvironments(root,sb,new Set(sb.shots.map(s=>s.id)));
+              const sb=await board();await prepareCinematicEnvironments(root,sb,new Set(sb.shots.map(s=>s.id)),config);
             }
             if(config.content.mode==='narrated-explainer'){const sb=await board(),n=await narration(),b=await beats(),{profile,rig}=await loadHost(root);validateExplainerStoryboard(sb,n,b,profile,rig,config);await writeHostTimeline(root,sb,n,profile,rig,(await readJson(path.join(root,'work/voice-report.json'),VoiceReportSchema)).synchronization);}
             if((config.workflow.require_storyboard_approval || !config.workflow.automatic) && !state.approvals.storyboard) throw new ApprovalRequired('storyboard');

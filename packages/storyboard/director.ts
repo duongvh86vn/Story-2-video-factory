@@ -23,6 +23,7 @@ import { modelExitParts } from '../director/props.js';
 import { createCreativeStoryboard } from '../director/creative.js';
 import {seedActorStoryboard} from '../actors/model.js';
 import {actorDefinitions,actorLockKey,assertActorLocks} from '../actors/locks.js';
+import {validateCertifiedTopicCast} from '../topics/prehistoric-life.js';
 
 /** Discard obsolete derived data only on unlocked shots; never relabel an old plan as current. */
 export async function readStoryboardForDirection(file:string,stateLocks:Record<string,boolean>):Promise<Storyboard>{
@@ -111,7 +112,8 @@ export async function createStoryboard(projectRoot: string, config: FactoryConfi
       if(config.presentation.mode==='story-cinematic')storyboard=await createCreativeStoryboard(projectRoot,config,router,{story,narration,characters,beats,profile,rig,lockedActors},storyboard,locks);
     }
     assertActorLocks(retained,storyboard,stateLocks);
-    if(config.presentation.mode==='story-cinematic')await prepareCinematicEnvironments(projectRoot,storyboard,new Set(stateLocks.storyboard?storyboard.shots.map(s=>s.id):storyboard.shots.filter(s=>stateLocks.scenes||stateLocks[s.id]||stateLocks[`shot:${s.id}`]||stateLocks[`scene:${s.id}`]||stateLocks[`shots.${s.id}`]||s.locked).map(s=>s.id)));
+    validateCertifiedTopicCast(storyboard,config);
+    if(config.presentation.mode==='story-cinematic')await prepareCinematicEnvironments(projectRoot,storyboard,new Set(stateLocks.storyboard?storyboard.shots.map(s=>s.id):storyboard.shots.filter(s=>stateLocks.scenes||stateLocks[s.id]||stateLocks[`shot:${s.id}`]||stateLocks[`scene:${s.id}`]||stateLocks[`shots.${s.id}`]||s.locked).map(s=>s.id)),config);
     storyboard=StoryboardSchema.parse(storyboard);
     validateStoryboard(storyboard, narration, beats, characters);
     validateExplainerStoryboard(storyboard, narration, beats, profile, rig, config);

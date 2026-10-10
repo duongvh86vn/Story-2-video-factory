@@ -1215,6 +1215,14 @@
               "maxLength": 96,
               "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_.-]*$"
             },
+            "environmentLighting": {
+              "type": "string",
+              "enum": [
+                "day",
+                "sunset",
+                "night"
+              ]
+            },
             "provenance": {
               "type": "string",
               "const": "illustration"

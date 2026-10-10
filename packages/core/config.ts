@@ -48,7 +48,9 @@ export const ConfigSchema = z.object({
     require_meaningful_host_action_per_beat: z.boolean().default(true) }).strict().default({}),
   voice: VoiceSettingsSchema.default({}),
   voice_profiles: z.record(z.string().regex(LANGUAGE_TAG), VoiceSettingsSchema.partial()).default({}),
-  topic: z.object({ id: z.enum(['prehistoric-life']).nullable().default(null) }).strict().default({}),
+  topic: z.object({ id: z.enum(['prehistoric-life']).nullable().default(null),
+    production_release:z.string().trim().min(1).max(2000).refine(file=>path.isAbsolute(file)&&!file.includes('\0'),'Use an absolute local QA ledger path').nullable().optional()
+  }).strict().default({}),
   input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']).default('auto'), story: z.string().default('input/story.txt'), idea: z.string().default('input/idea.txt'), script: z.string().default('input/script.txt'),
     script_format:z.enum(['narration','dialogue']).optional(),
     source: z.string().default('input/source.md'), narration: z.string().default('input/narration.wav'), subtitles: z.string().default('input/narration.srt') }).strict().default({}),

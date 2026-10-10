@@ -34,7 +34,7 @@ import {ANIMATION_LIBRARY} from '../animation/library.js';
 import {supportedArtworkTags} from './art-direction.js';
 import {creativeActingBrief} from './acting-brief.js';
 import {directCameraStoryboard} from './camera-direction.js';
-import {applyTopicCast,topicContext,requireTopicProductionReady} from '../topics/prehistoric-life.js';
+import {applyTopicCast,topicContext,requireTopicProductionReady,validateCertifiedTopicCast} from '../topics/prehistoric-life.js';
 import {loadSpriteSceneMotions,loadSpriteSceneSpeech} from '../motion/scene-source.js';
 import {loadSpriteMotionCatalog,validateSpriteCatalogSelection} from '../motion/catalog.js';
 
@@ -70,6 +70,7 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
     if(board.shots.length>config.rendering.max_shots)throw new Error('Creative storyboard exceeds configured shot limit');
     const failures=new Set<string>();
     const check=(operation:()=>unknown)=>{try{operation();}catch(error){failures.add(error instanceof Error?error.message:String(error));}};
+    check(()=>validateCertifiedTopicCast(board,config));
     check(()=>validateSpriteCatalogSelection(board,catalog,renderer));
     if(context.lockedActors?.length)check(()=>assertActorLocks({shots:context.lockedActors!.map(primary=>({cinematic:{actorScene:{primary,supporting:[]}}}))},board,Object.fromEntries(context.lockedActors!.map(a=>[actorLockKey(a.id),true]))));
     for(const [i,shot] of board.shots.entries()){

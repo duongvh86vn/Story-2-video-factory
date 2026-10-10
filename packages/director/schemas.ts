@@ -31,6 +31,7 @@ export const CinematicPlanSchema=z.object({
   version:z.literal(22),producer:z.literal(DIRECTION_VERSION),shotId:Id,leadCharacterId:Id,
   motivation:z.string().min(1).max(1000),attentionPartId:Id.optional(),sourceRefs:z.array(SourceRefSchema).min(1),
   setting:z.enum(['workshop','road','neutral','forest','camp','cave','river']),environmentAssetId:Id.optional(),
+  environmentLighting:z.enum(['day','sunset','night']).optional(),
   provenance:z.literal('illustration'),
   artDirection:ArtDirectionSchema.optional(),
   actorScene:ActorSceneSchema.optional(),

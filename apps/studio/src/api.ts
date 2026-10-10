@@ -6,6 +6,7 @@ import type {ActorMotion} from '../../../packages/motion/schemas.js';
 import type {SpriteMotionCatalogSnapshot} from '../../../packages/motion/catalog.js';
 import type {SpriteMotionCatalog} from '../../../packages/motion/catalog-schemas.js';
 import type {ActorSpeech} from '../../../packages/motion/speech-schemas.js';
+import type {TopicReadinessDocument} from '../../server/contracts.js';
 
 export class RequestError extends Error {
   constructor(message: string, public status: number, public code: string, public issues: Array<{ path: string; message: string }> = []) { super(message); }
@@ -33,6 +34,7 @@ export const api = {
   create: (name: string, example: boolean, mode: 'diagram' | 'story-cinematic',topic?:'prehistoric-life') => request<ProjectSummary>('/api/projects', { method: 'POST', body: JSON.stringify({ name, example, topic,presentation: { mode } }) }),
   project: (name: string) => request<ProjectDetail>(projectUrl(name)),
   sourceAudit:(name:string)=>request<SourceProductionAuditDocument>(`${projectUrl(name)}/source-audit`),
+  topicReadiness:(name:string)=>request<TopicReadinessDocument>(`${projectUrl(name)}/topic-readiness`),
   run: (name: string, until: ProjectStatus, shotIds?: string[],retryModelErrors=false,sceneRepairAttempts?:number) => request<{ job: Job }>(`${projectUrl(name)}/run`, { method: 'POST', body: JSON.stringify({ until, ...(shotIds ? { shotIds } : {}),...(retryModelErrors?{retryModelErrors:true}:{}),...(sceneRepairAttempts===undefined?{}:{sceneRepairAttempts}) }) }),
   approve: (name: string, kind: 'storyboard' | 'characters' | 'host') => request<ProjectSummary>(`${projectUrl(name)}/approve`, { method: 'POST', body: JSON.stringify({ kind }) }),
   locks: (name: string, locked: Record<string, boolean>) => request<ProjectSummary>(`${projectUrl(name)}/locks`, { method: 'PATCH', body: JSON.stringify({ locked }) }),

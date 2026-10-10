@@ -7,6 +7,7 @@ import { exists, hash, safeRealPath, writeAtomic } from '../core/utils.js';
 import { reservation } from './reservation.js';
 import { invalidateProject } from './index.js';
 import { LANGUAGE_TAG, primaryLanguage } from '../core/languages.js';
+import {topicNarrativeContext} from '../topics/prehistoric-life.js';
 
 export const PresentationPatchSchema = z.object({ mode: ConfigSchema.shape.presentation.removeDefault().shape.mode.removeDefault().optional(),
   character_mode:ConfigSchema.shape.presentation.removeDefault().shape.character_mode.removeDefault().optional(),
@@ -16,7 +17,7 @@ export const PresentationPatchSchema = z.object({ mode: ConfigSchema.shape.prese
 export const CreativeModelPatchSchema=ModelSettingsSchema.pick({provider:true,model:true,base_url:true,api_key_env:true,temperature:true,timeout_ms:true,vision:true}).partial().strict();
 export const SettingsPatchSchema = z.object({ revision: z.string().optional(),
   input: z.object({ mode: z.enum(['auto','story','idea','script','wav','srt']), script_format:ConfigSchema.shape.input.removeDefault().shape.script_format, story: z.enum(['input/story.txt','input/story.md']).optional(), idea: z.enum(['input/idea.txt','input/idea.md']).optional(), script: z.enum(['input/script.txt','input/script.md']).optional() }).strict().optional(),
-  topic: ConfigSchema.shape.topic.removeDefault().optional(),
+  topic: ConfigSchema.shape.topic.removeDefault().partial().strict().optional(),
   script_generation: ConfigSchema.shape.script_generation.removeDefault().partial().strict().optional(),
   host: z.enum(['mini-robot','stick-man','custom']).optional(), language: z.string().regex(LANGUAGE_TAG).optional(),
   voice: ConfigSchema.shape.voice.removeDefault().partial().strict().optional(), automatic: z.boolean().optional(),
@@ -52,7 +53,7 @@ export async function updateSettings(root: string, update: SettingsPatch): Promi
     throw new z.ZodError([{ code: 'custom', path: ['presentation','mode'], message: 'story-cinematic requires narrated-explainer content; the legacy renderer does not support it.' }]);
   }
   const effectiveMode=nextConfig.input.mode==='auto'?(await exists(path.join(root,nextConfig.input.story))?'story':await exists(path.join(root,nextConfig.input.idea))?'idea':await exists(path.join(root,nextConfig.input.script))?'script':await exists(path.join(root,nextConfig.input.narration))?'wav':'srt'):nextConfig.input.mode;
-  const changedNarration=hash({input:config.input,authoring:['idea','story'].includes(effectiveMode)?{topic:config.topic,settings:config.script_generation,model:config.models.planner}:undefined,voice:effectiveMode==='wav'?undefined:config.voice,language:config.project.language})!==hash({input:nextConfig.input,authoring:['idea','story'].includes(effectiveMode)?{topic:nextConfig.topic,settings:nextConfig.script_generation,model:nextConfig.models.planner}:undefined,voice:effectiveMode==='wav'?undefined:nextConfig.voice,language:nextConfig.project.language});
+  const changedNarration=hash({input:config.input,authoring:['idea','story'].includes(effectiveMode)?{topic:topicNarrativeContext(config),settings:config.script_generation,model:config.models.planner}:undefined,voice:effectiveMode==='wav'?undefined:config.voice,language:config.project.language})!==hash({input:nextConfig.input,authoring:['idea','story'].includes(effectiveMode)?{topic:topicNarrativeContext(nextConfig),settings:nextConfig.script_generation,model:nextConfig.models.planner}:undefined,voice:effectiveMode==='wav'?undefined:nextConfig.voice,language:nextConfig.project.language});
   const changedHost=hash(config.host)!==hash(nextConfig.host);
   const changedPresentation=hash({presentation:config.presentation,topic:config.topic})!==hash({presentation:nextConfig.presentation,topic:nextConfig.topic});
   const changedDirector=hash({director:config.models.storyboard,camera:config.models.camera})!==hash({director:nextConfig.models.storyboard,camera:nextConfig.models.camera});

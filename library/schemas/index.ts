@@ -41,9 +41,11 @@ import {OwnershipPaintSchema} from '../../packages/director/ownership-paint-sche
 import {SourceSpearBindingSchema} from '../../packages/director/source-spear-binding-schemas.js';
 import {SpearActionRefSchema,SpearWorldContactSchema} from '../../packages/director/source-spear-action-reference.js';
 import {ModelContactFrameSchema} from '../../packages/director/model-contact-reference.js';
+import {TopicProductionReleaseSchema} from '../../packages/topics/production-release.js';
 
 /** Generated views of core contracts; Zod remains the runtime authority. */
 export const schemaLibrary:Record<string,z.ZodTypeAny> = {
+  'topic-production-release':TopicProductionReleaseSchema,
   'view-art-study':ViewArtStudySchema,
   'model-contact-frame':ModelContactFrameSchema,
   'spear-source':SpearSourceSchema,

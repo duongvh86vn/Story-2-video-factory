@@ -33,7 +33,7 @@ import {loadHost} from '../../packages/host/index.js';
 import {installedWindowsVoices} from '../../packages/voice/catalog.js';
 import {LANGUAGE_TAG,primaryLanguage} from '../../packages/core/languages.js';
 import {discoverNineRouter} from '../../packages/models/nine-router.js';
-import {prehistoricReadiness,prehistoricReferences} from '../../packages/topics/prehistoric-life.js';
+import {prehistoricReadiness,prehistoricReferences,topicReadiness} from '../../packages/topics/prehistoric-life.js';
 import {referencePuppetSvg} from '../../packages/topics/reference-puppet.js';
 import {headWorkbench,headWorkbenchManifest} from '../../packages/topics/head-workbench.js';
 import {bodyWorkbench,bodyWorkbenchManifest,BODY_ACTIONS,BODY_WORKBENCH_VIEWS,BODY_COLOUR_MODES,BODY_MOUTH_MODES,BODY_EYES_MODES,BODY_LOOK_MODES,BODY_EXPRESSION_MODES,BODY_MOTION_MODES,BODY_SECONDARY_MODES,BODY_SEAT_MODES,BODY_MANIPULATION_MODES,bodyActionDuration,armAuditWorkbench,ARM_AUDIT_GROUPS} from '../../packages/topics/body-workbench.js';
@@ -541,6 +541,12 @@ export async function buildServer(options: ServerOptions = {}) {
     const result=await readSourceProductionAudit(await rootFor(request.params.name));
     reply.header('Cache-Control','no-store');
     return result;
+  });
+  app.get<{Params:Named}>('/api/projects/:name/topic-readiness',async(request,reply)=>{
+    NoMotionQuery.parse(request.query);
+    const config=await loadConfig(await rootFor(request.params.name));
+    reply.header('Cache-Control','no-store');
+    return topicReadiness(config);
   });
   app.put<{ Params: Named & { artifact: string } }>('/api/projects/:name/artifacts/:artifact', async request => {
     const body = z.object({ data: z.unknown(), revision: z.string().optional() }).strict().parse(request.body);

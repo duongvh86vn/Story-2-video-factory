@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.105-visual-qa-intake",
+  "precedingSourceSHA": "5d99dc3f30402306e9cbf2120dca76d0604a1324",
+  "scope": "source implementation and build/type/definition/static records, never runtime or visual acceptance",
+  "implementation": [
+    "Optional absolute external QA ledger; no writer/generated accepted fixture or acceptance endpoint. Exact source fingerprint/profile/default/rig/world/report/MP4/probe receipts, required accepted art and motion targets. Reject missing/stale/NOT RUN/mismatch/unbound targets before model/TTS.",
+    "Canonical profile identity/palette preserved; principal unspecified selection uses tested default, explicit profiles and locked cast must match. Supporting models only if actually tested. Visual QA does not approve a sprite library, unregistered turns, source props/ownership/spear or episode output.",
+    "Explicit environmentAssetId/setting/environmentLighting, bound source plate bytes and ledger provenance; no untested catalogue fallback. All original source clock/IK/contact/geometry/cloth/face/rasters unchanged.",
+    "Optional ledger-only settings patch keeps topic ID and authoring/narration identity. Current ledger fingerprint invalidates visuals; changed authority during stages requires resume. Project final fps stays configurable;60fps is the required motion QA evidence rate, never a replacement for per-video review/QC.",
+    "Read-only no-store readiness API and Studio ledger input/one status check when opening setup; saved path alone does not enable production. Server verifies again; no OS snapshot or authenticated test execution proven by receipt metadata."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "679c67/session39091/completion6e727f",
+      "decisiveOutput": "✓ 69 modules transformed.\n✓ built in 778ms\n",
+      "scope": "source build only"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "57bba7/session5222/completion74f4b4",
+      "decisiveOutput": "tsc -p tsconfig.tests.json; final output empty",
+      "scope": "typecheck only; callbacks not executed"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "195f0d",
+      "scope": "definition export only; config/shot/storyboard and new topic-production-release schema"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "dacf3c",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "explicitly allowed source/header/hash/static inventory"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source105-static.mjs",
+      "exitCode": 0,
+      "handle": "d0dece",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.105-visual-qa-intake\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"sharedFunctionsUnchanged\":63,\"frontManipulationSources\":2,\"mappedCodeHashes\":191,\"scalarCodeEntries\":46,\"callbacksDeclared\":12,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}",
+      "scope": "raw file/header/hash/JSON/source AST only; no project evaluation"
+    }
+  ],
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "requestedReasoning": "high",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 40398,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 14860,
+      "completion_tokens": 2144,
+      "total_tokens": 17004
+    },
+    "reply": "{\"findings\":[{\"file\":\"packages/stage/index.ts\",\"quote\":\"if(c.artDirection?.useEnvironment===false||!spec||spec.setting!==c.setting)throw new Error(`${shot.id}: needs-art-direction: explicitly select a tested environmentAssetId with its own setting`);\",\"reason\":\"The selected plate is checked against the shot’s setting but not its requested lighting. A shot can therefore request one lighting condition and silently stage a certified plate for another.\",\"correction\":\"Require the selected environment’s lighting to match the shot’s explicit lighting; reject missing or mismatched lighting rather than substituting a plate.\"}],\"missingContext\":[\"Metadata checks and receipt hashes cannot establish artistic quality; no media decoding or visual review was performed here.\",\"The supplied excerpts do not establish whether another layer separately validates shot lighting or enforces actor locks around every call to applyTopicCast.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshotChars": 54569,
+    "snapshotSHA256": "73ebd9f515c8573bc6c8705550e9d41c19603e1c3f2a38bc08ee58ec6d3459a5",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "scope": "bounded source-only advice, no actual tests/media/approval",
+    "parentAssessment": "Reviewer raised a possible lighting mismatch. Supplied current shot/art schemas originally had no separate lighting property, so the alleged pre-existing request field was not proven. Parent made the new certified environment contract explicit anyway: optional environmentLighting in canonical schema and exact matching in ledger staging/context, with negative declarations. Final source adds Studio integration/bounded JSON/deduplicated receipts/probe consistency and remains outside the reviewer snapshot. No test, decode, visual or production acceptance from reviewer."
+  },
+  "authoringErrors": [
+    {
+      "handle": "65cf6d",
+      "kind": "source helper",
+      "reason": "Windows UNKNOWN opening settings.ts; helper stopped before replacement. Actual file unchanged except separately applied import; source replacements later applied with apply_patch."
+    },
+    {
+      "handle": "dec033",
+      "kind": "source review setup",
+      "reason": "Snapshot bound exceeded before any request; trimmed actual source AST and only then dispatched one reviewer call."
+    },
+    {
+      "handle": "14be5c",
+      "kind": "source helper",
+      "reason": "Pack dependency anchor used single quotes but actual generated array used JSON double quotes; no pack write from failed helper. Correct actual anchor applied71a048."
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/visual-qa-intake-static-record-v1.json",
+  "ownedPaths": 30,
+  "userQA": {
+    "test": "tests/topic-production-release.test.ts",
+    "callbacksDeclared": 12,
+    "callbacksExecuted": 0,
+    "acceptedQaLedger": null,
+    "realCurrentVideo": null,
+    "positiveIntake": "NOT RUN; actual user ledger needed; SKIP is not PASS",
+    "api": "NOT RUN",
+    "studio": "NOT RUN",
+    "pipeline": "NOT RUN",
+    "media": "NOT RUN"
+  },
+  "originalRastersUnchanged": 307,
+  "originalHeadDefinitionsUnchanged": 18,
+  "originalHeadMetadataUnchanged": 27,
+  "sharedFunctionsUnchanged": 63,
+  "originalSourceProductionGatesUnchanged": true,
+  "visualPreflightChanged": "optional verified external evidence; default still needs-art-direction",
+  "manifestMappedSourceHashes": 191,
+  "manifestScalarCodeEntries": 46,
+  "productionBinding": "needs-source-prop-binding",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "real current art/motion/environment evidence and user acceptance",
+    "actual full source-prop/ownership/spear production integration with accepted evidence",
+    "continuous own actor turns/anatomy/garments/gaze/grips/vivid world/director/camera video acceptance",
+    "full arbitrary story/topic -> faithful script; exact script/dialogue/original WAV(+legacy SRT) -> actual voice-clock/scenes/review/repair/final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/assets/QC",
+    "EN primary/VI/JA/KO/external-local TTS, resume/locks/content/voice/actor/rebuild and missing-voice/fit/identity/source blockers"
+  ]
+}

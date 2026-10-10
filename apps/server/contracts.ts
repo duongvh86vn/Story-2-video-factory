@@ -58,5 +58,6 @@ export interface ProjectDetail extends ProjectSummary {
     format: { width: number; height: number; fps: number }; approvalRequired: { storyboard: boolean; characters: boolean; host: boolean } };
 }
 export interface ArtifactDocument<T = unknown> { name: string; data: T; revision: string; editable: boolean; settingsRevision?:string; }
+export type TopicReadinessDocument=ReturnType<typeof import('../../packages/topics/prehistoric-life.js').topicReadiness>;
 export interface SceneDocument { shotId: string; files: Array<{ path: string; content: string }>; revision: string; }
 export interface UploadedAsset { name: string; path: string; size: number; }
