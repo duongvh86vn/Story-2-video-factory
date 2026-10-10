@@ -7,19 +7,18 @@ import {usesBodyView} from '../animation/body-view-art.js';
 import {hasBodyViewSpeech} from '../animation/body-view-mouth.js';
 import {hasBodyViewEyes} from '../animation/body-view-eyes.js';
 import {hasBodyViewExpressions} from '../animation/body-view-expressions.js';
-import {hasBodyViewLocomotion} from '../animation/body-view-cloth.js';
+import {hasBodyViewLocomotion,hasOwnBodyLocomotion} from '../animation/body-view-cloth.js';
 import {hasBodyViewSecondary} from '../animation/body-view-secondary.js';
 import {normalizeViewExpressions,projectViewExpressions} from '../animation/view-expression-track.js';
 import {VIEW_ACTING_CLOCK_VERSION,normalizeViewGazes,validateViewActingClock,validateViewActingClockSource,type ViewActingClock} from '../animation/view-acting-clock.js';
 import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../animation/view-gaze-target.js';
 import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
 import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-view-basic-mouth-registration.js';
-import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from '../animation/body-view-profile-cloth-binding.js';
 import {PROFILE_BODY_SECONDARY_SELECTION,isProfileSecondaryView} from '../animation/body-view-profile-secondary-binding.js';
 /** Preserve the original expression run for selected own face/motion rigs;
  * motion alone keeps happy and does not grant expression artwork. */
 function keepsExpressionClock(profile:Pick<HostProfile,'appearance'>){
-  return hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(profile.appearance.bodyView)||profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(profile.appearance.bodyView)||profile.appearance.bodyMotion===PROFILE_BODY_LOCOMOTION_SELECTION&&isProfileMotionView(profile.appearance.bodyView)||profile.appearance.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(profile.appearance.bodyView);
+  return hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(profile.appearance.bodyView)||profile.appearance.bodySpeech===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(profile.appearance.bodyView)||hasOwnBodyLocomotion(profile)||profile.appearance.bodySecondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(profile.appearance.bodyView);
 }
 import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';

@@ -5,7 +5,6 @@ export {bodyViewRegistration,bodyViewRegistrations,bodyCandidateRegistrations,BO
 import {frontBodyRegistrationDescription} from './body-view-front-registration.js';
 import {basicBodyHasUnsupportedOptions,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import {obliqueBodyRegistrationDescription} from './body-view-oblique-registration.js';
-import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from './body-view-profile-cloth-binding.js';
 import {PROFILE_BODY_SECONDARY_SELECTION,isProfileSecondaryView} from './body-view-profile-secondary-binding.js';
 import {authoredRestArm} from './body-view-rest-arm.js';
 import {BASIC_BODY_EYES_SELECTION} from './body-view-basic-eyes-registration.js';
@@ -14,7 +13,7 @@ import {BASIC_BODY_EXPRESSIONS_SELECTION} from './body-view-basic-expression-reg
 import {bodyViewMouthSvg,bodyViewMouthDescription} from './body-view-mouth.js';
 import {bodyViewEyesSvg,bodyViewEyesDescription} from './body-view-eyes.js';
 import {bodyViewExpressionsSvg,bodyViewExpressionsDescription} from './body-view-expressions.js';
-import {hasBodyViewLocomotion,nativeClothSvg,nativeClothDescription} from './body-view-cloth.js';
+import {hasBodyViewLocomotion,hasOwnBodyLocomotion,nativeClothSvg,nativeClothDescription} from './body-view-cloth.js';
 import {hasBodyViewSecondary,nativeSecondarySvg,nativeSecondaryDescription} from './body-view-secondary.js';
 import {hasBodyViewSeat,nativeSeatSvg,nativeSeatDescription} from './body-view-seat.js';
 import {hasNativeHeadBank,nativeHeadBankSvg,registeredNativeHeadBank,nativeHeadBankBounds} from './body-head-bank.js';
@@ -22,7 +21,7 @@ import {nativeManipulationDescription} from './native-contact-arm.js';
 import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-11';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-12';
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These
  * engineering candidates use uniform head/body transforms. Their physical
@@ -47,9 +46,9 @@ export function registeredDetailedBodyView(profile:Pick<HostProfile,'appearance'
 export function registeredLocomotionBodyView(profile:Pick<HostProfile,'appearance'>){
   const a=profile.appearance;
   if(!hasBodyViewLocomotion(profile)||a.artworkVersion!==BODY_VIEW_VERSION||a.characterVariant!=='lila'&&a.characterVariant!=='karo')throw new Error('needs-view-locomotion: select the exact native actor and motion mode');
-  if(profile.appearance.bodyMotion!==PROFILE_BODY_LOCOMOTION_SELECTION)return registeredDetailedBodyView(profile);
+  if(!hasOwnBodyLocomotion(profile))return registeredDetailedBodyView(profile);
   const source=registeredBodyView(profile);
-  if(source.view!=='left'&&source.view!=='right'||!isProfileMotionView(profile.appearance.bodyView))throw basicBodyCapabilityError(source.view,'profile locomotion');
+  if(source.view!=='left'&&source.view!=='right'&&source.view!=='back-left'&&source.view!=='back-right'||source.view!==a.bodyView)throw basicBodyCapabilityError(source.view,'own locomotion');
   return source;
 }
 export function registeredSecondaryBodyView(profile:Pick<HostProfile,'appearance'>){

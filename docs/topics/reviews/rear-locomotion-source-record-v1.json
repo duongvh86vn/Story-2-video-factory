@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.99-own-rear-locomotion",
+  "precedingSourceSHA": "008c19001ab4bc258e82473b3837cfb34136dff7",
+  "scope": "own back-left/back-right locomotion integration and bounded source advice only; no anatomy/art/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Four exact own rear PNG/SHA/canvas garment cages; registered-rear-locomotion-v1. No image edits, other-view ROI/landmark borrowing, face mirror/warp or inferred yaw.",
+    "Own rear selector routes garment SVG, validation, physical sampling/lag/interpolation and camera through existing native kernel. Shared cloth/physical/secondary/temporal kernels and own fixed geometry unchanged.",
+    "Only forward walk/run/jump/crouch/rest/point/body react; original rigid head. Rear face/chin/source gesture/secondary/seat/tools/head-bank/supportingModel/continuous turns remain unavailable. Actor primary/supporting role swap is separate from supportingModel.",
+    "Complete original body/cloth/happy expression clock across explicit continuous cuts and role swaps, preserving identity/view/root/stage/scale and empty local physical tracks.",
+    "Clock13/schema/API/workbench/acting brief/exact report/cache/manifest bind source. Legacy cloth/face/secondary data unchanged.",
+    "Eight callbacks DECLARED/NOT RUN; actual geometry/anatomy/garment/art/motion/audio/render/final product acceptance remains pending."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "699745/session51731/completion0b3055",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 build\n> tsc -p tsconfig.json && tsc --noEmit -p apps/studio/tsconfig.json && vite build --config apps/studio/vite.config.ts\n\nvite v7.3.6 building client environment for production...\ntransforming...\n✓ 65 modules transformed.\nrendering chunks...\ncomputing gzip size...\n../../dist/studio/index.html                   0.91 kB │ gzip:  0.51 kB\n../../dist/studio/assets/index-BGNsJXdD.css   17.11 kB │ gzip:  4.44 kB\n../../dist/studio/assets/index-BourBLhp.js   248.88 kB │ gzip: 77.50 kB\n✓ built in 876ms\n",
+      "scope": "source build only; no runtime acceptance"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "a3c971/session91804/completion398bce",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 test:typecheck\n> tsc -p tsconfig.tests.json\n\n",
+      "scope": "typecheck only; callbacks NOT RUN; completion output empty"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "ad0903",
+      "decisiveOutput": "\n> story-to-video-factory@2.1.0 schemas\n> tsx library/schemas/export.ts\n\n",
+      "scope": "definition export only; no schema instances; later acting brief wording did not change schema definitions"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "4e4da5",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}\n",
+      "scope": "allowed source/header/hash/static JSON inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/rear-locomotion-static-v1.mjs",
+      "exitCode": 0,
+      "handle": "b1051d",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.99-own-rear-locomotion\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"mappedCodeHashes\":173,\"scalarCodeEntries\":46,\"ownRearClothSources\":4,\"callbacksDeclared\":8,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}\n",
+      "scope": "raw header/bytes/alpha/JSON/source AST only; no project evaluation or tests"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "scope": "source freeze only; executed by freeze script before recording"
+    }
+  ],
+  "rawRecord": "docs/topics/reviews/rear-locomotion-static-record-v1.json",
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 33116,
+    "usage": {
+      "prompt_tokens": 11562,
+      "completion_tokens": 1685,
+      "total_tokens": 13247
+    },
+    "finishReason": "stop",
+    "reply": "{\"findings\":[{\"file\":\"packages/animation/compiler.ts\",\"quote\":\"!(ownMotion&&key==='sourceSpan')\",\"reason\":\"This exempts rear source gesture spans whenever own rear locomotion is selected. The earlier generic gate can admit them when a face/head capability is present, but rear source gesture spans must remain unavailable.\",\"correction\":\"Do not exempt `sourceSpan` for rear locomotion; allow it only for eligible non-rear modes with a separately selected own face/head capability.\"}],\"missingContext\":[\"The new rear binding file and surrounding registration/capability implementations were not provided; rear face/head capability interactions cannot be fully checked.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshot": "C:/Users/Duongvh-pc/.codex/tmp/source099-review-snapshot.txt",
+    "sha256": "9ad7ea4f3d8e9352e75d460348aacd3d920591109d255f125d442690f37b78bc",
+    "scope": "bounded source-only snapshot advice; no tests/art/runtime/production acceptance",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "handle": "e3e608/session60359/completionfaceb8",
+    "parentDisposition": {
+      "finding": "Ambiguous rear sourceSpan exception",
+      "classification": "explicit contract narrowing; original bypass not established",
+      "reason": "Existing basic-rear capability guards already reject the face/head selections needed by the generic sourceSpan gate. Final source now also excludes rear explicitly from ownGestureSpan.",
+      "contextClaim": "Reviewer claimed binding/capability context missing; snapshot included both. No art/runtime verdict.",
+      "finalSourceChangedAfterReview": true,
+      "acceptsFinalSource": false,
+      "testsExecuted": false,
+      "artAccepted": false
+    }
+  },
+  "earlierChecks": [
+    {
+      "build": "a50d47/session46531/completion79cb56",
+      "typecheck": "8c8f14/session42092/completiona64be1",
+      "exitCode": 1,
+      "finding": "Own registration return union still included front; new test sourceSpan used wrong fields. Corrected before final successful checks."
+    },
+    {
+      "build": "d3212a/session9754",
+      "typecheck": "0fceb9/session45695",
+      "result": "Observation was truncated; later polls returned Unknown process id. These observations prove no final success; fresh confirmed checks supersede them."
+    },
+    {
+      "rawInventory": "440f0f",
+      "exitCode": 1,
+      "finding": "Raw Git batch omitted protected Markdown prompts. Temporary inventory reader corrected, successful final raw inventory follows."
+    }
+  ],
+  "ownedPaths": 29,
+  "unrelatedUntrackedPreserved": 52,
+  "handoff": "docs/topics/REAR-LOCOMOTION-HANDOFF.md",
+  "newCallbacksDeclared": 8,
+  "callbacksExecuted": 0,
+  "builtInImageGenerationCalls": 0,
+  "imagesEdited": false,
+  "environment": {
+    "node": "24.19.0",
+    "platform": "win32",
+    "workspace": "C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1",
+    "protectedCheckout": "D:/github/Story-2-video-factory2.1",
+    "diagnosticPort": 8851,
+    "serverStarted": false
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

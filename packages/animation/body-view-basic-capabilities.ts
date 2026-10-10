@@ -3,6 +3,7 @@ import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from './body-view-basic-mo
 import {BASIC_BODY_EXPRESSIONS_SELECTION,isBasicExpressionView} from './body-view-basic-expression-registration.js';
 import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from './body-view-profile-cloth-binding.js';
 import {PROFILE_BODY_SECONDARY_SELECTION,isProfileSecondaryView} from './body-view-profile-secondary-binding.js';
+import {REAR_BODY_LOCOMOTION_SELECTION,isRearMotionView} from './body-view-rear-cloth-binding.js';
 /** Discovery of a source angle grants no detailed feature or production bank.
  * These fixed-view authoring candidates retain independent source geometry. */
 export const OBLIQUE_BODY_VIEWS=['left','right','back-left','back-right'] as const;
@@ -14,7 +15,7 @@ export function isBasicBodyView(view:unknown):view is BasicBodyView{
 }
 export function isRearBodyView(view:unknown):view is 'back-left'|'back-right'{return view==='back-left'||view==='back-right';}
 export function basicBodyHasUnsupportedOptions(a:{bodyView?:unknown}&Partial<Record<typeof BASIC_UNREGISTERED_OPTIONS[number],unknown>>){
-  return isBasicBodyView(a.bodyView)&&BASIC_UNREGISTERED_OPTIONS.some(key=>a[key]!==undefined&&!(key==='bodyEyes'&&a[key]===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(a.bodyView))&&!(key==='bodySpeech'&&a[key]===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(a.bodyView))&&!(key==='bodyExpressions'&&a[key]===BASIC_BODY_EXPRESSIONS_SELECTION&&isBasicExpressionView(a.bodyView)&&a.bodyEyes===BASIC_BODY_EYES_SELECTION&&a.bodySpeech===BASIC_BODY_SPEECH_SELECTION)&&!(key==='bodyMotion'&&a[key]===PROFILE_BODY_LOCOMOTION_SELECTION&&isProfileMotionView(a.bodyView))&&!(key==='bodySecondary'&&a[key]===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(a.bodyView)));
+  return isBasicBodyView(a.bodyView)&&BASIC_UNREGISTERED_OPTIONS.some(key=>a[key]!==undefined&&!(key==='bodyEyes'&&a[key]===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(a.bodyView))&&!(key==='bodySpeech'&&a[key]===BASIC_BODY_SPEECH_SELECTION&&isBasicMouthView(a.bodyView))&&!(key==='bodyExpressions'&&a[key]===BASIC_BODY_EXPRESSIONS_SELECTION&&isBasicExpressionView(a.bodyView)&&a.bodyEyes===BASIC_BODY_EYES_SELECTION&&a.bodySpeech===BASIC_BODY_SPEECH_SELECTION)&&!(key==='bodyMotion'&&a[key]===PROFILE_BODY_LOCOMOTION_SELECTION&&isProfileMotionView(a.bodyView))&&!(key==='bodyMotion'&&a[key]===REAR_BODY_LOCOMOTION_SELECTION&&isRearMotionView(a.bodyView))&&!(key==='bodySecondary'&&a[key]===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(a.bodyView)));
 }
 export function basicBodyCapabilityError(view:unknown,feature:string){
   return new Error(`${view==='front'?'needs-front-capability':'needs-basic-view-capability'}: ${String(view)} has no own ${feature} registration; detailed3/4 data cannot be borrowed`);

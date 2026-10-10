@@ -18,7 +18,6 @@ import {usesCutoutHead,cutoutHeadChin} from './forest-cutout-head.js';
 import {sourceArmShape,sourceSpearPairShape,type SourceArmRole} from './source-arm.js';
 import {articulatedGestureWindow,articulatedPoseFromDirections,articulatedArmReference,sampleArticulatedArm} from './arm-trajectory.js';
 import {usesBodyView,registeredBodyView,registeredDetailedBodyView,registeredLocomotionBodyView,registeredSecondaryBodyView,bodyViewFacing,validateBodyViewLunge} from './body-view-art.js';
-import {PROFILE_BODY_LOCOMOTION_SELECTION} from './body-view-profile-cloth-binding.js';
 import {hasNativeHeadBank,hasNativeHeadSpeech,hasNativeHeadEyes,registeredNativeHeadBank,validateNativeHeadBankTrack,nativeHeadBankCell,nativeHeadBankCellAtGlobal,nativeHeadCellPoint,nativeHeadBankFace,nativeHeadBankFacialState,nativeHeadBankFacialError} from './body-head-bank.js';
 import {nativeHeadSources,nativeHeadPixelScale} from './native-head-bank.js';
 import {nativeHeadTrackTimes} from './native-head-track.js';
@@ -26,7 +25,7 @@ import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,bodyViewMo
 import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription,bodyViewEyeCenter} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
-import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
+import {hasBodyViewLocomotion,hasOwnBodyLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
 import {hasBodyViewManipulation,isNativeContactGesture,validateNativeManipulation,validateNativeContactBodyClock,nativeContactWindow,sampleNativeContactArm,nativeManipulationDescription} from './native-contact-arm.js';
 import {hasBodyViewSeat,nativeSeatState,nativeSeatMatrixError,nativeSeatDescription} from './body-view-seat.js';
 import {hasBodyViewSecondary,registeredNativeSecondary,nativeSecondaryState,nativeSecondaryMatrixError,nativeSecondaryDescription} from './body-view-secondary.js';
@@ -135,8 +134,9 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
   }
   if(!usesBodyView(profile))return;
   if(isBasicBodyView(registeredBodyView(profile).view)){
-    const ownMotion=profile.appearance.bodyMotion===PROFILE_BODY_LOCOMOTION_SELECTION;
-    const unsupportedSource=Object.entries(plan).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!(ownMotion&&key==='sourceBody'))||plan.gestures.some(g=>Object.entries(g).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!(ownMotion&&key==='sourceSpan')));
+    const ownMotion=hasOwnBodyLocomotion(profile);
+    const ownGestureSpan=ownMotion&&!isRearBodyView(registeredBodyView(profile).view);
+    const unsupportedSource=Object.entries(plan).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!(ownMotion&&key==='sourceBody'))||plan.gestures.some(g=>Object.entries(g).some(([key,value])=>key.startsWith('source')&&value!==undefined&&!(ownGestureSpan&&key==='sourceSpan')));
     if(unsupportedSource||performanceProps(plan).length||performanceSpears(plan).length)throw basicBodyCapabilityError(registeredBodyView(profile).view,'source action/ownership/tool/prop');
     if(isRearBodyView(registeredBodyView(profile).view)&&plan.gestures.some(g=>g.action==='think'))throw basicBodyCapabilityError(registeredBodyView(profile).view,'visible chin contact');
   }
