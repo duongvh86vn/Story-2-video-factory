@@ -10,14 +10,15 @@ import type { ModelRouter } from '../models/registry.js';
 import { loadPrompt } from '../story/prompts.js';
 import { planWithValidation } from '../story/request.js';
 import { validateStoryboard } from '../storyboard/validate.js';
-import { validateExplainerStoryboard } from '../explainer/storyboard.js';
+import { validateExplainerStoryboard,validateSourceCandidateStoryboard } from '../explainer/storyboard.js';
 import { renderCinematic } from '../../library/shots/cinematic.js';
 import { validateSceneFiles, secureSceneFiles } from '../scenes/security.js';
 import { DIRECTION_VERSION } from './schemas.js';
 import { stageModels } from './models.js';
 import { EXPLAINER_RECIPES } from '../explainer/recipes.js';
-import { modelExitParts } from './props.js';
-import { validateModelContinuity } from './index.js';
+import { modelExitParts,sourceModelExitParts } from './props.js';
+import {hasOriginalSource} from './source-audit-context.js';
+import { validateModelContinuity,validateSourceModelContinuity } from './index.js';
 import { validateAuthoredVisualSources } from '../explainer/visual-sources.js';
 import { ExplanationBeatSchema, SourceRefSchema, VisualizationSchema } from '../explainer/schemas.js';
 import { ShotHostSchema } from '../host/schemas.js';
@@ -93,7 +94,6 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
               c.continuity.exit=bodyRootAt(c.performance,shot.startMs,c.performance.durationMs);});
             c.continuity.facing=[...(c.performance.turns??[])].sort((a,b)=>a.startMs-b.startMs).at(-1)?.direction??c.performance.facing??'front';
           }
-          c.continuity.models=modelExitParts(shot,board,context.narration).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
         }
       }
       const prior=board.shots[i-1]?.cinematic;
@@ -101,13 +101,28 @@ export async function createCreativeStoryboard(root:string,config:FactoryConfig,
       // camera/metadata role and may change without moving either actor.
       if(prior&&!(prior.actorScene&&c.actorScene)&&c.actorScene?.continuity!=='cut'&&(prior.leadCharacterId!==c.leadCharacterId||hash(prior.continuity.exit)!==hash(c.continuity.entry)||prior.continuity.facing!==(c.performance.facing??'front')||prior.performance.scale!==c.performance.scale))failures.add(`${shot.id}: creative character position/facing/scale continuity changed at the cut`);
     }
+    // Finish every cast/profile/model/clock derivation before a boundary reads
+    // its complete original history. A later camera may swap the primary actor.
+    // Candidate geometry is derived metadata only, never production approval.
+    if(origin==='model')for(const shot of board.shots){
+      const c=shot.cinematic;if(!c||lockIds.has(shot.id))continue;
+      // Keep a rejected boundary in the same feedback as later scene failures.
+      check(()=>{
+        const parts=hasOriginalSource(shot)?sourceModelExitParts(shot,board,context.narration):modelExitParts(shot,board,context.narration);
+        c.continuity.models=parts.map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}));
+      });
+    }
     check(()=>validateStoryboard(board,context.narration,context.beats,context.characters));
+    const originalSource=board.shots.some(hasOriginalSource);
+    if(originalSource)check(()=>validateSourceCandidateStoryboard(board,context.narration,context.beats,context.profile,context.rig,config));
     check(()=>validateExplainerStoryboard(board,context.narration,context.beats,context.profile,context.rig,config));
     for(const shot of board.shots){
       // Per-shot diagnostics retain the full canonical world for persistent subjects and recaps.
+      if(originalSource)check(()=>validateSourceCandidateStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},board));
       check(()=>validateExplainerStoryboard({shots:[shot]},context.narration,context.beats,context.profile,context.rig,{...config,presentation:{...config.presentation,require_meaningful_host_action_per_beat:false}},{fragment:true,sourceBoard:board}));
       if(shot.cinematic?.artDirection&&shot.visualization?.parts.length)check(()=>validateAuthoredVisualSources(shot,canonicalExplanationEvidence(context.beats.map(beat=>ExplanationBeatSchema.parse({...beat,beatId:beat.id})),context.narration),context.narration,context.profile.id));
       check(()=>validateModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot,board,context.narration));
+      if(originalSource)check(()=>validateSourceModelContinuity(board.shots[board.shots.indexOf(shot)-1],shot,board,context.narration));
       // Camera diagnostics must survive a separate early artwork/rendering failure.
       if(!shot.cinematic?.spriteStage)check(()=>validateCastCameras(shot,context.profile,board,context.narration));
       let motions:Awaited<ReturnType<typeof loadSpriteSceneMotions>>;

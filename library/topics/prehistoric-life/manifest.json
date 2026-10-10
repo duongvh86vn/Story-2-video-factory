@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.107-story-person-models",
+  "version": "forest-tribe-0.108-creative-source-feedback",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -43,7 +43,7 @@
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
       "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/director/creative.ts": "6d76f628ae5f804dadbcc79a181930e4e86468fe1e5957a6b85868878f779698",
+      "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
       "packages/director/source-prop-identity.ts": "5ce1615fad0cee2d2839647f0c312136a18037baec74b4dbdd5a5c250f77fb34",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
@@ -61,7 +61,7 @@
     "codeHashes": {
       "packages/director/cast-camera.ts": "c08af1bb8d22e2c71b7542b1e22bafbd6b3e193a451de4ff6de5bf20dbd855c4",
       "packages/director/camera.ts": "a34d9464f3a7bbb050848af50ee506649870519b2e200e2cc95221263c308c4e",
-      "packages/director/creative.ts": "6d76f628ae5f804dadbcc79a181930e4e86468fe1e5957a6b85868878f779698",
+      "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
     }
@@ -116,7 +116,7 @@
       "packages/director/camera-direction-schemas.ts": "4f8d2a52b400b070baf1be95709a3fed1630994815fa9da36f7d315a27853b6c",
       "library/prompts/camera-director.md": "7de0340b1a4a513ad421b08a270df25561dc2c79d388ec8d86b69843ed41808a",
       "library/prompts/creative-director.md": "60439dc233453561cb6d8c46b376d2a504d036bf4b4daddaeed9c18366b97a17",
-      "packages/director/creative.ts": "6d76f628ae5f804dadbcc79a181930e4e86468fe1e5957a6b85868878f779698",
+      "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
       "packages/core/config.ts": "d0d9af6f29585379ac7dbba9a4e5d02fafdd96edb14001b36f0873abd393dc10",
       "packages/story/planning-cache.ts": "2128548e3671ab553409abe4c7406bfbbe93739c02e60f93f732c38946dff4f9",
@@ -477,7 +477,7 @@
       "packages/director/props.ts": "c5644d388708d83560a55bb10558152e57b3cfe741af7fb330b485801f8b4336",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
-      "packages/director/creative.ts": "6d76f628ae5f804dadbcc79a181930e4e86468fe1e5957a6b85868878f779698",
+      "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/explainer/storyboard.ts": "698ea99f12cf19fb812175bb8392345349f2ee34b15b22d8b935ebb38ba222f4",
@@ -664,7 +664,7 @@
       "packages/director/props.ts": "c5644d388708d83560a55bb10558152e57b3cfe741af7fb330b485801f8b4336",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
       "packages/director/story-coverage.ts": "f007c10cb891a010a0e4b587db211c710f2407040114ec141780ab1c46429afb",
-      "packages/director/creative.ts": "6d76f628ae5f804dadbcc79a181930e4e86468fe1e5957a6b85868878f779698",
+      "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
       "packages/explainer/storyboard.ts": "698ea99f12cf19fb812175bb8392345349f2ee34b15b22d8b935ebb38ba222f4",
       "packages/storyboard/director.ts": "69b5891e37a4ef0a2263403d77461640e28313ebcb8b1be6a4cbdc128b15b0da",
@@ -1250,7 +1250,7 @@
       "packages/host/schemas.ts": "1129adfaf1f0557f4170b0c47fa4232eda0a75b212122f7e6d74646251eb7cdd",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/body-workbench.ts": "734af019f355e805c5827423e94a519419fa82421b5f09f3bbbc5b6dc1822c9b",
-      "packages/topics/prehistoric-life.ts": "eb7129d2586d6d755fdd8b557c01fa4e54bdfdd33c9b629ff5266a194acd6865",
+      "packages/topics/prehistoric-life.ts": "6c9e5fe83bc32126fe70bf990ac3c88c18de75544bafab03812aec0baa111954",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df",
@@ -1272,7 +1272,7 @@
     "handoffDocument": "docs/topics/STORY-PERSON-MODELS-HANDOFF.md",
     "codeHashes": {
       "packages/topics/cast-model.ts": "b23d4d893d1b7c1a3a61029cd53dfa22ca10571ffe6e00d4889441daf6be1d6c",
-      "packages/topics/prehistoric-life.ts": "eb7129d2586d6d755fdd8b557c01fa4e54bdfdd33c9b629ff5266a194acd6865",
+      "packages/topics/prehistoric-life.ts": "6c9e5fe83bc32126fe70bf990ac3c88c18de75544bafab03812aec0baa111954",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/topics/production-release.ts": "28a1b79c22bd0e7ef8cbcce6a95ade3d0367bc490407e1b0895cea5d44513fc3",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
@@ -1304,7 +1304,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "eb7129d2586d6d755fdd8b557c01fa4e54bdfdd33c9b629ff5266a194acd6865",
+      "packages/topics/prehistoric-life.ts": "6c9e5fe83bc32126fe70bf990ac3c88c18de75544bafab03812aec0baa111954",
       "packages/director/acting-brief.ts": "046748cf2a8270a59c6450c4a3a01ec045a67637efb4b65931ee3d00f6b3a892"
     }
   },
@@ -1548,7 +1548,7 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "eb7129d2586d6d755fdd8b557c01fa4e54bdfdd33c9b629ff5266a194acd6865",
+      "packages/topics/prehistoric-life.ts": "6c9e5fe83bc32126fe70bf990ac3c88c18de75544bafab03812aec0baa111954",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
@@ -21070,14 +21070,14 @@
     "endpoint": "GET /api/projects/:name/topic-readiness",
     "codeHashes": {
       "packages/topics/production-release.ts": "28a1b79c22bd0e7ef8cbcce6a95ade3d0367bc490407e1b0895cea5d44513fc3",
-      "packages/topics/prehistoric-life.ts": "eb7129d2586d6d755fdd8b557c01fa4e54bdfdd33c9b629ff5266a194acd6865",
+      "packages/topics/prehistoric-life.ts": "6c9e5fe83bc32126fe70bf990ac3c88c18de75544bafab03812aec0baa111954",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
       "packages/core/config.ts": "d0d9af6f29585379ac7dbba9a4e5d02fafdd96edb14001b36f0873abd393dc10",
       "packages/orchestrator/settings.ts": "91c982c4e0f956b1f75f866a0250f785a2f25ec77fbc3ea0a30a8bd52664b35d",
       "packages/orchestrator/pipeline.ts": "db8f83dd8cf4befd55a7ae62d426c2081b8277d05eab459cc02d92dfe25a2a11",
       "packages/orchestrator/script-generation.ts": "f09ef8c06f96b6756189f85fcfbc993ebfd17a6540b45b982dff7acb95f5921b",
       "packages/stage/index.ts": "6d2fc0d65beb784947a3048dda94945eea935d81c6835dd904c8c12db1ed8bc5",
-      "packages/director/creative.ts": "6d76f628ae5f804dadbcc79a181930e4e86468fe1e5957a6b85868878f779698",
+      "packages/director/creative.ts": "54a636634ea08f990709749496cfec5b764a5ce152d76b67bf9efe4921260a10",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "packages/storyboard/director.ts": "69b5891e37a4ef0a2263403d77461640e28313ebcb8b1be6a4cbdc128b15b0da",
       "apps/server/index.ts": "cb966887b3207264c314b3a33ff772f71b8ae5a74d3a469edd513cb4b2db09e1",

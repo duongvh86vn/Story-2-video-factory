@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.108-creative-source-feedback",
+  "precedingSourceSHA": "609deb97577d93fff88f750668cec7c0ff1e22d9",
+  "scope": "source implementation/build/typecheck/schema definitions/raw file-JSON-hash-AST; runtime and film QA delegated to user model",
+  "ownedPaths": 12,
+  "change": "Every scene is derived before complete-source boundaries; creative boundary calculation now participates in error collection. Actual original candidate model exits and complete/fragment/model-continuity diagnostics reach repair feedback while all ordinary validators, renderer/security and acceptance/cache rules remain mandatory.",
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "aa4322",
+      "session": 60480,
+      "completionChunk": "ba7905",
+      "exitCode": 0,
+      "decisiveOutput": "✓ 69 modules transformed.\n✓ built in 867ms"
+    },
+    "typecheck": {
+      "command": "npm run test:typecheck",
+      "startChunk": "f82772",
+      "session": 11553,
+      "completionChunk": "cae97f",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "schema": {
+      "command": "npm run schemas",
+      "chunk": "b93f15",
+      "exitCode": 0,
+      "scope": "schema definition export only"
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "6a9821",
+      "exitCode": 0,
+      "scope": "explicitly permitted static source/header/hash metadata inventory only"
+    },
+    "staticInventory": {
+      "chunk": "edc723",
+      "exitCode": 0,
+      "scope": "raw Git/file/hash/JSON/TS AST only; no project import or callback evaluation",
+      "sourceVersion": "forest-tribe-0.108-creative-source-feedback",
+      "nodeVersion": "v24.19.0",
+      "unchangedSourceFiles": [
+        "packages/director/props.ts",
+        "packages/director/index.ts",
+        "packages/director/source-audit-context.ts",
+        "packages/director/source-prop-binding.ts",
+        "packages/director/source-spear-bindings.ts",
+        "packages/explainer/storyboard.ts",
+        "packages/actors/model.ts",
+        "packages/actors/speech-clock.ts",
+        "packages/actors/locks.ts",
+        "packages/topics/cast-model.ts",
+        "packages/topics/cast-appearance.ts",
+        "packages/topics/production-release.ts",
+        "packages/story/request.ts",
+        "packages/scenes/security.ts",
+        "library/shots/cinematic.ts"
+      ],
+      "mappedManifestHashes": 725,
+      "newCallbacksDeclared": 3,
+      "callbacksExecuted": 0,
+      "originalProductionAndRendererGatesUnchanged": true,
+      "ordinaryCreativeAcceptanceStillRequired": true,
+      "acceptedQaLedger": null,
+      "realCurrentVideo": null,
+      "productionReady": false,
+      "fullGoalComplete": false
+    },
+    "whitespace": {
+      "command": "git diff --check",
+      "chunk": "fef9ff",
+      "exitCode": 0
+    }
+  },
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 23244,
+    "finishReason": "stop",
+    "usage": {
+      "prompt_tokens": 10783,
+      "completion_tokens": 2512,
+      "total_tokens": 13295
+    },
+    "reply": "{\"findings\":[],\"missingContext\":\"The supplied snippets do not include the schema definitions, creativeFixture implementation, or source-reference normalization rules. I cannot verify that the regression callbacks pass schema and citation validation before reaching their intended assertions; in particular, the first callback changes citation quotes but retains the copied segment IDs.\",\"testsExecuted\":false,\"productionAccepted\":false}",
+    "snapshotChars": 34885,
+    "snapshotSHA256": "1604c6bff3c8cdbbf46459a4d806f007edec2a16361fd3eb9184ff6db1d0e4dd",
+    "testsExecuted": false,
+    "productionAccepted": false,
+    "snapshotPrecedesFinalChanges": true,
+    "finalSourceReviewed": false,
+    "parentFollowup": "After source snapshot: all-cast derivation moved before boundary metadata; added third NOT RUN regression for original role-swapped seed profile hashes.",
+    "startChunk": "f77ab0",
+    "session": 14762,
+    "completionChunk": "84a747",
+    "readChunk": "f0c9f1",
+    "exitCode": 0,
+    "successfulDispatches": 1,
+    "retries": 0,
+    "scope": "bounded source read only",
+    "parentDisposition": "No concrete finding in supplied scope. Snapshot omitted schemas, creativeFixture and normalization; cannot establish callback reachability. Parent source read confirms both original and copied reference segment IDs are cue; copied quotes replaced with actual full cue and source shots have explicit captionRegion/explanationGoal. No fixture or callback evaluated."
+  },
+  "tests": {
+    "file": "tests/creative-source-feedback.test.ts",
+    "declared": 3,
+    "executed": 0,
+    "status": "DECLARED / NOT RUN",
+    "purpose": [
+      "Original source boundary failure plus independent later SVG rejection reach one domain-rejected receipt without changing original response or creating accepted cache",
+      "Actual spear proposal retains ordinary production rejection and produces no accepted cache/report"
+    ],
+    "projectRuntimeExecuted": false,
+    "callbacksInvoked": false,
+    "fixturesInvoked": false,
+    "geometryEvaluated": false,
+    "compilerExecuted": false,
+    "rendererExecuted": false,
+    "serverStarted": false,
+    "browserOpened": false,
+    "pipelineExecuted": false,
+    "ttsExecuted": false,
+    "asrExecuted": false,
+    "videoRendered": false
+  },
+  "preserved": {
+    "sourceVersionUpdated": true,
+    "ordinaryValidatorsAndRendererRequired": true,
+    "originalProductionPropGuardsUnchanged": true,
+    "sourceCandidateAuthorityAndCoreGeometryUnchanged": true,
+    "actorSourceIdentityAndSpeakerClocksUnchanged": true,
+    "lockedActorAndShotChecksUnchanged": true,
+    "repairBudgetAndRejectedResponseReceiptsUnchanged": true,
+    "sourceRastersArtworkPaletteNotEdited": true,
+    "previewAndFinalSecurityUnchanged": true
+  },
+  "testAuthority": {
+    "latestHumanReply": "chưa",
+    "currentReportAvailable": false,
+    "oldV1Acceptance": false,
+    "owner": "user/model test"
+  },
+  "pending": [
+    "Current source-faithful Lila/Karo art/anatomy/garment/face/partner gaze and real normal-speed/reverse/random-seek motion/film QA.",
+    "Own genuine continuous head/body turns, soft limbs, feet/support/contact, tool/seat/spear/hunt/grasp/handoff/rear secondary/crowds and vivid layered day/sunset/night camera/world acting.",
+    "Integrated original-source production with actual current visual QA and episode source/contact/cue/voice/review/final/QC; candidate checks do not open production.",
+    "Full arbitrary story/topic -> faithful screenplay, exact script/dialogue and original WAV(+legacy SRT) -> actual narration clock -> actors inside story/world/director/camera -> repair/final exports and QC.",
+    "EN primary/VI/JA/KO/external-local TTS and current real cache/resume/locks/rebuild acceptance."
+  ],
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "productionBinding": "needs-source-prop-binding",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}
