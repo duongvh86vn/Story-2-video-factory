@@ -20,7 +20,7 @@ export interface RigMetrics {
   handAttachment?:Record<'left'|'right',{length:number;angleDeg:number;wristOffset:Point}>;
   /** Sole-to-ankle offset in foot artwork units, before its bodyScale. */
   footSoleOffset?:Record<'left'|'right',number>;
-  armRest?:Record<'left'|'right',Point>;footOffsets?:Record<'left'|'right',number>;
+  armRest?:Record<'left'|'right',Point>;armRestPole?:Record<'left'|'right',-1|1>;footOffsets?:Record<'left'|'right',number>;
   /** Positive X is the distance behind the facing direction; Y is below belt. */
   seatContactOffset?:Point;
 }

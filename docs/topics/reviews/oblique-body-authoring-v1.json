@@ -1,0 +1,203 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.93-profile-rear-body-rigs",
+  "sources": [
+    {
+      "id": "lila-left-v2",
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+      "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+      "width": 1173,
+      "height": 1341,
+      "authority": "parent source inspection/manual approximation",
+      "sourcePelvis": {
+        "x": 575,
+        "y": 707
+      },
+      "uncertainties": [
+        "Profile silhouette/mask/neck/shoulder/hip/chin/rest directions are manual approximations, not measured anatomy/yaw or accepted source geometry.",
+        "Original source identity/proportions/arm/sole/alpha and mask edges require normal-speed visual review."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    },
+    {
+      "id": "lila-right-v3",
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+      "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+      "width": 1024,
+      "height": 1536,
+      "authority": "parent source inspection/manual approximation",
+      "sourcePelvis": {
+        "x": 558,
+        "y": 836
+      },
+      "uncertainties": [
+        "Profile silhouette/mask/neck/shoulder/hip/chin/rest directions are manual approximations, not measured anatomy/yaw or accepted source geometry.",
+        "Original source identity/proportions/arm/sole/alpha and mask edges require normal-speed visual review."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    },
+    {
+      "id": "karo-left-v1",
+      "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+      "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+      "width": 910,
+      "height": 1728,
+      "authority": "parent source inspection/manual approximation",
+      "sourcePelvis": {
+        "x": 457,
+        "y": 1127
+      },
+      "uncertainties": [
+        "Profile silhouette/mask/neck/shoulder/hip/chin/rest directions are manual approximations, not measured anatomy/yaw or accepted source geometry.",
+        "Original source identity/proportions/arm/sole/alpha and mask edges require normal-speed visual review."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    },
+    {
+      "id": "karo-right-v2",
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+      "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+      "width": 910,
+      "height": 1727,
+      "authority": "parent source inspection/manual approximation",
+      "sourcePelvis": {
+        "x": 498,
+        "y": 921
+      },
+      "uncertainties": [
+        "Profile silhouette/mask/neck/shoulder/hip/chin/rest directions are manual approximations, not measured anatomy/yaw or accepted source geometry.",
+        "Original source identity/proportions/arm/sole/alpha and mask edges require normal-speed visual review."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    },
+    {
+      "id": "lila-back-three-quarter-left-v2",
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+      "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+      "width": 939,
+      "height": 1675,
+      "authority": "architect source-raster approximation plus parent belt/hip/tie changes",
+      "sourcePelvis": {
+        "x": 491,
+        "y": 906
+      },
+      "uncertainties": [
+        "Independent candidate in the original 939 by 1675 canvas; retain viewBox 0 0 939 1675 without cropping, normalization, or recentering.",
+        "The long ponytail overlaps the shoulder, back, and garment edge. Its separate contour is an exclusion-oriented proposal, not accepted topology or evidence of the hidden torso boundary.",
+        "The two head subpaths provisionally omit the visible hair tie; hair-to-tie boundaries and narrow hanging locks require source-specific author review.",
+        "The clothing contour cuts inward at the exposed screen-left shoulder to avoid retaining original upper-arm skin. The shoulder-to-trunk division is uncertain and may omit some valid torso pixels.",
+        "Neck, pelvis, shoulders, and hips are integration-anchor proposals, including occluded locations, not measured anatomical joints.",
+        "Left and right are provisional rig slots here; nearHand left is an unaccepted authoring choice, not an established anatomical or depth assignment.",
+        "No chin is visible in this rear-view source; chin is null and no facial landmarks are proposed. Black limbs may be obscured against the matte rather than absent."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    },
+    {
+      "id": "lila-back-three-quarter-right-v1",
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+      "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+      "width": 939,
+      "height": 1676,
+      "authority": "architect source-raster approximation plus parent belt/hip/tie changes",
+      "sourcePelvis": {
+        "x": 552,
+        "y": 889
+      },
+      "uncertainties": [
+        "Independent candidate in the original 939 by 1676 canvas; retain viewBox 0 0 939 1676. This contour is not a mirrored or coordinate-transferred version of the other Lila source.",
+        "The screen-left ponytail hides portions of the shoulder and upper garment. The separate head subpath and garment cut-in are provisional visible-region approximations, not accepted overlap topology.",
+        "The hair tie is provisionally outside the two head subpaths. Fine locks, tie margins, and matte gaps are unresolved.",
+        "The garment follows the strap and inner armhole on screen-right rather than the outer exposed upper arm; the shoulder cap division remains uncertain.",
+        "Neck and screen-left shoulder placement are particularly occlusion-dependent. Pelvis and hip coordinates are proposed rig anchors rather than anatomical measurements.",
+        "Left and right are provisional rig slots; nearHand right is an unaccepted authoring choice. Rear-view anatomical correspondence and near/far ordering remain unresolved.",
+        "No chin is visible for rear-view landmark authoring; chin is null and no facial landmarks are supplied. Dark original arms and legs may merge with the matte."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    },
+    {
+      "id": "karo-back-three-quarter-left-v1",
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+      "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+      "width": 910,
+      "height": 1729,
+      "authority": "architect source-raster approximation plus parent belt/hip/tie changes",
+      "sourcePelvis": {
+        "x": 495,
+        "y": 1127
+      },
+      "uncertainties": [
+        "Independent candidate in the original 910 by 1729 canvas; retain viewBox 0 0 910 1729 without trimming the matte.",
+        "The head contour proposes hair, visible head skin, and beard only. The beard-to-neck seam and lower hair tips are uncertain; no chin landmark is inferred from the beard silhouette.",
+        "The clothing contour includes a narrow exposed back/neck region and garment, while cutting around the screen-left armhole. The thin skin region between armhole and torso has an uncertain ownership boundary.",
+        "The belt tails and split lower garment are included as garment candidates; the central notch must remain outside the mask rather than bridging across original legs.",
+        "Shoulder and hip anchors are tentative drawing placements, not measured joints. The screen-right shoulder transition is especially ambiguous against the matte.",
+        "NearHand left and both rig-slot assignments remain unaccepted for this rear view; they do not establish anatomical laterality or depth.",
+        "Chin is null for this rear-view source and no face landmarks are authored. Black limbs may be present but obscured against the matte."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    },
+    {
+      "id": "karo-back-three-quarter-right-v2",
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+      "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+      "width": 910,
+      "height": 1728,
+      "authority": "architect source-raster approximation plus parent belt/hip/tie changes",
+      "sourcePelvis": {
+        "x": 496,
+        "y": 1080
+      },
+      "uncertainties": [
+        "Independent candidate in the original 910 by 1728 canvas; retain viewBox 0 0 910 1728. Coordinates are not a reflection or reuse of the other Karo source.",
+        "The lower hair and beard contours bound the proposed head region, but their junction with exposed neck skin is uncertain. Beard tips do not establish a visible chin.",
+        "The clothing contour includes exposed back and neck, belt, belt loop, and split garment. The screen-right back-to-arm division is a conservative candidate, not a verified anatomical seam.",
+        "The lower garment notch is intentionally outside the clothing region to avoid including original legs. Fine hem points and black outlines remain unresolved.",
+        "The neck anchor lies near an occluded hair boundary; shoulders, pelvis, and hips are unaccepted integration placements rather than measured anatomy.",
+        "NearHand right is only a provisional authoring selection; rear-view left/right anatomical correspondence and near/far ownership remain unaccepted.",
+        "Chin is null and no facial landmarks are proposed. Original black arms or legs may be obscured by the matte and are not asserted absent."
+      ],
+      "approved": false,
+      "motionVerified": false,
+      "productionReady": false
+    }
+  ],
+  "advice": {
+    "completed": "architect gpt-6-astra rear source proposal; source-only",
+    "timeouts": [
+      "planner neutral-arm advice,180000ms",
+      "architect profile advice,180000ms"
+    ],
+    "restartAttempted": false
+  },
+  "parentDisposition": [
+    "Rejected proposed Lila pelvis/hip y coordinates inconsistent with raw belt-colour inventory; used own manual belt/hip anchor candidates.",
+    "Restored source hair-tie mask regions omitted by proposed Lila rear head paths; source-specific rectangles remain unaccepted and need seam/overlap review.",
+    "Profile masks/landmarks authored by parent from each original canvas after profile advice timed out; no coordinates borrowed from3/4 or another source."
+  ],
+  "testsExecuted": false,
+  "geometryExecuted": false,
+  "rendererRun": false,
+  "artApproved": false,
+  "approved": false,
+  "motionVerified": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "fullGoalComplete": false,
+  "registrationArithmeticAuthored": true,
+  "geometryScope": "No project pose/compiler/IK/geometry evaluation; source authoring script calculates constant scale ratios from unaccepted landmarks only."
+}

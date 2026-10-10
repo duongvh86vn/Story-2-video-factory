@@ -1,3 +1,4 @@
+import {isBasicBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {registeredBodyViewEyes} from './body-view-eyes.js';
@@ -39,7 +40,7 @@ export type NativeExpressionPose={brow:number;browAngle:number;smile:number;frow
 export function hasBodyViewExpressions(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyExpressions===BODY_VIEW_EXPRESSIONS_SELECTION;}
 export function registeredBodyViewExpressions(profile:Pick<HostProfile,'appearance'>,sourceHash?:string){
   const a=profile.appearance;
-  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front expression registration is unavailable');
+  if(isBasicBodyView(a.bodyView))throw basicBodyCapabilityError(a.bodyView,'expression');
   if(!hasBodyViewExpressions(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour||a.bodyEyes!=='registered-eyes-v1'||a.bodySpeech!=='registered-rest-mouth-v1')throw new Error('needs-view-expression: native expressions require the exact native actor/view, registered eyes and resting speech');
   const eyes=registeredBodyViewEyes(profile,sourceHash),mouth=registeredBodyViewMouth(profile,sourceHash);
   const actor=a.characterVariant,view=a.bodyView;

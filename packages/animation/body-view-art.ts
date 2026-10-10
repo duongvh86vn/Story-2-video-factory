@@ -2,7 +2,10 @@ import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {bodyViewRegistrations,bodyCandidateRegistrations,BODY_CANDIDATE_VIEWS,REGISTERED_BODY_VIEWS} from './body-view-registration.js';
 export {bodyViewRegistration,bodyViewRegistrations,bodyCandidateRegistrations,BODY_CANDIDATE_VIEWS,REGISTERED_BODY_VIEWS,type RegisteredBodyView} from './body-view-registration.js';
-import {frontBodyHasUnsupportedOptions,frontBodyRegistrationDescription} from './body-view-front-registration.js';
+import {frontBodyRegistrationDescription} from './body-view-front-registration.js';
+import {basicBodyHasUnsupportedOptions,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
+import {obliqueBodyRegistrationDescription} from './body-view-oblique-registration.js';
+import {authoredRestArm} from './body-view-rest-arm.js';
 import {bodyViewMouthSvg,bodyViewMouthDescription} from './body-view-mouth.js';
 import {bodyViewEyesSvg,bodyViewEyesDescription} from './body-view-eyes.js';
 import {bodyViewExpressionsSvg,bodyViewExpressionsDescription} from './body-view-expressions.js';
@@ -14,7 +17,7 @@ import {nativeManipulationDescription} from './native-contact-arm.js';
 import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-5';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-6';
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These
  * engineering candidates use uniform head/body transforms. Their physical
@@ -24,25 +27,26 @@ export function usesBodyView(profile:Pick<HostProfile,'appearance'>){return prof
 export function registeredBodyView(profile:Pick<HostProfile,'appearance'>){
   const actor=profile.appearance.characterVariant,view=profile.appearance.bodyView;
   if(!actor||!view||!BODY_CANDIDATE_VIEWS.includes(view))throw new Error('needs-body-registration: this authored body angle has no registered candidate');
-  if(frontBodyHasUnsupportedOptions(profile.appearance))throw new Error('needs-front-capability: own front feature/action registrations are not available');
+  if(basicBodyHasUnsupportedOptions(profile.appearance))throw basicBodyCapabilityError(view,'feature/action');
   return bodyCandidateRegistrations[actor][view];
 }
 /** Keep legacy detail consumers on their original two independently drawn
- * sources. Never coerce a front profile to a right/left registration. */
+ * sources. Never coerce a basic fixed view to a detailed3/4 registration. */
 export function registeredDetailedBodyView(profile:Pick<HostProfile,'appearance'>){
   const source=registeredBodyView(profile);
-  if(source.view==='front')throw new Error('needs-front-capability: detailed3/4 features have no own-front registration');
+  if(source.view!=='three-quarter-left'&&source.view!=='three-quarter-right')throw basicBodyCapabilityError(source.view,'detailed3/4 feature');
   return source;
 }
-export function bodyViewFacing(profile:Pick<HostProfile,'appearance'>){const view=registeredBodyView(profile).view;return view==='front'?'front':view==='three-quarter-left'?'left':'right';}
+export function bodyViewFacing(profile:Pick<HostProfile,'appearance'>){const view=registeredBodyView(profile).view;return view==='front'?'front':view==='three-quarter-left'||view==='left'||view==='back-left'?'left':'right';}
 /** A planted lunge has only been authored for the right-facing candidate. */
 export function validateBodyViewLunge(profile:Pick<HostProfile,'appearance'>){
   if(!usesBodyView(profile)||registeredBodyView(profile).view!=='three-quarter-right')throw new Error('needs-lunge-pose: left-facing/native source stance is not registered; choose an authored right-facing lunge');
 }
-export function bodyViewMetrics(profile:Pick<HostProfile,'appearance'>){
+export function bodyViewMetrics(profile:Pick<HostProfile,'appearance'>,limbs?:{arms:Record<'left'|'right',{upper:number;lower:number}>;handAttachment:Record<'left'|'right',{length:number}>}){
   const c=registeredBodyView(profile),b=profile.appearance.bodyScale,k=c.bodyScale*b;
   const relative=(p:Point)=>({x:(p.x-c.pelvis.x)*k,y:(p.y-c.pelvis.y)*k});
-  return {neckX:relative(c.neck).x,torsoTop:relative(c.neck).y,
+  const rest='restDirectionsDeg' in c&&limbs?{left:authoredRestArm(limbs.arms.left.upper,limbs.arms.left.lower+limbs.handAttachment.left.length,c.restDirectionsDeg.left),right:authoredRestArm(limbs.arms.right.upper,limbs.arms.right.lower+limbs.handAttachment.right.length,c.restDirectionsDeg.right)}:undefined;
+  return {neckX:relative(c.neck).x,torsoTop:relative(c.neck).y,...(rest?{armRest:{left:rest.left.grip,right:rest.right.grip},armRestPole:{left:rest.left.pole,right:rest.right.pole}}:{}),
     shoulders:{left:relative(c.shoulders.left),right:relative(c.shoulders.right)},
     hips:{left:relative(c.hips.left),right:relative(c.hips.right)}};
 }
@@ -70,7 +74,7 @@ export function bodyViewClothingSvg(profile:HostProfile,imageUrl:(file:string,sh
     torso:`<g stroke="none" transform="scale(${c.bodyScale}) translate(${-c.pelvis.x} ${-c.pelvis.y})">${cloth?.artwork??'<g mask="url(#view-clothing-mask)"><use href="#view-body-source"/></g>'}</g>`};
 }
 export const bodyViewDescription={version:BODY_VIEW_REGISTRATION_VERSION,artworkVersion:BODY_VIEW_VERSION,
-  sources:bodyViewRegistrations,frontCandidate:frontBodyRegistrationDescription,headBankCandidate:nativeHeadBankDescription,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,expressionsCandidate:bodyViewExpressionsDescription,locomotionCandidate:nativeClothDescription,seatedCandidate:nativeSeatDescription,secondaryCandidate:nativeSecondaryDescription,manipulationCandidate:nativeManipulationDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,front:frontBodyRegistrationDescription,headBank:nativeHeadBankDescription,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint,expressions:bodyViewExpressionsDescription.fingerprint,cloth:nativeClothDescription.fingerprint,seat:nativeSeatDescription.fingerprint,secondary:nativeSecondaryDescription.fingerprint,manipulation:nativeManipulationDescription.fingerprint}),
+  sources:bodyViewRegistrations,frontCandidate:frontBodyRegistrationDescription,obliqueCandidate:obliqueBodyRegistrationDescription,headBankCandidate:nativeHeadBankDescription,mouthCandidate:bodyViewMouthDescription,eyesCandidate:bodyViewEyesDescription,expressionsCandidate:bodyViewExpressionsDescription,locomotionCandidate:nativeClothDescription,seatedCandidate:nativeSeatDescription,secondaryCandidate:nativeSecondaryDescription,manipulationCandidate:nativeManipulationDescription,fingerprint:hash({version:BODY_VIEW_REGISTRATION_VERSION,bodyViewRegistrations,front:frontBodyRegistrationDescription,oblique:obliqueBodyRegistrationDescription,headBank:nativeHeadBankDescription,mouth:bodyViewMouthDescription.fingerprint,eyes:bodyViewEyesDescription.fingerprint,expressions:bodyViewExpressionsDescription.fingerprint,cloth:nativeClothDescription.fingerprint,seat:nativeSeatDescription.fingerprint,secondary:nativeSecondaryDescription.fingerprint,manipulation:nativeManipulationDescription.fingerprint}),
   status:'developer-landmark-and-layer-candidate',productionReady:false,approved:false,
-  method:'independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp',
-  limitations:['front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns','identity/proportion/mask review','happy fixed view by default; optional unapproved speech/eyes/expression selections','rigid garment by default; optional unapproved locomotion and separately selected seated candidate','bounded eye look only; no continuous body/head turn or optical gaze','source support clock through camera cuts is source-only; runtime equivalence remains pending','no motion acceptance']};
+  method:'independent uniform3/4 sources plus own front/profile/rear fixed-view engineering candidates; own neutral-arm cues/poles with same-person canonical bones/mitten/sole; no borrowed detailed features, mirrored/warped faces or inferred yaw',
+  limitations:['front/profile/rear landmarks/masks/depth/arm direction are own-source approximations, not measured or accepted; fixed happy/rigid rest/point/think except rear has no think/chin; no continuous turns','identity/proportion/mask review','happy fixed view by default; optional unapproved speech/eyes/expression selections','rigid garment by default; optional unapproved locomotion and separately selected seated candidate','bounded eye look only; no continuous body/head turn or optical gaze','source support clock through camera cuts is source-only; runtime equivalence remains pending','no motion acceptance']};

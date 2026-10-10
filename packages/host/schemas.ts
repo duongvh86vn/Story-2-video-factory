@@ -4,7 +4,7 @@ import {NativeHeadBankSchema} from '../animation/native-head-bank.js';
 import {PREHISTORIC_SUPPORTING_MODELS,prehistoricSupportingModel} from '../topics/supporting-models.js';
 import {isSupportingNativeHeadVersion,nativeHeadIdentityMatches} from '../animation/native-head-identity.js';
 import {SpearActionRefSchema} from '../director/source-spear-action-reference.js';
-import {frontBodyHasUnsupportedOptions} from '../animation/body-view-front-registration.js';
+import {basicBodyHasUnsupportedOptions,basicBodyCapabilityError} from '../animation/body-view-basic-capabilities.js';
 
 export const HostKinds = ['mini-robot', 'stick-man'] as const;
 export const HostActions = ['idle', 'greet', 'explain', 'point', 'operate-model', 'compare', 'think', 'react', 'summarize', 'walk-to-marker','hold-tool','thrust-tool'] as const;
@@ -18,11 +18,11 @@ export const HostProfileSchema = z.object({
     characterVariant: z.enum(['lila','karo']).optional(),
     supportingModel:z.enum(PREHISTORIC_SUPPORTING_MODELS).optional(),
     artworkVersion: z.enum(['forest-head-1','forest-body-1','forest-body-view-1']).optional(),
-    bodyView:z.enum(['three-quarter-right','three-quarter-left','front']).optional(),
+    bodyView:z.enum(['three-quarter-right','three-quarter-left','front','left','right','back-left','back-right']).optional(),
     bodyHeadBank:NativeHeadBankSchema.optional(),
     bodySpeech:z.enum(['registered-mouth-v1','registered-rest-mouth-v1']).optional(),bodyEyes:z.literal('registered-eyes-v1').optional(),bodyExpressions:z.literal('registered-expressions-v1').optional(),bodyMotion:z.literal('registered-locomotion-v1').optional(),bodySeat:z.literal('registered-seated-v1').optional(),bodySecondary:z.literal('registered-secondary-v1').optional(),bodyManipulation:z.literal('registered-manipulation-v1').optional(),sourceColour:z.literal('original-rgb-v2').optional() }).strict().superRefine((a,ctx)=>{
-      if(frontBodyHasUnsupportedOptions(a))
-        ctx.addIssue({code:'custom',message:'needs-front-capability: front candidate has only its own fixed happy head/rigid clothing and basic rest/point/think; detailed3/4 overlays/actions cannot be borrowed'});
+      if(basicBodyHasUnsupportedOptions(a))
+        ctx.addIssue({code:'custom',message:basicBodyCapabilityError(a.bodyView,'detailed feature/action').message});
       if(a.supportingModel){
         const matchingCostume=a.characterVariant===prehistoricSupportingModel(a.supportingModel).bodyTemplate;
         const legacy=a.artworkVersion==='forest-body-1'&&!a.bodyView&&!a.bodyHeadBank&&!a.bodyMotion&&!a.bodySeat&&!a.bodyManipulation;

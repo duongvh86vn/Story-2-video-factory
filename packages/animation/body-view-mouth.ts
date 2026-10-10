@@ -1,3 +1,4 @@
+import {isBasicBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import type {HostProfile} from '../host/schemas.js';
 import type {SpeechActivity} from '../voice/schemas.js';
 import {hash} from '../core/utils.js';
@@ -40,7 +41,7 @@ const closed=(p:readonly Point[])=>`M${point(p[0]!)} C${point(p[1]!)} ${point(p[
 export function hasBodyViewSpeech(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodySpeech===BODY_VIEW_SPEECH_VERSION||hasBodyViewRestSpeech(profile);}
 export function registeredBodyViewMouth(profile:Pick<HostProfile,'appearance'>,sourceHash?:string):Mouth{
   const a=profile.appearance;
-  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front speech registration is unavailable');
+  if(isBasicBodyView(a.bodyView))throw basicBodyCapabilityError(a.bodyView,'speech');
   if(!hasBodyViewSpeech(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-voice-animation: mouth candidate requires its registered actor/body view');
   const c=bodyViewMouthRegistration[a.characterVariant]?.[a.bodyView];
   if(!c)throw new Error('needs-view-voice-animation: mouth actor/view is not registered');

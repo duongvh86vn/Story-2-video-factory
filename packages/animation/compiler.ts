@@ -1,3 +1,4 @@
+import {isBasicBodyView,isRearBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import type { HostProfile } from '../host/schemas.js';
 import type { SpeechActivity } from '../voice/schemas.js';
 import { hash } from '../core/utils.js';
@@ -132,9 +133,10 @@ function validateFixedBodyView(plan:PerformancePlan,profile:HostProfile):void {
     if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION,ANIMATION_VERSION].includes(plan.compilerVersion))throw new Error('needs-view-secondary: registered secondary motion requires animation2.2.13/14/15');
   }
   if(!usesBodyView(profile))return;
-  if(registeredBodyView(profile).view==='front'){
+  if(isBasicBodyView(registeredBodyView(profile).view)){
     const borrowedSource=Object.entries(plan).some(([key,value])=>key.startsWith('source')&&value!==undefined)||plan.gestures.some(g=>Object.entries(g).some(([key,value])=>key.startsWith('source')&&value!==undefined));
-    if(borrowedSource||performanceProps(plan).length||performanceSpears(plan).length)throw new Error('needs-front-capability: front has no source action/ownership/tool/prop registration');
+    if(borrowedSource||performanceProps(plan).length||performanceSpears(plan).length)throw basicBodyCapabilityError(registeredBodyView(profile).view,'source action/ownership/tool/prop');
+    if(isRearBodyView(registeredBodyView(profile).view)&&plan.gestures.some(g=>g.action==='think'))throw basicBodyCapabilityError(registeredBodyView(profile).view,'visible chin contact');
   }
   if(hasBodyViewManipulation(profile))validateNativeManipulation(plan,profile,registeredDetailedBodyView(profile));
   if(plan.headTurns?.length)throw new Error('needs-head-turn-registration: authored head cells still need continuity repair, source landmarks and original head-clock registration; see /api/topics/prehistoric-life/head-turn-art');
@@ -569,14 +571,14 @@ function expressionAt(plan:PerformancePlan,time:number,actingClock?:ViewActingCl
   if(next?.startMs!==clip.endMs)pose=blendExpression(neutral,pose,smooth((clip.endMs-at)/window));
   return {mood:clip.mood,weight:1,pose};
 }
-function expressiveAim(g:Gesture,neutral:Point,chin:Point,shoulder:Point,sourceReach?:number):Point{
-  if(g.action==='think')return chin;
+function expressiveAim(g:Gesture,neutral:Point,chin:Point|undefined,shoulder:Point,sourceReach?:number):Point{
+  if(g.action==='think'){if(!chin)throw new Error('needs-visible-chin-registration: thoughtful contact requires its own visible chin');return chin;}
   if(g.target)return g.target;
   const side=rigHand(g)==='left'?-1:1;
   if(sourceReach!==undefined)return {x:shoulder.x+sourceReach*(g.action==='react'?.7:.8)*side,y:shoulder.y+sourceReach*(g.action==='react'?-.15:.2)};
   return g.action==='react'?{x:neutral.x+25*side,y:neutral.y-110}:{x:neutral.x+55*side,y:neutral.y-45};
 }
-function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,scale:number,shoulder:Point):Point {
+function goal(g:Gesture,neutral:Point,chin:Point|undefined,carryAnchor:Point,time:number,scale:number,shoulder:Point):Point {
   const side=rigHand(g)==='left'?-1:1;
   const settle=Math.min(220,(g.endMs-g.startMs)*.18),recover=smooth((g.endMs-time)/settle);
   if(g.action==='pick-place'){
@@ -610,6 +612,7 @@ function goal(g:Gesture,neutral:Point,chin:Point,carryAnchor:Point,time:number,s
   const reach=g.contactMs??Math.min(g.endMs-settle,g.startMs+Math.min(320,(g.endMs-g.startMs)*.3));
   const progress=smooth((time-g.startMs)/(reach-g.startMs))*recover;
   if(g.action==='think'){
+    if(!chin)throw new Error('needs-visible-chin-registration: thoughtful contact requires its own visible chin');
     // Follow an outward arc in shoulder space. A Cartesian curve can pass
     // almost through the shoulder on custom rigs and spin the IK elbow.
     if(progress===0)return neutral;
@@ -658,7 +661,7 @@ function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture
   const {m,s,walk,pelvis,lean,pose,emotion,bodyPosture,bend}=bodyStateAt(plan,profile,entryTimeMs,actingClock);
   const toWorld=(point:Point)=>add(pelvis,rotate({x:point.x*s,y:point.y*s},lean));
   const shoulder=toWorld(m.shoulders![side]),lengths=m.arms![side],lower=lengths.lower*s+(m.handAttachment?.[side].length??0)*s;
-  const restPole=side==='right'?1:-1,sourceRun=(plan.sourceBody?.walks??plan.walks).some(w=>w.gait==='run'),rest=m.armRest![side];
+  const restPole=m.armRestPole?.[side]??(side==='right'?1:-1),sourceRun=(plan.sourceBody?.walks??plan.walks).some(w=>w.gait==='run'),rest=m.armRest![side];
   const swing=walk.running&&sourceRun?0:Math.sin(walk.phase*Math.PI)*(side==='right'?-1:1)*walk.armSwing*walk.activation;
   let neutral=add(shoulder,rotate({x:rest.x*s,y:rest.y*s},swing+lean)),runningChain:Chain|undefined;
   if(sourceRun&&walk.running){
@@ -680,14 +683,14 @@ function expressiveArmReference(plan:PerformancePlan,profile:HostProfile,gesture
   const neck=toWorld({x:m.neckX??0,y:usesBodyView(profile)?torsoTop:torsoTop-2*profile.appearance.bodyScale});
   const headAngle=lean+(usesBodyView(profile)?0:pose.tilt*emotion.weight);
   const head=add(neck,rotate({x:0,y:-headBottom*s},headAngle));
-  const chin=add(head,rotate(usesCutoutHead(profile)?{x:sourceChinPoint(plan,profile,entryTimeMs,side,actingClock).x*s*headScale,y:sourceChinPoint(plan,profile,entryTimeMs,side,actingClock).y*s*headScale}
-    :{x:m.headRadius*.3*s*(side==='left'?-1:1),y:headBottom*.85*s},headAngle));
+  const chin=gesture.action==='think'?add(head,rotate(usesCutoutHead(profile)?{x:sourceChinPoint(plan,profile,entryTimeMs,side,actingClock).x*s*headScale,y:sourceChinPoint(plan,profile,entryTimeMs,side,actingClock).y*s*headScale}
+    :{x:m.headRadius*.3*s*(side==='left'?-1:1),y:headBottom*.85*s},headAngle)):undefined;
   const aim=expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lower),active=solveChain(shoulder,aim,lengths.upper*s,lower,pole);
   if(entry.error>.001||active.error>.001)throw new Error('needs-arm-keypose: gesture-entry reference cannot reach its authored grip with fixed lengths');
-  return {pole,shoulder:articulatedArmReference(entryPose,articulatedPoseFromDirections(active.upper+90,active.lower+90))};
+  return {pole,restPole,shoulder:articulatedArmReference(entryPose,articulatedPoseFromDirections(active.upper+90,active.lower+90))};
 }
 function expressiveSourceArm(shoulder:Point,neutral:Point,aim:Point,gesture:Gesture,time:number,upper:number,lower:number,side:RigHand,reference:ReturnType<typeof expressiveArmReference>,currentRun?:Chain):Chain{
-  const rest= currentRun??solveChain(shoulder,neutral,upper,lower,side==='right'?1:-1),active=solveChain(shoulder,aim,upper,lower,reference.pole);
+  const rest= currentRun??solveChain(shoulder,neutral,upper,lower,reference.restPole),active=solveChain(shoulder,aim,upper,lower,reference.pole);
   if(rest.error>.001||active.error>.001)throw new Error('needs-arm-keypose: expressive source pose cannot reach its authored grip with fixed lengths');
   return sampleArticulatedArm(shoulder,upper,lower,articulatedPoseFromDirections(rest.upper+90,rest.lower+90),
     articulatedPoseFromDirections(active.upper+90,active.lower+90),articulatedGestureWindow(gesture),time,reference.shoulder);
@@ -843,7 +846,7 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
       // in torso coordinates; the recovery wrist passes low beside the hip.
       const drive=Math.sin(walk.phase*Math.PI)*(i?-1:1),upperAngle=90-walk.direction*35*drive;
       const lowerAngle=upperAngle-walk.direction*(60+15*drive);
-      const restChain=solveChain({x:0,y:0},{x:rest!.x*s,y:rest!.y*s},lengths.upper*s,lowerToGrip,i?1:-1);
+      const restChain=solveChain({x:0,y:0},{x:rest!.x*s,y:rest!.y*s},lengths.upper*s,lowerToGrip,m.armRestPole?.[side]??(i?1:-1));
       const blendAngle=(from:number,to:number)=>from+(((to-from+180)%360+360)%360-180)*walk.activation;
       const ua=blendAngle(restChain.upper+90,upperAngle)+lean,la=blendAngle(restChain.lower+90,lowerAngle)+lean;
       const joint=add(shoulder,rotate({x:lengths.upper*s,y:0},ua)),end=add(joint,rotate({x:lowerToGrip,y:0},la));
@@ -857,7 +860,7 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
       const lap={x:hip.x+bend*geometry.bones.upper*.55,y:hip.y+8*s};
       neutral=mix(neutral,lap,seatedWeight);
     }
-    const {gesture,timeMs:gestureTime,entryTimeMs}=gestureStates[side],chin=chinAt(side);
+    const {gesture,timeMs:gestureTime,entryTimeMs}=gestureStates[side],chin=gesture?.action==='think'?chinAt(side):undefined;
     const carryAnchor=add(shoulder,rotate({x:(gesture?.carryOffset?.x??(i?50:-50))*s,y:(gesture?.carryOffset?.y??35)*s},lean));
     const spear=spearStates.find(c=>c.track.hand===side||c.track.twoHands);
     const target=spear?(spear.track.hand===side?spear.state.primary:spear.state.secondary):gesture?goal(gesture,neutral,chin,carryAnchor,gestureTime,s,shoulder):neutral;
@@ -873,7 +876,7 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
       ?sampleNativeContactArm(shoulder,neutral,goal(gesture,neutral,chin,carryAnchor,Math.max(gesture.contactMs!,Math.min(gestureTime,nativeContactWindow(gesture).recoverMs)),s,shoulder),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),solveChain):expressiveSource
       ?expressiveSourceArm(shoulder,neutral,expressiveAim(gesture,neutral,chin,shoulder,lengths.upper*s+lowerToGrip),gesture,gestureTime,lengths.upper*s,lowerToGrip,side,expressiveArmReference(plan,profile,gesture,side,actingClock,entryTimeMs),authoredRun)
       :armPose(shoulder,neutral,target,sourceGesture,gestureTime,lengths.upper*s,lowerToGrip,side,
-      at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder));
+      at=>goal(gesture!,neutral,chin,carryAnchor,at,s,shoulder),m.armRestPole?.[side]);
     // Grip is a rigid continuation of the forearm, not a bone endpoint or a
     // second independently solved contact. This preserves the existing palm
     // contract while making ink/bones stop at the measured source cuff.
@@ -1100,7 +1103,7 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
     const sourceShoulder=m.shoulders?.[side];
     const shoulder=toWorld(sourceShoulder?.x??m.shoulderOffset*(side==='left'?-1:1),sourceShoulder?.y??m.shoulderY-m.pelvisY);
     const anchor=add(shoulder,rotate({x:(gesture.carryOffset?.x??(side==='left'?-50:50))*s,y:(gesture.carryOffset?.y??35)*s},lean));
-    const expected=(gesture.action==='carry'||gesture.action==='drop')?goal(gesture,hands[side],chinAt(side),anchor,contactTime,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((contactTime-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
+    const expected=(gesture.action==='carry'||gesture.action==='drop')?goal(gesture,hands[side],undefined,anchor,contactTime,s,shoulder):gesture.action==='operate'?gesture.target!:mix(gesture.target!,gesture.destination!,smooth((contactTime-gesture.contactMs!)/(gesture.releaseMs!-gesture.contactMs!)));
     contactErrors[side]=distance(hands[side],expected);contactError=Math.max(contactError,contactErrors[side]);
     if(contactErrors[side]>1)throw new Error(`${gesture.id}: ${side} hand misses contact anchor at ${t}ms (${contactErrors[side].toFixed(2)}px)`);
   }

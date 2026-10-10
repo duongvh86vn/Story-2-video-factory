@@ -1767,7 +1767,11 @@
                                     "enum": [
                                       "three-quarter-right",
                                       "three-quarter-left",
-                                      "front"
+                                      "front",
+                                      "left",
+                                      "right",
+                                      "back-left",
+                                      "back-right"
                                     ]
                                   },
                                   "bodyHeadBank": {
@@ -3866,7 +3870,11 @@
                                       "enum": [
                                         "three-quarter-right",
                                         "three-quarter-left",
-                                        "front"
+                                        "front",
+                                        "left",
+                                        "right",
+                                        "back-left",
+                                        "back-right"
                                       ]
                                     },
                                     "bodyHeadBank": {

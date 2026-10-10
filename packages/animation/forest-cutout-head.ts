@@ -27,6 +27,7 @@ export function cutoutHeadRegistration(profile:HostProfile){return usesBodyView(
 export function cutoutHeadChin(profile:HostProfile,side:'left'|'right'):Point {
   if(hasNativeHeadBank(profile))throw new Error('needs-head-source-phase: changing head chin requires its selected original cell/time');
   const c=cutoutHeadRegistration(profile);
+  if(!c.chin)throw new Error('needs-visible-chin-registration: this own rear source has no registered visible chin');
   return {x:(c.chin[side].x-c.neck.x)*c.scale,y:(c.chin[side].y-c.neck.y)*c.scale};
 }
 export function cutoutHeadSvg(profile:HostProfile,imageUrl:(file:string,sha:string)=>string):string {

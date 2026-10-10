@@ -1,5 +1,5 @@
 {
-  "version": "forest-tribe-0.92-front-body-rig",
+  "version": "forest-tribe-0.93-profile-rear-body-rigs",
   "productionReady": false,
   "artwork": "source-body-head-candidates",
   "rejected": "vector-v0.3",
@@ -178,10 +178,10 @@
       "packages/director/continuity.ts": "10fc00d7c76e79d38fdbc674be58def424c18c2183be764be3b81c0415284b7e",
       "packages/director/source-world-projection.ts": "6fa4b1e1fa18f46213ee3ca90f60d2d1598181fd2836fba8fc9fb94cb672846b",
       "packages/director/source-world-phase.ts": "6ffc529674aae0e7617b646dcdb89839ac4ae253ab595c0c500d4c6d750d1148",
-      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+      "packages/animation/compiler.ts": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
       "packages/actors/model.ts": "07f58cc52df91a8b24ab6d2117144b81d47f3a9b7d1f98a7d120fdc066ffc238",
       "apps/server/cinematic.ts": "0c326da064833b85f569efe7fd0d4674d9b59365286bf88ba98ca8ac707bbeb7",
-      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3"
+      "packages/host/schemas.ts": "3f802430256d5cb4fd594cde28198020643171f651137cf6bdcf7ec6717c47c4"
     }
   },
   "sourceWorldTimeline": {
@@ -414,7 +414,7 @@
       "packages/director/source-production-audit.ts": "5aeafc3dfdf27608786bc8e5e0181667e0cc510917eec0f8e9457742ad860f39",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
-      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
+      "packages/host/schemas.ts": "3f802430256d5cb4fd594cde28198020643171f651137cf6bdcf7ec6717c47c4",
       "packages/host/controller.ts": "ff89445ed0bc571d8ed0b0af9accfc748bef9284e3f2dee9173c10dca8d80bb5",
       "packages/explainer/schemas.ts": "ea369418415b2226e0725cc02f2e272373eee27a359f9cf6d5655fa74cb918ba",
       "packages/explainer/plan.ts": "230c80194b47111baae77c7839f4976e640dc558e721701492d3ed650aacd532",
@@ -503,7 +503,7 @@
     "codeHashes": {
       "packages/animation/view-source-spear.ts": "7b9a50038ca9fcc3c9cf3fd5a54299f467c57c294d1fd7c0715786b1f4b8f4cd",
       "packages/animation/schemas.ts": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
-      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+      "packages/animation/compiler.ts": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
       "packages/animation/view-acting-clock.ts": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
@@ -663,9 +663,9 @@
     "voice": "no input, generated activity, expanded speech clock, mouth state or render fallback",
     "motionVerified": false,
     "codeHashes": {
-      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+      "packages/animation/compiler.ts": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
       "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
-      "packages/animation/forest-body-art.ts": "5be6a0e011b3909760c112c2439830325abac33d29fec88ed8c13eb4fa21f2f3"
+      "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408"
     }
   },
   "sourceManipulationActions": {
@@ -681,7 +681,7 @@
       "packages/director/source-manipulation-actions.ts": "c14229201ff78b0d995019d8760bd904b281691d6e1dea7d39fce2c856711571",
       "packages/director/index.ts": "f426555b8e7e6ca9424ec36023060084719fd4322a8eabe301f8553517e834d0",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
-      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
+      "packages/host/schemas.ts": "3f802430256d5cb4fd594cde28198020643171f651137cf6bdcf7ec6717c47c4",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
@@ -733,10 +733,10 @@
     "codeHashes": {
       "packages/animation/view-source-manipulation.ts": "ce10fd3a5055bab3f79e50158c69e0daec2454dca4f868ab969d1987b3a95457",
       "packages/animation/schemas.ts": "c1f993a1ee59ca39659418bbc7dfba91065d0f47faed25cd3bec75a15cc3d20d",
-      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+      "packages/animation/compiler.ts": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
       "packages/animation/view-source-body.ts": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
       "packages/animation/view-acting-clock.ts": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
-      "packages/animation/native-contact-arm.ts": "b1787c3db51c017b47dc8b808408dca142bb08c74c96d7f937a4471f7c09f10b",
+      "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
       "packages/actors/view-acting-clock.ts": "a5264e4c4b8191a3045bf3d762869d035bad5b5d734db8472b2e1dcc720f4639",
       "packages/director/acting-repair.ts": "7983ceec4264f27036f062c58e3848f3de19eee380868c8067e5a13cf613d494",
@@ -1081,17 +1081,17 @@
     "productionReady": false,
     "motionVerified": false,
     "codeHashes": {
-      "packages/animation/native-contact-arm.ts": "b1787c3db51c017b47dc8b808408dca142bb08c74c96d7f937a4471f7c09f10b",
-      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
+      "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
+      "packages/animation/compiler.ts": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
       "packages/animation/source-arm.ts": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-      "packages/animation/rig.ts": "7889f3da63988ad58c1b73689ee86a84df819d246330b5bb23fcea055c4d4b14",
+      "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/animation/scene.ts": "c5eccda26d37b439a25de5b31a460b2ed87e534fc64a973caca6455af3ca10d3",
-      "packages/animation/body-view-art.ts": "8c2eacce65b1fd8d6734a1d4a0fcb19b2efe61d3adee581028093ab505b0729e",
-      "packages/animation/forest-body-art.ts": "5be6a0e011b3909760c112c2439830325abac33d29fec88ed8c13eb4fa21f2f3",
-      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
+      "packages/animation/body-view-art.ts": "46acb4a8c00ba6b25abf17610bfba77b7f200cee9e57f12bf7f921c7e4d57655",
+      "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408",
+      "packages/host/schemas.ts": "3f802430256d5cb4fd594cde28198020643171f651137cf6bdcf7ec6717c47c4",
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/body-workbench.ts": "d09c2240d0b0ab8be0267023f5d966c9f063419cb83a5d417c3e490a0adb0e40",
-      "packages/topics/prehistoric-life.ts": "8b4855bbdfe433d5cc52151cfa0f04e15d6c878bf137e261be95986bdf3261ac",
+      "packages/topics/body-workbench.ts": "bd3bd70768b67be950fe38f5784574aedabbe428193c28c71083022397bd71df",
+      "packages/topics/prehistoric-life.ts": "4c613f18eaccc524559fabc69b78ac41b160907ca982c17a67448a81148e4fe6",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e",
       "packages/director/schemas.ts": "3f8ff10b7a488092e2803b53e712b9908fa78db491608b38b80b1867b9ac33b8",
       "library/shots/cinematic.ts": "a98d7f1c4a1ac187728c0fabcfce504d1ca79f892fd090f46f5fc3a3e05fe3ea",
@@ -1123,7 +1123,7 @@
     "approval": "No automatic bank/view/motion selection or production approval; narration IDs/names/roles/source evidence/speaker assignments and clocks remain authoritative.",
     "codeHashes": {
       "packages/topics/cast-appearance.ts": "be07731452c0c95606e9e061ddab5406bf3a08d3636cc7d4e42ee8d7ad4be14c",
-      "packages/topics/prehistoric-life.ts": "8b4855bbdfe433d5cc52151cfa0f04e15d6c878bf137e261be95986bdf3261ac",
+      "packages/topics/prehistoric-life.ts": "4c613f18eaccc524559fabc69b78ac41b160907ca982c17a67448a81148e4fe6",
       "packages/director/acting-brief.ts": "003d23dbae7e4aee8c90240bc847a827be101d8d912770fcaadbc63c21be7b0e"
     }
   },
@@ -1367,11 +1367,11 @@
       "packages/topics/supporting-models.ts": "af4c40c0b7d16851e71986ac39a492eb28ae0f63d599f19d4c6be30fab0846d1",
       "packages/topics/supporting-workbench.ts": "7cf96078c9c990e80932fadb6fd0cf3d0ca2b1d2a36f30d9526b6ff806dcc35b",
       "packages/topics/supporting-face-candidates.ts": "e0ac22da6f5aa73f3a457b8d9da957377f9a66253f4e4935b0945df30c866558",
-      "packages/topics/prehistoric-life.ts": "8b4855bbdfe433d5cc52151cfa0f04e15d6c878bf137e261be95986bdf3261ac",
+      "packages/topics/prehistoric-life.ts": "4c613f18eaccc524559fabc69b78ac41b160907ca982c17a67448a81148e4fe6",
       "packages/animation/prehistoric-supporting-head.ts": "9ab66a0d16b09a30c6abb9a4ad7624dd88a38380a5e9e1d0bcf238849a811044",
       "packages/animation/native-head-identity.ts": "4af4def6af90d3ddc7f417a1176f488a412afdc74aad422260937a4d1726bd05",
       "packages/actors/design.ts": "d18fa9bee0418fb59dc51af3e39b11a410624a4b262c7182bc2b71ba29597d9d",
-      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3"
+      "packages/host/schemas.ts": "3f802430256d5cb4fd594cde28198020643171f651137cf6bdcf7ec6717c47c4"
     },
     "workbench": "/api/topics/prehistoric-life/supporting-actors"
   },
@@ -8123,7 +8123,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-5",
+        "version": "forest-view-registration-6",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -8403,6 +8403,16 @@
                 }
               },
               "armDepth": "coplanar",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 104,
+                  "lower": 96
+                },
+                "right": {
+                  "upper": 76,
+                  "lower": 84
+                }
+              },
               "inkPad": 7,
               "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
               "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
@@ -8460,6 +8470,16 @@
                 }
               },
               "armDepth": "coplanar",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 104,
+                  "lower": 96
+                },
+                "right": {
+                  "upper": 76,
+                  "lower": 84
+                }
+              },
               "inkPad": 7,
               "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
               "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
@@ -8502,6 +8522,563 @@
           ],
           "artApproved": false,
           "approved": false,
+          "motionVerified": false,
+          "productionReady": false,
+          "productionRig": null,
+          "availableBanks": []
+        },
+        "obliqueCandidate": {
+          "version": "native-oblique-body-registration-1",
+          "sources": {
+            "lila": {
+              "left": {
+                "view": "left",
+                "sourceView": "left",
+                "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+                "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+                "width": 1173,
+                "height": 1341,
+                "bodyScale": 0.302262443438914,
+                "headScale": 0.2610091743119266,
+                "neck": {
+                  "x": 598,
+                  "y": 486
+                },
+                "pelvis": {
+                  "x": 575,
+                  "y": 707
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 552,
+                    "y": 506
+                  },
+                  "right": {
+                    "x": 602,
+                    "y": 523
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 563,
+                    "y": 725
+                  },
+                  "right": {
+                    "x": 600,
+                    "y": 730
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M575 437L602 432L606 458L619 483L627 503L633 538L644 577L638 615L649 656L647 684L656 704L661 728L678 761L680 797L700 854L713 903L729 956L719 981L694 958L681 1007L662 970L646 995L630 960L620 994L604 965L590 1006L574 963L557 1000L542 963L527 989L512 958L493 981L499 925L492 903L504 863L500 837L511 803L514 774L530 732L520 710L537 680L532 647L540 615L534 584L545 556L527 550L545 530L565 507L575 474Z",
+                "inkPad": 7,
+                "headClip": "M0 0H1173V440H680L652 435L642 474L664 493L689 478L724 443L752 426L805 435L837 482L850 546L847 604L856 639L841 662L847 695L825 735L816 771L797 802L773 765L758 804L738 771L719 784L705 741L690 703L682 665L669 614L658 570L642 533L625 509L600 487L576 478L556 467L532 450H0Z",
+                "headBounds": {
+                  "left": 390,
+                  "right": 880,
+                  "top": 50,
+                  "bottom": 813
+                },
+                "chin": {
+                  "left": {
+                    "x": 473,
+                    "y": 413
+                  },
+                  "right": {
+                    "x": 473,
+                    "y": 413
+                  }
+                }
+              },
+              "right": {
+                "view": "right",
+                "sourceView": "right",
+                "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+                "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+                "width": 1024,
+                "height": 1536,
+                "bodyScale": 0.20809968847352023,
+                "headScale": 0.23224489795918365,
+                "neck": {
+                  "x": 571,
+                  "y": 515
+                },
+                "pelvis": {
+                  "x": 558,
+                  "y": 836
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 516,
+                    "y": 567
+                  },
+                  "right": {
+                    "x": 631,
+                    "y": 593
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 499,
+                    "y": 857
+                  },
+                  "right": {
+                    "x": 603,
+                    "y": 858
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M549 477L577 479L590 507L608 539L625 565L646 587L659 612L652 641L674 668L662 694L679 716L660 743L662 783L651 819L661 842L664 875L678 911L687 949L701 989L697 1034L712 1064L699 1109L679 1082L657 1138L638 1107L621 1146L608 1114L594 1157L573 1115L559 1148L539 1120L525 1155L507 1118L491 1148L477 1114L456 1132L468 1081L455 1061L469 1017L477 986L479 950L496 905L499 868L490 843L500 809L494 781L509 747L509 712L523 682L530 651L538 624L542 599L558 579L572 563L565 533L549 509Z",
+                "inkPad": 7,
+                "headClip": "M0 0H1024V466H660L633 484L613 513L594 539L580 558L564 535L550 505L537 490L515 494L498 526L484 570L466 616L447 661L428 710L405 747L385 792L359 825L345 790L327 840L309 804L292 826L278 786L263 806L249 762L234 740L244 694L231 667L248 627L243 598L260 553L277 514L302 479L329 449H0Z",
+                "headBounds": {
+                  "left": 210,
+                  "right": 832,
+                  "top": 25,
+                  "bottom": 857
+                },
+                "chin": {
+                  "left": {
+                    "x": 666,
+                    "y": 448
+                  },
+                  "right": {
+                    "x": 666,
+                    "y": 448
+                  }
+                }
+              },
+              "back-left": {
+                "view": "back-left",
+                "sourceView": "back-three-quarter-left",
+                "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+                "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+                "width": 939,
+                "height": 1675,
+                "bodyScale": 0.22416107382550335,
+                "headScale": 0.20141592920353982,
+                "neck": {
+                  "x": 464,
+                  "y": 608
+                },
+                "pelvis": {
+                  "x": 491,
+                  "y": 906
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 389,
+                    "y": 611
+                  },
+                  "right": {
+                    "x": 548,
+                    "y": 684
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 408,
+                    "y": 928
+                  },
+                  "right": {
+                    "x": 584,
+                    "y": 932
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 105,
+                    "lower": 112
+                  },
+                  "right": {
+                    "upper": 79,
+                    "lower": 73
+                  }
+                },
+                "clothing": "M 407 580 L 415 576 L 430 599 L 452 628 L 481 648 L 468 617 L 492 631 L 508 676 L 525 708 L 531 740 L 546 721 L 541 760 L 566 778 L 554 793 L 565 807 L 559 830 L 572 855 L 586 866 L 566 878 L 580 896 L 596 904 L 600 919 L 588 928 L 610 959 L 625 993 L 612 992 L 635 1069 L 621 1065 L 646 1138 L 655 1156 L 639 1162 L 660 1225 L 641 1205 L 643 1238 L 618 1200 L 615 1231 L 596 1197 L 587 1259 L 579 1280 L 559 1237 L 553 1272 L 530 1213 L 519 1241 L 497 1186 L 477 1240 L 453 1198 L 431 1253 L 419 1214 L 416 1149 L 381 1200 L 381 1169 L 354 1208 L 359 1151 L 338 1169 L 353 1080 L 343 1090 L 371 1023 L 350 1031 L 373 974 L 355 975 L 381 926 L 385 909 L 372 901 L 377 886 L 371 877 L 384 861 L 376 850 L 396 819 L 401 790 L 383 807 L 389 775 L 373 785 L 378 761 L 366 764 L 390 728 L 386 717 L 400 706 L 390 695 L 407 689 L 416 664 L 410 641 Z",
+                "inkPad": 7,
+                "headClip": "M 324 60 L 353 44 L 396 43 L 445 58 L 497 83 L 531 116 L 523 84 L 548 112 L 552 149 L 580 124 L 609 121 L 638 139 L 660 177 L 620 153 L 578 153 L 626 183 L 669 222 L 702 270 L 722 310 L 682 282 L 692 322 L 713 353 L 748 366 L 721 380 L 687 360 L 676 398 L 657 433 L 626 444 L 594 466 L 575 488 L 580 507 L 555 536 L 526 577 L 500 621 L 471 607 L 485 650 L 454 625 L 430 597 L 415 566 L 391 563 L 371 541 L 376 564 L 345 554 L 322 530 L 309 490 L 279 472 L 262 450 L 251 416 L 257 378 L 267 345 L 253 325 L 248 368 L 235 337 L 230 296 L 216 315 L 180 349 L 178 314 L 191 272 L 220 229 L 255 193 L 202 211 L 169 207 L 207 182 L 246 148 L 307 124 L 259 123 L 216 134 L 268 102 L 317 89 L 368 85 L 417 98 L 467 128 L 435 99 L 390 73 L 353 61 Z M 665 491 L 698 493 L 735 511 L 758 548 L 778 592 L 768 633 L 784 690 L 813 737 L 784 719 L 758 684 L 754 747 L 744 796 L 744 839 L 766 879 L 741 893 L 708 882 L 677 859 L 651 826 L 627 786 L 641 839 L 616 816 L 594 781 L 577 737 L 566 687 L 556 647 L 549 694 L 531 735 L 530 702 L 513 675 L 499 635 L 496 598 L 514 558 L 546 528 L 576 513 L 588 526 L 614 517 L 640 505 ZM574 436H677V529H574Z",
+                "headBounds": {
+                  "left": 169,
+                  "right": 813,
+                  "top": 43,
+                  "bottom": 893
+                },
+                "chin": null
+              },
+              "back-right": {
+                "view": "back-right",
+                "sourceView": "back-three-quarter-right",
+                "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+                "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+                "width": 939,
+                "height": 1676,
+                "bodyScale": 0.21139240506329113,
+                "headScale": 0.20766423357664232,
+                "neck": {
+                  "x": 565,
+                  "y": 573
+                },
+                "pelvis": {
+                  "x": 552,
+                  "y": 889
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 484,
+                    "y": 659
+                  },
+                  "right": {
+                    "x": 646,
+                    "y": 611
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 483,
+                    "y": 913
+                  },
+                  "right": {
+                    "x": 616,
+                    "y": 914
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 102,
+                    "lower": 108
+                  },
+                  "right": {
+                    "upper": 77,
+                    "lower": 70
+                  }
+                },
+                "clothing": "M 582 530 L 586 551 L 601 566 L 616 572 L 638 578 L 625 590 L 632 595 L 617 611 L 623 618 L 612 641 L 616 669 L 628 699 L 635 737 L 638 777 L 626 797 L 613 782 L 616 808 L 634 832 L 627 845 L 640 861 L 631 873 L 653 883 L 655 897 L 645 908 L 660 933 L 675 965 L 650 950 L 673 1016 L 694 1070 L 679 1054 L 696 1119 L 674 1098 L 691 1151 L 700 1206 L 676 1177 L 671 1154 L 671 1232 L 646 1199 L 632 1239 L 605 1275 L 596 1229 L 577 1250 L 575 1168 L 554 1193 L 546 1141 L 523 1205 L 518 1221 L 511 1195 L 481 1247 L 467 1211 L 470 1174 L 433 1209 L 398 1241 L 400 1184 L 375 1215 L 379 1179 L 399 1116 L 379 1124 L 411 1041 L 398 1054 L 416 991 L 437 945 L 413 953 L 448 905 L 441 888 L 448 871 L 459 863 L 471 826 L 474 806 L 458 804 L 476 779 L 477 763 L 487 769 L 481 740 L 478 722 L 500 708 L 514 693 L 508 671 L 516 623 L 537 586 L 561 562 Z",
+                "inkPad": 7,
+                "headClip": "M 450 121 L 481 79 L 524 52 L 572 35 L 625 25 L 679 26 L 716 38 L 745 57 L 695 44 L 650 43 L 606 54 L 572 86 L 559 112 L 600 91 L 645 79 L 690 83 L 725 96 L 677 100 L 645 119 L 687 112 L 733 120 L 778 145 L 741 135 L 705 136 L 752 161 L 785 194 L 807 231 L 818 263 L 786 229 L 769 219 L 786 268 L 790 318 L 779 359 L 773 317 L 756 286 L 755 323 L 764 368 L 759 411 L 742 442 L 716 466 L 682 483 L 671 487 L 675 516 L 693 541 L 675 538 L 653 521 L 642 490 L 642 452 L 629 488 L 617 494 L 621 535 L 640 563 L 612 560 L 596 547 L 589 517 L 573 535 L 547 558 L 538 594 L 536 568 L 518 583 L 506 624 L 499 673 L 486 650 L 476 605 L 464 555 L 466 514 L 476 494 L 462 475 L 425 453 L 384 439 L 365 451 L 344 444 L 327 426 L 319 401 L 324 368 L 303 389 L 276 407 L 287 373 L 307 342 L 338 304 L 367 260 L 391 224 L 362 241 L 389 204 L 430 170 L 383 186 L 362 199 L 388 166 L 437 144 L 394 149 L 367 155 L 405 133 Z M 366 480 L 401 488 L 443 511 L 460 541 L 471 586 L 476 633 L 474 675 L 481 709 L 498 724 L 478 721 L 477 743 L 491 764 L 470 755 L 453 731 L 449 774 L 432 828 L 437 858 L 420 844 L 411 814 L 398 866 L 384 914 L 373 873 L 351 827 L 340 789 L 334 836 L 318 813 L 306 766 L 302 721 L 294 744 L 289 787 L 276 746 L 274 702 L 258 738 L 239 766 L 237 719 L 246 674 L 268 628 L 240 653 L 222 670 L 237 625 L 259 585 L 292 549 L 260 564 L 231 584 L 261 548 L 302 519 L 337 502 L 309 505 L 278 516 L 306 495 ZM323 437H453V523H323Z",
+                "headBounds": {
+                  "left": 222,
+                  "right": 818,
+                  "top": 25,
+                  "bottom": 914
+                },
+                "chin": null
+              }
+            },
+            "karo": {
+              "left": {
+                "view": "left",
+                "sourceView": "left",
+                "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+                "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+                "width": 910,
+                "height": 1728,
+                "bodyScale": 0.13966244725738397,
+                "headScale": 0.21602787456445993,
+                "neck": {
+                  "x": 474,
+                  "y": 653
+                },
+                "pelvis": {
+                  "x": 457,
+                  "y": 1127
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 432,
+                    "y": 670
+                  },
+                  "right": {
+                    "x": 526,
+                    "y": 697
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 412,
+                    "y": 1149
+                  },
+                  "right": {
+                    "x": 506,
+                    "y": 1148
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M439 598L478 591L496 617L514 643L542 662L555 694L545 725L555 769L551 814L564 856L556 904L575 946L564 985L577 1023L570 1073L555 1105L563 1131L568 1162L581 1192L587 1229L595 1256L583 1272L585 1306L565 1333L549 1306L528 1348L513 1320L498 1354L483 1316L471 1283L457 1241L438 1289L422 1336L404 1311L389 1343L370 1317L351 1336L337 1298L323 1317L328 1283L320 1257L337 1222L336 1195L350 1168L345 1133L353 1105L341 1086L357 1052L355 1017L368 985L362 957L378 927L377 886L389 854L389 816L404 785L410 750L423 718L433 686L445 658Z",
+                "inkPad": 7,
+                "headClip": "M0 0H910V534H600L575 556L548 561L523 584L505 612L479 609L462 624L443 603L427 622L411 609L392 638L372 622L350 650L329 628L312 639L289 614L270 619L249 595L236 566H0Z",
+                "headBounds": {
+                  "left": 201,
+                  "right": 726,
+                  "top": 79,
+                  "bottom": 650
+                },
+                "chin": {
+                  "left": {
+                    "x": 322,
+                    "y": 589
+                  },
+                  "right": {
+                    "x": 322,
+                    "y": 589
+                  }
+                }
+              },
+              "right": {
+                "view": "right",
+                "sourceView": "right",
+                "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+                "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+                "width": 910,
+                "height": 1727,
+                "bodyScale": 0.18087431693989073,
+                "headScale": 0.23308270676691728,
+                "neck": {
+                  "x": 503,
+                  "y": 555
+                },
+                "pelvis": {
+                  "x": 498,
+                  "y": 921
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 420,
+                    "y": 592
+                  },
+                  "right": {
+                    "x": 556,
+                    "y": 611
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 444,
+                    "y": 944
+                  },
+                  "right": {
+                    "x": 550,
+                    "y": 947
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M463 512L501 513L514 539L535 566L557 585L580 597L581 627L595 656L585 683L603 718L601 751L616 789L608 823L628 857L621 882L639 912L635 941L648 974L643 1005L659 1043L649 1072L664 1106L652 1139L628 1115L611 1159L588 1139L571 1163L553 1128L536 1108L518 1058L503 1091L485 1131L465 1150L447 1127L430 1161L408 1136L389 1149L376 1119L358 1131L366 1097L354 1071L368 1037L365 1008L379 978L376 947L390 921L384 892L393 855L388 831L401 794L399 759L416 725L426 690L435 654L446 619L451 580Z",
+                "inkPad": 7,
+                "headClip": "M0 0H910V506H628L611 532L587 537L576 561L551 549L532 575L512 554L493 568L477 549L458 562L442 544L427 553L407 530H0Z",
+                "headBounds": {
+                  "left": 216,
+                  "right": 752,
+                  "top": 23,
+                  "bottom": 575
+                },
+                "chin": {
+                  "left": {
+                    "x": 617,
+                    "y": 522
+                  },
+                  "right": {
+                    "x": 617,
+                    "y": 522
+                  }
+                }
+              },
+              "back-left": {
+                "view": "back-left",
+                "sourceView": "back-three-quarter-left",
+                "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+                "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+                "width": 910,
+                "height": 1729,
+                "bodyScale": 0.12879377431906616,
+                "headScale": 0.2246376811594203,
+                "neck": {
+                  "x": 470,
+                  "y": 613
+                },
+                "pelvis": {
+                  "x": 495,
+                  "y": 1127
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 390,
+                    "y": 666
+                  },
+                  "right": {
+                    "x": 568,
+                    "y": 693
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 431,
+                    "y": 1149
+                  },
+                  "right": {
+                    "x": 567,
+                    "y": 1151
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 109,
+                    "lower": 115
+                  },
+                  "right": {
+                    "upper": 75,
+                    "lower": 69
+                  }
+                },
+                "clothing": "M 415 581 L 432 582 L 456 590 L 484 604 L 517 611 L 532 631 L 559 648 L 577 670 L 589 699 L 595 739 L 598 780 L 606 809 L 596 805 L 581 788 L 569 794 L 544 750 L 532 761 L 517 739 L 511 751 L 497 721 L 490 694 L 479 695 L 461 671 L 445 636 L 430 641 L 414 627 L 397 623 L 375 631 L 364 642 L 385 646 L 398 679 L 395 718 L 406 714 L 401 746 L 411 752 L 403 788 L 389 822 L 375 839 L 368 855 L 376 868 L 361 903 L 373 911 L 362 934 L 367 942 L 344 982 L 345 992 L 365 991 L 354 1015 L 339 1045 L 326 1078 L 334 1089 L 346 1089 L 336 1108 L 345 1118 L 328 1159 L 340 1170 L 322 1208 L 332 1219 L 320 1251 L 351 1241 L 365 1260 L 381 1247 L 401 1278 L 412 1270 L 439 1297 L 449 1260 L 464 1274 L 480 1226 L 474 1205 L 487 1196 L 500 1151 L 508 1144 L 518 1181 L 525 1214 L 540 1205 L 528 1229 L 532 1279 L 548 1267 L 558 1278 L 568 1264 L 585 1290 L 610 1251 L 632 1270 L 642 1239 L 660 1247 L 645 1199 L 636 1161 L 653 1151 L 638 1110 L 648 1094 L 631 1056 L 625 1032 L 635 1021 L 635 1006 L 643 996 L 630 964 L 640 950 L 624 919 L 613 894 L 624 882 L 612 850 L 621 838 L 606 817 L 604 773 L 599 723 L 590 684 L 574 661 L 551 642 L 529 628 L 522 608 L 492 599 L 462 585 L 438 574 L 416 569 Z",
+                "inkPad": 7,
+                "headClip": "M 369 80 L 408 88 L 448 99 L 440 81 L 490 114 L 473 61 L 505 75 L 530 103 L 548 147 L 562 104 L 573 130 L 567 150 L 602 127 L 588 150 L 627 153 L 657 164 L 612 176 L 651 190 L 683 212 L 710 244 L 660 232 L 697 280 L 712 309 L 728 342 L 684 322 L 705 370 L 716 416 L 680 393 L 693 447 L 667 433 L 680 478 L 674 512 L 657 483 L 648 530 L 630 555 L 625 528 L 607 564 L 590 587 L 576 569 L 557 602 L 539 615 L 522 588 L 518 603 L 487 587 L 479 595 L 453 580 L 431 558 L 418 571 L 402 552 L 386 537 L 375 496 L 366 461 L 352 456 L 360 499 L 370 551 L 409 574 L 391 597 L 366 610 L 349 607 L 331 621 L 310 606 L 299 586 L 294 598 L 280 568 L 277 546 L 269 561 L 266 532 L 274 514 L 263 520 L 268 501 L 251 493 L 242 477 L 248 460 L 238 450 L 235 439 L 244 422 L 264 401 L 266 379 L 260 357 L 252 364 L 254 333 L 240 346 L 248 313 L 231 320 L 263 295 L 231 307 L 245 275 L 266 249 L 201 273 L 211 246 L 242 216 L 276 197 L 235 197 L 260 178 L 294 160 L 335 145 L 284 128 L 309 115 L 344 109 L 380 114 L 401 121 Z",
+                "headBounds": {
+                  "left": 201,
+                  "right": 728,
+                  "top": 61,
+                  "bottom": 621
+                },
+                "chin": null
+              },
+              "back-right": {
+                "view": "back-right",
+                "sourceView": "back-three-quarter-right",
+                "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+                "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+                "width": 910,
+                "height": 1728,
+                "bodyScale": 0.12854368932038834,
+                "headScale": 0.2335216572504708,
+                "neck": {
+                  "x": 518,
+                  "y": 565
+                },
+                "pelvis": {
+                  "x": 496,
+                  "y": 1080
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 399,
+                    "y": 613
+                  },
+                  "right": {
+                    "x": 625,
+                    "y": 620
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 426,
+                    "y": 1104
+                  },
+                  "right": {
+                    "x": 577,
+                    "y": 1102
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 106,
+                    "lower": 113
+                  },
+                  "right": {
+                    "upper": 73,
+                    "lower": 66
+                  }
+                },
+                "clothing": "M 424 582 L 447 572 L 468 564 L 493 568 L 509 550 L 531 555 L 549 543 L 570 535 L 579 545 L 594 530 L 590 563 L 613 580 L 626 594 L 625 634 L 632 679 L 641 721 L 650 756 L 643 793 L 635 823 L 626 838 L 608 803 L 595 814 L 564 784 L 553 802 L 536 776 L 523 738 L 515 747 L 503 735 L 485 692 L 466 711 L 451 658 L 439 674 L 429 645 L 421 610 L 415 616 L 416 584 L 401 596 L 397 580 L 377 597 L 368 612 L 377 625 L 367 647 L 375 660 L 368 687 L 375 699 L 360 734 L 375 747 L 368 766 L 380 769 L 362 810 L 369 824 L 383 820 L 372 853 L 359 877 L 363 891 L 378 881 L 367 900 L 347 918 L 338 934 L 344 944 L 363 941 L 357 956 L 366 968 L 354 981 L 340 1002 L 318 1039 L 338 1037 L 326 1070 L 320 1101 L 337 1094 L 327 1137 L 313 1166 L 313 1180 L 331 1180 L 316 1209 L 306 1244 L 329 1232 L 342 1259 L 357 1236 L 372 1265 L 393 1250 L 407 1272 L 422 1263 L 438 1291 L 452 1250 L 467 1259 L 466 1211 L 477 1168 L 485 1148 L 494 1183 L 502 1200 L 501 1220 L 515 1225 L 515 1265 L 525 1265 L 530 1297 L 552 1270 L 574 1294 L 595 1256 L 617 1269 L 637 1279 L 648 1243 L 678 1263 L 684 1250 L 680 1238 L 690 1235 L 674 1196 L 684 1185 L 668 1153 L 674 1148 L 660 1118 L 670 1116 L 654 1061 L 675 1071 L 678 1055 L 660 1019 L 646 993 L 648 972 L 657 961 L 650 944 L 639 924 L 650 913 L 641 885 L 643 865 L 633 841 Z",
+                "inkPad": 7,
+                "headClip": "M 442 122 L 466 87 L 504 57 L 561 34 L 519 88 L 572 68 L 631 64 L 588 96 L 643 87 L 690 98 L 640 119 L 684 124 L 727 151 L 674 158 L 715 183 L 752 209 L 716 204 L 732 234 L 711 222 L 730 257 L 708 243 L 704 274 L 704 297 L 715 326 L 722 359 L 717 386 L 729 404 L 735 419 L 724 427 L 728 443 L 718 453 L 724 474 L 718 503 L 710 516 L 705 501 L 694 532 L 677 553 L 665 566 L 657 551 L 634 574 L 623 559 L 615 528 L 617 489 L 614 472 L 607 503 L 595 520 L 584 532 L 576 516 L 565 528 L 548 536 L 533 548 L 507 535 L 505 552 L 491 559 L 469 550 L 465 565 L 439 565 L 419 554 L 413 564 L 394 549 L 381 521 L 369 541 L 350 522 L 335 495 L 332 463 L 312 482 L 308 447 L 278 456 L 275 416 L 289 363 L 236 389 L 242 350 L 256 316 L 278 281 L 245 286 L 267 256 L 299 222 L 250 228 L 275 199 L 308 175 L 351 158 L 314 145 L 346 134 L 386 133 L 401 137 L 373 112 L 414 122 L 400 91 L 421 106 L 440 79 L 437 108 Z",
+                "headBounds": {
+                  "left": 236,
+                  "right": 752,
+                  "top": 34,
+                  "bottom": 574
+                },
+                "chin": null
+              }
+            }
+          },
+          "coordinateAuthority": "own-source manual/model-assisted approximations; not measured anatomy/yaw",
+          "measuredYawDeg": null,
+          "capabilities": [
+            "fixed own-source head/clothing",
+            "same-person canonical bones/mitten/sole",
+            "profile rest/point/think; rear rest/point only"
+          ],
+          "unavailable": [
+            "speech",
+            "gaze/blink",
+            "other emotions",
+            "locomotion/seat",
+            "cloth/hair follow",
+            "tools/manipulation",
+            "supporting cast/head bank",
+            "continuous turns",
+            "rear chin contact"
+          ],
+          "approved": false,
+          "artApproved": false,
           "motionVerified": false,
           "productionReady": false,
           "productionRig": null,
@@ -9945,13 +10522,13 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
+        "fingerprint": "7065a16b9c09e91fd988b31cb57daebd4ff311aac97dba9119949a555f4e2289",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
-        "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
+        "method": "independent uniform3/4 sources plus own front/profile/rear fixed-view engineering candidates; own neutral-arm cues/poles with same-person canonical bones/mitten/sole; no borrowed detailed features, mirrored/warped faces or inferred yaw",
         "limitations": [
-          "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
+          "front/profile/rear landmarks/masks/depth/arm direction are own-source approximations, not measured or accepted; fixed happy/rigid rest/point/think except rear has no think/chin; no continuous turns",
           "identity/proportion/mask review",
           "happy fixed view by default; optional unapproved speech/eyes/expression selections",
           "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",
@@ -9960,13 +10537,13 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "27407061e3b48273fbea7a8f085e0fedfdfd6eb07216df0a0629978532d019c7",
+      "fingerprint": "855667aa39b50cf505ffbb0d9f8f64cf70f9bb312e7ba71b04fa35918cb19dbc",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
       "productionReady": false
     },
-    "fingerprint": "b1d9ee0405a9e46d4be91a371adc35bfc25d7320d3cd14cf39e64ae7d3c414bd",
+    "fingerprint": "0cb0e57f7285e6aba1955dc1ea275f2ac057f77452f7efd70301ced61b8bf3dd",
     "status": "candidate-head-layer-integration",
     "productionReady": false,
     "turnRendering": "registered-cutout-source-orientation-for-body; stepped-authored-views-for-head-only",
@@ -9983,14 +10560,14 @@
       "library/topics/prehistoric-life/rig-v1/front-prompts.json"
     ],
     "codeHash": "7d2f08c1ad2a324375d23ab58f7ff75ff00f902ea31887e127e19977e3d48e36",
-    "cutoutCodeHash": "6444bbc8ec7e1da9dc709842867ed2a8d1c22eac889049ce4050900a6d878e45",
+    "cutoutCodeHash": "8c1509c7c369f5f1b965c725bd7f01f86608fe6ecb2da64f9f92156a086e9c56",
     "projectionCodeHash": "dd31b2c5bdfe0a18f3d0ef47166af47c73f3cb966a5599d3ac431ac0d3d56a22"
   },
   "bodyPack": {
     "version": "forest-body-1",
     "compilerVersion": "forest-source-body-motion-40",
     "rendererVersion": "forest-source-body-svg-18",
-    "fingerprint": "74e5f402072551bb938151134f4baeb11f26d8cd86244f3864b6742407575f03",
+    "fingerprint": "4449489fb80549c9db9afe15ca0dcf6020911fa453b9ee5826246a9e7855b54c",
     "sources": {
       "lila": {
         "file": "library/topics/prehistoric-life/lila-cutout-v1.png",
@@ -10503,7 +11080,7 @@
       "repairPrompt": "library/topics/prehistoric-life/rig-v1/karo-cuffs-v2-prompt.json"
     },
     "authoredViews": {
-      "version": "forest-view-registration-5",
+      "version": "forest-view-registration-6",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -10783,6 +11360,16 @@
               }
             },
             "armDepth": "coplanar",
+            "restDirectionsDeg": {
+              "left": {
+                "upper": 104,
+                "lower": 96
+              },
+              "right": {
+                "upper": 76,
+                "lower": 84
+              }
+            },
             "inkPad": 7,
             "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
             "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
@@ -10840,6 +11427,16 @@
               }
             },
             "armDepth": "coplanar",
+            "restDirectionsDeg": {
+              "left": {
+                "upper": 104,
+                "lower": 96
+              },
+              "right": {
+                "upper": 76,
+                "lower": 84
+              }
+            },
             "inkPad": 7,
             "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
             "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
@@ -10882,6 +11479,563 @@
         ],
         "artApproved": false,
         "approved": false,
+        "motionVerified": false,
+        "productionReady": false,
+        "productionRig": null,
+        "availableBanks": []
+      },
+      "obliqueCandidate": {
+        "version": "native-oblique-body-registration-1",
+        "sources": {
+          "lila": {
+            "left": {
+              "view": "left",
+              "sourceView": "left",
+              "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+              "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+              "width": 1173,
+              "height": 1341,
+              "bodyScale": 0.302262443438914,
+              "headScale": 0.2610091743119266,
+              "neck": {
+                "x": 598,
+                "y": 486
+              },
+              "pelvis": {
+                "x": 575,
+                "y": 707
+              },
+              "shoulders": {
+                "left": {
+                  "x": 552,
+                  "y": 506
+                },
+                "right": {
+                  "x": 602,
+                  "y": 523
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 563,
+                  "y": 725
+                },
+                "right": {
+                  "x": 600,
+                  "y": 730
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M575 437L602 432L606 458L619 483L627 503L633 538L644 577L638 615L649 656L647 684L656 704L661 728L678 761L680 797L700 854L713 903L729 956L719 981L694 958L681 1007L662 970L646 995L630 960L620 994L604 965L590 1006L574 963L557 1000L542 963L527 989L512 958L493 981L499 925L492 903L504 863L500 837L511 803L514 774L530 732L520 710L537 680L532 647L540 615L534 584L545 556L527 550L545 530L565 507L575 474Z",
+              "inkPad": 7,
+              "headClip": "M0 0H1173V440H680L652 435L642 474L664 493L689 478L724 443L752 426L805 435L837 482L850 546L847 604L856 639L841 662L847 695L825 735L816 771L797 802L773 765L758 804L738 771L719 784L705 741L690 703L682 665L669 614L658 570L642 533L625 509L600 487L576 478L556 467L532 450H0Z",
+              "headBounds": {
+                "left": 390,
+                "right": 880,
+                "top": 50,
+                "bottom": 813
+              },
+              "chin": {
+                "left": {
+                  "x": 473,
+                  "y": 413
+                },
+                "right": {
+                  "x": 473,
+                  "y": 413
+                }
+              }
+            },
+            "right": {
+              "view": "right",
+              "sourceView": "right",
+              "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+              "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+              "width": 1024,
+              "height": 1536,
+              "bodyScale": 0.20809968847352023,
+              "headScale": 0.23224489795918365,
+              "neck": {
+                "x": 571,
+                "y": 515
+              },
+              "pelvis": {
+                "x": 558,
+                "y": 836
+              },
+              "shoulders": {
+                "left": {
+                  "x": 516,
+                  "y": 567
+                },
+                "right": {
+                  "x": 631,
+                  "y": 593
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 499,
+                  "y": 857
+                },
+                "right": {
+                  "x": 603,
+                  "y": 858
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M549 477L577 479L590 507L608 539L625 565L646 587L659 612L652 641L674 668L662 694L679 716L660 743L662 783L651 819L661 842L664 875L678 911L687 949L701 989L697 1034L712 1064L699 1109L679 1082L657 1138L638 1107L621 1146L608 1114L594 1157L573 1115L559 1148L539 1120L525 1155L507 1118L491 1148L477 1114L456 1132L468 1081L455 1061L469 1017L477 986L479 950L496 905L499 868L490 843L500 809L494 781L509 747L509 712L523 682L530 651L538 624L542 599L558 579L572 563L565 533L549 509Z",
+              "inkPad": 7,
+              "headClip": "M0 0H1024V466H660L633 484L613 513L594 539L580 558L564 535L550 505L537 490L515 494L498 526L484 570L466 616L447 661L428 710L405 747L385 792L359 825L345 790L327 840L309 804L292 826L278 786L263 806L249 762L234 740L244 694L231 667L248 627L243 598L260 553L277 514L302 479L329 449H0Z",
+              "headBounds": {
+                "left": 210,
+                "right": 832,
+                "top": 25,
+                "bottom": 857
+              },
+              "chin": {
+                "left": {
+                  "x": 666,
+                  "y": 448
+                },
+                "right": {
+                  "x": 666,
+                  "y": 448
+                }
+              }
+            },
+            "back-left": {
+              "view": "back-left",
+              "sourceView": "back-three-quarter-left",
+              "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+              "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+              "width": 939,
+              "height": 1675,
+              "bodyScale": 0.22416107382550335,
+              "headScale": 0.20141592920353982,
+              "neck": {
+                "x": 464,
+                "y": 608
+              },
+              "pelvis": {
+                "x": 491,
+                "y": 906
+              },
+              "shoulders": {
+                "left": {
+                  "x": 389,
+                  "y": 611
+                },
+                "right": {
+                  "x": 548,
+                  "y": 684
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 408,
+                  "y": 928
+                },
+                "right": {
+                  "x": 584,
+                  "y": 932
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 105,
+                  "lower": 112
+                },
+                "right": {
+                  "upper": 79,
+                  "lower": 73
+                }
+              },
+              "clothing": "M 407 580 L 415 576 L 430 599 L 452 628 L 481 648 L 468 617 L 492 631 L 508 676 L 525 708 L 531 740 L 546 721 L 541 760 L 566 778 L 554 793 L 565 807 L 559 830 L 572 855 L 586 866 L 566 878 L 580 896 L 596 904 L 600 919 L 588 928 L 610 959 L 625 993 L 612 992 L 635 1069 L 621 1065 L 646 1138 L 655 1156 L 639 1162 L 660 1225 L 641 1205 L 643 1238 L 618 1200 L 615 1231 L 596 1197 L 587 1259 L 579 1280 L 559 1237 L 553 1272 L 530 1213 L 519 1241 L 497 1186 L 477 1240 L 453 1198 L 431 1253 L 419 1214 L 416 1149 L 381 1200 L 381 1169 L 354 1208 L 359 1151 L 338 1169 L 353 1080 L 343 1090 L 371 1023 L 350 1031 L 373 974 L 355 975 L 381 926 L 385 909 L 372 901 L 377 886 L 371 877 L 384 861 L 376 850 L 396 819 L 401 790 L 383 807 L 389 775 L 373 785 L 378 761 L 366 764 L 390 728 L 386 717 L 400 706 L 390 695 L 407 689 L 416 664 L 410 641 Z",
+              "inkPad": 7,
+              "headClip": "M 324 60 L 353 44 L 396 43 L 445 58 L 497 83 L 531 116 L 523 84 L 548 112 L 552 149 L 580 124 L 609 121 L 638 139 L 660 177 L 620 153 L 578 153 L 626 183 L 669 222 L 702 270 L 722 310 L 682 282 L 692 322 L 713 353 L 748 366 L 721 380 L 687 360 L 676 398 L 657 433 L 626 444 L 594 466 L 575 488 L 580 507 L 555 536 L 526 577 L 500 621 L 471 607 L 485 650 L 454 625 L 430 597 L 415 566 L 391 563 L 371 541 L 376 564 L 345 554 L 322 530 L 309 490 L 279 472 L 262 450 L 251 416 L 257 378 L 267 345 L 253 325 L 248 368 L 235 337 L 230 296 L 216 315 L 180 349 L 178 314 L 191 272 L 220 229 L 255 193 L 202 211 L 169 207 L 207 182 L 246 148 L 307 124 L 259 123 L 216 134 L 268 102 L 317 89 L 368 85 L 417 98 L 467 128 L 435 99 L 390 73 L 353 61 Z M 665 491 L 698 493 L 735 511 L 758 548 L 778 592 L 768 633 L 784 690 L 813 737 L 784 719 L 758 684 L 754 747 L 744 796 L 744 839 L 766 879 L 741 893 L 708 882 L 677 859 L 651 826 L 627 786 L 641 839 L 616 816 L 594 781 L 577 737 L 566 687 L 556 647 L 549 694 L 531 735 L 530 702 L 513 675 L 499 635 L 496 598 L 514 558 L 546 528 L 576 513 L 588 526 L 614 517 L 640 505 ZM574 436H677V529H574Z",
+              "headBounds": {
+                "left": 169,
+                "right": 813,
+                "top": 43,
+                "bottom": 893
+              },
+              "chin": null
+            },
+            "back-right": {
+              "view": "back-right",
+              "sourceView": "back-three-quarter-right",
+              "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+              "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+              "width": 939,
+              "height": 1676,
+              "bodyScale": 0.21139240506329113,
+              "headScale": 0.20766423357664232,
+              "neck": {
+                "x": 565,
+                "y": 573
+              },
+              "pelvis": {
+                "x": 552,
+                "y": 889
+              },
+              "shoulders": {
+                "left": {
+                  "x": 484,
+                  "y": 659
+                },
+                "right": {
+                  "x": 646,
+                  "y": 611
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 483,
+                  "y": 913
+                },
+                "right": {
+                  "x": 616,
+                  "y": 914
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 102,
+                  "lower": 108
+                },
+                "right": {
+                  "upper": 77,
+                  "lower": 70
+                }
+              },
+              "clothing": "M 582 530 L 586 551 L 601 566 L 616 572 L 638 578 L 625 590 L 632 595 L 617 611 L 623 618 L 612 641 L 616 669 L 628 699 L 635 737 L 638 777 L 626 797 L 613 782 L 616 808 L 634 832 L 627 845 L 640 861 L 631 873 L 653 883 L 655 897 L 645 908 L 660 933 L 675 965 L 650 950 L 673 1016 L 694 1070 L 679 1054 L 696 1119 L 674 1098 L 691 1151 L 700 1206 L 676 1177 L 671 1154 L 671 1232 L 646 1199 L 632 1239 L 605 1275 L 596 1229 L 577 1250 L 575 1168 L 554 1193 L 546 1141 L 523 1205 L 518 1221 L 511 1195 L 481 1247 L 467 1211 L 470 1174 L 433 1209 L 398 1241 L 400 1184 L 375 1215 L 379 1179 L 399 1116 L 379 1124 L 411 1041 L 398 1054 L 416 991 L 437 945 L 413 953 L 448 905 L 441 888 L 448 871 L 459 863 L 471 826 L 474 806 L 458 804 L 476 779 L 477 763 L 487 769 L 481 740 L 478 722 L 500 708 L 514 693 L 508 671 L 516 623 L 537 586 L 561 562 Z",
+              "inkPad": 7,
+              "headClip": "M 450 121 L 481 79 L 524 52 L 572 35 L 625 25 L 679 26 L 716 38 L 745 57 L 695 44 L 650 43 L 606 54 L 572 86 L 559 112 L 600 91 L 645 79 L 690 83 L 725 96 L 677 100 L 645 119 L 687 112 L 733 120 L 778 145 L 741 135 L 705 136 L 752 161 L 785 194 L 807 231 L 818 263 L 786 229 L 769 219 L 786 268 L 790 318 L 779 359 L 773 317 L 756 286 L 755 323 L 764 368 L 759 411 L 742 442 L 716 466 L 682 483 L 671 487 L 675 516 L 693 541 L 675 538 L 653 521 L 642 490 L 642 452 L 629 488 L 617 494 L 621 535 L 640 563 L 612 560 L 596 547 L 589 517 L 573 535 L 547 558 L 538 594 L 536 568 L 518 583 L 506 624 L 499 673 L 486 650 L 476 605 L 464 555 L 466 514 L 476 494 L 462 475 L 425 453 L 384 439 L 365 451 L 344 444 L 327 426 L 319 401 L 324 368 L 303 389 L 276 407 L 287 373 L 307 342 L 338 304 L 367 260 L 391 224 L 362 241 L 389 204 L 430 170 L 383 186 L 362 199 L 388 166 L 437 144 L 394 149 L 367 155 L 405 133 Z M 366 480 L 401 488 L 443 511 L 460 541 L 471 586 L 476 633 L 474 675 L 481 709 L 498 724 L 478 721 L 477 743 L 491 764 L 470 755 L 453 731 L 449 774 L 432 828 L 437 858 L 420 844 L 411 814 L 398 866 L 384 914 L 373 873 L 351 827 L 340 789 L 334 836 L 318 813 L 306 766 L 302 721 L 294 744 L 289 787 L 276 746 L 274 702 L 258 738 L 239 766 L 237 719 L 246 674 L 268 628 L 240 653 L 222 670 L 237 625 L 259 585 L 292 549 L 260 564 L 231 584 L 261 548 L 302 519 L 337 502 L 309 505 L 278 516 L 306 495 ZM323 437H453V523H323Z",
+              "headBounds": {
+                "left": 222,
+                "right": 818,
+                "top": 25,
+                "bottom": 914
+              },
+              "chin": null
+            }
+          },
+          "karo": {
+            "left": {
+              "view": "left",
+              "sourceView": "left",
+              "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+              "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+              "width": 910,
+              "height": 1728,
+              "bodyScale": 0.13966244725738397,
+              "headScale": 0.21602787456445993,
+              "neck": {
+                "x": 474,
+                "y": 653
+              },
+              "pelvis": {
+                "x": 457,
+                "y": 1127
+              },
+              "shoulders": {
+                "left": {
+                  "x": 432,
+                  "y": 670
+                },
+                "right": {
+                  "x": 526,
+                  "y": 697
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 412,
+                  "y": 1149
+                },
+                "right": {
+                  "x": 506,
+                  "y": 1148
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M439 598L478 591L496 617L514 643L542 662L555 694L545 725L555 769L551 814L564 856L556 904L575 946L564 985L577 1023L570 1073L555 1105L563 1131L568 1162L581 1192L587 1229L595 1256L583 1272L585 1306L565 1333L549 1306L528 1348L513 1320L498 1354L483 1316L471 1283L457 1241L438 1289L422 1336L404 1311L389 1343L370 1317L351 1336L337 1298L323 1317L328 1283L320 1257L337 1222L336 1195L350 1168L345 1133L353 1105L341 1086L357 1052L355 1017L368 985L362 957L378 927L377 886L389 854L389 816L404 785L410 750L423 718L433 686L445 658Z",
+              "inkPad": 7,
+              "headClip": "M0 0H910V534H600L575 556L548 561L523 584L505 612L479 609L462 624L443 603L427 622L411 609L392 638L372 622L350 650L329 628L312 639L289 614L270 619L249 595L236 566H0Z",
+              "headBounds": {
+                "left": 201,
+                "right": 726,
+                "top": 79,
+                "bottom": 650
+              },
+              "chin": {
+                "left": {
+                  "x": 322,
+                  "y": 589
+                },
+                "right": {
+                  "x": 322,
+                  "y": 589
+                }
+              }
+            },
+            "right": {
+              "view": "right",
+              "sourceView": "right",
+              "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+              "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+              "width": 910,
+              "height": 1727,
+              "bodyScale": 0.18087431693989073,
+              "headScale": 0.23308270676691728,
+              "neck": {
+                "x": 503,
+                "y": 555
+              },
+              "pelvis": {
+                "x": 498,
+                "y": 921
+              },
+              "shoulders": {
+                "left": {
+                  "x": 420,
+                  "y": 592
+                },
+                "right": {
+                  "x": 556,
+                  "y": 611
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 444,
+                  "y": 944
+                },
+                "right": {
+                  "x": 550,
+                  "y": 947
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M463 512L501 513L514 539L535 566L557 585L580 597L581 627L595 656L585 683L603 718L601 751L616 789L608 823L628 857L621 882L639 912L635 941L648 974L643 1005L659 1043L649 1072L664 1106L652 1139L628 1115L611 1159L588 1139L571 1163L553 1128L536 1108L518 1058L503 1091L485 1131L465 1150L447 1127L430 1161L408 1136L389 1149L376 1119L358 1131L366 1097L354 1071L368 1037L365 1008L379 978L376 947L390 921L384 892L393 855L388 831L401 794L399 759L416 725L426 690L435 654L446 619L451 580Z",
+              "inkPad": 7,
+              "headClip": "M0 0H910V506H628L611 532L587 537L576 561L551 549L532 575L512 554L493 568L477 549L458 562L442 544L427 553L407 530H0Z",
+              "headBounds": {
+                "left": 216,
+                "right": 752,
+                "top": 23,
+                "bottom": 575
+              },
+              "chin": {
+                "left": {
+                  "x": 617,
+                  "y": 522
+                },
+                "right": {
+                  "x": 617,
+                  "y": 522
+                }
+              }
+            },
+            "back-left": {
+              "view": "back-left",
+              "sourceView": "back-three-quarter-left",
+              "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+              "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+              "width": 910,
+              "height": 1729,
+              "bodyScale": 0.12879377431906616,
+              "headScale": 0.2246376811594203,
+              "neck": {
+                "x": 470,
+                "y": 613
+              },
+              "pelvis": {
+                "x": 495,
+                "y": 1127
+              },
+              "shoulders": {
+                "left": {
+                  "x": 390,
+                  "y": 666
+                },
+                "right": {
+                  "x": 568,
+                  "y": 693
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 431,
+                  "y": 1149
+                },
+                "right": {
+                  "x": 567,
+                  "y": 1151
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 109,
+                  "lower": 115
+                },
+                "right": {
+                  "upper": 75,
+                  "lower": 69
+                }
+              },
+              "clothing": "M 415 581 L 432 582 L 456 590 L 484 604 L 517 611 L 532 631 L 559 648 L 577 670 L 589 699 L 595 739 L 598 780 L 606 809 L 596 805 L 581 788 L 569 794 L 544 750 L 532 761 L 517 739 L 511 751 L 497 721 L 490 694 L 479 695 L 461 671 L 445 636 L 430 641 L 414 627 L 397 623 L 375 631 L 364 642 L 385 646 L 398 679 L 395 718 L 406 714 L 401 746 L 411 752 L 403 788 L 389 822 L 375 839 L 368 855 L 376 868 L 361 903 L 373 911 L 362 934 L 367 942 L 344 982 L 345 992 L 365 991 L 354 1015 L 339 1045 L 326 1078 L 334 1089 L 346 1089 L 336 1108 L 345 1118 L 328 1159 L 340 1170 L 322 1208 L 332 1219 L 320 1251 L 351 1241 L 365 1260 L 381 1247 L 401 1278 L 412 1270 L 439 1297 L 449 1260 L 464 1274 L 480 1226 L 474 1205 L 487 1196 L 500 1151 L 508 1144 L 518 1181 L 525 1214 L 540 1205 L 528 1229 L 532 1279 L 548 1267 L 558 1278 L 568 1264 L 585 1290 L 610 1251 L 632 1270 L 642 1239 L 660 1247 L 645 1199 L 636 1161 L 653 1151 L 638 1110 L 648 1094 L 631 1056 L 625 1032 L 635 1021 L 635 1006 L 643 996 L 630 964 L 640 950 L 624 919 L 613 894 L 624 882 L 612 850 L 621 838 L 606 817 L 604 773 L 599 723 L 590 684 L 574 661 L 551 642 L 529 628 L 522 608 L 492 599 L 462 585 L 438 574 L 416 569 Z",
+              "inkPad": 7,
+              "headClip": "M 369 80 L 408 88 L 448 99 L 440 81 L 490 114 L 473 61 L 505 75 L 530 103 L 548 147 L 562 104 L 573 130 L 567 150 L 602 127 L 588 150 L 627 153 L 657 164 L 612 176 L 651 190 L 683 212 L 710 244 L 660 232 L 697 280 L 712 309 L 728 342 L 684 322 L 705 370 L 716 416 L 680 393 L 693 447 L 667 433 L 680 478 L 674 512 L 657 483 L 648 530 L 630 555 L 625 528 L 607 564 L 590 587 L 576 569 L 557 602 L 539 615 L 522 588 L 518 603 L 487 587 L 479 595 L 453 580 L 431 558 L 418 571 L 402 552 L 386 537 L 375 496 L 366 461 L 352 456 L 360 499 L 370 551 L 409 574 L 391 597 L 366 610 L 349 607 L 331 621 L 310 606 L 299 586 L 294 598 L 280 568 L 277 546 L 269 561 L 266 532 L 274 514 L 263 520 L 268 501 L 251 493 L 242 477 L 248 460 L 238 450 L 235 439 L 244 422 L 264 401 L 266 379 L 260 357 L 252 364 L 254 333 L 240 346 L 248 313 L 231 320 L 263 295 L 231 307 L 245 275 L 266 249 L 201 273 L 211 246 L 242 216 L 276 197 L 235 197 L 260 178 L 294 160 L 335 145 L 284 128 L 309 115 L 344 109 L 380 114 L 401 121 Z",
+              "headBounds": {
+                "left": 201,
+                "right": 728,
+                "top": 61,
+                "bottom": 621
+              },
+              "chin": null
+            },
+            "back-right": {
+              "view": "back-right",
+              "sourceView": "back-three-quarter-right",
+              "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+              "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+              "width": 910,
+              "height": 1728,
+              "bodyScale": 0.12854368932038834,
+              "headScale": 0.2335216572504708,
+              "neck": {
+                "x": 518,
+                "y": 565
+              },
+              "pelvis": {
+                "x": 496,
+                "y": 1080
+              },
+              "shoulders": {
+                "left": {
+                  "x": 399,
+                  "y": 613
+                },
+                "right": {
+                  "x": 625,
+                  "y": 620
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 426,
+                  "y": 1104
+                },
+                "right": {
+                  "x": 577,
+                  "y": 1102
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 106,
+                  "lower": 113
+                },
+                "right": {
+                  "upper": 73,
+                  "lower": 66
+                }
+              },
+              "clothing": "M 424 582 L 447 572 L 468 564 L 493 568 L 509 550 L 531 555 L 549 543 L 570 535 L 579 545 L 594 530 L 590 563 L 613 580 L 626 594 L 625 634 L 632 679 L 641 721 L 650 756 L 643 793 L 635 823 L 626 838 L 608 803 L 595 814 L 564 784 L 553 802 L 536 776 L 523 738 L 515 747 L 503 735 L 485 692 L 466 711 L 451 658 L 439 674 L 429 645 L 421 610 L 415 616 L 416 584 L 401 596 L 397 580 L 377 597 L 368 612 L 377 625 L 367 647 L 375 660 L 368 687 L 375 699 L 360 734 L 375 747 L 368 766 L 380 769 L 362 810 L 369 824 L 383 820 L 372 853 L 359 877 L 363 891 L 378 881 L 367 900 L 347 918 L 338 934 L 344 944 L 363 941 L 357 956 L 366 968 L 354 981 L 340 1002 L 318 1039 L 338 1037 L 326 1070 L 320 1101 L 337 1094 L 327 1137 L 313 1166 L 313 1180 L 331 1180 L 316 1209 L 306 1244 L 329 1232 L 342 1259 L 357 1236 L 372 1265 L 393 1250 L 407 1272 L 422 1263 L 438 1291 L 452 1250 L 467 1259 L 466 1211 L 477 1168 L 485 1148 L 494 1183 L 502 1200 L 501 1220 L 515 1225 L 515 1265 L 525 1265 L 530 1297 L 552 1270 L 574 1294 L 595 1256 L 617 1269 L 637 1279 L 648 1243 L 678 1263 L 684 1250 L 680 1238 L 690 1235 L 674 1196 L 684 1185 L 668 1153 L 674 1148 L 660 1118 L 670 1116 L 654 1061 L 675 1071 L 678 1055 L 660 1019 L 646 993 L 648 972 L 657 961 L 650 944 L 639 924 L 650 913 L 641 885 L 643 865 L 633 841 Z",
+              "inkPad": 7,
+              "headClip": "M 442 122 L 466 87 L 504 57 L 561 34 L 519 88 L 572 68 L 631 64 L 588 96 L 643 87 L 690 98 L 640 119 L 684 124 L 727 151 L 674 158 L 715 183 L 752 209 L 716 204 L 732 234 L 711 222 L 730 257 L 708 243 L 704 274 L 704 297 L 715 326 L 722 359 L 717 386 L 729 404 L 735 419 L 724 427 L 728 443 L 718 453 L 724 474 L 718 503 L 710 516 L 705 501 L 694 532 L 677 553 L 665 566 L 657 551 L 634 574 L 623 559 L 615 528 L 617 489 L 614 472 L 607 503 L 595 520 L 584 532 L 576 516 L 565 528 L 548 536 L 533 548 L 507 535 L 505 552 L 491 559 L 469 550 L 465 565 L 439 565 L 419 554 L 413 564 L 394 549 L 381 521 L 369 541 L 350 522 L 335 495 L 332 463 L 312 482 L 308 447 L 278 456 L 275 416 L 289 363 L 236 389 L 242 350 L 256 316 L 278 281 L 245 286 L 267 256 L 299 222 L 250 228 L 275 199 L 308 175 L 351 158 L 314 145 L 346 134 L 386 133 L 401 137 L 373 112 L 414 122 L 400 91 L 421 106 L 440 79 L 437 108 Z",
+              "headBounds": {
+                "left": 236,
+                "right": 752,
+                "top": 34,
+                "bottom": 574
+              },
+              "chin": null
+            }
+          }
+        },
+        "coordinateAuthority": "own-source manual/model-assisted approximations; not measured anatomy/yaw",
+        "measuredYawDeg": null,
+        "capabilities": [
+          "fixed own-source head/clothing",
+          "same-person canonical bones/mitten/sole",
+          "profile rest/point/think; rear rest/point only"
+        ],
+        "unavailable": [
+          "speech",
+          "gaze/blink",
+          "other emotions",
+          "locomotion/seat",
+          "cloth/hair follow",
+          "tools/manipulation",
+          "supporting cast/head bank",
+          "continuous turns",
+          "rear chin contact"
+        ],
+        "approved": false,
+        "artApproved": false,
         "motionVerified": false,
         "productionReady": false,
         "productionRig": null,
@@ -12325,13 +13479,13 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
+      "fingerprint": "7065a16b9c09e91fd988b31cb57daebd4ff311aac97dba9119949a555f4e2289",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
-      "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
+      "method": "independent uniform3/4 sources plus own front/profile/rear fixed-view engineering candidates; own neutral-arm cues/poles with same-person canonical bones/mitten/sole; no borrowed detailed features, mirrored/warped faces or inferred yaw",
       "limitations": [
-        "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
+        "front/profile/rear landmarks/masks/depth/arm direction are own-source approximations, not measured or accepted; fixed happy/rigid rest/point/think except rear has no think/chin; no continuous turns",
         "identity/proportion/mask review",
         "happy fixed view by default; optional unapproved speech/eyes/expression selections",
         "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",
@@ -12752,7 +13906,7 @@
         "fingerprint": "a450786aaa029bc32f8530e9479081bda752f63f9e01d4a6bd8e75ef678f3707"
       },
       "authoredViews": {
-        "version": "forest-view-registration-5",
+        "version": "forest-view-registration-6",
         "artworkVersion": "forest-body-view-1",
         "sources": {
           "lila": {
@@ -13032,6 +14186,16 @@
                 }
               },
               "armDepth": "coplanar",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 104,
+                  "lower": 96
+                },
+                "right": {
+                  "upper": 76,
+                  "lower": 84
+                }
+              },
               "inkPad": 7,
               "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
               "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
@@ -13089,6 +14253,16 @@
                 }
               },
               "armDepth": "coplanar",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 104,
+                  "lower": 96
+                },
+                "right": {
+                  "upper": 76,
+                  "lower": 84
+                }
+              },
               "inkPad": 7,
               "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
               "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
@@ -13131,6 +14305,563 @@
           ],
           "artApproved": false,
           "approved": false,
+          "motionVerified": false,
+          "productionReady": false,
+          "productionRig": null,
+          "availableBanks": []
+        },
+        "obliqueCandidate": {
+          "version": "native-oblique-body-registration-1",
+          "sources": {
+            "lila": {
+              "left": {
+                "view": "left",
+                "sourceView": "left",
+                "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+                "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+                "width": 1173,
+                "height": 1341,
+                "bodyScale": 0.302262443438914,
+                "headScale": 0.2610091743119266,
+                "neck": {
+                  "x": 598,
+                  "y": 486
+                },
+                "pelvis": {
+                  "x": 575,
+                  "y": 707
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 552,
+                    "y": 506
+                  },
+                  "right": {
+                    "x": 602,
+                    "y": 523
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 563,
+                    "y": 725
+                  },
+                  "right": {
+                    "x": 600,
+                    "y": 730
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M575 437L602 432L606 458L619 483L627 503L633 538L644 577L638 615L649 656L647 684L656 704L661 728L678 761L680 797L700 854L713 903L729 956L719 981L694 958L681 1007L662 970L646 995L630 960L620 994L604 965L590 1006L574 963L557 1000L542 963L527 989L512 958L493 981L499 925L492 903L504 863L500 837L511 803L514 774L530 732L520 710L537 680L532 647L540 615L534 584L545 556L527 550L545 530L565 507L575 474Z",
+                "inkPad": 7,
+                "headClip": "M0 0H1173V440H680L652 435L642 474L664 493L689 478L724 443L752 426L805 435L837 482L850 546L847 604L856 639L841 662L847 695L825 735L816 771L797 802L773 765L758 804L738 771L719 784L705 741L690 703L682 665L669 614L658 570L642 533L625 509L600 487L576 478L556 467L532 450H0Z",
+                "headBounds": {
+                  "left": 390,
+                  "right": 880,
+                  "top": 50,
+                  "bottom": 813
+                },
+                "chin": {
+                  "left": {
+                    "x": 473,
+                    "y": 413
+                  },
+                  "right": {
+                    "x": 473,
+                    "y": 413
+                  }
+                }
+              },
+              "right": {
+                "view": "right",
+                "sourceView": "right",
+                "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+                "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+                "width": 1024,
+                "height": 1536,
+                "bodyScale": 0.20809968847352023,
+                "headScale": 0.23224489795918365,
+                "neck": {
+                  "x": 571,
+                  "y": 515
+                },
+                "pelvis": {
+                  "x": 558,
+                  "y": 836
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 516,
+                    "y": 567
+                  },
+                  "right": {
+                    "x": 631,
+                    "y": 593
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 499,
+                    "y": 857
+                  },
+                  "right": {
+                    "x": 603,
+                    "y": 858
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M549 477L577 479L590 507L608 539L625 565L646 587L659 612L652 641L674 668L662 694L679 716L660 743L662 783L651 819L661 842L664 875L678 911L687 949L701 989L697 1034L712 1064L699 1109L679 1082L657 1138L638 1107L621 1146L608 1114L594 1157L573 1115L559 1148L539 1120L525 1155L507 1118L491 1148L477 1114L456 1132L468 1081L455 1061L469 1017L477 986L479 950L496 905L499 868L490 843L500 809L494 781L509 747L509 712L523 682L530 651L538 624L542 599L558 579L572 563L565 533L549 509Z",
+                "inkPad": 7,
+                "headClip": "M0 0H1024V466H660L633 484L613 513L594 539L580 558L564 535L550 505L537 490L515 494L498 526L484 570L466 616L447 661L428 710L405 747L385 792L359 825L345 790L327 840L309 804L292 826L278 786L263 806L249 762L234 740L244 694L231 667L248 627L243 598L260 553L277 514L302 479L329 449H0Z",
+                "headBounds": {
+                  "left": 210,
+                  "right": 832,
+                  "top": 25,
+                  "bottom": 857
+                },
+                "chin": {
+                  "left": {
+                    "x": 666,
+                    "y": 448
+                  },
+                  "right": {
+                    "x": 666,
+                    "y": 448
+                  }
+                }
+              },
+              "back-left": {
+                "view": "back-left",
+                "sourceView": "back-three-quarter-left",
+                "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+                "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+                "width": 939,
+                "height": 1675,
+                "bodyScale": 0.22416107382550335,
+                "headScale": 0.20141592920353982,
+                "neck": {
+                  "x": 464,
+                  "y": 608
+                },
+                "pelvis": {
+                  "x": 491,
+                  "y": 906
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 389,
+                    "y": 611
+                  },
+                  "right": {
+                    "x": 548,
+                    "y": 684
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 408,
+                    "y": 928
+                  },
+                  "right": {
+                    "x": 584,
+                    "y": 932
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 105,
+                    "lower": 112
+                  },
+                  "right": {
+                    "upper": 79,
+                    "lower": 73
+                  }
+                },
+                "clothing": "M 407 580 L 415 576 L 430 599 L 452 628 L 481 648 L 468 617 L 492 631 L 508 676 L 525 708 L 531 740 L 546 721 L 541 760 L 566 778 L 554 793 L 565 807 L 559 830 L 572 855 L 586 866 L 566 878 L 580 896 L 596 904 L 600 919 L 588 928 L 610 959 L 625 993 L 612 992 L 635 1069 L 621 1065 L 646 1138 L 655 1156 L 639 1162 L 660 1225 L 641 1205 L 643 1238 L 618 1200 L 615 1231 L 596 1197 L 587 1259 L 579 1280 L 559 1237 L 553 1272 L 530 1213 L 519 1241 L 497 1186 L 477 1240 L 453 1198 L 431 1253 L 419 1214 L 416 1149 L 381 1200 L 381 1169 L 354 1208 L 359 1151 L 338 1169 L 353 1080 L 343 1090 L 371 1023 L 350 1031 L 373 974 L 355 975 L 381 926 L 385 909 L 372 901 L 377 886 L 371 877 L 384 861 L 376 850 L 396 819 L 401 790 L 383 807 L 389 775 L 373 785 L 378 761 L 366 764 L 390 728 L 386 717 L 400 706 L 390 695 L 407 689 L 416 664 L 410 641 Z",
+                "inkPad": 7,
+                "headClip": "M 324 60 L 353 44 L 396 43 L 445 58 L 497 83 L 531 116 L 523 84 L 548 112 L 552 149 L 580 124 L 609 121 L 638 139 L 660 177 L 620 153 L 578 153 L 626 183 L 669 222 L 702 270 L 722 310 L 682 282 L 692 322 L 713 353 L 748 366 L 721 380 L 687 360 L 676 398 L 657 433 L 626 444 L 594 466 L 575 488 L 580 507 L 555 536 L 526 577 L 500 621 L 471 607 L 485 650 L 454 625 L 430 597 L 415 566 L 391 563 L 371 541 L 376 564 L 345 554 L 322 530 L 309 490 L 279 472 L 262 450 L 251 416 L 257 378 L 267 345 L 253 325 L 248 368 L 235 337 L 230 296 L 216 315 L 180 349 L 178 314 L 191 272 L 220 229 L 255 193 L 202 211 L 169 207 L 207 182 L 246 148 L 307 124 L 259 123 L 216 134 L 268 102 L 317 89 L 368 85 L 417 98 L 467 128 L 435 99 L 390 73 L 353 61 Z M 665 491 L 698 493 L 735 511 L 758 548 L 778 592 L 768 633 L 784 690 L 813 737 L 784 719 L 758 684 L 754 747 L 744 796 L 744 839 L 766 879 L 741 893 L 708 882 L 677 859 L 651 826 L 627 786 L 641 839 L 616 816 L 594 781 L 577 737 L 566 687 L 556 647 L 549 694 L 531 735 L 530 702 L 513 675 L 499 635 L 496 598 L 514 558 L 546 528 L 576 513 L 588 526 L 614 517 L 640 505 ZM574 436H677V529H574Z",
+                "headBounds": {
+                  "left": 169,
+                  "right": 813,
+                  "top": 43,
+                  "bottom": 893
+                },
+                "chin": null
+              },
+              "back-right": {
+                "view": "back-right",
+                "sourceView": "back-three-quarter-right",
+                "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+                "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+                "width": 939,
+                "height": 1676,
+                "bodyScale": 0.21139240506329113,
+                "headScale": 0.20766423357664232,
+                "neck": {
+                  "x": 565,
+                  "y": 573
+                },
+                "pelvis": {
+                  "x": 552,
+                  "y": 889
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 484,
+                    "y": 659
+                  },
+                  "right": {
+                    "x": 646,
+                    "y": 611
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 483,
+                    "y": 913
+                  },
+                  "right": {
+                    "x": 616,
+                    "y": 914
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 102,
+                    "lower": 108
+                  },
+                  "right": {
+                    "upper": 77,
+                    "lower": 70
+                  }
+                },
+                "clothing": "M 582 530 L 586 551 L 601 566 L 616 572 L 638 578 L 625 590 L 632 595 L 617 611 L 623 618 L 612 641 L 616 669 L 628 699 L 635 737 L 638 777 L 626 797 L 613 782 L 616 808 L 634 832 L 627 845 L 640 861 L 631 873 L 653 883 L 655 897 L 645 908 L 660 933 L 675 965 L 650 950 L 673 1016 L 694 1070 L 679 1054 L 696 1119 L 674 1098 L 691 1151 L 700 1206 L 676 1177 L 671 1154 L 671 1232 L 646 1199 L 632 1239 L 605 1275 L 596 1229 L 577 1250 L 575 1168 L 554 1193 L 546 1141 L 523 1205 L 518 1221 L 511 1195 L 481 1247 L 467 1211 L 470 1174 L 433 1209 L 398 1241 L 400 1184 L 375 1215 L 379 1179 L 399 1116 L 379 1124 L 411 1041 L 398 1054 L 416 991 L 437 945 L 413 953 L 448 905 L 441 888 L 448 871 L 459 863 L 471 826 L 474 806 L 458 804 L 476 779 L 477 763 L 487 769 L 481 740 L 478 722 L 500 708 L 514 693 L 508 671 L 516 623 L 537 586 L 561 562 Z",
+                "inkPad": 7,
+                "headClip": "M 450 121 L 481 79 L 524 52 L 572 35 L 625 25 L 679 26 L 716 38 L 745 57 L 695 44 L 650 43 L 606 54 L 572 86 L 559 112 L 600 91 L 645 79 L 690 83 L 725 96 L 677 100 L 645 119 L 687 112 L 733 120 L 778 145 L 741 135 L 705 136 L 752 161 L 785 194 L 807 231 L 818 263 L 786 229 L 769 219 L 786 268 L 790 318 L 779 359 L 773 317 L 756 286 L 755 323 L 764 368 L 759 411 L 742 442 L 716 466 L 682 483 L 671 487 L 675 516 L 693 541 L 675 538 L 653 521 L 642 490 L 642 452 L 629 488 L 617 494 L 621 535 L 640 563 L 612 560 L 596 547 L 589 517 L 573 535 L 547 558 L 538 594 L 536 568 L 518 583 L 506 624 L 499 673 L 486 650 L 476 605 L 464 555 L 466 514 L 476 494 L 462 475 L 425 453 L 384 439 L 365 451 L 344 444 L 327 426 L 319 401 L 324 368 L 303 389 L 276 407 L 287 373 L 307 342 L 338 304 L 367 260 L 391 224 L 362 241 L 389 204 L 430 170 L 383 186 L 362 199 L 388 166 L 437 144 L 394 149 L 367 155 L 405 133 Z M 366 480 L 401 488 L 443 511 L 460 541 L 471 586 L 476 633 L 474 675 L 481 709 L 498 724 L 478 721 L 477 743 L 491 764 L 470 755 L 453 731 L 449 774 L 432 828 L 437 858 L 420 844 L 411 814 L 398 866 L 384 914 L 373 873 L 351 827 L 340 789 L 334 836 L 318 813 L 306 766 L 302 721 L 294 744 L 289 787 L 276 746 L 274 702 L 258 738 L 239 766 L 237 719 L 246 674 L 268 628 L 240 653 L 222 670 L 237 625 L 259 585 L 292 549 L 260 564 L 231 584 L 261 548 L 302 519 L 337 502 L 309 505 L 278 516 L 306 495 ZM323 437H453V523H323Z",
+                "headBounds": {
+                  "left": 222,
+                  "right": 818,
+                  "top": 25,
+                  "bottom": 914
+                },
+                "chin": null
+              }
+            },
+            "karo": {
+              "left": {
+                "view": "left",
+                "sourceView": "left",
+                "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+                "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+                "width": 910,
+                "height": 1728,
+                "bodyScale": 0.13966244725738397,
+                "headScale": 0.21602787456445993,
+                "neck": {
+                  "x": 474,
+                  "y": 653
+                },
+                "pelvis": {
+                  "x": 457,
+                  "y": 1127
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 432,
+                    "y": 670
+                  },
+                  "right": {
+                    "x": 526,
+                    "y": 697
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 412,
+                    "y": 1149
+                  },
+                  "right": {
+                    "x": 506,
+                    "y": 1148
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M439 598L478 591L496 617L514 643L542 662L555 694L545 725L555 769L551 814L564 856L556 904L575 946L564 985L577 1023L570 1073L555 1105L563 1131L568 1162L581 1192L587 1229L595 1256L583 1272L585 1306L565 1333L549 1306L528 1348L513 1320L498 1354L483 1316L471 1283L457 1241L438 1289L422 1336L404 1311L389 1343L370 1317L351 1336L337 1298L323 1317L328 1283L320 1257L337 1222L336 1195L350 1168L345 1133L353 1105L341 1086L357 1052L355 1017L368 985L362 957L378 927L377 886L389 854L389 816L404 785L410 750L423 718L433 686L445 658Z",
+                "inkPad": 7,
+                "headClip": "M0 0H910V534H600L575 556L548 561L523 584L505 612L479 609L462 624L443 603L427 622L411 609L392 638L372 622L350 650L329 628L312 639L289 614L270 619L249 595L236 566H0Z",
+                "headBounds": {
+                  "left": 201,
+                  "right": 726,
+                  "top": 79,
+                  "bottom": 650
+                },
+                "chin": {
+                  "left": {
+                    "x": 322,
+                    "y": 589
+                  },
+                  "right": {
+                    "x": 322,
+                    "y": 589
+                  }
+                }
+              },
+              "right": {
+                "view": "right",
+                "sourceView": "right",
+                "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+                "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+                "width": 910,
+                "height": 1727,
+                "bodyScale": 0.18087431693989073,
+                "headScale": 0.23308270676691728,
+                "neck": {
+                  "x": 503,
+                  "y": 555
+                },
+                "pelvis": {
+                  "x": 498,
+                  "y": 921
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 420,
+                    "y": 592
+                  },
+                  "right": {
+                    "x": 556,
+                    "y": 611
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 444,
+                    "y": 944
+                  },
+                  "right": {
+                    "x": 550,
+                    "y": 947
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 100,
+                    "lower": 94
+                  },
+                  "right": {
+                    "upper": 81,
+                    "lower": 88
+                  }
+                },
+                "clothing": "M463 512L501 513L514 539L535 566L557 585L580 597L581 627L595 656L585 683L603 718L601 751L616 789L608 823L628 857L621 882L639 912L635 941L648 974L643 1005L659 1043L649 1072L664 1106L652 1139L628 1115L611 1159L588 1139L571 1163L553 1128L536 1108L518 1058L503 1091L485 1131L465 1150L447 1127L430 1161L408 1136L389 1149L376 1119L358 1131L366 1097L354 1071L368 1037L365 1008L379 978L376 947L390 921L384 892L393 855L388 831L401 794L399 759L416 725L426 690L435 654L446 619L451 580Z",
+                "inkPad": 7,
+                "headClip": "M0 0H910V506H628L611 532L587 537L576 561L551 549L532 575L512 554L493 568L477 549L458 562L442 544L427 553L407 530H0Z",
+                "headBounds": {
+                  "left": 216,
+                  "right": 752,
+                  "top": 23,
+                  "bottom": 575
+                },
+                "chin": {
+                  "left": {
+                    "x": 617,
+                    "y": 522
+                  },
+                  "right": {
+                    "x": 617,
+                    "y": 522
+                  }
+                }
+              },
+              "back-left": {
+                "view": "back-left",
+                "sourceView": "back-three-quarter-left",
+                "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+                "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+                "width": 910,
+                "height": 1729,
+                "bodyScale": 0.12879377431906616,
+                "headScale": 0.2246376811594203,
+                "neck": {
+                  "x": 470,
+                  "y": 613
+                },
+                "pelvis": {
+                  "x": 495,
+                  "y": 1127
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 390,
+                    "y": 666
+                  },
+                  "right": {
+                    "x": 568,
+                    "y": 693
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 431,
+                    "y": 1149
+                  },
+                  "right": {
+                    "x": 567,
+                    "y": 1151
+                  }
+                },
+                "nearHand": "left",
+                "farHand": "right",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 109,
+                    "lower": 115
+                  },
+                  "right": {
+                    "upper": 75,
+                    "lower": 69
+                  }
+                },
+                "clothing": "M 415 581 L 432 582 L 456 590 L 484 604 L 517 611 L 532 631 L 559 648 L 577 670 L 589 699 L 595 739 L 598 780 L 606 809 L 596 805 L 581 788 L 569 794 L 544 750 L 532 761 L 517 739 L 511 751 L 497 721 L 490 694 L 479 695 L 461 671 L 445 636 L 430 641 L 414 627 L 397 623 L 375 631 L 364 642 L 385 646 L 398 679 L 395 718 L 406 714 L 401 746 L 411 752 L 403 788 L 389 822 L 375 839 L 368 855 L 376 868 L 361 903 L 373 911 L 362 934 L 367 942 L 344 982 L 345 992 L 365 991 L 354 1015 L 339 1045 L 326 1078 L 334 1089 L 346 1089 L 336 1108 L 345 1118 L 328 1159 L 340 1170 L 322 1208 L 332 1219 L 320 1251 L 351 1241 L 365 1260 L 381 1247 L 401 1278 L 412 1270 L 439 1297 L 449 1260 L 464 1274 L 480 1226 L 474 1205 L 487 1196 L 500 1151 L 508 1144 L 518 1181 L 525 1214 L 540 1205 L 528 1229 L 532 1279 L 548 1267 L 558 1278 L 568 1264 L 585 1290 L 610 1251 L 632 1270 L 642 1239 L 660 1247 L 645 1199 L 636 1161 L 653 1151 L 638 1110 L 648 1094 L 631 1056 L 625 1032 L 635 1021 L 635 1006 L 643 996 L 630 964 L 640 950 L 624 919 L 613 894 L 624 882 L 612 850 L 621 838 L 606 817 L 604 773 L 599 723 L 590 684 L 574 661 L 551 642 L 529 628 L 522 608 L 492 599 L 462 585 L 438 574 L 416 569 Z",
+                "inkPad": 7,
+                "headClip": "M 369 80 L 408 88 L 448 99 L 440 81 L 490 114 L 473 61 L 505 75 L 530 103 L 548 147 L 562 104 L 573 130 L 567 150 L 602 127 L 588 150 L 627 153 L 657 164 L 612 176 L 651 190 L 683 212 L 710 244 L 660 232 L 697 280 L 712 309 L 728 342 L 684 322 L 705 370 L 716 416 L 680 393 L 693 447 L 667 433 L 680 478 L 674 512 L 657 483 L 648 530 L 630 555 L 625 528 L 607 564 L 590 587 L 576 569 L 557 602 L 539 615 L 522 588 L 518 603 L 487 587 L 479 595 L 453 580 L 431 558 L 418 571 L 402 552 L 386 537 L 375 496 L 366 461 L 352 456 L 360 499 L 370 551 L 409 574 L 391 597 L 366 610 L 349 607 L 331 621 L 310 606 L 299 586 L 294 598 L 280 568 L 277 546 L 269 561 L 266 532 L 274 514 L 263 520 L 268 501 L 251 493 L 242 477 L 248 460 L 238 450 L 235 439 L 244 422 L 264 401 L 266 379 L 260 357 L 252 364 L 254 333 L 240 346 L 248 313 L 231 320 L 263 295 L 231 307 L 245 275 L 266 249 L 201 273 L 211 246 L 242 216 L 276 197 L 235 197 L 260 178 L 294 160 L 335 145 L 284 128 L 309 115 L 344 109 L 380 114 L 401 121 Z",
+                "headBounds": {
+                  "left": 201,
+                  "right": 728,
+                  "top": 61,
+                  "bottom": 621
+                },
+                "chin": null
+              },
+              "back-right": {
+                "view": "back-right",
+                "sourceView": "back-three-quarter-right",
+                "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+                "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+                "width": 910,
+                "height": 1728,
+                "bodyScale": 0.12854368932038834,
+                "headScale": 0.2335216572504708,
+                "neck": {
+                  "x": 518,
+                  "y": 565
+                },
+                "pelvis": {
+                  "x": 496,
+                  "y": 1080
+                },
+                "shoulders": {
+                  "left": {
+                    "x": 399,
+                    "y": 613
+                  },
+                  "right": {
+                    "x": 625,
+                    "y": 620
+                  }
+                },
+                "hips": {
+                  "left": {
+                    "x": 426,
+                    "y": 1104
+                  },
+                  "right": {
+                    "x": 577,
+                    "y": 1102
+                  }
+                },
+                "nearHand": "right",
+                "farHand": "left",
+                "armDepth": "authored-near-far",
+                "restDirectionsDeg": {
+                  "left": {
+                    "upper": 106,
+                    "lower": 113
+                  },
+                  "right": {
+                    "upper": 73,
+                    "lower": 66
+                  }
+                },
+                "clothing": "M 424 582 L 447 572 L 468 564 L 493 568 L 509 550 L 531 555 L 549 543 L 570 535 L 579 545 L 594 530 L 590 563 L 613 580 L 626 594 L 625 634 L 632 679 L 641 721 L 650 756 L 643 793 L 635 823 L 626 838 L 608 803 L 595 814 L 564 784 L 553 802 L 536 776 L 523 738 L 515 747 L 503 735 L 485 692 L 466 711 L 451 658 L 439 674 L 429 645 L 421 610 L 415 616 L 416 584 L 401 596 L 397 580 L 377 597 L 368 612 L 377 625 L 367 647 L 375 660 L 368 687 L 375 699 L 360 734 L 375 747 L 368 766 L 380 769 L 362 810 L 369 824 L 383 820 L 372 853 L 359 877 L 363 891 L 378 881 L 367 900 L 347 918 L 338 934 L 344 944 L 363 941 L 357 956 L 366 968 L 354 981 L 340 1002 L 318 1039 L 338 1037 L 326 1070 L 320 1101 L 337 1094 L 327 1137 L 313 1166 L 313 1180 L 331 1180 L 316 1209 L 306 1244 L 329 1232 L 342 1259 L 357 1236 L 372 1265 L 393 1250 L 407 1272 L 422 1263 L 438 1291 L 452 1250 L 467 1259 L 466 1211 L 477 1168 L 485 1148 L 494 1183 L 502 1200 L 501 1220 L 515 1225 L 515 1265 L 525 1265 L 530 1297 L 552 1270 L 574 1294 L 595 1256 L 617 1269 L 637 1279 L 648 1243 L 678 1263 L 684 1250 L 680 1238 L 690 1235 L 674 1196 L 684 1185 L 668 1153 L 674 1148 L 660 1118 L 670 1116 L 654 1061 L 675 1071 L 678 1055 L 660 1019 L 646 993 L 648 972 L 657 961 L 650 944 L 639 924 L 650 913 L 641 885 L 643 865 L 633 841 Z",
+                "inkPad": 7,
+                "headClip": "M 442 122 L 466 87 L 504 57 L 561 34 L 519 88 L 572 68 L 631 64 L 588 96 L 643 87 L 690 98 L 640 119 L 684 124 L 727 151 L 674 158 L 715 183 L 752 209 L 716 204 L 732 234 L 711 222 L 730 257 L 708 243 L 704 274 L 704 297 L 715 326 L 722 359 L 717 386 L 729 404 L 735 419 L 724 427 L 728 443 L 718 453 L 724 474 L 718 503 L 710 516 L 705 501 L 694 532 L 677 553 L 665 566 L 657 551 L 634 574 L 623 559 L 615 528 L 617 489 L 614 472 L 607 503 L 595 520 L 584 532 L 576 516 L 565 528 L 548 536 L 533 548 L 507 535 L 505 552 L 491 559 L 469 550 L 465 565 L 439 565 L 419 554 L 413 564 L 394 549 L 381 521 L 369 541 L 350 522 L 335 495 L 332 463 L 312 482 L 308 447 L 278 456 L 275 416 L 289 363 L 236 389 L 242 350 L 256 316 L 278 281 L 245 286 L 267 256 L 299 222 L 250 228 L 275 199 L 308 175 L 351 158 L 314 145 L 346 134 L 386 133 L 401 137 L 373 112 L 414 122 L 400 91 L 421 106 L 440 79 L 437 108 Z",
+                "headBounds": {
+                  "left": 236,
+                  "right": 752,
+                  "top": 34,
+                  "bottom": 574
+                },
+                "chin": null
+              }
+            }
+          },
+          "coordinateAuthority": "own-source manual/model-assisted approximations; not measured anatomy/yaw",
+          "measuredYawDeg": null,
+          "capabilities": [
+            "fixed own-source head/clothing",
+            "same-person canonical bones/mitten/sole",
+            "profile rest/point/think; rear rest/point only"
+          ],
+          "unavailable": [
+            "speech",
+            "gaze/blink",
+            "other emotions",
+            "locomotion/seat",
+            "cloth/hair follow",
+            "tools/manipulation",
+            "supporting cast/head bank",
+            "continuous turns",
+            "rear chin contact"
+          ],
+          "approved": false,
+          "artApproved": false,
           "motionVerified": false,
           "productionReady": false,
           "productionRig": null,
@@ -14574,13 +16305,13 @@
           "productionReady": false,
           "motionVerified": false
         },
-        "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
+        "fingerprint": "7065a16b9c09e91fd988b31cb57daebd4ff311aac97dba9119949a555f4e2289",
         "status": "developer-landmark-and-layer-candidate",
         "productionReady": false,
         "approved": false,
-        "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
+        "method": "independent uniform3/4 sources plus own front/profile/rear fixed-view engineering candidates; own neutral-arm cues/poles with same-person canonical bones/mitten/sole; no borrowed detailed features, mirrored/warped faces or inferred yaw",
         "limitations": [
-          "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
+          "front/profile/rear landmarks/masks/depth/arm direction are own-source approximations, not measured or accepted; fixed happy/rigid rest/point/think except rear has no think/chin; no continuous turns",
           "identity/proportion/mask review",
           "happy fixed view by default; optional unapproved speech/eyes/expression selections",
           "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",
@@ -14589,7 +16320,7 @@
           "no motion acceptance"
         ]
       },
-      "fingerprint": "27407061e3b48273fbea7a8f085e0fedfdfd6eb07216df0a0629978532d019c7",
+      "fingerprint": "855667aa39b50cf505ffbb0d9f8f64cf70f9bb312e7ba71b04fa35918cb19dbc",
       "happy": "One unwarped cutout image, retaining its complete face, nose, eyes and smile; no relocated or enlarged glyphs.",
       "orientation": "fixed source orientation with whole-head tilt/nod; no yaw reconstruction; partner-facing authored views pending",
       "expression": "source happy retained; provisional blink and speech/frown/round overlays only, not accepted expression art or phoneme lip-sync",
@@ -14603,24 +16334,24 @@
       "garment fold and seated motion acceptance",
       "runtime anatomy and motion acceptance"
     ],
-    "codeHash": "5be6a0e011b3909760c112c2439830325abac33d29fec88ed8c13eb4fa21f2f3",
+    "codeHash": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408",
     "walkCodeHash": "9af5808072972eb6ec94449252c949fd1c8f1d93aa44e5d9dd8c25d9d87d8f07",
     "runCodeHash": "2e3ca3e74e33fdf94b851f9aea95dc14d44ad89f13757a877367503404fa5d40",
     "spearCodeHash": "3857e1bcb51dac785ad84b660139cd2b0c381458534e0c467928fd1209baebe0",
     "armShapeCodeHash": "f8fb3f473570154534dfbef110dfc54ab9b7b3c9dcc4f5b19b7a76eada0b8e98",
-    "compilerCodeHash": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
-    "rigCodeHash": "7889f3da63988ad58c1b73689ee86a84df819d246330b5bb23fcea055c4d4b14",
+    "compilerCodeHash": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
+    "rigCodeHash": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
     "cameraCodeHash": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
     "sourceBodyCodeHash": "7068b1dcec92770d37e7dcc274c8ba128a314543c1a3571182ee4159bccf30f1",
     "actingClockCodeHash": "b13d2b419151a84aab9055af740a13abcc7cfdff0e78c481815fec00a73b3c58",
     "actingBindingCodeHash": "a5264e4c4b8191a3045bf3d762869d035bad5b5d734db8472b2e1dcc720f4639",
-    "secondaryCodeHash": "7391bed1c6b05dfde089058a07fee7099c4fd27b8457b5089ee0ba592d955fad",
+    "secondaryCodeHash": "884addb5616e89c3c83986343fb4315f1c257a8d2927971fdff2de500d089278",
     "secondaryMotionCodeHash": "edde8773a2aa460a1c2246effdd8b1ed3121f67bdb4c42965a5b33f9a58f2e0c",
-    "viewCodeHash": "8c2eacce65b1fd8d6734a1d4a0fcb19b2efe61d3adee581028093ab505b0729e",
+    "viewCodeHash": "46acb4a8c00ba6b25abf17610bfba77b7f200cee9e57f12bf7f921c7e4d57655",
     "viewContourCodeHash": "0a1be1efcb3c638180e2a62e9f7deb180cc67ec26a172778859d9fd468f07e8d",
-    "viewClothCodeHash": "76774634b92df6a5378caa37f70449d2f6d3e5a37014c18fc5363f09a313052b",
+    "viewClothCodeHash": "551ae8515f7211f3db01abefb419a5a455136451f0833a0f11680314153988ce",
     "viewClothGeometryCodeHash": "5e8b75506ebe87768d44161d158bfc762e1e9b3645601bfb76d44d8af1a34f51",
-    "viewSeatCodeHash": "45db194550423810c71e191e35bcf2155cb5217abe322f963db7d116e44584ef",
+    "viewSeatCodeHash": "8aa8eeefb324f76d1e1c71f434abf8de719684f474c19c06182429a4943ecff4",
     "viewSeatRegistrationCodeHash": "48b77839b52e2275b68d1bb0a0ea0aeed102add0194a6b4fc3550f548d485142",
     "viewSeatCorrespondenceHash": "89df68c15f5c359f3b9421fce0ac2c5309d259a2e6fe469991e20592f03d48af",
     "lungeCodeHash": "124f4fe064ceda099e1f1ecd108faf2d09910738c402463530106b2d7a1fcdfc",
@@ -14858,6 +16589,587 @@
     ],
     "workflow": "docs/topics/AI-POSE-WORKFLOW.md"
   },
+  "nativeObliqueRig": {
+    "version": "native-oblique-body-registration-1",
+    "sources": {
+      "lila": {
+        "left": {
+          "view": "left",
+          "sourceView": "left",
+          "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+          "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+          "width": 1173,
+          "height": 1341,
+          "bodyScale": 0.302262443438914,
+          "headScale": 0.2610091743119266,
+          "neck": {
+            "x": 598,
+            "y": 486
+          },
+          "pelvis": {
+            "x": 575,
+            "y": 707
+          },
+          "shoulders": {
+            "left": {
+              "x": 552,
+              "y": 506
+            },
+            "right": {
+              "x": 602,
+              "y": 523
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 563,
+              "y": 725
+            },
+            "right": {
+              "x": 600,
+              "y": 730
+            }
+          },
+          "nearHand": "right",
+          "farHand": "left",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 100,
+              "lower": 94
+            },
+            "right": {
+              "upper": 81,
+              "lower": 88
+            }
+          },
+          "clothing": "M575 437L602 432L606 458L619 483L627 503L633 538L644 577L638 615L649 656L647 684L656 704L661 728L678 761L680 797L700 854L713 903L729 956L719 981L694 958L681 1007L662 970L646 995L630 960L620 994L604 965L590 1006L574 963L557 1000L542 963L527 989L512 958L493 981L499 925L492 903L504 863L500 837L511 803L514 774L530 732L520 710L537 680L532 647L540 615L534 584L545 556L527 550L545 530L565 507L575 474Z",
+          "inkPad": 7,
+          "headClip": "M0 0H1173V440H680L652 435L642 474L664 493L689 478L724 443L752 426L805 435L837 482L850 546L847 604L856 639L841 662L847 695L825 735L816 771L797 802L773 765L758 804L738 771L719 784L705 741L690 703L682 665L669 614L658 570L642 533L625 509L600 487L576 478L556 467L532 450H0Z",
+          "headBounds": {
+            "left": 390,
+            "right": 880,
+            "top": 50,
+            "bottom": 813
+          },
+          "chin": {
+            "left": {
+              "x": 473,
+              "y": 413
+            },
+            "right": {
+              "x": 473,
+              "y": 413
+            }
+          }
+        },
+        "right": {
+          "view": "right",
+          "sourceView": "right",
+          "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+          "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+          "width": 1024,
+          "height": 1536,
+          "bodyScale": 0.20809968847352023,
+          "headScale": 0.23224489795918365,
+          "neck": {
+            "x": 571,
+            "y": 515
+          },
+          "pelvis": {
+            "x": 558,
+            "y": 836
+          },
+          "shoulders": {
+            "left": {
+              "x": 516,
+              "y": 567
+            },
+            "right": {
+              "x": 631,
+              "y": 593
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 499,
+              "y": 857
+            },
+            "right": {
+              "x": 603,
+              "y": 858
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 100,
+              "lower": 94
+            },
+            "right": {
+              "upper": 81,
+              "lower": 88
+            }
+          },
+          "clothing": "M549 477L577 479L590 507L608 539L625 565L646 587L659 612L652 641L674 668L662 694L679 716L660 743L662 783L651 819L661 842L664 875L678 911L687 949L701 989L697 1034L712 1064L699 1109L679 1082L657 1138L638 1107L621 1146L608 1114L594 1157L573 1115L559 1148L539 1120L525 1155L507 1118L491 1148L477 1114L456 1132L468 1081L455 1061L469 1017L477 986L479 950L496 905L499 868L490 843L500 809L494 781L509 747L509 712L523 682L530 651L538 624L542 599L558 579L572 563L565 533L549 509Z",
+          "inkPad": 7,
+          "headClip": "M0 0H1024V466H660L633 484L613 513L594 539L580 558L564 535L550 505L537 490L515 494L498 526L484 570L466 616L447 661L428 710L405 747L385 792L359 825L345 790L327 840L309 804L292 826L278 786L263 806L249 762L234 740L244 694L231 667L248 627L243 598L260 553L277 514L302 479L329 449H0Z",
+          "headBounds": {
+            "left": 210,
+            "right": 832,
+            "top": 25,
+            "bottom": 857
+          },
+          "chin": {
+            "left": {
+              "x": 666,
+              "y": 448
+            },
+            "right": {
+              "x": 666,
+              "y": 448
+            }
+          }
+        },
+        "back-left": {
+          "view": "back-left",
+          "sourceView": "back-three-quarter-left",
+          "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+          "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+          "width": 939,
+          "height": 1675,
+          "bodyScale": 0.22416107382550335,
+          "headScale": 0.20141592920353982,
+          "neck": {
+            "x": 464,
+            "y": 608
+          },
+          "pelvis": {
+            "x": 491,
+            "y": 906
+          },
+          "shoulders": {
+            "left": {
+              "x": 389,
+              "y": 611
+            },
+            "right": {
+              "x": 548,
+              "y": 684
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 408,
+              "y": 928
+            },
+            "right": {
+              "x": 584,
+              "y": 932
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 105,
+              "lower": 112
+            },
+            "right": {
+              "upper": 79,
+              "lower": 73
+            }
+          },
+          "clothing": "M 407 580 L 415 576 L 430 599 L 452 628 L 481 648 L 468 617 L 492 631 L 508 676 L 525 708 L 531 740 L 546 721 L 541 760 L 566 778 L 554 793 L 565 807 L 559 830 L 572 855 L 586 866 L 566 878 L 580 896 L 596 904 L 600 919 L 588 928 L 610 959 L 625 993 L 612 992 L 635 1069 L 621 1065 L 646 1138 L 655 1156 L 639 1162 L 660 1225 L 641 1205 L 643 1238 L 618 1200 L 615 1231 L 596 1197 L 587 1259 L 579 1280 L 559 1237 L 553 1272 L 530 1213 L 519 1241 L 497 1186 L 477 1240 L 453 1198 L 431 1253 L 419 1214 L 416 1149 L 381 1200 L 381 1169 L 354 1208 L 359 1151 L 338 1169 L 353 1080 L 343 1090 L 371 1023 L 350 1031 L 373 974 L 355 975 L 381 926 L 385 909 L 372 901 L 377 886 L 371 877 L 384 861 L 376 850 L 396 819 L 401 790 L 383 807 L 389 775 L 373 785 L 378 761 L 366 764 L 390 728 L 386 717 L 400 706 L 390 695 L 407 689 L 416 664 L 410 641 Z",
+          "inkPad": 7,
+          "headClip": "M 324 60 L 353 44 L 396 43 L 445 58 L 497 83 L 531 116 L 523 84 L 548 112 L 552 149 L 580 124 L 609 121 L 638 139 L 660 177 L 620 153 L 578 153 L 626 183 L 669 222 L 702 270 L 722 310 L 682 282 L 692 322 L 713 353 L 748 366 L 721 380 L 687 360 L 676 398 L 657 433 L 626 444 L 594 466 L 575 488 L 580 507 L 555 536 L 526 577 L 500 621 L 471 607 L 485 650 L 454 625 L 430 597 L 415 566 L 391 563 L 371 541 L 376 564 L 345 554 L 322 530 L 309 490 L 279 472 L 262 450 L 251 416 L 257 378 L 267 345 L 253 325 L 248 368 L 235 337 L 230 296 L 216 315 L 180 349 L 178 314 L 191 272 L 220 229 L 255 193 L 202 211 L 169 207 L 207 182 L 246 148 L 307 124 L 259 123 L 216 134 L 268 102 L 317 89 L 368 85 L 417 98 L 467 128 L 435 99 L 390 73 L 353 61 Z M 665 491 L 698 493 L 735 511 L 758 548 L 778 592 L 768 633 L 784 690 L 813 737 L 784 719 L 758 684 L 754 747 L 744 796 L 744 839 L 766 879 L 741 893 L 708 882 L 677 859 L 651 826 L 627 786 L 641 839 L 616 816 L 594 781 L 577 737 L 566 687 L 556 647 L 549 694 L 531 735 L 530 702 L 513 675 L 499 635 L 496 598 L 514 558 L 546 528 L 576 513 L 588 526 L 614 517 L 640 505 ZM574 436H677V529H574Z",
+          "headBounds": {
+            "left": 169,
+            "right": 813,
+            "top": 43,
+            "bottom": 893
+          },
+          "chin": null
+        },
+        "back-right": {
+          "view": "back-right",
+          "sourceView": "back-three-quarter-right",
+          "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+          "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+          "width": 939,
+          "height": 1676,
+          "bodyScale": 0.21139240506329113,
+          "headScale": 0.20766423357664232,
+          "neck": {
+            "x": 565,
+            "y": 573
+          },
+          "pelvis": {
+            "x": 552,
+            "y": 889
+          },
+          "shoulders": {
+            "left": {
+              "x": 484,
+              "y": 659
+            },
+            "right": {
+              "x": 646,
+              "y": 611
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 483,
+              "y": 913
+            },
+            "right": {
+              "x": 616,
+              "y": 914
+            }
+          },
+          "nearHand": "right",
+          "farHand": "left",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 102,
+              "lower": 108
+            },
+            "right": {
+              "upper": 77,
+              "lower": 70
+            }
+          },
+          "clothing": "M 582 530 L 586 551 L 601 566 L 616 572 L 638 578 L 625 590 L 632 595 L 617 611 L 623 618 L 612 641 L 616 669 L 628 699 L 635 737 L 638 777 L 626 797 L 613 782 L 616 808 L 634 832 L 627 845 L 640 861 L 631 873 L 653 883 L 655 897 L 645 908 L 660 933 L 675 965 L 650 950 L 673 1016 L 694 1070 L 679 1054 L 696 1119 L 674 1098 L 691 1151 L 700 1206 L 676 1177 L 671 1154 L 671 1232 L 646 1199 L 632 1239 L 605 1275 L 596 1229 L 577 1250 L 575 1168 L 554 1193 L 546 1141 L 523 1205 L 518 1221 L 511 1195 L 481 1247 L 467 1211 L 470 1174 L 433 1209 L 398 1241 L 400 1184 L 375 1215 L 379 1179 L 399 1116 L 379 1124 L 411 1041 L 398 1054 L 416 991 L 437 945 L 413 953 L 448 905 L 441 888 L 448 871 L 459 863 L 471 826 L 474 806 L 458 804 L 476 779 L 477 763 L 487 769 L 481 740 L 478 722 L 500 708 L 514 693 L 508 671 L 516 623 L 537 586 L 561 562 Z",
+          "inkPad": 7,
+          "headClip": "M 450 121 L 481 79 L 524 52 L 572 35 L 625 25 L 679 26 L 716 38 L 745 57 L 695 44 L 650 43 L 606 54 L 572 86 L 559 112 L 600 91 L 645 79 L 690 83 L 725 96 L 677 100 L 645 119 L 687 112 L 733 120 L 778 145 L 741 135 L 705 136 L 752 161 L 785 194 L 807 231 L 818 263 L 786 229 L 769 219 L 786 268 L 790 318 L 779 359 L 773 317 L 756 286 L 755 323 L 764 368 L 759 411 L 742 442 L 716 466 L 682 483 L 671 487 L 675 516 L 693 541 L 675 538 L 653 521 L 642 490 L 642 452 L 629 488 L 617 494 L 621 535 L 640 563 L 612 560 L 596 547 L 589 517 L 573 535 L 547 558 L 538 594 L 536 568 L 518 583 L 506 624 L 499 673 L 486 650 L 476 605 L 464 555 L 466 514 L 476 494 L 462 475 L 425 453 L 384 439 L 365 451 L 344 444 L 327 426 L 319 401 L 324 368 L 303 389 L 276 407 L 287 373 L 307 342 L 338 304 L 367 260 L 391 224 L 362 241 L 389 204 L 430 170 L 383 186 L 362 199 L 388 166 L 437 144 L 394 149 L 367 155 L 405 133 Z M 366 480 L 401 488 L 443 511 L 460 541 L 471 586 L 476 633 L 474 675 L 481 709 L 498 724 L 478 721 L 477 743 L 491 764 L 470 755 L 453 731 L 449 774 L 432 828 L 437 858 L 420 844 L 411 814 L 398 866 L 384 914 L 373 873 L 351 827 L 340 789 L 334 836 L 318 813 L 306 766 L 302 721 L 294 744 L 289 787 L 276 746 L 274 702 L 258 738 L 239 766 L 237 719 L 246 674 L 268 628 L 240 653 L 222 670 L 237 625 L 259 585 L 292 549 L 260 564 L 231 584 L 261 548 L 302 519 L 337 502 L 309 505 L 278 516 L 306 495 ZM323 437H453V523H323Z",
+          "headBounds": {
+            "left": 222,
+            "right": 818,
+            "top": 25,
+            "bottom": 914
+          },
+          "chin": null
+        }
+      },
+      "karo": {
+        "left": {
+          "view": "left",
+          "sourceView": "left",
+          "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+          "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+          "width": 910,
+          "height": 1728,
+          "bodyScale": 0.13966244725738397,
+          "headScale": 0.21602787456445993,
+          "neck": {
+            "x": 474,
+            "y": 653
+          },
+          "pelvis": {
+            "x": 457,
+            "y": 1127
+          },
+          "shoulders": {
+            "left": {
+              "x": 432,
+              "y": 670
+            },
+            "right": {
+              "x": 526,
+              "y": 697
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 412,
+              "y": 1149
+            },
+            "right": {
+              "x": 506,
+              "y": 1148
+            }
+          },
+          "nearHand": "right",
+          "farHand": "left",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 100,
+              "lower": 94
+            },
+            "right": {
+              "upper": 81,
+              "lower": 88
+            }
+          },
+          "clothing": "M439 598L478 591L496 617L514 643L542 662L555 694L545 725L555 769L551 814L564 856L556 904L575 946L564 985L577 1023L570 1073L555 1105L563 1131L568 1162L581 1192L587 1229L595 1256L583 1272L585 1306L565 1333L549 1306L528 1348L513 1320L498 1354L483 1316L471 1283L457 1241L438 1289L422 1336L404 1311L389 1343L370 1317L351 1336L337 1298L323 1317L328 1283L320 1257L337 1222L336 1195L350 1168L345 1133L353 1105L341 1086L357 1052L355 1017L368 985L362 957L378 927L377 886L389 854L389 816L404 785L410 750L423 718L433 686L445 658Z",
+          "inkPad": 7,
+          "headClip": "M0 0H910V534H600L575 556L548 561L523 584L505 612L479 609L462 624L443 603L427 622L411 609L392 638L372 622L350 650L329 628L312 639L289 614L270 619L249 595L236 566H0Z",
+          "headBounds": {
+            "left": 201,
+            "right": 726,
+            "top": 79,
+            "bottom": 650
+          },
+          "chin": {
+            "left": {
+              "x": 322,
+              "y": 589
+            },
+            "right": {
+              "x": 322,
+              "y": 589
+            }
+          }
+        },
+        "right": {
+          "view": "right",
+          "sourceView": "right",
+          "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+          "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+          "width": 910,
+          "height": 1727,
+          "bodyScale": 0.18087431693989073,
+          "headScale": 0.23308270676691728,
+          "neck": {
+            "x": 503,
+            "y": 555
+          },
+          "pelvis": {
+            "x": 498,
+            "y": 921
+          },
+          "shoulders": {
+            "left": {
+              "x": 420,
+              "y": 592
+            },
+            "right": {
+              "x": 556,
+              "y": 611
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 444,
+              "y": 944
+            },
+            "right": {
+              "x": 550,
+              "y": 947
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 100,
+              "lower": 94
+            },
+            "right": {
+              "upper": 81,
+              "lower": 88
+            }
+          },
+          "clothing": "M463 512L501 513L514 539L535 566L557 585L580 597L581 627L595 656L585 683L603 718L601 751L616 789L608 823L628 857L621 882L639 912L635 941L648 974L643 1005L659 1043L649 1072L664 1106L652 1139L628 1115L611 1159L588 1139L571 1163L553 1128L536 1108L518 1058L503 1091L485 1131L465 1150L447 1127L430 1161L408 1136L389 1149L376 1119L358 1131L366 1097L354 1071L368 1037L365 1008L379 978L376 947L390 921L384 892L393 855L388 831L401 794L399 759L416 725L426 690L435 654L446 619L451 580Z",
+          "inkPad": 7,
+          "headClip": "M0 0H910V506H628L611 532L587 537L576 561L551 549L532 575L512 554L493 568L477 549L458 562L442 544L427 553L407 530H0Z",
+          "headBounds": {
+            "left": 216,
+            "right": 752,
+            "top": 23,
+            "bottom": 575
+          },
+          "chin": {
+            "left": {
+              "x": 617,
+              "y": 522
+            },
+            "right": {
+              "x": 617,
+              "y": 522
+            }
+          }
+        },
+        "back-left": {
+          "view": "back-left",
+          "sourceView": "back-three-quarter-left",
+          "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+          "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+          "width": 910,
+          "height": 1729,
+          "bodyScale": 0.12879377431906616,
+          "headScale": 0.2246376811594203,
+          "neck": {
+            "x": 470,
+            "y": 613
+          },
+          "pelvis": {
+            "x": 495,
+            "y": 1127
+          },
+          "shoulders": {
+            "left": {
+              "x": 390,
+              "y": 666
+            },
+            "right": {
+              "x": 568,
+              "y": 693
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 431,
+              "y": 1149
+            },
+            "right": {
+              "x": 567,
+              "y": 1151
+            }
+          },
+          "nearHand": "left",
+          "farHand": "right",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 109,
+              "lower": 115
+            },
+            "right": {
+              "upper": 75,
+              "lower": 69
+            }
+          },
+          "clothing": "M 415 581 L 432 582 L 456 590 L 484 604 L 517 611 L 532 631 L 559 648 L 577 670 L 589 699 L 595 739 L 598 780 L 606 809 L 596 805 L 581 788 L 569 794 L 544 750 L 532 761 L 517 739 L 511 751 L 497 721 L 490 694 L 479 695 L 461 671 L 445 636 L 430 641 L 414 627 L 397 623 L 375 631 L 364 642 L 385 646 L 398 679 L 395 718 L 406 714 L 401 746 L 411 752 L 403 788 L 389 822 L 375 839 L 368 855 L 376 868 L 361 903 L 373 911 L 362 934 L 367 942 L 344 982 L 345 992 L 365 991 L 354 1015 L 339 1045 L 326 1078 L 334 1089 L 346 1089 L 336 1108 L 345 1118 L 328 1159 L 340 1170 L 322 1208 L 332 1219 L 320 1251 L 351 1241 L 365 1260 L 381 1247 L 401 1278 L 412 1270 L 439 1297 L 449 1260 L 464 1274 L 480 1226 L 474 1205 L 487 1196 L 500 1151 L 508 1144 L 518 1181 L 525 1214 L 540 1205 L 528 1229 L 532 1279 L 548 1267 L 558 1278 L 568 1264 L 585 1290 L 610 1251 L 632 1270 L 642 1239 L 660 1247 L 645 1199 L 636 1161 L 653 1151 L 638 1110 L 648 1094 L 631 1056 L 625 1032 L 635 1021 L 635 1006 L 643 996 L 630 964 L 640 950 L 624 919 L 613 894 L 624 882 L 612 850 L 621 838 L 606 817 L 604 773 L 599 723 L 590 684 L 574 661 L 551 642 L 529 628 L 522 608 L 492 599 L 462 585 L 438 574 L 416 569 Z",
+          "inkPad": 7,
+          "headClip": "M 369 80 L 408 88 L 448 99 L 440 81 L 490 114 L 473 61 L 505 75 L 530 103 L 548 147 L 562 104 L 573 130 L 567 150 L 602 127 L 588 150 L 627 153 L 657 164 L 612 176 L 651 190 L 683 212 L 710 244 L 660 232 L 697 280 L 712 309 L 728 342 L 684 322 L 705 370 L 716 416 L 680 393 L 693 447 L 667 433 L 680 478 L 674 512 L 657 483 L 648 530 L 630 555 L 625 528 L 607 564 L 590 587 L 576 569 L 557 602 L 539 615 L 522 588 L 518 603 L 487 587 L 479 595 L 453 580 L 431 558 L 418 571 L 402 552 L 386 537 L 375 496 L 366 461 L 352 456 L 360 499 L 370 551 L 409 574 L 391 597 L 366 610 L 349 607 L 331 621 L 310 606 L 299 586 L 294 598 L 280 568 L 277 546 L 269 561 L 266 532 L 274 514 L 263 520 L 268 501 L 251 493 L 242 477 L 248 460 L 238 450 L 235 439 L 244 422 L 264 401 L 266 379 L 260 357 L 252 364 L 254 333 L 240 346 L 248 313 L 231 320 L 263 295 L 231 307 L 245 275 L 266 249 L 201 273 L 211 246 L 242 216 L 276 197 L 235 197 L 260 178 L 294 160 L 335 145 L 284 128 L 309 115 L 344 109 L 380 114 L 401 121 Z",
+          "headBounds": {
+            "left": 201,
+            "right": 728,
+            "top": 61,
+            "bottom": 621
+          },
+          "chin": null
+        },
+        "back-right": {
+          "view": "back-right",
+          "sourceView": "back-three-quarter-right",
+          "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+          "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+          "width": 910,
+          "height": 1728,
+          "bodyScale": 0.12854368932038834,
+          "headScale": 0.2335216572504708,
+          "neck": {
+            "x": 518,
+            "y": 565
+          },
+          "pelvis": {
+            "x": 496,
+            "y": 1080
+          },
+          "shoulders": {
+            "left": {
+              "x": 399,
+              "y": 613
+            },
+            "right": {
+              "x": 625,
+              "y": 620
+            }
+          },
+          "hips": {
+            "left": {
+              "x": 426,
+              "y": 1104
+            },
+            "right": {
+              "x": 577,
+              "y": 1102
+            }
+          },
+          "nearHand": "right",
+          "farHand": "left",
+          "armDepth": "authored-near-far",
+          "restDirectionsDeg": {
+            "left": {
+              "upper": 106,
+              "lower": 113
+            },
+            "right": {
+              "upper": 73,
+              "lower": 66
+            }
+          },
+          "clothing": "M 424 582 L 447 572 L 468 564 L 493 568 L 509 550 L 531 555 L 549 543 L 570 535 L 579 545 L 594 530 L 590 563 L 613 580 L 626 594 L 625 634 L 632 679 L 641 721 L 650 756 L 643 793 L 635 823 L 626 838 L 608 803 L 595 814 L 564 784 L 553 802 L 536 776 L 523 738 L 515 747 L 503 735 L 485 692 L 466 711 L 451 658 L 439 674 L 429 645 L 421 610 L 415 616 L 416 584 L 401 596 L 397 580 L 377 597 L 368 612 L 377 625 L 367 647 L 375 660 L 368 687 L 375 699 L 360 734 L 375 747 L 368 766 L 380 769 L 362 810 L 369 824 L 383 820 L 372 853 L 359 877 L 363 891 L 378 881 L 367 900 L 347 918 L 338 934 L 344 944 L 363 941 L 357 956 L 366 968 L 354 981 L 340 1002 L 318 1039 L 338 1037 L 326 1070 L 320 1101 L 337 1094 L 327 1137 L 313 1166 L 313 1180 L 331 1180 L 316 1209 L 306 1244 L 329 1232 L 342 1259 L 357 1236 L 372 1265 L 393 1250 L 407 1272 L 422 1263 L 438 1291 L 452 1250 L 467 1259 L 466 1211 L 477 1168 L 485 1148 L 494 1183 L 502 1200 L 501 1220 L 515 1225 L 515 1265 L 525 1265 L 530 1297 L 552 1270 L 574 1294 L 595 1256 L 617 1269 L 637 1279 L 648 1243 L 678 1263 L 684 1250 L 680 1238 L 690 1235 L 674 1196 L 684 1185 L 668 1153 L 674 1148 L 660 1118 L 670 1116 L 654 1061 L 675 1071 L 678 1055 L 660 1019 L 646 993 L 648 972 L 657 961 L 650 944 L 639 924 L 650 913 L 641 885 L 643 865 L 633 841 Z",
+          "inkPad": 7,
+          "headClip": "M 442 122 L 466 87 L 504 57 L 561 34 L 519 88 L 572 68 L 631 64 L 588 96 L 643 87 L 690 98 L 640 119 L 684 124 L 727 151 L 674 158 L 715 183 L 752 209 L 716 204 L 732 234 L 711 222 L 730 257 L 708 243 L 704 274 L 704 297 L 715 326 L 722 359 L 717 386 L 729 404 L 735 419 L 724 427 L 728 443 L 718 453 L 724 474 L 718 503 L 710 516 L 705 501 L 694 532 L 677 553 L 665 566 L 657 551 L 634 574 L 623 559 L 615 528 L 617 489 L 614 472 L 607 503 L 595 520 L 584 532 L 576 516 L 565 528 L 548 536 L 533 548 L 507 535 L 505 552 L 491 559 L 469 550 L 465 565 L 439 565 L 419 554 L 413 564 L 394 549 L 381 521 L 369 541 L 350 522 L 335 495 L 332 463 L 312 482 L 308 447 L 278 456 L 275 416 L 289 363 L 236 389 L 242 350 L 256 316 L 278 281 L 245 286 L 267 256 L 299 222 L 250 228 L 275 199 L 308 175 L 351 158 L 314 145 L 346 134 L 386 133 L 401 137 L 373 112 L 414 122 L 400 91 L 421 106 L 440 79 L 437 108 Z",
+          "headBounds": {
+            "left": 236,
+            "right": 752,
+            "top": 34,
+            "bottom": 574
+          },
+          "chin": null
+        }
+      }
+    },
+    "coordinateAuthority": "own-source manual/model-assisted approximations; not measured anatomy/yaw",
+    "measuredYawDeg": null,
+    "capabilities": [
+      "fixed own-source head/clothing",
+      "same-person canonical bones/mitten/sole",
+      "profile rest/point/think; rear rest/point only"
+    ],
+    "unavailable": [
+      "speech",
+      "gaze/blink",
+      "other emotions",
+      "locomotion/seat",
+      "cloth/hair follow",
+      "tools/manipulation",
+      "supporting cast/head bank",
+      "continuous turns",
+      "rear chin contact"
+    ],
+    "approved": false,
+    "artApproved": false,
+    "motionVerified": false,
+    "productionReady": false,
+    "productionRig": null,
+    "availableBanks": [],
+    "handoff": "docs/topics/PROFILE-REAR-RIG-HANDOFF.md",
+    "codeHashes": {
+      "packages/animation/body-view-basic-capabilities.ts": "e66f6488cf7b24793d4273f936877134d3656917bddbdf6bd4aa369b2196f6d4",
+      "packages/animation/body-view-oblique-registration.ts": "db7afff934d379b14ac8dbc3958bd863774512220e89151d2c8c0bdb19fee05e",
+      "packages/animation/body-view-rest-arm.ts": "e5b8b9fa014f8cc92d890e65e7200462bdf6c5a1209e3a4d10af85b87bf4c01e",
+      "packages/animation/body-view-front-registration.ts": "6605a9cda22f2bfac336a9899fba8d73128d2dcd2a17d16d5f31100d11421c1a",
+      "packages/animation/body-view-registration.ts": "c3d058e2890c073b5dbde2b1658de9a56e471d7459096dce09ed3fef371d2de8",
+      "packages/animation/body-view-art.ts": "46acb4a8c00ba6b25abf17610bfba77b7f200cee9e57f12bf7f921c7e4d57655",
+      "packages/animation/body-view-mouth.ts": "e59fd2368a093dc6699c31c08458b6e73a8411a1b4a43d48b17f738bfc75f740",
+      "packages/animation/body-view-rest-mouth.ts": "3b82b2802d403fe768c23cf8d6c039979e9b34ddf3a43b3219224489ac8899ac",
+      "packages/animation/body-view-eyes.ts": "1fe0364ec53b4f8e7ee9767e8f212266c8f8f79637922959e475fd0fe4ca2aef",
+      "packages/animation/body-view-expressions.ts": "ef37452262af21c9b823160ef8ddebc66e543b9cce784c736cbfacc324ef6aef",
+      "packages/animation/body-view-cloth.ts": "551ae8515f7211f3db01abefb419a5a455136451f0833a0f11680314153988ce",
+      "packages/animation/body-view-seat.ts": "8aa8eeefb324f76d1e1c71f434abf8de719684f474c19c06182429a4943ecff4",
+      "packages/animation/body-view-secondary.ts": "884addb5616e89c3c83986343fb4315f1c257a8d2927971fdff2de500d089278",
+      "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
+      "packages/animation/compiler.ts": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
+      "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
+      "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408",
+      "packages/animation/forest-cutout-head.ts": "8c1509c7c369f5f1b965c725bd7f01f86608fe6ecb2da64f9f92156a086e9c56",
+      "packages/host/schemas.ts": "3f802430256d5cb4fd594cde28198020643171f651137cf6bdcf7ec6717c47c4",
+      "packages/topics/body-workbench.ts": "bd3bd70768b67be950fe38f5784574aedabbe428193c28c71083022397bd71df",
+      "packages/topics/view-registration-workbench.ts": "eca2c62a00f5a133a7a4da1c59f75eefc9e755e99ec4627e4f62b029a78621fd"
+    }
+  },
   "nativeFrontRig": {
     "version": "native-front-body-registration-1",
     "sources": {
@@ -14898,6 +17210,16 @@
           }
         },
         "armDepth": "coplanar",
+        "restDirectionsDeg": {
+          "left": {
+            "upper": 104,
+            "lower": 96
+          },
+          "right": {
+            "upper": 76,
+            "lower": 84
+          }
+        },
         "inkPad": 7,
         "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
         "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
@@ -14955,6 +17277,16 @@
           }
         },
         "armDepth": "coplanar",
+        "restDirectionsDeg": {
+          "left": {
+            "upper": 104,
+            "lower": 96
+          },
+          "right": {
+            "upper": 76,
+            "lower": 84
+          }
+        },
         "inkPad": 7,
         "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
         "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
@@ -15003,22 +17335,27 @@
     "availableBanks": [],
     "handoff": "docs/topics/FRONT-BODY-RIG-HANDOFF.md",
     "codeHashes": {
-      "packages/animation/body-view-front-registration.ts": "86ab2e47ba49d36895b196537bf0b7eb0b122494e7320cc990d64d5dc470e403",
-      "packages/animation/body-view-registration.ts": "045ef1ae95684b3fa5580b47144ede6cf7b9a6801986e9285211ff7a99294bd7",
-      "packages/animation/body-view-art.ts": "8c2eacce65b1fd8d6734a1d4a0fcb19b2efe61d3adee581028093ab505b0729e",
-      "packages/animation/body-view-mouth.ts": "3f24a3b5a9315ace1d19097bc5ceb836c932dff4f58f0f5ec815eb4c77730f6d",
-      "packages/animation/body-view-rest-mouth.ts": "23ae31842d1e4ae0f1a920440d84c70e6f87beb11087f31a5c039b4caf267d85",
-      "packages/animation/body-view-eyes.ts": "6953fc615b768cad515996ae4e6af478e634cbd487b7a917551d8a6e936896ea",
-      "packages/animation/body-view-expressions.ts": "ba4cfe469ffad28a29266c75999e77ed25a64661bcc8876ec68da8cafe3994ba",
-      "packages/animation/body-view-cloth.ts": "76774634b92df6a5378caa37f70449d2f6d3e5a37014c18fc5363f09a313052b",
-      "packages/animation/body-view-seat.ts": "45db194550423810c71e191e35bcf2155cb5217abe322f963db7d116e44584ef",
-      "packages/animation/body-view-secondary.ts": "7391bed1c6b05dfde089058a07fee7099c4fd27b8457b5089ee0ba592d955fad",
-      "packages/animation/native-contact-arm.ts": "b1787c3db51c017b47dc8b808408dca142bb08c74c96d7f937a4471f7c09f10b",
-      "packages/animation/compiler.ts": "cbe273b6795e59b5d055d3140e31f25ff5dd5304832aac8ac650463c97987465",
-      "packages/animation/rig.ts": "7889f3da63988ad58c1b73689ee86a84df819d246330b5bb23fcea055c4d4b14",
+      "packages/animation/body-view-basic-capabilities.ts": "e66f6488cf7b24793d4273f936877134d3656917bddbdf6bd4aa369b2196f6d4",
+      "packages/animation/body-view-rest-arm.ts": "e5b8b9fa014f8cc92d890e65e7200462bdf6c5a1209e3a4d10af85b87bf4c01e",
+      "packages/animation/body-view-oblique-registration.ts": "db7afff934d379b14ac8dbc3958bd863774512220e89151d2c8c0bdb19fee05e",
+      "packages/animation/forest-body-art.ts": "1c5c4a8f76bd9a07962b9d3feafda331fcfd4b8bbfb9fa3475b234c0cc59c408",
+      "packages/animation/forest-cutout-head.ts": "8c1509c7c369f5f1b965c725bd7f01f86608fe6ecb2da64f9f92156a086e9c56",
+      "packages/animation/body-view-front-registration.ts": "6605a9cda22f2bfac336a9899fba8d73128d2dcd2a17d16d5f31100d11421c1a",
+      "packages/animation/body-view-registration.ts": "c3d058e2890c073b5dbde2b1658de9a56e471d7459096dce09ed3fef371d2de8",
+      "packages/animation/body-view-art.ts": "46acb4a8c00ba6b25abf17610bfba77b7f200cee9e57f12bf7f921c7e4d57655",
+      "packages/animation/body-view-mouth.ts": "e59fd2368a093dc6699c31c08458b6e73a8411a1b4a43d48b17f738bfc75f740",
+      "packages/animation/body-view-rest-mouth.ts": "3b82b2802d403fe768c23cf8d6c039979e9b34ddf3a43b3219224489ac8899ac",
+      "packages/animation/body-view-eyes.ts": "1fe0364ec53b4f8e7ee9767e8f212266c8f8f79637922959e475fd0fe4ca2aef",
+      "packages/animation/body-view-expressions.ts": "ef37452262af21c9b823160ef8ddebc66e543b9cce784c736cbfacc324ef6aef",
+      "packages/animation/body-view-cloth.ts": "551ae8515f7211f3db01abefb419a5a455136451f0833a0f11680314153988ce",
+      "packages/animation/body-view-seat.ts": "8aa8eeefb324f76d1e1c71f434abf8de719684f474c19c06182429a4943ecff4",
+      "packages/animation/body-view-secondary.ts": "884addb5616e89c3c83986343fb4315f1c257a8d2927971fdff2de500d089278",
+      "packages/animation/native-contact-arm.ts": "f6e88d7e5e5a9365f48e8390d7a8a851018e2ea2bfb8ba9f386f6689af1e9787",
+      "packages/animation/compiler.ts": "547b4fcc71e2fd0d9f2e55f122582bde5e8ff60e6447bd94d1639ec4c950e7f7",
+      "packages/animation/rig.ts": "4b928c8bc366e17c81464210ec7f0f4fb19cc42da5ac20e49dcb3cde129b734f",
       "packages/director/camera.ts": "86543021d07d8d4cf916da4791f20bbe4b8b1d76725c5e60de1afaa266ff48fc",
-      "packages/host/schemas.ts": "93762854378030e171f8945b42687388273c672cd3740fd9397276023a88fce3",
-      "packages/topics/body-workbench.ts": "d09c2240d0b0ab8be0267023f5d966c9f063419cb83a5d417c3e490a0adb0e40",
+      "packages/host/schemas.ts": "3f802430256d5cb4fd594cde28198020643171f651137cf6bdcf7ec6717c47c4",
+      "packages/topics/body-workbench.ts": "bd3bd70768b67be950fe38f5784574aedabbe428193c28c71083022397bd71df",
       "packages/topics/view-registration-workbench.ts": "eca2c62a00f5a133a7a4da1c59f75eefc9e755e99ec4627e4f62b029a78621fd"
     }
   },
@@ -15045,9 +17382,9 @@
     "motionVerified": false,
     "productionApproval": false,
     "availableBanks": [],
-    "handoff": "docs/topics/FRONT-BODY-RIG-HANDOFF.md",
+    "handoff": "docs/topics/PROFILE-REAR-RIG-HANDOFF.md",
     "codeHashes": {
-      "packages/topics/view-art-workbench.ts": "a8911dbd514eb7f344ca1bdc7f504aa51767ba8f87351d2882c2673eb9778712",
+      "packages/topics/view-art-workbench.ts": "4881dba366eaeec63ede40acaa0c3c92208d39774d25ed0dad5e436efb447774",
       "apps/server/index.ts": "87927cf6e1a19e4c0efdbc664b02d365ba23950ddadde2894a553c2bc318b6be",
       "library/schemas/index.ts": "8112c29dd396c47d8f34de51b55eccf989fb45705f1b745d2d83d5725b7b1984"
     }
@@ -15772,7 +18109,7 @@
     "registered": false,
     "registrationFlagScope": "all artwork approved/registered for production: false; raw generation metadata remains immutable",
     "engineeringRegistrations": {
-      "version": "forest-view-registration-5",
+      "version": "forest-view-registration-6",
       "artworkVersion": "forest-body-view-1",
       "sources": {
         "lila": {
@@ -16052,6 +18389,16 @@
               }
             },
             "armDepth": "coplanar",
+            "restDirectionsDeg": {
+              "left": {
+                "upper": 104,
+                "lower": 96
+              },
+              "right": {
+                "upper": 76,
+                "lower": 84
+              }
+            },
             "inkPad": 7,
             "clothing": "M458 530L513 530L515 557L542 574L572 575L592 598L598 646L609 679L600 718L619 766L586 790L583 835L599 877L623 888L627 930L642 975L659 1020L676 1065L675 1120L695 1185L687 1255L642 1215L628 1278L601 1244L588 1197L558 1246L546 1181L515 1210L500 1149L483 1112L463 1157L445 1231L420 1181L400 1256L377 1199L346 1227L356 1170L327 1208L343 1122L333 1099L349 1038L340 1010L362 956L371 930L381 900L389 877L384 850L397 798L386 772L393 738L391 697L402 666L399 631L406 598L439 577L455 555Z",
             "headClip": "M0 0H939V540H545L532 526H454L443 550L412 570L382 608L365 655L348 704L329 748L301 795L270 840L233 889H0Z",
@@ -16109,6 +18456,16 @@
               }
             },
             "armDepth": "coplanar",
+            "restDirectionsDeg": {
+              "left": {
+                "upper": 104,
+                "lower": 96
+              },
+              "right": {
+                "upper": 76,
+                "lower": 84
+              }
+            },
             "inkPad": 7,
             "clothing": "M445 535L555 535L587 533L621 541L636 565L637 612L648 662L651 709L660 755L661 800L673 848L657 871L661 888L675 918L680 948L697 971L680 991L682 1031L697 1071L701 1104L698 1135L667 1108L650 1150L627 1126L607 1157L588 1118L572 1092L552 1112L542 1050L518 1004L502 1054L486 1105L466 1093L446 1154L419 1121L394 1152L377 1106L345 1117L343 1088L355 1042L347 1018L368 974L367 940L382 916L378 889L361 864L374 823L371 798L384 761L379 738L397 709L403 668L407 623L406 582L420 551Z",
             "headClip": "M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z",
@@ -16151,6 +18508,563 @@
         ],
         "artApproved": false,
         "approved": false,
+        "motionVerified": false,
+        "productionReady": false,
+        "productionRig": null,
+        "availableBanks": []
+      },
+      "obliqueCandidate": {
+        "version": "native-oblique-body-registration-1",
+        "sources": {
+          "lila": {
+            "left": {
+              "view": "left",
+              "sourceView": "left",
+              "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+              "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+              "width": 1173,
+              "height": 1341,
+              "bodyScale": 0.302262443438914,
+              "headScale": 0.2610091743119266,
+              "neck": {
+                "x": 598,
+                "y": 486
+              },
+              "pelvis": {
+                "x": 575,
+                "y": 707
+              },
+              "shoulders": {
+                "left": {
+                  "x": 552,
+                  "y": 506
+                },
+                "right": {
+                  "x": 602,
+                  "y": 523
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 563,
+                  "y": 725
+                },
+                "right": {
+                  "x": 600,
+                  "y": 730
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M575 437L602 432L606 458L619 483L627 503L633 538L644 577L638 615L649 656L647 684L656 704L661 728L678 761L680 797L700 854L713 903L729 956L719 981L694 958L681 1007L662 970L646 995L630 960L620 994L604 965L590 1006L574 963L557 1000L542 963L527 989L512 958L493 981L499 925L492 903L504 863L500 837L511 803L514 774L530 732L520 710L537 680L532 647L540 615L534 584L545 556L527 550L545 530L565 507L575 474Z",
+              "inkPad": 7,
+              "headClip": "M0 0H1173V440H680L652 435L642 474L664 493L689 478L724 443L752 426L805 435L837 482L850 546L847 604L856 639L841 662L847 695L825 735L816 771L797 802L773 765L758 804L738 771L719 784L705 741L690 703L682 665L669 614L658 570L642 533L625 509L600 487L576 478L556 467L532 450H0Z",
+              "headBounds": {
+                "left": 390,
+                "right": 880,
+                "top": 50,
+                "bottom": 813
+              },
+              "chin": {
+                "left": {
+                  "x": 473,
+                  "y": 413
+                },
+                "right": {
+                  "x": 473,
+                  "y": 413
+                }
+              }
+            },
+            "right": {
+              "view": "right",
+              "sourceView": "right",
+              "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+              "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+              "width": 1024,
+              "height": 1536,
+              "bodyScale": 0.20809968847352023,
+              "headScale": 0.23224489795918365,
+              "neck": {
+                "x": 571,
+                "y": 515
+              },
+              "pelvis": {
+                "x": 558,
+                "y": 836
+              },
+              "shoulders": {
+                "left": {
+                  "x": 516,
+                  "y": 567
+                },
+                "right": {
+                  "x": 631,
+                  "y": 593
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 499,
+                  "y": 857
+                },
+                "right": {
+                  "x": 603,
+                  "y": 858
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M549 477L577 479L590 507L608 539L625 565L646 587L659 612L652 641L674 668L662 694L679 716L660 743L662 783L651 819L661 842L664 875L678 911L687 949L701 989L697 1034L712 1064L699 1109L679 1082L657 1138L638 1107L621 1146L608 1114L594 1157L573 1115L559 1148L539 1120L525 1155L507 1118L491 1148L477 1114L456 1132L468 1081L455 1061L469 1017L477 986L479 950L496 905L499 868L490 843L500 809L494 781L509 747L509 712L523 682L530 651L538 624L542 599L558 579L572 563L565 533L549 509Z",
+              "inkPad": 7,
+              "headClip": "M0 0H1024V466H660L633 484L613 513L594 539L580 558L564 535L550 505L537 490L515 494L498 526L484 570L466 616L447 661L428 710L405 747L385 792L359 825L345 790L327 840L309 804L292 826L278 786L263 806L249 762L234 740L244 694L231 667L248 627L243 598L260 553L277 514L302 479L329 449H0Z",
+              "headBounds": {
+                "left": 210,
+                "right": 832,
+                "top": 25,
+                "bottom": 857
+              },
+              "chin": {
+                "left": {
+                  "x": 666,
+                  "y": 448
+                },
+                "right": {
+                  "x": 666,
+                  "y": 448
+                }
+              }
+            },
+            "back-left": {
+              "view": "back-left",
+              "sourceView": "back-three-quarter-left",
+              "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+              "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+              "width": 939,
+              "height": 1675,
+              "bodyScale": 0.22416107382550335,
+              "headScale": 0.20141592920353982,
+              "neck": {
+                "x": 464,
+                "y": 608
+              },
+              "pelvis": {
+                "x": 491,
+                "y": 906
+              },
+              "shoulders": {
+                "left": {
+                  "x": 389,
+                  "y": 611
+                },
+                "right": {
+                  "x": 548,
+                  "y": 684
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 408,
+                  "y": 928
+                },
+                "right": {
+                  "x": 584,
+                  "y": 932
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 105,
+                  "lower": 112
+                },
+                "right": {
+                  "upper": 79,
+                  "lower": 73
+                }
+              },
+              "clothing": "M 407 580 L 415 576 L 430 599 L 452 628 L 481 648 L 468 617 L 492 631 L 508 676 L 525 708 L 531 740 L 546 721 L 541 760 L 566 778 L 554 793 L 565 807 L 559 830 L 572 855 L 586 866 L 566 878 L 580 896 L 596 904 L 600 919 L 588 928 L 610 959 L 625 993 L 612 992 L 635 1069 L 621 1065 L 646 1138 L 655 1156 L 639 1162 L 660 1225 L 641 1205 L 643 1238 L 618 1200 L 615 1231 L 596 1197 L 587 1259 L 579 1280 L 559 1237 L 553 1272 L 530 1213 L 519 1241 L 497 1186 L 477 1240 L 453 1198 L 431 1253 L 419 1214 L 416 1149 L 381 1200 L 381 1169 L 354 1208 L 359 1151 L 338 1169 L 353 1080 L 343 1090 L 371 1023 L 350 1031 L 373 974 L 355 975 L 381 926 L 385 909 L 372 901 L 377 886 L 371 877 L 384 861 L 376 850 L 396 819 L 401 790 L 383 807 L 389 775 L 373 785 L 378 761 L 366 764 L 390 728 L 386 717 L 400 706 L 390 695 L 407 689 L 416 664 L 410 641 Z",
+              "inkPad": 7,
+              "headClip": "M 324 60 L 353 44 L 396 43 L 445 58 L 497 83 L 531 116 L 523 84 L 548 112 L 552 149 L 580 124 L 609 121 L 638 139 L 660 177 L 620 153 L 578 153 L 626 183 L 669 222 L 702 270 L 722 310 L 682 282 L 692 322 L 713 353 L 748 366 L 721 380 L 687 360 L 676 398 L 657 433 L 626 444 L 594 466 L 575 488 L 580 507 L 555 536 L 526 577 L 500 621 L 471 607 L 485 650 L 454 625 L 430 597 L 415 566 L 391 563 L 371 541 L 376 564 L 345 554 L 322 530 L 309 490 L 279 472 L 262 450 L 251 416 L 257 378 L 267 345 L 253 325 L 248 368 L 235 337 L 230 296 L 216 315 L 180 349 L 178 314 L 191 272 L 220 229 L 255 193 L 202 211 L 169 207 L 207 182 L 246 148 L 307 124 L 259 123 L 216 134 L 268 102 L 317 89 L 368 85 L 417 98 L 467 128 L 435 99 L 390 73 L 353 61 Z M 665 491 L 698 493 L 735 511 L 758 548 L 778 592 L 768 633 L 784 690 L 813 737 L 784 719 L 758 684 L 754 747 L 744 796 L 744 839 L 766 879 L 741 893 L 708 882 L 677 859 L 651 826 L 627 786 L 641 839 L 616 816 L 594 781 L 577 737 L 566 687 L 556 647 L 549 694 L 531 735 L 530 702 L 513 675 L 499 635 L 496 598 L 514 558 L 546 528 L 576 513 L 588 526 L 614 517 L 640 505 ZM574 436H677V529H574Z",
+              "headBounds": {
+                "left": 169,
+                "right": 813,
+                "top": 43,
+                "bottom": 893
+              },
+              "chin": null
+            },
+            "back-right": {
+              "view": "back-right",
+              "sourceView": "back-three-quarter-right",
+              "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+              "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+              "width": 939,
+              "height": 1676,
+              "bodyScale": 0.21139240506329113,
+              "headScale": 0.20766423357664232,
+              "neck": {
+                "x": 565,
+                "y": 573
+              },
+              "pelvis": {
+                "x": 552,
+                "y": 889
+              },
+              "shoulders": {
+                "left": {
+                  "x": 484,
+                  "y": 659
+                },
+                "right": {
+                  "x": 646,
+                  "y": 611
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 483,
+                  "y": 913
+                },
+                "right": {
+                  "x": 616,
+                  "y": 914
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 102,
+                  "lower": 108
+                },
+                "right": {
+                  "upper": 77,
+                  "lower": 70
+                }
+              },
+              "clothing": "M 582 530 L 586 551 L 601 566 L 616 572 L 638 578 L 625 590 L 632 595 L 617 611 L 623 618 L 612 641 L 616 669 L 628 699 L 635 737 L 638 777 L 626 797 L 613 782 L 616 808 L 634 832 L 627 845 L 640 861 L 631 873 L 653 883 L 655 897 L 645 908 L 660 933 L 675 965 L 650 950 L 673 1016 L 694 1070 L 679 1054 L 696 1119 L 674 1098 L 691 1151 L 700 1206 L 676 1177 L 671 1154 L 671 1232 L 646 1199 L 632 1239 L 605 1275 L 596 1229 L 577 1250 L 575 1168 L 554 1193 L 546 1141 L 523 1205 L 518 1221 L 511 1195 L 481 1247 L 467 1211 L 470 1174 L 433 1209 L 398 1241 L 400 1184 L 375 1215 L 379 1179 L 399 1116 L 379 1124 L 411 1041 L 398 1054 L 416 991 L 437 945 L 413 953 L 448 905 L 441 888 L 448 871 L 459 863 L 471 826 L 474 806 L 458 804 L 476 779 L 477 763 L 487 769 L 481 740 L 478 722 L 500 708 L 514 693 L 508 671 L 516 623 L 537 586 L 561 562 Z",
+              "inkPad": 7,
+              "headClip": "M 450 121 L 481 79 L 524 52 L 572 35 L 625 25 L 679 26 L 716 38 L 745 57 L 695 44 L 650 43 L 606 54 L 572 86 L 559 112 L 600 91 L 645 79 L 690 83 L 725 96 L 677 100 L 645 119 L 687 112 L 733 120 L 778 145 L 741 135 L 705 136 L 752 161 L 785 194 L 807 231 L 818 263 L 786 229 L 769 219 L 786 268 L 790 318 L 779 359 L 773 317 L 756 286 L 755 323 L 764 368 L 759 411 L 742 442 L 716 466 L 682 483 L 671 487 L 675 516 L 693 541 L 675 538 L 653 521 L 642 490 L 642 452 L 629 488 L 617 494 L 621 535 L 640 563 L 612 560 L 596 547 L 589 517 L 573 535 L 547 558 L 538 594 L 536 568 L 518 583 L 506 624 L 499 673 L 486 650 L 476 605 L 464 555 L 466 514 L 476 494 L 462 475 L 425 453 L 384 439 L 365 451 L 344 444 L 327 426 L 319 401 L 324 368 L 303 389 L 276 407 L 287 373 L 307 342 L 338 304 L 367 260 L 391 224 L 362 241 L 389 204 L 430 170 L 383 186 L 362 199 L 388 166 L 437 144 L 394 149 L 367 155 L 405 133 Z M 366 480 L 401 488 L 443 511 L 460 541 L 471 586 L 476 633 L 474 675 L 481 709 L 498 724 L 478 721 L 477 743 L 491 764 L 470 755 L 453 731 L 449 774 L 432 828 L 437 858 L 420 844 L 411 814 L 398 866 L 384 914 L 373 873 L 351 827 L 340 789 L 334 836 L 318 813 L 306 766 L 302 721 L 294 744 L 289 787 L 276 746 L 274 702 L 258 738 L 239 766 L 237 719 L 246 674 L 268 628 L 240 653 L 222 670 L 237 625 L 259 585 L 292 549 L 260 564 L 231 584 L 261 548 L 302 519 L 337 502 L 309 505 L 278 516 L 306 495 ZM323 437H453V523H323Z",
+              "headBounds": {
+                "left": 222,
+                "right": 818,
+                "top": 25,
+                "bottom": 914
+              },
+              "chin": null
+            }
+          },
+          "karo": {
+            "left": {
+              "view": "left",
+              "sourceView": "left",
+              "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+              "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+              "width": 910,
+              "height": 1728,
+              "bodyScale": 0.13966244725738397,
+              "headScale": 0.21602787456445993,
+              "neck": {
+                "x": 474,
+                "y": 653
+              },
+              "pelvis": {
+                "x": 457,
+                "y": 1127
+              },
+              "shoulders": {
+                "left": {
+                  "x": 432,
+                  "y": 670
+                },
+                "right": {
+                  "x": 526,
+                  "y": 697
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 412,
+                  "y": 1149
+                },
+                "right": {
+                  "x": 506,
+                  "y": 1148
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M439 598L478 591L496 617L514 643L542 662L555 694L545 725L555 769L551 814L564 856L556 904L575 946L564 985L577 1023L570 1073L555 1105L563 1131L568 1162L581 1192L587 1229L595 1256L583 1272L585 1306L565 1333L549 1306L528 1348L513 1320L498 1354L483 1316L471 1283L457 1241L438 1289L422 1336L404 1311L389 1343L370 1317L351 1336L337 1298L323 1317L328 1283L320 1257L337 1222L336 1195L350 1168L345 1133L353 1105L341 1086L357 1052L355 1017L368 985L362 957L378 927L377 886L389 854L389 816L404 785L410 750L423 718L433 686L445 658Z",
+              "inkPad": 7,
+              "headClip": "M0 0H910V534H600L575 556L548 561L523 584L505 612L479 609L462 624L443 603L427 622L411 609L392 638L372 622L350 650L329 628L312 639L289 614L270 619L249 595L236 566H0Z",
+              "headBounds": {
+                "left": 201,
+                "right": 726,
+                "top": 79,
+                "bottom": 650
+              },
+              "chin": {
+                "left": {
+                  "x": 322,
+                  "y": 589
+                },
+                "right": {
+                  "x": 322,
+                  "y": 589
+                }
+              }
+            },
+            "right": {
+              "view": "right",
+              "sourceView": "right",
+              "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+              "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+              "width": 910,
+              "height": 1727,
+              "bodyScale": 0.18087431693989073,
+              "headScale": 0.23308270676691728,
+              "neck": {
+                "x": 503,
+                "y": 555
+              },
+              "pelvis": {
+                "x": 498,
+                "y": 921
+              },
+              "shoulders": {
+                "left": {
+                  "x": 420,
+                  "y": 592
+                },
+                "right": {
+                  "x": 556,
+                  "y": 611
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 444,
+                  "y": 944
+                },
+                "right": {
+                  "x": 550,
+                  "y": 947
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 100,
+                  "lower": 94
+                },
+                "right": {
+                  "upper": 81,
+                  "lower": 88
+                }
+              },
+              "clothing": "M463 512L501 513L514 539L535 566L557 585L580 597L581 627L595 656L585 683L603 718L601 751L616 789L608 823L628 857L621 882L639 912L635 941L648 974L643 1005L659 1043L649 1072L664 1106L652 1139L628 1115L611 1159L588 1139L571 1163L553 1128L536 1108L518 1058L503 1091L485 1131L465 1150L447 1127L430 1161L408 1136L389 1149L376 1119L358 1131L366 1097L354 1071L368 1037L365 1008L379 978L376 947L390 921L384 892L393 855L388 831L401 794L399 759L416 725L426 690L435 654L446 619L451 580Z",
+              "inkPad": 7,
+              "headClip": "M0 0H910V506H628L611 532L587 537L576 561L551 549L532 575L512 554L493 568L477 549L458 562L442 544L427 553L407 530H0Z",
+              "headBounds": {
+                "left": 216,
+                "right": 752,
+                "top": 23,
+                "bottom": 575
+              },
+              "chin": {
+                "left": {
+                  "x": 617,
+                  "y": 522
+                },
+                "right": {
+                  "x": 617,
+                  "y": 522
+                }
+              }
+            },
+            "back-left": {
+              "view": "back-left",
+              "sourceView": "back-three-quarter-left",
+              "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+              "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+              "width": 910,
+              "height": 1729,
+              "bodyScale": 0.12879377431906616,
+              "headScale": 0.2246376811594203,
+              "neck": {
+                "x": 470,
+                "y": 613
+              },
+              "pelvis": {
+                "x": 495,
+                "y": 1127
+              },
+              "shoulders": {
+                "left": {
+                  "x": 390,
+                  "y": 666
+                },
+                "right": {
+                  "x": 568,
+                  "y": 693
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 431,
+                  "y": 1149
+                },
+                "right": {
+                  "x": 567,
+                  "y": 1151
+                }
+              },
+              "nearHand": "left",
+              "farHand": "right",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 109,
+                  "lower": 115
+                },
+                "right": {
+                  "upper": 75,
+                  "lower": 69
+                }
+              },
+              "clothing": "M 415 581 L 432 582 L 456 590 L 484 604 L 517 611 L 532 631 L 559 648 L 577 670 L 589 699 L 595 739 L 598 780 L 606 809 L 596 805 L 581 788 L 569 794 L 544 750 L 532 761 L 517 739 L 511 751 L 497 721 L 490 694 L 479 695 L 461 671 L 445 636 L 430 641 L 414 627 L 397 623 L 375 631 L 364 642 L 385 646 L 398 679 L 395 718 L 406 714 L 401 746 L 411 752 L 403 788 L 389 822 L 375 839 L 368 855 L 376 868 L 361 903 L 373 911 L 362 934 L 367 942 L 344 982 L 345 992 L 365 991 L 354 1015 L 339 1045 L 326 1078 L 334 1089 L 346 1089 L 336 1108 L 345 1118 L 328 1159 L 340 1170 L 322 1208 L 332 1219 L 320 1251 L 351 1241 L 365 1260 L 381 1247 L 401 1278 L 412 1270 L 439 1297 L 449 1260 L 464 1274 L 480 1226 L 474 1205 L 487 1196 L 500 1151 L 508 1144 L 518 1181 L 525 1214 L 540 1205 L 528 1229 L 532 1279 L 548 1267 L 558 1278 L 568 1264 L 585 1290 L 610 1251 L 632 1270 L 642 1239 L 660 1247 L 645 1199 L 636 1161 L 653 1151 L 638 1110 L 648 1094 L 631 1056 L 625 1032 L 635 1021 L 635 1006 L 643 996 L 630 964 L 640 950 L 624 919 L 613 894 L 624 882 L 612 850 L 621 838 L 606 817 L 604 773 L 599 723 L 590 684 L 574 661 L 551 642 L 529 628 L 522 608 L 492 599 L 462 585 L 438 574 L 416 569 Z",
+              "inkPad": 7,
+              "headClip": "M 369 80 L 408 88 L 448 99 L 440 81 L 490 114 L 473 61 L 505 75 L 530 103 L 548 147 L 562 104 L 573 130 L 567 150 L 602 127 L 588 150 L 627 153 L 657 164 L 612 176 L 651 190 L 683 212 L 710 244 L 660 232 L 697 280 L 712 309 L 728 342 L 684 322 L 705 370 L 716 416 L 680 393 L 693 447 L 667 433 L 680 478 L 674 512 L 657 483 L 648 530 L 630 555 L 625 528 L 607 564 L 590 587 L 576 569 L 557 602 L 539 615 L 522 588 L 518 603 L 487 587 L 479 595 L 453 580 L 431 558 L 418 571 L 402 552 L 386 537 L 375 496 L 366 461 L 352 456 L 360 499 L 370 551 L 409 574 L 391 597 L 366 610 L 349 607 L 331 621 L 310 606 L 299 586 L 294 598 L 280 568 L 277 546 L 269 561 L 266 532 L 274 514 L 263 520 L 268 501 L 251 493 L 242 477 L 248 460 L 238 450 L 235 439 L 244 422 L 264 401 L 266 379 L 260 357 L 252 364 L 254 333 L 240 346 L 248 313 L 231 320 L 263 295 L 231 307 L 245 275 L 266 249 L 201 273 L 211 246 L 242 216 L 276 197 L 235 197 L 260 178 L 294 160 L 335 145 L 284 128 L 309 115 L 344 109 L 380 114 L 401 121 Z",
+              "headBounds": {
+                "left": 201,
+                "right": 728,
+                "top": 61,
+                "bottom": 621
+              },
+              "chin": null
+            },
+            "back-right": {
+              "view": "back-right",
+              "sourceView": "back-three-quarter-right",
+              "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+              "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+              "width": 910,
+              "height": 1728,
+              "bodyScale": 0.12854368932038834,
+              "headScale": 0.2335216572504708,
+              "neck": {
+                "x": 518,
+                "y": 565
+              },
+              "pelvis": {
+                "x": 496,
+                "y": 1080
+              },
+              "shoulders": {
+                "left": {
+                  "x": 399,
+                  "y": 613
+                },
+                "right": {
+                  "x": 625,
+                  "y": 620
+                }
+              },
+              "hips": {
+                "left": {
+                  "x": 426,
+                  "y": 1104
+                },
+                "right": {
+                  "x": 577,
+                  "y": 1102
+                }
+              },
+              "nearHand": "right",
+              "farHand": "left",
+              "armDepth": "authored-near-far",
+              "restDirectionsDeg": {
+                "left": {
+                  "upper": 106,
+                  "lower": 113
+                },
+                "right": {
+                  "upper": 73,
+                  "lower": 66
+                }
+              },
+              "clothing": "M 424 582 L 447 572 L 468 564 L 493 568 L 509 550 L 531 555 L 549 543 L 570 535 L 579 545 L 594 530 L 590 563 L 613 580 L 626 594 L 625 634 L 632 679 L 641 721 L 650 756 L 643 793 L 635 823 L 626 838 L 608 803 L 595 814 L 564 784 L 553 802 L 536 776 L 523 738 L 515 747 L 503 735 L 485 692 L 466 711 L 451 658 L 439 674 L 429 645 L 421 610 L 415 616 L 416 584 L 401 596 L 397 580 L 377 597 L 368 612 L 377 625 L 367 647 L 375 660 L 368 687 L 375 699 L 360 734 L 375 747 L 368 766 L 380 769 L 362 810 L 369 824 L 383 820 L 372 853 L 359 877 L 363 891 L 378 881 L 367 900 L 347 918 L 338 934 L 344 944 L 363 941 L 357 956 L 366 968 L 354 981 L 340 1002 L 318 1039 L 338 1037 L 326 1070 L 320 1101 L 337 1094 L 327 1137 L 313 1166 L 313 1180 L 331 1180 L 316 1209 L 306 1244 L 329 1232 L 342 1259 L 357 1236 L 372 1265 L 393 1250 L 407 1272 L 422 1263 L 438 1291 L 452 1250 L 467 1259 L 466 1211 L 477 1168 L 485 1148 L 494 1183 L 502 1200 L 501 1220 L 515 1225 L 515 1265 L 525 1265 L 530 1297 L 552 1270 L 574 1294 L 595 1256 L 617 1269 L 637 1279 L 648 1243 L 678 1263 L 684 1250 L 680 1238 L 690 1235 L 674 1196 L 684 1185 L 668 1153 L 674 1148 L 660 1118 L 670 1116 L 654 1061 L 675 1071 L 678 1055 L 660 1019 L 646 993 L 648 972 L 657 961 L 650 944 L 639 924 L 650 913 L 641 885 L 643 865 L 633 841 Z",
+              "inkPad": 7,
+              "headClip": "M 442 122 L 466 87 L 504 57 L 561 34 L 519 88 L 572 68 L 631 64 L 588 96 L 643 87 L 690 98 L 640 119 L 684 124 L 727 151 L 674 158 L 715 183 L 752 209 L 716 204 L 732 234 L 711 222 L 730 257 L 708 243 L 704 274 L 704 297 L 715 326 L 722 359 L 717 386 L 729 404 L 735 419 L 724 427 L 728 443 L 718 453 L 724 474 L 718 503 L 710 516 L 705 501 L 694 532 L 677 553 L 665 566 L 657 551 L 634 574 L 623 559 L 615 528 L 617 489 L 614 472 L 607 503 L 595 520 L 584 532 L 576 516 L 565 528 L 548 536 L 533 548 L 507 535 L 505 552 L 491 559 L 469 550 L 465 565 L 439 565 L 419 554 L 413 564 L 394 549 L 381 521 L 369 541 L 350 522 L 335 495 L 332 463 L 312 482 L 308 447 L 278 456 L 275 416 L 289 363 L 236 389 L 242 350 L 256 316 L 278 281 L 245 286 L 267 256 L 299 222 L 250 228 L 275 199 L 308 175 L 351 158 L 314 145 L 346 134 L 386 133 L 401 137 L 373 112 L 414 122 L 400 91 L 421 106 L 440 79 L 437 108 Z",
+              "headBounds": {
+                "left": 236,
+                "right": 752,
+                "top": 34,
+                "bottom": 574
+              },
+              "chin": null
+            }
+          }
+        },
+        "coordinateAuthority": "own-source manual/model-assisted approximations; not measured anatomy/yaw",
+        "measuredYawDeg": null,
+        "capabilities": [
+          "fixed own-source head/clothing",
+          "same-person canonical bones/mitten/sole",
+          "profile rest/point/think; rear rest/point only"
+        ],
+        "unavailable": [
+          "speech",
+          "gaze/blink",
+          "other emotions",
+          "locomotion/seat",
+          "cloth/hair follow",
+          "tools/manipulation",
+          "supporting cast/head bank",
+          "continuous turns",
+          "rear chin contact"
+        ],
+        "approved": false,
+        "artApproved": false,
         "motionVerified": false,
         "productionReady": false,
         "productionRig": null,
@@ -17594,13 +20508,13 @@
         "productionReady": false,
         "motionVerified": false
       },
-      "fingerprint": "4849cbb8572e2461195870252d81adbbb8e3d9b1d41061fe1953f4ef18f1d51f",
+      "fingerprint": "7065a16b9c09e91fd988b31cb57daebd4ff311aac97dba9119949a555f4e2289",
       "status": "developer-landmark-and-layer-candidate",
       "productionReady": false,
       "approved": false,
-      "method": "independent uniform3/4 sources plus own-front basic engineering candidates; front has no borrowed detailed features/depth; same-person canonical limb lengths/mitten/sole retained; no mirror/face warp",
+      "method": "independent uniform3/4 sources plus own front/profile/rear fixed-view engineering candidates; own neutral-arm cues/poles with same-person canonical bones/mitten/sole; no borrowed detailed features, mirrored/warped faces or inferred yaw",
       "limitations": [
-        "front landmarks/masks are manual approximations, not measured or accepted; only fixed happy/rigid rest/point/think; no continuous turns",
+        "front/profile/rear landmarks/masks/depth/arm direction are own-source approximations, not measured or accepted; fixed happy/rigid rest/point/think except rear has no think/chin; no continuous turns",
         "identity/proportion/mask review",
         "happy fixed view by default; optional unapproved speech/eyes/expression selections",
         "rigid garment by default; optional unapproved locomotion and separately selected seated candidate",

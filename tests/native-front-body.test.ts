@@ -18,7 +18,7 @@ import type {PerformancePlan} from '../packages/animation/schemas.js';
 
 test('front candidates bind their own immutable native PNG and never enter the detailed or approved view banks',()=>{
   assert.deepEqual(REGISTERED_BODY_VIEWS,['three-quarter-right','three-quarter-left']);
-  assert.deepEqual(BODY_CANDIDATE_VIEWS,['three-quarter-right','three-quarter-left','front']);
+  assert.deepEqual(BODY_CANDIDATE_VIEWS,['three-quarter-right','three-quarter-left','front','left','right','back-left','back-right']);
   assert.ok(BODY_WORKBENCH_VIEWS.includes('front'));
   for(const actor of ['lila','karo'] as const){
     const c=bodyFrontRegistration[actor],bytes=readFileSync(c.file);

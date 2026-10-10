@@ -1,3 +1,4 @@
+import {isBasicBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import type {HostProfile} from '../host/schemas.js';
 import type {Point} from './schemas.js';
 import {hash} from '../core/utils.js';
@@ -31,7 +32,7 @@ export const nativeSecondaryBindings={
 export const hasBodyViewSecondary=(profile:Pick<HostProfile,'appearance'>)=>profile.appearance.bodySecondary===BODY_VIEW_SECONDARY_SELECTION;
 export function registeredNativeSecondary(profile:Pick<HostProfile,'appearance'>,source:NativeSecondarySource){
   const a=profile.appearance;
-  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front secondary registration is unavailable');
+  if(isBasicBodyView(a.bodyView))throw basicBodyCapabilityError(a.bodyView,'secondary');
   if(!hasBodyViewSecondary(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-secondary: select a registered native actor/view');
   const binding=nativeSecondaryBindings[a.characterVariant][a.bodyView];
   if(source.view!==a.bodyView||source.sha256!==binding.sha256||source.width!==binding.width||source.height!==binding.height)throw new Error('needs-view-secondary: native image registration differs');

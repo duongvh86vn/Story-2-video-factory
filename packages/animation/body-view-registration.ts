@@ -1,11 +1,13 @@
 import {bodyViewClothingContours} from './body-view-contours.js';
 import {bodyViewLeftRegistration} from './body-view-left-registration.js';
 import {bodyFrontRegistration} from './body-view-front-registration.js';
+import {bodyObliqueRegistration} from './body-view-oblique-registration.js';
+import {OBLIQUE_BODY_VIEWS} from './body-view-basic-capabilities.js';
 export const REGISTERED_BODY_VIEWS=['three-quarter-right','three-quarter-left'] as const;
 export type RegisteredBodyView=typeof REGISTERED_BODY_VIEWS[number];
 /** Legacy detail maps cover only REGISTERED_BODY_VIEWS. Never broaden those
  * loops when adding a view with fewer own-source capabilities. */
-export const BODY_CANDIDATE_VIEWS=[...REGISTERED_BODY_VIEWS,'front'] as const;
+export const BODY_CANDIDATE_VIEWS=[...REGISTERED_BODY_VIEWS,'front',...OBLIQUE_BODY_VIEWS] as const;
 export {bodyFrontRegistration};
 export const bodyViewRegistration={
   lila:{view:'three-quarter-right',file:'library/topics/prehistoric-life/body-views/lila-three-quarter-right-v2.png',
@@ -34,6 +36,6 @@ export const bodyViewRegistrations={
   karo:{'three-quarter-right':bodyViewRegistration.karo,'three-quarter-left':bodyViewLeftRegistration.karo},
 } as const;
 export const bodyCandidateRegistrations={
-  lila:{...bodyViewRegistrations.lila,front:bodyFrontRegistration.lila},
-  karo:{...bodyViewRegistrations.karo,front:bodyFrontRegistration.karo},
+  lila:{...bodyViewRegistrations.lila,front:bodyFrontRegistration.lila,...bodyObliqueRegistration.lila},
+  karo:{...bodyViewRegistrations.karo,front:bodyFrontRegistration.karo,...bodyObliqueRegistration.karo},
 } as const;

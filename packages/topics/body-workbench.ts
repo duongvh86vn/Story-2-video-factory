@@ -1,3 +1,4 @@
+import {isBasicBodyView,basicBodyActionAllowed,basicBodyCapabilityError} from '../animation/body-view-basic-capabilities.js';
 import {escapeHtml} from '../core/utils.js';
 import {hash} from '../core/utils.js';
 import {BODY_VIEW_VERSION,BODY_CANDIDATE_VIEWS,bodyViewFacing,bodyViewDescription} from '../animation/body-view-art.js';
@@ -64,8 +65,8 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(manipulationActions.includes(action)&&manipulation!==BODY_VIEW_MANIPULATION_SELECTION)throw new Error('needs-view-manipulation: explicitly select registered-manipulation-v1');
   if(action==='spear-lunge'&&view==='three-quarter-left')throw new Error('needs-lunge-pose: left-facing planted lunge has not been authored');
   if(colour!== 'cutout'&&(colour!==SOURCE_COLOUR_VERSION||authored))throw new Error('needs-source-colour-profile: original RGB candidate is registered only for source orientation');
-  if(view==='front'&&(mood!=='happy'||!['rest','point','think'].includes(action)||mouth!=='silent'||eyes!=='native'||look!=='rest'||expressions!=='native'||motion!=='rigid'||seat!=='unregistered'||secondary!=='rigid'||manipulation!=='unregistered'))
-    throw new Error('needs-front-capability: front preview requires silent happy rigid rest/point/think and no borrowed detailed registrations');
+  if(isBasicBodyView(view)&&(mood!=='happy'||!basicBodyActionAllowed(view,action)||mouth!=='silent'||eyes!=='native'||look!=='rest'||expressions!=='native'||motion!=='rigid'||seat!=='unregistered'||secondary!=='rigid'||manipulation!=='unregistered'))
+    throw basicBodyCapabilityError(view,'selected action/face/motion (only silent happy rigid basic poses, no rear chin)');
   if(authored){
     if(mood!=='happy'&&expressions==='native')throw new Error('needs-view-expression: non-happy moods need explicit registered expressions');
     const fixed=['rest','point','think'];

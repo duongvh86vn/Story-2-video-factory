@@ -73,6 +73,7 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
     const total=forestWristChainTotal(source.arms[side].upper+source.arms[side].lower,source.hands[side],handArt[side].wrist)*k;
     return [side,{upper:total*.52,lower:total*.48}];
   })) as Record<RigHand,{upper:number;lower:number}>;
+  const handAttachment=forestHandMetrics(actor,u,b);
   const legs=Object.fromEntries((['left','right'] as const).map(side=>[side,{upper:source.legs[side].upper*k,lower:source.legs[side].lower*k}])) as Record<RigHand,{upper:number;lower:number}>;
   return {height:318*b,pelvisY:(source.pelvis.y-source.groundY)*k,
     // Slight flexion reserve for ground contact. Foot anchors are at the sole,
@@ -85,7 +86,7 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
     torsoTop:relative(source.neck).y,neckX:relative(source.neck).x,
     shoulders:{left:relative(source.shoulders.left),right:relative(source.shoulders.right)},arms,
     handRestRotation:{...source.handRestRotation},
-    handAttachment:forestHandMetrics(actor,u,b),
+    handAttachment,
     hips:{left:relative(source.hips.left),right:relative(source.hips.right)},legs,
     seatContactOffset:{x:source.seatContact.x*b,y:source.seatContact.y*b},
     armRest:{left:{x:(handArt.left.grip.x-source.shoulders.left.x)*k,y:(handArt.left.grip.y-source.shoulders.left.y)*k},
@@ -93,7 +94,7 @@ export function referenceBodyMetrics(profile:Pick<HostProfile,'appearance'>){
     footOffsets:{left:(source.feet.left.x-source.pelvis.x)*k,right:(source.feet.right.x-source.pelvis.x)*k},
     footSoleOffset:{left:(source.feet.left.y-source.ankleY.left)*u,right:(source.feet.right.y-source.ankleY.right)*u},
     strokeWidth:16*u,
-    ...(usesBodyView(profile)?bodyViewMetrics(profile):{}),
+    ...(usesBodyView(profile)?bodyViewMetrics(profile,{arms,handAttachment}):{}),
   };
 }
 /** The attachment is under the actual authored chin/beard, off center from

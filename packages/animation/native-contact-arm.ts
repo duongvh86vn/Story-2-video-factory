@@ -1,3 +1,4 @@
+import {isBasicBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
 import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 import {type RigHand} from '../core/identifiers.js';
@@ -24,7 +25,7 @@ export const nativeManipulationBindings={bodyViews:bodyViewRegistrations,hands:h
 type NativeSource={view:'three-quarter-left'|'three-quarter-right';sha256:string;width:number;height:number};
 export function registeredNativeManipulation(profile:Pick<HostProfile,'appearance'>,source:NativeSource){
   const a=profile.appearance;
-  if(a.bodyView==='front')throw new Error('needs-front-capability: own-front manipulation registration is unavailable');
+  if(isBasicBodyView(a.bodyView))throw basicBodyCapabilityError(a.bodyView,'manipulation');
   if(!hasBodyViewManipulation(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)
     throw new Error('needs-view-manipulation: select an explicit native actor/view manipulation candidate');
   const binding=bodyViewRegistrations[a.characterVariant][a.bodyView];
