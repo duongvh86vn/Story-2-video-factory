@@ -44,7 +44,8 @@
                 "type": "string",
                 "enum": [
                   "walk",
-                  "run"
+                  "run",
+                  "sidestep"
                 ]
               }
             },

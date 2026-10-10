@@ -3652,7 +3652,8 @@
                                     "enum": [
                                       "registered-locomotion-v1",
                                       "registered-profile-locomotion-v1",
-                                      "registered-rear-locomotion-v1"
+                                      "registered-rear-locomotion-v1",
+                                      "registered-front-motion-v1"
                                     ]
                                   },
                                   "bodySeat": {
@@ -5773,7 +5774,8 @@
                                       "enum": [
                                         "registered-locomotion-v1",
                                         "registered-profile-locomotion-v1",
-                                        "registered-rear-locomotion-v1"
+                                        "registered-rear-locomotion-v1",
+                                        "registered-front-motion-v1"
                                       ]
                                     },
                                     "bodySeat": {
@@ -6193,7 +6195,8 @@
                                         "type": "string",
                                         "enum": [
                                           "walk",
-                                          "run"
+                                          "run",
+                                          "sidestep"
                                         ]
                                       }
                                     },
@@ -6575,7 +6578,8 @@
                                             "type": "string",
                                             "enum": [
                                               "walk",
-                                              "run"
+                                              "run",
+                                              "sidestep"
                                             ]
                                           }
                                         },
@@ -10063,7 +10067,8 @@
                               "type": "string",
                               "enum": [
                                 "walk",
-                                "run"
+                                "run",
+                                "sidestep"
                               ]
                             }
                           },
@@ -10445,7 +10450,8 @@
                                   "type": "string",
                                   "enum": [
                                     "walk",
-                                    "run"
+                                    "run",
+                                    "sidestep"
                                   ]
                                 }
                               },

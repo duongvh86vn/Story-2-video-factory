@@ -24,7 +24,7 @@ export const GazeSchema=z.union([
   z.object({...Interval,actorTarget:z.object({id:Id,anchor:z.literal('eyes')}).strict()}).strict(),
 ]);
 export type Gaze=z.infer<typeof GazeSchema>;
-export const WalkSchema = z.object({ ...Interval, fromX: z.number().finite(), toX: z.number().finite(),gait:z.enum(['walk','run']).optional() }).strict();
+export const WalkSchema = z.object({ ...Interval, fromX: z.number().finite(), toX: z.number().finite(),gait:z.enum(['walk','run','sidestep']).optional() }).strict();
 export const JumpSchema=z.object({...Interval,takeoffMs:Time,landingMs:Time,height:z.number().finite().positive(),tuck:z.number().finite().min(0).max(.5).optional()}).strict();
 export const FacingSchema=z.enum(['front','left','right']);
 export const TurnSchema=z.object({...Interval,direction:FacingSchema}).strict();

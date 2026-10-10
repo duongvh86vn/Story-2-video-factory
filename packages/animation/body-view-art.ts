@@ -20,7 +20,7 @@ import {nativeManipulationDescription,hasBodyViewManipulation,hasOwnBodyManipula
 import {nativeHeadBankDescription} from './native-head-bank.js';
 
 export const BODY_VIEW_VERSION='forest-body-view-1' as const;
-export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-14';
+export const BODY_VIEW_REGISTRATION_VERSION='forest-view-registration-15';
 type Point={x:number;y:number};
 /** Manually authored pixel landmarks, not model-generated skeletons. These
  * engineering candidates use uniform head/body transforms. Their physical
@@ -47,7 +47,7 @@ export function registeredLocomotionBodyView(profile:Pick<HostProfile,'appearanc
   if(!hasBodyViewLocomotion(profile)||a.artworkVersion!==BODY_VIEW_VERSION||a.characterVariant!=='lila'&&a.characterVariant!=='karo')throw new Error('needs-view-locomotion: select the exact native actor and motion mode');
   if(!hasOwnBodyLocomotion(profile))return registeredDetailedBodyView(profile);
   const source=registeredBodyView(profile);
-  if(source.view!=='left'&&source.view!=='right'&&source.view!=='back-left'&&source.view!=='back-right'||source.view!==a.bodyView)throw basicBodyCapabilityError(source.view,'own locomotion');
+  if(source.view!=='front'&&source.view!=='left'&&source.view!=='right'&&source.view!=='back-left'&&source.view!=='back-right'||source.view!==a.bodyView)throw basicBodyCapabilityError(source.view,'own locomotion');
   return source;
 }
 export function registeredSecondaryBodyView(profile:Pick<HostProfile,'appearance'>){

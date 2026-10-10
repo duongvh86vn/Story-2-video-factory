@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.103-own-front-motion",
+  "precedingSourceSHA": "b58c021cc51b4ed516bcc3ae27dae6473b8985a7",
+  "scope": "explicit own-front lateral sidestep/jump/posture, own garment source and unchanged shared physical kernels; no runtime/art/anatomy/audio/motion/film/full-factory acceptance",
+  "implementation": [
+    "Explicit registered-front-motion-v1 for original Lila/Karo front sources. Paired open-close lateral steps choose leading sole by actual travel direction, use common pair-end root clock and own stance offsets, finish both soles at final root and reject zero travel/nonpositive clocks/crossed soles.",
+    "Own front PNG/SHA/canvas garment cages, pinned original upper clothing/belt and shared 12-piece lower material. Manual source coordinates are not measured/accepted anatomy or fabric. No other-view face/garment/landmark borrowing, mirror, yaw/depth inference or forward walk/run grant.",
+    "Canonical sourceSwing/C2/planted contact/support, fixed bone/arm/body/soft ink/cloth kernels retained; sidestep dispatch and sole-order guard added. Existing own profile/3/4 forward gait and rear behavior unchanged.",
+    "Complete original sourceBody and own expression/secondary clocks remain through explicit continuous camera slices/primary-supporting swaps with exact identity/root/stage/scale. Existing complete source closure and publication binding unchanged; nine new callbacks are DECLARED/NOT RUN.",
+    "Compiler42/clock16/native-view-cloth4/front registration6/body registration15; schema/API/workbench/director/report/cache/manifest use the new exact selection. Own eyes/mouth/expressions/secondary require their independent registrations.",
+    "No new seat/tools/props/handoff/head-bank/supportingModel/continuous turn grants. Original-project source preview emitter/security and pre-model/TTS/source-prop-binding gates remain unchanged; no production or full goal acceptance."
+  ],
+  "sourceChecks": [
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "handle": "8faac8/session21958/completiond9f227",
+      "decisiveOutput": "✓ 68 modules transformed.\n✓ built in 637ms\n",
+      "scope": "TypeScript core/Studio and Vite build only; no app runtime"
+    },
+    {
+      "command": "npm run test:typecheck",
+      "exitCode": 0,
+      "handle": "68b32e/session34950/completionba988a",
+      "decisiveOutput": "tsc -p tsconfig.tests.json; completion output empty",
+      "scope": "typecheck only; callbacks/fixtures not executed"
+    },
+    {
+      "command": "npm run schemas",
+      "exitCode": 0,
+      "handle": "636d4e",
+      "scope": "definition export only; six embedded source/host/clock schemas updated"
+    },
+    {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "exitCode": 0,
+      "handle": "32e061",
+      "decisiveOutput": "{\"references\":6,\"candidates\":12,\"headCandidates\":6,\"garmentCandidates\":2,\"rejected\":7,\"productionReady\":false}",
+      "scope": "explicitly allowed source/header/hash/static JSON inventory only"
+    },
+    {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source103-static.mjs",
+      "exitCode": 0,
+      "handle": "e14c3b",
+      "decisiveOutput": "{\"sourceVersion\":\"forest-tribe-0.103-own-front-motion\",\"originalRastersUnchanged\":307,\"originalHeadDefinitions\":18,\"originalHeadMetadata\":27,\"sharedFunctionsUnchanged\":59,\"frontCages\":2,\"mappedCodeHashes\":186,\"scalarCodeEntries\":46,\"callbacksDeclared\":9,\"callbacksExecuted\":0,\"productionReady\":false,\"fullGoalComplete\":false}",
+      "scope": "raw file/header/hash/JSON/source AST only; no application module evaluation"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "handle": "c04eed",
+      "scope": "source whitespace only"
+    }
+  ],
+  "preliminaryChecks": {
+    "build": {
+      "handle": "f1e439/session23116/completionce8d7b",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "handle": "935bec/session26263/completiond7f0a5",
+      "exitCode": 0
+    },
+    "scope": "superseded by final checks after pack source edits; not runtime acceptance"
+  },
+  "supersededInventory": {
+    "handle": "37d1b3",
+    "helperFailed": true,
+    "finding": "Literal-only reader refused a pre-existing arithmetic expression in bodyFrontRegistration. Replaced only the comparison with raw AST declaration-text equality; no arithmetic/evaluation added. Subsequent shell git diff --check returned0, so this mixed shell exit must not be treated as an inventory pass. e14c3b is the standalone successful inventory."
+  },
+  "rawRecord": "docs/topics/reviews/front-motion-static-record-v1.json",
+  "sourceAdvice": {
+    "requestedModel": "tester",
+    "responseModel": "gpt-6-luna",
+    "httpStatus": 200,
+    "elapsedMs": 22677,
+    "usage": {
+      "prompt_tokens": 12879,
+      "completion_tokens": 1979,
+      "total_tokens": 14858
+    },
+    "finishReason": "stop",
+    "reply": "{\"findings\":[],\"missingContext\":[\"No defect is proven by the supplied excerpts. The schedule assigns both feet in each pair to the same pair-center root position; their sequential landing times are consistent with a leading-open, trailing-close sidestep.\",\"The full implementations of sourceBodyPlan, camera-slice continuity validation, and cache lookup/invalidation are not included, so their source-clock and cache/report contracts cannot be verified from these excerpts.\",\"Original PNGs and production gates were not independently inspected; no artwork, motion, or production approval is implied.\"],\"testsExecuted\":false,\"artAccepted\":false}",
+    "snapshotChars": 42241,
+    "snapshotSHA256": "0991f90d91ff87234b988e3b0fcdca02ed594f77441370b05a8161b2ee78c2f9",
+    "testsExecuted": false,
+    "acceptsFinalSource": false,
+    "scope": "bounded source-only advice; no runtime/art/motion/factory acceptance",
+    "parentAssessment": "Reviewer reported no proven defects in its bounded excerpts. Complete sourceBodyPlan/source closure, original clock collectors, source identity/publication/cache and production gates were not accepted by reviewer; parent inspected canonical source and the raw inventory proves these protected sources unchanged from source0.102. Actual paired sampling, anatomy, garment/face/hair seams and pipeline behavior still require user QA."
+  },
+  "userQA": {
+    "commandsDocument": "docs/topics/FRONT-MOTION-HANDOFF.md",
+    "test": "tests/native-front-motion.test.ts",
+    "callbacksDeclared": 9,
+    "callbacksExecuted": 0,
+    "originalStoryExport": "NOT RUN",
+    "server": "NOT RUN",
+    "browser": "NOT RUN",
+    "renderer": "NOT RUN",
+    "audio": "NOT RUN",
+    "video": "NOT RUN",
+    "motionArt": "NOT RUN",
+    "factoryThreeInputs": "NOT RUN"
+  },
+  "ownedPaths": 31,
+  "productionBinding": "needs-source-prop-binding",
+  "canPublish": false,
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false,
+  "pending": [
+    "user QA on the actual original story/project/full SHA: fixed bones/planted soles/leading-trailing stance, two garments/ink/face/hair and full clock through cuts/seeks/role swaps",
+    "genuine continuous own head/body turns and complete per-view seat/tools/grasp/handoff/contact; faithful warm-skin primaries/supporting actors and vivid reusable worlds/director/camera",
+    "arbitrary story/topic -> faithful screenplay; exact script/dialogue and original WAV (+legacy SRT) -> narration/scenes/review/repair/final MP4/audio/SRT/thumbnail/storyboard/profile/timeline/manifest/QC",
+    "EN primary/VI/JA/KO and local/external HTTP/command TTS; failed/missing voice/fit must never final/DONE",
+    "resume/rebuild/approved locks/content/voice/actor invalidation and current source receipts"
+  ]
+}

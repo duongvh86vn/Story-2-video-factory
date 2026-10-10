@@ -2,6 +2,7 @@ import {isBasicBodyView,basicBodyActionAllowed,basicBodyCapabilityError} from '.
 import {PROFILE_BODY_LOCOMOTION_SELECTION,isProfileMotionView} from '../animation/body-view-profile-cloth-binding.js';
 import {PROFILE_BODY_MANIPULATION_SELECTION,isProfileManipulationView} from '../animation/body-view-profile-manipulation-binding.js';
 import {REAR_BODY_LOCOMOTION_SELECTION,isRearMotionView} from '../animation/body-view-rear-cloth-binding.js';
+import {FRONT_BODY_MOTION_SELECTION,isFrontMotionView} from '../animation/body-view-front-motion-binding.js';
 import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
 import {BASIC_BODY_SPEECH_SELECTION,isBasicMouthView} from '../animation/body-view-basic-mouth-registration.js';
 import {BASIC_BODY_EXPRESSIONS_SELECTION,isBasicExpressionView} from '../animation/body-view-basic-expression-registration.js';
@@ -29,7 +30,7 @@ import {topicPreviewProfile} from './preview.js';
 import {SOURCE_WALK_POSES} from '../animation/source-walk.js';
 import {RUN_POSES,runStepCount} from '../animation/running.js';
 import {spearSvg} from '../animation/spear.js';
-export const BODY_ACTIONS=['rest','point','think','inspect','operate','pick-place','carry','drop','crouch','walk','walk-left','run','run-left','jump','hunt-stalk','spear-hold','spear-hold-left','spear-thrust','spear-thrust-left','spear-lunge','hunt-aim','hunt-chase','head-turn','sit-right','sit-left','sit-walk-right','sit-walk-left'] as const;
+export const BODY_ACTIONS=['rest','point','think','inspect','operate','pick-place','carry','drop','crouch','sidestep','sidestep-left','walk','walk-left','run','run-left','jump','hunt-stalk','spear-hold','spear-hold-left','spear-thrust','spear-thrust-left','spear-lunge','hunt-aim','hunt-chase','head-turn','sit-right','sit-left','sit-walk-right','sit-walk-left'] as const;
 export const BODY_WORKBENCH_VIEWS=['source',...BODY_CANDIDATE_VIEWS] as const;
 export type BodyWorkbenchView=typeof BODY_WORKBENCH_VIEWS[number];
 export const BODY_COLOUR_MODES=['cutout',SOURCE_COLOUR_VERSION] as const;
@@ -40,7 +41,7 @@ export const BODY_EYES_MODES=['native',BODY_VIEW_EYES_SELECTION,BASIC_BODY_EYES_
 export type BodyEyesMode=typeof BODY_EYES_MODES[number];
 export const BODY_EXPRESSION_MODES=['native',BODY_VIEW_EXPRESSIONS_SELECTION,BASIC_BODY_EXPRESSIONS_SELECTION] as const;
 export type BodyExpressionMode=typeof BODY_EXPRESSION_MODES[number];
-export const BODY_MOTION_MODES=['rigid',BODY_VIEW_LOCOMOTION_SELECTION,PROFILE_BODY_LOCOMOTION_SELECTION,REAR_BODY_LOCOMOTION_SELECTION] as const;
+export const BODY_MOTION_MODES=['rigid',BODY_VIEW_LOCOMOTION_SELECTION,PROFILE_BODY_LOCOMOTION_SELECTION,REAR_BODY_LOCOMOTION_SELECTION,FRONT_BODY_MOTION_SELECTION] as const;
 export type BodyMotionMode=typeof BODY_MOTION_MODES[number];
 export const BODY_SECONDARY_MODES=['rigid',BODY_VIEW_SECONDARY_SELECTION,PROFILE_BODY_SECONDARY_SELECTION,FRONT_BODY_SECONDARY_SELECTION] as const;
 export type BodySecondaryMode=typeof BODY_SECONDARY_MODES[number];
@@ -68,9 +69,10 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(look!=='rest'&&eyes==='native')throw new Error('needs-view-gaze: explicit look requires its selected registered eyes');
   const ownExpressions=expressions===BASIC_BODY_EXPRESSIONS_SELECTION&&isBasicExpressionView(view)&&eyes===BASIC_BODY_EYES_SELECTION&&mouth===BASIC_BODY_SPEECH_SELECTION;
   if(expressions!=='native'&&!ownExpressions&&(expressions!==BODY_VIEW_EXPRESSIONS_SELECTION||!authored||eyes!==BODY_VIEW_EYES_SELECTION||mouth!==BODY_VIEW_REST_SPEECH_SELECTION))throw new Error('needs-view-expression: expressions need their own view, registered eyes and mouth source');
-  const ownMotion=motion===PROFILE_BODY_LOCOMOTION_SELECTION&&isProfileMotionView(view)||motion===REAR_BODY_LOCOMOTION_SELECTION&&isRearMotionView(view);
+  const ownMotion=motion===PROFILE_BODY_LOCOMOTION_SELECTION&&isProfileMotionView(view)||motion===REAR_BODY_LOCOMOTION_SELECTION&&isRearMotionView(view)||motion===FRONT_BODY_MOTION_SELECTION&&isFrontMotionView(view);
   if(motion!=='rigid'&&!ownMotion&&(motion!==BODY_VIEW_LOCOMOTION_SELECTION||!authored||isBasicBodyView(view)))throw new Error('needs-view-locomotion: select motion registered for this own native body view');
-  const ownMotionAction=ownMotion&&['walk','walk-left','run','run-left','jump','crouch'].includes(action);
+  const ownMotionAction=ownMotion&&(view==='front'?['sidestep','sidestep-left','jump','crouch']:['walk','walk-left','run','run-left','jump','crouch']).includes(action);
+  if(action.startsWith('sidestep')&&(!isFrontMotionView(view)||motion!==FRONT_BODY_MOTION_SELECTION))throw new Error('needs-front-motion: lateral steps require the exact own front candidate');
   const ownSecondary=secondary===PROFILE_BODY_SECONDARY_SELECTION&&isProfileSecondaryView(view)||secondary===FRONT_BODY_SECONDARY_SELECTION&&isFrontSecondaryView(view);
   if(secondary!=='rigid'&&!ownSecondary&&(secondary!==BODY_VIEW_SECONDARY_SELECTION||!authored||isBasicBodyView(view)))throw new Error('needs-view-secondary: select secondary registered for this own native body view');
   if(seat!=='unregistered'&&(seat!==BODY_VIEW_SEAT_SELECTION||!authored||motion!==BODY_VIEW_LOCOMOTION_SELECTION))throw new Error('needs-view-seat: seated candidate requires a native view and registered locomotion');
@@ -86,7 +88,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
     const fixed=['rest','point','think'];
     const rightTools=['spear-hold','spear-thrust','spear-lunge','hunt-aim'];
     if(view==='three-quarter-left'&&(action.startsWith('spear-')||action==='hunt-aim'||action==='hunt-chase'))throw new Error('needs-view-tool-pose: left-view spear grip and contact have not been authored');
-    const moving=(motion===BODY_VIEW_LOCOMOTION_SELECTION||ownMotion)&&['walk','walk-left','run','run-left','jump','crouch'].includes(action);
+    const moving=ownMotionAction||motion===BODY_VIEW_LOCOMOTION_SELECTION&&['walk','walk-left','run','run-left','jump','crouch'].includes(action);
     const seated=seat===BODY_VIEW_SEAT_SELECTION&&action.startsWith('sit-');
     if(!fixed.includes(action)&&!rightTools.includes(action)&&!moving&&!seated&&!((manipulation===BODY_VIEW_MANIPULATION_SELECTION||ownManipulation)&&manipulationActions.includes(action)))throw new Error(action.startsWith('sit-')?'needs-view-seat: explicitly select registered-seated-v1':'needs-view-motion: select the registered candidate for this action; continuous turns remain pending');
   }
@@ -132,6 +134,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
     }
   }
   if(action==='crouch')plan.postures=[{pose:'crouch',intensity:.6,startMs:300,endMs:1000},{pose:'stand',startMs:3000,endMs:3700}];
+  if(action==='sidestep'||action==='sidestep-left'){plan.walks=[{startMs:300,endMs:3600,fromX:210,toX:210+(action==='sidestep-left'?-40:40),gait:'sidestep'}];}
   if(action==='walk'||action==='walk-left'){delete plan.headView;plan.facing=action==='walk-left'?'left':'right';plan.walks=[{startMs:300,endMs:3600,fromX:210,toX:210+(action==='walk-left'?-55:55)}];}
   if(HUNT_ACTIONS.includes(action))plan.compilerVersion=HUNT_ANIMATION_VERSION;
   if(action==='run'||action==='run-left'||action==='hunt-chase'){

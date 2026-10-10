@@ -26,6 +26,7 @@ import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSource
 import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription,bodyViewEyeCenter} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
 import {hasBodyViewLocomotion,hasOwnBodyLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
+import {FRONT_BODY_MOTION_SELECTION,frontalSidestepSchedule} from './body-view-front-motion-binding.js';
 import {hasBodyViewManipulation,hasOwnBodyManipulation,hasStationaryProfileContactSource,isNativeContactGesture,validateNativeManipulation,validateNativeContactBodyClock,nativeContactWindow,sampleNativeContactArm,nativeManipulationDescription} from './native-contact-arm.js';
 import {hasBodyViewSeat,nativeSeatState,nativeSeatMatrixError,nativeSeatDescription} from './body-view-seat.js';
 import {hasBodyViewSecondary,registeredNativeSecondary,nativeSecondaryState,nativeSecondaryMatrixError,nativeSecondaryDescription} from './body-view-secondary.js';
@@ -179,6 +180,7 @@ export function validatePerformance(plan: PerformancePlan, profile:HostProfile):
   overlaps(plan.jumps??[],'jump',plan.durationMs);
   if(![HUNT_ANIMATION_VERSION,AIRBORNE_ANIMATION_VERSION].includes(plan.compilerVersion)&&(plan.jumps?.length||plan.gestures.some(g=>g.action==='drop'||g.landingMs!==undefined)))throw new Error('Jump/drop clips require animation2.2.14 or newer');
   if(plan.compilerVersion!==HUNT_ANIMATION_VERSION&&(plan.walks.some(w=>w.gait==='run')||plan.spears?.length||plan.props.some(p=>p.kind==='spear')))throw new Error('Run/spear tracks require animation2.2.15');
+  if(plan.walks.some(w=>w.gait==='sidestep')&&(!usesBodyView(profile)||profile.appearance.bodyMotion!==FRONT_BODY_MOTION_SELECTION||profile.appearance.bodyView!=='front'||!isCurrentAnimation(plan.compilerVersion)))throw new Error('needs-front-motion: paired sidestep requires the explicitly selected own front source and current compiler');
   if(plan.lunge)validateBodyViewLunge(profile);
   validateFixedBodyView(plan,profile);
   if(plan.lunge){
@@ -345,6 +347,7 @@ function rootAt(plan:PerformancePlan,timeMs:number):Point {
   return {x,y:plan.root.y};
 }
 function walkSteps(plan:PerformancePlan,profile:HostProfile,walk:PerformancePlan['walks'][number]){
+  if(walk.gait==='sidestep')return frontalSidestepSchedule(walk,rigMetrics(profile),plan.scale,t=>rootAt(plan,t));
   const m=rigMetrics(profile),stepLength=Math.max(8,m.upperLeg*.32)*plan.scale;
   const steps=walk.gait==='run'?runStepCount(walk,m,plan.scale):Math.max(2,Math.ceil(Math.abs(walk.toX-walk.fromX)/stepLength)),span=(walk.endMs-walk.startMs)/steps;
   return Array.from({length:steps},(_,i)=>{
@@ -397,6 +400,7 @@ function gait(plan:PerformancePlan,profile:HostProfile,timeMs:number) {
       }
     }
   }
+  if(profile.appearance.bodyMotion===FRONT_BODY_MOTION_SELECTION&&feet.left.x>=feet.right.x)throw new Error('needs-front-motion: frontal soles cross; original source must retain its leading/trailing stance order');
   running=!!runAir;
   return {feet,stance,activation,phase,direction,armSwing,supportShiftX,runAir,running};
 }
@@ -1344,6 +1348,6 @@ export function compilePerformance(plan:PerformancePlan,profile:HostProfile,acti
     ...(hasBodyViewSeat(profile)?{bodySeat:{...nativeSeatDescription,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
       supportTrackHash:hash({supports:physical.supports??[],postures:physical.postures??[],entryPosture:physical.entryPosture??null}),clock:plan.sourceBody?'complete original physical support/body transfer through explicit continuous camera slices':'shot-local physical support transfer',sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     ...(hasBodyViewLocomotion(profile)?{bodyMotion:{...nativeClothDescription,selection:profile.appearance.bodyMotion!,actor:profile.appearance.characterVariant,view:profile.appearance.bodyView,
-      clock:plan.sourceBody?'complete original body tracks through explicitly continuous camera slices':'complete shot-local walk/run/jump/posture; moving cuts require explicit sourceBody',sourceTrackHash:hash(plan.sourceBody??{walks:plan.walks,jumps:plan.jumps??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
+      clock:plan.sourceBody?'complete original body tracks through explicitly continuous camera slices':profile.appearance.bodyMotion===FRONT_BODY_MOTION_SELECTION?'complete shot-local lateral sidestep/jump/posture; moving cuts require explicit sourceBody':'complete shot-local walk/run/jump/posture; moving cuts require explicit sourceBody',sourceTrackHash:hash(plan.sourceBody??{walks:plan.walks,jumps:plan.jumps??[],postures:plan.postures??[],entryPosture:plan.entryPosture??null}),sourceBody:plan.sourceBody??null,motionVerified:false,audioVerified:false}}:{}),
     source:'compiled-fixed-length-bones',synchronization:activity.method,phonemeLipSync:false}};
 }

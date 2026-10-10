@@ -6,7 +6,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "const": "native-view-acting-clock-15"
+          "const": "native-view-acting-clock-16"
         },
         "ownerId": {
           "type": "string",
@@ -275,7 +275,8 @@
                     "type": "string",
                     "enum": [
                       "walk",
-                      "run"
+                      "run",
+                      "sidestep"
                     ]
                   }
                 },
@@ -3114,7 +3115,8 @@
                         "enum": [
                           "registered-locomotion-v1",
                           "registered-profile-locomotion-v1",
-                          "registered-rear-locomotion-v1"
+                          "registered-rear-locomotion-v1",
+                          "registered-front-motion-v1"
                         ]
                       },
                       "bodySeat": {
@@ -3576,7 +3578,8 @@
                           "type": "string",
                           "enum": [
                             "walk",
-                            "run"
+                            "run",
+                            "sidestep"
                           ]
                         }
                       },
@@ -3958,7 +3961,8 @@
                               "type": "string",
                               "enum": [
                                 "walk",
-                                "run"
+                                "run",
+                                "sidestep"
                               ]
                             }
                           },
