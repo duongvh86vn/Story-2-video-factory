@@ -31,8 +31,9 @@ function pointNear(a:{x:number;y:number},b:{x:number;y:number},epsilon=.01){asse
 function renderedEyes(frame:ReturnType<typeof samplePerformance>,profile:ReturnType<typeof actorProfile>){
   const values=frame.transforms.head!.match(/-?\d+(?:\.\d+)?/g)!.map(Number),[x,y,angle,scale]=values as [number,number,number,number];
   const c=registeredBodyView(profile),eyes=registeredBodyViewEyes(profile).eyes;
-  const px=((eyes[0].center.x+eyes[1].center.x)/2-c.neck.x)*c.headScale*scale;
-  const py=((eyes[0].center.y+eyes[1].center.y)/2-c.neck.y)*c.headScale*scale,rad=angle*Math.PI/180;
+  const second=eyes[1];assert.ok(second,'this legacy3/4 fixture has two registered eyes');
+  const px=((eyes[0].center.x+second.center.x)/2-c.neck.x)*c.headScale*scale;
+  const py=((eyes[0].center.y+second.center.y)/2-c.neck.y)*c.headScale*scale,rad=angle*Math.PI/180;
   return {x:x+px*Math.cos(rad)-py*Math.sin(rad),y:y+px*Math.sin(rad)+py*Math.cos(rad)};
 }
 

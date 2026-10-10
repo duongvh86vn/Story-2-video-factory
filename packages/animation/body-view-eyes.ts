@@ -1,14 +1,16 @@
-import {isBasicBodyView,basicBodyCapabilityError} from './body-view-basic-capabilities.js';
+import {isBasicBodyView,basicBodyCapabilityError,basicBodyHasUnsupportedOptions} from './body-view-basic-capabilities.js';
+import {BASIC_BODY_EYES_SELECTION,BASIC_BODY_EYES_VERSION,bodyViewBasicEyesRegistration,isBasicEyeView} from './body-view-basic-eyes-registration.js';
 import type {HostProfile} from '../host/schemas.js';
 import {hash} from '../core/utils.js';
 
 export const BODY_VIEW_EYES_SELECTION='registered-eyes-v1' as const;
-export const BODY_VIEW_EYES_VERSION='forest-native-view-eyes-1';
+export const BODY_VIEW_EYES_VERSION='forest-native-view-eyes-2';
 type Point={x:number;y:number};
 export type EyeSlot='screen-left'|'screen-right';
-type Eye={center:Point;rx:number;ry:number;shift:Point;bounds:{x:number;y:number;width:number;height:number};
+type Eye={slot?:EyeSlot;center:Point;rx:number;ry:number;shift:Point;bounds:{x:number;y:number;width:number;height:number};
   strip:{x:number;y:number;width:number;height:number};region?:string;glyph?:string;lid?:string};
-type Registration={sourceHash:string;sourceSize:readonly [number,number];eyes:readonly [Eye,Eye]};
+export type NativeEyeRegistration={sourceHash:string;sourceSize:readonly [number,number];sourceErase?:boolean;eyes:readonly [Eye,...Eye[]]};
+type Registration=NativeEyeRegistration;
 /** Screen slots only, never anatomical hand labels. Manual native eye/skin
  * regions from the exact PNG; the left Karo eye touches the nose, so its edit
  * region excludes the nose with a diagonal lower edge. No whole-face warp. */
@@ -35,15 +37,25 @@ export const bodyViewEyesRegistration={
     ]},
   },
 } as const satisfies Record<'lila'|'karo',Record<'three-quarter-left'|'three-quarter-right',Registration>>;
-export function hasBodyViewEyes(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyEyes===BODY_VIEW_EYES_SELECTION;}
+/** Selection predicate only. registeredBodyViewEyes/registeredBodyView and
+ * HostProfileSchema authorize the own actor/view/source before evaluation. */
+export function hasBodyViewEyes(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyEyes===BODY_VIEW_EYES_SELECTION||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION;}
 export function registeredBodyViewEyes(profile:Pick<HostProfile,'appearance'>,sourceHash?:string):Registration{
   const a=profile.appearance;
-  if(isBasicBodyView(a.bodyView))throw basicBodyCapabilityError(a.bodyView,'eyes');
+  if(isBasicBodyView(a.bodyView)){
+    if(a.bodyEyes!==BASIC_BODY_EYES_SELECTION||!isBasicEyeView(a.bodyView)||basicBodyHasUnsupportedOptions(a))throw basicBodyCapabilityError(a.bodyView,'selected own eyes');
+  }else if(a.bodyEyes!==BODY_VIEW_EYES_SELECTION)throw new Error('needs-view-eyes: basic eye selection requires its own front/profile source');
   if(!hasBodyViewEyes(profile)||a.artworkVersion!=='forest-body-view-1'||!a.characterVariant||!a.bodyView||a.sourceColour)throw new Error('needs-view-eyes: eye candidate requires its registered actor/body view');
-  const c=bodyViewEyesRegistration[a.characterVariant]?.[a.bodyView];
+  const c=isBasicEyeView(a.bodyView)?bodyViewBasicEyesRegistration[a.characterVariant][a.bodyView]:a.bodyView==='three-quarter-left'||a.bodyView==='three-quarter-right'?bodyViewEyesRegistration[a.characterVariant][a.bodyView]:undefined;
   if(!c||sourceHash!==undefined&&sourceHash!==c.sourceHash)throw new Error('needs-view-eyes: eye coordinates do not match the native view image');
   return c;
 }
+/** One visible profile eye, or the midpoint of the two source-front eyes.
+ * This is the physical ink anchor, before any pupil/blink transform. */
+export function bodyViewEyeCenter(c:Registration):Point{
+  return {x:c.eyes.reduce((sum,e)=>sum+e.center.x,0)/c.eyes.length,y:c.eyes.reduce((sum,e)=>sum+e.center.y,0)/c.eyes.length};
+}
+const eyeId=(e:Eye,index:number)=>'view-eye-'+(e.slot??(index?'screen-right':'screen-left'));
 const n=(value:number)=>Number(value.toFixed(5));
 const ease=(v:number)=>{const t=Math.max(0,Math.min(1,v));return t*t*t*(t*(t*6-15)+10);};
 const ellipse=(e:Eye)=>{const {x,y}=e.center,k=.55228475,rx=e.rx,ry=e.ry;
@@ -55,18 +67,23 @@ export function bodyViewEyesSvg(profile:Pick<HostProfile,'appearance'>,source:{s
   if(source.width!==c.sourceSize[0]||source.height!==c.sourceSize[1])throw new Error('Invalid eye source dimensions');
   if(source.url!=='assets/rigs/'+c.sourceHash+'.png'&&!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(source.url))throw new Error('Unapproved eye image URL');
   const image=`<image width="${source.width}" height="${source.height}" href="${source.url}"/>`;
-  const eyes=c.eyes.map((e,i)=>{const id='view-eye-'+(i?'screen-right':'screen-left'),q=e.bounds,s=e.strip,{x,y}=e.center;
+  // Own basic images have partially transparent skin pixels. Remove their
+  // original eye region at the same weight as its replacement, instead of
+  // leaving old black ink underneath a translucent skin-strip overlay.
+  const erase=c.sourceErase?`<defs><mask id="view-eyes-source-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="${source.width}" height="${source.height}" style="mask-type:luminance"><rect width="${source.width}" height="${source.height}" fill="white"/><g id="view-eyes-source-erase" opacity="0">${c.eyes.map(e=>{const q=e.bounds;return `<path d="${e.region??`M${q.x} ${q.y}H${q.x+q.width}V${q.y+q.height}H${q.x}Z`}" fill="black"/>`;}).join('')}</g></mask></defs>`:'';
+  const eyes=c.eyes.map((e,i)=>{const id=eyeId(e,i),q=e.bounds,s=e.strip,{x,y}=e.center;
     const region=e.region??`M${q.x} ${q.y}H${q.x+q.width}V${q.y+q.height}H${q.x}Z`,glyph=e.glyph??ellipse(e),lid=e.lid??`M${x-e.rx} ${y}C${x-e.rx*.45} ${y+4} ${x+e.rx*.45} ${y+4} ${x+e.rx} ${y}`;
     return `<defs><clipPath id="${id}-region"><path d="${region}"/></clipPath><clipPath id="${id}-glyph-clip"><path d="${glyph}"/></clipPath></defs><g clip-path="url(#${id}-region)"><svg x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" viewBox="${s.x} ${s.y} ${s.width} ${s.height}" preserveAspectRatio="none">${image}</svg><g id="${id}-glyph"><g clip-path="url(#${id}-glyph-clip)">${image}</g></g><g id="${id}-lid" opacity="0"><path d="${lid}" fill="none" stroke="#100B06" stroke-width="3" stroke-linecap="round"/></g></g>`;
   });
-  return `<g id="view-eyes-layer" opacity="0" data-eyes-artwork="${BODY_VIEW_EYES_VERSION}">${eyes.join('')}</g>`;
+  return `${erase}<g id="view-eyes-layer" opacity="0" data-eyes-artwork="${BODY_VIEW_EYES_VERSION}">${eyes.join('')}</g>`;
 }
 /** Bounded shape/transform authoring shared by static documents and sampler.
  * Input is a head-local normalized direction, not an inferred speaker/target. */
 export function bodyViewEyesState(c:Registration,look:Point,blink:number){
   if(!Number.isFinite(look.x)||!Number.isFinite(look.y)||Math.abs(look.x)>1||Math.abs(look.y)>1||!Number.isFinite(blink)||blink<0||blink>1)throw new Error('needs-view-eyes: invalid bounded look/blink');
   const face:Record<string,{opacity?:number;attr?:{transform:string}}>={'view-eyes-layer':{opacity:ease(Math.max(Math.abs(look.x),Math.abs(look.y),blink)/.025)}};
-  for(const [i,e] of c.eyes.entries()){const id='view-eye-'+(i?'screen-right':'screen-left'),dx=look.x*e.shift.x,dy=look.y*e.shift.y,sy=Math.max(.02,1-blink);
+  if(c.sourceErase)face['view-eyes-source-erase']={opacity:face['view-eyes-layer']!.opacity};
+  for(const [i,e] of c.eyes.entries()){const id=eyeId(e,i),dx=look.x*e.shift.x,dy=look.y*e.shift.y,sy=Math.max(.02,1-blink);
     face[id+'-glyph']={opacity:1-ease((blink-.7)/.3),attr:{transform:`matrix(1 0 0 ${n(sy)} ${n(dx)} ${n(e.center.y*(1-sy)+dy)})`}};
     face[id+'-lid']={opacity:ease((blink-.4)/.6),attr:{transform:`translate(${n(dx)} ${n(dy)})`}};
   }
@@ -79,7 +96,7 @@ export function bodyViewEyesMatrixError(c:Registration,from:Record<string,{attr?
   if(!Number.isFinite(progress)||progress<0||progress>1)throw new Error('needs-view-eyes: invalid interpolation progress');
   let error=0;
   for(const [i,e] of c.eyes.entries())for(const suffix of ['glyph','lid']){
-    const id='view-eye-'+(i?'screen-right':'screen-left')+'-'+suffix;
+    const id=eyeId(e,i)+'-'+suffix;
     const numbers=(face:typeof from)=>{const value=face[id]?.attr?.transform;if(!value)throw new Error('needs-view-eyes: missing native eye transform');
       const m=value.match(/-?\d+(?:\.\d+)?/g)?.map(Number);if(!m||(suffix==='glyph'?m.length!==6:m.length!==2))throw new Error('needs-view-eyes: invalid native eye transform');return suffix==='glyph'?m:[1,0,0,1,...m];};
     const a=numbers(from),b=numbers(to),actual=numbers(wanted),blend=a.map((v,j)=>v+(b[j]!-v)*progress);
@@ -90,7 +107,8 @@ export function bodyViewEyesMatrixError(c:Registration,from:Record<string,{attr?
   }
   return error;
 }
-export const bodyViewEyesDescription={version:BODY_VIEW_EYES_VERSION,selection:BODY_VIEW_EYES_SELECTION,registrations:bodyViewEyesRegistration,
-  fingerprint:hash({version:BODY_VIEW_EYES_VERSION,bodyViewEyesRegistration,fade:.025,blinkGlyphFade:[.7,1],blinkLidFade:[.4,1],blinkDurationMs:140,blinkPeriodMs:3500}),
+export const bodyViewEyesDescription={version:BODY_VIEW_EYES_VERSION,selection:BODY_VIEW_EYES_SELECTION,selections:[BODY_VIEW_EYES_SELECTION,BASIC_BODY_EYES_SELECTION],registrations:bodyViewEyesRegistration,
+  ownBasicEyes:{version:BASIC_BODY_EYES_VERSION,selection:BASIC_BODY_EYES_SELECTION,registrations:bodyViewBasicEyesRegistration,coordinateAuthority:'own-source authoring cues; raw ink threshold inventory is not anatomy/optical-gaze acceptance',eraseSourceEyeRegions:true,rearEyes:false,approved:false,motionVerified:false,productionReady:false,availableBanks:[]},
+  fingerprint:hash({version:BODY_VIEW_EYES_VERSION,bodyViewEyesRegistration,bodyViewBasicEyesRegistration,fade:.025,blinkGlyphFade:[.7,1],blinkLidFade:[.4,1],blinkDurationMs:140,blinkPeriodMs:3500}),
   method:'bounded native raster eye glyph/skin samples and authored closed lids; head-local directional pupil look, fixed authored head view',
   productionReady:false,approved:false,limitations:['skin-strip/clip seams and original eye-nose contact need artistic review','happy fixed face only; full expression set pending','no head turn or exact optical gaze','no animation/audio/video acceptance']};

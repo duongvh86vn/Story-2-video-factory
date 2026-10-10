@@ -6,7 +6,7 @@
       "properties": {
         "version": {
           "type": "string",
-          "const": "native-view-acting-clock-7"
+          "const": "native-view-acting-clock-8"
         },
         "ownerId": {
           "type": "string",
@@ -1109,7 +1109,7 @@
             "properties": {
               "version": {
                 "type": "string",
-                "const": "native-actor-gaze-source-3"
+                "const": "native-actor-gaze-source-4"
               },
               "actorId": {
                 "type": "string",
@@ -3096,7 +3096,10 @@
                       },
                       "bodyEyes": {
                         "type": "string",
-                        "const": "registered-eyes-v1"
+                        "enum": [
+                          "registered-eyes-v1",
+                          "registered-basic-eyes-v1"
+                        ]
                       },
                       "bodyExpressions": {
                         "type": "string",

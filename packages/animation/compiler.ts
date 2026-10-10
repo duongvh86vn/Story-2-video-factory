@@ -23,7 +23,7 @@ import {nativeHeadSources,nativeHeadPixelScale} from './native-head-bank.js';
 import {nativeHeadTrackTimes} from './native-head-track.js';
 import {hasBodyViewSpeech,registeredBodyViewMouth,sampleBodyViewMouth,bodyViewMouthLevel,validateBodyViewMouthActivity,bodyViewMouthDescription,BODY_VIEW_MOUTH_ATTACK_MS,BODY_VIEW_MOUTH_RELEASE_MS} from './body-view-mouth.js';
 import {validateSpeechSourceClock,speechSourceClockDescription,type SpeechSourceClock} from './speech-clock.js';
-import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription} from './body-view-eyes.js';
+import {hasBodyViewEyes,registeredBodyViewEyes,bodyViewEyesState,bodyViewEyesMatrixError,bodyViewEyesDescription,bodyViewEyeCenter} from './body-view-eyes.js';
 import {hasBodyViewExpressions,registeredBodyViewExpressions,bodyViewExpressionState,bodyViewExpressionsDescription} from './body-view-expressions.js';
 import {hasBodyViewLocomotion,validateNativeLocomotion,nativeClothState,nativeClothMatrixError,nativeClothDescription,VIEW_CLOTH_LAG_MS,VIEW_CLOTH_KNEE_WEIGHT} from './body-view-cloth.js';
 import {hasBodyViewManipulation,isNativeContactGesture,validateNativeManipulation,validateNativeContactBodyClock,nativeContactWindow,sampleNativeContactArm,nativeManipulationDescription} from './native-contact-arm.js';
@@ -480,7 +480,7 @@ function nativeEyeOrigin(profile:HostProfile,geometry:ReturnType<typeof headGeom
     const {bank,cell}=nativeHeadBankCell(context.plan,profile,context.timeMs,context.clock),p=nativeHeadCellPoint(bank,cell,cell.eyeTarget);
     return add(geometry.head,rotate({x:p.x*scale*geometry.headArtScale,y:p.y*scale*geometry.headArtScale},geometry.headAngle));
   }
-  const eyes=registeredBodyViewEyes(profile),c=registeredBodyView(profile),center={x:(eyes.eyes[0].center.x+eyes.eyes[1].center.x)/2,y:(eyes.eyes[0].center.y+eyes.eyes[1].center.y)/2};
+  const eyes=registeredBodyViewEyes(profile),c=registeredBodyView(profile),center=bodyViewEyeCenter(eyes);
   return add(geometry.head,rotate({x:(center.x-c.neck.x)*c.headScale*scale*geometry.headArtScale,y:(center.y-c.neck.y)*c.headScale*scale*geometry.headArtScale},geometry.headAngle));
 }
 /** Physical eye midpoint, not pupil deformation, arm IK or speaker inference. */
@@ -1003,8 +1003,8 @@ function samplePerformanceState(plan:PerformancePlan,profile:HostProfile,time:nu
       let look={x:0,y:0};
       if(spearStates[0])look=direction(spearStates[0].track.aim);
       if(activeGesture?.target)look=mix(look,direction(activeGesture.target),activeGestureWeight);
-      if(explicitGaze){const to=direction(explicitGaze.target),forward=c.view==='three-quarter-left'?-1:1;
-        if(to.x*forward<-.01)throw new Error('needs-view-gaze: target is behind the fixed native view; author a matching view/turn');
+      if(explicitGaze){const to=direction(explicitGaze.target),facing=bodyViewFacing(profile),forward=facing==='left'?-1:1;
+        if(facing!=='front'&&to.x*forward<-.01)throw new Error('needs-view-gaze: target is behind the fixed native view; author a matching view/turn');
         look=mix(look,to,explicitGazeWeight(explicitGaze));
       }
       const nativeExpression=hasBodyViewExpressions(profile)?bodyViewExpressionState(profile,{...expressionPose('neutral'),...pose},bodyViewMouthLevel(activity,t,sourceClock)):undefined;

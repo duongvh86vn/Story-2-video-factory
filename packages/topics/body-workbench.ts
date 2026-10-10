@@ -1,4 +1,5 @@
 import {isBasicBodyView,basicBodyActionAllowed,basicBodyCapabilityError} from '../animation/body-view-basic-capabilities.js';
+import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
 import {escapeHtml} from '../core/utils.js';
 import {hash} from '../core/utils.js';
 import {BODY_VIEW_VERSION,BODY_CANDIDATE_VIEWS,bodyViewFacing,bodyViewDescription} from '../animation/body-view-art.js';
@@ -28,7 +29,7 @@ export const BODY_COLOUR_MODES=['cutout',SOURCE_COLOUR_VERSION] as const;
 export type BodyColourMode=typeof BODY_COLOUR_MODES[number];
 export const BODY_MOUTH_MODES=['silent',BODY_VIEW_SPEECH_VERSION,BODY_VIEW_REST_SPEECH_SELECTION] as const;
 export type BodyMouthMode=typeof BODY_MOUTH_MODES[number];
-export const BODY_EYES_MODES=['native',BODY_VIEW_EYES_SELECTION] as const;
+export const BODY_EYES_MODES=['native',BODY_VIEW_EYES_SELECTION,BASIC_BODY_EYES_SELECTION] as const;
 export type BodyEyesMode=typeof BODY_EYES_MODES[number];
 export const BODY_EXPRESSION_MODES=['native',BODY_VIEW_EXPRESSIONS_SELECTION] as const;
 export type BodyExpressionMode=typeof BODY_EXPRESSION_MODES[number];
@@ -55,8 +56,8 @@ export const bodyActionDuration=(action:BodyAction)=>action.startsWith('sit-walk
 export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:Mood,gestureHand:'left'|'right'='right',view:BodyWorkbenchView='source',colour:BodyColourMode='cutout',mouth:BodyMouthMode='silent',eyes:BodyEyesMode='native',look:BodyLookMode='rest',expressions:BodyExpressionMode='native',motion:BodyMotionMode='rigid',secondary:BodySecondaryMode='rigid',seat:BodySeatMode='unregistered',manipulation:BodyManipulationMode='unregistered') {
   const base=topicPreviewProfile(actor),authored=view!=='source'||action==='spear-lunge';
   if(mouth!=='silent'&&(!BODY_MOUTH_MODES.includes(mouth)||!authored))throw new Error('needs-view-voice-animation: mouth candidate requires an authored body view');
-  if(eyes!=='native'&&(eyes!==BODY_VIEW_EYES_SELECTION||!authored))throw new Error('needs-view-eyes: eye candidate requires an authored body view');
-  if(look!=='rest'&&eyes!==BODY_VIEW_EYES_SELECTION)throw new Error('needs-view-gaze: explicit look requires registered-eyes-v1');
+  if(eyes!=='native'&&(!authored||(eyes===BASIC_BODY_EYES_SELECTION?!isBasicEyeView(view):eyes!==BODY_VIEW_EYES_SELECTION||isBasicBodyView(view))))throw new Error('needs-view-eyes: explicitly select the eyes registered for this own body source');
+  if(look!=='rest'&&eyes==='native')throw new Error('needs-view-gaze: explicit look requires its selected registered eyes');
   if(expressions!=='native'&&(expressions!==BODY_VIEW_EXPRESSIONS_SELECTION||!authored||eyes!==BODY_VIEW_EYES_SELECTION||mouth!==BODY_VIEW_REST_SPEECH_SELECTION))throw new Error('needs-view-expression: expressions need native view, registered eyes and resting speech');
   if(motion!=='rigid'&&(motion!==BODY_VIEW_LOCOMOTION_SELECTION||!authored))throw new Error('needs-view-locomotion: motion candidate requires a registered native body view');
   if(secondary!=='rigid'&&(secondary!==BODY_VIEW_SECONDARY_SELECTION||!authored))throw new Error('needs-view-secondary: secondary candidate requires a registered native body view');
@@ -65,8 +66,8 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   if(manipulationActions.includes(action)&&manipulation!==BODY_VIEW_MANIPULATION_SELECTION)throw new Error('needs-view-manipulation: explicitly select registered-manipulation-v1');
   if(action==='spear-lunge'&&view==='three-quarter-left')throw new Error('needs-lunge-pose: left-facing planted lunge has not been authored');
   if(colour!== 'cutout'&&(colour!==SOURCE_COLOUR_VERSION||authored))throw new Error('needs-source-colour-profile: original RGB candidate is registered only for source orientation');
-  if(isBasicBodyView(view)&&(mood!=='happy'||!basicBodyActionAllowed(view,action)||mouth!=='silent'||eyes!=='native'||look!=='rest'||expressions!=='native'||motion!=='rigid'||seat!=='unregistered'||secondary!=='rigid'||manipulation!=='unregistered'))
-    throw basicBodyCapabilityError(view,'selected action/face/motion (only silent happy rigid basic poses, no rear chin)');
+  if(isBasicBodyView(view)&&(mood!=='happy'||!basicBodyActionAllowed(view,action)||mouth!=='silent'||eyes!=='native'&&!(eyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(view))||expressions!=='native'||motion!=='rigid'||seat!=='unregistered'||secondary!=='rigid'||manipulation!=='unregistered'))
+    throw basicBodyCapabilityError(view,'selected action/face/motion (silent happy rigid basic poses; own front/profile eyes only, no rear chin/eyes)');
   if(authored){
     if(mood!=='happy'&&expressions==='native')throw new Error('needs-view-expression: non-happy moods need explicit registered expressions');
     const fixed=['rest','point','think'];
@@ -80,7 +81,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
   const selectedView=view==='source'?'three-quarter-right':view;
   const viewProfile=authored?{...source,appearance:{...source.appearance,artworkVersion:BODY_VIEW_VERSION,bodyView:selectedView},profileHash:hash({source:source.profileHash,view:selectedView,registration:bodyViewDescription.fingerprint})}:source;
   const mouthProfile=mouth==='silent'?viewProfile:{...viewProfile,appearance:{...viewProfile.appearance,bodySpeech:mouth},profileHash:hash({source:viewProfile.profileHash,selection:mouth,mouth:bodyViewMouthDescription.fingerprint})};
-  const eyesProfile=eyes==='native'?mouthProfile:{...mouthProfile,appearance:{...mouthProfile.appearance,bodyEyes:BODY_VIEW_EYES_SELECTION},profileHash:hash({source:mouthProfile.profileHash,eyes:bodyViewEyesDescription.fingerprint})};
+  const eyesProfile=eyes==='native'?mouthProfile:{...mouthProfile,appearance:{...mouthProfile.appearance,bodyEyes:eyes},profileHash:hash({source:mouthProfile.profileHash,eyes:bodyViewEyesDescription.fingerprint,selection:eyes})};
   const expressionProfile=expressions==='native'?eyesProfile:{...eyesProfile,appearance:{...eyesProfile.appearance,bodyExpressions:BODY_VIEW_EXPRESSIONS_SELECTION},profileHash:hash({source:eyesProfile.profileHash,expressions:bodyViewExpressionsDescription.fingerprint})};
   const motionProfile=motion==='rigid'?expressionProfile:{...expressionProfile,appearance:{...expressionProfile.appearance,bodyMotion:BODY_VIEW_LOCOMOTION_SELECTION},profileHash:hash({source:expressionProfile.profileHash,motion:nativeClothDescription.fingerprint})};
   const seatProfile=seat==='unregistered'?motionProfile:{...motionProfile,appearance:{...motionProfile.appearance,bodySeat:BODY_VIEW_SEAT_SELECTION},profileHash:hash({source:motionProfile.profileHash,seat:nativeSeatDescription.fingerprint})};
@@ -91,7 +92,7 @@ export function bodyCalibrationPlan(actor:'lila'|'karo',action:BodyAction,mood:M
     kind:'stick-man',durationMs,fps:60,stage:{width:430,height:440,groundY:410},root:{x:210,y:410},scale:1,
     walks:[],gestures:[],props:[],gazes:[],expressions:[{startMs:0,endMs:durationMs,mood}]};
   if(authored){plan.headView=selectedView;plan.facing=bodyViewFacing(profile);}
-  if(look!=='rest'){const direction=selectedView==='three-quarter-left'?-1:1;
+  if(look!=='rest'){const direction=bodyViewFacing(profile)==='left'?-1:1;
     plan.gazes=[{startMs:300,endMs:3600,target:{x:210+direction*(look==='ahead'?160:80),y:look==='up'?100:look==='down'?395:260}}];}
   if(action==='point'){
     if(!authored)delete plan.headView;
@@ -255,7 +256,7 @@ export function bodyWorkbench(action:BodyAction,timeMs:number,mood:Mood,view:Bod
     +'<p><strong>Cầm vật — ứng viên source0.65:</strong> chọn view 3/4 và registered-manipulation-v1, rồi inspect/operate/pick-place/carry/drop và tay rig. Cuff/palm giữ nguồn, tiếp cận bằng góc khớp C2, giữ grip thật khi mang, thu tay sau release. Vật tròn chỉ là marker kiểm geometry; cảnh truyện dùng SVG có nguồn. Chọn locomotion để carry đi18 đơn vị. Không có audio và chưa nghiệm thu hình/chuyển động/video.</p>'
     +'<p><strong>Tóc/râu — ứng viên 0.39:</strong> chuyển động trễ theo đầu, giữ texture nguồn và điểm gắn; nét mặt và dây buộc tóc giữ cố định. Chỉ có cho hai góc 3/4. Chưa nghiệm thu vùng tách, silhouette, seam, va chạm hoặc chuyển động video.</p>'
     +'<p><strong>Miệng khép — ứng viên 0.35:</strong> chọn registered-rest-mouth-v1 với view 3/4 để Karo giữ miệng khép khi im lặng, rồi mở theo tín hiệu giả lập segment-draft; Lila giữ nụ cười khép nguồn. Chỉ vùng miệng dùng tile mới, không thay cả khuôn mặt. Màu/texture/viền ghép và chuyển động còn chờ duyệt; đây không phải audio thật hoặc phoneme lip-sync.</p>'
-    +'<p><strong>Mắt native — ứng viên:</strong> registered-eyes-v1 giữ glyph mắt từ PNG theo tọa độ riêng, chớp mắt và dịch nhìn trong ROI nhỏ; không xoay/kéo cả mặt. Target vòng tròn phía trước góc đang chọn; chưa là xác nhận ánh nhìn quang học hoặc diễn xuất. Rest/native giữ artwork nguồn; biểu cảm đầy đủ và head turn còn chờ.</p>'
+    +'<p><strong>Mắt — ứng viên:</strong> chọn registered-eyes-v1 cho 3/4, hoặc registered-basic-eyes-v1 cho chính diện/nghiêng. Mắt lấy từ đúng PNG của góc đã chọn; góc nghiêng chỉ có một mắt nhìn thấy, góc lưng chưa có mắt. Chớp và dịch nhìn chỉ trong vùng mắt nhỏ; đầu/mũi/tóc giữ nguồn. Target phía sau góc nghiêng cần quay đầu chưa hỗ trợ; chính diện nhận target cả hai bên. Rest/native giữ artwork gốc. Chưa nghiệm thu viền ghép, ánh nhìn, chuyển động hoặc video.</p>'
     +'<p><strong>Nền rig 0.20:</strong> tách cuff/cổ tay khỏi palm/grip theo ảnh nguồn và mở mask mitten đầy đủ. Cẳng tay kết thúc ở cuff; bàn tay cứng nối theo tiếp tuyến cẳng tay, grip vẫn giữ đúng cán. Xương tay đã migrate theo landmark trước khi đánh giá target, chưa nghiệm thu tỷ lệ. 3/4 trái/phải giữ lớp tay gần/xa theo artwork độc lập; lunge và grip giáo mới có ứng viên phải. Mặc định silent giữ nguyên happy; miệng 3/4 cần chọn registered-mouth-v1, áo còn rigid. Ba luồng input sản xuất vẫn chờ rig được duyệt. <a href="?action=spear-lunge&amp;view=three-quarter-right&amp;timeMs=1800&amp;mood=happy">Xem ứng viên lunge 3/4</a>.</p>'
     +'<p>Màu ảnh gốc dùng RGB nguyên bản và matte riêng, còn viền mảnh cần nghiệm thu. Lựa chọn này chỉ có cho thân source; view 3/4/lunge dùng artwork khác và sẽ bị chặn khi chọn màu gốc. Lớp mặt happy giữ nguyên; blink/mouth vẫn là overlay ứng viên. Đây là trang kiểm pose, không phát video.</p>'
     +'<form method="get"><label>Mắt<select name="eyes">'+BODY_EYES_MODES.map(value=>'<option value="'+value+'"'+(eyes===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><label>Nhìn<select name="look">'+BODY_LOOK_MODES.map(value=>'<option value="'+value+'"'+(look===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><label>Miệng<select name="mouth">'+BODY_MOUTH_MODES.map(value=>'<option value="'+value+'"'+(mouth===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label><label>Màu nhân vật<select name="colour">'+BODY_COLOUR_MODES.map(value=>'<option value="'+value+'"'+(colour===value?' selected':'')+'>'+(value==='cutout'?'Cutout hiện có':'Màu ảnh gốc · ứng viên')+'</option>').join('')+'</select></label><label>Góc thân<select name="view">'+BODY_WORKBENCH_VIEWS.map(v=>'<option value="'+v+'"'+(view===v?' selected':'')+'>'+v+'</option>').join('')+'</select></label><label>Động tác<select name="action">'+BODY_ACTIONS.map(value=>'<option value="'+value+'"'+(action===value?' selected':'')+'>'+value+'</option>').join('')+'</select></label>'

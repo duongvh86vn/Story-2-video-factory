@@ -12,6 +12,12 @@ import {hasBodyViewSecondary} from '../animation/body-view-secondary.js';
 import {normalizeViewExpressions,projectViewExpressions} from '../animation/view-expression-track.js';
 import {VIEW_ACTING_CLOCK_VERSION,normalizeViewGazes,validateViewActingClock,validateViewActingClockSource,type ViewActingClock} from '../animation/view-acting-clock.js';
 import {VIEW_ACTOR_GAZE_VERSION,viewGazeTarget} from '../animation/view-gaze-target.js';
+import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from '../animation/body-view-basic-eyes-registration.js';
+/** Preserve the fixed happy pose of own basic eye rigs in the original run;
+ * this does not grant expression overlays or a different facial artwork. */
+function keepsExpressionClock(profile:Pick<HostProfile,'appearance'>){
+  return hasBodyViewExpressions(profile)||hasNativeHeadBank(profile)||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(profile.appearance.bodyView);
+}
 import {actorProfile} from './model.js';
 import {collectViewSourceGestures} from '../animation/view-source-gesture.js';
 import {collectViewSourceBody,validateBodySourcePlan} from '../animation/view-source-body.js';
@@ -51,7 +57,7 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
     const scene=s.cinematic!.actorScene!,cast=[...(scene.primary?[scene.primary]:[]),...scene.supporting.map(actor=>actor.character)].sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
     return {shotId:s.id,ownerId:actorId,startMs:s.startMs,endMs:s.endMs,continuity:scene.continuity??'cut',
       castHash:hash(cast.map(character=>ActorDefinitionSchema.parse(character))),geometryHash:hash({stage:p.stage,root:p.root,scale:p.scale,facing:p.facing??'front',headView:p.headView??null,kind:p.kind,profileHash:p.profileHash}),gazes:p.gazes,gestures:p.gestures,
-      ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:p.expressions}:{}),
+      ...(keepsExpressionClock(currentActor.character)?{expressions:p.expressions}:{}),
       sourceBody:p.sourceBody,
       sourceManipulation:p.sourceManipulation,
       sourceSpear:p.sourceSpear,
@@ -84,7 +90,7 @@ function actorViewActingClockSource(board:Storyboard,current:Shot,actorId:string
     ...(manipulationMotion?{manipulationMotion}:{}),
     ...(spearMotion?{spearMotion}:{}),
     ...(headMotion?{headMotion}:{}),
-    ...(hasBodyViewExpressions(currentActor.character)||hasNativeHeadBank(currentActor.character)?{expressions:normalizeViewExpressions(run.flatMap(e=>(e.expressions??[]).map(expression=>({...expression,startMs:expression.startMs+e.startMs,endMs:expression.endMs+e.startMs}))))}:{})};
+    ...(keepsExpressionClock(currentActor.character)?{expressions:normalizeViewExpressions(run.flatMap(e=>(e.expressions??[]).map(expression=>({...expression,startMs:expression.startMs+e.startMs,endMs:expression.endMs+e.startMs}))))}:{})};
   validateViewActingClockSource(currentActor.performance,clock);return clock;
 }
 

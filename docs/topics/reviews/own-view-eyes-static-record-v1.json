@@ -1,0 +1,463 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.94-own-front-profile-eyes",
+  "precedingSourceSHA": "7d408a613498083aa9012ddaf5b25b0f1666221e",
+  "scope": "raw raster bytes/header/alpha and JSON/source-text inventory only; no project code imports, schema instances, callback/fixture/compiler/sampler/render execution",
+  "originalRastersUnchanged": 307,
+  "actualPNG": 144,
+  "actualJPEG": 163,
+  "JPEGNamedPNG": 101,
+  "imageFingerprint": "cab9572968becefdd2b1531de4f9937eb2b5191f29195dc24a05b4a6306c7b2c",
+  "newImages": 0,
+  "originalHeadDefinitionsUnchanged": 18,
+  "originalHeadMetadataUnchanged": 27,
+  "protectedProductionPathsUnchanged": 209,
+  "intentionallyEditedProductionModules": [
+    "packages/animation/body-view-art.ts",
+    "packages/animation/body-view-basic-capabilities.ts",
+    "packages/animation/body-view-eyes.ts",
+    "packages/animation/body-view-front-registration.ts",
+    "packages/animation/body-view-oblique-registration.ts",
+    "packages/animation/compiler.ts",
+    "packages/animation/view-acting-clock.ts",
+    "packages/animation/view-gaze-target.ts",
+    "packages/actors/view-acting-clock.ts"
+  ],
+  "legacyDetailedRegistrationDataUnchanged": true,
+  "legacyDetailedViewCount": 2,
+  "frontEngineeringSourceCount": 2,
+  "frontSourceBindings": [
+    {
+      "actor": "lila",
+      "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+      "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+      "width": 939,
+      "height": 1675,
+      "pixelSha256": "d68097cdedf74bbf911c075d2d5d22a12ce5a8e40bd5618731e5eccd48a125ba",
+      "opaquePixels": 1746,
+      "measuredYawDeg": null,
+      "registrationAuthority": "manual approximations, not measured or accepted"
+    },
+    {
+      "actor": "karo",
+      "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+      "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+      "width": 1024,
+      "height": 1536,
+      "pixelSha256": "3fdc052a687527d08e013e2dd4dc3cee32a5ac66b5bffa0fbaca8e320e962474",
+      "opaquePixels": 0,
+      "measuredYawDeg": null,
+      "registrationAuthority": "manual approximations, not measured or accepted"
+    }
+  ],
+  "obliqueEngineeringSourceCount": 8,
+  "obliqueSourceBindings": [
+    {
+      "actor": "lila",
+      "view": "left",
+      "sourceView": "left",
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+      "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+      "width": 1173,
+      "height": 1341,
+      "pixelSha256": "e86e9964b2b3335299e37049cff29b2a7642354b54e0c02709e02e7173e5ab12",
+      "opaquePixels": 1912,
+      "rearChinAbsent": false,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    },
+    {
+      "actor": "lila",
+      "view": "right",
+      "sourceView": "right",
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+      "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+      "width": 1024,
+      "height": 1536,
+      "pixelSha256": "11a4c52b974a0a1e80f1529bac552f23275723f8f757a295d8a54d3c449d7b14",
+      "opaquePixels": 0,
+      "rearChinAbsent": false,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    },
+    {
+      "actor": "lila",
+      "view": "back-left",
+      "sourceView": "back-three-quarter-left",
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-left-v2.png",
+      "sha256": "48b6607a9395bcb77e34ac58648f3eee5a4d66df36afebc85efa76c7b1d99349",
+      "width": 939,
+      "height": 1675,
+      "pixelSha256": "163d4a11afee193463f778d77319a171d12d431714773d3222b43662c9e3cb3e",
+      "opaquePixels": 3133,
+      "rearChinAbsent": true,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    },
+    {
+      "actor": "lila",
+      "view": "back-right",
+      "sourceView": "back-three-quarter-right",
+      "file": "library/topics/prehistoric-life/body-views/lila-back-three-quarter-right-v1.png",
+      "sha256": "4e13ed7b693be71213bc3f223f4e2bd817f5ab9b177b091141cd798b78661e32",
+      "width": 939,
+      "height": 1676,
+      "pixelSha256": "d074a5b9c968b7109294584f43cc3390b61bf6d54521f465fbd72544be34e16c",
+      "opaquePixels": 2465,
+      "rearChinAbsent": true,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    },
+    {
+      "actor": "karo",
+      "view": "left",
+      "sourceView": "left",
+      "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+      "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+      "width": 910,
+      "height": 1728,
+      "pixelSha256": "bef80f507b2c54b0af53cc3c84b0c326234bac08aa7a11f5c58431f68dec59d8",
+      "opaquePixels": 1328,
+      "rearChinAbsent": false,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    },
+    {
+      "actor": "karo",
+      "view": "right",
+      "sourceView": "right",
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+      "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+      "width": 910,
+      "height": 1727,
+      "pixelSha256": "40087492df3e0333fc8495f928981a474ce99b7df5ae063b04d7b2228737d3ff",
+      "opaquePixels": 2641,
+      "rearChinAbsent": false,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    },
+    {
+      "actor": "karo",
+      "view": "back-left",
+      "sourceView": "back-three-quarter-left",
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-left-v1.png",
+      "sha256": "4a281876694fb6f1952e7d35496ab2d353f60d131d570f0a255a0dcd4637e97b",
+      "width": 910,
+      "height": 1729,
+      "pixelSha256": "3ef95be3cce7ad7ef9d0cdae71c8a52901315ffb15e66514a8577d6df3d609fe",
+      "opaquePixels": 2227,
+      "rearChinAbsent": true,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    },
+    {
+      "actor": "karo",
+      "view": "back-right",
+      "sourceView": "back-three-quarter-right",
+      "file": "library/topics/prehistoric-life/body-views/karo-back-three-quarter-right-v2.png",
+      "sha256": "4bbe2bc16625b8c35bc81015607eeb3a8151f838450af3d0917bcc23957d22b6",
+      "width": 910,
+      "height": 1728,
+      "pixelSha256": "00d84001779c2d119b37464b301792263abd92eb50c42ad4fa91bbfda9a9339b",
+      "opaquePixels": 2435,
+      "rearChinAbsent": true,
+      "coordinateAuthority": "manual/model-assisted source approximations, not measured or accepted"
+    }
+  ],
+  "rawSourceCoordinateCheckOnly": true,
+  "ownEyeSourceCount": 6,
+  "visibleOwnEyeGlyphs": 8,
+  "ownEyeSources": [
+    {
+      "actor": "lila",
+      "view": "front",
+      "file": "library/topics/prehistoric-life/body-views/lila-front-v1.png",
+      "sha256": "f25c96337a4afbee79a9ed2650e1f065d43a5bb92eade24201cafe30acff36ce",
+      "width": 939,
+      "height": 1675,
+      "visibleEyes": 2,
+      "rawROI": [
+        {
+          "slot": "screen-left",
+          "eyeBounds": {
+            "pixelCount": 2288,
+            "darkPixelCount": 875,
+            "nonOpaquePixels": 2288,
+            "meanRGB": [
+              151.031,
+              101.3,
+              61.346
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 132,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 132,
+            "meanRGB": [
+              251.939,
+              166.409,
+              98.871
+            ]
+          }
+        },
+        {
+          "slot": "screen-right",
+          "eyeBounds": {
+            "pixelCount": 2288,
+            "darkPixelCount": 862,
+            "nonOpaquePixels": 2288,
+            "meanRGB": [
+              152.139,
+              103.538,
+              63.914
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 132,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 132,
+            "meanRGB": [
+              252.098,
+              170.47,
+              104.167
+            ]
+          }
+        }
+      ],
+      "coordinateAuthority": "own-source authoring cues, not anatomy/yaw/optical-gaze/motion acceptance"
+    },
+    {
+      "actor": "lila",
+      "view": "left",
+      "file": "library/topics/prehistoric-life/body-views/lila-left-v2.png",
+      "sha256": "aa8ef7e30b11bf8f34b85ca7de211d20c0900a09437ba3a10e76aab7eee0afee",
+      "width": 1173,
+      "height": 1341,
+      "visibleEyes": 1,
+      "rawROI": [
+        {
+          "slot": "screen-left",
+          "eyeBounds": {
+            "pixelCount": 1890,
+            "darkPixelCount": 549,
+            "nonOpaquePixels": 1890,
+            "meanRGB": [
+              174.78,
+              115.793,
+              67.48
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 105,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 105,
+            "meanRGB": [
+              251.571,
+              162.467,
+              94.829
+            ]
+          }
+        }
+      ],
+      "coordinateAuthority": "own-source authoring cues, not anatomy/yaw/optical-gaze/motion acceptance"
+    },
+    {
+      "actor": "lila",
+      "view": "right",
+      "file": "library/topics/prehistoric-life/body-views/lila-right-v3.png",
+      "sha256": "4ee7c232a489162159542d58f06ae16a72fadb9bc1382170b5c07a6ca3c4e311",
+      "width": 1024,
+      "height": 1536,
+      "visibleEyes": 1,
+      "rawROI": [
+        {
+          "slot": "screen-right",
+          "eyeBounds": {
+            "pixelCount": 2880,
+            "darkPixelCount": 977,
+            "nonOpaquePixels": 2880,
+            "meanRGB": [
+              165.168,
+              105.146,
+              56.33
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 135,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 135,
+            "meanRGB": [
+              254.03,
+              160.763,
+              84.474
+            ]
+          }
+        }
+      ],
+      "coordinateAuthority": "own-source authoring cues, not anatomy/yaw/optical-gaze/motion acceptance"
+    },
+    {
+      "actor": "karo",
+      "view": "front",
+      "file": "library/topics/prehistoric-life/body-views/karo-front-v1.png",
+      "sha256": "51dbffa390baea557b569d293bb9e7d87ad53948da17c253d060cc9efb5b1f9e",
+      "width": 1024,
+      "height": 1536,
+      "visibleEyes": 2,
+      "rawROI": [
+        {
+          "slot": "screen-left",
+          "eyeBounds": {
+            "pixelCount": 2184,
+            "darkPixelCount": 730,
+            "nonOpaquePixels": 2184,
+            "meanRGB": [
+              165.141,
+              105.793,
+              61.852
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 126,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 126,
+            "meanRGB": [
+              252.706,
+              160.762,
+              92.976
+            ]
+          }
+        },
+        {
+          "slot": "screen-right",
+          "eyeBounds": {
+            "pixelCount": 2000,
+            "darkPixelCount": 724,
+            "nonOpaquePixels": 2000,
+            "meanRGB": [
+              156.651,
+              101.712,
+              60.88
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 120,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 120,
+            "meanRGB": [
+              253.583,
+              163.792,
+              96.358
+            ]
+          }
+        }
+      ],
+      "coordinateAuthority": "own-source authoring cues, not anatomy/yaw/optical-gaze/motion acceptance"
+    },
+    {
+      "actor": "karo",
+      "view": "left",
+      "file": "library/topics/prehistoric-life/body-views/karo-left-v1.png",
+      "sha256": "9d000f6134385eebba1b79aaff8cb07b266bca9b87e16f3bd3529b379a2a8e6b",
+      "width": 910,
+      "height": 1728,
+      "visibleEyes": 1,
+      "rawROI": [
+        {
+          "slot": "screen-left",
+          "eyeBounds": {
+            "pixelCount": 2352,
+            "darkPixelCount": 637,
+            "nonOpaquePixels": 2352,
+            "meanRGB": [
+              179.409,
+              117.892,
+              71.11
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 126,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 126,
+            "meanRGB": [
+              252.119,
+              166.079,
+              100.587
+            ]
+          }
+        }
+      ],
+      "coordinateAuthority": "own-source authoring cues, not anatomy/yaw/optical-gaze/motion acceptance"
+    },
+    {
+      "actor": "karo",
+      "view": "right",
+      "file": "library/topics/prehistoric-life/body-views/karo-right-v2.png",
+      "sha256": "d3bf00b107d07c12a7384610a9181d6aa2ca14f9e5e160ff133f69aece3f37d8",
+      "width": 910,
+      "height": 1727,
+      "visibleEyes": 1,
+      "rawROI": [
+        {
+          "slot": "screen-right",
+          "eyeBounds": {
+            "pixelCount": 2400,
+            "darkPixelCount": 856,
+            "nonOpaquePixels": 2400,
+            "meanRGB": [
+              157.881,
+              108.31,
+              65.981
+            ]
+          },
+          "skinStrip": {
+            "pixelCount": 120,
+            "darkPixelCount": 0,
+            "nonOpaquePixels": 120,
+            "meanRGB": [
+              253.767,
+              171.767,
+              102.583
+            ]
+          }
+        }
+      ],
+      "coordinateAuthority": "own-source authoring cues, not anatomy/yaw/optical-gaze/motion acceptance"
+    }
+  ],
+  "legacyDetailedEyeDataUnchanged": true,
+  "ownFrontProfileRearRigDataUnchanged": true,
+  "previousObliqueCallbacksRetained": 8,
+  "sourceLiteralASTOnly": true,
+  "manualCoordinatesNotMeasured": true,
+  "ownNeutralArmCueSourceRetained": true,
+  "restArmHelperExecuted": false,
+  "legacyFixedViewOrderUnchanged": true,
+  "originalSourceProductionGuardRetained": true,
+  "topicProductionEntryRetained": true,
+  "originalWAVSRTVoiceAndOrchestratorUnchanged": true,
+  "manifestMappedCodeHashes": 161,
+  "manifestMappedEntries": 424,
+  "manifestScalarCodeEntries": 46,
+  "availableBankFields": 25,
+  "newCallbacksDeclared": 8,
+  "frontCallbacksDeclared": 6,
+  "legacyTestHelpersNarrowed": 2,
+  "callbacksExecuted": 0,
+  "fixtureInvoked": false,
+  "geometryInvoked": false,
+  "compilerInvoked": false,
+  "browserOpened": false,
+  "serverStarted": false,
+  "rendererRun": false,
+  "audioGenerated": false,
+  "videoRendered": false,
+  "existingTestReport": {
+    "file": "D:/github/Story-2-video-factory2.1/TEST-RESULTS.md",
+    "length": 18063,
+    "lastWriteTimeUTC": "2026-10-01T06:23:44.131Z",
+    "acceptsCurrentSource": false
+  },
+  "productionBinding": "needs-source-prop-binding",
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "artApproved": false,
+  "approved": false,
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

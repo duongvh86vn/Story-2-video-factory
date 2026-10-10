@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.94-own-front-profile-eyes",
+  "scope": "snapshot source-only review; no runtime/art/production acceptance",
+  "requestedModel": "tester",
+  "responseModel": "gpt-6-luna",
+  "httpStatus": 200,
+  "elapsedMs": 4455,
+  "usage": {
+    "prompt_tokens": 11616,
+    "completion_tokens": 393,
+    "total_tokens": 12009
+  },
+  "finishReason": "stop",
+  "reply": "{\"snapshotOnly\":true,\"findings\":[{\"file\":\"packages/animation/body-view-eyes.ts\",\"quote\":\"export function registeredBodyViewEyes(profile:Pick<HostProfile,'appearance'>,sourceHash?:string):Registration{\",\"reason\":\"The basic-eye registration is keyed by `a.characterVariant`, but this accessor’s declared input includes only `appearance`. TypeScript cannot safely access `characterVariant` on that type, so the new basic-eye branch introduces a narrowing/type error.\",\"correction\":\"Accept a profile type that includes `characterVariant` (and any other fields this function reads), or pass the variant explicitly; preserve the existing appearance-only type only for code paths that do not need it.\"},{\"file\":\"packages/animation/body-view-eyes.ts\",\"quote\":\"export function hasBodyViewEyes(profile:Pick<HostProfile,'appearance'>){return profile.appearance.bodyEyes===BODY_VIEW_EYES_SELECTION||profile.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION;}\",\"reason\":\"This makes the generic eyes capability predicate report basic eyes for any profile carrying the selection, without validating that the actor/view has an own registration or that other basic-view options are supported. Any caller treating this as capability authorization can bypass the intended own-source boundary.\",\"correction\":\"Keep this predicate as a selection check only and rename/document it accordingly, or make it validate the basic registration using a sufficiently typed profile; ensure capability consumers use `registeredBodyViewEyes` before enabling behavior.\"}],\"missingContext\":[\"The diff omits the new registration file’s repository status/path and surrounding export/build configuration, so its inclusion and import-cycle effects cannot be assessed.\",\"Call sites of `hasBodyViewEyes`, `registeredBodyViewEyes`, `bodyViewFacing`, and the gaze-target schema are not included; downstream boundary effects beyond the shown code cannot be established.\",\"No runtime, visual, sampling, or production acceptance is assessed.\"],\"acceptsRuntime\":false}",
+  "testsExecuted": false,
+  "acceptsFinalSource": false,
+  "disposition": [
+    {
+      "finding": "characterVariant is outside appearance / inferred type error",
+      "decision": "not applied; unsupported",
+      "evidence": "HostProfileSchema.appearance declares characterVariant; registeredBodyViewEyes reads profile.appearance.characterVariant. Source build/core and final typecheck determine actual type diagnostics, not this model assertion."
+    },
+    {
+      "finding": "hasBodyViewEyes selection predicate may be treated as authorization",
+      "decision": "selection-only contract documented; actual registration remains in raw/schema/accessor/compiler boundaries",
+      "evidence": "New accessor rejects other source/selection/capabilities before sampling/SVG; callbacks declare raw/schema and mismatched-source cases. No runtime proof or blanket capability approval."
+    },
+    {
+      "finding": "snapshot missing call sites/build context",
+      "decision": "limited snapshot review only; not final-source acceptance",
+      "evidence": "Parent then inspected actor clock and added fixed-happy expression source preservation for basic rigs, versions8/4 and opacity-coupled source-eye erasure after raw alpha inspection; review did not cover these later changes."
+    }
+  ],
+  "callbacksExecuted": 0,
+  "approved": false,
+  "artApproved": false,
+  "motionVerified": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "fullGoalComplete": false
+}

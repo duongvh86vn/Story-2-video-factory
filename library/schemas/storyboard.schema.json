@@ -3634,7 +3634,10 @@
                                   },
                                   "bodyEyes": {
                                     "type": "string",
-                                    "const": "registered-eyes-v1"
+                                    "enum": [
+                                      "registered-eyes-v1",
+                                      "registered-basic-eyes-v1"
+                                    ]
                                   },
                                   "bodyExpressions": {
                                     "type": "string",
@@ -5737,7 +5740,10 @@
                                     },
                                     "bodyEyes": {
                                       "type": "string",
-                                      "const": "registered-eyes-v1"
+                                      "enum": [
+                                        "registered-eyes-v1",
+                                        "registered-basic-eyes-v1"
+                                      ]
                                     },
                                     "bodyExpressions": {
                                       "type": "string",

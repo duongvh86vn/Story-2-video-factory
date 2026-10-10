@@ -26,8 +26,8 @@ export const bodyFrontRegistration={
     headClip:'M0 0H1024V514H650L611 556L563 575L513 560L480 569L434 553L392 514H0Z',
     headBounds:{left:183,right:839,top:23,bottom:575},chin:{left:{x:409,y:498},right:{x:625,y:498}}},
 } as const;
-export const frontBodyRegistrationDescription={version:'native-front-body-registration-1',sources:bodyFrontRegistration,
+export const frontBodyRegistrationDescription={version:'native-front-body-registration-2',sources:bodyFrontRegistration,
   coordinateAuthority:'manually authored source-canvas approximations; not measured anatomy/pose/yaw',measuredYawDeg:null,
-  capabilities:['fixed happy source head','rigid own-source clothing','same-person canonical soft limb rest/point/think candidate'],
-  unavailable:['speech','target gaze/blink','other emotions','locomotion','seat','cloth/hair follow','manipulation/tools','supporting cast','head bank','continuous body/head turns'],
+  capabilities:['fixed happy source head','rigid own-source clothing','same-person canonical soft limb rest/point/think candidate','explicit registered-basic-eyes-v1 from own front source; bounded look/blink candidate only'],
+  unavailable:['speech','exact optical gaze','other emotions','locomotion','seat','cloth/hair follow','manipulation/tools','supporting cast','head bank','continuous body/head turns'],
   artApproved:false,approved:false,motionVerified:false,productionReady:false,productionRig:null,availableBanks:[]};

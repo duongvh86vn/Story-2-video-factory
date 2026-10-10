@@ -94,7 +94,8 @@ test('head-local pupil direction follows the native eye origin and is invariant 
   for(const actor of ['lila','karo'] as const){
     const {profile,plan}=candidate(actor),c=registeredDetailedBodyView(profile),eyes=registeredBodyViewEyes(profile),forward=c.view==='three-quarter-left'?-1:1;
     plan.gazes=[{startMs:0,endMs:3500,target:{x:210+forward*160,y:120}}];const at=900,f=samplePerformance(plan,profile,at,silence),head=numbers(f.transforms.head!);
-    const angle=head[2]!*Math.PI/180,scale=head[3]!,center={x:(eyes.eyes[0].center.x+eyes.eyes[1].center.x)/2,y:(eyes.eyes[0].center.y+eyes.eyes[1].center.y)/2};
+    const second=eyes.eyes[1];assert.ok(second,'this legacy3/4 fixture has two registered eyes');
+    const angle=head[2]!*Math.PI/180,scale=head[3]!,center={x:(eyes.eyes[0].center.x+second.center.x)/2,y:(eyes.eyes[0].center.y+second.center.y)/2};
     const native={x:(center.x-c.neck.x)*c.headScale*scale,y:(center.y-c.neck.y)*c.headScale*scale},origin={x:head[0]!+Math.cos(angle)*native.x-Math.sin(angle)*native.y,y:head[1]!+Math.sin(angle)*native.x+Math.cos(angle)*native.y};
     const delta={x:fixedGazeTarget(plan.gazes[0]!).x-origin.x,y:fixedGazeTarget(plan.gazes[0]!).y-origin.y},m=numbers(f.face['view-eye-screen-left-glyph']!.attr!.transform as string),look={x:m[4]!/eyes.eyes[0].shift.x,y:m[5]!/eyes.eyes[0].shift.y};
     const local={x:Math.cos(angle)*delta.x+Math.sin(angle)*delta.y,y:-Math.sin(angle)*delta.x+Math.cos(angle)*delta.y},length=Math.hypot(local.x,local.y);

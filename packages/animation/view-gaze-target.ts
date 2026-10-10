@@ -9,10 +9,11 @@ import {supportMotionTimes} from './support.js';
 import {PhysicalLungeClockSchema} from './lunge.js';
 import {hasNativeHeadBank,validateNativeHeadBankTrack} from './body-head-bank.js';
 import {nativeHeadTrackTimes} from './native-head-track.js';
+import {BASIC_BODY_EYES_SELECTION,isBasicEyeView} from './body-view-basic-eyes-registration.js';
 
-export const VIEW_ACTOR_GAZE_VERSION='native-actor-gaze-source-3' as const;
+export const VIEW_ACTOR_GAZE_VERSION='native-actor-gaze-source-4' as const;
 export const nativeActorGazeDescription={version:VIEW_ACTOR_GAZE_VERSION,selection:"performance.gazes[].actorTarget={id,anchor:'eyes'}",
-  method:'complete visible original actor run; registered eye midpoint projected by the rendered physical neck/head transform, body/expression/breath clock and owned physical lunge timings; no gaze feedback or arm/tool evaluation',
+  method:'complete visible original actor run; own visible eye anchor (one profile eye or two-eye midpoint) projected by the rendered physical neck/head transform, body/expression/breath clock and owned physical lunge timings; no gaze feedback or arm/tool evaluation',
   limits:'fixed native eyes/expression source or explicitly registered selected-cell physical eye anchor; bank3 local directional eyes/speech are unaccepted source candidates, emotion and continuous gaze across cell changes unavailable; no optical gaze or motion acceptance',
   runtimeVerified:false,opticalGazeVerified:false,productionReady:false,approved:false};
 const SourceSchema=z.object({version:z.literal(VIEW_ACTOR_GAZE_VERSION),actorId:Id,
@@ -25,7 +26,8 @@ export const ViewGazeTargetSchema=SourceSchema.extend({fingerprint:z.string().re
   const p=source.performance,a=source.profile;
   if(source.endMs<=source.startMs||source.endMs-source.startMs>300000||p.durationMs!==source.endMs-source.startMs)ctx.addIssue({code:'custom',message:'Invalid complete gaze target run clock'});
   if(source.actorId!==a.id||p.leadCharacterId!==a.id||p.profileHash!==a.profileHash||p.kind!==a.kind)ctx.addIssue({code:'custom',message:'Gaze target identity/profile mismatch'});
-  if(a.appearance.artworkVersion!=='forest-body-view-1'||!a.appearance.bodyView||!hasNativeHeadBank(a)&&(a.appearance.bodyEyes!=='registered-eyes-v1'||a.appearance.bodyExpressions!=='registered-expressions-v1'))ctx.addIssue({code:'custom',message:'Actor eye target needs its registered native face or head cell/body source'});
+  const ownBasicEyes=a.appearance.bodyEyes===BASIC_BODY_EYES_SELECTION&&isBasicEyeView(a.appearance.bodyView);
+  if(a.appearance.artworkVersion!=='forest-body-view-1'||!a.appearance.bodyView||!hasNativeHeadBank(a)&&!ownBasicEyes&&(a.appearance.bodyEyes!=='registered-eyes-v1'||a.appearance.bodyExpressions!=='registered-expressions-v1'))ctx.addIssue({code:'custom',message:'Actor eye target needs its registered native face, own basic eyes or head cell/body source'});
   if(p.root.y!==p.stage.groundY)ctx.addIssue({code:'custom',message:'Gaze target root must use its ground anchor'});
   if(p.gazes.length||p.gestures.length||p.props.length||p.spears?.length||p.sourceSpear||p.sourceManipulation)ctx.addIssue({code:'custom',message:'Gaze target source is physical only, without attention/arms/props'});
   if(!!p.lunge!==!!source.lungeClock||source.lungeClock&&(source.lungeClock.spearId!==p.lunge?.spearId||source.lungeClock.endMs!==p.durationMs))ctx.addIssue({code:'custom',message:'Gaze target lunge must keep its original owned physical clock'});
