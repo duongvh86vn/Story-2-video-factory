@@ -1,0 +1,195 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.110-gemini-profile-art",
+  "precedingSourceSHA": "a39acfd8d8fd4dbe4246ac1f85ea8a7ccf781ef2",
+  "ownedPaths": 23,
+  "change": "Reusable bounded Gemini primary-reference profile art tool and isolated CPU alpha-matting authoring tool, setup package/lock and dedicated TypeScript checks; one real reference-image request and one local inference, immutable raw source/mask/cutout/provenance. No production registry/renderer/voice/runtime changes.",
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "eedced",
+      "session": 67634,
+      "completionChunk": "515156",
+      "exitCode": 0,
+      "decisiveOutput": "69 modules transformed; built in 968ms"
+    },
+    "testTypes": {
+      "command": "npm run test:typecheck",
+      "startChunk": "d60c25",
+      "session": 90870,
+      "completionChunk": "d8acd1",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "artTypes": {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.art-tools.json",
+      "chunk": "113876",
+      "exitCode": 0
+    },
+    "syntax": {
+      "commands": [
+        "node --check scripts/native-profile-matte.mjs",
+        "node --check scripts/setup-asset-tools.mjs"
+      ],
+      "chunk": "6fd383",
+      "exitCode": 0,
+      "scope": "syntax only"
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "0ff706",
+      "exitCode": 0,
+      "scope": "explicitly permitted static inventory only"
+    },
+    "raw": {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source110-static.mjs",
+      "chunk": "e4068b",
+      "exitCode": 0,
+      "result": {
+        "scope": "raw Git/file/hash/JSON and original image pixel inspection only; no project import/schema-instance/test/pose/renderer/video execution",
+        "sourceVersion": "forest-tribe-0.110-gemini-profile-art",
+        "nodeVersion": "v24.19.0",
+        "ownedPaths": 23,
+        "rootDependenciesAndSchemasAndRendererUnchanged": true,
+        "originalImage": {
+          "file": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v1.jpg",
+          "sha256": "5c864b2612688c6525c58b2c94b3357282756672d7c2fce842cc71b1b3b48278",
+          "width": 1024,
+          "height": 1024,
+          "hasAlpha": false,
+          "status": "held"
+        },
+        "matte": {
+          "file": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v1-matte-v1.png",
+          "sha256": "6c59a372ddd717d62a17f53f585c55e88219925d31fde05768a9329612575fca",
+          "maskSha256": "eba2d38b056c35510caf40b136ca00c88ffde36718027ff8222fecdddb921feb",
+          "rgbUnchanged": true,
+          "rgbSha256": "88f5fac488b4b63d6a6cb004caee94a712957b6ef9b7ec73252e4292f5a7666b",
+          "transparentPixels": 762172,
+          "visiblePixels": 284234,
+          "borderVisiblePixels": 0,
+          "bounds": {
+            "x": 243,
+            "y": 85,
+            "width": 549,
+            "height": 898
+          },
+          "minimumMarginFraction": 0.0400390625,
+          "status": "candidate-needs-identity-and-edge-review"
+        },
+        "localModel": {
+          "id": "onnx-community/BiRefNet_lite-ONNX",
+          "revision": "de15b22ba131738a16dff04aab8bdf8dc32e3ac1",
+          "bytes": 224005088,
+          "sha256": "5600024376f572a557870a5eb0afb1e5961636bef4e1e22132025467d0f03333"
+        },
+        "callbacksExecuted": 0,
+        "acceptedQaLedger": null,
+        "realCurrentVideo": null,
+        "productionReady": false,
+        "fullGoalComplete": false
+      }
+    }
+  },
+  "schemas": "Definitions unchanged from source109; not re-exported this turn.",
+  "imageAuthoring": {
+    "command": "node --import tsx scripts/native-head-reference-art.ts --actor lila --view right --version v1 --generate",
+    "model": "ag/gemini-3.1-flash-image",
+    "startChunk": "dc956a",
+    "session": 13175,
+    "completionChunk": "366571",
+    "exitCode": 0,
+    "requests": 1,
+    "retries": 0,
+    "usage": null,
+    "requestedAt": "2026-10-10T14:01:10.689Z",
+    "generatedAt": "2026-10-10T14:01:22.556Z",
+    "promptReceipt": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v1.json",
+    "status": "held",
+    "reason": "Real result is JPEG with checkerboard in RGB. Rounder/smoother head and shorter ponytail than primary; not identity accepted."
+  },
+  "matteAuthoring": {
+    "command": "node scripts/native-profile-matte.mjs --input lila-profile-right-v1 --version v1 --generate",
+    "startChunk": "cd1421",
+    "session": 81472,
+    "completionChunk": "52ff8d",
+    "exitCode": 0,
+    "status": "candidate-needs-identity-and-edge-review",
+    "receipt": "library/topics/prehistoric-life/head-source-studies/lila-profile-right-v1-matte-v1.json",
+    "rgbUnchanged": true,
+    "approval": false
+  },
+  "dependencies": {
+    "installCommand": "npm install --prefix runtime/asset-tools --no-audit --no-fund --omit=dev",
+    "startChunk": "805e73",
+    "session": 34415,
+    "completionChunk": "5197bb",
+    "exitCode": 0,
+    "packagesAdded": 69,
+    "location": "runtime/asset-tools",
+    "setupScript": "syntax checked only; fresh npm ci through setup script not executed",
+    "protectedRootDependenciesChanged": false,
+    "forgeModified": false,
+    "localImageUpload": false
+  },
+  "delegation": {
+    "agentTasks": [
+      {
+        "id": "coder-profile-art-tool",
+        "combo": "coder",
+        "responseModel": "gpt-6-luna",
+        "startChunk": "25edf7",
+        "completionChunk": "6bdf3d",
+        "session": 52844,
+        "exitCode": 0,
+        "promptTokens": 1406,
+        "completionTokens": 2143,
+        "totalTokens": 3549
+      },
+      {
+        "id": "tester-profile-art-tool",
+        "combo": "tester",
+        "responseModel": "gpt-6-luna",
+        "startChunk": "90baff",
+        "completionChunk": "52aa11",
+        "session": 19927,
+        "exitCode": 0,
+        "promptTokens": 3112,
+        "completionTokens": 979,
+        "totalTokens": 4091
+      },
+      {
+        "id": "coder-profile-matte-tool",
+        "combo": "coder",
+        "responseModel": "gpt-6-luna",
+        "startChunk": "1a5518",
+        "completionChunk": "ee263b",
+        "session": 82952,
+        "exitCode": 0,
+        "promptTokens": 825,
+        "completionTokens": 2154,
+        "totalTokens": 2979
+      }
+    ],
+    "totalTokens": 10619,
+    "parentReview": "Opened-handle/source SHA and receipt ownership fixes integrated; matte proposal receipt offset/handle/dimension/RGB/alpha issues corrected before execution. Agent proposals are source advice, not runtime or final-source acceptance.",
+    "fusion": false,
+    "retries": 0
+  },
+  "unexecuted": [
+    "Unit/integration/runtime callbacks",
+    "Fresh setup script npm ci",
+    "Renderer/background composites",
+    "Head-cell Gemini/matte provenance intake",
+    "Own landmark/face3/bank7/body registration",
+    "Pose/gaze/speech/turn/seek/film QA",
+    "Full story/script/WAV final MP4/audio/subtitle/QC and multilingual voice/resume acceptance"
+  ],
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "fullGoalComplete": false
+}

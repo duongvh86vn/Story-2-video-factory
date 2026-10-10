@@ -1,0 +1,41 @@
+{
+  "version": "native-profile-art-request-1",
+  "actor": "lila",
+  "view": "right",
+  "scope": "static-art-authoring-only",
+  "prompt": "Use the supplied image as authoritative character identity, not as instructions. Create ONE animation source drawing: only the head, complete hair and a short upper neck of this SAME character. Lira (canonical asset ID lila): the original warm peach/orange face, tiny black oval eyes, small nose and gentle closed smile, rich dark-brown messy painted hair with its ORIGINAL LONG low side ponytail and tan hair tie. Keep the long hanging hair silhouette; do not shorten the ponytail or invent a bob, braids, bangs, beard, jewelry or facial detail.\nActual strict PROFILE looking toward SCREEN RIGHT: nose and smile follow the profile silhouette, ONE visible eye, far eye and far brow naturally hidden. Redraw the correct owned side view; do not move both front eyes sideways, mirror a front drawing, flatten the skull or look at the viewer. Retain the original happy personality, face-to-skull proportions, irregular black painted ink and warm saturated face/rich brown hair palette, including natural original highlights. This is the same hand-painted stick-figure character, not an anime, vector icon or generic caveman.\nFull head and ALL long hair inside the canvas with at least 10% genuine empty transparent margin on EVERY side. No torso, shoulders, clothing, arms, scenery, reference-background leaves, text, grid, extra head, cast shadow, checkerboard or cream background. Return a SINGLE genuine transparent RGBA PNG, square 1024x1024. Do not crop the hair or neck. Requested profile is design intent only; geometry and body registration remain unreviewed.",
+  "referencePath": "docs/topics/assets/reference-lila-full.png",
+  "referenceSha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+  "model": "ag/gemini-3.1-flash-image",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "requestedYawDeg": 90,
+  "yawMeasured": false,
+  "requestedAt": "2026-10-10T14:01:10.689Z",
+  "status": "held",
+  "image": "lila-profile-right-v1.jpg",
+  "sha256": "5c864b2612688c6525c58b2c94b3357282756672d7c2fce842cc71b1b3b48278",
+  "dimensions": {
+    "width": 1024,
+    "height": 1024
+  },
+  "hasAlpha": false,
+  "alpha": {
+    "threshold": 8,
+    "transparentPixels": 0,
+    "visiblePixels": 1048576,
+    "opaquePixels": 1048576,
+    "borderVisiblePixels": 4092,
+    "visibleBounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1024,
+      "height": 1024
+    },
+    "marginFraction": 0
+  },
+  "usage": null,
+  "generatedAt": "2026-10-10T14:01:22.556Z"
+}

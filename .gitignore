@@ -33,4 +33,5 @@ config/voice.yaml.backup
 logs/
 library/topics/prehistoric-life/pose-studies/*.reserved
 library/topics/prehistoric-life/body-views/*.reserved
+library/topics/prehistoric-life/head-source-studies/*.reserved
 docs/topics/reviews/*.reserved

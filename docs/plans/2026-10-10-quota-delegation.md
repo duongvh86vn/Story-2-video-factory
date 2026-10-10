@@ -27,3 +27,8 @@ Khi cần asset, dùng ảnh gốc của người dùng để giữ mặt, tóc,
 - `tester-occlusion-review` → combo `tester`, response model `gpt-6-luna`: review tĩnh mặt bị che và paint; provider báo 10.027 input + 373 output = 10.400 token. Ba nhận xét không được coi là lỗi đã xác nhận: code đã đối chiếu eye/brow visibility theo slot, bắt buộc contour nằm trong protectedContours, kiểm lid matrix; hàm matrix error chỉ đo transform như tài liệu của nó, không kiểm toàn bộ opacity.
 
 Packet/proposal nằm trong `runtime/dev-agents/source109-visibility/`, không tự áp dụng source hoặc thực thi code model. Tổng báo cáo hai request: 21.365 token 9router, không quy đổi thành phần trăm tiết kiệm hoặc chi phí. Đề xuất của model được kiểm tra trước tích hợp; không mở thêm vòng gọi chỉ để xác nhận các finding đã bác bỏ bằng source.
+
+
+## Source0.110: lượt ảnh và tách nền thực tế
+
+Một request `ag/gemini-3.1-flash-image` đã thành công, JPEG gốc được giữ nguyên và alpha được tạo riêng bằng BiRefNet CPU. Không có usage ảnh trả về. Ba task source dùng combo coder/tester, response đều GPT Luna: 3.549 + 4.091 + 2.979 = 10.619 token provider báo. Không retry/Fusion; parent sửa và tích hợp đề xuất. [Công cụ, artifact, môi trường và việc còn thiếu](../topics/GEMINI-PROFILE-ART.md). Phần discovery/chưa generation phía trên mô tả riêng lượt0.109.

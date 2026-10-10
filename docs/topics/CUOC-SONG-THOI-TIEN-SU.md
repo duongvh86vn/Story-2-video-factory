@@ -1,5 +1,8 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
+**Cập nhật source0.110:** [Gemini reference và tách nền cục bộ](GEMINI-PROFILE-ART.md). Đã tạo một ảnh qua Gemini/9router và PNG alpha thật bằng BiRefNet CPU, giữ RGB nguồn; tool/prompt/hash/mask có thể dùng lại. Ảnh còn khác mặt/tóc mẫu gốc, chưa đăng ký vào rig, chưa duyệt art/motion/video. Ba task source hẹp qua coder/tester, không tự retry. Runtime do model test thực hiện; toàn story/script/WAV→diễn viên→final/QC vẫn còn mở.0.109 trở xuống là lịch sử.
+
+
 **Cập nhật source0.109:** [Chi tiết mặt nghiêng bị che từ đúng nguồn](NATIVE-SOURCE-FACE-VISIBILITY.md). Face3/bank7 khai báo mắt/lông mày bị che, giữ own protected contour, không vẽ hoặc điều khiển chi tiết không nhìn thấy; renderer/compiler/schema/manifest dùng cùng contract. Hai atlas đầu mới vẫn giữ lại để sửa, không có cell/turn được nghiệm thu. Sáu test mới DECLARED / NOT RUN; [phân công qua 9router](../plans/2026-10-10-quota-delegation.md) ưu tiên Gemini Image cho asset, coder/tester cho code/review. Toàn story/script/WAV→video, hình/diễn xuất/màu/giọng/resume/final/QC vẫn còn việc;0.108 trở xuống là lịch sử.
 
 
