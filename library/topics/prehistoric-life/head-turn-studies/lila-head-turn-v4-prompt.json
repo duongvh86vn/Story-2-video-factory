@@ -1,0 +1,37 @@
+{
+  "actor": "lila",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: illustration-story / identity-preserve. Create an animation artist's MODEL-CONSISTENT head-turn source atlas for the exact prehistoric woman Lila in the attached primary character design. Preserve her mature round warm orange-peach face, coarse dark brown long messy hair and low tied back bundle, ochre tie, small black oval eyes, little curved nose, simple CLOSED gentle happy smile, bold irregular hand-ink outlines and warm textured color. No pale face, no princess, no anime, no glossy 3D, no new haircut/accessories. This is one woman turning her head to LOOK AT A PARTNER ON SCREEN RIGHT. Draw SIXTEEN distinct consecutive drawings in a precise 4x4 equal-cell grid, read row-major. One monotonic turn from FRONT (both eyes, nose central) to TRUE RIGHT PROFILE (only one eye visible, forehead-nose-lips-chin silhouette at right, rear of skull at left). Intended artistic keyframe orientations: row1 0,6,12,18; row2 24,30,36,42; row3 48,54,60,66; row4 72,78,84,90 degrees toward screen right. All four rows continue the same turn, no row resets, no flipped portraits, no near-identical frontal heads pretending to be profiles. At 60+ degrees, the far eye becomes physically occluded, not pasted on the cheek; at 90 only one eye. The nose and cheek profile actually change under perspective while the skull volume stays constant. The original messy hair clumps and low rear ponytail rotate/occlude coherently as part of the same head; the rear hair remains behind the skull, no sudden hair relocation at row boundaries. Keep equal skull HEIGHT, fixed neck attachment location and fixed line weight in every cell; visible short warm-skin neck below chin, no shoulders or body. Hair may occupy appropriate changing width; don't scale heads to fill their cells. Keep all hair and neck inside each cell with clear spacious transparent margins. Every frame has the same closed happy expression and consistent neutral front lighting. Rich warm skin and saturated dark browns match the primary reference; do not wash colors out. Draw true new perspective frames rather than stretching, mirroring, crossfading, face-warping, or rotating the same flat portrait. One large square genuine transparent RGBA PNG, 4 by 4 layout with exactly16 complete isolated head drawings. No grid lines, text, frame labels, icons, border, background or cast shadow. Aim for clean production animation draft artwork faithful to this source, with readable natural turn progression. Requested size2048 square.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-lila-full.png",
+      "sha256": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-8b9fe993-dcc2-4533-b96e-c95800a3a28a.png",
+  "requestedYawDeg": [
+    0,
+    6,
+    12,
+    18,
+    24,
+    30,
+    36,
+    42,
+    48,
+    54,
+    60,
+    66,
+    72,
+    78,
+    84,
+    90
+  ],
+  "requestedRepairCells": [],
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

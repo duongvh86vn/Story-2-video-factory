@@ -57,7 +57,8 @@ test('brow motion, repair strips and closed mouth controls must remain inside th
   assert.equal(NativeHeadFaceSchema.safeParse({...face,emotions:{...e,mouth:{...e.mouth,frown:e.mouth.frown.map(p=>({...p,y:0}))}}}).success,false);
   const badStrip=structuredClone(face);badStrip.emotions!.mouth.repair.strip={x:0,y:0,width:99999,height:1};
   assert.equal(NativeHeadFaceSchema.safeParse(badStrip).success,false);
-  assert.equal(NativeHeadFaceSchema.safeParse({...face,protectedContours:[...face.protectedContours,e.brows['screen-left'].region]}).success,false);
+  const left=e.brows['screen-left'];assert.ok(!('visibility' in left),'legacy emotion source retains its visible brow');
+  assert.equal(NativeHeadFaceSchema.safeParse({...face,protectedContours:[...face.protectedContours,left.region]}).success,false);
   assert.throws(()=>nativeHeadFaceState(face,{aperture:0,blink:0,look:{x:0,y:0},emotion:{...emotion,brow:NaN}},'test'),/bounded emotion/);
 });
 

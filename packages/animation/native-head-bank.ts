@@ -2,9 +2,9 @@ import {z} from 'zod';
 import {Id} from '../core/identifiers.js';
 import {jsonSha256 as hash} from '../core/json-sha256.js';
 import {bodyViewRegistrations} from './body-view-registration.js';
-import {NativeHeadFaceSchema,validateNativeHeadFace} from './native-head-face.js';
+import {NativeHeadFaceSchema,validateNativeHeadFace,nativeHeadEyeRegistrations} from './native-head-face.js';
 import {NativeHeadPaintSchema,validateNativeHeadPaint} from './native-head-paint.js';
-import {NATIVE_HEAD_ACTORS,NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION,NATIVE_MOTION_HEAD_BANK_VERSION,nativeHeadIdentities,isNativeHeadFaceVersion} from './native-head-identity.js';
+import {NATIVE_HEAD_ACTORS,NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION,NATIVE_MOTION_HEAD_BANK_VERSION,NATIVE_OCCLUSION_HEAD_BANK_VERSION,nativeHeadIdentities,isNativeHeadFaceVersion} from './native-head-identity.js';
 
 export const NATIVE_HEAD_BANK_VERSION='native-head-bank-1' as const;
 const Sha=z.string().length(64).regex(/^[a-f0-9]{64}$/),Point=z.object({x:z.number().finite(),y:z.number().finite()}).strict();
@@ -19,10 +19,14 @@ held.add('1f84f61a4bf5e69c45903626df91517091013f16aa3bbc5bec52aa14609227b2');
 // Human replaced this bearded supporting male with the clean-face v2. It
 // cannot become a new directional head by copying/renaming its original PNG.
 held.add('f2995c6f6289f9c6e3b33b872ae40f70daef58cc312f34d641bb6dbcecce83ca');
+// New front-to-profile studies still have margin/identity/spacing defects and
+// no own per-cell registration. File renaming does not repair the source art.
+held.add('b2b0c90dbe66f8fefb61c8851920dcbb59b8932cc45dbab77694adcf74f45cde');
+held.add('7346a6bcc4fa0e33f23ae79dd134ddbb832424ebb1e32ba3ba59b2db069de692');
 /** An explicit engineering source registration, distinct from the incomplete
  * landmark draft, artistic approval or production rig. Held studies cannot
  * enter this contract, even under a renamed path. */
-export const NativeHeadBankDefinitionSchema=z.object({version:z.enum([NATIVE_HEAD_BANK_VERSION,'native-head-bank-2','native-head-bank-3',NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION,NATIVE_MOTION_HEAD_BANK_VERSION]),id:Id,actor:z.enum(NATIVE_HEAD_ACTORS),
+export const NativeHeadBankDefinitionSchema=z.object({version:z.enum([NATIVE_HEAD_BANK_VERSION,'native-head-bank-2','native-head-bank-3',NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION,NATIVE_MOTION_HEAD_BANK_VERSION,NATIVE_OCCLUSION_HEAD_BANK_VERSION]),id:Id,actor:z.enum(NATIVE_HEAD_ACTORS),
   source:NativeHeadSourceSchema,
   additionalSources:z.array(z.object({id:Id,...NativeHeadSourceSchema.shape}).strict()).max(23).optional(),
   primary:z.object({file:z.string(),sha256:Sha}).strict(),
@@ -37,13 +41,18 @@ export const NativeHeadBankDefinitionSchema=z.object({version:z.enum([NATIVE_HEA
 }).strict().superRefine((b,ctx)=>{
   const fail=(message:string)=>ctx.addIssue({code:'custom',message});
   const faceVersion=isNativeHeadFaceVersion(b.version),identity=nativeHeadIdentities[b.actor];
-  const motionVersion=b.version===NATIVE_MOTION_HEAD_BANK_VERSION,emotionVersion=b.version===NATIVE_EMOTION_HEAD_BANK_VERSION||motionVersion;
+  const occlusionVersion=b.version===NATIVE_OCCLUSION_HEAD_BANK_VERSION,motionVersion=b.version===NATIVE_MOTION_HEAD_BANK_VERSION||occlusionVersion,emotionVersion=b.version===NATIVE_EMOTION_HEAD_BANK_VERSION||motionVersion;
   if(b.cells.some(c=>'paint' in c)&&(!emotionVersion||b.cells.some(c=>!c.paint)))fail('Source paint requires an explicit complete bank5/6 partition; legacy registrations retain their bytes');
   if(motionVersion){
     if(b.cells.some(c=>c.paint?.version!=='native-head-paint-2')||b.capabilities.secondary!==b.cells.some(c=>c.paint?.rear.length))fail('Bank6 requires complete own paint2 and exact rear motion capability');
   }else if(b.capabilities.secondary||b.cells.some(c=>c.paint?.version==='native-head-paint-2'))fail('Only explicit bank6 may enable own source rear motion; bank1-5 retain no secondary capability');
   if(!emotionVersion&&identity.supporting!==(b.version===NATIVE_SUPPORTING_HEAD_BANK_VERSION))fail('Supporting head identity requires its own version 4 bank; principal banks retain versions 1–3');
-  if(emotionVersion?(!b.capabilities.expressions||b.cells.some(c=>c.face?.version!=='native-head-face-2'||!c.face.emotions||c.restMood!=='happy')):(b.capabilities.expressions||b.cells.some(c=>c.face?.version==='native-head-face-2')))fail('Only explicit bank5/6 may declare complete own face2 emotions from a happy source rest; legacy bank bytes retain their capabilities');
+  if(occlusionVersion){
+    if(!b.capabilities.expressions||b.cells.some(c=>c.face?.version!=='native-head-face-3'||!c.face.emotions||c.restMood!=='happy'))fail('Bank7 requires complete own face3 visibility/emotions from a happy source rest');
+  }else{
+    if(b.cells.some(c=>c.face?.version==='native-head-face-3'))fail('Source-occluded faces require explicit bank7; legacy bank1-6 remain unchanged');
+    if(emotionVersion?(!b.capabilities.expressions||b.cells.some(c=>c.face?.version!=='native-head-face-2'||!c.face.emotions||c.restMood!=='happy')):(b.capabilities.expressions||b.cells.some(c=>c.face?.version==='native-head-face-2')))fail('Only explicit bank5/6 may declare complete own face2 emotions from a happy source rest; legacy bank bytes retain their capabilities');
+  }
   if(!faceVersion&&(b.cells.length<2||!b.routes.length||b.cells.some(c=>c.yawDeg===null||'face' in c)||b.capabilities.speech||b.capabilities.directionalEyes))fail('Legacy head banks require numeric turn cells and forbid source-face capabilities');
   if(faceVersion&&b.cells.length===1&&b.routes.length)fail('A single fixed source-angle cell cannot declare head turns');
   if(faceVersion&&b.cells.length>1&&(!b.routes.length||b.cells.some(c=>c.yawDeg===null)))fail('Multiple source cells need numeric measured angles and real routes');
@@ -84,6 +93,10 @@ export const NativeHeadBankDefinitionSchema=z.object({version:z.enum([NATIVE_HEA
     if(c.paint&&source){try{validateNativeHeadPaint(c.paint,source,c);}catch(error){fail(error instanceof Error?error.message:String(error));}}
     if(c.face&&source){
       try{validateNativeHeadFace(c.face,source,c.crop);}catch(error){fail(error instanceof Error?error.message:String(error));}
+      if(occlusionVersion){
+        const eyes=nativeHeadEyeRegistrations(c.face),anchor={x:eyes.reduce((n,[,e])=>n+e.center.x,0)/eyes.length,y:eyes.reduce((n,[,e])=>n+e.center.y,0)/eyes.length};
+        if(c.eyeTarget.x!==anchor.x||c.eyeTarget.y!==anchor.y)fail('Bank7 eye target must be the actual visible eye center or both visible centers midpoint');
+      }
       if(c.face.mouth.kind!==identity.mouthKind)fail('Actor mouth requires its own source-face kind');
       if(c.face.mouth.rest){const r=c.face.mouth.rest,plate=sourceById.get(r.sourceId);if(!plate||plate.sha256!==r.source.sha256||plate.width!==r.source.width||plate.height!==r.source.height||!plate.file.includes('/head-face-plates/'))fail('Closed-mouth patch source differs from its registered bank resource');}
       if(c.face.emotions){const r=c.face.emotions.mouth.repair,paint=sourceById.get(r.sourceId);
@@ -127,8 +140,9 @@ export function nativeHeadSourceForCell(bank:NativeHeadBank,cell:NativeHeadBank[
 /** Fixed image pixel density times the one global attachment unit scale. */
 export function nativeHeadPixelScale(bank:NativeHeadBank,cell:NativeHeadBank['cells'][number]):number{return bank.unitScale*(nativeHeadSourceForCell(bank,cell).pixelScale??1);}
 export const nativeHeadBankDescription={version:NATIVE_HEAD_BANK_VERSION,selection:'appearance.bodyHeadBank + performance.sourceHead',
-  sourceVersions:[NATIVE_HEAD_BANK_VERSION,'native-head-bank-2','native-head-bank-3',NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION,NATIVE_MOTION_HEAD_BANK_VERSION],
+  sourceVersions:[NATIVE_HEAD_BANK_VERSION,'native-head-bank-2','native-head-bank-3',NATIVE_SUPPORTING_HEAD_BANK_VERSION,NATIVE_EMOTION_HEAD_BANK_VERSION,NATIVE_MOTION_HEAD_BANK_VERSION,NATIVE_OCCLUSION_HEAD_BANK_VERSION],
+  sourceVisibility:'Explicit bank7/face3 retains protected own-source occluded eye/brow contours; hidden features have no glyph/strip/center or animation channel; visible eyes own gaze target. Declarations are not optical or art acceptance.',
   modelIdentities:nativeHeadIdentities,
   method:'registered source cell at the original discrete head clock; single atlas or explicitly bound source images, fixed source pixel density and uniform global neck attachment, native eye/chin geometry; no pose-dependent scaling, whole-face warp, reflection or double-face crossfade',
   productionReady:false,approved:false,motionVerified:false,availableBanks:[],
-  pending:['faithful artwork, source identity and correspondence; Lila V1-V3 and Karo V1-V2 held','bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending','bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending','explicit bank5 source-paint and bank6 own rear follow authored; geometry/alpha seams/body occlusion/mesh/history/normal-speed motion unverified; full hair/cloth art and continuous turns pending','continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked','neck overlap/painter seam masks and compatible body turns','actual head/body turn and normal-speed video review','whole arbitrary-story/script/WAV factory acceptance']};
+  pending:['faithful artwork, source identity and correspondence; Lila V1-V4 and Karo V1-V3 held','bank3/4 local speech/eyes painter and geometry are source candidates; real registration/closed-mouth seam/normal-speed verification pending','bank5 own source emotions are authored candidates; geometry, skin/ink masks and normal-speed reactions unverified; supporting own emotion drawings pending','explicit bank5 source-paint and bank6 own rear follow authored; bank7/face3 source occlusion contract has no actual registered cell yet; geometry/alpha seams/body occlusion/mesh/history/normal-speed motion unverified; full hair/cloth art and continuous turns pending','continuous chin-contact and observer-gaze correspondence across cell changes; current combinations blocked','neck overlap/painter seam masks and compatible body turns','actual head/body turn and normal-speed video review','whole arbitrary-story/script/WAV factory acceptance']};

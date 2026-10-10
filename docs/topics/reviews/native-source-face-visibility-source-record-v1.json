@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "sourceVersion": "forest-tribe-0.109-own-profile-face-visibility",
+  "precedingSourceSHA": "a32c4e460c090c1cc537c0cf8733a516ceae1fdb",
+  "scope": "raw Git/file/hash/JSON/TS AST/PNG RGBA metadata only; no project import/schema-instance/callback/geometry/render evaluation",
+  "ownedPaths": 36,
+  "change": "Explicit face3/bank7 own-source hidden eye/brow declarations. Visible-only SVG/state/matrix/paint; slot-specific tilt; source protection and eye anchor; legacy version gates retained. Eight schema definitions and pack metadata updated; two earlier generated art studies held and hash-blocked, not registered.",
+  "sourceChecks": {
+    "build": {
+      "command": "npm run build",
+      "startChunk": "32f35d",
+      "session": 41605,
+      "completionChunk": "12ea52",
+      "exitCode": 0,
+      "decisiveOutput": "69 modules transformed; built in 758ms"
+    },
+    "typecheck": {
+      "command": "npm run test:typecheck",
+      "startChunk": "83fb84",
+      "session": 51372,
+      "completionChunk": "6f4cc8",
+      "exitCode": 0,
+      "callbacksExecuted": 0
+    },
+    "schema": {
+      "command": "npm run schemas",
+      "chunk": "ec71ac",
+      "exitCode": 0,
+      "scope": "definition export only"
+    },
+    "pack": {
+      "command": "node --import tsx scripts/prehistoric-pack.ts",
+      "chunk": "4ef0ba",
+      "exitCode": 0,
+      "productionReady": false
+    },
+    "raw": {
+      "command": "node C:/Users/Duongvh-pc/.codex/tmp/source109-static.mjs",
+      "chunk": "9f79d9",
+      "exitCode": 0,
+      "result": {
+        "scope": "raw Git/file/hash/JSON/TS AST/PNG RGBA metadata only; no project import/schema-instance/callback/geometry/render evaluation",
+        "sourceVersion": "forest-tribe-0.109-own-profile-face-visibility",
+        "nodeVersion": "v24.19.0",
+        "unchangedSourceFiles": [
+          "packages/director/props.ts",
+          "packages/director/creative.ts",
+          "packages/director/index.ts",
+          "packages/director/source-audit-context.ts",
+          "packages/director/source-prop-binding.ts",
+          "packages/director/source-spear-bindings.ts",
+          "packages/explainer/storyboard.ts",
+          "packages/actors/model.ts",
+          "packages/actors/speech-clock.ts",
+          "packages/actors/locks.ts",
+          "packages/topics/cast-model.ts",
+          "packages/topics/cast-appearance.ts",
+          "packages/topics/production-release.ts",
+          "packages/story/request.ts",
+          "packages/scenes/security.ts",
+          "library/shots/cinematic.ts",
+          "packages/animation/native-contact-arm.ts",
+          "packages/animation/view-acting-clock.ts",
+          "packages/animation/native-head-track.ts",
+          "packages/animation/native-head-follow.ts",
+          "packages/models/nine-router-image.ts"
+        ],
+        "compilerChange": "source face report version only",
+        "mappedManifestHashes": 725,
+        "exportedSchemas": [
+          "library/schemas/host-profile.schema.json",
+          "library/schemas/native-head-bank.schema.json",
+          "library/schemas/native-head-face.schema.json",
+          "library/schemas/shot.schema.json",
+          "library/schemas/topic-production-release.schema.json",
+          "library/schemas/storyboard.schema.json",
+          "library/schemas/view-acting-clock.schema.json",
+          "library/schemas/view-gaze-target.schema.json"
+        ],
+        "newCallbacksDeclared": 6,
+        "callbacksExecuted": 0,
+        "art": [
+          {
+            "file": "library/topics/prehistoric-life/head-turn-studies/lila-head-turn-v4.png",
+            "sha256": "b2b0c90dbe66f8fefb61c8851920dcbb59b8932cc45dbab77694adcf74f45cde",
+            "width": 1254,
+            "height": 1254,
+            "edgeCells": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16
+            ],
+            "held": true,
+            "registered": false,
+            "yawMeasured": false
+          },
+          {
+            "file": "library/topics/prehistoric-life/head-turn-studies/karo-head-turn-v3.png",
+            "sha256": "7346a6bcc4fa0e33f23ae79dd134ddbb832424ebb1e32ba3ba59b2db069de692",
+            "width": 1254,
+            "height": 1254,
+            "edgeCells": [
+              1,
+              2,
+              5,
+              6,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16
+            ],
+            "held": true,
+            "registered": false,
+            "yawMeasured": false
+          }
+        ],
+        "acceptedQaLedger": null,
+        "realCurrentVideo": null,
+        "productionReady": false,
+        "fullGoalComplete": false
+      }
+    },
+    "staticFollowup": "First raw check found separate head-turn inventory still had five studies. Updated its metadata/materials/fingerprint from fresh pack manifest to seven held studies; independent raw check then matched both PNG/JSON provenance and inventories. No pose/schema instance/render callback evaluated."
+  },
+  "sourceAdvice": {
+    "requests": [
+      {
+        "id": "coder-occlusion-tests",
+        "model": "coder",
+        "responseModel": "gpt-6-luna",
+        "status": "proposal-not-applied",
+        "usage": {
+          "promptTokens": 9904,
+          "completionTokens": 1061,
+          "totalTokens": 10965
+        },
+        "fingerprint": "9adf76726485e51a98ed6c67f050c5dc68c0457029a9c2840006a3eb97160d3b",
+        "scope": "source-static-advice-only",
+        "requestedReasoningEffort": null,
+        "timeoutMs": 60000,
+        "disposition": "Two proposed declarations source-reviewed and integrated; callbacks NOT RUN"
+      },
+      {
+        "id": "tester-occlusion-review",
+        "model": "tester",
+        "responseModel": "gpt-6-luna",
+        "status": "proposal-not-applied",
+        "usage": {
+          "promptTokens": 10027,
+          "completionTokens": 373,
+          "totalTokens": 10400
+        },
+        "fingerprint": "24723a5d0fa87e029a328b35e69396b4454f3f2c1bf9b2fed29d2bee19f35a1b",
+        "scope": "source-static-advice-only",
+        "requestedReasoningEffort": null,
+        "timeoutMs": 60000,
+        "disposition": "Three static findings rejected after source review: paired visibility exists; protected contour ownership and brow strips checked; visible lids included in matrix-only metric. No runtime result."
+      }
+    ],
+    "successfulDispatches": 2,
+    "retries": 0,
+    "totalTokens": 21365,
+    "noFusionRequested": true,
+    "scope": "bounded source proposals/static review, not runtime tests; router internal retry/quota not measured"
+  },
+  "imageRouting": {
+    "preferredModel": "ag/gemini-3.1-flash-image",
+    "discovery": {
+      "endpoint": "http://127.0.0.1:20128/v1/models/image",
+      "status": 200,
+      "generationProven": false
+    },
+    "referenceAdapter": "packages/models/nine-router-image.ts",
+    "generationExecutedThisFollowup": false,
+    "artIncluded": "Two raw PNG studies generated earlier using built-in imagegen, both held; no new Gemini generation or actor registration performed"
+  },
+  "tests": {
+    "file": "tests/native-head-occlusion.test.ts",
+    "declared": 6,
+    "executed": 0,
+    "status": "DECLARED / NOT RUN",
+    "fixture": "Isolated protocol data only; copied two-eye artwork does not prove optical occlusion and is never registered as actor/QA",
+    "legacyAssertionsRetained": true
+  },
+  "execution": {
+    "projectRuntime": false,
+    "callbacks": false,
+    "fixtures": false,
+    "geometry": false,
+    "compiler": false,
+    "renderer": false,
+    "server": false,
+    "browser": false,
+    "pipeline": false,
+    "tts": false,
+    "asr": false,
+    "video": false
+  },
+  "preserved": [
+    "packages/director/props.ts",
+    "packages/director/creative.ts",
+    "packages/director/index.ts",
+    "packages/director/source-audit-context.ts",
+    "packages/director/source-prop-binding.ts",
+    "packages/director/source-spear-bindings.ts",
+    "packages/explainer/storyboard.ts",
+    "packages/actors/model.ts",
+    "packages/actors/speech-clock.ts",
+    "packages/actors/locks.ts",
+    "packages/topics/cast-model.ts",
+    "packages/topics/cast-appearance.ts",
+    "packages/topics/production-release.ts",
+    "packages/story/request.ts",
+    "packages/scenes/security.ts",
+    "library/shots/cinematic.ts",
+    "packages/animation/native-contact-arm.ts",
+    "packages/animation/view-acting-clock.ts",
+    "packages/animation/native-head-track.ts",
+    "packages/animation/native-head-follow.ts",
+    "packages/models/nine-router-image.ts"
+  ],
+  "testAuthority": {
+    "owner": "user/model test",
+    "latestHumanReply": "chưa",
+    "currentReportAvailable": false,
+    "V1AcceptanceApplicable": false
+  },
+  "pending": [
+    "Own face3 source/landmarks/paint/body/neck/gaze and genuine continuous head/body turns; held art does not satisfy identity or motion acceptance.",
+    "Soft plausible anatomy/contact/feet/garment/hair, source-faithful faces and vivid day/sunset/night worlds with director/camera; supporting male bald/no beard/no hair and female.",
+    "Arbitrary story/topic -> faithful screenplay; exact script/dialogue/original WAV and legacy SRT -> real narration clock -> actors/world -> review/repair/final MP4 and all exports/QC.",
+    "EN primary/VI/JA/KO/external-local TTS, audio/source ownership, resume/cache/locks/rebuild and actual runtime/full-film acceptance."
+  ],
+  "acceptedQaLedger": null,
+  "realCurrentVideo": null,
+  "productionBinding": "needs-source-prop-binding",
+  "approved": false,
+  "productionReady": false,
+  "productionRig": null,
+  "availableBanks": [],
+  "motionVerified": false,
+  "productionApproval": false,
+  "fullGoalComplete": false
+}

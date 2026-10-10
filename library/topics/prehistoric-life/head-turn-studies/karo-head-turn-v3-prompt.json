@@ -1,0 +1,37 @@
+{
+  "actor": "karo",
+  "provider": "builtin-imagegen",
+  "prompt": "Use case: illustration-story / identity-preserve. Draw a coherent sixteen-frame animation head-turn source atlas of EXACTLY Karo, the warm-skinned prehistoric man from the primary attached design. Same broad friendly orange-peach face, small plain black oval eyes, small rounded nose, coarse SHORT messy spiky dark brown hair, thick continuous dark brown beard/moustache with the source's pointed beard silhouette and ochre-brown texture, bold imperfect hand-ink outline. Keep him recognizably this source man, not a different cute mascot or a realistic person. Heads and short skin neck ONLY, no body, no shoulders, no collar/costume. One genuine transparent RGBA square PNG in a precise 4x4 equal-cell grid of exactly16 drawings, no grid/text/background/border/shadows. Row-major continuous SMALL-STEP turn from FRONT with two eyes to TRUE RIGHT PROFILE with only ONE visible eye: intended row1 0,6,12,18 degrees, row2 24,30,36,42, row3 48,54,60,66, row4 72,78,84,90 toward screen RIGHT. All rows continue the same turn, no angle resets. Real perspective changes in forehead-nose-mouth-beard silhouette, with the far eye becoming physically hidden around the profile; no pasted second eye at far angles. Draw actual distinct intermediate perspectives, do not duplicate near-frontal heads or make a pasted portrait rotation, mirror, face warp or crossfade. Same skull HEIGHT, fixed neck attachment location and line weight in all cells; separate spacious alpha margins around each hair/beard/neck. No head scale changes to fill cells. Preserve the source's beard mass and its little chin tuft, no extra beard spikes or wandering moustache. The face expression is consistently HAPPY, but the MOUTH IS CLOSED into a relaxed broad smile within the original moustache/beard, with no teeth/open mouth/tongue; no emotional variation during this anatomy turn study. Keep rich warm skin, deep warm dark browns and readable black ink from the source, neutral steady lighting, no faded/desaturated palette. Request2048-square canvas, every complete head including beard and neck comfortably inside its own cell. This is an animation drawing draft meant for later source registration, not a finished scene or video.",
+  "referenceImages": [
+    {
+      "file": "docs/topics/assets/reference-karo-full.png",
+      "sha256": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "role": "primary-character-identity"
+    }
+  ],
+  "generatedOriginal": "C:/Users/Duongvh-pc/.codex/generated_images/01a0f194-5a26-7743-b0e6-bdc3cca6d17f/exec-3ef7b646-18e3-4800-b1a2-9f80c688f1ec.png",
+  "requestedYawDeg": [
+    0,
+    6,
+    12,
+    18,
+    24,
+    30,
+    36,
+    42,
+    48,
+    54,
+    60,
+    66,
+    72,
+    78,
+    84,
+    90
+  ],
+  "requestedRepairCells": [],
+  "scope": "static-art-authoring-only",
+  "approved": false,
+  "registered": false,
+  "productionReady": false,
+  "runtimeVerified": false
+}

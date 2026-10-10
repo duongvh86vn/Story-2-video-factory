@@ -12,7 +12,8 @@
             "native-head-bank-3",
             "native-head-bank-4",
             "native-head-bank-5",
-            "native-head-bank-6"
+            "native-head-bank-6",
+            "native-head-bank-7"
           ]
         },
         "id": {
@@ -347,7 +348,8 @@
                     "type": "string",
                     "enum": [
                       "native-head-face-1",
-                      "native-head-face-2"
+                      "native-head-face-2",
+                      "native-head-face-3"
                     ]
                   },
                   "source": {
@@ -606,422 +608,520 @@
                     "type": "object",
                     "properties": {
                       "screen-left": {
-                        "type": "object",
-                        "properties": {
-                          "center": {
+                        "anyOf": [
+                          {
                             "type": "object",
                             "properties": {
-                              "x": {
-                                "type": "number",
-                                "minimum": 0
+                              "center": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
                               },
-                              "y": {
+                              "shift": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "region": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 3,
+                                "maxItems": 32
+                              },
+                              "glyph": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 3,
+                                "maxItems": 32
+                              },
+                              "lid": {
+                                "type": "array",
+                                "minItems": 4,
+                                "maxItems": 4,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "strip": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "width": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y",
+                                  "width",
+                                  "height"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "stroke": {
                                 "type": "number",
-                                "minimum": 0
+                                "exclusiveMinimum": 0,
+                                "maximum": 32
                               }
                             },
                             "required": [
-                              "x",
-                              "y"
+                              "center",
+                              "shift",
+                              "region",
+                              "glyph",
+                              "lid",
+                              "strip",
+                              "stroke"
                             ],
                             "additionalProperties": false
                           },
-                          "shift": {
+                          {
                             "type": "object",
                             "properties": {
-                              "x": {
-                                "type": "number",
-                                "minimum": 0
+                              "visibility": {
+                                "type": "string",
+                                "const": "occluded"
                               },
-                              "y": {
-                                "type": "number",
-                                "minimum": 0
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "head-profile",
+                                  "hair"
+                                ]
+                              },
+                              "contour": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 3,
+                                "maxItems": 32
                               }
                             },
                             "required": [
-                              "x",
-                              "y"
+                              "visibility",
+                              "reason",
+                              "contour"
                             ],
                             "additionalProperties": false
-                          },
-                          "region": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "x": {
-                                  "type": "number",
-                                  "minimum": 0
-                                },
-                                "y": {
-                                  "type": "number",
-                                  "minimum": 0
-                                }
-                              },
-                              "required": [
-                                "x",
-                                "y"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "minItems": 3,
-                            "maxItems": 32
-                          },
-                          "glyph": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "x": {
-                                  "type": "number",
-                                  "minimum": 0
-                                },
-                                "y": {
-                                  "type": "number",
-                                  "minimum": 0
-                                }
-                              },
-                              "required": [
-                                "x",
-                                "y"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "minItems": 3,
-                            "maxItems": 32
-                          },
-                          "lid": {
-                            "type": "array",
-                            "minItems": 4,
-                            "maxItems": 4,
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              }
-                            ]
-                          },
-                          "strip": {
-                            "type": "object",
-                            "properties": {
-                              "x": {
-                                "type": "number",
-                                "minimum": 0
-                              },
-                              "y": {
-                                "type": "number",
-                                "minimum": 0
-                              },
-                              "width": {
-                                "type": "number",
-                                "exclusiveMinimum": 0
-                              },
-                              "height": {
-                                "type": "number",
-                                "exclusiveMinimum": 0
-                              }
-                            },
-                            "required": [
-                              "x",
-                              "y",
-                              "width",
-                              "height"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "stroke": {
-                            "type": "number",
-                            "exclusiveMinimum": 0,
-                            "maximum": 32
                           }
-                        },
-                        "required": [
-                          "center",
-                          "shift",
-                          "region",
-                          "glyph",
-                          "lid",
-                          "strip",
-                          "stroke"
-                        ],
-                        "additionalProperties": false
+                        ]
                       },
                       "screen-right": {
-                        "type": "object",
-                        "properties": {
-                          "center": {
+                        "anyOf": [
+                          {
                             "type": "object",
                             "properties": {
-                              "x": {
-                                "type": "number",
-                                "minimum": 0
+                              "center": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
                               },
-                              "y": {
+                              "shift": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "region": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 3,
+                                "maxItems": 32
+                              },
+                              "glyph": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 3,
+                                "maxItems": 32
+                              },
+                              "lid": {
+                                "type": "array",
+                                "minItems": 4,
+                                "maxItems": 4,
+                                "items": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                ]
+                              },
+                              "strip": {
+                                "type": "object",
+                                "properties": {
+                                  "x": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "y": {
+                                    "type": "number",
+                                    "minimum": 0
+                                  },
+                                  "width": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                  },
+                                  "height": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "x",
+                                  "y",
+                                  "width",
+                                  "height"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "stroke": {
                                 "type": "number",
-                                "minimum": 0
+                                "exclusiveMinimum": 0,
+                                "maximum": 32
                               }
                             },
                             "required": [
-                              "x",
-                              "y"
+                              "center",
+                              "shift",
+                              "region",
+                              "glyph",
+                              "lid",
+                              "strip",
+                              "stroke"
                             ],
                             "additionalProperties": false
                           },
-                          "shift": {
+                          {
                             "type": "object",
                             "properties": {
-                              "x": {
-                                "type": "number",
-                                "minimum": 0
+                              "visibility": {
+                                "type": "string",
+                                "const": "occluded"
                               },
-                              "y": {
-                                "type": "number",
-                                "minimum": 0
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "head-profile",
+                                  "hair"
+                                ]
+                              },
+                              "contour": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "minItems": 3,
+                                "maxItems": 32
                               }
                             },
                             "required": [
-                              "x",
-                              "y"
+                              "visibility",
+                              "reason",
+                              "contour"
                             ],
                             "additionalProperties": false
-                          },
-                          "region": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "x": {
-                                  "type": "number",
-                                  "minimum": 0
-                                },
-                                "y": {
-                                  "type": "number",
-                                  "minimum": 0
-                                }
-                              },
-                              "required": [
-                                "x",
-                                "y"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "minItems": 3,
-                            "maxItems": 32
-                          },
-                          "glyph": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "x": {
-                                  "type": "number",
-                                  "minimum": 0
-                                },
-                                "y": {
-                                  "type": "number",
-                                  "minimum": 0
-                                }
-                              },
-                              "required": [
-                                "x",
-                                "y"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "minItems": 3,
-                            "maxItems": 32
-                          },
-                          "lid": {
-                            "type": "array",
-                            "minItems": 4,
-                            "maxItems": 4,
-                            "items": [
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              },
-                              {
-                                "type": "object",
-                                "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
-                                  }
-                                },
-                                "required": [
-                                  "x",
-                                  "y"
-                                ],
-                                "additionalProperties": false
-                              }
-                            ]
-                          },
-                          "strip": {
-                            "type": "object",
-                            "properties": {
-                              "x": {
-                                "type": "number",
-                                "minimum": 0
-                              },
-                              "y": {
-                                "type": "number",
-                                "minimum": 0
-                              },
-                              "width": {
-                                "type": "number",
-                                "exclusiveMinimum": 0
-                              },
-                              "height": {
-                                "type": "number",
-                                "exclusiveMinimum": 0
-                              }
-                            },
-                            "required": [
-                              "x",
-                              "y",
-                              "width",
-                              "height"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "stroke": {
-                            "type": "number",
-                            "exclusiveMinimum": 0,
-                            "maximum": 32
                           }
-                        },
-                        "required": [
-                          "center",
-                          "shift",
-                          "region",
-                          "glyph",
-                          "lid",
-                          "strip",
-                          "stroke"
-                        ],
-                        "additionalProperties": false
+                        ]
                       }
                     },
                     "required": [
@@ -1303,248 +1403,346 @@
                         "type": "object",
                         "properties": {
                           "screen-left": {
-                            "type": "object",
-                            "properties": {
-                              "center": {
+                            "anyOf": [
+                              {
                                 "type": "object",
                                 "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
+                                  "center": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
                                   },
-                                  "y": {
+                                  "region": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        },
+                                        "y": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 32
+                                  },
+                                  "glyph": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        },
+                                        "y": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 32
+                                  },
+                                  "strip": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "width": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                      },
+                                      "height": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y",
+                                      "width",
+                                      "height"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "up": {
                                     "type": "number",
-                                    "minimum": 0
+                                    "minimum": 0,
+                                    "maximum": 80
+                                  },
+                                  "down": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 80
+                                  },
+                                  "tiltDeg": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 30
                                   }
                                 },
                                 "required": [
-                                  "x",
-                                  "y"
+                                  "center",
+                                  "region",
+                                  "glyph",
+                                  "strip",
+                                  "up",
+                                  "down",
+                                  "tiltDeg"
                                 ],
                                 "additionalProperties": false
                               },
-                              "region": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "x": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    },
-                                    "y": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "x",
-                                    "y"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "minItems": 3,
-                                "maxItems": 32
-                              },
-                              "glyph": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "x": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    },
-                                    "y": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "x",
-                                    "y"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "minItems": 3,
-                                "maxItems": 32
-                              },
-                              "strip": {
+                              {
                                 "type": "object",
                                 "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
+                                  "visibility": {
+                                    "type": "string",
+                                    "const": "occluded"
                                   },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
+                                  "reason": {
+                                    "type": "string",
+                                    "enum": [
+                                      "head-profile",
+                                      "hair"
+                                    ]
                                   },
-                                  "width": {
-                                    "type": "number",
-                                    "exclusiveMinimum": 0
-                                  },
-                                  "height": {
-                                    "type": "number",
-                                    "exclusiveMinimum": 0
+                                  "contour": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        },
+                                        "y": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 32
                                   }
                                 },
                                 "required": [
-                                  "x",
-                                  "y",
-                                  "width",
-                                  "height"
+                                  "visibility",
+                                  "reason",
+                                  "contour"
                                 ],
                                 "additionalProperties": false
-                              },
-                              "up": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 80
-                              },
-                              "down": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 80
-                              },
-                              "tiltDeg": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30
                               }
-                            },
-                            "required": [
-                              "center",
-                              "region",
-                              "glyph",
-                              "strip",
-                              "up",
-                              "down",
-                              "tiltDeg"
-                            ],
-                            "additionalProperties": false
+                            ]
                           },
                           "screen-right": {
-                            "type": "object",
-                            "properties": {
-                              "center": {
+                            "anyOf": [
+                              {
                                 "type": "object",
                                 "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
+                                  "center": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ],
+                                    "additionalProperties": false
                                   },
-                                  "y": {
+                                  "region": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        },
+                                        "y": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 32
+                                  },
+                                  "glyph": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        },
+                                        "y": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 32
+                                  },
+                                  "strip": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0
+                                      },
+                                      "width": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                      },
+                                      "height": {
+                                        "type": "number",
+                                        "exclusiveMinimum": 0
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y",
+                                      "width",
+                                      "height"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "up": {
                                     "type": "number",
-                                    "minimum": 0
+                                    "minimum": 0,
+                                    "maximum": 80
+                                  },
+                                  "down": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 80
+                                  },
+                                  "tiltDeg": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 30
                                   }
                                 },
                                 "required": [
-                                  "x",
-                                  "y"
+                                  "center",
+                                  "region",
+                                  "glyph",
+                                  "strip",
+                                  "up",
+                                  "down",
+                                  "tiltDeg"
                                 ],
                                 "additionalProperties": false
                               },
-                              "region": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "x": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    },
-                                    "y": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "x",
-                                    "y"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "minItems": 3,
-                                "maxItems": 32
-                              },
-                              "glyph": {
-                                "type": "array",
-                                "items": {
-                                  "type": "object",
-                                  "properties": {
-                                    "x": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    },
-                                    "y": {
-                                      "type": "number",
-                                      "minimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "x",
-                                    "y"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                "minItems": 3,
-                                "maxItems": 32
-                              },
-                              "strip": {
+                              {
                                 "type": "object",
                                 "properties": {
-                                  "x": {
-                                    "type": "number",
-                                    "minimum": 0
+                                  "visibility": {
+                                    "type": "string",
+                                    "const": "occluded"
                                   },
-                                  "y": {
-                                    "type": "number",
-                                    "minimum": 0
+                                  "reason": {
+                                    "type": "string",
+                                    "enum": [
+                                      "head-profile",
+                                      "hair"
+                                    ]
                                   },
-                                  "width": {
-                                    "type": "number",
-                                    "exclusiveMinimum": 0
-                                  },
-                                  "height": {
-                                    "type": "number",
-                                    "exclusiveMinimum": 0
+                                  "contour": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        },
+                                        "y": {
+                                          "type": "number",
+                                          "minimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    "minItems": 3,
+                                    "maxItems": 32
                                   }
                                 },
                                 "required": [
-                                  "x",
-                                  "y",
-                                  "width",
-                                  "height"
+                                  "visibility",
+                                  "reason",
+                                  "contour"
                                 ],
                                 "additionalProperties": false
-                              },
-                              "up": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 80
-                              },
-                              "down": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 80
-                              },
-                              "tiltDeg": {
-                                "type": "number",
-                                "minimum": 0,
-                                "maximum": 30
                               }
-                            },
-                            "required": [
-                              "center",
-                              "region",
-                              "glyph",
-                              "strip",
-                              "up",
-                              "down",
-                              "tiltDeg"
-                            ],
-                            "additionalProperties": false
+                            ]
                           }
                         },
                         "required": [

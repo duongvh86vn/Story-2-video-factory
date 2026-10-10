@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {Id} from '../core/identifiers.js';
-import type {NativeHeadFace} from './native-head-face.js';
+import {nativeHeadEyeRegistrations,nativeHeadBrowRegistrations,nativeHeadOcclusionContours,type NativeHeadFace} from './native-head-face.js';
 import {NativeRearMotionSchema,nativeRearFollowDefs} from './native-head-follow.js';
 
 const Scalar=z.number().finite().nonnegative();
@@ -26,9 +26,9 @@ export function validateNativeHeadPaint(value:NativeHeadPaint,source:z.infer<typ
   if(!within(cell.crop,full)||source.width*source.height>20_000_000)fail('crop leaves bounded source');
   if(new Set(paint.rear.map(p=>p.id)).size!==paint.rear.length)fail('duplicate rear layer');
   const f=cell.face,protect=[box(cell.seam),...[cell.neck,cell.neckTop,cell.chin,cell.eyeTarget].map(p=>({x:p.x,y:p.y,width:0,height:0})),
-    ...(f?[f.mouth.region,...Object.values(f.eyes).map(e=>e.region),...f.protectedContours,...(f.emotions?Object.values(f.emotions.brows).map(b=>b.region):[])].map(box):[]),
-    ...(f?Object.values(f.eyes).map(e=>e.strip):[]),...(f?.mouth.strip?[f.mouth.strip]:[]),
-    ...(f?.emotions?Object.values(f.emotions.brows).map(b=>b.strip):[]),
+    ...(f?[f.mouth.region,...nativeHeadEyeRegistrations(f).map(([,e])=>e.region),...f.protectedContours,...nativeHeadOcclusionContours(f),...nativeHeadBrowRegistrations(f).map(([,b])=>b.region)].map(box):[]),
+    ...(f?nativeHeadEyeRegistrations(f).map(([,e])=>e.strip):[]),...(f?.mouth.strip?[f.mouth.strip]:[]),
+    ...(f?nativeHeadBrowRegistrations(f).map(([,b])=>b.strip):[]),
     ...(f?.emotions?.mouth.repair.source.sha256===source.sha256?[f.emotions.mouth.repair.strip]:[])];
   for(const [i,p] of paint.rear.entries()){
     if(paint.version==='native-head-paint-1'?'motion' in p:!p.motion)fail('paint2 requires every own rear motion; paint1 forbids motion fields');

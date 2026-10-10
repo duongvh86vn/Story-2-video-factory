@@ -7,6 +7,7 @@ export type NativeHeadActor=typeof NATIVE_HEAD_ACTORS[number];
 export const NATIVE_SUPPORTING_HEAD_BANK_VERSION='native-head-bank-4' as const;
 export const NATIVE_EMOTION_HEAD_BANK_VERSION='native-head-bank-5' as const;
 export const NATIVE_MOTION_HEAD_BANK_VERSION='native-head-bank-6' as const;
+export const NATIVE_OCCLUSION_HEAD_BANK_VERSION='native-head-bank-7' as const;
 const male=prehistoricSupportingModels['prehistoric-male-bald'],female=prehistoricSupportingModels['prehistoric-female-haired'];
 export const nativeHeadIdentities={
   lila:{bodyTemplate:'lila',supporting:false,mouthKind:'skin-strip',primary:{file:'docs/topics/assets/reference-lila-full.png',sha256:'85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce'}},
@@ -18,5 +19,5 @@ export function nativeHeadIdentityMatches(appearance:{characterVariant?:'lila'|'
   const identity=nativeHeadIdentities[actor];
   return appearance.characterVariant===identity.bodyTemplate&&(identity.supporting?appearance.supportingModel===actor:appearance.supportingModel===undefined);
 }
-export function isNativeHeadFaceVersion(version:string){return version==='native-head-bank-3'||version===NATIVE_SUPPORTING_HEAD_BANK_VERSION||version===NATIVE_EMOTION_HEAD_BANK_VERSION||version===NATIVE_MOTION_HEAD_BANK_VERSION;}
-export function isSupportingNativeHeadVersion(version:string){return version===NATIVE_SUPPORTING_HEAD_BANK_VERSION||version===NATIVE_EMOTION_HEAD_BANK_VERSION||version===NATIVE_MOTION_HEAD_BANK_VERSION;}
+export function isNativeHeadFaceVersion(version:string){return version==='native-head-bank-3'||version===NATIVE_SUPPORTING_HEAD_BANK_VERSION||version===NATIVE_EMOTION_HEAD_BANK_VERSION||version===NATIVE_MOTION_HEAD_BANK_VERSION||version===NATIVE_OCCLUSION_HEAD_BANK_VERSION;}
+export function isSupportingNativeHeadVersion(version:string){return version===NATIVE_SUPPORTING_HEAD_BANK_VERSION||version===NATIVE_EMOTION_HEAD_BANK_VERSION||version===NATIVE_MOTION_HEAD_BANK_VERSION||version===NATIVE_OCCLUSION_HEAD_BANK_VERSION;}

@@ -38,8 +38,10 @@ test('real source-face candidates bind original V2 and local rest plate bytes wi
     assert.equal(bank.cells.length,1);assert.equal(bank.cells[0]!.yawDeg,null);assert.deepEqual(bank.routes,[]);
     assert.equal(bank.productionReady,false);assert.equal(bank.approved,false);assert.equal(bank.motionVerified,false);
     const cell=bank.cells[0]!,face=cell.face!;
-    assert.equal(cell.eyeTarget.x,(face.eyes['screen-left'].center.x+face.eyes['screen-right'].center.x)/2);
-    assert.equal(cell.eyeTarget.y,(face.eyes['screen-left'].center.y+face.eyes['screen-right'].center.y)/2);
+    const left=face.eyes['screen-left'],right=face.eyes['screen-right'];
+    assert.ok(!('visibility' in left)&&!('visibility' in right),'legacy source registration retains both visible eyes');
+    assert.equal(cell.eyeTarget.x,(left.center.x+right.center.x)/2);
+    assert.equal(cell.eyeTarget.y,(left.center.y+right.center.y)/2);
     assert.deepEqual(nativeHeadCellPoint(bank,cell,cell.neck),{x:0,y:0});
   }
 });

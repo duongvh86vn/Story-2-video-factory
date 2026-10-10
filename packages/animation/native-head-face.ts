@@ -7,20 +7,33 @@ const Source=z.object({sha256:z.string().regex(/^[a-f0-9]{64}$/),width:z.number(
 const Polygon=z.array(Point).min(3).max(32),Curve=z.tuple([Point,Point,Point,Point]);
 const Eye=z.object({center:Point,shift:Point,region:Polygon,glyph:Polygon,lid:Curve,strip:Rect,stroke:Scalar.positive().max(32)}).strict();
 const Brow=z.object({center:Point,region:Polygon,glyph:Polygon,strip:Rect,up:Scalar.nonnegative().max(80),down:Scalar.nonnegative().max(80),tiltDeg:Scalar.nonnegative().max(30)}).strict();
+// A source-occluded feature has no invented center, erase strip or glyph.
+// Its exact protected contour is retained as source evidence, never animated.
+const Occluded=z.object({visibility:z.literal('occluded'),reason:z.enum(['head-profile','hair']),contour:Polygon}).strict();
 const Emotions=z.object({mouth:z.object({flat:Curve,frown:Curve,repair:z.object({sourceId:Id,source:Source,strip:Rect}).strict()}).strict(),
-  brows:z.object({'screen-left':Brow,'screen-right':Brow}).strict(),
+  brows:z.object({'screen-left':z.union([Brow,Occluded]),'screen-right':z.union([Brow,Occluded])}).strict(),
 }).strict();
-const Shape=z.object({version:z.enum(['native-head-face-1','native-head-face-2']),source:Source,
+const Shape=z.object({version:z.enum(['native-head-face-1','native-head-face-2','native-head-face-3']),source:Source,
   mouth:z.object({kind:z.enum(['skin-strip','native-rim']),region:Polygon,top:Curve,depth:Scalar.positive(),lift:Scalar.nonnegative(),stroke:Scalar.positive().max(32),strip:Rect.optional(),
     rest:z.object({sourceId:Id,source:Source,scale:Scalar.positive().max(2),offset:z.object({x:Scalar,y:Scalar}).strict()}).strict().optional(),
   }).strict(),
-  eyes:z.object({'screen-left':Eye,'screen-right':Eye}).strict(),protectedContours:z.array(Polygon).min(1).max(8),
+  eyes:z.object({'screen-left':z.union([Eye,Occluded]),'screen-right':z.union([Eye,Occluded])}).strict(),protectedContours:z.array(Polygon).min(1).max(8),
   emotions:Emotions.optional(),
   status:z.literal('engineering-face-registration'),approved:z.literal(false),productionReady:z.literal(false),motionVerified:z.literal(false),
 }).strict();
 type P=z.infer<typeof Point>;type R=z.infer<typeof Rect>;
 export type NativeHeadFace=z.infer<typeof Shape>;
 const slots=['screen-left','screen-right'] as const,epsilon=1e-7;
+type Slot=typeof slots[number];
+export function nativeHeadEyeRegistrations(face:NativeHeadFace):Array<[Slot,z.infer<typeof Eye>]>{
+  return slots.flatMap(side=>{const eye=face.eyes[side];return 'visibility' in eye?[]:[[side,eye] as [Slot,z.infer<typeof Eye>]];});
+}
+export function nativeHeadBrowRegistrations(face:NativeHeadFace):Array<[Slot,z.infer<typeof Brow>]>{
+  return face.emotions?slots.flatMap(side=>{const brow=face.emotions!.brows[side];return 'visibility' in brow?[]:[[side,brow] as [Slot,z.infer<typeof Brow>]];}):[];
+}
+export function nativeHeadOcclusionContours(face:NativeHeadFace):P[][]{
+  return [...Object.values(face.eyes),...Object.values(face.emotions?.brows??{})].flatMap(feature=>'visibility' in feature?[feature.contour]:[]);
+}
 const cross=(a:P,b:P,c:P)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
 const segment=(p:P,a:P,b:P)=>Math.abs(cross(a,b,p))<=epsilon&&p.x>=Math.min(a.x,b.x)-epsilon&&p.x<=Math.max(a.x,b.x)+epsilon&&p.y>=Math.min(a.y,b.y)-epsilon&&p.y<=Math.max(a.y,b.y)+epsilon;
 const intersects=(a:P,b:P,c:P,d:P)=>segment(a,c,d)||segment(b,c,d)||segment(c,a,b)||segment(d,a,b)||(cross(a,b,c)>0)!==(cross(a,b,d)>0)&&(cross(c,d,a)>0)!==(cross(c,d,b)>0);
@@ -40,12 +53,24 @@ const within=(p:P,r:R)=>p.x>=r.x&&p.y>=r.y&&p.x<r.x+r.width&&p.y<r.y+r.height;
 const rectWithin=(r:R,b:R)=>r.x>=b.x&&r.y>=b.y&&r.x+r.width<=b.x+b.width&&r.y+r.height<=b.y+b.height;
 function geometry(f:NativeHeadFace,crop:R){
   const fail=(reason:string):never=>{throw new Error('needs-head-face-registration: '+reason);};
-  if((f.version==='native-head-face-2')!==('emotions' in f&&f.emotions!==undefined))fail('face2 requires its own complete emotions; face1 forbids emotion fields');
+  if(f.version==='native-head-face-3'){
+    if(!f.emotions)fail('face3 requires its own complete source emotions');
+    for(const side of slots){const eye=f.eyes[side],brow=f.emotions!.brows[side];
+      if(('visibility' in eye)!==('visibility' in brow)||'visibility' in eye&&'visibility' in brow&&(eye.reason!==brow.reason||eye.contour.length!==brow.contour.length||eye.contour.some((p,i)=>p.x!==brow.contour[i]!.x||p.y!==brow.contour[i]!.y)))fail('occluded eye and brow must retain the same owned source contour/reason');
+    }
+  }else{
+    if(nativeHeadOcclusionContours(f).length)fail('occluded source features require explicit face3; legacy face1/2 remain unchanged');
+    if((f.version==='native-head-face-2')!==('emotions' in f&&f.emotions!==undefined))fail('face2 requires its own complete emotions; face1 forbids emotion fields');
+  }
+  const eyes=nativeHeadEyeRegistrations(f);
+  if(!eyes.length)fail('a speaking/gazing face requires at least one visible source eye');
   const full={x:0,y:0,width:f.source.width,height:f.source.height};
   if(f.source.width*f.source.height>20_000_000||!corners(crop).every(p=>p.x>=0&&p.y>=0&&p.x<=full.width&&p.y<=full.height))fail('crop outside face source');
-  const brows=f.emotions?slots.map(s=>f.emotions!.brows[s]):[];
-  const edits=[f.mouth.region,...slots.map(s=>f.eyes[s].region),...brows.map(b=>b.region)],polygons=[...edits,...slots.map(s=>f.eyes[s].glyph),...brows.map(b=>b.glyph),...f.protectedContours];
+  const brows=nativeHeadBrowRegistrations(f).map(([,b])=>b);
+  const occlusions=nativeHeadOcclusionContours(f);
+  const edits=[f.mouth.region,...eyes.map(([,e])=>e.region),...brows.map(b=>b.region)],polygons=[...edits,...eyes.map(([,e])=>e.glyph),...brows.map(b=>b.glyph),...f.protectedContours,...occlusions];
   for(const poly of polygons)if(!simple(poly)||!poly.every(p=>within(p,full)&&within(p,crop)))fail('polygon is invalid or leaves source/crop');
+  for(const contour of occlusions)if(!f.protectedContours.some(poly=>poly.length===contour.length&&poly.every((p,i)=>p.x===contour[i]!.x&&p.y===contour[i]!.y)))fail('occlusion must name an exact protected contour in this own source cell');
   if(edits.some(p=>!convex(p)))fail('edit region must be convex to bound all Bezier/transform intermediates');
   for(let i=0;i<edits.length;i++)if(edits.slice(i+1).some(p=>overlap(edits[i]!,p))||f.protectedContours.some(p=>overlap(edits[i]!,p)))fail('edit region touches another edit or protected paint');
   const inMouth=(p:P)=>contains(p,f.mouth.region);
@@ -56,14 +81,15 @@ function geometry(f:NativeHeadFace,crop:R){
   for(const amount of [0,1])for(const [key,points] of Object.entries(mouthControls(f,amount))){const pad=key==='aperture'?f.mouth.stroke/2:0;
     if(!points.every(p=>corners({x:p.x-pad,y:p.y-pad,width:pad*2,height:pad*2}).every(inMouth)))fail('generated mouth '+key+' hull/ink leaves its own region');
   }
-  const strips=[...slots.map(s=>f.eyes[s].strip),...(f.mouth.strip?[f.mouth.strip]:[])];
+  const strips=[...eyes.map(([,e])=>e.strip),...(f.mouth.strip?[f.mouth.strip]:[])];
   for(const strip of strips)if(!rectWithin(strip,full)||!rectWithin(strip,crop)||edits.some(p=>overlap(corners(strip),p)))fail('source strip leaves crop or samples edited facial paint');
-  for(const side of slots){const e=f.eyes[side];
+  if(f.version==='native-head-face-3'&&strips.some(strip=>occlusions.some(contour=>overlap(corners(strip),contour))))fail('face3 erase strips cannot sample protected source occlusion paint');
+  for(const [,e] of eyes){
     if(!contains(e.center,e.glyph)||!e.lid.every(p=>contains(p,e.region)))fail('eye center/lid differs from its local geometry');
     for(const sy of [0,1])for(const dx of [-e.shift.x,e.shift.x])for(const dy of [-e.shift.y,e.shift.y])if(![...e.glyph,...e.lid].every(p=>contains({x:p.x+dx,y:e.center.y+(p.y-e.center.y)*sy+dy},e.region)))fail('eye shift/blink hull leaves its region');
     for(const dx of [-e.shift.x,e.shift.x])for(const dy of [-e.shift.y,e.shift.y])if(!e.lid.every(p=>corners({x:p.x+dx-e.stroke/2,y:p.y+dy-e.stroke/2,width:e.stroke,height:e.stroke}).every(q=>contains(q,e.region))))fail('lid stroke leaves its eye region');
   }
-  if(f.eyes['screen-left'].center.x>=f.eyes['screen-right'].center.x)fail('screen-coordinate eyes are swapped');
+  if(eyes.length===2&&eyes[0]![1].center.x>=eyes[1]![1].center.x)fail('screen-coordinate eyes are swapped');
   if(f.mouth.kind==='skin-strip'&&(!f.mouth.strip||f.mouth.rest)||f.mouth.kind==='native-rim'&&(!f.mouth.rest||f.mouth.strip))fail('mouth requires its own cheek strip or explicit closed-mouth plate');
   if(f.mouth.rest){const r=f.mouth.rest;if(r.source.sha256===f.source.sha256||r.source.width*r.source.height>20_000_000)fail('rest plate must be a separate bounded source');
     if(!f.mouth.region.every(p=>within({x:(p.x-r.offset.x)/r.scale,y:(p.y-r.offset.y)/r.scale},{x:0,y:0,width:r.source.width,height:r.source.height})))fail('rest plate does not cover its target mouth region');
@@ -154,10 +180,10 @@ export function nativeHeadFaceSvg(f:NativeHeadFace,imageId:string,prefix:string,
   const repair=rest?`<g transform="translate(${rest.offset.x} ${rest.offset.y}) scale(${rest.scale})"><use href="#${restImageId}" filter="url(#${opaque})"/></g>`:sample(f.mouth.strip!,regionBounds(f.mouth.region));
   const emotionRepair=f.emotions?`<g id="${mouthId}-emotion-repair" opacity="0">${sample(f.emotions.mouth.repair.strip,regionBounds(f.mouth.region),emotionImageId)}</g>`:'';
   const mouth=`<defs><clipPath id="${mouthId}-region"><path d="${polygon(f.mouth.region)}"/></clipPath><clipPath id="${mouthId}-inside"><use href="#${mouthId}-aperture"/></clipPath></defs><g id="${mouthId}-layer" opacity="${rest?1:0}" clip-path="url(#${mouthId}-region)">${repair}${emotionRepair}<g id="${mouthId}-generated" opacity="0"><path id="${mouthId}-aperture" d="${paths[mouthId+'-aperture']}" fill="#211008" stroke="#100804" stroke-width="${f.mouth.stroke}" stroke-linejoin="round"/><g clip-path="url(#${mouthId}-inside)"><path id="${mouthId}-teeth" d="${paths[mouthId+'-teeth']}" fill="#FFF8E9"/><path id="${mouthId}-tongue" d="${paths[mouthId+'-tongue']}" fill="#B3471F"/></g></g></g>`;
-  const eyes=slots.map(side=>{const e=f.eyes[side],key=prefix+'-'+side;
+  const eyes=nativeHeadEyeRegistrations(f).map(([side,e])=>{const key=prefix+'-'+side;
     return `<defs><clipPath id="${key}-region"><path d="${polygon(e.region)}"/></clipPath><clipPath id="${key}-ink"><path d="${polygon(e.glyph)}"/></clipPath></defs><g clip-path="url(#${key}-region)">${sample(e.strip,regionBounds(e.region))}<g id="${key}-glyph"><g clip-path="url(#${key}-ink)"><use href="#${imageId}"/></g></g><g id="${key}-lid" opacity="0"><path d="${cubic(e.lid)}" fill="none" stroke="#100804" stroke-width="${e.stroke}" stroke-linecap="round"/></g></g>`;
   }).join('');
-  const brows=f.emotions?slots.map(side=>{const b=f.emotions!.brows[side],key=prefix+'-brow-'+side;
+  const brows=f.emotions?nativeHeadBrowRegistrations(f).map(([side,b])=>{const key=prefix+'-brow-'+side;
     return `<defs><clipPath id="${key}-region"><path d="${polygon(b.region)}"/></clipPath><clipPath id="${key}-ink"><path d="${polygon(b.glyph)}"/></clipPath></defs><g id="${key}-layer" opacity="0" clip-path="url(#${key}-region)"><g clip-path="url(#${key}-ink)">${sample(b.strip,regionBounds(b.glyph))}</g><g id="${key}-glyph"><g clip-path="url(#${key}-ink)"><use href="#${imageId}" filter="url(#${prefix}-brow-ink)"/></g></g></g>`;
   }).join(''):'';
   const ink=f.emotions?`<filter id="${prefix}-brow-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -1.2 -2.4 -.4 0 2"/></filter>`:'';
@@ -177,15 +203,15 @@ export function nativeHeadFaceState(f:NativeHeadFace,input:{aperture:number;blin
   // eyes/brows/mouth contours. Face2 painter switches are discrete in compiler;
   // only local paths and glyph matrices interpolate. Face1 retains its output.
   const face:NativeFaceState['face']={[prefix+'-mouth-layer']:{opacity:f.mouth.rest?1:mouthVisible},[prefix+'-mouth-generated']:{opacity:mouthVisible},[prefix+'-eyes-layer']:{opacity:f.emotions?on(Math.max(Math.abs(look.x),Math.abs(look.y),closure)):ease(Math.max(Math.abs(look.x),Math.abs(look.y),closure)/.025)}};
-  for(const side of slots){const e=f.eyes[side],key=prefix+'-'+side,dx=look.x*e.shift.x,dy=look.y*e.shift.y;
+  for(const [side,e] of nativeHeadEyeRegistrations(f)){const key=prefix+'-'+side,dx=look.x*e.shift.x,dy=look.y*e.shift.y;
     const open=Math.max(.02,1-closure);
     face[key+'-glyph']={opacity:1-ease((closure-.7)/.3),attr:{transform:`matrix(1 0 0 ${n(open)} ${n(dx)} ${n(e.center.y*(1-open)+dy)})`}};
     face[key+'-lid']={opacity:ease((closure-.4)/.6),attr:{transform:`translate(${n(dx)} ${n(dy)})`}};
   }
   if(f.emotions){face[prefix+'-mouth-emotion-repair']={opacity:mouthVisible};
-    for(const [i,side] of slots.entries()){const key=prefix+'-brow-'+side;
+    for(const [side,brow] of nativeHeadBrowRegistrations(f)){const key=prefix+'-brow-'+side;
       face[key+'-layer']={opacity:on(Math.max(Math.abs(emotion.brow),Math.abs(emotion.tilt)))};
-      face[key+'-glyph']={attr:{transform:browMatrix(f.emotions.brows[side],emotion.brow,(i?1:-1)*emotion.tilt)}};
+      face[key+'-glyph']={attr:{transform:browMatrix(brow,emotion.brow,(side==='screen-right'?1:-1)*emotion.tilt)}};
     }
   }
   return {face,paths:mouthPaths(emotionMouth(f,emotion,aperture),aperture,prefix)};
@@ -193,17 +219,17 @@ export function nativeHeadFaceState(f:NativeHeadFace,input:{aperture:number;blin
 /** Exact affine interpolation error at registered glyph corners, source pixels. */
 export function nativeHeadFaceMatrixError(f:NativeHeadFace,prefix:string,from:NativeFaceState['face'],to:NativeFaceState['face'],wanted:NativeFaceState['face'],progress:number){
   if(!Number.isFinite(progress)||progress<0||progress>1)throw new Error('Invalid native face interpolation');let error=0;
-  for(const side of slots)for(const suffix of ['glyph','lid']){const key=prefix+'-'+side+'-'+suffix;
+  for(const [side,eye] of nativeHeadEyeRegistrations(f))for(const suffix of ['glyph','lid']){const key=prefix+'-'+side+'-'+suffix;
     const values=(state:typeof from)=>{const raw=state[key]?.attr?.transform,match=raw?.match(/-?\d+(?:\.\d+)?/g)?.map(Number);if(!match||(suffix==='glyph'?match.length!==6:match.length!==2)||match.some(v=>!Number.isFinite(v)))throw new Error('Missing native face matrix');return suffix==='glyph'?match:[1,0,0,1,...match];};
     const a=values(from),b=values(to),actual=values(wanted),blend=a.map((v,i)=>v+(b[i]!-v)*progress);
-    const points=suffix==='glyph'?f.eyes[side].glyph:f.eyes[side].lid.flatMap(p=>corners({x:p.x-f.eyes[side].stroke/2,y:p.y-f.eyes[side].stroke/2,width:f.eyes[side].stroke,height:f.eyes[side].stroke}));
+    const points=suffix==='glyph'?eye.glyph:eye.lid.flatMap(p=>corners({x:p.x-eye.stroke/2,y:p.y-eye.stroke/2,width:eye.stroke,height:eye.stroke}));
     // Lids translate without rotation/scale, so the error is point-independent;
     // use their own stroke/control hull explicitly rather than unrelated glyphs.
     for(const p of points){const point=(m:number[])=>({x:m[0]!*p.x+m[2]!*p.y+m[4]!,y:m[1]!*p.x+m[3]!*p.y+m[5]!}),x=point(blend),y=point(actual);error=Math.max(error,Math.hypot(x.x-y.x,x.y-y.y));}
   }
-  if(f.emotions)for(const side of slots){const key=prefix+'-brow-'+side+'-glyph',values=(state:typeof from)=>{const m=state[key]?.attr?.transform?.match(/-?\d+(?:\.\d+)?/g)?.map(Number);if(!m||m.length!==6||m.some(v=>!Number.isFinite(v)))throw new Error('Missing native brow matrix');return m;};
+  if(f.emotions)for(const [side,brow] of nativeHeadBrowRegistrations(f)){const key=prefix+'-brow-'+side+'-glyph',values=(state:typeof from)=>{const m=state[key]?.attr?.transform?.match(/-?\d+(?:\.\d+)?/g)?.map(Number);if(!m||m.length!==6||m.some(v=>!Number.isFinite(v)))throw new Error('Missing native brow matrix');return m;};
     const a=values(from),b=values(to),actual=values(wanted),blend=a.map((v,i)=>v+(b[i]!-v)*progress);
-    for(const p of f.emotions.brows[side].glyph){const at=(m:number[])=>({x:m[0]!*p.x+m[2]!*p.y+m[4]!,y:m[1]!*p.x+m[3]!*p.y+m[5]!}),x=at(blend),y=at(actual);error=Math.max(error,Math.hypot(x.x-y.x,x.y-y.y));}
+    for(const p of brow.glyph){const at=(m:number[])=>({x:m[0]!*p.x+m[2]!*p.y+m[4]!,y:m[1]!*p.x+m[3]!*p.y+m[5]!}),x=at(blend),y=at(actual);error=Math.max(error,Math.hypot(x.x-y.x,x.y-y.y));}
   }
   return error;
 }
