@@ -1,0 +1,18 @@
+{
+  "prepareHttp": 200,
+  "sameRevision": true,
+  "retainedClips": [
+    1,
+    2,
+    6,
+    13
+  ],
+  "rangeHttp": 206,
+  "range": "bytes 0-31/512861",
+  "rangeLength": 32,
+  "previewHttp": 200,
+  "previewFixedPainter": true,
+  "previewWrapControls": true,
+  "productionReady": false,
+  "qualityAccepted": false
+}

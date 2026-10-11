@@ -1,0 +1,15 @@
+{
+  "originalAtZeroExact": true,
+  "originalAtEndExact": true,
+  "changedPixels": 55805,
+  "outsideHeadRoi": 0,
+  "bounds": {
+    "left": 234,
+    "top": 144,
+    "right": 511,
+    "bottom": 453
+  },
+  "captionAndWheelsUnchanged": true,
+  "sourceHash": "17fc0416ce28169f035707ceb49789d7b77710de596460d9befd2471c3d8f8b6",
+  "qualityAccepted": false
+}

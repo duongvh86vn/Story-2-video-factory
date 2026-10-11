@@ -1,0 +1,18 @@
+{
+  "algorithm": "sha256",
+  "scope": "owned code/specification source at this delivery; runtime/voice/art acceptance excluded",
+  "files": {
+    "apps/server/image-timestamp.ts": "ed031c434bbcfb275abeba1e4e1e865bd255d7e08fb25e577eaf7514f9a3fa4e",
+    "scripts/image-motion-timestamp-studio.ts": "66a7b08cc3b8b4a69986432d506457845612cb50fa9ecc1bb43f254ce010237c",
+    "packages/image-motion/timestamp-workbench.ts": "dd99b1e33dba332b88780f2932492829ab0e422463bf4f1f05dfbabcb9636eb7",
+    "packages/image-motion/timestamp-definition.ts": "8916286698501b5fc26a38b7ac69e30f66b9b241b9259fbd46c283718f276cb3",
+    "packages/image-motion/timestamp-prepare.ts": "5628c50a5c342489a1d6bbf72a76ef604543d583ad4db1f6e898228f22718b75",
+    "packages/image-motion/timestamp-motion-editor.ts": "b82bf235ddc2c07e88b15bd6d663b40be1de6ebf85da895fe2d15b50c2d5a9e2",
+    "tests/image-timestamp-workbench.test.ts": "1d62bf13fba3a46bf8f8f8f940dd17f291a106db7d2780a615526e87b2d757b8",
+    "tests/image-timestamp-definition.test.ts": "1caa3b9af322573393fb6cdd41918ddf4920bc88e3f0eaf1d9ee31dc169a2fd8",
+    "docs/plans/2026-10-12-timestamp-motion-editor.md": "7622d10a47b0c1f6588b42ac192ff3a50916f714c55f7174f7e18b9add1aa30d",
+    "docs/topics/IMAGE-TIMESTAMP-MOTION.md": "7f61cda7883f3eaff7f3bc9b8d23a7c3e32e313dadc773ff38f4942c5749b54f",
+    "docs/topics/motion-recipes/flow-doodle-0001-head-editor.json": "39281c2a99fa27444819bba52c3f34171ffcd94e984081ae07c36096285054d6",
+    "docs/topics/motion-recipes/empty-timestamp-bindings.json": "1f51e4788006399226c3845bd451e18e3fd5df0cc0893a1530581ee1059b674f"
+  }
+}

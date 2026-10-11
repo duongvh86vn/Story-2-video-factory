@@ -6,6 +6,7 @@ import {z} from 'zod';
 import {createTimestampWorkbench,TimestampBinding} from '../apps/server/image-timestamp.js';
 import {ApiError,redact} from '../apps/server/security.js';
 import {imageTimestampWorkbench} from '../packages/image-motion/timestamp-workbench.js';
+import {imageTimestampMotionEditor} from '../packages/image-motion/timestamp-motion-editor.js';
 
 const {values}=parseArgs({options:{source:{type:'string'},bindings:{type:'string'},output:{type:'string'},port:{type:'string'},fps:{type:'string'},variant:{type:'string'},chrome:{type:'string'},ffmpeg:{type:'string'},ffprobe:{type:'string'}}});
 if(!values.source||!values.bindings)throw Error('--source and --bindings are required');
@@ -21,14 +22,26 @@ const server=createServer(async(req,res)=>{
     if(req.headers.host!=='127.0.0.1:'+port||req.headers.origin&&req.headers.origin!==origin)throw new ApiError(403,'Use the local studio address');
     const url=new URL(req.url??'/',origin),route=url.pathname;
     const json=(status:number,data:unknown)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'});res.end(JSON.stringify(data));};
+    const bodyBytes=async(limit:number)=>{let size=0;const chunks:Buffer[]=[];for await(const chunk of req){size+=chunk.length;if(size>limit)throw new ApiError(413,'Request exceeds limit');chunks.push(chunk);}return Buffer.concat(chunks);};
     if(req.method==='GET'&&route==='/'){res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(imageTimestampWorkbench());return;}
     if(req.method==='GET'&&route==='/api/image-timestamp/catalog'){json(200,await service.catalog());return;}
+    const edit=route.match(/^\/api\/image-timestamp\/edit\/([1-9]\d*)$/);
+    if(req.method==='GET'&&edit){const id=Number(edit[1]);if(!Number.isSafeInteger(id))throw new ApiError(400,'Invalid scene');await service.definition(id);res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(imageTimestampMotionEditor(id));return;}
+    const definition=route.match(/^\/api\/image-timestamp\/definition\/([1-9]\d*)$/);
+    if(definition&&['GET','POST'].includes(req.method??'')){
+      const id=Number(definition[1]);if(!Number.isSafeInteger(id))throw new ApiError(400,'Invalid scene');
+      if(req.method==='GET'){json(200,await service.definition(id));return;}
+      if(!req.headers['content-type']?.startsWith('application/json'))throw new ApiError(415,'Send JSON');let body:unknown;try{body=JSON.parse((await bodyBytes(128*1024)).toString());}catch(e){if(e instanceof ApiError)throw e;throw new ApiError(400,'Invalid JSON');}json(200,await service.prepare(id,body));return;
+    }
+    const background=route.match(/^\/api\/image-timestamp\/background\/([1-9]\d*)$/);
+    if(req.method==='POST'&&background){const id=Number(background[1]);if(!Number.isSafeInteger(id))throw new ApiError(400,'Invalid scene');if(!req.headers['content-type']?.startsWith('image/png'))throw new ApiError(415,'Send PNG background');json(201,await service.background(id,url.searchParams.get('revision')??'',await bodyBytes(16*1024*1024)));return;}
+    const prepared=route.match(/^\/api\/image-timestamp\/prepared\/([1-9]\d*)\/([a-f0-9]{64})\/(index\.html|assets\/[A-Za-z0-9_.-]+\.png)$/);
+    if(req.method==='GET'&&prepared){const id=Number(prepared[1]);if(!Number.isSafeInteger(id))throw new ApiError(400,'Invalid scene');const result=await service.preview(id,prepared[2]!,prepared[3]!);res.setHeader('Content-Security-Policy',"default-src 'none'; img-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'");res.writeHead(200,{'Content-Type':result.type});res.end(result.data);return;}
     const job=route.match(/^\/api\/image-timestamp\/job\/([a-f0-9-]{36})$/);
     if(req.method==='GET'&&job){json(200,await service.job(job[1]!));return;}
     if(req.method==='POST'&&['/api/image-timestamp/render','/api/image-timestamp/render-ready'].includes(route)){
-      if(!req.headers['content-type']?.startsWith('application/json'))throw new ApiError(415,'Send JSON');let size=0;const chunks:Buffer[]=[];
-      for await(const chunk of req){size+=chunk.length;if(size>4096)throw new ApiError(413,'Request exceeds limit');chunks.push(chunk);}
-      let body:unknown;try{body=JSON.parse(Buffer.concat(chunks).toString());}catch{throw new ApiError(400,'Invalid JSON');}
+      if(!req.headers['content-type']?.startsWith('application/json'))throw new ApiError(415,'Send JSON');
+      let body:unknown;try{body=JSON.parse((await bodyBytes(4096)).toString());}catch(e){if(e instanceof ApiError)throw e;throw new ApiError(400,'Invalid JSON');}
       json(202,await service.start(route.endsWith('render-ready')?'render-ready':'render',body));return;
     }
     const media=route.match(/^\/api\/image-timestamp\/(image|clip)\/([1-9]\d*)$/);

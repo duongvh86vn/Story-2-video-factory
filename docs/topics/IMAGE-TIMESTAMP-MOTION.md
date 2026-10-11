@@ -1,6 +1,6 @@
 # Ảnh của project → clip chuyển động theo timestamp
 
-Phạm vi hiện tại: xử lý từng ảnh, giữ nét vẽ và màu, xuất clip im lặng để đặt vào timeline/audio đã có. Ưu tiên 60 fps. Không tự viết lời, không tạo lại ảnh, không chèn chú thích mới lên video. Chữ đã nằm trong ảnh gốc vẫn giữ nguyên. Studio chuẩn bị tay hiện có vẫn hoạt động riêng. Bàn làm việc timestamp đã có danh mục, xem trước, xuất từng cảnh/nhóm cảnh đã chuẩn bị và cache; chưa tự tách chuyển động cho cả 24 ảnh.
+Phạm vi hiện tại: xử lý từng ảnh, giữ nét vẽ và màu, xuất clip im lặng để đặt vào timeline/audio đã có. Ưu tiên 60 fps. Không tự viết lời, không tạo lại ảnh, không chèn chú thích mới lên video. Chữ đã nằm trong ảnh gốc vẫn giữ nguyên. Editor chuẩn bị tay là luồng riêng; cổng 8858 cũ chưa được khởi động/kiểm thử lại trong chặng này. Bàn làm việc timestamp đã có danh mục, xem trước, xuất từng cảnh/nhóm cảnh đã chuẩn bị và cache; chưa tự tách chuyển động cho cả 24 ảnh.
 
 ## Nguồn đã đọc
 
@@ -55,11 +55,21 @@ File bindings local đã chuẩn bị cho 0002/0006/0013. Khi dùng checkout m�
 {"bindings":[{"clipId":6,"manifest":"runtime/image-motion/presenter-0006/manifest.json","scene":"character"}]}
 ```
 
-`seedClip` tùy chọn là thư mục clip đã xuất tương đối trong workspace, dùng lại sau khi kiểm tra đủ source/clock/asset/movie/receipt. Các artifact dưới `runtime` không đi kèm GitHub; phải chuẩn bị hoặc sao chép từ bản local có sẵn. Không gửi đường dẫn file tùy ý qua browser. Server chỉ đọc source export, binding và recipe được cấu hình qua CLI.
+`seedClip` tùy chọn là thư mục clip đã xuất tương đối trong workspace, dùng lại sau khi kiểm tra đủ source/clock/asset/movie/receipt. Các artifact dưới `runtime` không đi kèm GitHub; phải chuẩn bị hoặc sao chép từ bản local có sẵn. Không gửi đường dẫn file tùy ý qua browser. Server chỉ đọc source export và binding được cấu hình qua CLI. Editor nhận dữ liệu vùng chọn qua schema đóng, lưu recipe/asset tại output riêng.
 
 Chọn cảnh, xem ảnh/lời/mốc thời gian, bấm **Xuất clip cảnh này** hoặc **Xuất các cảnh đã chuẩn bị**, rồi phát/tải MP4. Clip không tự phát. Tải lại trang giữ cảnh đang chọn và nối lại trạng thái lượt xuất đang chạy. Nếu mất kết nối, công cụ giữ lượt xuất chưa xác nhận và cho kiểm tra lại; không tự tạo thêm lượt vì chậm phản hồi.
 
 Lượt xuất chỉ `done` khi từng clip được xác minh. Cảnh thiếu recipe bị chặn. Revision cũ hoặc đang có lượt xuất trả HTTP 409. Thất bại giữ output/log riêng; thử lại tạo attempt mới, clip hợp lệ vẫn được dùng lại. Lease phân biệt PID với thời điểm bắt đầu process để tránh nhận nhầm process có PID được tái sử dụng. Bản hiện tại hỗ trợ lease trên Windows/Linux.
+
+## Chuẩn bị chuyển động của một ảnh
+
+Chọn cảnh rồi bấm **Chuẩn bị / chỉnh chuyển động**. Bánh/vòng không bị vật khác che có thể chọn bằng ellipse, hoặc bấm **Thêm vùng quay bằng số** và nhập tâm, bán kính, chu kỳ. Bộ phận nhân vật dùng polygon bao quanh vùng cần cử động, chốt vùng, đặt điểm xoay và góc nhỏ. Có thể nhập các điểm viền bằng bàn phím theo pixel của ảnh gốc. Nét xanh chỉ là vùng hướng dẫn, không xuất vào MP4.
+
+**Lưu và xem thử** chuẩn bị layer và lưu definition; bấm **Phát** trong preview. Về danh mục cảnh để xuất clip. Preview không tự phát. Clock luôn lấy từ timeline nguồn, không sửa từ editor. Lưu/reload có quyết định bỏ/giữ thay đổi ngay trong trang; refresh/đóng tab của browser sẽ bỏ phần chưa lưu.
+
+Nền phức tạp cần PNG nền sạch cùng kích thước; plate chỉ sửa vùng bị xóa, không thay toàn cảnh. Không tự inpaint hoặc suy ra phần cơ thể bị che. Ellipse quay toàn bộ pixel trong vùng: nếu khung xe, tay hoặc vật cố định đè lên bánh, cần mask và layer che phía trước; editor hiện chưa có chức năng đó. Polygon xoay nguyên bộ phận, không tạo pose mới, head turn hay lip-sync.
+
+Checkout mới có thể dùng `docs/topics/motion-recipes/empty-timestamp-bindings.json` thay cho bindings local và một output mới. Không chạy thêm server vào cổng/output đang dùng. Sau khi chuẩn bị trong editor, không cần sửa bindings để xuất cảnh đó. API mới: GET/POST `/api/image-timestamp/definition/:id`, POST `/background/:id?revision=…` nhận PNG tối đa16 MB, GET `/edit/:id` và preview `/prepared/:id/:key/index.html`. Revision cũ/busy và source hash đổi đều chặn lưu/xuất; không chạy code gửi từ browser.
 
 ## Clock, cache và kết quả
 
@@ -71,9 +81,11 @@ Output mỗi clip: `demo.mp4`, `index.html`, `timing.json`, `qc-report.json`, pr
 
 ## Còn cần làm
 
-- Tách/chọn chuyển động phù hợp cho 21 ảnh còn lại. 0006 đã có cử động đầu/tay từ ảnh nguồn, vẫn cần duyệt mép tách và tiếp xúc tại vai/mép bảng.
-- Editor gán recipe cho ảnh chưa có chuyển động, tự động tách phần và phục hồi nền phức tạp; manifest bàn giao toàn bộ clip. UI hiện đọc timestamp đã có, không phải editor đổi nội dung nguồn.
+- Tách/chọn chuyển động phù hợp cho 20 ảnh còn lại. 0001 có mẫu đầu cử động nhẹ; mép nối cổ chưa duyệt. 0006 đã có cử động đầu/tay từ ảnh nguồn, vẫn cần duyệt mép tách và tiếp xúc tại vai/mép bảng.
+- Editor đã có schema, chuẩn bị/lưu recipe và preview; thao tác click/save/download vẫn cần kiểm thử đầy đủ sau khi gỡ tab browser thử cũ bị kẹt. Còn tự động tách phần, mask vật che, phục hồi nền phức tạp và manifest bàn giao toàn bộ clip. UI hiện đọc timestamp đã có, không phải editor đổi nội dung nguồn.
 - Đạo diễn/artist qua9router đề xuất recipe, người vận hành xem và duyệt chất lượng. Đề xuất không được thực thi như code.
 - Ghép toàn bộ timeline/voice, review/repair, final/QC theo mục tiêu chung sau khi chuyển động từng ảnh được duyệt.
 
-Ba clip hiện có là mẫu chẩn đoán, chưa chứng minh chất lượng diễn xuất của toàn bộ video. Phần nối narration đang dở được giữ riêng theo yêu cầu tập trung từng ảnh. Kết quả workbench mới: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-workbench/REPORT.md).
+Bốn clip local hiện có là mẫu chẩn đoán, chưa chứng minh chất lượng diễn xuất của toàn bộ video. Phần nối narration đang dở được giữ riêng theo yêu cầu tập trung từng ảnh. Kết quả workbench mới: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-workbench/REPORT.md).
+
+Chặng editor/API và clip 0001: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-motion-editor/REPORT.md). 25 test tập trung và build/typecheck đã qua; không thay thế nghiệm thu chất lượng hình hoặc final có giọng.

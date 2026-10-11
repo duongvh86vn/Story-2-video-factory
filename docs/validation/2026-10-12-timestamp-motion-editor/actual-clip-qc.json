@@ -1,0 +1,113 @@
+{
+  "directory": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\timestamp-workbench\\studio\\attempts\\8ec0f002-99bb-4d9d-8f23-57d04b749e69\\1\\clip-0001-80942805447d9f76",
+  "report": {
+    "productionReady": false,
+    "qualityAccepted": false,
+    "scope": "Local silent image-motion clip; not final production",
+    "started": "2026-10-11T19:47:13.925Z",
+    "completed": "2026-10-11T19:47:51.141Z",
+    "media": {
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+          "profile": "High",
+          "codec_type": "video",
+          "codec_tag_string": "avc1",
+          "codec_tag": "0x31637661",
+          "width": 1920,
+          "height": 1080,
+          "coded_width": 1920,
+          "coded_height": 1088,
+          "has_b_frames": 2,
+          "pix_fmt": "yuv420p",
+          "level": 42,
+          "chroma_location": "left",
+          "field_order": "progressive",
+          "refs": 4,
+          "is_avc": "true",
+          "nal_length_size": "4",
+          "id": "0x1",
+          "r_frame_rate": "60/1",
+          "avg_frame_rate": "60/1",
+          "time_base": "1/15360",
+          "start_pts": 0,
+          "start_time": "0.000000",
+          "duration_ts": 88576,
+          "duration": "5.766667",
+          "bit_rate": "704548",
+          "bits_per_raw_sample": "8",
+          "nb_frames": "346",
+          "nb_read_frames": "346",
+          "extradata_size": 47,
+          "disposition": {
+            "default": 1,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0,
+            "multilayer": 0
+          },
+          "tags": {
+            "language": "und",
+            "handler_name": "VideoHandler",
+            "vendor_id": "[0][0][0][0]",
+            "encoder": "Lavc62.16.100 libx264"
+          }
+        }
+      ],
+      "format": {
+        "filename": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\timestamp-workbench\\studio\\attempts\\8ec0f002-99bb-4d9d-8f23-57d04b749e69\\1\\clip-0001-80942805447d9f76\\demo.mp4",
+        "nb_streams": 1,
+        "nb_programs": 0,
+        "nb_stream_groups": 0,
+        "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+        "format_long_name": "QuickTime / MOV",
+        "start_time": "0.000000",
+        "duration": "5.766667",
+        "size": "512861",
+        "bit_rate": "711483",
+        "probe_score": 100,
+        "tags": {
+          "major_brand": "isom",
+          "minor_version": "512",
+          "compatible_brands": "isomiso2avc1mp41",
+          "encoder": "Lavf62.6.100"
+        }
+      }
+    },
+    "decodeErrors": 0,
+    "movie": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\timestamp-workbench\\studio\\attempts\\8ec0f002-99bb-4d9d-8f23-57d04b749e69\\1\\clip-0001-80942805447d9f76\\demo.mp4",
+    "totalFrames": 346,
+    "randomSeekPngExact": true,
+    "firstFrameHash": "f55e2a2c9a02d2449a56581a37cb2b3a1d371ceb391e41d8f5316a6656d77a90",
+    "lastProbeHash": "f55e2a2c9a02d2449a56581a37cb2b3a1d371ceb391e41d8f5316a6656d77a90",
+    "browserErrors": [],
+    "clock": {
+      "startMs": 0,
+      "endMs": 5760,
+      "startFrame": 0,
+      "endFrame": 346,
+      "fps": 60
+    },
+    "encodedDurationMs": 5766.666666666667,
+    "startErrorMs": 0,
+    "endErrorMs": 6.66666666666697,
+    "movieHash": "b7c752401cd54008797c72eec68c7cb40e6be39e1bcc2575ccaeb7ca515c4b87",
+    "renderIdentity": "80942805447d9f7655d13e8422198dfcff0ec3c936599963207dcd8d9201b7e0"
+  }
+}
