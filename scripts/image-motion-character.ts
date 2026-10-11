@@ -31,7 +31,7 @@ const recipe:CharacterSourceRecipe={width:640,height:800,durationMs:6000,fps:60,
   {id:'image-right-fore',parent:'image-right-upper',image:'assets/image-right-fore.png',pivot:shape.elbow,polygon:shape.fore as [number,number][],inkOnly:true,replacement:{type:'ink-arm',from:shape.elbow,to:shape.wrist,width:13,hand:{width:44,height:60,thumbSide:'left'}},frames:fore},
   {id:'cloth-occlusion',image:'assets/cloth-occlusion.png',pivot:{x:0,y:0},polygon:shape.cloth as [number,number][],remove:false,frames:still}
 ]};
-const directory=path.resolve(values.output??path.join(parent,`${actor}-new-arm-v4`)),prepared=await prepareCharacterSource(`docs/topics/assets/reference-${actor}-full.png`,mask,directory,recipe,path.resolve('runtime/image-motion/character-layer-cache'));
+const directory=path.resolve(values.output??path.join(parent,`${actor}-new-arm-v5`)),prepared=await prepareCharacterSource(`docs/topics/assets/reference-${actor}-full.png`,mask,directory,recipe,path.resolve('runtime/image-motion/character-layer-cache'));
 const html=createImageMotionHtml(prepared.demo),file=path.join(directory,'index.html');
 try{await fs.writeFile(file,html,{flag:'wx'});}catch(e){if((e as NodeJS.ErrnoException).code!=='EEXIST')throw e;if(hash(await fs.readFile(file))!==hash(html))throw new Error('Viewer code changed. Choose a new --output directory; prepared layers will be reused.');}
 console.log(JSON.stringify({directory,actor,layerCacheKey:prepared.layerCacheKey,sourceHash:prepared.sourceHash,scope:'Image-right arm replaced with straight rounded ink segments; original face/clothes and opposite arm; not production or artistic acceptance'}));

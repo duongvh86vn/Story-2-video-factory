@@ -12,16 +12,19 @@ export interface InkArmReplacement {
 }
 export interface SourcePart extends ArticulatedPart {polygon:[number,number][];inkOnly?:boolean;remove?:boolean;replacement?:InkArmReplacement}
 export interface CharacterSourceRecipe {width:number;height:number;durationMs:number;fps:number;patchSampleX:number;patchMode?:'column'|'paper-interpolate'|'paper-harmonic';repairRegion?:'ink'|'polygon';repairMargin?:number;protectSubject?:boolean;parts:SourcePart[]}
-export interface PreparedCharacter {directory:string;demo:ImageMotionDemo;layerCacheKey:string;assetHashes:Record<string,string>;sourceHash:string;maskHash:string}
-export async function prepareCharacterSource(source:string,mask:string,directory:string,recipe:CharacterSourceRecipe,cacheRoot:string):Promise<PreparedCharacter>{
+export interface PreparedCharacter {directory:string;demo:ImageMotionDemo;layerCacheKey:string;assetHashes:Record<string,string>;sourceHash:string;maskHash:string;cleanPlateHash?:string}
+export const SOURCE_PART_VERSION='source-parts-7';
+export async function prepareCharacterSource(source:string,mask:string,directory:string,recipe:CharacterSourceRecipe,cacheRoot:string,cleanPlate?:string):Promise<PreparedCharacter>{
   const sourceBytes=await fs.readFile(source),maskBytes=await fs.readFile(mask),sourceHash=hash(sourceBytes),maskHash=hash(maskBytes);
+  const plateBytes=cleanPlate?await fs.readFile(cleanPlate):undefined,cleanPlateHash=plateBytes?hash(plateBytes):undefined;
   if(sourceBytes.length>16*1024*1024||maskBytes.length>16*1024*1024)throw new Error('Source or mask exceeds 16 MB');
   const metadata=await sharp(sourceBytes,{limitInputPixels:64000000}).metadata(),alphaMeta=await sharp(maskBytes,{limitInputPixels:64000000}).metadata();
   if(metadata.format!=='png'||alphaMeta.format!=='png'||!alphaMeta.hasAlpha||metadata.width!==alphaMeta.width||metadata.height!==alphaMeta.height||!metadata.width||!metadata.height||recipe.width<metadata.width||recipe.height<metadata.height)throw new Error('Source and alpha mask must be matching PNG images inside the canvas');
+  if(plateBytes){const plateMeta=await sharp(plateBytes,{limitInputPixels:64000000}).metadata();if(plateBytes.length>16*1024*1024||plateMeta.format!=='png'||plateMeta.width!==metadata.width||plateMeta.height!==metadata.height)throw new Error('Clean plate must be a matching PNG inside the source canvas');}
   if(!Number.isInteger(recipe.patchSampleX)||recipe.patchSampleX<0||recipe.patchSampleX>=metadata.width)throw new Error('Choose a valid background sample column');
   const parts=recipe.parts.map(({polygon,inkOnly,remove,replacement,...p})=>p);if(recipe.protectSubject)parts.push({id:'static-subject',image:'assets/static-subject.png',pivot:{x:0,y:0},frames:[{timeMs:0,angle:0},{timeMs:recipe.durationMs,angle:0}]});
   const demo:ImageMotionDemo={version:1,fps:recipe.fps,scenes:[{id:'character',width:recipe.width,height:recipe.height,durationMs:recipe.durationMs,original:'assets/original.png',background:'assets/background.png',layers:[],parts}]};validateDemo(demo);
-  for(const p of recipe.parts)if(p.image!==`assets/${p.id}.png`||['original','source-original','background'].includes(p.id)||p.polygon.length<3||p.polygon.length>128||p.polygon.some(q=>q.length!==2||!q.every(Number.isFinite)||q[0]<0||q[0]>metadata.width!||q[1]<0||q[1]>metadata.height!))throw new Error('Invalid source part polygon or image name');
+  for(const p of recipe.parts)if(p.image!==`assets/${p.id}.png`||['original','source-original','background','clean-plate'].includes(p.id)||p.polygon.length<3||p.polygon.length>128||p.polygon.some(q=>q.length!==2||!q.every(Number.isFinite)||q[0]<0||q[0]>metadata.width!||q[1]<0||q[1]>metadata.height!))throw new Error('Invalid source part polygon or image name');
   for(const p of recipe.parts){
     const r=p.replacement;if(!r)continue;
     const validPoint=(q:{x:number;y:number})=>q&&Number.isFinite(q.x)&&Number.isFinite(q.y)&&q.x>=0&&q.y>=0&&q.x<=recipe.width&&q.y<=recipe.height;
@@ -33,8 +36,8 @@ export async function prepareCharacterSource(source:string,mask:string,directory
   // Motion/pivots are excluded: changing the acting must not regenerate pixels.
   if(recipe.patchMode!==undefined&&!['column','paper-interpolate','paper-harmonic'].includes(recipe.patchMode))throw new Error('Unknown source background repair');
   const margin=recipe.repairMargin??1;if(!Number.isInteger(margin)||margin<0||margin>32||recipe.repairRegion!==undefined&&!['ink','polygon'].includes(recipe.repairRegion))throw new Error('Invalid source repair region');
-  const layerCacheKey=hash({version:'source-parts-6',sourceHash,maskHash,width:recipe.width,height:recipe.height,patchSampleX:recipe.patchSampleX,patchMode:recipe.patchMode??'column',repairRegion:recipe.repairRegion??'ink',margin,protectSubject:recipe.protectSubject??false,parts:recipe.parts.map(({id,polygon,inkOnly,remove,replacement})=>({id,polygon,inkOnly,remove,replacement}))}),cache=path.join(path.resolve(cacheRoot),layerCacheKey);
-  const names=['assets/source-original.png','assets/original.png','assets/background.png',...parts.map(p=>p.image)];
+  const layerCacheKey=hash({version:SOURCE_PART_VERSION,sourceHash,maskHash,cleanPlateHash,width:recipe.width,height:recipe.height,patchSampleX:recipe.patchSampleX,patchMode:recipe.patchMode??'column',repairRegion:recipe.repairRegion??'ink',margin,protectSubject:recipe.protectSubject??false,parts:recipe.parts.map(({id,polygon,inkOnly,remove,replacement})=>({id,polygon,inkOnly,remove,replacement}))}),cache=path.join(path.resolve(cacheRoot),layerCacheKey);
+  const names=['assets/source-original.png','assets/original.png','assets/background.png',...(plateBytes?['assets/clean-plate.png']:[]),...parts.map(p=>p.image)];
   let assetHashes:Record<string,string>|undefined;
   const verify=async(dir:string,hashes:Record<string,string>)=>{
     if(Object.keys(hashes).sort().join('|')!==[...names].sort().join('|')||hashes['assets/source-original.png']!==sourceHash)throw new Error('Layer cache integrity metadata mismatch');
@@ -47,6 +50,7 @@ export async function prepareCharacterSource(source:string,mask:string,directory
     for(let i=0;i<original.length;i+=4)original.set([...paper,255],i);
     for(let y=0;y<sh;y++)original.set(sourceRaw.subarray(y*sw*4,(y+1)*sw*4),y*w*4);
     const remove=new Uint8Array(w*h),region=new Uint8Array(w*h),assets=new Map<string,Buffer>([['assets/source-original.png',sourceBytes],['assets/original.png',await sharp(original,{raw:{width:w,height:h,channels:4}}).png().toBuffer()]]);
+    if(plateBytes)assets.set('assets/clean-plate.png',plateBytes);
     for(const p of recipe.parts){
       const polygon=await sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${sw}" height="${sh}"><polygon fill="white" points="${p.polygon.map(q=>q.join(',')).join(' ')}"/></svg>`)).ensureAlpha().raw().toBuffer(),layer=Buffer.alloc(w*h*4);
       for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){
@@ -73,7 +77,7 @@ export async function prepareCharacterSource(source:string,mask:string,directory
       for(let x=0;x<w;x++){let sum=0;for(let y=0;y<=Math.min(r,h-1);y++)sum+=row[y*w+x]!;for(let y=0;y<h;y++){out[y*w+x]=sum>0?1:0;if(y-r>=0)sum-=row[(y-r)*w+x]!;if(y+r+1<h)sum+=row[(y+r+1)*w+x]!;}}return out;
     };
     const background=Buffer.from(original),repair=dilate(recipe.repairRegion==='polygon'?region:remove,margin);
-    const paperAt=(x:number,y:number)=>{if(x<0||x>=sw||y<0||y>=sh||repair[y*w+x])return false;const i=(y*sw+x)*4,r=sourceRaw[i]!,g=sourceRaw[i+1]!,b=sourceRaw[i+2]!;return (recipe.patchMode!=='paper-harmonic'||alpha[i+3]!<8)&&r>170&&g>140&&b>90&&Math.max(r,g,b)-Math.min(r,g,b)<100;};
+    const paperAt=(x:number,y:number)=>{if(x<0||x>=sw||y<0||y>=sh||repair[y*w+x])return false;const i=(y*sw+x)*4,r=sourceRaw[i]!,g=sourceRaw[i+1]!,b=sourceRaw[i+2]!;return (recipe.patchMode!=='paper-harmonic'||!recipe.protectSubject||alpha[i+3]!<8)&&r>170&&g>140&&b>90&&Math.max(r,g,b)-Math.min(r,g,b)<100;};
     for(let y=0;y<sh;y++)for(let x=0;x<sw;x++)if(repair[y*w+x]){
       const at=(y*w+x)*4;let left=-1,right=-1;
       if(recipe.patchMode==='paper-interpolate'||recipe.patchMode==='paper-harmonic'){for(let d=1;d<=64&&(left<0||right<0);d++){if(left<0&&paperAt(x-d,y))left=x-d;if(right<0&&paperAt(x+d,y))right=x+d;}}
@@ -81,12 +85,14 @@ export async function prepareCharacterSource(source:string,mask:string,directory
       else{const sample=(y*sw+recipe.patchSampleX)*4;background.set(sourceRaw.subarray(sample,sample+3),at);}
       background[at+3]=255;
     }
-    if(recipe.patchMode==='paper-harmonic'){
+    if(plateBytes){const plate=await sharp(plateBytes).ensureAlpha().raw().toBuffer();for(let y=0;y<sh;y++)for(let x=0;x<sw;x++)if(repair[y*w+x]){const at=(y*sw+x)*4;if(plate[at+3]!==255)throw Error('needs-background: clean plate is transparent in erased region');background.set(plate.subarray(at,at+4),(y*w+x)*4);}}
+    else if(recipe.patchMode==='paper-harmonic'){
       // Simple paper only: interpolate the missing background from its valid
       // surrounding paper in both axes. Do not copy skin/clothing into it.
       // This is not semantic inpainting for a textured scene.
       const values=new Float32Array(w*h*3),cells:number[][]=[[],[]];
       for(let y=0;y<sh;y++)for(let x=0;x<sw;x++){const n=y*w+x;for(let c=0;c<3;c++)values[n*3+c]=background[n*4+c]!;if(repair[n])cells[(x+y)%2]!.push(n);}
+      if(cells.some(p=>p.length)&&!cells.some(p=>p.some(n=>{const x=n%w,y=Math.floor(n/w);return paperAt(x-1,y)||paperAt(x+1,y)||paperAt(x,y-1)||paperAt(x,y+1);})))throw Error('needs-background: no clean paper around the erased arm');
       for(let iteration=0;iteration<800;iteration++){
         let delta=0;
         for(const parity of cells)for(const n of parity){
@@ -111,7 +117,7 @@ export async function prepareCharacterSource(source:string,mask:string,directory
     for(const [name,bytes]of assets){assetHashes[name]=hash(bytes);try{await fs.writeFile(path.join(cache,name),bytes,{flag:'wx'});}catch(e){if((e as NodeJS.ErrnoException).code!=='EEXIST'||hash(await fs.readFile(path.join(cache,name)))!==hash(bytes))throw new Error('Layer cache integrity conflict: '+name);}}
     await writeAtomic(path.join(cache,'cache.json'),JSON.stringify({layerCacheKey,assetHashes},null,2)+'\n');
   }
-  const prepared:PreparedCharacter={directory:path.resolve(directory),demo,layerCacheKey,assetHashes,sourceHash,maskHash},identity=hash(demo);
+  const prepared:PreparedCharacter={directory:path.resolve(directory),demo,layerCacheKey,assetHashes,sourceHash,maskHash,...(cleanPlateHash?{cleanPlateHash}:{})},identity=hash(demo);
   try{const old=JSON.parse(await fs.readFile(path.join(directory,'manifest.json'),'utf8'));if(old.identity!==identity||old.layerCacheKey!==layerCacheKey)throw new Error('Output already contains a different motion. Choose a new directory; cached source layers will be reused.');await verify(directory,assetHashes);return prepared;}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
   await fs.mkdir(directory,{recursive:false});await fs.mkdir(path.join(directory,'assets'));
   for(const name of names)await fs.copyFile(path.join(cache,name),path.join(directory,name),fs.constants.COPYFILE_EXCL);

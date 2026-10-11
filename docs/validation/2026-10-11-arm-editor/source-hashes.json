@@ -1,0 +1,23 @@
+{
+  "code": {
+    "apps/server/image-motion.ts": "b659a8a96c4f5bfd2d6314cb742dfaef244ba2aea81a3e8fd0b8f79b8efb929b",
+    "packages/image-motion/character-source.ts": "cb2f95eeafd6f90738a4220a87235dfee7043f96b9f9e354ccbfb86fe0f0cdfb",
+    "packages/image-motion/arm-definition.ts": "a271b6d6ba34087222b55c5fd35a65d04d5d4be5275cdec363e6545c28f718f3",
+    "packages/image-motion/arm-workbench.ts": "8d5524db4c572f66842eb8613fcf138d9bf227111b36f096acc68f0ee9ab27d3",
+    "packages/image-motion/workbench.ts": "997842e4c6f17989e99ac87a7ec34f3f01ebdbcd23ebe37de47bf8b2ee2c2801",
+    "scripts/image-motion-character.ts": "87ba7fc75035fa761b5ceb47e8a058e03df8dde67a28b5efe74ef2ea8879c0a2",
+    "tests/image-motion-arms-api.test.ts": "5c8bcada66f218c5131d12bca08cbc401df39930f23a0b3547adf07a24e276fe"
+  },
+  "sourceOriginal": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+  "normalizedPreview": "dd7384d2407a0cd0cdd3f0337f1df25bbe3e0a5e3aaab7616326f0dbc145677f",
+  "layerCacheKey": "6a37ff8ecfb369380228786a3d6755634c23a5cb32111b39c6d95d641dda3c40",
+  "assetHashes": {
+    "assets/source-original.png": "dd7384d2407a0cd0cdd3f0337f1df25bbe3e0a5e3aaab7616326f0dbc145677f",
+    "assets/original.png": "8ede087952a469ea0dfb2a5d96243799a807aba22ec86be3df037f8604e2b061",
+    "assets/lila-arm-upper.png": "e2c178c5c5b7ef6e894668ae6d870262bfa27f98569125f9df2b0ebc50b602c0",
+    "assets/lila-arm-fore.png": "e668e92fb47243599f801d4166524bf4a7b620f98535e1e0538fad63eea0372d",
+    "assets/lila-arm-cover-0.png": "09273d9ebd1e6f35c00d0496f815755ce316f1649ad1cff7ecb5230432d2cd41",
+    "assets/lila-arm-cover-1.png": "377385e1c00498462977925a04d4234ee2531d268dbac5652af33cd9c5a6a912",
+    "assets/background.png": "31bc6210c0d1f64003ca79e93f381ca161739331f2bb3f4158fa309fcc474f7e"
+  }
+}

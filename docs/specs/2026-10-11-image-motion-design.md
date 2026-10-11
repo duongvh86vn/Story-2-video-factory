@@ -1,6 +1,6 @@
 # Luồng ảnh gốc → chuyển động → video
 
-Ngày: 11/10/2026. Trạng thái: **slice xoay vật thể, editor nhập ảnh và bản thử tay thay mới đã triển khai; toàn bộ luồng nội dung → ảnh → video chưa hoàn thành hoặc nghiệm thu**. Xem `../topics/IMAGE-MOTION-CHARACTER.md` và `../validation/2026-10-11-image-motion-character/REPORT.md` cho lệnh/evidence của bản tay mới.
+Ngày: 11/10/2026. Trạng thái: **slice xoay vật thể, editor nhập ảnh, bản thử tay thay mới và editor tay thủ công đã triển khai; toàn bộ luồng nội dung → ảnh → video chưa hoàn thành hoặc nghiệm thu**. Xem `../topics/IMAGE-MOTION-CHARACTER.md` và `../validation/2026-10-11-arm-editor/REPORT.md` cho thao tác/evidence hiện hành. Editor tay dùng nền giấy hoặc clean plate cung cấp; chưa tự tách semantic hoặc phục hồi nền phức tạp.
 
 ## 1. Yêu cầu hiện hành
 

@@ -1,0 +1,18 @@
+✖ browser authors polygon and joints, saves under lock, compares source, seeks and restores clean plate (10974.3554ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13018.7542
+
+✖ failing tests:
+
+test at tests\image-motion-arms-api.test.ts:6:4754
+✖ browser authors polygon and joints, saves under lock, compares source, seeks and restores clean plate (10974.3554ms)
+  Error: TimeoutError: Waiting failed: 10000ms exceeded {"errors":["Invalid regular expression: missing /"],"state":{"status":"Đang tải danh mục…","width":960,"uploadDisabled":false}}
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-arms-api.test.ts:51:318)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

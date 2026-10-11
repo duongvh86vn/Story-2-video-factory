@@ -1,0 +1,162 @@
+{
+  "sourceHash": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+  "previewUrl": "http://127.0.0.1:8858/api/projects/arm-editor-lila-03/image-motion/arms/editor",
+  "definition": {
+    "backgroundMode": "paper",
+    "arms": [
+      {
+        "id": "lila-arm",
+        "erasePolygon": [
+          [
+            310,
+            337
+          ],
+          [
+            329,
+            345
+          ],
+          [
+            352,
+            391
+          ],
+          [
+            377,
+            461
+          ],
+          [
+            401,
+            474
+          ],
+          [
+            405,
+            540
+          ],
+          [
+            349,
+            542
+          ],
+          [
+            344,
+            485
+          ],
+          [
+            331,
+            450
+          ],
+          [
+            319,
+            410
+          ],
+          [
+            304,
+            370
+          ],
+          [
+            304,
+            350
+          ]
+        ],
+        "shoulder": {
+          "x": 310,
+          "y": 337
+        },
+        "elbow": {
+          "x": 349,
+          "y": 410
+        },
+        "wrist": {
+          "x": 376,
+          "y": 487
+        },
+        "width": 13,
+        "handWidth": 36,
+        "handHeight": 46,
+        "upperAngle": 35,
+        "foreAngle": -125,
+        "occlusionPolygons": [
+          [
+            [
+              233,
+              268
+            ],
+            [
+              275,
+              278
+            ],
+            [
+              283,
+              304
+            ],
+            [
+              287,
+              321
+            ],
+            [
+              303,
+              345
+            ],
+            [
+              307,
+              359
+            ],
+            [
+              298,
+              366
+            ],
+            [
+              223,
+              374
+            ],
+            [
+              216,
+              322
+            ]
+          ],
+          [
+            [
+              327,
+              335
+            ],
+            [
+              345,
+              332
+            ],
+            [
+              341,
+              348
+            ],
+            [
+              325,
+              355
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "checks": [
+    {
+      "timeMs": 0,
+      "changedFace": 0
+    },
+    {
+      "timeMs": 1300,
+      "changedFace": 0
+    },
+    {
+      "timeMs": 2500,
+      "changedFace": 0
+    },
+    {
+      "timeMs": 4300,
+      "changedFace": 0
+    },
+    {
+      "timeMs": 6000,
+      "changedFace": 0
+    }
+  ],
+  "browserErrors": [],
+  "productionReady": false,
+  "qualityAccepted": false
+}
