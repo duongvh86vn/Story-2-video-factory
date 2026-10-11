@@ -1,6 +1,6 @@
 # Ảnh của project → clip chuyển động theo timestamp
 
-Phạm vi hiện tại: xử lý từng ảnh, giữ nét vẽ và màu, xuất clip im lặng để đặt vào timeline/audio đã có. Ưu tiên 60 fps. Không tự viết lời, không tạo lại ảnh, không chèn chú thích mới lên video. Chữ đã nằm trong ảnh gốc vẫn giữ nguyên. Studio chuẩn bị tay hiện có vẫn hoạt động riêng; UI nối timestamp và xuất hàng loạt chưa triển khai.
+Phạm vi hiện tại: xử lý từng ảnh, giữ nét vẽ và màu, xuất clip im lặng để đặt vào timeline/audio đã có. Ưu tiên 60 fps. Không tự viết lời, không tạo lại ảnh, không chèn chú thích mới lên video. Chữ đã nằm trong ảnh gốc vẫn giữ nguyên. Studio chuẩn bị tay hiện có vẫn hoạt động riêng. Bàn làm việc timestamp đã có danh mục, xem trước, xuất từng cảnh/nhóm cảnh đã chuẩn bị và cache; chưa tự tách chuyển động cho cả 24 ảnh.
 
 ## Nguồn đã đọc
 
@@ -29,7 +29,7 @@ node --import tsx scripts/image-motion-source-part.ts --source "$flowExport/imag
 node --import tsx scripts/image-motion-timestamp.ts --source $flowExport --output runtime/image-motion/timed-clips --manifest runtime/image-motion/presenter-0006/manifest.json --scene character --clip 6 --fps 60 --render
 ```
 
-Tool source-part nhận PNG + recipe JSON có polygon/pivot/keyframe; có thể nhận thêm `--mask` PNG alpha đã chuẩn bị. Đây là vùng chọn thủ công, chưa phải AI tự tách bộ phận. Output source-part nằm trong `runtime/image-motion`; source được giữ nguyên. Đổi góc/keyframe/pivot giữ layer cache khi các pixel/vùng cắt không đổi.
+Tool source-part nhận PNG + recipe JSON có polygon/pivot/keyframe; có thể nhận thêm `--mask` PNG alpha và `--clean-plate` PNG nền đã xóa bộ phận cũ, cùng kích thước với ảnh nguồn. Đây là vùng chọn thủ công, chưa phải AI tự tách bộ phận. Output source-part nằm trong `runtime/image-motion`; source được giữ nguyên. Đổi góc/keyframe/pivot giữ layer cache khi các pixel/vùng cắt không đổi. Thay clean plate tạo identity khác.
 
 Với bộ layer bánh quay đã có tại máy này, lệnh đã chạy:
 
@@ -38,6 +38,28 @@ node --import tsx scripts/image-motion-timestamp.ts --source $flowExport --outpu
 ```
 
 `old-project-motion-v3` là artifact local có sẵn, không phải file được tải lên GitHub. Tham số `--manifest` dùng cho bất kỳ scene đã chuẩn bị nào có cùng hash ảnh nguồn với cảnh được chọn. Có thể truyền đường dẫn executable qua `--chrome`, `--ffmpeg`, `--ffprobe`.
+
+## Khởi động bàn làm việc
+
+Chạy ở đúng thư mục worktree đã nêu, dùng terminal PowerShell riêng và giữ terminal mở:
+
+```powershell
+node --import tsx scripts/image-motion-timestamp-studio.ts --source $flowExport --bindings runtime/image-motion/timestamp-workbench/bindings.json --output runtime/image-motion/timestamp-workbench/studio --port 8860 --fps 60
+```
+
+Mở `http://127.0.0.1:8860/`. Nếu server này đang chạy, chỉ mở trang; không khởi động thêm vào cùng output. Cổng 8858 của editor tay cũ vẫn riêng. Để dừng server dùng Ctrl+C trong terminal đã chạy lệnh. Khi đổi file bindings, đợi lượt xuất kết thúc rồi khởi động lại đúng server đó.
+
+File bindings local đã chuẩn bị cho 0002/0006/0013. Khi dùng checkout mới hoặc project khác, tạo một file JSON tương tự, với đường dẫn manifest tương đối trong workspace và scene ID có thật:
+
+```json
+{"bindings":[{"clipId":6,"manifest":"runtime/image-motion/presenter-0006/manifest.json","scene":"character"}]}
+```
+
+`seedClip` tùy chọn là thư mục clip đã xuất tương đối trong workspace, dùng lại sau khi kiểm tra đủ source/clock/asset/movie/receipt. Các artifact dưới `runtime` không đi kèm GitHub; phải chuẩn bị hoặc sao chép từ bản local có sẵn. Không gửi đường dẫn file tùy ý qua browser. Server chỉ đọc source export, binding và recipe được cấu hình qua CLI.
+
+Chọn cảnh, xem ảnh/lời/mốc thời gian, bấm **Xuất clip cảnh này** hoặc **Xuất các cảnh đã chuẩn bị**, rồi phát/tải MP4. Clip không tự phát. Tải lại trang giữ cảnh đang chọn và nối lại trạng thái lượt xuất đang chạy. Nếu mất kết nối, công cụ giữ lượt xuất chưa xác nhận và cho kiểm tra lại; không tự tạo thêm lượt vì chậm phản hồi.
+
+Lượt xuất chỉ `done` khi từng clip được xác minh. Cảnh thiếu recipe bị chặn. Revision cũ hoặc đang có lượt xuất trả HTTP 409. Thất bại giữ output/log riêng; thử lại tạo attempt mới, clip hợp lệ vẫn được dùng lại. Lease phân biệt PID với thời điểm bắt đầu process để tránh nhận nhầm process có PID được tái sử dụng. Bản hiện tại hỗ trợ lease trên Windows/Linux.
 
 ## Clock, cache và kết quả
 
@@ -49,9 +71,9 @@ Output mỗi clip: `demo.mp4`, `index.html`, `timing.json`, `qc-report.json`, pr
 
 ## Còn cần làm
 
-- Tách/chọn chuyển động phù hợp cho 21 ảnh còn lại, thêm cử động tay ở các cảnh có người, giữ tiếp xúc với đạo cụ.
-- UI gán timestamp/xuất clip, hàng đợi và resume sau render thất bại, manifest bàn giao toàn bộ clip.
+- Tách/chọn chuyển động phù hợp cho 21 ảnh còn lại. 0006 đã có cử động đầu/tay từ ảnh nguồn, vẫn cần duyệt mép tách và tiếp xúc tại vai/mép bảng.
+- Editor gán recipe cho ảnh chưa có chuyển động, tự động tách phần và phục hồi nền phức tạp; manifest bàn giao toàn bộ clip. UI hiện đọc timestamp đã có, không phải editor đổi nội dung nguồn.
 - Đạo diễn/artist qua9router đề xuất recipe, người vận hành xem và duyệt chất lượng. Đề xuất không được thực thi như code.
 - Ghép toàn bộ timeline/voice, review/repair, final/QC theo mục tiêu chung sau khi chuyển động từng ảnh được duyệt.
 
-Ba clip hiện có là mẫu chẩn đoán, chưa chứng minh chất lượng diễn xuất của toàn bộ video. Phần nối narration đang dở được giữ riêng theo yêu cầu tập trung từng ảnh.
+Ba clip hiện có là mẫu chẩn đoán, chưa chứng minh chất lượng diễn xuất của toàn bộ video. Phần nối narration đang dở được giữ riêng theo yêu cầu tập trung từng ảnh. Kết quả workbench mới: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-workbench/REPORT.md).

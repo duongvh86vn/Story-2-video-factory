@@ -7,7 +7,7 @@ import {hash} from '../packages/core/utils.js';
 import {prepareCharacterSource,type CharacterSourceRecipe} from '../packages/image-motion/character-source.js';
 import {outputPath} from '../packages/render/process.js';
 
-const {values}=parseArgs({options:{source:{type:'string'},recipe:{type:'string'},output:{type:'string'},mask:{type:'string'}}});
+const {values}=parseArgs({options:{source:{type:'string'},recipe:{type:'string'},output:{type:'string'},mask:{type:'string'},'clean-plate':{type:'string'}}});
 if(!values.source||!values.recipe)throw Error('--source PNG and --recipe JSON are required');
 const source=await fs.realpath(path.resolve(values.source)),recipeFile=await fs.realpath(path.resolve(values.recipe));
 if((await fs.stat(source)).size>16*1024*1024||(await fs.stat(recipeFile)).size>256*1024)throw Error('Source/recipe exceeds size limit');
@@ -21,8 +21,9 @@ else{
   const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+meta.width+'" height="'+meta.height+'">'+polygons.join('')+'</svg>';mask=path.join(maskRoot,hash(svg)+'.png');
   try{await fs.writeFile(mask,await sharp(Buffer.from(svg)).png().toBuffer(),{flag:'wx'});}catch(e){if((e as NodeJS.ErrnoException).code!=='EEXIST')throw e;}
 }
-const outputRoot=path.resolve('runtime/image-motion'),output=path.resolve(values.output??'runtime/image-motion/source-parts/'+hash({source:hash(await fs.readFile(source)),mask:hash(await fs.readFile(mask)),recipe}).slice(0,24)),relative=path.relative(outputRoot,output);
+const cleanPlate=values['clean-plate']?await fs.realpath(path.resolve(values['clean-plate'])):undefined;
+const outputRoot=path.resolve('runtime/image-motion'),output=path.resolve(values.output??'runtime/image-motion/source-parts/'+hash({source:hash(await fs.readFile(source)),mask:hash(await fs.readFile(mask)),recipe,cleanPlate:cleanPlate?hash(await fs.readFile(cleanPlate)):undefined}).slice(0,24)),relative=path.relative(outputRoot,output);
 if(!relative||relative==='..'||relative.startsWith('..'+path.sep)||path.isAbsolute(relative))throw Error('Source-part output must be inside runtime/image-motion');
 await outputPath(outputRoot,relative);await fs.mkdir(path.dirname(output),{recursive:true});
-const prepared=await prepareCharacterSource(source,mask,output,recipe,maskRoot);
+const prepared=await prepareCharacterSource(source,mask,output,recipe,maskRoot,cleanPlate);
 console.log(JSON.stringify({directory:prepared.directory,manifest:path.join(prepared.directory,'manifest.json'),sourceHash:prepared.sourceHash,layerCacheKey:prepared.layerCacheKey,productionReady:false,qualityAccepted:false}));

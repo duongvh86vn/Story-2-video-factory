@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "parentCommit": "bf136ff3d11ca8eae005524c6f94180aa97f963c",
+  "branch": "codex/prehistoric-life",
+  "files": {
+    "apps/server/image-timestamp.ts": "e259bfd40a98daa1e76a71f550502010ed265ab4174986f1d466254bac960c87",
+    "packages/image-motion/timestamp-workbench.ts": "3f2b9ed99a99bcee6c5457752ccef4d0ceec1a0f8db57cd38ade018278698c7a",
+    "scripts/image-motion-timestamp-studio.ts": "9b1e5755d69f8839887faf1ffeae4191f8ca5bba3e31e65d764e5b7f0473dc64",
+    "scripts/image-motion-source-part.ts": "b4e7a88bf23a12c782be51a076d5e4247b5eacc5415227177f714ec4cfcc77c4",
+    "tests/image-timestamp-workbench.test.ts": "1d7bccdd99fc91ee71d4ebcfcbe90c4eb497b370d5094ae40ae463c7ad81f88f",
+    "docs/topics/motion-recipes/flow-doodle-0006-point.json": "9a3772e66dcdd0421055745fb5986248da9734669059052c4c14c36d1ad635e9"
+  },
+  "progressPercentEstimate": 47,
+  "qualityAccepted": false,
+  "productionReady": false
+}
