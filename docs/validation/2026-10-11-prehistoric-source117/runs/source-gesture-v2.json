@@ -1,0 +1,13 @@
+{
+  "name": "source-gesture-v2",
+  "startedAt": "2026-10-10T20:05:23.847Z",
+  "endedAt": "2026-10-10T20:05:40.432Z",
+  "exitCode": 1,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "tests/native-source-gesture.test.ts"
+  ]
+}

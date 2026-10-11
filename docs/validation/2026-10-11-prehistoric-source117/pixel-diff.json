@@ -1,0 +1,45 @@
+{
+  "pairedDomEqual": 7,
+  "pairedPngEqual": 6,
+  "totalPairs": 7,
+  "rows": [
+    {
+      "a": "original-0-0.png",
+      "b": "original-4-0.png",
+      "differentPixels": 75,
+      "maxChannelDifference": 23,
+      "bounds": [
+        256,
+        99,
+        968,
+        462
+      ]
+    },
+    {
+      "a": "original-2-1499.png",
+      "b": "original-5-1499.png",
+      "differentPixels": 46,
+      "maxChannelDifference": 16,
+      "bounds": [
+        243,
+        99,
+        968,
+        354
+      ]
+    },
+    {
+      "a": "original-6-800.png",
+      "b": "packed-6-800.png",
+      "differentPixels": 34,
+      "maxChannelDifference": 23,
+      "bounds": [
+        243,
+        195,
+        270,
+        354
+      ]
+    }
+  ],
+  "cause": "NOT ESTABLISHED",
+  "productionAcceptance": false
+}

@@ -1,0 +1,12 @@
+{
+  "name": "testtypes",
+  "startedAt": "2026-10-10T20:12:02.810Z",
+  "endedAt": "2026-10-10T20:12:17.831Z",
+  "exitCode": 2,
+  "signal": null,
+  "args": [
+    "node_modules/typescript/bin/tsc",
+    "-p",
+    "tsconfig.tests.json"
+  ]
+}

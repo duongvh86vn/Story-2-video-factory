@@ -1,6 +1,17 @@
 # Báo cáo kiểm tra — Cuộc sống thời tiền sử
 
-## Kết quả hiện hành — source0.116, 11/10/2026
+## Kết quả hiện hành — source117, 11/10/2026
+
+**Đã gỡ cap cho hai cảnh đầu và xuất clip chẩn đoán1,5s; ca7,2s còn lỗi trang phục, chưa nghiệm thu video.** Không gọi model/TTS trả phí hoặc sinh ảnh; giữ D/8850.
+
+- Transport binary2 giữ58.603 lệnh GSAP nguyên giá trị/thứ tự; scene900–2400ms giảm2.290.955→1.825.476byte, dưới cap2MB. Scene security7 + HyperFrames lint/check PASS; bốn PNG bằng bản nguồn. MP4 H.2641280×72060fps90frames,1,5s im lặng; probe/decode exit0.
+- Source-gesture **13/13**, transport/binary/path guard **10/10**, artwork-repair/QC **60/60 PASS**; build core/Studio/Vite, test:typecheck và static pack exit0. Repair/review ở test dùng mock/router cục bộ. Giữ các lượt lỗi trước trong [receipts](docs/validation/2026-10-11-prehistoric-source117/results.json); chưa chạy lại toàn regression56.
+- Random seek **7/7 DOM,6/7 PNG bằng nhau**; ảnh cuối khác34pixel. Bản nguồn cũng khác ảnh nhẹ khi quay về cùng thời điểm. Test ảnh tuyệt đối vẫn **FAIL**, nguyên nhân chưa xác định.
+- Ca7,2s qua cảnh0/1, dừng cảnh2 ở global3219.9463ms: sai lệch nội suy1,33. Diagnosis khoanh vùng matrix trang phục ngồi Karo, không phải mắt/miệng. Chưa sửa cloth, render bố cục còn lại hoặc xuất phim đầy đủ.
+
+[Thay đổi, công việc còn thiếu, môi trường và lệnh](docs/topics/SCENE-BINARY-TRANSPORT.md). Tiến độ **khoảng40%, +0 điểm phần trăm**; toàn story/script/WAV→diễn viên→final/QC đang làm.
+
+## Kết quả trước — source0.116, 11/10/2026
 
 **Sửa hình học chống cằm; render vẫn bị chặn bởi cap cảnh, chưa có MP4 mới.** Được phép test/render chẩn đoán cục bộ. Không gọi model/TTS trả phí, sinh ảnh hoặc đổi server8850/checkout D.
 

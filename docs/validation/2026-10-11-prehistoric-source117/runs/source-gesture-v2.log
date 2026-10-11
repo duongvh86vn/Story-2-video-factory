@@ -1,0 +1,42 @@
+✔ source span is strict original motion timing, with complete ordered approach/hold/recovery and no implicit ID inference (7.5135ms)
+✔ all exact source pieces bind one physical hand/action/target/pole/window; real missing/duplicate fragments fail (3.1003ms)
+✔ approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip (260.5326ms)
+✔ seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state (4.9508ms)
+✔ ordinary adjacent gestures never become a source command and explicit cuts cannot carry an incomplete declared span (2.9218ms)
+✔ missing/stale context, incompatible profiles and contact/prop timing cannot silently approximate a source gesture (5.5869ms)
+✔ overlapping source commands or an ordinary clip on the same owned hand fail, while the other hand can be independent (2.8546ms)
+✔ cache/repair input identity includes nonlocal command timing and actual replacement, with no discarded old approval (3.7751ms)
+✔ compiler source grid/refinement and namespaced ink/hand layers use original gesture phases without fake contact (2397.7436ms)
+✔ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (3683.7411ms)
+✔ creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2] (4741.6996ms)
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (3470.3878ms)
+✔ native source gesture readiness remains unapproved and full input/video production gates stay active (13.6606ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16519.749
+
+✖ failing tests:
+
+test at tests\native-source-gesture.test.ts:1:20277
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (3470.3878ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'C:\\Users\\DUONGV~1\\AppData\\Local\\Temp\\story-factory-test-9GTzrr\\work\\attempts\\creative-artwork-repair\\source-hand-0\\d9722299-e718-41ac-b325-491a6ff0966e.json'
+  - 'C:\\Users\\DUONGV~1\\AppData\\Local\\Temp\\story-factory-test-9GTzrr\\work\\attempts\\creative-artwork-repair\\source-hand-0\\1229cb84-1e82-4297-afa9-0781ad2b0e5b.json'
+  
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:215:144)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'C:\\Users\\DUONGV~1\\AppData\\Local\\Temp\\story-factory-test-9GTzrr\\work\\attempts\\creative-artwork-repair\\source-hand-0\\d9722299-e718-41ac-b325-491a6ff0966e.json',
+    expected: 'C:\\Users\\DUONGV~1\\AppData\\Local\\Temp\\story-factory-test-9GTzrr\\work\\attempts\\creative-artwork-repair\\source-hand-0\\1229cb84-1e82-4297-afa9-0781ad2b0e5b.json',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

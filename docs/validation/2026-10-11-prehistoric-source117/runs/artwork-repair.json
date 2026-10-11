@@ -1,0 +1,14 @@
+{
+  "name": "artwork-repair",
+  "startedAt": "2026-10-11T01:06:17.415Z",
+  "endedAt": "2026-10-11T01:07:48.692Z",
+  "exitCode": 0,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "tests/artwork-repair.test.ts",
+    "tests/qc-artwork-repair.test.ts"
+  ]
+}

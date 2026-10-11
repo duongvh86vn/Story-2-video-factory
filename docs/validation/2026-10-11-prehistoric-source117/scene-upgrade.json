@@ -1,0 +1,213 @@
+{
+  "startedAt": "2026-10-10T20:00:58.397Z",
+  "scope": "SAME CACHED NATIVE CHIN SCENE; LOSSLESS TRANSPORT UPGRADE",
+  "productionAcceptance": false,
+  "finalExportAllowed": false,
+  "paidCalls": 0,
+  "bodyCompiler": "forest-source-body-motion-46",
+  "sourceRange": [
+    900,
+    2400
+  ],
+  "original": [
+    {
+      "path": "index.html",
+      "bytes": 216937,
+      "sha256": "322094e93a32a79d3987e77ae0d843a751eb3ff7351445e4e2b6d196e0b913cb"
+    },
+    {
+      "path": "style.css",
+      "bytes": 401,
+      "sha256": "2d2ff85494506c0b3e7485c0b6ce06497cc05144633395527512c09a9e36bb17"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 2073617,
+      "sha256": "84440b8e4ee0b459aa6d4690f95d8055293b0fe54a97b441b0027bc0ef43f759"
+    }
+  ],
+  "packed": [
+    {
+      "path": "index.html",
+      "bytes": 216937
+    },
+    {
+      "path": "style.css",
+      "bytes": 401
+    },
+    {
+      "path": "scene.js",
+      "bytes": 1608138
+    }
+  ],
+  "calls": {
+    "original": {
+      "count": 58603,
+      "sha256": "228cbfac59b716699ac964c92e2c20bb07f7f537e5e8f81b8f647b2705f4ac76"
+    },
+    "packed": {
+      "count": 58603,
+      "sha256": "228cbfac59b716699ac964c92e2c20bb07f7f537e5e8f81b8f647b2705f4ac76"
+    }
+  },
+  "validationErrors": [],
+  "phase": "exported",
+  "validation": {
+    "pass": true,
+    "errors": [],
+    "diagnostics": [
+      {
+        "command": "lint",
+        "code": 0,
+        "stdout": "{\n  \"ok\": true,\n  \"errorCount\": 0,\n  \"warningCount\": 0,\n  \"infoCount\": 0,\n  \"findings\": [],\n  \"filesScanned\": 1,\n  \"_meta\": {\n    \"version\": \"0.8.96\",\n    \"updateAvailable\": false\n  }\n}\n",
+        "stderr": "",
+        "timedOut": false,
+        "truncated": false,
+        "envelope": {
+          "ok": true,
+          "errorCount": 0,
+          "warningCount": 0,
+          "infoCount": 0,
+          "findings": [],
+          "filesScanned": 1,
+          "_meta": {
+            "version": "0.8.96",
+            "updateAvailable": false
+          }
+        }
+      },
+      {
+        "command": "check",
+        "code": 0,
+        "stdout": "{\n  \"ok\": true,\n  \"strict\": false,\n  \"lint\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"filesScanned\": 1\n  },\n  \"runtime\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": []\n  },\n  \"layout\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"duration\": 1.5,\n    \"samples\": [\n      0.083,\n      0.25,\n      0.417,\n      0.583,\n      0.75,\n      0.917,\n      1.083,\n      1.25,\n      1.417\n    ],\n    \"transitionSamples\": [],\n    \"transitionSamplesDropped\": 0,\n    \"tolerance\": 2,\n    \"totalIssueCount\": 0,\n    \"truncated\": false\n  },\n  \"motion\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"enabled\": false,\n    \"samples\": 0\n  },\n  \"contrast\": {\n    \"ok\": true,\n    \"errorCount\": 0,\n    \"warningCount\": 0,\n    \"infoCount\": 0,\n    \"findings\": [],\n    \"enabled\": true,\n    \"samples\": [\n      0.083,\n      0.417,\n      0.75,\n      1.083,\n      1.417\n    ],\n    \"checked\": 0,\n    \"passed\": 0\n  },\n  \"hdr\": {\n    \"autoPromotion\": null,\n    \"inspection\": \"available\"\n  },\n  \"snapshots\": {\n    \"enabled\": false,\n    \"files\": [],\n    \"times\": [],\n    \"findingFiles\": []\n  },\n  \"_meta\": {\n    \"version\": \"0.8.96\",\n    \"updateAvailable\": false\n  }\n}\n",
+        "stderr": "",
+        "timedOut": false,
+        "truncated": false,
+        "envelope": {
+          "ok": true,
+          "strict": false,
+          "lint": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "filesScanned": 1
+          },
+          "runtime": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": []
+          },
+          "layout": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "duration": 1.5,
+            "samples": [
+              0.083,
+              0.25,
+              0.417,
+              0.583,
+              0.75,
+              0.917,
+              1.083,
+              1.25,
+              1.417
+            ],
+            "transitionSamples": [],
+            "transitionSamplesDropped": 0,
+            "tolerance": 2,
+            "totalIssueCount": 0,
+            "truncated": false
+          },
+          "motion": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "enabled": false,
+            "samples": 0
+          },
+          "contrast": {
+            "ok": true,
+            "errorCount": 0,
+            "warningCount": 0,
+            "infoCount": 0,
+            "findings": [],
+            "enabled": true,
+            "samples": [
+              0.083,
+              0.417,
+              0.75,
+              1.083,
+              1.417
+            ],
+            "checked": 0,
+            "passed": 0
+          },
+          "hdr": {
+            "autoPromotion": null,
+            "inspection": "available"
+          },
+          "snapshots": {
+            "enabled": false,
+            "files": [],
+            "times": [],
+            "findingFiles": []
+          },
+          "_meta": {
+            "version": "0.8.96",
+            "updateAvailable": false
+          }
+        }
+      }
+    ]
+  },
+  "frames": [
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source117-binary\\left-shot-1\\frames\\0.png",
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source117-binary\\left-shot-1\\frames\\300.png",
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source117-binary\\left-shot-1\\frames\\800.png",
+    "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source117-binary\\left-shot-1\\frames\\1499.png"
+  ],
+  "frameHashes": [
+    {
+      "timeMs": 0,
+      "original": "8a9edca590e0ac1ab7aae9c0bf6a52d519cad600cfb9e6ee18da2ef74dc9bcfd",
+      "packed": "8a9edca590e0ac1ab7aae9c0bf6a52d519cad600cfb9e6ee18da2ef74dc9bcfd",
+      "equal": true
+    },
+    {
+      "timeMs": 300,
+      "original": "bfa3080f0542c430d2081118e10ae90246803f1106d009090a327bfca7fb7bb0",
+      "packed": "bfa3080f0542c430d2081118e10ae90246803f1106d009090a327bfca7fb7bb0",
+      "equal": true
+    },
+    {
+      "timeMs": 800,
+      "original": "3a167ff1b68607ef903fd5635a519ad91d3f9ca1c2a7a74a629beee0d3ff7d61",
+      "packed": "3a167ff1b68607ef903fd5635a519ad91d3f9ca1c2a7a74a629beee0d3ff7d61",
+      "equal": true
+    },
+    {
+      "timeMs": 1499,
+      "original": "d984516afae82f00bfba25aa1bcf2efba2d0e6c4d81a6c50dca690ae03dacb62",
+      "packed": "d984516afae82f00bfba25aa1bcf2efba2d0e6c4d81a6c50dca690ae03dacb62",
+      "equal": true
+    }
+  ],
+  "render": {
+    "path": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\prehistoric-life\\qa\\source117-binary\\left-shot-1\\work\\draft.mp4",
+    "profile": "draft",
+    "renderer": "hyperframes",
+    "version": "0.8.96",
+    "code": 0,
+    "cacheKey": "3417e6a71bb6a7a0d969d6d93f3b8f87f6f14673908efe1ace83e7a9560100b1"
+  },
+  "completedAt": "2026-10-10T20:02:14.515Z"
+}

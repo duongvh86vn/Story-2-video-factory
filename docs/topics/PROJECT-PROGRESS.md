@@ -1,5 +1,7 @@
 # Mốc tiến độ dự án
 
+**Source117 — 11/10/2026: khoảng40%, +0 điểm phần trăm.** Hai cảnh đầu dưới cap nhờ transport lossless; có clip1,5s im lặng. Ca7,2s còn lỗi cloth; random-seek PNG chưa khớp tuyệt đối. Chưa có phim/các input đến final đạt nghiệm thu. [Báo cáo](SCENE-BINARY-TRANSPORT.md); bảng ước lượng dưới giữ nguyên.
+
 **Source0.116 — 11/10/2026: khoảng40%, +0 điểm phần trăm.** Pose cổ tay chống cằm giữ xương/landmark qua kiểm tra cục bộ. Đoạn1,5s vẫn vượt cap2MB; ảnh QA chưa chứng minh độ mượt, mỹ thuật hoặc câu chuyện hoàn chỉnh. [Báo cáo](CHIN-WRIST-DIAGNOSTIC.md). Toàn luồng chưa nghiệm thu; bảng ước lượng bên dưới giữ nguyên.
 
 **Lượt source115 — 11/10/2026: khoảng40%, +0 điểm phần trăm.** Gỡ chặn xuất một cảnh0,9s bằng đóng gói lossless, có clip60fps và phép so sánh tua DOM/PNG trung thực. Chưa sửa anatomy/diễn xuất, chưa có câu chuyện đủ dài hoặc ba input đến final/QC; chưa đủ căn cứ cộng điểm. [Báo cáo](../../TEST-RESULTS-PREHISTORIC.md), [việc còn thiếu](SCENE-BAKE-COMPACTION.md).

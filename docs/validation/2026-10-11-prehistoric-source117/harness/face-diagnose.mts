@@ -1,0 +1,14 @@
+import {promises as fs} from 'node:fs';
+const base='C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1/',load=async(p:string)=>import('file:///'+base+p),folder=base+'runtime/prehistoric-life/native-seat-tracers/tracer-2026-10-10T20-02-43-124Z-eade453d-339c-4ecb-b504-4dd5a0f21cd3/work/';
+const read=async(n:string)=>JSON.parse(await fs.readFile(folder+n+'.json','utf8')),[board,narration,activity]=await Promise.all(['storyboard','narration','speech-activity'].map(read)),shot=board.shots[2];
+const {actorProfile}=await load('packages/actors/model.ts'),{actorViewActingClock}=await load('packages/actors/view-acting-clock.ts'),{narrationCueOwners,actorShotSpeech}=await load('packages/actors/speech-clock.ts'),{samplePerformance}=await load('packages/animation/compiler.ts');
+const {nativeHeadBankFacialError}=await load('packages/animation/body-head-bank.ts'),{nativeSeatMatrixError}=await load('packages/animation/body-view-seat.ts'),{registeredDetailedBodyView}=await load('packages/animation/body-view-art.ts');
+const owners=narrationCueOwners(board,shot,narration),scene=shot.cinematic.actorScene,actors=[{character:scene.primary,performance:shot.cinematic.performance,speakingSegmentIds:scene.speakingSegmentIds},...scene.supporting],rows=[];
+for(const actor of actors){const profile=actorProfile(actor.character),plan=actor.performance,clock=actorViewActingClock(board,shot,actor.character.id),speech=actorShotSpeech(activity,narration,actor.character.id,actor.speakingSegmentIds,shot.startMs,shot.endMs,owners.get(actor.character.id)||[]),frame=(t:number)=>samplePerformance(plan,profile,t,speech.activity,speech.sourceClock,clock);
+ for(const h of [.1,.01,.001,.0001]){
+  const time=819.9463,a=frame(time-h),b=frame(time+h),want=frame(time),scalar=[];
+  for(const [id,from]of Object.entries(a.face) as any)for(const key of ['opacity','scaleX','scaleY','rotation','x','y']){const x=from[key],y=b.face[id]?.[key],v=want.face[id]?.[key];if(typeof x==='number'&&typeof y==='number'&&typeof v==='number'){const error=Math.abs((x+y)/2-v)/(key==='rotation'||key==='x'||key==='y'?.02:.002);if(error>.01)scalar.push({id,key,from:x,to:y,wanted:v,error});}}
+  rows.push({actor:actor.character.id,time,h,head:nativeHeadBankFacialError(profile.appearance.bodyHeadBank,a.face,b.face,want.face,.5)*plan.scale*profile.appearance.headScale*profile.appearance.bodyScale/.2,seat:nativeSeatMatrixError(profile,registeredDetailedBodyView(profile),a.face,b.face,want.face,.5)*registeredDetailedBodyView(profile).bodyScale*plan.scale*profile.appearance.bodyScale/.2,scalar:scalar.sort((a,b)=>b.error-a.error).slice(0,8)});
+ }
+}
+const out=base+'runtime/prehistoric-life/qa/source117-binary/face-diagnostic.json';await fs.writeFile(out,JSON.stringify({scope:'PURE SAMPLER DIAGNOSIS; NO MOCKS/VOICE/FALLBACK',productionAcceptance:false,rows},null,2));console.log(JSON.stringify(rows));

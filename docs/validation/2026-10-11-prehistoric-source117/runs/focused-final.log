@@ -1,0 +1,18 @@
+✔ server and fixed browser reader retain Unicode, integer boundaries, doubles and nested literal values (17.7274ms)
+✔ both parsers reject truncated, overflowing, noncanonical and malformed binary, with no payload code execution (42.4177ms)
+✔ packed browser player preserves exact values, actor interleaving and duration sentinels (313.4294ms)
+✔ second differences retain irregular signed motion, template changes and mixed methods at seven decimal places (64.1259ms)
+✔ packing cannot hide forbidden targets, resources or executable callbacks (381.2173ms)
+✔ decoder rejects tampering, invalid order and decompression/expansion bounds (409.2285ms)
+✔ legacy JSON transport remains validated and playable without rewriting cached scene bytes (24.4101ms)
+✔ source alpha filter accepts only the fixed discrete alpha operation (4.0153ms)
+✔ scene guard accepts bounded open garment contours and closed polygons (15.882ms)
+✔ open path permission retains finite, vertex, byte and literal-data bounds (6.9353ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2235.148

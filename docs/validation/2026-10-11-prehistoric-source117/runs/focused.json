@@ -1,0 +1,15 @@
+{
+  "name": "focused",
+  "startedAt": "2026-10-10T20:11:59.722Z",
+  "endedAt": "2026-10-10T20:12:02.098Z",
+  "exitCode": 0,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "--test",
+    "tests/packed-binary.test.ts",
+    "tests/packed-timeline.test.ts",
+    "tests/scene-baked-path.test.ts"
+  ]
+}

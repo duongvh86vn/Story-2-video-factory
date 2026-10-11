@@ -1,0 +1,21 @@
+✔ source span is strict original motion timing, with complete ordered approach/hold/recovery and no implicit ID inference (7.1668ms)
+✔ all exact source pieces bind one physical hand/action/target/pole/window; real missing/duplicate fragments fail (3.0862ms)
+✔ approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip (227.9122ms)
+✔ seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state (4.4188ms)
+✔ ordinary adjacent gestures never become a source command and explicit cuts cannot carry an incomplete declared span (1.939ms)
+✔ missing/stale context, incompatible profiles and contact/prop timing cannot silently approximate a source gesture (3.6382ms)
+✔ overlapping source commands or an ordinary clip on the same owned hand fail, while the other hand can be independent (1.6114ms)
+✔ cache/repair input identity includes nonlocal command timing and actual replacement, with no discarded old approval (3.2686ms)
+✔ compiler source grid/refinement and namespaced ink/hand layers use original gesture phases without fake contact (2116.1022ms)
+✔ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (3340.4947ms)
+✔ creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2] (4233.0369ms)
+✔ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (4045.9503ms)
+✔ native source gesture readiness remains unapproved and full input/video production gates stay active (13.4182ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15770.3862

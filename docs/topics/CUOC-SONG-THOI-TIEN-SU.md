@@ -1,5 +1,7 @@
 # Cuộc sống thời tiền sử — bộ chủ đề Lila & Karo
 
+**Source117, 11/10/2026:** [Transport cảnh, clip và lỗi còn mở](SCENE-BINARY-TRANSPORT.md). Gỡ cap hai cảnh đầu, clip1,5s im lặng; còn lỗi cloth ở cảnh3 và sai khác ảnh khi tua. Chưa nghiệm thu mỹ thuật/độ mượt/toàn luồng. Ba input, diễn viên trong chuyện, màu/nét/trang phục, camera, giọng đa ngôn ngữ và final/QC vẫn giữ đầy đủ. Các cập nhật sau đây là lịch sử.
+
 **Source0.116, 11/10/2026:** [Pose cổ tay chống cằm và kết quả chẩn đoán](CHIN-WRIST-DIAGNOSTIC.md). Giữ landmark, xương, clock và giới hạn khuỷu; render vẫn vượt cap2MB. Chưa có video mới đủ điều kiện nghiệm thu. Ba input, diễn viên trong chuyện, màu/nét/trang phục, camera, giọng đa ngôn ngữ và final/QC tiếp tục là mục tiêu đầy đủ. Các cập nhật dưới là lịch sử, không phải nghiệm thu source0.116.
 
 **Lượt source115 — 11/10/2026:** đã gỡ cap/security cho một cảnh0–900ms bằng đóng gói tween trung thực; lint/check và clip chẩn đoán im lặng60fps đã chạy. Tua tiến/lùi so sánh với bản gốc giữ nguyên DOM/PNG. Không đổi artwork/pose/source clock, không nghiệm thu độ mượt hoặc full story/script/WAV→final/QC. [Evidence, môi trường, lệnh và phần còn thiếu](SCENE-BAKE-COMPACTION.md); [báo cáo hiện hành](../../TEST-RESULTS-PREHISTORIC.md). Tiến độ **40%, +0 điểm phần trăm**. Các mốc dưới là lịch sử.

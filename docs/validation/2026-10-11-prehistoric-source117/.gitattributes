@@ -1,0 +1,7 @@
+*.log -text
+*.json -text
+*.mjs -text
+*.mts -text
+*.cjs -text
+*.png -text
+*.mp4 -text

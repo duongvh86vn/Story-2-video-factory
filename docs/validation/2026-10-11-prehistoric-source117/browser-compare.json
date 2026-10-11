@@ -1,0 +1,161 @@
+{
+  "scope": "EXACT SCENE TRANSPORT/SEEK COMPARISON; NOT MOTION/ART ACCEPTANCE",
+  "productionAcceptance": false,
+  "paidCalls": 0,
+  "variants": {
+    "original": {
+      "init": {
+        "timelines": [
+          "native-seat-canonical-1"
+        ],
+        "duration": 1.5
+      },
+      "loadMs": 4656,
+      "onePageMetrics": {
+        "Timestamp": 188247.735641,
+        "Documents": 1,
+        "Frames": 1,
+        "JSEventListeners": 0,
+        "Nodes": 4630,
+        "LayoutCount": 8,
+        "RecalcStyleCount": 35,
+        "LayoutDuration": 0.007603,
+        "RecalcStyleDuration": 0.036374,
+        "ScriptDuration": 2.473262,
+        "TaskDuration": 3.283697,
+        "JSHeapUsedSize": 120926944,
+        "JSHeapTotalSize": 171159552
+      },
+      "errors": [],
+      "frames": [
+        {
+          "index": 0,
+          "timeMs": 0,
+          "file": "original-0-0.png",
+          "domSha256": "af568cad1aa31fc44fb145b4bc38be07377a687c05e44d110a2d8cc68c2e8d98",
+          "pngSha256": "f1456e0b3b7092d12e6b0ad309f722786149a22d6981136ea76b53c5b5a9056c"
+        },
+        {
+          "index": 1,
+          "timeMs": 800,
+          "file": "original-1-800.png",
+          "domSha256": "606d6c79635989108e874da81dc849038c76a06b16fd2519bcfdc46070b00ac0",
+          "pngSha256": "a27daaa0fcda50cba7c23f662215adb1743a3a9332b1dd9af032334e97bea60b"
+        },
+        {
+          "index": 2,
+          "timeMs": 1499,
+          "file": "original-2-1499.png",
+          "domSha256": "e1cab04361bb5626bca16e871cd839111c133023091afb2064a288e63d24348f",
+          "pngSha256": "37a676e48a4962cfbdab8285c8757ac9bc17ca13136f013733d52d24c76c2542"
+        },
+        {
+          "index": 3,
+          "timeMs": 300,
+          "file": "original-3-300.png",
+          "domSha256": "1707a7af9b90aaf53edc140d12a5c237fd6bdd2e7595fcdcc970a0d9c22826f9",
+          "pngSha256": "bfa3080f0542c430d2081118e10ae90246803f1106d009090a327bfca7fb7bb0"
+        },
+        {
+          "index": 4,
+          "timeMs": 0,
+          "file": "original-4-0.png",
+          "domSha256": "af568cad1aa31fc44fb145b4bc38be07377a687c05e44d110a2d8cc68c2e8d98",
+          "pngSha256": "18b21945af9cc071f1adad64277882ccbd387fb3c4f3f9034966ec38aa414fda"
+        },
+        {
+          "index": 5,
+          "timeMs": 1499,
+          "file": "original-5-1499.png",
+          "domSha256": "e1cab04361bb5626bca16e871cd839111c133023091afb2064a288e63d24348f",
+          "pngSha256": "9b2585bc20f7f1c4cb524b5d616afbc14506f2066cc966d83073755ac3acc01c"
+        },
+        {
+          "index": 6,
+          "timeMs": 800,
+          "file": "original-6-800.png",
+          "domSha256": "606d6c79635989108e874da81dc849038c76a06b16fd2519bcfdc46070b00ac0",
+          "pngSha256": "8352ff3fc53626b97b16f336e64099ab91f0ae4d09b415d5d2cd9129ea635e29"
+        }
+      ]
+    },
+    "packed": {
+      "init": {
+        "timelines": [
+          "native-seat-canonical-1"
+        ],
+        "duration": 1.5
+      },
+      "loadMs": 4650,
+      "onePageMetrics": {
+        "Timestamp": 188253.634766,
+        "Documents": 2,
+        "Frames": 1,
+        "JSEventListeners": 0,
+        "Nodes": 4634,
+        "LayoutCount": 8,
+        "RecalcStyleCount": 35,
+        "LayoutDuration": 0.006456,
+        "RecalcStyleDuration": 0.030437,
+        "ScriptDuration": 2.532656,
+        "TaskDuration": 3.323093,
+        "JSHeapUsedSize": 141121208,
+        "JSHeapTotalSize": 192200704
+      },
+      "errors": [],
+      "frames": [
+        {
+          "index": 0,
+          "timeMs": 0,
+          "file": "packed-0-0.png",
+          "domSha256": "af568cad1aa31fc44fb145b4bc38be07377a687c05e44d110a2d8cc68c2e8d98",
+          "pngSha256": "f1456e0b3b7092d12e6b0ad309f722786149a22d6981136ea76b53c5b5a9056c"
+        },
+        {
+          "index": 1,
+          "timeMs": 800,
+          "file": "packed-1-800.png",
+          "domSha256": "606d6c79635989108e874da81dc849038c76a06b16fd2519bcfdc46070b00ac0",
+          "pngSha256": "a27daaa0fcda50cba7c23f662215adb1743a3a9332b1dd9af032334e97bea60b"
+        },
+        {
+          "index": 2,
+          "timeMs": 1499,
+          "file": "packed-2-1499.png",
+          "domSha256": "e1cab04361bb5626bca16e871cd839111c133023091afb2064a288e63d24348f",
+          "pngSha256": "37a676e48a4962cfbdab8285c8757ac9bc17ca13136f013733d52d24c76c2542"
+        },
+        {
+          "index": 3,
+          "timeMs": 300,
+          "file": "packed-3-300.png",
+          "domSha256": "1707a7af9b90aaf53edc140d12a5c237fd6bdd2e7595fcdcc970a0d9c22826f9",
+          "pngSha256": "bfa3080f0542c430d2081118e10ae90246803f1106d009090a327bfca7fb7bb0"
+        },
+        {
+          "index": 4,
+          "timeMs": 0,
+          "file": "packed-4-0.png",
+          "domSha256": "af568cad1aa31fc44fb145b4bc38be07377a687c05e44d110a2d8cc68c2e8d98",
+          "pngSha256": "18b21945af9cc071f1adad64277882ccbd387fb3c4f3f9034966ec38aa414fda"
+        },
+        {
+          "index": 5,
+          "timeMs": 1499,
+          "file": "packed-5-1499.png",
+          "domSha256": "e1cab04361bb5626bca16e871cd839111c133023091afb2064a288e63d24348f",
+          "pngSha256": "9b2585bc20f7f1c4cb524b5d616afbc14506f2066cc966d83073755ac3acc01c"
+        },
+        {
+          "index": 6,
+          "timeMs": 800,
+          "file": "packed-6-800.png",
+          "domSha256": "606d6c79635989108e874da81dc849038c76a06b16fd2519bcfdc46070b00ac0",
+          "pngSha256": "3a167ff1b68607ef903fd5635a519ad91d3f9ca1c2a7a74a629beee0d3ff7d61"
+        }
+      ]
+    }
+  },
+  "equal": false,
+  "repeatedSeeksStable": false
+}

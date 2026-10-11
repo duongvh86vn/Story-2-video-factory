@@ -6,7 +6,7 @@ import {validateSceneScript,SCENE_SECURITY_VERSION} from '../packages/scenes/sec
 const source=(value:string)=>`const tl=gsap.timeline({paused:true});tl.set('[data-composition-id="seat"] #edge',{attr:{d:${JSON.stringify(value)}}},0);window.__timelines=window.__timelines||{};window.__timelines["seat"]=tl;`;
 
 test('scene guard accepts bounded open garment contours and closed polygons',()=>{
-  assert.equal(SCENE_SECURITY_VERSION,6);
+  assert.equal(SCENE_SECURITY_VERSION,7);
   for(const d of ['M0 0L10 10L20 0','M0 0L10 10L20 0Z','M-1.5 2e1L0 -3L1 4',
     'M0 0C1 1 2 2 3 3C2 2 1 1 0 0Z',
     'M0 0 C1 1 2 2 3 3 C2 2 1 1 0 0',

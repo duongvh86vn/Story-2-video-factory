@@ -1,0 +1,12 @@
+{
+  "name": "upgrade",
+  "startedAt": "2026-10-10T20:00:54.807Z",
+  "endedAt": "2026-10-10T20:02:14.538Z",
+  "exitCode": 0,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "C:/Users/Duongvh-pc/.codex/tmp/source117-upgrade.mts"
+  ]
+}

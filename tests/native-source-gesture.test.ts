@@ -147,6 +147,10 @@ async function canonicalFixture(root:string,complete=false){
   if(complete){
     f.narration=NarrationSchema.parse(base.narration);
     const first=f.shots[0]!,p=first.cinematic!.performance;first.startMs=0;p.durationMs=first.endMs;p.expressions[0]!.endMs=p.durationMs;p.gestures[0]!.startMs=f.span.startMs;
+    // Extending the shot back to zero changes both local gesture endpoints.
+    // Keep the exact original source intersection; never accept negative clips.
+    p.gestures[0]!.endMs=Math.min(f.span.endMs,first.endMs)-first.startMs;
+    assert.ok(p.gestures[0]!.endMs>p.gestures[0]!.startMs);
     for(const s of f.shots)s.cinematic!.actorScene!.primary!.sourceRefs=structuredClone(base.shot.sourceRefs!);
   }
   const shots=f.shots.map((partial,i)=>{
@@ -166,7 +170,11 @@ async function canonicalFixture(root:string,complete=false){
     c.camera={...c.camera,focus:'ensemble',framing:'wide',movement:'locked',startScale:1,endScale:1,anchor:{x:640,y:360}};bindActorShot(s,base.profile,base.rig);
     c.continuity={...c.continuity,entry:{...c.performance.root},exit:{...c.performance.root},facing:c.performance.facing??'front',carriedProps:[],models:modelExitParts(s).map(part=>({partId:part.id,x:part.x,y:part.y,width:part.width,height:part.height}))};s.camera={...s.camera,shotSize:c.camera.framing,movement:c.camera.movement};return s;
   });
-  return {...base,root,narration:f.narration,board:StoryboardSchema.parse({shots})};
+  const board=StoryboardSchema.parse({shots});
+  // Canonical schema parsing orders newly added appearance fields. Bind the
+  // final cast definitions, as authoring does, before testing identity guards.
+  for(const shot of board.shots)bindActorShot(shot,base.profile,base.rig);
+  return {...base,root,narration:f.narration,board};
 }
 
 test('canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing',async t=>{
@@ -204,6 +212,9 @@ test('artwork repair and rejected/completed replay use the full current source b
   await writeJson(first.attemptFile,{...receipt,status:'domain-rejected'});
   const replay=await repairCinematicArtwork(f.root,f.config,router,shot,['fixture source diagnostic']);assert.equal(calls,1);assert.deepEqual(replay.shot,first.shot);
   const replayReceipt=await readJson<Record<string,unknown>>(replay.attemptFile);await writeJson(replay.attemptFile,{...replayReceipt,status:'commit-failed',runtimeValidation:'passed'});
+  // Force the older rejection to sort first; UUID order must not choose it
+  // ahead of an existing browser-validated result with the exact same binding.
+  await writeJson(path.join(path.dirname(first.attemptFile),'zz-older-domain-rejection.json'),{...receipt,status:'domain-rejected'});
   const completed=await repairCinematicArtwork(f.root,f.config,router,shot,['fixture source diagnostic'],f.board);assert.equal(calls,1);assert.equal(completed.attemptFile,replay.attemptFile);
   const changed=structuredClone(f.board);changed.shots[1]!.cinematic!.actorScene!.supporting[0]!.performance.gazes=[{startMs:100,endMs:300,target:{x:600,y:400}}];
   const refreshed=await repairCinematicArtwork(f.root,f.config,router,shot,['fixture source diagnostic'],changed);assert.equal(calls,2);

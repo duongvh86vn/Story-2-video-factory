@@ -82,7 +82,7 @@
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/director/camera-direction.ts": "6c63edd07328f17ed0f6aa3462ff983a33fe87e7be9f2de1abd9a72ce29c7ae0",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
-      "packages/director/artwork-repair.ts": "0f781c5d0d6c075b860d7a452152a99a127ffbffce2b23de4ceb96a6afdf8a63",
+      "packages/director/artwork-repair.ts": "17749ae270cfe79aec7cf18fcf7b6230cc483b4f7b2b5f3f5d07a8c8f289f239",
       "packages/orchestrator/pipeline.ts": "db8f83dd8cf4befd55a7ae62d426c2081b8277d05eab459cc02d92dfe25a2a11",
       "packages/review/index.ts": "9dee42d7204b48b29598bca4189688ab9ba82e19ab270a87861b2387c0950fce"
     }
@@ -111,7 +111,7 @@
     "codeHashes": {
       "packages/director/camera-direction-report.ts": "f8b816f8a757d4ea26b7d9ce80e6b2cb1d07c4aaf46d21173833263bb09da628",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
-      "packages/director/artwork-repair.ts": "0f781c5d0d6c075b860d7a452152a99a127ffbffce2b23de4ceb96a6afdf8a63",
+      "packages/director/artwork-repair.ts": "17749ae270cfe79aec7cf18fcf7b6230cc483b4f7b2b5f3f5d07a8c8f289f239",
       "packages/director/camera-direction.ts": "6c63edd07328f17ed0f6aa3462ff983a33fe87e7be9f2de1abd9a72ce29c7ae0",
       "packages/director/camera-direction-schemas.ts": "4f8d2a52b400b070baf1be95709a3fed1630994815fa9da36f7d315a27853b6c",
       "library/prompts/camera-director.md": "7de0340b1a4a513ad421b08a270df25561dc2c79d388ec8d86b69843ed41808a",
@@ -211,7 +211,7 @@
       "packages/actors/speech-clock.ts": "447f52780c08d978497e8a0472c7119a4533293e98774e96937b362ca3501585",
       "packages/scenes/index.ts": "29263964b519c0e4a5381cb35296e442c799cb664383868b6883d68d6afaa317",
       "packages/scenes/source-publication.ts": "0de47346be7ebd2aa70d987aecf9c6dcd02bfc1ad61e42d3b7db835bc32ebba2",
-      "packages/director/artwork-repair.ts": "0f781c5d0d6c075b860d7a452152a99a127ffbffce2b23de4ceb96a6afdf8a63",
+      "packages/director/artwork-repair.ts": "17749ae270cfe79aec7cf18fcf7b6230cc483b4f7b2b5f3f5d07a8c8f289f239",
       "packages/director/schemas.ts": "95db6d87e0e9bd202634b5269f0f0cef8d05258476bed4ba4797baf1bfb6b3ac",
       "packages/director/props.ts": "c5644d388708d83560a55bb10558152e57b3cfe741af7fb330b485801f8b4336",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
@@ -539,7 +539,7 @@
       "packages/scenes/source-preview-project.ts": "c64d114ba27b1811e492b3f0770a94ab5bc374bd32fa403bf5a9463ea19bf3f9",
       "scripts/source-preview.ts": "c730e88389b8bbad3120927a25d67c03d83d545c856825e3b98850bd9067425a",
       "library/shots/cinematic.ts": "d22d3859b65ad019054deb490a1217ac12d5adf39a5cfcba506039c45f9976df",
-      "packages/scenes/security.ts": "bb59ba3e442cd4d2cbc2ccfec24a60206bbeaead3d5662ed56331c1944a553bd",
+      "packages/scenes/security.ts": "609d3d57df0fed7afd17a5d1a3ed70f41f7ed4bbe4cf90bd998d1b1c89def3a7",
       "packages/director/source-audit-context.ts": "cc65696ca6490f91d35efbdb51af560b63412a50082cc7a05bc6e10f919a9da0",
       "packages/director/source-production-audit.ts": "9bdc9c64f9883b7c786162294fb7e392a5da080569acbf767265166fa6db98c9",
       "packages/director/index.ts": "7ef1a39daecc63da4adafd53fb4eb915aa8ed375ecbb7e8591e35dba22247f17",
@@ -8391,7 +8391,7 @@
     "physicalLungeCodeHash": "124f4fe064ceda099e1f1ecd108faf2d09910738c402463530106b2d7a1fcdfc",
     "publicationGuardCodeHash": "0de47346be7ebd2aa70d987aecf9c6dcd02bfc1ad61e42d3b7db835bc32ebba2",
     "scenePipelineCodeHash": "29263964b519c0e4a5381cb35296e442c799cb664383868b6883d68d6afaa317",
-    "artworkTransactionCodeHash": "0f781c5d0d6c075b860d7a452152a99a127ffbffce2b23de4ceb96a6afdf8a63"
+    "artworkTransactionCodeHash": "17749ae270cfe79aec7cf18fcf7b6230cc483b4f7b2b5f3f5d07a8c8f289f239"
   },
   "nativeTracer": {
     "version": "native-seat-tracer-2",

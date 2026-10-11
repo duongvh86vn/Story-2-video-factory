@@ -1,0 +1,8 @@
+file:///C:/Users/Duongvh-pc/.codex/tmp/source117-browser.mjs:22
+ await save();if(!report.equal||!report.repeatedSeeksStable||Object.values(report.variants).some(v=>v.errors.length))throw Error('Browser transport/seek mismatch');console.log(JSON.stringify({equal:report.equal,repeatedSeeksStable:report.repeatedSeeksStable,seeks:7}));
+                                                                                                                           ^
+
+Error: Browser transport/seek mismatch
+    at file:///C:/Users/Duongvh-pc/.codex/tmp/source117-browser.mjs:22:124
+
+Node.js v24.19.0

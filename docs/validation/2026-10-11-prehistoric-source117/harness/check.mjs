@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {spawn} from 'node:child_process';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const root='C:/Users/Duongvh-pc/.codex/worktrees/stickman-acting-v22/Story-2-video-factory2.1';
+const dir=path.join(root,'runtime/prehistoric-life/qa/source117-binary');fs.mkdirSync(dir,{recursive:true});
+const name=process.argv[2],args=process.argv.slice(3),output=fs.openSync(path.join(dir,name+'.log'),'w');
+const files=[...new Set([...execFileSync('git',['ls-files','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(f=>/\.(?:[cm]?tsx?|jsx?|json|yaml)$/.test(f)),'packages/animation/wrist-contact.ts','tests/forest-wrist-contact.test.ts','packages/scenes/packed-binary.ts','tests/packed-binary.test.ts'])].sort();
+const hashes=Object.fromEntries(files.filter(f=>fs.existsSync(path.join(root,f))).map(f=>[f,createHash('sha256').update(fs.readFileSync(path.join(root,f))).digest('hex')]));
+fs.writeFileSync(path.join(dir,name+'-source.json'),JSON.stringify({head:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),hashes},null,2));
+const startedAt=new Date().toISOString(),child=spawn(process.execPath,args,{cwd:root,stdio:['ignore',output,output],env:process.env});
+child.on('error',error=>{fs.writeFileSync(path.join(dir,name+'.json'),JSON.stringify({name,startedAt,error:String(error),args},null,2));process.exitCode=1;});
+child.on('exit',(exitCode,signal)=>{fs.closeSync(output);const receipt={name,startedAt,endedAt:new Date().toISOString(),exitCode,signal,args};fs.writeFileSync(path.join(dir,name+'.json'),JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));process.exitCode=exitCode??1;});

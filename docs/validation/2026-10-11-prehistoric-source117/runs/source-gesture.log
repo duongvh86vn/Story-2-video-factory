@@ -1,0 +1,49 @@
+✔ source span is strict original motion timing, with complete ordered approach/hold/recovery and no implicit ID inference (7.449ms)
+✔ all exact source pieces bind one physical hand/action/target/pole/window; real missing/duplicate fragments fail (3.2746ms)
+✔ approach, hold and recovery cuts preserve both actor/view/hand trajectories and painter slots against a complete original clip (250.9992ms)
+✔ seeking source trajectories out of order is deterministic and the nonowned hand keeps its actual body rest state (4.8314ms)
+✔ ordinary adjacent gestures never become a source command and explicit cuts cannot carry an incomplete declared span (2.0053ms)
+✔ missing/stale context, incompatible profiles and contact/prop timing cannot silently approximate a source gesture (3.707ms)
+✔ overlapping source commands or an ordinary clip on the same owned hand fail, while the other hand can be independent (1.8166ms)
+✔ cache/repair input identity includes nonlocal command timing and actual replacement, with no discarded old approval (3.7832ms)
+✔ compiler source grid/refinement and namespaced ink/hand layers use original gesture phases without fake contact (2074.7997ms)
+✖ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (323.345ms)
+✔ creative normalization keeps complete native source context, registered image resources and cast continuity across primary swap [P2] (4432.0946ms)
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (260.6346ms)
+✔ native source gesture readiness remains unapproved and full input/video production gates stay active (14.8307ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 11
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9158.7767
+
+✖ failing tests:
+
+test at tests\native-source-gesture.test.ts:1:17426
+✖ canonical paired source gestures preserve a speaking actor across primary/supporting switch and report original target timing (323.345ms)
+  Error: Performance identity/profile mismatch
+      at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:174:117)
+      at validateCinematicActorShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:270:3)
+      at validateCinematicShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:223:3)
+      at renderRigCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:61:9)
+      at renderCinematic (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\library\shots\cinematic.ts:299:10)
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:179:20)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\native-source-gesture.test.ts:1:20193
+✖ artwork repair and rejected/completed replay use the full current source board without a new provider call or stale sibling binding [P2] (260.6346ms)
+  Error: Performance identity/profile mismatch
+      at validatePerformance (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\animation\compiler.ts:174:117)
+      at validateCinematicActorShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:270:3)
+      at validateCinematicShot (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\index.ts:223:3)
+      at checkExplainerStoryboard (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\explainer\storyboard.ts:121:53)
+      at validateExplainerStoryboard (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\explainer\storyboard.ts:96:3)
+      at validate (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\artwork-repair.ts:51:5)
+      at repairCinematicArtwork (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\packages\director\artwork-repair.ts:92:11)
+      at async TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\native-source-gesture.test.ts:206:15)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

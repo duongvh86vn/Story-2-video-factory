@@ -70,12 +70,19 @@ export async function repairCinematicArtwork(root:string,config:FactoryConfig,ro
   // Revalidate completed designs against current source before spending another
   // call. A rejected response must match the exact current request and binding;
   // its original receipt stays unchanged and browser validation is still required.
-  for(const file of (await walk(path.join(root,'work/attempts/creative-artwork-repair',shot.id))).filter(file=>file.endsWith('.json')).reverse()){
+  const attemptFiles=(await walk(path.join(root,'work/attempts/creative-artwork-repair',shot.id))).filter(file=>file.endsWith('.json')).reverse();
+  // UUID/filename order is not completion order. Prefer every exact-binding,
+  // browser-validated result before replaying an older rejected response.
+  for(const file of attemptFiles){
     const saved=await readJson<{status:string;binding:unknown;request?:unknown;response?:unknown;runtimeValidation?:string;result?:unknown}>(file);
     if(hash(saved.binding)!==hash(binding))continue;
     if(['commit-failed','domain-validated'].includes(saved.status)&&saved.runtimeValidation==='passed'){
       try{const candidate=StoryboardSchema.parse({shots:[saved.result]}).shots[0]!;await validate(candidate);return {shot:candidate,attemptFile:file};}catch{/* Current source must approve a replay. */}
     }
+  }
+  for(const file of attemptFiles){
+    const saved=await readJson<{status:string;binding:unknown;request?:unknown;response?:unknown}>(file);
+    if(hash(saved.binding)!==hash(binding))continue;
     if(saved.status!=='domain-rejected'||saved.response===undefined||!saved.request||hash(saved.request)!==hash(request))continue;
     let candidate:Shot;
     try{candidate=responseCandidate(saved.response);await validate(candidate);}catch{continue;}

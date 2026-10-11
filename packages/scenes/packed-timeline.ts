@@ -1,6 +1,7 @@
 import ts from 'typescript';
 import {gzipSync,gunzipSync} from 'node:zlib';
 import {PAKO_INFLATE_SOURCE} from './vendor/pako-inflate.js';
+import {writePackedBinary,readPackedBinary,PACKED_BINARY_DECODER_SOURCE} from './packed-binary.js';
 
 // Transport only: exact GSAP values and call order survive the round trip.
 // No code/eval is stored in the payload. security.ts validates the expanded
@@ -9,7 +10,8 @@ const SCALE=10000000,MAX_BYTES=64*1024*1024,MAX_CALLS=250000;
 type Literal=null|boolean|number|string|Literal[]|{[key:string]:Literal};
 type Step=[string,Literal];
 type Column=[Literal,Step[]];
-interface Packed {v:1;templates:string[][];columns:Column[];order:number[];}
+interface Packed {v:1|2;templates:string[][];columns:Column[];order:number[];}
+interface VectorState {nums:number[];deltas:number[];}
 const methods=new Set(['set','to','from','fromTo']);
 const decimal=(n:number)=>{
  const a=Math.abs(n),s=String(a%SCALE).padStart(7,'0').replace(/0+$/,'');
@@ -29,14 +31,15 @@ function literal(n:ts.Expression):Literal{
  }
  throw Error('Non-literal GSAP argument');
 }
-function encode(value:Literal,path:string,state:Map<string,number[]>,templates:string[][],ids:Map<string,number>):Literal{
+function encode(value:Literal,path:string,state:Map<string,VectorState>,templates:string[][],ids:Map<string,number>):Literal{
  if(typeof value==='string'){
   const matches=[...value.matchAll(/-?\d+(?:\.\d+)?/g)];
   const nums=matches.map(m=>{const [i,d='']=m[0].replace('-','').split('.');return (m[0][0]==='-'?-1:1)*(Number(i)*SCALE+Number(d.padEnd(7,'0')));});
   if(matches.length>=2&&matches.every((m,i)=>Number.isSafeInteger(nums[i])&&Math.abs(nums[i]!)<=1e14&&decimal(nums[i]!)===m[0])){
    let at=0;const parts=matches.map(m=>{const s=value.slice(at,m.index);at=m.index!+m[0].length;return s;});parts.push(value.slice(at));
    const key=JSON.stringify(parts);let id=ids.get(key);if(id===undefined){id=templates.length;ids.set(key,id);templates.push(parts);}
-   const sk=path+':'+id,previous=state.get(sk)??nums.map(()=>0),delta=nums.map((n,i)=>n-previous[i]!);state.set(sk,nums);return [1,id,delta];
+   const sk=path+':'+id,previous=state.get(sk)??{nums:nums.map(()=>0),deltas:nums.map(()=>0)},delta=nums.map((n,i)=>n-previous.nums[i]!);
+   const second=delta.map((n,i)=>n-previous.deltas[i]!);state.set(sk,{nums,deltas:delta});return [1,id,second];
   }return [0,value];
  }
  if(Array.isArray(value))return [2,...value.map((v,i)=>encode(v,path+'.'+i,state,templates,ids))];
@@ -47,24 +50,31 @@ function encode(value:Literal,path:string,state:Map<string,number[]>,templates:s
 // Kept as literal JS so its exact bytes are identical in tsx and built Node.
 // Browser reconstructs columns first, then replays ORIGINAL interleaving. Each
 // empty target is fresh, just as in the uncompressed duration sentinels.
-export const PACKED_TIMELINE_PREFIX='(function(tl,encoded){const module={exports:{}},exports=module.exports;'+PAKO_INFLATE_SOURCE+`;const p=JSON.parse(module.exports.ungzip(atob(encoded),{to:"string"}));
+export const LEGACY_PACKED_TIMELINE_PREFIX='(function(tl,encoded){const module={exports:{}},exports=module.exports;'+PAKO_INFLATE_SOURCE+`;const p=JSON.parse(module.exports.ungzip(atob(encoded),{to:"string"}));
 function decimal(n){const a=Math.abs(n),s=String(a%10000000).padStart(7,"0").replace(/0+$/,"");return(n<0?"-":"")+Math.floor(a/10000000)+(s?"."+s:"");}
 function decode(v,path,state){if(!Array.isArray(v))return v;if(v[0]===0)return v[1];if(v[0]===1){const key=path+":"+v[1],prev=state.get(key)||v[2].map(()=>0),nums=v[2].map((n,i)=>n+prev[i]);state.set(key,nums);const parts=p.templates[v[1]];return parts[0]+nums.map((n,i)=>decimal(n)+parts[i+1]).join("");}if(v[0]===2)return v.slice(1).map((e,i)=>decode(e,path+"."+i,state));const o={};for(let i=1;i<v.length;i+=2)o[v[i]]=decode(v[i+1],path+"."+v[i],state);return o;}
 const columns=p.columns.map(c=>{const state=new Map();return[c[0],c[1].map(s=>[s[0],decode(s[1],"",state)])];}),cursors=columns.map(()=>0);
 for(const index of p.order){const c=columns[index],s=c[1][cursors[index]++];tl[s[0]](typeof c[0]==="string"?c[0]:{},...s[1]);}
 })(tl,`;
 
+export const PACKED_TIMELINE_PREFIX='(function(tl,encoded){const module={exports:{}},exports=module.exports;'+PAKO_INFLATE_SOURCE+';'+PACKED_BINARY_DECODER_SOURCE+`;const p=readBinary(module.exports.ungzip(atob(encoded)));
+function decimal(n){const a=Math.abs(n),s=String(a%10000000).padStart(7,"0").replace(/0+$/,"");return(n<0?"-":"")+Math.floor(a/10000000)+(s?"."+s:"");}
+function decode(v,path,state){if(!Array.isArray(v))return v;if(v[0]===0)return v[1];if(v[0]===1){const key=path+":"+v[1],previous=state.get(key)||{nums:v[2].map(()=>0),deltas:v[2].map(()=>0)},deltas=v[2].map((n,i)=>n+previous.deltas[i]),nums=deltas.map((n,i)=>n+previous.nums[i]);state.set(key,{nums,deltas});const parts=p.templates[v[1]];return parts[0]+nums.map((n,i)=>decimal(n)+parts[i+1]).join("");}if(v[0]===2)return v.slice(1).map((e,i)=>decode(e,path+"."+i,state));const o={};for(let i=1;i<v.length;i+=2)o[v[i]]=decode(v[i+1],path+"."+v[i],state);return o;}
+const columns=p.columns.map(c=>{const state=new Map();return[c[0],c[1].map(s=>[s[0],decode(s[1],"",state)])];}),cursors=columns.map(()=>0);
+for(const index of p.order){const c=columns[index],s=c[1][cursors[index]++];tl[s[0]](typeof c[0]==="string"?c[0]:{},...s[1]);}
+})(tl,`;
+
 function packCalls(calls:ts.CallExpression[]):string{
- const columns:Column[]=[],order:number[]=[],targets=new Map<string,number>(),templates:string[][]=[],ids=new Map<string,number>(),states:Map<string,number[]>[]=[];
+ const columns:Column[]=[],order:number[]=[],targets=new Map<string,number>(),templates:string[][]=[],ids=new Map<string,number>(),states:Map<string,VectorState>[]=[];
  for(const call of calls){
   const method=(call.expression as ts.PropertyAccessExpression).name.text,args=call.arguments.map(literal),target=args.shift()!;
   const key=JSON.stringify(target);let index=targets.get(key);
   if(index===undefined){index=columns.length;targets.set(key,index);columns.push([target,[]]);states.push(new Map());}
   columns[index]![1].push([method,encode(args,'',states[index]!,templates,ids)]);order.push(index);
  }
- const data:Packed={v:1,templates,columns,order},json=JSON.stringify(data);
- if(Buffer.byteLength(json)>MAX_BYTES||calls.length>MAX_CALLS)throw Error('Packed timeline exceeds bounds');
- return PACKED_TIMELINE_PREFIX+JSON.stringify(gzipSync(json,{level:9}).toString('base64'))+');';
+ const data:Packed={v:2,templates,columns,order};
+ if(calls.length>MAX_CALLS)throw Error('Packed timeline exceeds call bound');
+ return PACKED_TIMELINE_PREFIX+JSON.stringify(gzipSync(writePackedBinary(data),{level:9}).toString('base64'))+');';
 }
 
 /** Unsupported authored code is left intact for the normal security rejection. */
@@ -92,23 +102,24 @@ export function packTimelineScript(source:string,threshold=250000):string{
 const check=(ok:unknown,message:string):void=>{if(!ok)throw Error(message);};
 /** Returns declarative calls, never executable payload code. Bounded before AST validation. */
 export function unpackTimelineCall(source:string):string|null{
- if(!source.startsWith(PACKED_TIMELINE_PREFIX))return null;
- const tail=source.slice(PACKED_TIMELINE_PREFIX.length),match=/^"([A-Za-z0-9+/]*={0,2})"\);?$/.exec(tail);
+ const version=source.startsWith(PACKED_TIMELINE_PREFIX)?2:source.startsWith(LEGACY_PACKED_TIMELINE_PREFIX)?1:undefined;
+ if(!version)return null;
+ const tail=source.slice((version===2?PACKED_TIMELINE_PREFIX:LEGACY_PACKED_TIMELINE_PREFIX).length),match=/^"([A-Za-z0-9+/]*={0,2})"\);?$/.exec(tail);
  check(match&&match[1]!.length<=MAX_BYTES,'Invalid packed payload');const b64=match![1]!;
  const bytes=Buffer.from(b64,'base64');check(bytes.toString('base64')===b64,'Non-canonical packed base64');
- const p=JSON.parse(gunzipSync(bytes,{maxOutputLength:MAX_BYTES}).toString('utf8')) as Packed;
- check(p&&p.v===1&&Object.keys(p).sort().join(',')==='columns,order,templates,v','Invalid packed schema');
+ const raw=gunzipSync(bytes,{maxOutputLength:MAX_BYTES}),p=(version===2?readPackedBinary(raw):JSON.parse(raw.toString('utf8'))) as Packed;
+ check(p&&p.v===version&&Object.keys(p).sort().join(',')==='columns,order,templates,v','Invalid packed schema');
  check(Array.isArray(p.templates)&&p.templates.length<=2000&&p.templates.every(t=>Array.isArray(t)&&t.length>=3&&t.length<=1000&&t.every(s=>typeof s==='string'&&s.length<=4096)),'Invalid packed templates');
  check(Array.isArray(p.columns)&&p.columns.length<=10000&&Array.isArray(p.order)&&p.order.length<=MAX_CALLS,'Invalid packed columns/order');
- function decode(v:Literal,path:string,state:Map<string,number[]>,depth=0):Literal{
+ function decode(v:Literal,path:string,state:Map<string,VectorState>,depth=0):Literal{
   check(depth<=32,'Packed value nesting exceeds bounds');
   if(!Array.isArray(v)){check(v===null||typeof v==='boolean'||typeof v==='number'&&Number.isFinite(v),'Invalid packed scalar');return v;}
   if(v[0]===0){check(v.length===2&&typeof v[1]==='string','Invalid packed string');return v[1]!;}
   if(v[0]===1){
    const id=v[1],deltas=v[2];check(v.length===3&&typeof id==='number'&&Number.isInteger(id)&&id>=0&&id<p.templates.length&&Array.isArray(deltas),'Invalid packed vector');
-   const parts=p.templates[id as number]!,ns=deltas as number[];check(ns.length===parts.length-1&&ns.every(n=>Number.isSafeInteger(n)&&Math.abs(n)<=2e14),'Invalid packed deltas');
-   const key=path+':'+id,prev=state.get(key)??ns.map(()=>0),nums=ns.map((n,i)=>n+prev[i]!);
-   check(nums.every(n=>Number.isSafeInteger(n)&&Math.abs(n)<=1e14),'Packed vector overflow');state.set(key,nums);
+   const parts=p.templates[id as number]!,ns=deltas as number[];check(ns.length===parts.length-1&&ns.every(n=>Number.isSafeInteger(n)&&Math.abs(n)<=(version===2?4e14:2e14)),'Invalid packed deltas');
+   const key=path+':'+id,prev=state.get(key)??{nums:ns.map(()=>0),deltas:ns.map(()=>0)},first=ns.map((n,i)=>n+(version===2?prev.deltas[i]!:0)),nums=first.map((n,i)=>n+prev.nums[i]!);
+   check(first.every(n=>Number.isSafeInteger(n)&&Math.abs(n)<=2e14)&&nums.every(n=>Number.isSafeInteger(n)&&Math.abs(n)<=1e14),'Packed vector overflow');state.set(key,{nums,deltas:first});
    return parts[0]!+nums.map((n,i)=>decimal(n)+parts[i+1]!).join('');
   }
   if(v[0]===2)return v.slice(1).map((e,i)=>decode(e,path+'.'+i,state,depth+1));
@@ -118,7 +129,7 @@ export function unpackTimelineCall(source:string):string|null{
  let count=0,totalBytes=0;
  const columns=p.columns.map(c=>{
   check(Array.isArray(c)&&c.length===2&&(typeof c[0]==='string'||c[0]!==null&&typeof c[0]==='object'&&!Array.isArray(c[0])&&Object.keys(c[0]).length===0)&&Array.isArray(c[1]),'Invalid packed column');
-  const state=new Map<string,number[]>();
+  const state=new Map<string,VectorState>();
   const steps=c[1].map(s=>{check(++count<=MAX_CALLS&&Array.isArray(s)&&s.length===2&&methods.has(s[0]),'Invalid packed step');const args=decode(s[1],'',state);check(Array.isArray(args)&&args.length>=1&&args.length<=3,'Invalid packed arguments');
    const line=`tl.${s[0]}(${[c[0],...(args as Literal[])].map(v=>JSON.stringify(v)).join(',')});`;
    totalBytes+=Buffer.byteLength(line);check(totalBytes<=MAX_BYTES,'Expanded timeline exceeds bounds');return line;});return steps;

@@ -1,0 +1,20 @@
+{
+  "name": "full-tracer",
+  "startedAt": "2026-10-10T20:02:41.650Z",
+  "endedAt": "2026-10-10T20:06:42.937Z",
+  "exitCode": 1,
+  "signal": null,
+  "args": [
+    "--import",
+    "tsx",
+    "scripts/native-seat-tracer.ts",
+    "--native-heads",
+    "--staging",
+    "lila-left",
+    "--acting",
+    "listening-think",
+    "--validate",
+    "--frames",
+    "--render"
+  ]
+}
