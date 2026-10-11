@@ -1,0 +1,28 @@
+✖ source preparation clears the old limb and reuses immutable layers across timing edits (41.3247ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3674.0385
+
+✖ failing tests:
+
+test at tests\image-motion-character.test.ts:1:3041
+✖ source preparation clears the old limb and reuses immutable layers across timing edits (41.3247ms)
+  AssertionError [ERR_ASSERTION]: preparation must emit both source layers
+
+  0 !== 2
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-character.test.ts:43:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

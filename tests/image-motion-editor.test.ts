@@ -76,9 +76,9 @@ test('browser uploads, draws and saves a region, then reloads and seeks the same
   // Reusing an older source must select that source, not the last catalog entry.
   page.once('dialog',d=>void d.accept());
   const second=path.join(f.root,'second.png');await fs.writeFile(second,await sharp(f.bytes).negate().png().toBuffer());
-  await (await page.$('#upload'))!.uploadFile(second);
+  await (await page.$('input#upload'))!.uploadFile(second);
   await page.waitForFunction(()=>document.querySelector<HTMLSelectElement>('#image')!.options.length===2&&!document.querySelector<HTMLInputElement>('#upload')!.disabled);
-  await (await page.$('#upload'))!.uploadFile(source);
+  await (await page.$('input#upload'))!.uploadFile(source);
   await page.waitForFunction(()=>!document.querySelector<HTMLInputElement>('#upload')!.disabled);
   assert.equal(await page.$eval('#image',e=>(e as HTMLSelectElement).value),saved.images[0].id,'duplicate upload must reopen its saved regions');
 });

@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "algorithm": "sha256",
+  "files": {
+    "packages/image-motion/scene.ts": "20691967cf308ec91fdd3bd129289c6c1af78b8377806656db92423f0facc407",
+    "packages/image-motion/character-source.ts": "4f06019c9efb45ce00b3a2296f6b39762e5b1b8c9753f5e6e7505e175afd22e1",
+    "packages/image-motion/export-clip.ts": "f249cc719c7b846aa0e45d262c5fbc742fa381e1ef66dec998af7ba9645ff5fb",
+    "scripts/image-motion-character.ts": "16b53f58ec0edb43a2a422b5bdf274c78b4094c856c858fdc3d8d119b32ba29a",
+    "tests/image-motion-character.test.ts": "f2052b2e4ceb6aefed3426631d8ea62a41f9e8fab31add003413b0c6db431ac0",
+    "tests/image-motion-editor.test.ts": "636269e7072e098276b31cef122ef10fafa9edae4815dfd998af992eb64754c3"
+  },
+  "actors": {
+    "lila": {
+      "sourceHash": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+      "maskHash": "92d96368b499b7e4e7b4466e593884d89ed228ca294b84967b6f2334ebb8c9b1",
+      "layerCacheKey": "f552988e2d85e11dd66e634028a214ec110273f394e492f9def07e1b1bfdc0c7",
+      "assetHashes": {
+        "assets/source-original.png": "85e1e03073171d7ba65de930e888f8abd33b946662fe8a99d13837a4fe77d7ce",
+        "assets/original.png": "baae38317ab03ffb596d371656592b039d3c58c28e71c135fc68c5a8a284b229",
+        "assets/image-right-upper.png": "9bf7c4a3c159f4fbf24776b11f70a66a8844936b37795c29c698a85e861ddedc",
+        "assets/image-right-fore.png": "707883470845aea884300d3515e15eb9597794fc77048d59a98569abfbbd45e2",
+        "assets/cloth-occlusion.png": "f0cfed64a7e026617547b252e4bc65b8e95787027e3a162126ac95958c90b4ca",
+        "assets/background.png": "c21cb7f82e478859e5542b03cc9892a27f29ddd5be88572baa5eef4f557fed0c",
+        "assets/static-subject.png": "fb40b964daf06fa665afedb19e672ad004466ff29bdfeb07cbb7459d64ab71d9"
+      },
+      "replacedParts": [
+        "image-right-upper",
+        "image-right-fore"
+      ]
+    },
+    "karo": {
+      "sourceHash": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+      "maskHash": "c9ee7ef1a462354338c63aaf8b6540b76ec15e09ad9447d90cb686388111c476",
+      "layerCacheKey": "ef602e0e7e87b253b5b85649b001e83558135d4e22b32046c271bc2a7583841f",
+      "assetHashes": {
+        "assets/source-original.png": "7106afd9697f5b4be341c46a357fe45981f29bb4b0e58dd136528e6c1e600aa2",
+        "assets/original.png": "03009e21d534bb7989763fe03508d43c00a9ab323d7d5349f6f5e95675712368",
+        "assets/image-right-upper.png": "a6142e6be95f5b13a41912d3d7c1e1ffa62f21abfc7602e55df51008d84677c0",
+        "assets/image-right-fore.png": "6084f81903cc8e2284644a847b96837a4d61644a085cc46840cc0991192bb086",
+        "assets/cloth-occlusion.png": "eec755bd741658a84cb7314b48a303c6ce46d50ee35790968188d7b3b23ff2be",
+        "assets/background.png": "7073915838317f782c040108c2bd2c6f1a4966dc18cb421a58993e2a6ad4ff95",
+        "assets/static-subject.png": "021b8f99e101d9286bad060c231b77e0d984545362c2f66da3ed9cf322480800"
+      },
+      "replacedParts": [
+        "image-right-upper",
+        "image-right-fore"
+      ]
+    }
+  }
+}

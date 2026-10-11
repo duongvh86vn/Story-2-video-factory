@@ -1,0 +1,20 @@
+✔ articulated source parts stay connected at a moving elbow and return on seek (2205.1315ms)
+✔ replacement arm removes the old arm in the rest poster while retaining the source file (512.2486ms)
+✔ static clothing remains source-exact in a moving pose despite a fractional candidate matte (1058.9328ms)
+✔ standalone export encodes the articulated clock and dimensions without claiming production acceptance (3060.8749ms)
+✔ paper repair follows nearby shading and ink layers do not lose source pixels to a candidate matte (243.5964ms)
+✔ source preparation clears the old limb and reuses immutable layers across timing edits (330.5257ms)
+✔ uploads original image once and saves editable regions with revision protection (1637.7027ms)
+✔ browser uploads, draws and saves a region, then reloads and seeks the same pixels (5574.9214ms)
+✔ matching orphaned image files are reused when a publication is retried (514.5885ms)
+✔ rejects invalid regions and busy or corrupt sources without changing the saved book (978.7051ms)
+✔ browser rotates only the selected surface and reproduces arbitrary seeks (1895.4517ms)
+✔ prepared background clears antialiased gear edges and preserves source files (209.7283ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14271.2923

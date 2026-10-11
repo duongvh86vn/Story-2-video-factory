@@ -1,0 +1,36 @@
+✖ articulated source parts stay connected at a moving elbow and return on seek (676.7076ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 914.0105
+
+✖ failing tests:
+
+test at tests\image-motion-character.test.ts:1:351
+✖ articulated source parts stay connected at a moving elbow and return on seek (676.7076ms)
+  AssertionError [ERR_ASSERTION]: upper arm must reach toward the moved elbow
+  + actual - expected
+
+    [
+  +   255,
+  +   255,
+  +   255
+  -   0,
+  -   0,
+  -   0
+    ]
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-character.test.ts:21:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 255, 255, 255 ],
+    expected: [ 0, 0, 0 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

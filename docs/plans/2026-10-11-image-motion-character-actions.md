@@ -2,7 +2,7 @@
 
 ## Yêu cầu mới và giới hạn hiện tại
 
-Người dùng thấy ellipse rotation cứng và hỏi nhân vật có diễn tả hành động không. Câu trả lời hiện tại: **chưa**. Hướng ảnh gốc vẫn giữ, nhưng người cần layer và nhịp diễn; không áp preset bánh răng cho tay hoặc khuôn mặt.
+Người dùng thấy ellipse rotation cứng và hỏi nhân vật có diễn tả hành động không, sau đó yêu cầu **xóa tay cũ và lắp tay mới**. Đã có renderer phân cấp và bản thử một cử chỉ tay; editor Studio hiện vẫn chỉ chọn vùng xoay. Hướng ảnh gốc giữ nguyên, riêng cánh tay được phép thay bằng nét mới. Chưa có diễn hoạt toàn thân hoặc nghiệm thu mỹ thuật.
 
 Demo kế tiếp dùng lại nguồn Lila/Karo đã có, giữ nét, màu, mặt và trang phục. Chưa được dùng các asset sinh lại chưa duyệt làm bằng chứng rằng đã giữ chính xác mẫu gốc. Không sinh ảnh từng frame; không giả phoneme lip-sync.
 
@@ -12,12 +12,23 @@ Demo kế tiếp dùng lại nguồn Lila/Karo đã có, giữ nét, màu, mặt
 
 Nhìn bạn diễn phải có góc mặt/pose phù hợp nguồn; di chuyển hai con mắt trên mặt nhìn thẳng không được gọi là quay đầu tự nhiên. Nếu thiếu ảnh góc nghiêng, báo `needs-pose`; trước tiên dùng chuyển động đầu nhỏ trong góc ảnh hiện có. Không tự vẽ lại mắt/mũi/miệng gốc.
 
-## Công việc triển khai, chưa hoàn thành
+## Phần đã triển khai ngày 11/10
 
-1. Contract layer alpha + crop nguồn + mask + pivot + parent + thứ tự trước/sau + clean plate và provenance. Mọi sửa crop/mask thay cache của layer liên quan; sửa timing không tạo lại ảnh.
-2. Chuẩn bị riêng upper-arm/forearm/hand/head/body khi cần. Mask theo đường viền, không ellipse crop cả nền. Thử nguồn có sẵn; kiểm RGB/biên alpha với ảnh thật. Thiếu nền sau tay phải báo `needs-background`, không để tay cũ nằm dưới tay mới. Phần bị che không có trong một ảnh: cần patch nguồn, layer bổ sung hoặc pose được duyệt.
-3. Renderer keyframe theo thời gian tuyệt đối, hierarchy giữ vai/khuỷu gắn liên tục; anticipation → action → hold → recovery, ease chuyển tốc độ liên tục. Biên độ và vùng di chuyển giới hạn theo asset, không bẻ hình vượt khả năng nguồn.
-4. Preview đứng yên và5–10 giây chuyển động; dùng nguồn thật và góc cận tay/mặt. Kiểm seek/export cùng frame, không mờ/halo/đúp tay, không thay tỷ lệ và màu tổng thể. Giữ các layer để tái sử dụng.
+- [x] Layer nguồn có polygon, alpha, pivot, parent và draw order; lưu nguyên bytes ảnh gốc. Cache kiểm hash; sửa timing dùng lại PNG, sửa hình tay thay cache.
+- [x] Renderer Canvas dùng clock tuyệt đối, keyframe với quintic easing và ma trận parent→child; khuỷu đi theo vai, seek không tích lũy biến dạng.
+- [x] Thay tay phía bên phải ảnh của Lila/Karo bằng hai nét thẳng đầu tròn và bàn tay mới. Mặt/hair/trang phục lấy từ nguồn; tay phía còn lại giữ gốc. Đây là tay trái giải phẫu nếu nhân vật nhìn thẳng khán giả.
+- [x] Xóa vùng tay cũ theo polygon; phục hồi nền giấy đơn giản bằng nội suy hai chiều; lớp quần áo ở phía trước tay mới. Tư thế nghỉ cũng dùng tay mới, không bật về ảnh cũ.
+- [x] CLI chuẩn bị source/layer và xuất clip im lặng 6 giây, 60 fps, 640×800. Hai bản `lila-new-arm-v4` và `karo-new-arm-v4` đã xuất và decode kiểm tra. Kết quả kỹ thuật có trong `../validation/2026-10-11-image-motion-character/REPORT.md`.
+- [ ] Duyệt mỹ thuật tay/vai/bàn tay và nhịp động tác ở tốc độ thật. Không coi test kỹ thuật là bằng chứng đã đạt video mẫu.
+
+Lệnh chạy thật và môi trường: `../topics/IMAGE-MOTION-CHARACTER.md`. Các bản thử dùng lại nguồn/candidate matte hiện có; không gọi sinh ảnh từng frame.
+
+## Công việc còn lại
+
+1. Editor polygon/mask/layer/điểm vai–khuỷu–cổ tay để người dùng áp dụng cho ảnh mới; hiện các mốc được tác giả đặt trong recipe CLI. Thêm clean-plate upload và lock/phê duyệt/provenance gắn với project.
+2. Chuẩn bị tay đối diện, đầu và thân khi cần. Tay bị tóc che cần mask occlusion riêng; không xóa cả tóc để thay tay. Thiếu nền sau tay phải báo `needs-background`; nội suy nền giấy hiện tại không giải quyết cảnh rừng có texture hoặc phần thân bị che.
+3. Phối hợp chuyển trọng tâm, đầu, ánh nhìn và biểu cảm từ asset phù hợp; một động tác tay hiện có chưa đủ thành diễn xuất. Thêm motion presets sau khi người dùng chấp nhận chất lượng; hạn chế theo khả năng nguồn.
+4. Preview đứng yên và5–10 giây chuyển động cho từng asset mới; kiểm mép cắt/vai/halo/nền và sắc độ. Mặt và hai vùng quần áo được đo pixel-exact trên bản thử không chứng minh toàn bộ biên tóc/quần áo của mọi input đã chính xác.
 5. Người dùng kiểm chất lượng động tác trước khi lấy làm preset nhân vật. Sau đó mới nối clock narration và video chung. Chạy/nhảy/quay người cần bộ pose và nghiệm thu riêng, chưa hứa dựng đủ từ một ảnh đứng.
 
 ## Môi trường và nguồn

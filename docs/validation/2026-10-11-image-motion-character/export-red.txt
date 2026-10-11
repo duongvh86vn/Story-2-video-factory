@@ -1,0 +1,28 @@
+✖ standalone export encodes the articulated clock and dimensions without claiming production acceptance (33.6227ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3553.3507
+
+✖ failing tests:
+
+test at tests\image-motion-character.test.ts:1:3115
+✖ standalone export encodes the articulated clock and dimensions without claiming production acceptance (33.6227ms)
+  AssertionError [ERR_ASSERTION]: export must follow the one-second60fps clock
+
+  undefined !== 60
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-character.test.ts:43:81)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 60,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

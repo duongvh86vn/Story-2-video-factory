@@ -1,0 +1,13 @@
+{
+  "combo": "coder",
+  "responseModel": "gpt-6-luna",
+  "usage": {
+    "promptTokens": 7626,
+    "completionTokens": 2276,
+    "totalTokens": 9902
+  },
+  "scope": "source-code-proposal",
+  "localVerification": "focused tests and two actual clips",
+  "imageGenerationCalls": 0,
+  "ttsCalls": 0
+}

@@ -1,0 +1,36 @@
+✖ replacement arm removes the old arm in the rest poster while retaining the source file (172.2197ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3990.7466
+
+✖ failing tests:
+
+test at tests\image-motion-character.test.ts:1:3115
+✖ replacement arm removes the old arm in the rest poster while retaining the source file (172.2197ms)
+  AssertionError [ERR_ASSERTION]: the old vertical arm must be gone even in the new rest image
+  + actual - expected
+
+    [
+  +   0,
+  +   0,
+  +   0
+  -   255,
+  -   255,
+  -   255
+    ]
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-character.test.ts:42:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 0, 0, 0 ],
+    expected: [ 255, 255, 255 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,38 @@
+{
+  "actor": "lila",
+  "checks": [
+    {
+      "timeMs": 0,
+      "changedFace": 0,
+      "changedSourceFace": 0,
+      "changedSourceCloth": 0
+    },
+    {
+      "timeMs": 1600,
+      "changedFace": 0,
+      "changedSourceFace": 0,
+      "changedSourceCloth": 0
+    },
+    {
+      "timeMs": 2500,
+      "changedFace": 0,
+      "changedSourceFace": 0,
+      "changedSourceCloth": 0
+    },
+    {
+      "timeMs": 4200,
+      "changedFace": 0,
+      "changedSourceFace": 0,
+      "changedSourceCloth": 0
+    },
+    {
+      "timeMs": 6000,
+      "changedFace": 0,
+      "changedSourceFace": 0,
+      "changedSourceCloth": 0,
+      "restPngRawExact": true
+    }
+  ],
+  "qualityAccepted": false,
+  "productionReady": false
+}

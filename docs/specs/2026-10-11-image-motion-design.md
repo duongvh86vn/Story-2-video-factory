@@ -1,12 +1,14 @@
 # Luồng ảnh gốc → chuyển động → video
 
-Ngày: 11/10/2026. Trạng thái: **người dùng đã cho phép demo bằng bộ ảnh flow_doodle cũ; slice chuyển động vật thể đã xuất, toàn bộ luồng ảnh chưa triển khai hoặc nghiệm thu**.
+Ngày: 11/10/2026. Trạng thái: **slice xoay vật thể, editor nhập ảnh và bản thử tay thay mới đã triển khai; toàn bộ luồng nội dung → ảnh → video chưa hoàn thành hoặc nghiệm thu**. Xem `../topics/IMAGE-MOTION-CHARACTER.md` và `../validation/2026-10-11-image-motion-character/REPORT.md` cho lệnh/evidence của bản tay mới.
 
 ## 1. Yêu cầu hiện hành
 
 Người dùng cung cấp **một ảnh PNG/JPG hoàn chỉnh**. Tool hỗ trợ tách phần cần chuyển động, giữ thiết kế, nét vẽ, trang phục, khuôn mặt và màu sắc của ảnh. Chuyển động phục vụ câu chuyện: đưa tay ra, lửa bập bùng, di chuyển, hoặc động cơ/bánh răng quay. Không bắt mọi cảnh phải có nhiều chuyển động.
 
 Người dùng đã bác bỏ chất lượng rig hiện tại: tay luôn cong, cử chỉ cứng, chất lượng hình không đạt. Các test toán học hoặc render thành công không thay thế đánh giá đó. Không tiếp tục coi rig Lila/Karo hiện tại là nguồn hình mặc định của luồng đề xuất.
+
+Yêu cầu bổ sung: có thể **xóa tay cũ và lắp tay mới** cho đẹp. Đây là quyền thay vùng tay có kiểm soát; không phải quyền tự vẽ lại mặt/tóc/trang phục hay đổi bảng màu. Bản thử hiện thay một tay ở phía bên phải ảnh bằng nét thẳng đầu tròn, hai đoạn nối ở khuỷu. Hình gốc lưu riêng; poster nghỉ và các frame chuyển động đều phải dùng cùng tay thay mới. Ảnh/layer được cache, sửa động tác không gọi sinh lại ảnh.
 
 Mục tiêu tool vẫn là đưa nội dung vào để ra video. Hai nhân vật thời tiền sử là diễn viên trong câu chuyện; hệ thống cũng phải dùng được cho vật thể, máy móc và các chủ đề khác. Ví dụ bánh răng chỉ là một ca sử dụng.
 
