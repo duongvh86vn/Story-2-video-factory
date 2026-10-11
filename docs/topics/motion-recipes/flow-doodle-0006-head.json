@@ -1,0 +1,100 @@
+{
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "durationMs": 6000,
+  "patchSampleX": 60,
+  "patchMode": "column",
+  "repairRegion": "polygon",
+  "repairMargin": 0,
+  "parts": [
+    {
+      "id": "presenter-head",
+      "image": "assets/presenter-head.png",
+      "pivot": {
+        "x": 303,
+        "y": 700
+      },
+      "polygon": [
+        [
+          113,
+          297
+        ],
+        [
+          459,
+          297
+        ],
+        [
+          459,
+          638
+        ],
+        [
+          407,
+          678
+        ],
+        [
+          346,
+          700
+        ],
+        [
+          294,
+          706
+        ],
+        [
+          232,
+          687
+        ],
+        [
+          176,
+          650
+        ],
+        [
+          148,
+          609
+        ],
+        [
+          127,
+          550
+        ],
+        [
+          111,
+          487
+        ]
+      ],
+      "frames": [
+        {
+          "timeMs": 0,
+          "angle": 0
+        },
+        {
+          "timeMs": 450,
+          "angle": 0
+        },
+        {
+          "timeMs": 1350,
+          "angle": -2.2
+        },
+        {
+          "timeMs": 2300,
+          "angle": 0
+        },
+        {
+          "timeMs": 3250,
+          "angle": 1.4
+        },
+        {
+          "timeMs": 4150,
+          "angle": 0
+        },
+        {
+          "timeMs": 5100,
+          "angle": -1.3
+        },
+        {
+          "timeMs": 6000,
+          "angle": 0
+        }
+      ]
+    }
+  ]
+}

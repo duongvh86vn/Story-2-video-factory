@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "codeFingerprints": {
+    "packages/image-motion/flow-timeline.ts": "72fed544ccdc5ff4feb85c456b67450ccd845e158bcfa7a7e203801231b1ae74",
+    "packages/image-motion/export-clip.ts": "9c6cdedfa93b4a472bc095edafef8868038ab7f886ee9d320662853022e886d3",
+    "scripts/image-motion-source-part.ts": "dd7cc13ee59e247edf453622b314ea6b0a2ceb8eaae12d7a66ed45d8be618e15",
+    "scripts/image-motion-timestamp.ts": "397cea34459aac275d6b14a32058da4c9325f7ace01c45b8d8b57f5c95d81ad9",
+    "tests/image-motion-timestamp.test.ts": "7b339608b0326b24f28650d574f2d1afe7a398add4a2255ee1da18e13c2d1e8e"
+  },
+  "metadataUnchanged": true,
+  "sourceImagesUnchanged": true
+}
