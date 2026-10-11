@@ -1,0 +1,36 @@
+✖ prepared background clears antialiased gear edges and preserves source files (128.9568ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 481.4019
+
+✖ failing tests:
+
+test at tests\image-motion.test.ts:1:2673
+✖ prepared background clears antialiased gear edges and preserves source files (128.9568ms)
+  AssertionError [ERR_ASSERTION]: a faint source edge must not remain as a ghost
+  + actual - expected
+
+    [
+  +   152,
+  +   207,
+  +   247
+  -   142,
+  -   201,
+  -   242
+    ]
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion.test.ts:47:35)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 152, 207, 247 ],
+    expected: [ 142, 201, 242 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

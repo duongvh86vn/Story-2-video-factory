@@ -1,0 +1,6 @@
+
+> story-to-video-factory@2.1.0 test:typecheck
+> tsc -p tsconfig.tests.json
+
+tests/native-support-gait-continuity.test.ts(13,29): error TS18048: 'a.paths' is possibly 'undefined'.
+tests/native-support-gait-continuity.test.ts(13,61): error TS18048: 'b.paths' is possibly 'undefined'.

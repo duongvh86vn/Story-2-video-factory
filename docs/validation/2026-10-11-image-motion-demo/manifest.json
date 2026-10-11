@@ -1,0 +1,186 @@
+{
+  "demo": {
+    "version": 1,
+    "fps": 60,
+    "scenes": [
+      {
+        "id": "drive-disc",
+        "width": 1920,
+        "height": 1080,
+        "durationMs": 5000,
+        "original": "assets/0002.png",
+        "background": "assets/0002.png",
+        "layers": [
+          {
+            "id": "drive-disc",
+            "image": "assets/0002.png",
+            "kind": "surface",
+            "cx": 1172,
+            "cy": 667,
+            "rx": 103,
+            "ry": 111,
+            "periodMs": 2400,
+            "direction": -1
+          }
+        ]
+      },
+      {
+        "id": "isolated-gears",
+        "width": 1920,
+        "height": 1080,
+        "durationMs": 5000,
+        "original": "assets/0013.png",
+        "background": "assets/gears-background.png",
+        "layers": [
+          {
+            "id": "silver-left",
+            "image": "assets/silver-left.png",
+            "kind": "cutout",
+            "cx": 161,
+            "cy": 224,
+            "rx": 62,
+            "ry": 62,
+            "periodMs": 3400,
+            "direction": 1,
+            "rect": {
+              "x": 95,
+              "y": 158,
+              "width": 132,
+              "height": 132
+            }
+          },
+          {
+            "id": "orange-left",
+            "image": "assets/orange-left.png",
+            "kind": "cutout",
+            "cx": 176,
+            "cy": 937,
+            "rx": 76,
+            "ry": 76,
+            "periodMs": 4400,
+            "direction": -1,
+            "rect": {
+              "x": 96,
+              "y": 857,
+              "width": 160,
+              "height": 160
+            }
+          },
+          {
+            "id": "silver-right-top",
+            "image": "assets/silver-right-top.png",
+            "kind": "cutout",
+            "cx": 1619,
+            "cy": 219,
+            "rx": 53,
+            "ry": 53,
+            "periodMs": 3000,
+            "direction": -1,
+            "rect": {
+              "x": 1562,
+              "y": 162,
+              "width": 114,
+              "height": 114
+            }
+          },
+          {
+            "id": "silver-right-bottom",
+            "image": "assets/silver-right-bottom.png",
+            "kind": "cutout",
+            "cx": 1389,
+            "cy": 812,
+            "rx": 73,
+            "ry": 73,
+            "periodMs": 4000,
+            "direction": 1,
+            "rect": {
+              "x": 1312,
+              "y": 735,
+              "width": 154,
+              "height": 154
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "sources": [
+    {
+      "source": "C:\\Users\\Duongvh-pc\\Documents\\Codex\\2026-04-29\\files-mentioned-by-the-user-readme\\gemini-novel-translator-studio-restored\\app\\exports\\flow_doodle\\3bec044e0bb441d49c6277acd74ac763\\images_fullhd\\0002.png",
+      "copy": "assets/0002.png",
+      "sha256": "0021ec408d13f288a125b0224603fa74f8ebdde189a54a62cb2ae06e4c4697f1",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "source": "C:\\Users\\Duongvh-pc\\Documents\\Codex\\2026-04-29\\files-mentioned-by-the-user-readme\\gemini-novel-translator-studio-restored\\app\\exports\\flow_doodle\\3bec044e0bb441d49c6277acd74ac763\\images_fullhd\\0013.png",
+      "copy": "assets/0013.png",
+      "sha256": "1181ca00df046557ad941d2c136e22aa81db07eea5dfcb0d9881606b74568f8a",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "gears": [
+    {
+      "id": "silver-left",
+      "region": {
+        "cx": 161,
+        "cy": 224,
+        "radius": 62
+      },
+      "backgroundRGB": [
+        142,
+        201,
+        242
+      ],
+      "foregroundPixels": 10010,
+      "repair": "Only the old visible gear footprint is filled with RGB sampled from its neighboring source background; hidden geometry is not inferred."
+    },
+    {
+      "id": "orange-left",
+      "region": {
+        "cx": 176,
+        "cy": 937,
+        "radius": 76
+      },
+      "backgroundRGB": [
+        142,
+        200,
+        242
+      ],
+      "foregroundPixels": 13543,
+      "repair": "Only the old visible gear footprint is filled with RGB sampled from its neighboring source background; hidden geometry is not inferred."
+    },
+    {
+      "id": "silver-right-top",
+      "region": {
+        "cx": 1619,
+        "cy": 219,
+        "radius": 53
+      },
+      "backgroundRGB": [
+        141,
+        202,
+        243
+      ],
+      "foregroundPixels": 6906,
+      "repair": "Only the old visible gear footprint is filled with RGB sampled from its neighboring source background; hidden geometry is not inferred."
+    },
+    {
+      "id": "silver-right-bottom",
+      "region": {
+        "cx": 1389,
+        "cy": 812,
+        "radius": 73
+      },
+      "backgroundRGB": [
+        134,
+        203,
+        245
+      ],
+      "foregroundPixels": 13580,
+      "repair": "Only the old visible gear footprint is filled with RGB sampled from its neighboring source background; hidden geometry is not inferred."
+    }
+  ],
+  "directory": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\demos\\old-project-motion-v3"
+}

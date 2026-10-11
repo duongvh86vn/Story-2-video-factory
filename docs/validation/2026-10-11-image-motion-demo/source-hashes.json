@@ -1,0 +1,29 @@
+{
+  "recorded": "2026-10-11T04:37:45.620Z",
+  "hashes": [
+    {
+      "file": "packages/image-motion/scene.ts",
+      "sha256": "c4acef694db88ca841a44743e723a9c8f937f2258a9a88028a7a432dc14cc913"
+    },
+    {
+      "file": "packages/image-motion/prepare.ts",
+      "sha256": "b87b26ebf32297173b8ca21957f26b1428b03a71a72503d5d3ffb2de152750aa"
+    },
+    {
+      "file": "packages/image-motion/export.ts",
+      "sha256": "41109a49269a7845a65dd30e3b9264d9f78fe67207ba8b734b34d6a10471f6f3"
+    },
+    {
+      "file": "scripts/image-motion-demo.ts",
+      "sha256": "4c05896595cced3a17623397a7626bf2067eec988b4d5842fccb753624bf6ec5"
+    },
+    {
+      "file": "tests/image-motion.test.ts",
+      "sha256": "11d4b623a6883eaf5146b1f5d7d7701d281aa5c5af63e1b619157f6d0834b895"
+    }
+  ],
+  "movie": {
+    "path": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\demos\\old-project-motion-v3\\demo.mp4",
+    "sha256": "1a2a6fa6005b173807be2dd2b51c52f0daae70ad383b1834d956f3164f63f314"
+  }
+}
