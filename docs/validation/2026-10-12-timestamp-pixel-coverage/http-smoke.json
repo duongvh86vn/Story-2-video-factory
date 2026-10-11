@@ -1,0 +1,12 @@
+{
+  "rangeStatus": 206,
+  "rangeBytes": 32,
+  "staleStatus": 409,
+  "staleCode": "STALE_REVISION",
+  "catalogExported": [
+    1,
+    2,
+    6,
+    13
+  ]
+}

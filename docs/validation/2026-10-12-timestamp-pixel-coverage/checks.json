@@ -1,0 +1,52 @@
+{
+  "candidateTree": "ee98aa7e9d60bb828964f4b5a897cca7c795def7",
+  "node": "24.19.0",
+  "renderer": "fixed HTML5 Canvas + Chrome154 + FFmpeg",
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0
+  },
+  "runtimeTests": {
+    "command": "node --experimental-test-module-mocks --import tsx --test --test-concurrency=1 <10 image motion/timestamp/crop test files>",
+    "pass": 32,
+    "fail": 0,
+    "skip": 0,
+    "exitCode": 0
+  },
+  "cliTypecheck": {
+    "command": "node node_modules/typescript/bin/tsc -p runtime/verification/tsconfig.json",
+    "includes": [
+      "tests/image-timestamp-pixel-coverage.test.ts",
+      "tests/image-clean-crop.test.ts",
+      "scripts/image-motion-clean-crop.ts",
+      "scripts/image-motion-timestamp-studio.ts"
+    ],
+    "exitCode": 0
+  },
+  "cleanCropCli": {
+    "exitCode": 0,
+    "key": "05632bcc091a6bb96063a90adab2e56ee3f5587a182ae8cd4861b60b9506e54e",
+    "plateHash": "7bdabed64737ae9bc827755bb16dbb86fd863fa5bd78e3c06a56bc351380957c",
+    "reused": true
+  },
+  "gateway": {
+    "calls": 1,
+    "model": "gpt-6-luna",
+    "totalTokens": 6750,
+    "scope": "bounded source proposal"
+  },
+  "imagegen": {
+    "calls": 1,
+    "mode": "builtin edit",
+    "asset": "docs/topics/assets/image-motion/flow-doodle-0001-neck-clean-crop-v1.png",
+    "scope": "hidden neck/background crop; original head retained"
+  },
+  "qualityAccepted": false,
+  "productionReady": false,
+  "fullGoalComplete": false,
+  "trackedTestTypecheck": {
+    "command": "npm run test:typecheck",
+    "exitCode": 0,
+    "scope": "all tracked test sources in candidate snapshot; unrelated untracked native gait test excluded"
+  }
+}

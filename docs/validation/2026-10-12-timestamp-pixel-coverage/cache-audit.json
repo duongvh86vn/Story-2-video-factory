@@ -1,0 +1,26 @@
+[
+  {
+    "clipId": 2,
+    "directory": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\timestamp-flow-60-v2\\clip-0002-ccf25b0bdac3ec01",
+    "movieHash": "334a5626ad5554312521793730af53dfb8ae1ac28451bf2b069895ed697bd867",
+    "beforeStatus": "exported",
+    "afterStatus": "exported",
+    "available": true
+  },
+  {
+    "clipId": 6,
+    "directory": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\timestamp-workbench\\studio\\attempts\\ebb39f77-d138-415c-a233-6ac8378c2c0c\\6\\clip-0006-79d40d623531f4dc",
+    "movieHash": "35b393742df9729750b1b443cd8b4b9e3ed47d1ca742e553d8ffe31afdeb4d9d",
+    "beforeStatus": "exported",
+    "afterStatus": "exported",
+    "available": true
+  },
+  {
+    "clipId": 13,
+    "directory": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\timestamp-workbench\\studio\\attempts\\ebb39f77-d138-415c-a233-6ac8378c2c0c\\13\\clip-0013-2842d431d007c518",
+    "movieHash": "ae11ad8be8cd5ae38e5d825097ef4999d5a1538134231c87a991bdc53c08496f",
+    "beforeStatus": "exported",
+    "afterStatus": "exported",
+    "available": true
+  }
+]

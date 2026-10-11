@@ -11,7 +11,7 @@ export interface InkArmReplacement {
   hand?:{width:number;height:number;thumbSide?:'left'|'right'};
 }
 export interface SourcePart extends ArticulatedPart {polygon:[number,number][];inkOnly?:boolean;remove?:boolean;replacement?:InkArmReplacement}
-export interface CharacterSourceRecipe {width:number;height:number;durationMs:number;fps:number;patchSampleX:number;patchMode?:'column'|'paper-interpolate'|'paper-harmonic';repairRegion?:'ink'|'polygon';repairMargin?:number;protectSubject?:boolean;parts:SourcePart[]}
+export interface CharacterSourceRecipe {width:number;height:number;durationMs:number;fps:number;patchSampleX:number;matteMode?:'alpha'|'source-pixels';patchMode?:'column'|'paper-interpolate'|'paper-harmonic';repairRegion?:'ink'|'polygon';repairMargin?:number;protectSubject?:boolean;parts:SourcePart[]}
 export interface PreparedCharacter {directory:string;demo:ImageMotionDemo;layerCacheKey:string;assetHashes:Record<string,string>;sourceHash:string;maskHash:string;cleanPlateHash?:string}
 export const SOURCE_PART_VERSION='source-parts-7';
 export async function prepareCharacterSource(source:string,mask:string,directory:string,recipe:CharacterSourceRecipe,cacheRoot:string,cleanPlate?:string):Promise<PreparedCharacter>{
@@ -34,9 +34,10 @@ export async function prepareCharacterSource(source:string,mask:string,directory
     if(parent&&(parent.to.x!==r.from.x||parent.to.y!==r.from.y))throw new Error('Replacement arm segments must meet at their shared joint');
   }
   // Motion/pivots are excluded: changing the acting must not regenerate pixels.
+  if(recipe.matteMode!==undefined&&!['alpha','source-pixels'].includes(recipe.matteMode))throw new Error('Unknown source matte mode');
   if(recipe.patchMode!==undefined&&!['column','paper-interpolate','paper-harmonic'].includes(recipe.patchMode))throw new Error('Unknown source background repair');
   const margin=recipe.repairMargin??1;if(!Number.isInteger(margin)||margin<0||margin>32||recipe.repairRegion!==undefined&&!['ink','polygon'].includes(recipe.repairRegion))throw new Error('Invalid source repair region');
-  const layerCacheKey=hash({version:recipe.parts.some(p=>p.remove===false)?'source-static-1':SOURCE_PART_VERSION,sourceHash,maskHash,cleanPlateHash,width:recipe.width,height:recipe.height,patchSampleX:recipe.patchSampleX,patchMode:recipe.patchMode??'column',repairRegion:recipe.repairRegion??'ink',margin,protectSubject:recipe.protectSubject??false,parts:recipe.parts.map(({id,polygon,inkOnly,remove,replacement})=>({id,polygon,inkOnly,remove,replacement}))}),cache=path.join(path.resolve(cacheRoot),layerCacheKey);
+  const layerCacheKey=hash({version:recipe.matteMode==='source-pixels'?'source-pixel-coverage-1':recipe.parts.some(p=>p.remove===false)?'source-static-1':SOURCE_PART_VERSION,sourceHash,maskHash,cleanPlateHash,width:recipe.width,height:recipe.height,patchSampleX:recipe.patchSampleX,patchMode:recipe.patchMode??'column',repairRegion:recipe.repairRegion??'ink',margin,protectSubject:recipe.protectSubject??false,parts:recipe.parts.map(({id,polygon,inkOnly,remove,replacement})=>({id,polygon,inkOnly,remove,replacement}))}),cache=path.join(path.resolve(cacheRoot),layerCacheKey);
   const names=['assets/source-original.png','assets/original.png','assets/background.png',...(plateBytes?['assets/clean-plate.png']:[]),...parts.map(p=>p.image)];
   let assetHashes:Record<string,string>|undefined;
   const verify=async(dir:string,hashes:Record<string,string>)=>{
@@ -57,6 +58,7 @@ export async function prepareCharacterSource(source:string,mask:string,directory
         const si=(y*sw+x)*4,di=(y*w+x)*4;
         if(p.remove!==false&&polygon[si+3]!>0)region[y*w+x]=1;
         if(p.inkOnly){const r=sourceRaw[si]!,g=sourceRaw[si+1]!,b=sourceRaw[si+2]!;if((r+g+b)/3>100||Math.max(r,g,b)-Math.min(r,g,b)>45)continue;}
+        if(recipe.matteMode==='source-pixels'&&polygon[si+3]!>0&&(p.remove===false||p.inkOnly||alpha[si+3]!>0)){layer.set(sourceRaw.subarray(si,si+4),di);if(p.remove!==false)remove[y*w+x]=1;continue;}
         let a=Math.round((p.remove===false||p.inkOnly?sourceRaw[si+3]!:alpha[si+3]!)*polygon[si+3]!/255);if(!a)continue;
         // Static occlusion keeps baked source pixels opaque. Applying a second
         // fractional matte over the same RGB introduces premultiplication color

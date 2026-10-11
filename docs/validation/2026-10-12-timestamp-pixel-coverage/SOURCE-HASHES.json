@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "candidateTree": "ee98aa7e9d60bb828964f4b5a897cca7c795def7",
+  "files": [
+    {
+      "file": "packages/image-motion/character-source.ts",
+      "sha256": "10214c163a2aae6fefe4d30ac7eeb2e10e604f85e874fce0a9e8e149b2ca2619",
+      "bytes": 16158
+    },
+    {
+      "file": "packages/image-motion/timestamp-prepare.ts",
+      "sha256": "79d065486927e918d6eb59842d5e08d050369ee3a37e24fb174e4bbc930f782e",
+      "bytes": 6944
+    },
+    {
+      "file": "packages/image-motion/register-clean-crop.ts",
+      "sha256": "1ba714e729a7a8b9f11154ab8bbb81c5c43437eb5040ffe8a4ecf97e3e92cb6b",
+      "bytes": 3986
+    },
+    {
+      "file": "scripts/image-motion-clean-crop.ts",
+      "sha256": "80f076cf893eef22062efc63c23293b703bad8e42c832af453a2ff41ccc8fa8d",
+      "bytes": 1451
+    },
+    {
+      "file": "tests/image-timestamp-pixel-coverage.test.ts",
+      "sha256": "af8509994b4c4c8c1f092f7fbc9cf85e7d6103bcbbeb0e7d16cfe01fae638c07",
+      "bytes": 4717
+    },
+    {
+      "file": "tests/image-clean-crop.test.ts",
+      "sha256": "a043a9fab8f7091113877fda94fdb1af89c8f0d53155a309f044dd2858e375fa",
+      "bytes": 2998
+    },
+    {
+      "file": "docs/plans/2026-10-12-timestamp-pixel-coverage.md",
+      "sha256": "d49870263a412a7a219e757cb781856656be69f82a4a56f61dd93ccdc2869fbe",
+      "bytes": 2477
+    },
+    {
+      "file": "docs/topics/IMAGE-TIMESTAMP-MOTION.md",
+      "sha256": "b33db3fc840acf38ef5214f0105f5eefd58fcbd93b79824f12f1278915b4a942",
+      "bytes": 15677
+    },
+    {
+      "file": "docs/topics/motion-recipes/flow-doodle-0001-head-editor.json",
+      "sha256": "17e5c8802581bc89ab00f25ca98ef0e56b393bd7f8e292b967c7610f9bf6a9f4",
+      "bytes": 1681
+    },
+    {
+      "file": "docs/topics/assets/image-motion/flow-doodle-0001-neck-clean-crop-v1.png",
+      "sha256": "4424e2bcb8ad281e78471d7f46db0177128cf67f7729c27c15bd8489b9d16661",
+      "bytes": 1293969
+    },
+    {
+      "file": "docs/topics/assets/image-motion/flow-doodle-0001-neck-clean-crop-v1.md",
+      "sha256": "45961581088356de98a2dc16f285cf896ca31c54b8b78068ecbb053c2278a13b",
+      "bytes": 2126
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/actual-clip-qc.json",
+      "sha256": "78e522af4334845db700e9057f411554f751b922601f883f7bcd5f6de26d3ac8",
+      "bytes": 3620
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/actual-pixel-audit.json",
+      "sha256": "0d1447492dd0412808e99a8a8d9617c65fa60aaca088ff635f4f7d9ab47b7be3",
+      "bytes": 881
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/cache-audit.json",
+      "sha256": "6cb85dc363300c16e0e332757bd34e2139b7dbd292bde7bfccaa0a796d4851ab",
+      "bytes": 1252
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/clean-crop-registration.json",
+      "sha256": "790a44849f53195de47030c788ccd938c2c1c5255011765e81bf2ef0d1312667",
+      "bytes": 917
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/http-smoke.json",
+      "sha256": "49b38474ee32ad0e974fb414c9eb56512137c23b12f685ad18ce90252e326009",
+      "bytes": 156
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/neck-after.png",
+      "sha256": "a255bbac9e7426becaa908368a1e9245e3a728e28d17ae73d437b395a8500e31",
+      "bytes": 189238
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/neck-before.png",
+      "sha256": "32e4bbe34b6cde5c14c9b5608abc657b74723ec24a83a8d8f8d588658b0e2e83",
+      "bytes": 190760
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/neck-source.png",
+      "sha256": "b7dd9e3e8c0f592405037a6d875de1b831cc4a6bab89fea723e1d0a744302e2b",
+      "bytes": 184265
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/REPORT.md",
+      "sha256": "3121d8d4b613b4de97b5a291a3ce6701d3ca06daef4173a9c63453d64d8a8824",
+      "bytes": 7092
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-pixel-coverage/checks.json",
+      "sha256": "9cc558569c0475bfc4432d1acea7388fd3536291fa531ed99f25405fdccc647a",
+      "bytes": 1651
+    }
+  ],
+  "source": {
+    "file": "C:/Users/Duongvh-pc/Documents/Codex/2026-04-29/files-mentioned-by-the-user-readme/gemini-novel-translator-studio-restored/app/exports/flow_doodle/3bec044e0bb441d49c6277acd74ac763/images_fullhd/0001.png",
+    "sha256": "17fc0416ce28169f035707ceb49789d7b77710de596460d9befd2471c3d8f8b6"
+  }
+}

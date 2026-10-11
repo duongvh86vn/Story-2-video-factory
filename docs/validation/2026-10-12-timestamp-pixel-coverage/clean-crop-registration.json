@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "key": "05632bcc091a6bb96063a90adab2e56ee3f5587a182ae8cd4861b60b9506e54e",
+  "directory": "C:\\Users\\Duongvh-pc\\.codex\\worktrees\\stickman-acting-v22\\Story-2-video-factory2.1\\runtime\\image-motion\\timestamp-seam\\clean-crops\\05632bcc091a6bb96063a90adab2e56ee3f5587a182ae8cd4861b60b9506e54e",
+  "sourceHash": "17fc0416ce28169f035707ceb49789d7b77710de596460d9befd2471c3d8f8b6",
+  "cropHash": "4424e2bcb8ad281e78471d7f46db0177128cf67f7729c27c15bd8489b9d16661",
+  "options": {
+    "rect": {
+      "left": 200,
+      "top": 110,
+      "width": 450,
+      "height": 450
+    },
+    "background": {
+      "sourceColumn": 0,
+      "cropX": 0,
+      "cropY": 0,
+      "tolerance": 40
+    }
+  },
+  "width": 1920,
+  "height": 1080,
+  "plateHash": "7bdabed64737ae9bc827755bb16dbb86fd863fa5bd78e3c06a56bc351380957c",
+  "normalizedPixels": 162465,
+  "productionReady": false,
+  "qualityAccepted": false
+}

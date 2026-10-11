@@ -1,0 +1,57 @@
+{
+  "headPixels": 71917,
+  "headMismatch": 0,
+  "outsideCropMismatch": 0,
+  "checks": [
+    {
+      "timeMs": 0,
+      "changed": 0,
+      "bounds": [
+        1920,
+        1080,
+        0,
+        0
+      ],
+      "outsideHead": 0,
+      "body": 0
+    },
+    {
+      "timeMs": 2880,
+      "changed": 52929,
+      "bounds": [
+        234,
+        144,
+        511,
+        449
+      ],
+      "outsideHead": 0,
+      "body": 0
+    },
+    {
+      "timeMs": 5760,
+      "changed": 0,
+      "bounds": [
+        1920,
+        1080,
+        0,
+        0
+      ],
+      "outsideHead": 0,
+      "body": 0
+    },
+    {
+      "timeMs": 2880,
+      "changed": 52929,
+      "bounds": [
+        234,
+        144,
+        511,
+        449
+      ],
+      "outsideHead": 0,
+      "body": 0
+    }
+  ],
+  "scope": "uncompressed fixed Canvas RGBA; not lossy MP4 pixels",
+  "qualityAccepted": false
+}

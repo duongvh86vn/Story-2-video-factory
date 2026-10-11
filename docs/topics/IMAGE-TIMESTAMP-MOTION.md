@@ -1,6 +1,6 @@
 # Ảnh của project → clip chuyển động theo timestamp
 
-Phạm vi hiện tại: xử lý từng ảnh, giữ nét vẽ và màu, xuất clip im lặng để đặt vào timeline/audio đã có. Ưu tiên 60 fps. Không tự viết lời, không tạo lại ảnh, không chèn chú thích mới lên video. Chữ đã nằm trong ảnh gốc vẫn giữ nguyên. Editor chuẩn bị tay là luồng riêng; cổng 8858 cũ chưa được khởi động/kiểm thử lại trong chặng này. Bàn làm việc timestamp đã có danh mục, xem trước, xuất từng cảnh/nhóm cảnh đã chuẩn bị và cache; chưa tự tách chuyển động cho cả 24 ảnh.
+Phạm vi hiện tại: xử lý từng ảnh, giữ nét vẽ và màu, xuất clip im lặng để đặt vào timeline/audio đã có. Ưu tiên 60 fps. Không tự viết lời, không tạo lại toàn cảnh/nhân vật, không chèn chú thích mới lên video. Chữ đã nằm trong ảnh gốc vẫn giữ nguyên. Nền bị che có thể dùng một asset phục hồi riêng rồi tái sử dụng. Editor chuẩn bị tay là luồng riêng; cổng 8858 cũ chưa được khởi động/kiểm thử lại trong chặng này. Bàn làm việc timestamp đã có danh mục, xem trước, xuất từng cảnh/nhóm cảnh đã chuẩn bị và cache; chưa tự tách chuyển động cho cả 24 ảnh.
 
 ## Nguồn đã đọc
 
@@ -73,6 +73,8 @@ Checkout mới có thể dùng `docs/topics/motion-recipes/empty-timestamp-bindi
 
 ## Clock, cache và kết quả
 
+Timestamp preparer `timestamp-parts-3` lấy RGBA gốc ở pixel có coverage của mask/polygon tự sinh (`matteMode:source-pixels`), tránh nhân coverage hai lần rồi xóa nền cứng gây pop mép. Kiểm chứng hiện là ảnh PNG đục; không gọi đây là semantic matting hoặc giải pháp mọi ảnh trong suốt. Helper source-part cũ vẫn mặc định `alpha`, giữ cache/semantics cũ. Bản chuẩn bị v3 có output/cache riêng; artifact cũ được giữ.
+
 Mỗi biên frame tính từ timestamp tuyệt đối: `floor(timestamp_ms × fps / 1000 + 0.5)`. Clip có `endFrame - startFrame` frame; không làm tròn riêng từng thời lượng rồi cộng dồn. Sai số mỗi biên ở 60 fps tối đa 8.333 ms. Khi ghép, dùng startFrame/endFrame trong `timing.json` và giữ gaps; không nối tất cả clip sát nhau rồi bỏ khoảng nghỉ.
 
 Keyframe tay/đầu được retime vào thời lượng cảnh. Bánh quay giữ chu kỳ cơ học đã chọn. Renderer HTML5/Canvas vẽ trực tiếp 60 frame mỗi giây; Chrome và FFmpeg xuất H.264 MP4. Không gọi TTS/model trong bước render.
@@ -86,8 +88,24 @@ Output mỗi clip: `demo.mp4`, `index.html`, `timing.json`, `qc-report.json`, pr
 - Đạo diễn/artist qua9router đề xuất recipe, người vận hành xem và duyệt chất lượng. Đề xuất không được thực thi như code.
 - Ghép toàn bộ timeline/voice, review/repair, final/QC theo mục tiêu chung sau khi chuyển động từng ảnh được duyệt.
 
+## Dùng lại nền phục hồi nhỏ
+
+Ảnh0001 có một crop nền cổ được tạo một lần bằng built-in imagegen, nằm ở `docs/topics/assets/image-motion/flow-doodle-0001-neck-clean-crop-v1.png`. Pixel mặt/đầu và thân dùng ảnh nguồn. Không đưa cả crop được sinh vào toàn cảnh. CLI đăng ký crop với rectangle rõ ràng, giữ RGBA ngoài rectangle, chống kéo giãn sai tỷ lệ và ghi cache/hash bất biến:
+
+```powershell
+$cleanCrop = node --import tsx scripts/image-motion-clean-crop.ts --source "$flowExport/images_fullhd/0001.png" --crop docs/topics/assets/image-motion/flow-doodle-0001-neck-clean-crop-v1.png --rect 200,110,450,450 --output runtime/image-motion/clean-crops --background-column 0 --background-sample 0,0 --tolerance 40 | ConvertFrom-Json
+$sceneState = Invoke-RestMethod http://127.0.0.1:8860/api/image-timestamp/definition/1
+$plateReceipt = Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:8860/api/image-timestamp/background/1?revision=$($sceneState.revision)" -ContentType image/png -InFile $cleanCrop.plateFile
+$motionDefinition = Get-Content docs/topics/motion-recipes/flow-doodle-0001-head-editor.json -Raw | ConvertFrom-Json
+$motionDefinition.background.cleanPlateId = $plateReceipt.cleanPlateId
+$prepareBody = @{revision=$plateReceipt.revision;definition=$motionDefinition} | ConvertTo-Json -Depth 15
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8860/api/image-timestamp/definition/1 -ContentType application/json -Body $prepareBody
+```
+
+Chạy với source0001 và server đã cấu hình export này; ID của plate lấy từ upload thực tế, không giả định hash luôn giống trên mọi phiên bản Sharp. Các lệnh này lưu/chỉnh cảnh1 riêng. Sau đó mở bàn làm việc và xuất cảnh1. Clock lấy từ export, không sửa bằng recipe. Không chạy khi có job đang xuất. Đổi góc/timestamp dùng lại crop và layer cache; không gọi tạo ảnh lại. `background-column`/sample/tolerance là lựa chọn màu do người vận hành kiểm tra, không tự phân đoạn nền có texture. Nền sạch vẫn chỉ áp vào vùng bị xóa của bộ phận, không thay thân/cảnh.
+
 Bốn clip local hiện có là mẫu chẩn đoán, chưa chứng minh chất lượng diễn xuất của toàn bộ video. Phần nối narration đang dở được giữ riêng theo yêu cầu tập trung từng ảnh. Kết quả workbench mới: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-workbench/REPORT.md).
 
 Chặng editor/API và clip 0001: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-motion-editor/REPORT.md). 25 test tập trung và build/typecheck đã qua; không thay thế nghiệm thu chất lượng hình hoặc final có giọng.
 
-Chặng vật che: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-foreground/REPORT.md). Clip0001 giữ cổ áo đứng yên và có 346 frame ở60fps; đường nối cổ vẫn chưa đạt khi soi gần. Tiến độ chức năng toàn dự án ước lượng49%, không phải tỷ lệ nghiệm thu art hoặc video có giọng.
+Chặng vật che trước: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-foreground/REPORT.md), vẫn giữ bằng chứng đường nối cổ của bản trước. Chặng giữ pixel nguồn và sửa cổ: [báo cáo mới](../validation/2026-10-12-timestamp-pixel-coverage/REPORT.md). Clip0001 mới có346 frame60fps, dùng viền hàm và nền cổ riêng; không giữ một phần mặt đứng yên để giấu lỗi. 32 test tập trung/build đã qua; art và toàn video chưa nghiệm thu. Tiến độ chức năng toàn dự án ước lượng50%, không phải tỷ lệ nghiệm thu art hoặc video có giọng.

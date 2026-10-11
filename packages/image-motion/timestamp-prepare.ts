@@ -8,7 +8,7 @@ import {prepareCharacterSource,type CharacterSourceRecipe} from './character-sou
 import {validateDemo,type ImageMotionDemo} from './scene.js';
 import {validateTimestampMotion} from './timestamp-definition.js';
 
-export const TIMESTAMP_PREPARER_VERSION='timestamp-parts-2';
+export const TIMESTAMP_PREPARER_VERSION='timestamp-parts-3';
 
 export async function prepareTimestampMotion(source:string,directory:string,input:unknown,clock:ClipClock,cacheRoot:string,cleanPlate?:string){
   validateClipClock(clock);
@@ -63,7 +63,7 @@ export async function prepareTimestampMotion(source:string,directory:string,inpu
     const recipe:CharacterSourceRecipe={
       width,height,fps:clock.fps,durationMs,
       patchSampleX:definition.background.mode==='column'?definition.background.sampleX:0,
-      repairRegion:'polygon',repairMargin:0,
+      repairRegion:'polygon',repairMargin:0,matteMode:'source-pixels',
       parts:[
         ...definition.parts.map(p=>({id:p.id,image:'assets/'+p.id+'.png',polygon:p.polygon,pivot:p.pivot,frames:[{timeMs:0,angle:0},{timeMs:durationMs*.2,angle:0},{timeMs:durationMs*.45,angle:p.angle},{timeMs:durationMs*.65,angle:p.angle},{timeMs:durationMs,angle:0}]})),
         ...(definition.occlusions??[]).map(p=>({id:p.id,image:'assets/'+p.id+'.png',polygon:p.polygon,pivot:{x:0,y:0},remove:false as const,frames:[{timeMs:0,angle:0},{timeMs:durationMs,angle:0}]}))
