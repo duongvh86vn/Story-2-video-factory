@@ -101,11 +101,15 @@ Schema/resource allowlist/render security phải mở rộng theo asset ảnh/la
 - Kịch bản/WAV/chủ đề tạo đúng lời, giọng, clock, phụ đề và các cảnh thuộc nội dung; final/QC không bỏ các gate.
 - **Người dùng chấp nhận chất lượng hình và chuyển động của slice đầu** trước khi lấy nó làm mẫu cho toàn bộ tool.
 
-## 10. Trạng thái khi viết đề xuất
+## 10. Trạng thái ban đầu khi viết đề xuất (lịch sử)
 
 Chưa code luồng mới; không có demo ảnh/layer mới được duyệt. Không sinh ảnh hoặc gọi model/TTS trả phí trong lượt thiết kế này. Source118 của rig cũ và các logs được giữ ở worktree, chưa commit; các test PASS không vượt qua đánh giá chất lượng xấu của người dùng. Dừng tiến trình render chẩn đoán cũ đang chạy sau khi người dùng đổi hướng, không sửa checkout D hoặc server8850.
 
 Không cộng tiến độ dự án vì chỉ mới chốt đầu vào ảnh phẳng và đề xuất thiết kế. Mốc ước lượng trước vẫn khoảng40%, có độ bất định lớn và **không phải chất lượng video đã đạt40%**.
+
+### Cập nhật sau demo và phản hồi người dùng
+
+Demo im lặng10 giây đã xuất; người dùng chọn giữ hướng ảnh gốc. Upload PNG/JPG, chọn bề mặt ellipse/tâm/tốc độ, preview/lưu/reopen đã triển khai trong editor riêng8858 và có nút từ Studio. Chưa có mask/layer nhân vật, clean plate tổng quát hoặc final nối narration. Phản hồi tiếp theo: chuyển động cứng, yêu cầu diễn tả hành động người. Ưu tiên demo đưa tay/thu tay với phối hợp đầu/thân trước khi nối pipeline; xem `docs/plans/2026-10-11-image-motion-character-actions.md`. Lựa chọn hướng không đồng nghĩa nghiệm thu chuyển động/mỹ thuật nhân vật. Tiến độ toàn dự án vẫn ước lượng khoảng40%, chưa có final đạt yêu cầu mới.
 
 ## 11. Rà soát tài nguyên thực tế trước khi triển khai
 

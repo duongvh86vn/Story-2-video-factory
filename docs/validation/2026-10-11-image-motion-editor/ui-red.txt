@@ -1,0 +1,28 @@
+✖ browser uploads, draws and saves a region, then reloads and seeks the same pixels (1706.8607ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4498.154
+
+✖ failing tests:
+
+test at tests\image-motion-editor.test.ts:7:1367
+✖ browser uploads, draws and saves a region, then reloads and seeks the same pixels (1706.8607ms)
+  AssertionError [ERR_ASSERTION]: editor must expose an image upload control
+
+  0 !== 1
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-editor.test.ts:43:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

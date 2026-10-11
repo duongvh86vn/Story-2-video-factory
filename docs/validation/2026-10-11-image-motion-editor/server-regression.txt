@@ -1,0 +1,40 @@
+✔ artifact optimistic revisions reject stale writes and preserve canonical content (580.5133ms)
+✔ locked shot edits reject; successful edits invalidate storyboard approval (9906.0557ms)
+✔ narration timestamps are immutable through artifact editor (9943.0013ms)
+✔ upload commits only after every file validates; rejects active SVG and oversize source (447.7185ms)
+✔ upload traversal, type mismatch, host/origin and active lock mutations are blocked (476.771ms)
+✖ preview blocks junction escape and malformed/traversal paths; ranges are bounded (150.1492ms)
+✔ catalog API returns empty revision then saves exact candidate version without model or render calls (429.9644ms)
+✔ catalog API reports stale revision as conflict and preserves the newer document (264.0712ms)
+✔ catalog API rejects active production but read-only library access stays available (131.4399ms)
+✔ catalog route accepts no arbitrary paths, account choices, query parameters or missing revision (78.0517ms)
+✔ corrupt catalog source cannot be accepted as usable library or silently dropped (142.2319ms)
+✔ catalog edit invalidates completed visuals immediately while keeping narration bytes and approved locks (291.441ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 11
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23977.3168
+
+✖ failing tests:
+
+test at tests\server.test.ts:6:4216
+✖ preview blocks junction escape and malformed/traversal paths; ranges are bounded (150.1492ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  409 !== 206
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\server.test.ts:104:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 206,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "algorithm": "sha256",
+  "files": {
+    "apps/server/index.ts": "aef5a4def67ce0036907d6e64c3f800f42b34230f31d96739a00d7069c8d564e",
+    "apps/server/image-motion.ts": "8694f41eaf5339d5451e8b5fee203995514f41214fce77f1160d585a4dc8662f",
+    "apps/studio/src/main.ts": "8f107f5b9306f2c6b87596b017a658321247e0af47e6d4c36e6b8adbd6174146",
+    "packages/image-motion/scene.ts": "0c1d611cf101f0cdb29eba7c716e3d04321c3437f16fc51b5b9661a00289dd26",
+    "packages/image-motion/workbench.ts": "c0ab963abfcb55cff99543bd4bf0c8f9887fc03e053df78d1532a7f4e608532e",
+    "scripts/image-motion-editor.ts": "69f2a0d9db9717a76404d7d6407af27cc9e79233e65b30479bee56430097ee14",
+    "tests/image-motion-editor.test.ts": "485097949572a0d19ed335fd892733e37e9f10ee21c0f15ca5ae915574ee282e"
+  }
+}

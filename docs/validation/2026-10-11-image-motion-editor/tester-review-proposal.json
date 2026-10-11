@@ -1,0 +1,67 @@
+{
+  "version": "dev-nine-router-proposal-1",
+  "status": "proposal-not-applied",
+  "response": {
+    "findings": [
+      {
+        "file": "packages/image-motion/workbench.ts",
+        "line": 21,
+        "severity": "high",
+        "issue": "The UI changes `regions` in place but only updates `dirty` on pointer-up and valid field input. Moving an existing ellipse updates its center during pointer-move, but pointer-up never sets `dirty` for that drag. Switching images or reloading therefore discards the move without the unsaved-changes prompt.",
+        "fix": "Track whether pointer-move changed a region and set `dirty=true` on pointer-up for moved-region drags."
+      },
+      {
+        "file": "packages/image-motion/workbench.ts",
+        "line": 21,
+        "severity": "medium",
+        "issue": "Ellipse creation uses the drag midpoint and half-deltas, but does not normalize or clamp the ellipse to the image. A drag that starts or ends on an image edge can produce a region outside the image; the UI marks it valid and enables Save, which the server then rejects.",
+        "fix": "Clamp the ellipse center/radii to the image bounds before adding it, or reject the creation and show the existing bounds error."
+      },
+      {
+        "file": "apps/server/image-motion.ts",
+        "line": 40,
+        "severity": "medium",
+        "issue": "When an upload writes the source successfully but preview creation/write or catalog save fails, the source file is left behind. Retrying the same upload then hits `EEXIST`; if no catalog entry exists, the endpoint cannot recover because duplicate reuse only checks catalog images.",
+        "fix": "Make new-image storage/catalog publication recoverable: on failure remove only files created by this request, or validate and reuse matching orphaned files on retry."
+      }
+    ],
+    "limits": []
+  },
+  "responseModel": "gpt-6-luna",
+  "usage": {
+    "promptTokens": 10166,
+    "completionTokens": 329,
+    "totalTokens": 10495
+  },
+  "model": "tester",
+  "purpose": "source-only-review",
+  "fingerprint": "e248243acf6aaf57f897210239572e2a3cc072bb2024f66439942349de894f41",
+  "slot": 1,
+  "requestedReasoningEffort": null,
+  "requestTimeoutMs": 90000,
+  "prompt": "Review only these new project image-intake/editor changes. No execution or changes. Report concrete correctness/security/data-loss issues with file, line, reproduction reasoning and smallest fix. Do not invent cosmetic findings or demand new capabilities. Requirements: source PNG/JPG bytes kept unchanged, duplicate sources reused, catalog revision protects edits, writes use existing project idle/mutation guards and boundPath, fixed trusted browser JS only, manual ellipse surface rotation is explicitly preparation not production readiness. Inspect upload/save/load, selection coordinates, async operations and shape validation. A pending UI or final pipeline feature is a known limitation, not a bug. Return JSON {findings:[{file,line,severity,issue,fix}],limits:[]} and keep it short.",
+  "sources": [
+    {
+      "file": "apps/server/image-motion.ts",
+      "sha256": "8694f41eaf5339d5451e8b5fee203995514f41214fce77f1160d585a4dc8662f"
+    },
+    {
+      "file": "packages/image-motion/workbench.ts",
+      "sha256": "56caa7c66ada51284562cad9506be4993ac56c7b1de8806199ca60ae26a1b588"
+    },
+    {
+      "file": "packages/image-motion/scene.ts",
+      "sha256": "0c1d611cf101f0cdb29eba7c716e3d04321c3437f16fc51b5b9661a00289dd26"
+    },
+    {
+      "file": "tests/image-motion-editor.test.ts",
+      "sha256": "96ab615ea35c34ce48635e6225bcd82573e68aabc4245f5b83ba1c9402940f9c"
+    }
+  ],
+  "references": [],
+  "scope": "source-static-advice-only",
+  "approved": false,
+  "productionReady": false,
+  "motionVerified": false,
+  "createdAt": "2026-10-11T07:51:25.582Z"
+}

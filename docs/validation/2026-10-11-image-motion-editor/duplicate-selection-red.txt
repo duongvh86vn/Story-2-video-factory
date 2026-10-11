@@ -1,0 +1,30 @@
+✖ browser uploads, draws and saves a region, then reloads and seeks the same pixels (1897.6715ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3766.0953
+
+✖ failing tests:
+
+test at tests\image-motion-editor.test.ts:7:1367
+✖ browser uploads, draws and saves a region, then reloads and seeks the same pixels (1897.6715ms)
+  AssertionError [ERR_ASSERTION]: duplicate upload must reopen its saved regions
+  + actual - expected
+
+  + '923e4ea6e83533dcd25a9516bd6a02e9a556b5d31f234aa56f83ff97e99560aa'
+  - '5cefa706c3ec29106bd9e48ecc1b5e690e43e7f1d53aa3d572461ff0e917e2c6'
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-editor.test.ts:83:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '923e4ea6e83533dcd25a9516bd6a02e9a556b5d31f234aa56f83ff97e99560aa',
+    expected: '5cefa706c3ec29106bd9e48ecc1b5e690e43e7f1d53aa3d572461ff0e917e2c6',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

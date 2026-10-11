@@ -58,6 +58,7 @@ import {loadSpriteMotionCatalog,saveSpriteMotionCatalog} from '../../packages/mo
 import {importActorSpeech,listActorSpeech,loadActorSpeech,actorSpeechSheetBytes} from '../../packages/motion/speech-import.js';
 import {MotionCatalogSaveSchema} from '../../packages/motion/catalog-schemas.js';
 import {readSourceProductionAudit} from './source-audit.js';
+import {registerImageMotionRoutes} from './image-motion.js';
 
 export interface ServerOptions { repoRoot?: string; projectsRoot?: string; studioRoot?: string; coordinator?: Coordinator; coordinatorLoader?: () => Promise<Coordinator>; logger?: boolean; }
 type Named = { name: string };
@@ -164,6 +165,8 @@ export async function buildServer(options: ServerOptions = {}) {
     request.log.warn({ status, code: error instanceof ApiError ? error.code : 'REQUEST_FAILED' }, 'Studio request failed');
     return reply.code(status).send({ error: { code: error instanceof ApiError ? error.code : 'REQUEST_FAILED', message } });
   });
+
+  registerImageMotionRoutes(app,{rootFor,mutateLocal});
 
   app.get('/api/motions/runtime/gsap.min.js',async(request,reply)=>{
     NoMotionQuery.parse(request.query);

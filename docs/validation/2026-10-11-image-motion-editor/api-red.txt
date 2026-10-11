@@ -1,0 +1,29 @@
+✖ uploads original image once and saves editable regions with revision protection (416.6147ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3711.6232
+
+✖ failing tests:
+
+test at tests\image-motion-editor.test.ts:7:75
+✖ uploads original image once and saves editable regions with revision protection (416.6147ms)
+  AssertionError [ERR_ASSERTION]: {"message":"Route POST:/api/projects/fixture/image-motion/images?revision=new not found","error":"Not Found","statusCode":404}
+
+  404 !== 201
+
+      at TestContext.<anonymous> (C:\Users\Duongvh-pc\.codex\worktrees\stickman-acting-v22\Story-2-video-factory2.1\tests\image-motion-editor.test.ts:23:58)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 404,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

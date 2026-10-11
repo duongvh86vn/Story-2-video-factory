@@ -1,0 +1,18 @@
+{
+  "studioEntryOpenedEditor": true,
+  "sourceFilename": "0002.png",
+  "sourceId": "0021ec408d13f288a125b0224603fa74f8ebdde189a54a62cb2ae06e4c4697f1",
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "productionReady": false,
+  "contrast": {
+    "bodyOnPage": 13.338408132255703,
+    "labelsOnWhite": 10.307355969735845,
+    "primaryWhite": 6.701618401398807,
+    "borderOnWhite": 4.834490081424352
+  },
+  "scope": "Technical editor verification, not character quality acceptance",
+  "checkedAt": "2026-10-11T08:20:43.940Z"
+}

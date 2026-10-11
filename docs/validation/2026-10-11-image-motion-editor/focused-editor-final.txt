@@ -1,0 +1,14 @@
+✔ uploads original image once and saves editable regions with revision protection (402.9185ms)
+✔ browser uploads, draws and saves a region, then reloads and seeks the same pixels (1721.8474ms)
+✔ matching orphaned image files are reused when a publication is retried (126.8713ms)
+✔ rejects invalid regions and busy or corrupt sources without changing the saved book (227.879ms)
+✔ browser rotates only the selected surface and reproduces arbitrary seeks (812.8404ms)
+✔ prepared background clears antialiased gear edges and preserves source files (113.8509ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4657.8676
