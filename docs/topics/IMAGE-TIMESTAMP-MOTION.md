@@ -63,11 +63,11 @@ Lượt xuất chỉ `done` khi từng clip được xác minh. Cảnh thiếu r
 
 ## Chuẩn bị chuyển động của một ảnh
 
-Chọn cảnh rồi bấm **Chuẩn bị / chỉnh chuyển động**. Bánh/vòng không bị vật khác che có thể chọn bằng ellipse, hoặc bấm **Thêm vùng quay bằng số** và nhập tâm, bán kính, chu kỳ. Bộ phận nhân vật dùng polygon bao quanh vùng cần cử động, chốt vùng, đặt điểm xoay và góc nhỏ. Có thể nhập các điểm viền bằng bàn phím theo pixel của ảnh gốc. Nét xanh chỉ là vùng hướng dẫn, không xuất vào MP4.
+Chọn cảnh rồi bấm **Chuẩn bị / chỉnh chuyển động**. Bánh/vòng không bị vật khác che có thể chọn bằng ellipse, hoặc bấm **Thêm vùng quay bằng số** và nhập tâm, bán kính, chu kỳ. Bộ phận nhân vật dùng polygon bao quanh vùng cần cử động, chốt vùng, đặt điểm xoay và góc nhỏ. Có thể nhập các điểm viền bằng bàn phím theo pixel của ảnh gốc. Nét xanh là vùng chuyển động; nét cam là vùng giữ nguyên. Các nét hướng dẫn không xuất vào MP4. Tool không thêm chú thích vào cảnh; chữ/nhãn đã có trong ảnh nguồn vẫn được giữ.
 
 **Lưu và xem thử** chuẩn bị layer và lưu definition; bấm **Phát** trong preview. Về danh mục cảnh để xuất clip. Preview không tự phát. Clock luôn lấy từ timeline nguồn, không sửa từ editor. Lưu/reload có quyết định bỏ/giữ thay đổi ngay trong trang; refresh/đóng tab của browser sẽ bỏ phần chưa lưu.
 
-Nền phức tạp cần PNG nền sạch cùng kích thước; plate chỉ sửa vùng bị xóa, không thay toàn cảnh. Không tự inpaint hoặc suy ra phần cơ thể bị che. Ellipse quay toàn bộ pixel trong vùng: nếu khung xe, tay hoặc vật cố định đè lên bánh, cần mask và layer che phía trước; editor hiện chưa có chức năng đó. Polygon xoay nguyên bộ phận, không tạo pose mới, head turn hay lip-sync.
+Nền phức tạp cần PNG nền sạch cùng kích thước; plate chỉ sửa vùng bị xóa, không thay toàn cảnh. Không tự inpaint hoặc suy ra phần cơ thể bị che. Ellipse quay toàn bộ pixel trong vùng. Với khung xe, tay hoặc vật cố định đè lên bánh, chọn **Giữ vật che đứng yên**, nhập/chọn polygon và chốt vùng. Vùng đó dùng pixel nguồn, nằm phía trước chuyển động. Chọn **PNG bề mặt quay sạch** và tải PNG cùng kích thước, đã bỏ vật che khỏi vùng bánh. Nếu thiếu bề mặt sạch, API trả HTTP422 `NEEDS_MOTION_SOURCE`: chỉ phủ khung xe lên trên không loại được pixel khung đã bị quay theo. PNG được kiểm tra kích thước/hash/độ đục; người vận hành vẫn phải xem chất lượng phần được phục hồi. Cùng cơ chế vật che có thể giữ cổ áo khi đầu cử động; không cần PNG bề mặt quay sạch nếu không có vùng quay giao nhau. Polygon xoay nguyên bộ phận, không tạo pose mới, head turn hay lip-sync.
 
 Checkout mới có thể dùng `docs/topics/motion-recipes/empty-timestamp-bindings.json` thay cho bindings local và một output mới. Không chạy thêm server vào cổng/output đang dùng. Sau khi chuẩn bị trong editor, không cần sửa bindings để xuất cảnh đó. API mới: GET/POST `/api/image-timestamp/definition/:id`, POST `/background/:id?revision=…` nhận PNG tối đa16 MB, GET `/edit/:id` và preview `/prepared/:id/:key/index.html`. Revision cũ/busy và source hash đổi đều chặn lưu/xuất; không chạy code gửi từ browser.
 
@@ -77,15 +77,17 @@ Mỗi biên frame tính từ timestamp tuyệt đối: `floor(timestamp_ms × fp
 
 Keyframe tay/đầu được retime vào thời lượng cảnh. Bánh quay giữ chu kỳ cơ học đã chọn. Renderer HTML5/Canvas vẽ trực tiếp 60 frame mỗi giây; Chrome và FFmpeg xuất H.264 MP4. Không gọi TTS/model trong bước render.
 
-Output mỗi clip: `demo.mp4`, `index.html`, `timing.json`, `qc-report.json`, probe PNG và assets tái sử dụng. Cache kiểm tra identity chuyển động, hash asset/movie, clock và receipt frame/rate/decode/seek; cache lỗi bị chặn. Render thất bại giữ chẩn đoán và không ghi đè clip cũ. Báo cáo luôn `productionReady:false`, `qualityAccepted:false`.
+Output mỗi clip: `demo.mp4`, `index.html`, `timing.json`, `qc-report.json`, probe PNG và assets tái sử dụng. Cache kiểm tra identity chuyển động, hash asset/movie, clock và receipt frame/rate/decode/seek; cache lỗi bị chặn. Thay phiên bản chuẩn bị hoặc đường dẫn manifest vẫn giữ clip nếu toàn bộ identity/clock/pixel/movie/receipt còn hợp lệ; đổi chuyển động thực sự sẽ cần render lại. Render thất bại giữ chẩn đoán và không ghi đè clip cũ. Báo cáo luôn `productionReady:false`, `qualityAccepted:false`.
 
 ## Còn cần làm
 
 - Tách/chọn chuyển động phù hợp cho 20 ảnh còn lại. 0001 có mẫu đầu cử động nhẹ; mép nối cổ chưa duyệt. 0006 đã có cử động đầu/tay từ ảnh nguồn, vẫn cần duyệt mép tách và tiếp xúc tại vai/mép bảng.
-- Editor đã có schema, chuẩn bị/lưu recipe và preview; thao tác click/save/download vẫn cần kiểm thử đầy đủ sau khi gỡ tab browser thử cũ bị kẹt. Còn tự động tách phần, mask vật che, phục hồi nền phức tạp và manifest bàn giao toàn bộ clip. UI hiện đọc timestamp đã có, không phải editor đổi nội dung nguồn.
+- Editor đã có schema, chuẩn bị/lưu recipe và preview; thao tác click/save/download vẫn cần kiểm thử đầy đủ sau khi gỡ tab browser thử cũ bị kẹt. Mask vật che thủ công đã có; còn tự động tách phần, phục hồi nền phức tạp, chất lượng mép tách và manifest bàn giao toàn bộ clip. UI hiện đọc timestamp đã có, không phải editor đổi nội dung nguồn.
 - Đạo diễn/artist qua9router đề xuất recipe, người vận hành xem và duyệt chất lượng. Đề xuất không được thực thi như code.
 - Ghép toàn bộ timeline/voice, review/repair, final/QC theo mục tiêu chung sau khi chuyển động từng ảnh được duyệt.
 
 Bốn clip local hiện có là mẫu chẩn đoán, chưa chứng minh chất lượng diễn xuất của toàn bộ video. Phần nối narration đang dở được giữ riêng theo yêu cầu tập trung từng ảnh. Kết quả workbench mới: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-workbench/REPORT.md).
 
 Chặng editor/API và clip 0001: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-motion-editor/REPORT.md). 25 test tập trung và build/typecheck đã qua; không thay thế nghiệm thu chất lượng hình hoặc final có giọng.
+
+Chặng vật che: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-foreground/REPORT.md). Clip0001 giữ cổ áo đứng yên và có 346 frame ở60fps; đường nối cổ vẫn chưa đạt khi soi gần. Tiến độ chức năng toàn dự án ước lượng49%, không phải tỷ lệ nghiệm thu art hoặc video có giọng.

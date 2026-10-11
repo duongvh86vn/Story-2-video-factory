@@ -1,0 +1,27 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "apps/server/image-timestamp.ts": "71ca9c0747ca007ce0be65430458a079fd20d72c26a481961c698d880dd110b4",
+    "packages/image-motion/character-source.ts": "705a28218652fe46b448464ab9ca6fe9135b41b443a0af1973b412f1389bdab4",
+    "packages/image-motion/timestamp-definition.ts": "8aac685475c93bdae841e51f272a91f7502cecc1def8e053879575b7c510be23",
+    "packages/image-motion/timestamp-motion-editor.ts": "be04221786dc7301b689ef75a555cfa784a7a43148250faf56ddc038a47107c9",
+    "packages/image-motion/timestamp-prepare.ts": "7fcbd379e724be1b385ec79cc6db4ab9ee42ad68005668a9ebb083741b7bbe11",
+    "tests/image-timestamp-workbench.test.ts": "1237979730e1d1c9401f54b35c11d1343167305c6fb8d8adba84cc65ef55ca41",
+    "tests/image-timestamp-foreground.test.ts": "9d642f14594431b3fd51c68b1437b6d9919d48e28a231fccc865948f1f393a1d",
+    "docs/plans/2026-10-12-timestamp-foreground.md": "9b6aea7dbe3596f50e09f053ac3bdee136117f48dfd0b26d23bc5c0b75fd79fa",
+    "docs/topics/IMAGE-TIMESTAMP-MOTION.md": "4a4ca4dc50087523629dd1590221a8769451c486b59c989ecf8c00ee19bf754b",
+    "docs/topics/motion-recipes/flow-doodle-0001-head-editor.json": "2309cd4bdb676d5a5a5819a7609636483f3eae5aa31a541d2d9ec036a318e943",
+    "docs/validation/2026-10-12-timestamp-foreground/actual-clip-qc.json": "c62130f74fec2044b36bc7fcc790e32baaa7a126ac2c62cee81f7f61a62e64a7",
+    "docs/validation/2026-10-12-timestamp-foreground/actual-pixel-audit.json": "852f79211defdfc1e2d19ea8fc15fe962db8712aebaafb6f150a65d9103ebcb2",
+    "docs/validation/2026-10-12-timestamp-foreground/cache-audit.json": "150dea0fec3216371a6bfc6667dec30f368a1d2225dbcb06ad06ccbac6caf164",
+    "docs/validation/2026-10-12-timestamp-foreground/editor-1280.png": "ece49a9ed130aaf05c86f8bc27e7ee8c19a064a1498a25761e3d0190d4ddf7ac",
+    "docs/validation/2026-10-12-timestamp-foreground/editor-375.png": "e8dde93a1c81fca3590b1289137d0fd47e0bf7b87e93ffd0105a709e59ec5eb7",
+    "docs/validation/2026-10-12-timestamp-foreground/http-smoke.json": "fe9f83ac05a2d89705b11ac1ebb41d24c0bb293ac1c380b7260422f3be853aa9",
+    "docs/validation/2026-10-12-timestamp-foreground/migration-api.json": "a0cc0788ee7624764e1659bd00c2a78c9e9716363e10a0228f4ea05c8cd3322f",
+    "docs/validation/2026-10-12-timestamp-foreground/neck-before.png": "d90767af1da5ac55ad02bd36e7777c445ba624df04a145b24ca2f518af0cdd4e",
+    "docs/validation/2026-10-12-timestamp-foreground/neck-protected.png": "9b58d60bdd2b993562f885cbd563f87669473c3de44dbda48ec12148d642ed72",
+    "docs/validation/2026-10-12-timestamp-foreground/neck-source.png": "6e66a4059deb8dc5f22374e64760017d652f2aff2680f96bd7dc8099c9b032fe",
+    "docs/validation/2026-10-12-timestamp-foreground/REPORT.md": "16dd17c52021fd49cf25285dc57dccf441855307f916f85271c96a93530ed494",
+    "docs/validation/2026-10-12-timestamp-foreground/review-resolution.json": "9e55c4b1862134e8ba9be1098b8378c19ddc3b0b25939fe1b09bc6db119f55df"
+  }
+}

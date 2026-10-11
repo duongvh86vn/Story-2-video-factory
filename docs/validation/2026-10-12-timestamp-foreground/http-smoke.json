@@ -1,0 +1,19 @@
+{
+  "missingTextureHttp": 422,
+  "missingTextureCode": "NEEDS_MOTION_SOURCE",
+  "rejectionKeepsRevision": true,
+  "rangeHttp": 206,
+  "rangeLength": 32,
+  "readyIds": [
+    1,
+    2,
+    6,
+    13
+  ],
+  "restartKeepsAllCachedClips": true,
+  "qualityAccepted": false,
+  "productionReady": false,
+  "lostCleanSurfaceHttp": 422,
+  "lostCleanSurfaceCode": "NEEDS_MOTION_SOURCE",
+  "lostSurfaceRejectionKeepsRevision": true
+}

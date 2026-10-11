@@ -36,7 +36,7 @@ export async function prepareCharacterSource(source:string,mask:string,directory
   // Motion/pivots are excluded: changing the acting must not regenerate pixels.
   if(recipe.patchMode!==undefined&&!['column','paper-interpolate','paper-harmonic'].includes(recipe.patchMode))throw new Error('Unknown source background repair');
   const margin=recipe.repairMargin??1;if(!Number.isInteger(margin)||margin<0||margin>32||recipe.repairRegion!==undefined&&!['ink','polygon'].includes(recipe.repairRegion))throw new Error('Invalid source repair region');
-  const layerCacheKey=hash({version:SOURCE_PART_VERSION,sourceHash,maskHash,cleanPlateHash,width:recipe.width,height:recipe.height,patchSampleX:recipe.patchSampleX,patchMode:recipe.patchMode??'column',repairRegion:recipe.repairRegion??'ink',margin,protectSubject:recipe.protectSubject??false,parts:recipe.parts.map(({id,polygon,inkOnly,remove,replacement})=>({id,polygon,inkOnly,remove,replacement}))}),cache=path.join(path.resolve(cacheRoot),layerCacheKey);
+  const layerCacheKey=hash({version:recipe.parts.some(p=>p.remove===false)?'source-static-1':SOURCE_PART_VERSION,sourceHash,maskHash,cleanPlateHash,width:recipe.width,height:recipe.height,patchSampleX:recipe.patchSampleX,patchMode:recipe.patchMode??'column',repairRegion:recipe.repairRegion??'ink',margin,protectSubject:recipe.protectSubject??false,parts:recipe.parts.map(({id,polygon,inkOnly,remove,replacement})=>({id,polygon,inkOnly,remove,replacement}))}),cache=path.join(path.resolve(cacheRoot),layerCacheKey);
   const names=['assets/source-original.png','assets/original.png','assets/background.png',...(plateBytes?['assets/clean-plate.png']:[]),...parts.map(p=>p.image)];
   let assetHashes:Record<string,string>|undefined;
   const verify=async(dir:string,hashes:Record<string,string>)=>{
@@ -57,7 +57,7 @@ export async function prepareCharacterSource(source:string,mask:string,directory
         const si=(y*sw+x)*4,di=(y*w+x)*4;
         if(p.remove!==false&&polygon[si+3]!>0)region[y*w+x]=1;
         if(p.inkOnly){const r=sourceRaw[si]!,g=sourceRaw[si+1]!,b=sourceRaw[si+2]!;if((r+g+b)/3>100||Math.max(r,g,b)-Math.min(r,g,b)>45)continue;}
-        let a=Math.round((p.inkOnly?sourceRaw[si+3]!:alpha[si+3]!)*polygon[si+3]!/255);if(!a)continue;
+        let a=Math.round((p.remove===false||p.inkOnly?sourceRaw[si+3]!:alpha[si+3]!)*polygon[si+3]!/255);if(!a)continue;
         // Static occlusion keeps baked source pixels opaque. Applying a second
         // fractional matte over the same RGB introduces premultiplication color
         // rounding when Canvas paints the moving pose.

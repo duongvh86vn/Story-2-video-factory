@@ -1,0 +1,12 @@
+{
+  "status": 200,
+  "readyIds": [
+    1,
+    2,
+    6,
+    13
+  ],
+  "sameDirectories": true,
+  "beforeManifest": "runtime/image-motion/timestamp-workbench/studio/motions/1-e61fd6058a767556d379c19a1c190f93cb500fe8105a819822add1b152949437/motion.json",
+  "afterManifest": "runtime/image-motion/timestamp-workbench/studio/motions/1-d692a6744d2c03954df09dbcd2d3814811f9dae563f8e6cfcf39ea36f842fe6b/motion.json"
+}

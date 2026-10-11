@@ -96,7 +96,8 @@ export async function createTimestampWorkbench(options:TimestampWorkbenchOptions
   }
   async function findClip(clip:FlowImageClip,state:BindingState,revision:string,timelineHash:string){
     const saved=ledger.clips[String(clip.id)];
-    if(saved?.signature===state.signature){try{await verified(saved.directory,clip,state,timelineHash);return saved.directory;}catch{/* An invalid artifact is never shown as exported. */}}
+    // Metadata and preparation paths may change; the complete visual/media receipt determines reuse.
+    if(saved){try{await verified(saved.directory,clip,state,timelineHash);return saved.directory;}catch{/* An invalid artifact is never shown as exported. */}}
     if(state.binding.seedClip){const seed=await boundPath(cwd,state.binding.seedClip);try{await verified(seed,clip,state,timelineHash);return seed;}catch{/* Seed is optional; failure requires a fresh render. */}}
     return undefined;
   }
@@ -161,16 +162,22 @@ export async function createTimestampWorkbench(options:TimestampWorkbenchOptions
       const input=z.object({revision:z.string().regex(/^[a-f0-9]{64}$/),definition:TimestampMotionDefinition}).strict().parse(body),s=await snapshot();
       if(input.revision!==s.revision)throw new ApiError(409,'Source or motion changed; reload the editor','STALE_REVISION');const clip=s.timeline.clips.find(c=>c.id===id);if(!clip)throw new ApiError(404,'Scene not found');
       const sourceFile=await safeRealPath(source,clip.selectedImage),meta=await sharp(await bytes(sourceFile,16*1024*1024),{limitInputPixels:64000000}).metadata();
-      let d:TimestampMotionDefinition;try{d=validateTimestampMotion(input.definition,meta.width!,meta.height!);}catch(e){throw new ApiError(422,(e as Error).message,'MOTION_GEOMETRY');}
+      let d:TimestampMotionDefinition;try{d=validateTimestampMotion(input.definition,meta.width!,meta.height!);}catch(e){throw new ApiError(422,(e as Error).message,(e as Error).message.startsWith('needs-motion-source:')?'NEEDS_MOTION_SOURCE':'MOTION_GEOMETRY');}
       let plate:string|undefined;if(d.background.mode==='clean-plate'){
-        const receipt=JSON.parse((await bytes(await boundPath(output,'backgrounds/'+id+'-'+clip.selectedHash+'-'+d.background.cleanPlateId+'.json'),4096)).toString());
-        plate=await boundPath(output,'backgrounds/'+d.background.cleanPlateId+'.png');if(receipt.sourceHash!==clip.selectedHash||receipt.width!==meta.width||receipt.height!==meta.height||hash(await bytes(plate,16*1024*1024))!==d.background.cleanPlateId)throw new ApiError(409,'Nền sạch không còn khớp ảnh nguồn.','STALE_BACKGROUND');
+        try{
+          const receipt=JSON.parse((await bytes(await boundPath(output,'backgrounds/'+id+'-'+clip.selectedHash+'-'+d.background.cleanPlateId+'.json'),4096)).toString());
+          plate=await boundPath(output,'backgrounds/'+d.background.cleanPlateId+'.png');if(receipt.sourceHash!==clip.selectedHash||receipt.width!==meta.width||receipt.height!==meta.height||hash(await bytes(plate,16*1024*1024))!==d.background.cleanPlateId)throw new ApiError(409,'Nền sạch không còn khớp ảnh nguồn.','STALE_BACKGROUND');
+        }catch(e){
+          if(d.rotationSource==='clean-plate')throw new ApiError(422,'needs-motion-source: PNG bề mặt quay sạch thiếu hoặc không còn khớp ảnh nguồn. Tải lại PNG phù hợp.','NEEDS_MOTION_SOURCE');
+          if(e instanceof ApiError&&e.code==='STALE_BACKGROUND')throw e;
+          throw new ApiError(409,'Nền sạch thiếu hoặc không còn khớp ảnh nguồn. Tải lại PNG phù hợp.','STALE_BACKGROUND');
+        }
       }
       const key=hash({version:TIMESTAMP_PREPARER_VERSION,definition:d,sourceHash:clip.selectedHash,clock:clip.clock});let folder=await outputPath(output,'motions/'+id+'-'+key);await fs.mkdir(path.dirname(folder),{recursive:true});
       // Preserve incomplete attempts; rebuild their manifest using the same verified layer cache.
-      const existing=ledger.overrides?.[String(id)];if(existing?.sourceHash===clip.selectedHash&&hash(existing.definition)===hash(d)){const previousFolder=path.dirname(await boundPath(cwd,existing.manifest));try{const previous=JSON.parse((await bytes(await boundPath(previousFolder,'motion.json'),128*1024)).toString());if(previous.demo?.fps===clip.clock.fps&&previous.demo?.scenes?.[0]?.durationMs===clip.clock.endMs-clip.clock.startMs)folder=previousFolder;}catch{}}
+      const existing=ledger.overrides?.[String(id)];if(existing?.sourceHash===clip.selectedHash&&hash(existing.definition)===hash(d)){const previousFolder=path.dirname(await boundPath(cwd,existing.manifest));try{const previous=JSON.parse((await bytes(await boundPath(previousFolder,'motion.json'),128*1024)).toString());if(previous.preparer===TIMESTAMP_PREPARER_VERSION&&previous.demo?.fps===clip.clock.fps&&previous.demo?.scenes?.[0]?.durationMs===clip.clock.endMs-clip.clock.startMs)folder=previousFolder;}catch{}}
       try{await fs.stat(folder);try{await fs.stat(path.join(folder,'motion.json'));}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;folder=await outputPath(output,'motions/'+id+'-'+key+'-'+randomUUID());}}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
-      const prepared=await prepareTimestampMotion(sourceFile,folder,d,clip.clock,await outputPath(output,'layer-cache'),plate);
+      let prepared:Awaited<ReturnType<typeof prepareTimestampMotion>>;try{prepared=await prepareTimestampMotion(sourceFile,folder,d,clip.clock,await outputPath(output,'layer-cache'),plate);}catch(e){if((e as Error).message.startsWith('needs-motion-source:'))throw new ApiError(422,(e as Error).message,'NEEDS_MOTION_SOURCE');throw e;}
       const {manifest:preparedManifest,...preparedMetadata}=prepared;const recorded=JSON.parse((await bytes(await boundPath(cwd,path.relative(cwd,preparedManifest).split(path.sep).join('/')),128*1024)).toString());
       if(hash(recorded)!==hash(preparedMetadata)||hash(prepared.definition)!==hash(d)||prepared.demo.fps!==clip.clock.fps||prepared.demo.scenes[0]?.durationMs!==clip.clock.endMs-clip.clock.startMs)throw new ApiError(409,'Prepared motion receipt changed.','MOTION_INTEGRITY');
       for(const [name,expected]of Object.entries(prepared.assetHashes)){const asset=await boundPath(path.dirname(preparedManifest),name);if(hash(await bytes(asset,16*1024*1024))!==expected)throw new ApiError(409,'Prepared motion asset changed.','MOTION_INTEGRITY');}

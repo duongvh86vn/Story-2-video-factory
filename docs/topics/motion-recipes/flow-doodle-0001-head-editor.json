@@ -48,5 +48,28 @@
   "background": {
     "mode": "column",
     "sampleX": 0
-  }
+  },
+  "occlusions": [
+    {
+      "id": "collar",
+      "polygon": [
+        [
+          245,
+          446
+        ],
+        [
+          530,
+          446
+        ],
+        [
+          530,
+          645
+        ],
+        [
+          245,
+          645
+        ]
+      ]
+    }
+  ]
 }

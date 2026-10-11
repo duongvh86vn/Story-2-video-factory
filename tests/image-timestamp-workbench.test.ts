@@ -63,10 +63,20 @@ test('saved motion survives restart and an edit of another scene retains the ver
   const config={cwd,source,output,bindings:[],worker},service=await createTimestampWorkbench(config);
   const motion={...emptyTimestampMotion(),rotations:[{id:'wheel',cx:50,cy:50,rx:10,ry:10,periodMs:1200,direction:1 as const}]};
   const initial=await service.catalog();await service.prepare(1,{revision:initial.revision,definition:motion});
-  const after1=await service.catalog();await service.prepare(2,{revision:after1.revision,definition:motion});
+  const after1=await service.catalog();
+  await assert.rejects(service.prepare(1,{revision:after1.revision,definition:{...motion,occlusions:[{id:'frame',polygon:[[48,30],[52,30],[52,70],[48,70]]}]}}),(e:any)=>e.statusCode===422&&e.code==='NEEDS_MOTION_SOURCE');
+  assert.equal((await service.catalog()).revision,after1.revision,'Rejected geometry does not mutate the saved motion');
+  await assert.rejects(service.prepare(1,{revision:after1.revision,definition:{...motion,rotationSource:'clean-plate',background:{mode:'clean-plate',cleanPlateId:'0'.repeat(64)}}}),(e:any)=>e.statusCode===422&&e.code==='NEEDS_MOTION_SOURCE');
+  await service.prepare(2,{revision:after1.revision,definition:motion});
   const before=await service.catalog(),job=await service.start('render-ready',{revision:before.revision});await service.idle();assert.equal((await service.job(job.id)).status,'done');assert.equal(calls,2);
   const ready=await service.catalog(),oldUrl=ready.clips[0]!.clipUrl;assert.ok(oldUrl);
-  await service.prepare(2,{revision:ready.revision,definition:{...motion,rotations:[{...motion.rotations[0],periodMs:1600}]}});
+  // The receipt and visual identity stay identical when only preparer metadata changes.
+  const cacheLedger=JSON.parse(await fs.readFile(path.join(output,'workbench.json'),'utf8'));
+  const oldBinding=path.join(cwd,cacheLedger.overrides['1'].manifest),migrationMeta=JSON.parse(await fs.readFile(oldBinding,'utf8'));
+  migrationMeta.preparer='older-preparer';await fs.writeFile(oldBinding,JSON.stringify(migrationMeta));
+  const migrationCatalog=await service.catalog();
+  assert.ok(migrationCatalog.clips[0]!.clipUrl,'Fully verified media must survive a preparer metadata change');
+  await service.prepare(2,{revision:migrationCatalog.revision,definition:{...motion,rotations:[{...motion.rotations[0],periodMs:1600}]}});
   const edited=await service.catalog();assert.ok(edited.clips[0]!.clipUrl);assert.equal(edited.clips[1]!.clipUrl,undefined);assert.notEqual(edited.clips[0]!.clipUrl,oldUrl);
   await assert.rejects(service.prepare(1,{revision:ready.revision,definition:motion}),/changed/);
   await service.start('render',{revision:edited.revision,clipId:1});await service.idle();assert.equal(calls,2);

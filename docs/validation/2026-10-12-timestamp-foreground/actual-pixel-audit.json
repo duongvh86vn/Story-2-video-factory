@@ -1,0 +1,24 @@
+{
+  "sourceHash": "17fc0416ce28169f035707ceb49789d7b77710de596460d9befd2471c3d8f8b6",
+  "sourceUnchanged": true,
+  "firstRGBAExact": true,
+  "endRGBAExact": true,
+  "middleChangedPixels": 55128,
+  "changedBounds": {
+    "left": 234,
+    "top": 144,
+    "right": 511,
+    "bottom": 445
+  },
+  "protectedInteriorChangedPixels": 0,
+  "outsideHeadROIChangedPixels": 0,
+  "reseekRGBAExact": true,
+  "fps": "60/1",
+  "totalFrames": 346,
+  "duration": "5.766667",
+  "decodeErrors": 0,
+  "randomSeekPngExact": true,
+  "browserErrors": [],
+  "qualityAccepted": false,
+  "productionReady": false
+}

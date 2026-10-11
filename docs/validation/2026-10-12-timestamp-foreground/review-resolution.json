@@ -1,0 +1,24 @@
+{
+  "finding": {
+    "severity": "medium",
+    "file": "packages/image-motion/character-source.ts",
+    "evidence": "PNG sources are accepted without requiring four channels, but `sourceRaw` is created with `.ensureAlpha().raw()` and then indexed as four bytes per pixel throughout layer extraction. `.ensureAlpha()` does not convert grayscale PNGs to RGBA; for a grayscale source, the raw buffer can have two channels while the code uses four-channel offsets.",
+    "impact": "For accepted grayscale PNG sources, static `remove:false` occlusion pixels are not reliably copied from the original source RGBA, and generated layers/background can read incorrect pixel data.",
+    "smallestFix": "Convert source pixels to sRGB RGBA before raw access, and use the same explicit channel normalization wherever the raw buffer is treated as four-channel."
+  },
+  "decision": "not-reproduced",
+  "reason": "Installed Sharp 0.34.4 normalizes a grayscale PNG to 4 channels with ensureAlpha().raw(); direct diagnostic returns channels:1 in PNG metadata, raw channels:4, bytes:1024 for 16x16. No unrelated normalization change applied.",
+  "command": "node --import tsx runtime/dev-agents/timestamp-foreground/gray-info.ts",
+  "result": {
+    "format": "png",
+    "channels": 1,
+    "raw": 4,
+    "bytes": 1024
+  },
+  "model": "gpt-6-luna",
+  "usage": {
+    "promptTokens": 8232,
+    "completionTokens": 946,
+    "totalTokens": 9178
+  }
+}
