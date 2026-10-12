@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "candidateTree": "3e340820a0f709246a5c4b5d0400b53e50b69b77",
+  "files": [
+    {
+      "file": "packages/image-motion/proposal-contract.ts",
+      "sha256": "39f360e66917cbe5582878cbfc080970b0663bfea0820bb24335b1d1f3056efc",
+      "bytes": 3148
+    },
+    {
+      "file": "packages/image-motion/motion-proposal.ts",
+      "sha256": "dc3a1408070cd53570e58c461edcb7674e6587891623f6dc239ccd28cf4725a3",
+      "bytes": 8617
+    },
+    {
+      "file": "packages/image-motion/proposal-gateway.ts",
+      "sha256": "68a8d096650791fed6b3448931f5f824af5857c6451817d983221b6a52d858e2",
+      "bytes": 2592
+    },
+    {
+      "file": "scripts/image-motion-propose.ts",
+      "sha256": "140fdd6c076c5c03f00567519030e8a610da95424988c91db33a232344f4d80d",
+      "bytes": 3757
+    },
+    {
+      "file": "tests/image-motion-proposal.test.ts",
+      "sha256": "548997e4ef0b1a00f1d2a44cc26974cc96c70c83422a8830744c5a32a352242c",
+      "bytes": 6074
+    },
+    {
+      "file": "tests/image-motion-proposal-gateway.test.ts",
+      "sha256": "f18cb21b383a77552daae79709f45680d7b411b96157e5f00517c3b4a1afa696",
+      "bytes": 2568
+    },
+    {
+      "file": "docs/plans/2026-10-12-timestamp-motion-proposals.md",
+      "sha256": "80d17252c2f6281de9f016990ac414b302d46e701a108e416c040e05a6ba6a9f",
+      "bytes": 2974
+    },
+    {
+      "file": "docs/topics/IMAGE-TIMESTAMP-MOTION.md",
+      "sha256": "c6aaf90dd949c0c1a8cc1bd7762a27794e0ac84194817c995159b9cfeea215b3",
+      "bytes": 18843
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/proposal-15.json",
+      "sha256": "beecc7e3387709bc7f4267292d91e178f29c4da4155a1f4910d3b714ad5106fc",
+      "bytes": 2237
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/proposal-18.json",
+      "sha256": "6e63c537dd11ceacf19150649d8052b244e5b01ace81cfcd8c9b36bd17f5f95b",
+      "bytes": 2204
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/REPORT.md",
+      "sha256": "65d7a2f211f362648fd9492b0148d74e3a4ae82e0456acc782f8c5a1a2c59428",
+      "bytes": 6365
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/review-resolution.json",
+      "sha256": "e2b86e66c0b0612204fd697149bc327d96d04a563111edfb3640ed919abeac63",
+      "bytes": 564
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/runtime-audit.json",
+      "sha256": "0c41154ea5f7a0b5ee570a99c193e18962e91f26227030ae3e3805d47971dcdb",
+      "bytes": 1129
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/ui-smoke.json",
+      "sha256": "eb8f8b3316460080d8b0c97bb12aa82e61af5af84c889b1340b9fd0dfd6caf56",
+      "bytes": 846
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/ui-workbench.png",
+      "sha256": "6d58a22d2fdc9d07dddb2206591d7bb13afedbc44f6f05929ab6c81bdc734d04",
+      "bytes": 198842
+    },
+    {
+      "file": "docs/validation/2026-10-12-timestamp-proposals/checks.json",
+      "sha256": "e97a2ce045b2a81ed4c4a42ce166cbb5e453bf72ccf8e00fd543e2025baeef0b",
+      "bytes": 1175
+    }
+  ]
+}

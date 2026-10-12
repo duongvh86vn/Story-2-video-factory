@@ -1,0 +1,50 @@
+{
+  "candidateTree": "3e340820a0f709246a5c4b5d0400b53e50b69b77",
+  "node": "24.19.0",
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0
+  },
+  "trackedTestsTypecheck": {
+    "command": "npm run test:typecheck",
+    "exitCode": 0,
+    "scope": "all tracked test source in snapshot; unrelated untracked native gait fixture excluded"
+  },
+  "cliTypecheck": {
+    "command": "node node_modules/typescript/bin/tsc -p runtime/verification/tsconfig-cli.json",
+    "exitCode": 0
+  },
+  "focusedRuntime": {
+    "files": 12,
+    "pass": 42,
+    "fail": 0,
+    "skipped": 0,
+    "exitCode": 0
+  },
+  "runtimeVision": {
+    "successfulCalls": 2,
+    "responseModel": "gpt-6-luna",
+    "sourceClips": [
+      15,
+      18
+    ],
+    "statuses": [
+      "needs-artwork",
+      "needs-artwork"
+    ],
+    "automaticApply": false,
+    "cachedRerunCalls": 0,
+    "candidateSourceVideoVerified": false
+  },
+  "ui": {
+    "existingRecipeSave": true,
+    "play": true,
+    "seekHome": true,
+    "exportFromCache": true,
+    "downloadMatchesExistingQC": true,
+    "newRegionAuthoring": false
+  },
+  "fullGoalComplete": false,
+  "productionReady": false,
+  "qualityAccepted": false
+}

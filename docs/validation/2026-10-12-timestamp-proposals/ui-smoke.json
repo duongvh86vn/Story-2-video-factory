@@ -1,0 +1,35 @@
+{
+  "source": "CUA browser2 tab6",
+  "existingRecipeSave": true,
+  "play": true,
+  "seekHome": true,
+  "exportButton": true,
+  "exportJob": {
+    "id": "4381c6a5-38d5-46d1-8be5-862d8aece734",
+    "status": "done",
+    "clipIds": [
+      1
+    ],
+    "completed": 1,
+    "resultClips": [
+      {
+        "id": 1,
+        "url": "/api/image-timestamp/clip/1?revision=c169821b2dc011c3b365a6e1f7e19baf634d145632f781bea3b939d84668f5b0"
+      }
+    ]
+  },
+  "downloadFile": "C:/Users/Duongvh-pc/Downloads/clip-1.mp4",
+  "downloadSha256": "97438753c9d0395dd926828b19504def4c810b9edd5602feae10e5d255e3cac8",
+  "matchesExportedBytes": true,
+  "sourceRecipeChanged": false,
+  "catalogReady": [
+    1,
+    2,
+    6,
+    13
+  ],
+  "newRegionAuthoringNotTested": true,
+  "newRenderNotTriggered": true,
+  "productionReady": false,
+  "qualityAccepted": false
+}

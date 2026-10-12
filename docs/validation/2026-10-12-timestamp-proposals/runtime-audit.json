@@ -1,0 +1,41 @@
+{
+  "sourceProposalCalls": 2,
+  "sourceProposalTokens": 8463,
+  "successfulVisionCalls": 2,
+  "visionTokens": 5950,
+  "knownTotalTokens": 14413,
+  "failedHttpCalls": 2,
+  "failedHttpUsage": "unavailable",
+  "initialEndpoint": "https://api.openai.com/v1 inherited from unrelated MODEL_GATEWAY_URL",
+  "confirmedFailureStatus": 401,
+  "firstFailureStatus": "not captured",
+  "fixedEndpoint": "http://127.0.0.1:20128/v1",
+  "cachedRerunCalls": 0,
+  "newImageGenerations": 0,
+  "receipts": [
+    {
+      "clipId": 15,
+      "key": "5cccebe1540da48f3fa7dccd9dd70319cbad3f8f3ffcd80039100c94c302d6a6",
+      "status": "needs-artwork",
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "inputTokens": 2641,
+        "outputTokens": 290
+      }
+    },
+    {
+      "clipId": 18,
+      "key": "d4b7983c90d1234e521e9574c088b5998f16db1c8bcffeb2c54a4e38686f1e50",
+      "status": "needs-artwork",
+      "responseModel": "gpt-6-luna",
+      "usage": {
+        "inputTokens": 2655,
+        "outputTokens": 364
+      }
+    }
+  ],
+  "autoApplied": false,
+  "newMotionScenes": 0,
+  "qualityAccepted": false,
+  "productionReady": false
+}

@@ -1,0 +1,57 @@
+{
+  "key": "d4b7983c90d1234e521e9574c088b5998f16db1c8bcffeb2c54a4e38686f1e50",
+  "descriptor": {
+    "version": "source-motion-proposal-1",
+    "clipId": 18,
+    "sourceHash": "4a91b55f37b25e13c7967c13e359b99a345e132ed12d3f85f30a082c37fce013",
+    "width": 1920,
+    "height": 1080,
+    "text": "and a usable transmission behave as one road-going machine was a different problem entirely.",
+    "visual": "An animated cutaway diagram showing an engine, chassis, and transmission interlocking together into a single cohesive road-going machine.",
+    "clock": {
+      "startMs": 83460,
+      "endMs": 90760,
+      "startFrame": 5008,
+      "endFrame": 5446,
+      "fps": 60
+    },
+    "modelIdentity": {
+      "model": "coder",
+      "baseUrl": "http://127.0.0.1:20128/v1",
+      "maxOutputTokens": 2400,
+      "temperature": 0.1
+    }
+  },
+  "referenceHash": "522356e01be59d4fa0250d86ed3e23dc7280883cbf5185760837c90edb5a7504",
+  "proposal": {
+    "version": 1,
+    "summary": "The diagram shows an engine suspended above the chassis, but bringing it into the assembled machine requires translation and attachment that the available motion model cannot represent.",
+    "targets": [
+      {
+        "regionId": "upper-engine",
+        "object": "Detached engine above the chassis",
+        "evidence": "The gray engine is visibly separate from the frame, with a downward arrow beneath it.",
+        "why": "The cue describes the engine, chassis, and transmission interlocking as one machine; depicting that assembly requires moving and attaching the engine."
+      }
+    ],
+    "status": "needs-artwork",
+    "definition": null,
+    "needsArtwork": [
+      {
+        "regionId": "upper-engine",
+        "kind": "pose",
+        "reason": "The engine must translate into the chassis and connect to it; rigid polygon pivot motion cannot perform that assembly while preserving correct overlap and contact."
+      }
+    ]
+  },
+  "definition": null,
+  "resultHash": "0cfa756e9d2369602a27c59e3a6c1f1369155f5c1382eb4bdeeb47d86490766c",
+  "responseModel": "gpt-6-luna",
+  "usage": {
+    "inputTokens": 2655,
+    "outputTokens": 364
+  },
+  "applied": false,
+  "productionReady": false,
+  "qualityAccepted": false
+}

@@ -1,0 +1,10 @@
+{
+  "reviewModel": "tester",
+  "responseModel": "gpt-6-luna",
+  "finding": "Stale adapter lastResponse could be attributed to a failed new invocation",
+  "reproduction": "Old failure code included prior1000/999usage; focused regression failed",
+  "change": "Only current returned response.usage is recorded; provider/pre-response errors without attributable usage stay unknown",
+  "newTest": "failure diagnostics never attribute a stale adapter response to a new call",
+  "resolved": true,
+  "limits": "Static review and local regression; not visual acceptance"
+}

@@ -84,7 +84,7 @@ Output mỗi clip: `demo.mp4`, `index.html`, `timing.json`, `qc-report.json`, pr
 ## Còn cần làm
 
 - Tách/chọn chuyển động phù hợp cho 20 ảnh còn lại. 0001 có mẫu đầu cử động nhẹ; mép nối cổ chưa duyệt. 0006 đã có cử động đầu/tay từ ảnh nguồn, vẫn cần duyệt mép tách và tiếp xúc tại vai/mép bảng.
-- Editor đã có schema, chuẩn bị/lưu recipe và preview; thao tác click/save/download vẫn cần kiểm thử đầy đủ sau khi gỡ tab browser thử cũ bị kẹt. Mask vật che thủ công đã có; còn tự động tách phần, phục hồi nền phức tạp, chất lượng mép tách và manifest bàn giao toàn bộ clip. UI hiện đọc timestamp đã có, không phải editor đổi nội dung nguồn.
+- Editor đã kiểm tra qua CUA: tải recipe1, lưu cùng recipe, Phát, tua về đầu, về danh mục, xuất lại cảnh1 từ cache và tải MP4 thực tế đúng hash. Chọn/vẽ vùng mới bằng chuột, upload/authoring trọn luồng vẫn còn kiểm tra riêng. Mask vật che thủ công đã có; còn tự động tách phần, phục hồi nền phức tạp, chất lượng mép tách và manifest bàn giao toàn bộ clip. UI hiện đọc timestamp đã có, không phải editor đổi nội dung nguồn.
 - Đạo diễn/artist qua9router đề xuất recipe, người vận hành xem và duyệt chất lượng. Đề xuất không được thực thi như code.
 - Ghép toàn bộ timeline/voice, review/repair, final/QC theo mục tiêu chung sau khi chuyển động từng ảnh được duyệt.
 
@@ -104,8 +104,24 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8860/api/image-timestamp/de
 
 Chạy với source0001 và server đã cấu hình export này; ID của plate lấy từ upload thực tế, không giả định hash luôn giống trên mọi phiên bản Sharp. Các lệnh này lưu/chỉnh cảnh1 riêng. Sau đó mở bàn làm việc và xuất cảnh1. Clock lấy từ export, không sửa bằng recipe. Không chạy khi có job đang xuất. Đổi góc/timestamp dùng lại crop và layer cache; không gọi tạo ảnh lại. `background-column`/sample/tolerance là lựa chọn màu do người vận hành kiểm tra, không tự phân đoạn nền có texture. Nền sạch vẫn chỉ áp vào vùng bị xóa của bộ phận, không thay thân/cảnh.
 
+## Agent đề xuất chuyển động từ ảnh
+
+CLI mới gửi ảnh đã chọn và cue/clock cho9router local, nhận đề xuất numeric hoặc lý do cần bổ sung hỗ trợ. Không gửi cả repository, không chạy code do model viết. Không tự lưu recipe vào Studio hay tự nghiệm thu hình. Ví dụ:
+
+```powershell
+node --import tsx scripts/image-motion-propose.ts --source $flowExport --clips 15,18 --output runtime/image-motion/motion-proposals --fps 60 --model coder --max-calls 2 --max-output-tokens 2400 --env D:/github/Story-2-video-factory2.1/.env
+```
+
+`--env` là file cấu hình riêng tại máy này; checkout khác dùng `.env` hoặc `STORY_FACTORY_ENV_FILE`. Không đưa key vào lệnh/chat. CLI này luôn dùng9router `http://127.0.0.1:20128/v1`, không đọc URL API chung từ `MODEL_GATEWAY_URL`. Chọn combo/model vision có thật tại9router. Discovery không chứng minh model đã đủ quota hay có vision.
+
+Output mỗi ảnh có request, reference PNG phục vụ vision, receipt hoặc failure. Reference được resize để đọc ảnh, không thay artwork của video. Receipt bind hash nguồn/kích thước/text/clock/model/giới hạn token; nguồn thay đổi chặn reuse. Candidate dùng tọa độ0–1000 đã validate, ánh xạ về pixel nguồn trong `definition`; phải xem vùng chọn và preview rồi mới gửi definition cho API chuẩn bị. Geometry hợp lệ không chứng minh vùng đó là đúng đối tượng. Trạng thái `needs-artwork` và definition:null giữ cảnh chưa chuẩn bị; đọc reason để phân biệt thiếu bề mặt/nền với chuyển động renderer chưa có, không tự yêu cầu người dùng tạo lại mọi ảnh.
+
+Nhập lại đúng yêu cầu dùng cache và không gọi model. `--max-calls` chỉ giới hạn lượt mới của lần chạy này; cache không tốn lượt. `--max-output-tokens` giới hạn256–4000 token/lượt. Không retry/fanout tự động ở client; combo fallback của9router do người dùng cấu hình riêng. Request đã reserved mà chưa có receipt hợp lệ phải kiểm tra failure/trạng thái, không lặng lẽ gọi lại. CLI chưa có thao tác retry/resolve request gián đoạn trong Studio; dùng output mới là lượt yêu cầu mới có thể tính phí và cần chủ động lựa chọn. Failure không có response/usage hiện tại được ghi là không có số liệu, không gán usage của lượt trước.
+
+Kiểm chứng source15/18 thật: model gpt-6-luna báo đúng phần cần hỗ trợ, chưa tạo chuyển động mới. Re-run hai cảnh dùng0 call. Báo cáo: [đề xuất/agent và UI](../validation/2026-10-12-timestamp-proposals/REPORT.md). Cần tiếp tục phép tịnh tiến/lắp ghép và asset clean texture để giải quyết các cảnh đang chờ; không thay bằng một cử động không ăn nhập cue.
+
 Bốn clip local hiện có là mẫu chẩn đoán, chưa chứng minh chất lượng diễn xuất của toàn bộ video. Phần nối narration đang dở được giữ riêng theo yêu cầu tập trung từng ảnh. Kết quả workbench mới: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-workbench/REPORT.md).
 
 Chặng editor/API và clip 0001: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-motion-editor/REPORT.md). 25 test tập trung và build/typecheck đã qua; không thay thế nghiệm thu chất lượng hình hoặc final có giọng.
 
-Chặng vật che trước: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-foreground/REPORT.md), vẫn giữ bằng chứng đường nối cổ của bản trước. Chặng giữ pixel nguồn và sửa cổ: [báo cáo mới](../validation/2026-10-12-timestamp-pixel-coverage/REPORT.md). Clip0001 mới có346 frame60fps, dùng viền hàm và nền cổ riêng; không giữ một phần mặt đứng yên để giấu lỗi. 32 test tập trung/build đã qua; art và toàn video chưa nghiệm thu. Tiến độ chức năng toàn dự án ước lượng50%, không phải tỷ lệ nghiệm thu art hoặc video có giọng.
+Chặng vật che trước: [báo cáo kiểm tra](../validation/2026-10-12-timestamp-foreground/REPORT.md), vẫn giữ bằng chứng đường nối cổ của bản trước. Chặng giữ pixel nguồn và sửa cổ: [báo cáo mới](../validation/2026-10-12-timestamp-pixel-coverage/REPORT.md). Clip0001 mới có346 frame60fps, dùng viền hàm và nền cổ riêng; không giữ một phần mặt đứng yên để giấu lỗi. 32 test tập trung/build đã qua; art và toàn video chưa nghiệm thu. Đến chặng agent/kiểm tra UI, tiến độ chức năng toàn dự án ước lượng51%, không phải tỷ lệ nghiệm thu art hoặc video có giọng; danh mục vẫn4/24 cảnh có chuyển động.

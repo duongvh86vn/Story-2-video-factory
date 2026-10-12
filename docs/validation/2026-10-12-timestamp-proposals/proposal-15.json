@@ -1,0 +1,57 @@
+{
+  "key": "5cccebe1540da48f3fa7dccd9dd70319cbad3f8f3ffcd80039100c94c302d6a6",
+  "descriptor": {
+    "version": "source-motion-proposal-1",
+    "clipId": 15,
+    "sourceHash": "7e51711c1d29c00ed19a6e125c5347bb7cd0f9daee0e1de8ec5fb16197c7c037",
+    "width": 1920,
+    "height": 1080,
+    "text": "Engines were not new.",
+    "visual": "A simple workshop bench displaying various early stationary industrial engines side-by-side with motion lines indicating established technology.",
+    "clock": {
+      "startMs": 73020,
+      "endMs": 75040,
+      "startFrame": 4381,
+      "endFrame": 4502,
+      "fps": 60
+    },
+    "modelIdentity": {
+      "model": "coder",
+      "baseUrl": "http://127.0.0.1:20128/v1",
+      "maxOutputTokens": 2400,
+      "temperature": 0.1
+    }
+  },
+  "referenceHash": "63ce31737db499968b56f9c5eeddf266869d38297f7cd7a177627841fdac19d0",
+  "proposal": {
+    "version": 1,
+    "summary": "The stationary engines are shown as established technology; a small rotation of the prominent steam-engine flywheel would suggest familiar mechanical operation, but its spokes and underlying details require a clean rotation source.",
+    "targets": [
+      {
+        "regionId": "steam-flywheel",
+        "object": "Large spoked flywheel on the steam engine at left",
+        "evidence": "The wheel is clearly visible beside the steam-engine boiler, with a rim, spokes, and hub; nearby drawn motion marks also suggest rotation.",
+        "why": "A subtle flywheel rotation conveys a working, established engine without changing its pose or the rest of the illustration."
+      }
+    ],
+    "status": "needs-artwork",
+    "definition": null,
+    "needsArtwork": [
+      {
+        "regionId": "steam-flywheel",
+        "kind": "clean-rotation-source",
+        "reason": "Rotating the detailed wheel requires a clean rotation source that preserves its spokes and rim while avoiding artifacts over the engine and background."
+      }
+    ]
+  },
+  "definition": null,
+  "resultHash": "8c71c3f05b274da7baa43d253f35444eb5df28a0605b1ce351a122298712c146",
+  "responseModel": "gpt-6-luna",
+  "usage": {
+    "inputTokens": 2641,
+    "outputTokens": 290
+  },
+  "applied": false,
+  "productionReady": false,
+  "qualityAccepted": false
+}
